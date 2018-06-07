@@ -1,0 +1,28 @@
+<div id="overlay">
+	<div class="uk-flex uk-flex-center uk-height-viewport pastebin-white uk-card-default">
+		<div class="uk-width-medium uk-padding-small">
+			<div class="uk-background-cover uk-height-medium uk-panel uk-flex uk-flex-center uk-flex-middle" style="background-image: url(assets/nitro.png);"></div>
+			<form action="login.html">
+				<fieldset class="uk-fieldset">
+					<legend class="uk-legend">Le Portail des élèves</legend>
+					<div class="uk-margin">
+						<div class="uk-inline uk-width-1-1">
+							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
+							<input class="uk-input uk-form-large {{ loginClass }}" required placeholder="Identifiant" type="text" name="login" autocomplete="username" [(ngModel)]="loginText">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<div class="uk-inline uk-width-1-1">
+							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
+							<input class="uk-input uk-form-large {{ passwordClass }}" required placeholder="Mot de passe" name="password" type="password" autocomplete="current-password" [(ngModel)]="passwordText" >
+						</div>
+					</div>
+					<div class="uk-margin">
+						<button type="submit" (click)="login()" class="uk-button uk-button-default uk-button-default uk-button-large uk-width-1-1">Se connecter</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="particle"></div>
