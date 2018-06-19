@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "*"
+djangorestframework = "*"
+Markdown = "*"
+django-filter = "*"
+django-cors-headers = "*"
+jwt = "*"
+"psycopg2-binary" = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
