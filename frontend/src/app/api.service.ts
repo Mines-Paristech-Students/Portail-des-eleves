@@ -31,7 +31,7 @@ export class ApiService {
   authenticate(login: string, password: string) {
     return this.http.post(
       server + "auth/",
-      {"username": login, "password": password},
+      {"pseudo": login, "password": password},
       {withCredentials: !isDevMode()})
   }
 
