@@ -22,7 +22,6 @@ export function highlightJsFactory() {
     AppComponent,
     HomeComponent,
     LoginComponent,
-    SideBarComponent
   ],
   imports: [
     BrowserModule,
