@@ -32,7 +32,7 @@ export class ApiService {
     return this.http.post(
       server + "auth/",
       {"pseudo": login, "password": password},
-      {withCredentials: !isDevMode()})
+      {withCredentials: true})
   }
 
   getFiles(storageKey: string) {
