@@ -62,7 +62,6 @@ export class LoginComponent implements OnInit {
                 },
                 err => {
                     this.passwordText = "";
-                    this.loginText = "";
                     this.loginClass = "is-invalid";
                     this.passwordClass = "is-invalid"
                     console.log(err);

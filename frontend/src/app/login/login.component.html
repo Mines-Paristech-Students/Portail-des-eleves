@@ -15,14 +15,14 @@
                                 <div class="card-title">Connection au portail des élèves</div>
                                 <div class="form-group">
                                     <label class="form-label">Addresse email</label>
-                                    <input type="email" class="form-control {{ loginClass }}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre email" [(ngModel)]="loginText">
+                                    <input type="email" class="form-control {{ loginClass }}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre email" name="login" [(ngModel)]="loginText">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">
                                         Mot de passe
                                         <a href="#" class="float-right small">J'ai oublié mon mot de passe</a>
                                     </label>
-                                    <input type="password" class="form-control {{ passwordClass }}" id="exampleInputPassword1" placeholder="Mot de passe" [(ngModel)]="passwordText">
+                                    <input type="password" class="form-control {{ passwordClass }}" id="exampleInputPassword1" placeholder="Mot de passe" name="password" [(ngModel)]="passwordText">
                                 </div>
                                 <div class="form-group">
                                     <label class="custom-control custom-checkbox">
