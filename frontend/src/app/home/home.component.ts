@@ -11,13 +11,20 @@ declare var UIkit: any;
 export class HomeComponent implements OnInit {
 
   constructor(private _apiService: ApiService,
-              private router: Router) { }
+    private router: Router) { }
 
   ngOnInit() {
       // Check if the user is already connected
-      if (!this._apiService.checkAuthentication()) {
-          this.router.navigate(['login'])
-          return
-      }
+      this._apiService.checkAuthentication().subscribe(
+        data => {
+          console.log('HomeComponent')
+          console.log(data)
+        },
+        err => {
+          console.log('HomeComponent')
+          console.log(err);
+          this.router.navigate(['/login'])
+        }
+      )
   }
 }

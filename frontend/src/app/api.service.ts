@@ -17,15 +17,19 @@ export class ApiService {
   header: any;
 
   constructor(private http: HttpClient,
-              private cookieService: CookieService) { }
+              private cookieService: CookieService) {
+    this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest'); //new HttpHeaders({ 'X-REQUESTED-WITH': 'XMLHttpRequest' });
+  }
 
   checkAuthentication() {
-    if (localStorage.getItem("csrf_token") != null) {
-      this.header = new HttpHeaders({ 'x-csrf-token': localStorage.getItem("csrf_token") })
-      return true
-    } else {
-      return false
-    }
+    return this.http.post(
+      server + "auth/check/",
+      null
+      {
+        headers: this.header,
+        withCredentials: true
+      }
+    ))
   }
 
   authenticate(login: string, password: string) {

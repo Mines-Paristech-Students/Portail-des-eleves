@@ -17,18 +17,23 @@ export class LoginComponent implements OnInit {
     passwordClass: string;
 
     constructor(private _apiService: ApiService,
-                private router: Router,
-                private cookieService: CookieService) { }
+        private router: Router,
+        private cookieService: CookieService) { }
 
     ngOnInit() {
-        console.log("Authenticated : " + this._apiService.checkAuthentication())
+        this._apiService.checkAuthentication().subscribe(
+            data => {
+                // Already identified, navigate to the home page
+                console.log(data)
+                this.router.navigate([''])
+            },
+            err => {
+                // Not identified, finish to load the page
+                console.log(err);
+                particlesJS.load('particle', 'assets/particles.json');
+            }
+        )
         // Setup particles
-        particlesJS.load('particle', 'assets/particles.json');
-        // Check if the user is already connected
-        if (this._apiService.checkAuthentication()) {
-            this.router.navigate([''])
-            return
-        }
     }
 
     login() {
@@ -48,17 +53,7 @@ export class LoginComponent implements OnInit {
         if (valid) {
             this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
                 data => {
-                    localStorage.setItem("csrf_token", data["CSRFTokens"][0].CSRFToken)
-                    localStorage.setItem("login", data["Login"])
-                    this.cookieService.set("DDCSESSION", data["SessionTokens"][0].SessionToken)
-                    // Redirect
-                    if (localStorage.getItem("file_id") != null) {
-                        var fileID = localStorage.getItem("file_id")
-                        localStorage.removeItem("file_id")
-                        this.router.navigate(['file/', fileID])
-                    } else {
-                        this.router.navigate([''])
-                    }
+                    this.router.navigate([''])
                 },
                 err => {
                     this.passwordText = "";
