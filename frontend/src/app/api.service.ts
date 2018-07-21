@@ -24,12 +24,12 @@ export class ApiService {
   checkAuthentication() {
     return this.http.post(
       server + "auth/check/",
-      null
+      null,
       {
         headers: this.header,
         withCredentials: true
       }
-    ))
+    );
   }
 
   authenticate(login: string, password: string) {
