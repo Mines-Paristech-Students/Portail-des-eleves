@@ -24,16 +24,14 @@ export class LoginComponent implements OnInit {
         this._apiService.checkAuthentication().subscribe(
             data => {
                 // Already identified, navigate to the home page
-                console.log(data)
                 this.router.navigate([''])
             },
             err => {
-                // Not identified, finish to load the page
                 console.log(err);
-                particlesJS.load('particle', 'assets/particles.json');
             }
         )
-        // Setup particles
+
+        particlesJS.load('particle', 'assets/particles.json');
     }
 
     login() {
@@ -53,14 +51,14 @@ export class LoginComponent implements OnInit {
         if (valid) {
             this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
                 data => {
+                    this.loginText = "";
+                    this.passwordText = "";
                     this.router.navigate([''])
                 },
                 err => {
                     this.passwordText = "";
                     this.loginClass = "is-invalid";
                     this.passwordClass = "is-invalid"
-                    console.log(err);
-
                 }
             )
         }
