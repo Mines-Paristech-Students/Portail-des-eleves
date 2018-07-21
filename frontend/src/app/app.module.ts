@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { SideBarComponent } from './side-bar/side-bar.component'
+import { NavbarComponent } from './navbar/navbar.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -22,7 +22,7 @@ export function highlightJsFactory() {
     AppComponent,
     HomeComponent,
     LoginComponent,
-    SideBarComponent
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,

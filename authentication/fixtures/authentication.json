@@ -1,16 +1,31 @@
 [
-{
-    "model": "authentication.student",
-    "pk": "15veaux",
-    "fields": {
-        "password": "pbkdf2_sha256$100000$0W5ybbaHsoF6$GRWRwB+l7Q4sVSopIqtqAJrFVd5itlUsaDHU1ZdzgCs=",
-        "last_login": null,
-        "first_name": "Florian",
-        "last_name": "Veaux",
-        "email": "florian.veaux@mines-paristech.fr",
-        "date_of_birth": "1996-08-28",
-        "is_active": true,
-        "is_admin": true
+    {
+        "model": "authentication.student",
+        "pk": "15veaux",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Florian",
+            "last_name": "Veaux",
+            "email": "florian.veaux@mines-paristech.fr",
+            "date_of_birth": "1996-08-28",
+            "is_active": true,
+            "is_admin": true
+        }
+    },
+    {
+        "model": "authentication.student",
+        "pk": "17bocquet",
+        "fields":
+        {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Adrien",
+            "last_name": "Bocquet",
+            "email": "adrien.bocquet@mines-paristech.fr",
+            "date_of_birth": "1997-06-08",
+            "is_active": true,
+            "is_admin": true
+        }
     }
-}
 ]

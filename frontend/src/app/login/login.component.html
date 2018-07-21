@@ -1,28 +1,45 @@
-<div id="overlay">
-	<div class="uk-flex uk-flex-center uk-height-viewport pastebin-white uk-card-default">
-		<div class="uk-width-medium uk-padding-small">
-			<div class="uk-background-cover uk-height-medium uk-panel uk-flex uk-flex-center uk-flex-middle" style="background-image: url(assets/nitro.png);"></div>
-			<form action="login.html">
-				<fieldset class="uk-fieldset">
-					<legend class="uk-legend">Le Portail des élèves</legend>
-					<div class="uk-margin">
-						<div class="uk-inline uk-width-1-1">
-							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: user"></span>
-							<input class="uk-input uk-form-large {{ loginClass }}" required placeholder="Identifiant" type="text" name="login" autocomplete="username" [(ngModel)]="loginText">
-						</div>
-					</div>
-					<div class="uk-margin">
-						<div class="uk-inline uk-width-1-1">
-							<span class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: lock"></span>
-							<input class="uk-input uk-form-large {{ passwordClass }}" required placeholder="Mot de passe" name="password" type="password" autocomplete="current-password" [(ngModel)]="passwordText" >
-						</div>
-					</div>
-					<div class="uk-margin">
-						<button type="submit" (click)="login()" class="uk-button uk-button-default uk-button-default uk-button-large uk-width-1-1">Se connecter</button>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-	</div>
-</div>
 <div id="particle"></div>
+
+
+<div class="page">
+    <div class="page-single">
+        <form action="login.html">
+            <div class="container">
+                <div class="row">
+                    <div class="col col-login mx-auto">
+                        <div class="text-center mb-6 bg-white p-4 border rounded">
+                            <img src="assets/images/logo-mines.png" alt="">
+                        </div>
+                        <form class="card" action="" method="post">
+                            <div class="card-body p-6">
+                                <div class="card-title">Connection au portail des élèves</div>
+                                <div class="form-group">
+                                    <label class="form-label">Addresse email</label>
+                                    <input type="email" class="form-control {{ loginClass }}" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre email" name="login" [(ngModel)]="loginText">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Mot de passe
+                                        <a href="#" class="float-right small">J'ai oublié mon mot de passe</a>
+                                    </label>
+                                    <input type="password" class="form-control {{ passwordClass }}" id="exampleInputPassword1" placeholder="Mot de passe" name="password" [(ngModel)]="passwordText">
+                                </div>
+                                <div class="form-group">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-label">Se souvenir de moi</span>
+                                    </label>
+                                </div>
+                                <div class="form-footer">
+                                    <button type="submit" (click)="login()"  class="btn btn-primary btn-block">Connection</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="http://www.jsdelivr.com/#!particles.js"></script>

@@ -1,4 +1,7 @@
+import sys
+
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -6,7 +9,6 @@ from rest_framework.exceptions import AuthenticationFailed
 from authentication.exceptions import TokenError
 from authentication.settings import api_settings
 from authentication.token import Token
-
 
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
@@ -27,6 +29,8 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed("Authorization cookie not set")
         validated_token = self.get_validated_token(raw_token)
         return self.get_user(validated_token), None
+
+
 
     def validate_csrf_header(self, request):
         header = request.META.get('HTTP_X_REQUESTED_WITH')
