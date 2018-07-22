@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { isDevMode } from '@angular/core';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,8 +13,7 @@ export class ApiService {
 
     header: any;
 
-    constructor(private http: HttpClient,
-                private cookieService: CookieService) {
+    constructor(private http: HttpClient, private cookieService: CookieService) {
         this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest');
     }
 
@@ -35,18 +33,18 @@ export class ApiService {
             server + "auth/",
             {"pseudo": login, "password": password},
             {withCredentials: true}
-        )
-    },
+        );
+    }
 
     logout(){
         this.cookieService.set("jwt_access_token", "");
         // Why simply deleting the cookie does not work ?
         // If you have an idea, please write me on Slack
-    },
+    }
 
     getUser() {
         return this.http.get("auth/get_user/")
-    },
+    }
 
     getFiles(storageKey: string) {
         return this.http.post(
