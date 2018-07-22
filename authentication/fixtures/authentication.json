@@ -8,9 +8,13 @@
             "first_name": "Florian",
             "last_name": "Veaux",
             "email": "florian.veaux@mines-paristech.fr",
-            "date_of_birth": "1996-08-28",
+            "birthday": "1996-08-01",
             "is_active": true,
-            "is_admin": true
+            "is_admin": true,
+            "nickname": "the fair",
+            "city_of_origin": "Panem",
+            "room": "REDRUM",
+            "phone": "+33000000000"
         }
     },
     {
@@ -23,9 +27,13 @@
             "first_name": "Adrien",
             "last_name": "Bocquet",
             "email": "adrien.bocquet@mines-paristech.fr",
-            "date_of_birth": "1997-06-08",
+            "birthday": "1997-01-08",
             "is_active": true,
-            "is_admin": true
+            "is_admin": true,
+            "nickname": "the roc",
+            "city_of_origin": "Gotham",
+            "room": "1234",
+            "phone": "+33456789012"
         }
     }
 ]

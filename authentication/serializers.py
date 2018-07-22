@@ -3,20 +3,26 @@ from django.utils.six import text_type
 
 from rest_framework import serializers
 
+from authentication.models import Student
 from authentication.token import Token
 
 
-class TokenSerializer(serializers.Serializer):
+class StudentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Student
+        fields = ('pseudo', 'email', 'first_name', 'last_name')
 
+
+class TokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD
 
     def __init__(self, *args, **kwargs):
         super(TokenSerializer, self).__init__(*args, **kwargs)
         self.fields[self.username_field] = serializers.CharField()
         self.fields['password'] = serializers.CharField(
-                                    style={'input_type': 'password'},
-                                    write_only=True
-                                  )
+            style={'input_type': 'password'},
+            write_only=True
+        )
 
     @classmethod
     def get_token(cls, user):

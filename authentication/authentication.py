@@ -33,8 +33,9 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
 
 
     def validate_csrf_header(self, request):
-        header = request.META.get('HTTP_X_REQUESTED_WITH')
-        return header == 'XMLHttpRequest'
+        return True # Leave it that what in dev so we can check API from the browser
+        #header = request.META.get('HTTP_X_REQUESTED_WITH')
+        #return header == 'XMLHttpRequest'
 
     def get_validated_token(self, raw_token):
         """
