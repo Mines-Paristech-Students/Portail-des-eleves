@@ -9,8 +9,8 @@
                     <div class="nav-link pr-0 leading-none" (click)="showNavBarMenu = !showNavBarMenu">
                         <span class="avatar"></span>
                         <span class="ml-2 d-none d-lg-block">
-                            <span class="text-default">{{ user }}</span>
-                            <small class="text-muted d-block mt-1">P17</small>
+                            <span class="text-default">{{ this.app.user.first_name }} {{ this.app.user.last_name[0] }}.</span>
+                            <small class="text-muted d-block mt-1">{{ getPromotion(this.app.user) }}</small>
                         </span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
