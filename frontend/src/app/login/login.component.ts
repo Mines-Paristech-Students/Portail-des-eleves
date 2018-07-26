@@ -43,13 +43,13 @@ export class LoginComponent implements OnInit {
         var valid = true;
         if (!this.loginText) {
             valid = false
-            this.loginClass = "uk-form-danger"
+            this.loginClass = "is-invalid"
         } else {
             this.loginClass = ""
         }
         if (!this.passwordText) {
             valid = false
-            this.passwordClass = "uk-form-danger"
+            this.passwordClass = "is-invalid"
         } else {
             this.passwordClass = ""
         }
@@ -58,8 +58,6 @@ export class LoginComponent implements OnInit {
             return this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
                 data => {
                     this._apiService.getUser().subscribe(user => {
-                        this.app.user = user;
-
                         this.loginText = "";
                         this.passwordText = "";
                         this.router.navigate([''])

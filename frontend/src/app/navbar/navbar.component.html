@@ -1,7 +1,7 @@
 <div class="header py-4">
     <div class="container">
         <div class="d-flex">
-            <a class="header-brand" href="/">
+            <a class="header-brand" routerLink="/">
                 <img src="assets/images/logo-mines.png" class="header-brand-img" alt="site logo">
             </a>
             <div class="d-flex order-lg-2 ml-auto">
@@ -9,12 +9,12 @@
                     <div class="nav-link pr-0 leading-none" (click)="showNavBarMenu = !showNavBarMenu">
                         <span class="avatar"></span>
                         <span class="ml-2 d-none d-lg-block">
-                            <span class="text-default">{{ this.app.user.first_name }} {{ this.app.user.last_name[0] }}.</span>
-                            <small class="text-muted d-block mt-1">{{ getPromotion(this.app.user) }}</small>
+                            <span class="text-default">{{ app.user.first_name }} {{ app.user.last_name[0] }}.</span>
+                            <small class="text-muted d-block mt-1">{{ getPromotion(app.user) }}</small>
                         </span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" routerLink="/profile">
                             <i class="dropdown-icon fe fe-user"></i> Profile
                         </a>
                         <a class="dropdown-item" href="#">
@@ -38,7 +38,7 @@
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active"><i class="fe fe-home"></i>Accueil</a>
+                        <a routerLink="/" class="nav-link active"><i class="fe fe-home"></i>Accueil</a>
                     </li>
                 </ul>
             </div>
