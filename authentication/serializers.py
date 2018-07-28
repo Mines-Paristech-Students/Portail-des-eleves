@@ -10,7 +10,7 @@ from authentication.token import Token
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('pseudo', 'email', 'first_name', 'last_name')
+        fields = ('id', 'email', 'first_name', 'last_name')
 
 
 class TokenSerializer(serializers.Serializer):

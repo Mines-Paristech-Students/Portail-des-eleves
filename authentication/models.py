@@ -5,25 +5,25 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, pseudo, first_name, last_name, email, password, date_of_birth):
+    def create_user(self, id, first_name, last_name, email, password, date_of_birth):
         """
         Creates and saves a User
         """
-        return self._create_user(pseudo, first_name, last_name, email, password, date_of_birth, is_admin=False)
+        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=False)
 
-    def create_superuser(self, pseudo, first_name, last_name, email, password, date_of_birth):
+    def create_superuser(self, id, first_name, last_name, email, password, date_of_birth):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
-        return self._create_user(pseudo, first_name, last_name, email, password, date_of_birth, is_admin=True)
+        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=True)
 
-    def _create_user(self, pseudo, first_name, last_name, email, password, date_of_birth, is_admin):
+    def _create_user(self, id, first_name, last_name, email, password, date_of_birth, is_admin):
         """
         Creates and saves a User
         """
         user = self.model(
-            pseudo=pseudo,
+            id=id,
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
@@ -38,7 +38,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    pseudo = models.CharField(primary_key=True, max_length=30, verbose_name="User pseudo")
+    id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
     first_name = models.CharField(max_length=50, verbose_name="User first name")
     last_name = models.CharField(max_length=50, verbose_name="User last name")
 
@@ -77,11 +77,11 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'pseudo'
+    USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'date_of_birth']
 
     def __str__(self):
-        return self.pseudo
+        return self.id
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

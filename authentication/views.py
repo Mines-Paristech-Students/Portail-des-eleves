@@ -46,7 +46,7 @@ class CheckCredentials(generics.GenericAPIView):
     authentication_classes = [JWTCookieAuthentication]
 
     def post(self, request, *args, **kwargs):
-        return Response({"pseudo": request.user.pseudo, "first_name": request.user.first_name, "last_name": request.user.last_name}, status=status.HTTP_200_OK)
+        return Response({"id": request.user.id, "first_name": request.user.first_name, "last_name": request.user.last_name}, status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     """

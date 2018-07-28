@@ -77,7 +77,7 @@ JWT_AUTH = {
     'ALGORITHM': 'HS256',
     'SECRET_KEY': os.environ.get('JWT_PRIVATE_KEY', 'SECRET_KEY'),
     'USER_ID_CLAIM': 'user',
-    'USER_ID_FIELD': 'pseudo',
+    'USER_ID_FIELD': 'id',
 }
 
 ROOT_URLCONF = 'backend.urls'

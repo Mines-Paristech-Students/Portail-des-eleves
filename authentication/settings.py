@@ -15,7 +15,7 @@ DEFAULTS = {
     'ALGORITHM': 'HS256',
     'SECRET_KEY': settings.SECRET_KEY,
     'USER_ID_CLAIM': 'user',
-    'USER_ID_FIELD': 'pseudo',
+    'USER_ID_FIELD': 'id',
 }
 
 api_settings = APISettings(USER_SETTINGS, DEFAULTS)

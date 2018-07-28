@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('pseudo', models.CharField(max_length=30, primary_key=True, serialize=False, verbose_name='User pseudo')),
+                ('id', models.CharField(max_length=30, primary_key=True, serialize=False, verbose_name='User id')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('firstname', models.CharField(max_length=50, verbose_name='User first name')),
