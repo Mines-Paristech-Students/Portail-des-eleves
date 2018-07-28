@@ -12,76 +12,76 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='student',
+            model_name='user',
             name='date_of_birth',
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='address',
             field=models.CharField(blank=True, help_text='adresse en dehors de la Meuh', max_length=512),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='birthday',
             field=models.DateField(null=True, verbose_name='date de naissance'),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='city_of_origin',
             field=models.CharField(blank=True, help_text="ville d'origine", max_length=128),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='gender',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='is_ast',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='is_in_gapyear',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='is_isupfere',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='minesparent',
             field=models.ManyToManyField(blank=True, related_name='fillots', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='nickname',
             field=models.CharField(blank=True, default='', max_length=128),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='option',
             field=models.CharField(blank=True, max_length=128),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='phone',
             field=models.CharField(blank=True, max_length=15, verbose_name='numéro de téléphone'),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='room',
             field=models.CharField(blank=True, max_length=128, verbose_name='numéro de chambre'),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='roommate',
-            field=models.ManyToManyField(blank=True, related_name='_student_roommate_+', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(blank=True, related_name='_user_roommate_+', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='student',
+            model_name='user',
             name='sports',
             field=models.CharField(blank=True, max_length=512),
         ),

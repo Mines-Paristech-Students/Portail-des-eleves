@@ -12,13 +12,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Student',
+            name='User',
             fields=[
-                ('pseudo', models.CharField(max_length=30, primary_key=True, serialize=False, verbose_name='Student pseudo')),
+                ('pseudo', models.CharField(max_length=30, primary_key=True, serialize=False, verbose_name='User pseudo')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('firstname', models.CharField(max_length=50, verbose_name='Student first name')),
-                ('lastname', models.CharField(max_length=50, verbose_name='Student last name')),
+                ('firstname', models.CharField(max_length=50, verbose_name='User first name')),
+                ('lastname', models.CharField(max_length=50, verbose_name='User last name')),
                 ('email', models.EmailField(max_length=160, unique=True, verbose_name='email address')),
                 ('date_of_birth', models.DateField()),
                 ('is_active', models.BooleanField(default=True)),

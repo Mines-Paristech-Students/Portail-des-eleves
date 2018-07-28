@@ -4,8 +4,8 @@ from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
-from authentication.models import Student
-from authentication.serializers import TokenSerializer, StudentSerializer
+from authentication.models import User
+from authentication.serializers import TokenSerializer, UserSerializer
 from authentication.settings import api_settings
 from backend import settings
 
@@ -48,23 +48,9 @@ class CheckCredentials(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         return Response({"pseudo": request.user.pseudo, "first_name": request.user.first_name, "last_name": request.user.last_name}, status=status.HTTP_200_OK)
 
-
-class CurrentUser(generics.GenericAPIView):
+class UserViewSet(viewsets.ModelViewSet):
     """
-    This class gets both JWT tokens and sets them as secure cookies.
+    API endpoint that allows user to be viewed or edited.
     """
-    is_prod_mode = settings.is_prod_mode()
-    authentication_classes = [JWTCookieAuthentication]
-
-    def get(self, request, *args, **kwargs):
-        user = Student.objects.get(pseudo=request.user)
-        serialized_user = StudentSerializer(user)
-        return Response(serialized_user.data, status=status.HTTP_200_OK)
-
-
-class StudentViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows students to be viewed or edited.
-    """
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

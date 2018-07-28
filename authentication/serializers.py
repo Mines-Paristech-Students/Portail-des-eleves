@@ -3,13 +3,13 @@ from django.utils.six import text_type
 
 from rest_framework import serializers
 
-from authentication.models import Student
+from authentication.models import User
 from authentication.token import Token
 
 
-class StudentSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Student
+        model = User
         fields = ('pseudo', 'email', 'first_name', 'last_name')
 
 

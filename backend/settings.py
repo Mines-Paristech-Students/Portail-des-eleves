@@ -34,7 +34,7 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 ENV = "DEV"  # Can be 'DEV' or 'PROD'
-AUTH_USER_MODEL = 'authentication.Student'
+AUTH_USER_MODEL = 'authentication.User'
 
 # Application definition
 

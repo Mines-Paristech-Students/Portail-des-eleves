@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
 )
 
 
-class StudentManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def create_user(self, pseudo, first_name, last_name, email, password, date_of_birth):
         """
         Creates and saves a User
@@ -37,10 +37,10 @@ class StudentManager(BaseUserManager):
         return user
 
 
-class Student(AbstractBaseUser):
-    pseudo = models.CharField(primary_key=True, max_length=30, verbose_name="Student pseudo")
-    first_name = models.CharField(max_length=50, verbose_name="Student first name")
-    last_name = models.CharField(max_length=50, verbose_name="Student last name")
+class User(AbstractBaseUser):
+    pseudo = models.CharField(primary_key=True, max_length=30, verbose_name="User pseudo")
+    first_name = models.CharField(max_length=50, verbose_name="User first name")
+    last_name = models.CharField(max_length=50, verbose_name="User last name")
 
     email = models.EmailField(
         verbose_name='email address',
@@ -75,7 +75,7 @@ class Student(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    objects = StudentManager()
+    objects = UserManager()
 
     USERNAME_FIELD = 'pseudo'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'date_of_birth']

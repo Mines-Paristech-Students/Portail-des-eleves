@@ -1,6 +1,6 @@
 [
     {
-        "model": "authentication.student",
+        "model": "authentication.user",
         "pk": "15veaux",
         "fields": {
             "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
@@ -18,7 +18,7 @@
         }
     },
     {
-        "model": "authentication.student",
+        "model": "authentication.user",
         "pk": "17bocquet",
         "fields":
         {
