@@ -1,8 +1,52 @@
 <navbar></navbar>
 
-<div class="container">
+<div class="container mt-4">
     <div *ngIf="user">
-        {{ user.first_name }}
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+
+                    <span class="avatar avatar-xl mr-3">{{ user.first_name[0] }}{{ user.last_name[0] }}</span> <!--// TODO: add real photo-->
+                    <h2 class="mt-2 mb-0">{{ user.first_name }} {{ user.last_name }}</h2>
+
+                    <p>
+                        <a href="/monprofil/editer">Modifier mon profil</a> -
+                        <a href="/monprofil/editer/motdepasse">Modifier mon mot de passe</a>
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Informations personnelles</div>
+                </div>
+                <div class="card-body">
+                    <strong>Prénom : </strong> {{ user.first_name }} <br>
+                    <strong>Nom : </strong> {{ user.last_name }} <br>
+                    <br>
+                    <strong>Parrain : </strong> {{ user.minesparent }} <br>
+                    <br>
+                    <strong>Email : </strong> {{ user.email }} <br>
+                    <strong>Téléphone : </strong> {{ user.phoneNumber }}<br>
+                    <br>
+                    <div *ngIf="user.room">
+                        <strong>Chambre : </strong> {{ user.room }} <br>
+                    </div>
+                    <ng-template #elseBlock>
+                        <strong>Addresse de PAM : </strong> {{ user.address }} <br>
+                    </ng-template>
+                    <strong>Ville d'origine : </strong> {{ user.city_of_origin }}
+
+                    <br>
+
+                    <strong>Option : </strong> {{ user.option }} <br>
+                    <br>
+                    <strong>Sports : </strong> {{ user.sport }} <br>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <div *ngIf="error">

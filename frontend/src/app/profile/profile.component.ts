@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
       const id = this.route.snapshot.paramMap.get('id');
-      this.api.get("rest/user/" + id).subscribe(
+      this.api.get("rest/users/" + id + "/").subscribe(
           user => this.user = user,
               error => {
               this.error = error
