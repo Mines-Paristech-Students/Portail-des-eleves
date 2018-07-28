@@ -13,6 +13,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { PasswordEditComponent } from './password-edit/password-edit.component';
+import { FacebookComponent } from './facebook/facebook.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -29,6 +30,7 @@ export function highlightJsFactory() {
     ProfileComponent,
     ProfileEditComponent,
     PasswordEditComponent,
+    FacebookComponent,
   ],
   imports: [
     BrowserModule,

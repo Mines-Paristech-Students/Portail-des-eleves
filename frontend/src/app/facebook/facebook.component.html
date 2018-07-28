@@ -1,0 +1,11 @@
+<navbar></navbar>
+
+<div class="container">
+
+    <div *ngIf="users">
+        <ul>
+            <li *ngFor="let user of users"><a routerLink="/user/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a></li>
+        </ul>
+    </div>
+
+</div>

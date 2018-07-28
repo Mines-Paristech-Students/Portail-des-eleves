@@ -17,8 +17,8 @@ export class ApiService {
         this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest');
     }
 
-    get(url: String){
-        return this.http.get(
+    get<T>(url: String){
+        return this.http.get<T>(
             server + url,
             {
                 headers: this.header,
@@ -27,19 +27,8 @@ export class ApiService {
         )
     }
 
-    post(url: String, body: any){
-        return this.http.post(
-            server + url,
-            body,
-            {
-                headers: this.header,
-                withCredentials: true
-            }
-        )
-    }
-
-    put(url: String, body: any){
-        return this.http.put(
+    post<T>(url: String, body: any){
+        return this.http.post<T>(
             server + url,
             body,
             {
@@ -49,8 +38,19 @@ export class ApiService {
         )
     }
 
-    delete(url: String){
-        return this.http.delete(
+    put<T>(url: String, body: any){
+        return this.http.put<T>(
+            server + url,
+            body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    delete<T>(url: String){
+        return this.http.delete<T>(
             server + url,
             {
                 headers: this.header,
