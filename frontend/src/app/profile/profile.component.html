@@ -7,11 +7,15 @@
                 <div class="card-body text-center">
 
                     <span class="avatar avatar-xl mr-3">{{ user.first_name[0] }}{{ user.last_name[0] }}</span> <!--// TODO: add real photo-->
-                    <h2 class="mt-2 mb-0">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <h2 class="mt-2 mb-0">
+                        {{ user.first_name }}
+                        <span *ngIf="user.nickname"> "{{ user.nickname }}" </span>
+                        {{ user.last_name }}
+                    </h2>
 
                     <p>
-                        <a href="/monprofil/editer">Modifier mon profil</a> -
-                        <a href="/monprofil/editer/motdepasse">Modifier mon mot de passe</a>
+                        <a routerLink="/user/{{ user.id }}/edit">Modifier mon profil</a> -
+                        <a routerLink="/monprofil/editer/motdepasse">Modifier mon mot de passe</a>
                     </p>
 
                 </div>
@@ -28,7 +32,7 @@
                     <strong>Parrain : </strong> {{ user.minesparent }} <br>
                     <br>
                     <strong>Email : </strong> {{ user.email }} <br>
-                    <strong>Téléphone : </strong> {{ user.phoneNumber }}<br>
+                    <strong>Téléphone : </strong> {{ user.phone }}<br>
                     <br>
                     <div *ngIf="user.room">
                         <strong>Chambre : </strong> {{ user.room }} <br>
@@ -36,12 +40,11 @@
                     <ng-template #elseBlock>
                         <strong>Addresse de PAM : </strong> {{ user.address }} <br>
                     </ng-template>
-                    <strong>Ville d'origine : </strong> {{ user.city_of_origin }}
+                    <strong>Ville d'origine : </strong> {{ user.city_of_origin }}<br>
 
                     <br>
 
                     <strong>Option : </strong> {{ user.option }} <br>
-                    <br>
                     <strong>Sports : </strong> {{ user.sport }} <br>
                 </div>
             </div>
