@@ -9,12 +9,12 @@
                     <div class="nav-link pr-0 leading-none" (click)="showNavBarMenu = !showNavBarMenu">
                         <span class="avatar"></span>
                         <span class="ml-2 d-none d-lg-block">
-                            <span class="text-default">{{ app.user.first_name }} {{ app.user.last_name[0] }}.</span>
-                            <small class="text-muted d-block mt-1">{{ getPromotion(app.user) }}</small>
+                            <span class="text-default" *ngIf="user">{{ user.first_name }} {{ user.last_name[0] }}.</span>
+                            <small class="text-muted d-block mt-1">{{ getPromotion(user) }}</small>
                         </span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
-                        <a class="dropdown-item" routerLink="/profile">
+                        <a class="dropdown-item" *ngIf="user" routerLink="/user/{{ user.pseudo }}">
                             <i class="dropdown-icon fe fe-user"></i> Profile
                         </a>
                         <a class="dropdown-item" href="#">

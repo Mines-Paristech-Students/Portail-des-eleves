@@ -20,18 +20,13 @@ export class LoginComponent implements OnInit {
     constructor(
         private _apiService: ApiService,
         private router: Router,
-        private cookieService: CookieService,
-        private app : AppComponent
     ) { }
 
     ngOnInit() {
         this._apiService.checkAuthentication().subscribe(
             data => {
                 // Already identified, navigate to the home page
-                this._apiService.getUser().subscribe(user => {
-                    this.app.user = user;
-                    this.router.navigate([''])
-                });
+                this.router.navigate([''])
             },
             err => {}
         )
@@ -57,11 +52,10 @@ export class LoginComponent implements OnInit {
 
             return this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
                 data => {
-                    this._apiService.getUser().subscribe(user => {
-                        this.loginText = "";
-                        this.passwordText = "";
-                        this.router.navigate([''])
-                    })
+                    console.log(data);
+                    this.loginText = "";
+                    this.passwordText = "";
+                    this.router.navigate([''])
                 },
                 err => {
                     this.passwordText = "";

@@ -8,6 +8,7 @@ from rest_framework.settings import APISettings
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 
+
 DEFAULTS = {
     'ACCESS_TOKEN_COOKIE_NAME': 'jwt_access_token',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),

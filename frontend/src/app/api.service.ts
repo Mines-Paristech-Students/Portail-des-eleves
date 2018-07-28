@@ -17,6 +17,48 @@ export class ApiService {
         this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest');
     }
 
+    get(url: String){
+        return this.http.get(
+            server + url,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    post(url: String, body: any){
+        return this.http.post(
+            server + url,
+            body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    put(url: String, body: any){
+        return this.http.put(
+            server + url,
+            body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    delete(url: String){
+        return this.http.delete(
+            server + url,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
     checkAuthentication() {
         return this.http.post(
             server + "auth/check/",

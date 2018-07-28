@@ -11,8 +11,9 @@ import {AppComponent} from "../app.component";
 export class NavbarComponent implements OnInit {
 
     showNavBarMenu : Boolean = false ;
+    user: any ;
 
-    constructor(private _apiService: ApiService, private router: Router, private app: AppComponent) { }
+    constructor(private _apiService: ApiService, private router: Router) { }
 
     logout(){
         this._apiService.logout();
@@ -24,8 +25,20 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit() {
-        if(this.app.user == null){
-            this.router.navigate(["/login"])
+        if(window.localStorage && localStorage.getItem("user")) {
+            this.user = JSON.parse(localStorage.getItem("user"));
+        } else {
+            this._apiService.checkAuthentication().subscribe(
+                data => {
+                    this.user = data;
+                    if(window.localStorage) {
+                        localStorage.setItem("user", JSON.stringify(data))
+                    }
+                },
+                err => {
+                    this.router.navigate(["/login"])
+                }
+            )
         }
     }
 }

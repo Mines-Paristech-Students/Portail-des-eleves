@@ -1,5 +1,13 @@
 <navbar></navbar>
 
 <div class="container">
-    {{ app.user.first_name }}
+    <div *ngIf="user">
+        {{ user.first_name }}
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
 </div>
