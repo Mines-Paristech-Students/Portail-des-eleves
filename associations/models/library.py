@@ -10,12 +10,14 @@ class Library(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_library"
 
 
 class Object(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_library_object"
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
@@ -36,9 +38,10 @@ class Loan(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_library_loan"
 
-    object = models.OneToOneField(Object)
-    user = models.OneToOneField(User)
+    object = models.OneToOneField(Object, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     loan_date = models.DateTimeField(auto_now=True)
     expected_return_date = models.DateTimeField(auto_now=False, null=True)

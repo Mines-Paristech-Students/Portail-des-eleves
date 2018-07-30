@@ -1,23 +1,23 @@
 from django.db import models
 from django.utils.text import slugify
 
+from associations.models.marketplace import Marketplace
+from associations.models.library import Library
 from authentication.models import User
-
-from associations.events.models import *
-from associations.library.models import *
-from associations.markerplace.models import *
-from associations.page.models import *
-from associations.vote.models import *
 
 
 class Association(models.Model):
+    class Meta:
+        app_label = "association"
+        db_table = "associations"
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
 
     logo = models.ImageField(upload_to="associations/logos/", null=True)
 
-    market = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING())
-    library = models.OneToOneField(Library, on_delete=models.DO_NOTHING())
+    market = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING)
+    library = models.OneToOneField(Library, on_delete=models.DO_NOTHING)
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
@@ -39,6 +39,10 @@ class Association(models.Model):
 
 
 class Group(models.Model):
+    class Meta:
+        app_label = "association"
+        db_table = "association_groups"
+
     members = models.ManyToManyField(User, blank=True)
 
     is_admin_group = models.BooleanField(default=False)

@@ -8,11 +8,16 @@ class Marketplace(models.Model):
         Provides an interface to lend objects to people and to follow who has what
     """
 
+    class Meta:
+        app_label = "association"
+        db_table = "association_marketplace"
+
 
 class Product(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_marketplace_product"
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
@@ -34,9 +39,10 @@ class Order(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_marketplace_order"
 
-    product = models.OneToOneField(Product)
-    buyer = models.OneToOneField(User)
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    buyer = models.OneToOneField(User, on_delete=models.CASCADE)
 
     quantity = models.PositiveIntegerField(default=1)
     value = models.DecimalField(max_digits=5, decimal_places=2) # Total value should be remembered because the price might change

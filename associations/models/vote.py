@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 
-from associations.models import Association
+from associations.models.association import Association
 from authentication.models import User
 
 
@@ -13,6 +13,7 @@ class Election(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_election"
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 
@@ -29,18 +30,20 @@ class VoteChoice(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_vote_choice"
 
     name = models.CharField(max_length=200)
-    election = models.ForeignKey(Election)
+    election = models.ForeignKey(Election, on_delete=models.CASCADE)
 
 
 class Vote(models.Model):
 
     class Meta:
         app_label = "association"
+        db_table = "association_vote"
 
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
-    choices = models.ManyToManyField(VoteChoice, on_delete=models.CASCADE)
+    choices = models.ManyToManyField(VoteChoice)
 
     def is_valid(self):  # Should always be true
         return len(self.choices.count()) <= self.election.max_choice_number
