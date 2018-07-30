@@ -1,8 +1,5 @@
 from django.db import models
 
-from associations.models.association import Association
-
-
 class Publication(models.Model):
     """
         Provides an interface to publish files on a regular basis
@@ -17,6 +14,6 @@ class Edition(models.Model):
     date = models.DateTimeField(auto_now=True)
     number = models.IntegerField()
     file = models.FileField()
-    image = models.ImageField()
+    thumbnail = models.ImageField()
 
     publication = models.ForeignKey(Publication, models.CASCADE)
