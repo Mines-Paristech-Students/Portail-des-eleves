@@ -8,17 +8,8 @@ class Library(models.Model):
         Provides an interface to lend objects to people and to follow who has what
     """
 
-    class Meta:
-        app_label = "association"
-        db_table = "association_library"
-
 
 class Object(models.Model):
-
-    class Meta:
-        app_label = "association"
-        db_table = "association_library_object"
-
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
     image = models.ImageField()
@@ -35,7 +26,6 @@ class Object(models.Model):
 
 
 class Loan(models.Model):
-
     class Meta:
         app_label = "association"
         db_table = "association_library_loan"

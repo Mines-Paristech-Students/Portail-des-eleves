@@ -6,10 +6,6 @@ from authentication.models import User
 
 class Event(models.Model):
 
-    class Meta:
-        app_label = "association"
-        db_table = "association_event"
-
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=200)

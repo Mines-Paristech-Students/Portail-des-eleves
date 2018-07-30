@@ -7,9 +7,6 @@ from authentication.models import User
 
 
 class Association(models.Model):
-    class Meta:
-        app_label = "association"
-        db_table = "associations"
 
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
@@ -39,9 +36,6 @@ class Association(models.Model):
 
 
 class Group(models.Model):
-    class Meta:
-        app_label = "association"
-        db_table = "association_groups"
 
     members = models.ManyToManyField(User, blank=True)
 

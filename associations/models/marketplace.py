@@ -8,13 +8,8 @@ class Marketplace(models.Model):
         Provides an interface to lend objects to people and to follow who has what
     """
 
-    class Meta:
-        app_label = "association"
-        db_table = "association_marketplace"
-
 
 class Product(models.Model):
-
     class Meta:
         app_label = "association"
         db_table = "association_marketplace_product"
@@ -36,7 +31,6 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-
     class Meta:
         app_label = "association"
         db_table = "association_marketplace_order"
@@ -45,14 +39,15 @@ class Order(models.Model):
     buyer = models.OneToOneField(User, on_delete=models.CASCADE)
 
     quantity = models.PositiveIntegerField(default=1)
-    value = models.DecimalField(max_digits=5, decimal_places=2) # Total value should be remembered because the price might change
+    value = models.DecimalField(max_digits=5,
+                                decimal_places=2)  # Total value should be remembered because the price might change
     date = models.DateTimeField(auto_now=True)
 
     STATUS = (
-        ("ORDERED", "Commandé"),   # The buyer passed the purchase order
-        ("VALIDATED", "Validé"),   # The seller confirms it can honor the request
+        ("ORDERED", "Commandé"),  # The buyer passed the purchase order
+        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request
         ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then
-        ("CANCELLED", "Annulé"),   # The buyer cancels the order
+        ("CANCELLED", "Annulé"),  # The buyer cancels the order
         ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
     )
     status = models.CharField(choices=STATUS)

@@ -55,7 +55,8 @@ class User(AbstractBaseUser):
     phone = models.CharField(max_length=15, blank=True, verbose_name="numéro de téléphone")
 
     room = models.CharField(max_length=128, blank=True, verbose_name="numéro de chambre")  # null if the person is PAM
-    address = models.CharField(max_length=512, blank=True, help_text="adresse en dehors de la Meuh")  # null if the person is not PAM
+    address = models.CharField(max_length=512, blank=True,
+                               help_text="adresse en dehors de la Meuh")  # null if the person is not PAM
     city_of_origin = models.CharField(max_length=128, blank=True, help_text="ville d'origine")
 
     # Cursus
@@ -67,7 +68,8 @@ class User(AbstractBaseUser):
     # Life in Mines
     sports = models.CharField(max_length=512, blank=True)
     roommate = models.ManyToManyField('self', symmetrical=True, blank=True)
-    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, blank=True) # the Mines godparent
+    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False,
+                                         blank=True)  # the Mines godparent
 
     # Life on portail
 

@@ -11,10 +11,6 @@ class Election(models.Model):
         The election class allows to carry a vote. It should always guarantee the anonymity of the voter.
     """
 
-    class Meta:
-        app_label = "association"
-        db_table = "association_election"
-
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 
     registered_voters = models.ManyToManyField(User)  # People who are allowed to vote
@@ -28,19 +24,11 @@ class Election(models.Model):
 
 class VoteChoice(models.Model):
 
-    class Meta:
-        app_label = "association"
-        db_table = "association_vote_choice"
-
     name = models.CharField(max_length=200)
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
 
 
 class Vote(models.Model):
-
-    class Meta:
-        app_label = "association"
-        db_table = "association_vote"
 
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     choices = models.ManyToManyField(VoteChoice)
