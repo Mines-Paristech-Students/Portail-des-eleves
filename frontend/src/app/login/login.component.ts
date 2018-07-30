@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import {AppComponent} from "../app.component";
 declare var particlesJS: any;
 
 @Component({
@@ -16,9 +17,10 @@ export class LoginComponent implements OnInit {
     passwordText: string;
     passwordClass: string;
 
-    constructor(private _apiService: ApiService,
+    constructor(
+        private _apiService: ApiService,
         private router: Router,
-        private cookieService: CookieService) { }
+    ) { }
 
     ngOnInit() {
         this._apiService.checkAuthentication().subscribe(
@@ -26,9 +28,7 @@ export class LoginComponent implements OnInit {
                 // Already identified, navigate to the home page
                 this.router.navigate([''])
             },
-            err => {
-                console.log(err);
-            }
+            err => {}
         )
 
         particlesJS.load('particle', 'assets/particles.json');
@@ -38,19 +38,21 @@ export class LoginComponent implements OnInit {
         var valid = true;
         if (!this.loginText) {
             valid = false
-            this.loginClass = "uk-form-danger"
+            this.loginClass = "is-invalid"
         } else {
             this.loginClass = ""
         }
         if (!this.passwordText) {
             valid = false
-            this.passwordClass = "uk-form-danger"
+            this.passwordClass = "is-invalid"
         } else {
             this.passwordClass = ""
         }
         if (valid) {
-            this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
+
+            return this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
                 data => {
+                    console.log(data);
                     this.loginText = "";
                     this.passwordText = "";
                     this.router.navigate([''])

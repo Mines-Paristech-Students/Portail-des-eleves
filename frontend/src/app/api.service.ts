@@ -17,6 +17,48 @@ export class ApiService {
         this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest');
     }
 
+    get<T>(url: String){
+        return this.http.get<T>(
+            server + url,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    post<T>(url: String, body: any){
+        return this.http.post<T>(
+            server + url,
+            body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    put<T>(url: String, body: any){
+        return this.http.put<T>(
+            server + url,
+            body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    delete<T>(url: String){
+        return this.http.delete<T>(
+            server + url,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
     checkAuthentication() {
         return this.http.post(
             server + "auth/check/",
@@ -37,45 +79,12 @@ export class ApiService {
     }
 
     logout(){
-        this.cookieService.set("jwt_access_token", "");
         // Why simply deleting the cookie does not work ?
         // If you have an idea, please write me on Slack
+        this.cookieService.set("jwt_access_token", "");
     }
 
     getUser() {
-        return this.http.get("auth/get_user/")
-    }
-
-    getFiles(storageKey: string) {
-        return this.http.post(
-            "/api/v1/files",
-            { "StorageKey": storageKey },
-            { headers: this.header })
-    }
-
-    postFiles(filename: string, dowloadsLeft: number, expiresIn: number, rawData: string) {
-        return this.http.post(
-            "/api/v1/files/new",
-            {
-                "Filename": filename,
-                "DownloadsLeft": dowloadsLeft,
-                "ExpiresIn": expiresIn,
-                "RawData": rawData
-            },
-            { headers: this.header})
-    }
-
-    downloadFile(storageKey: string) {
-        return this.http.post(
-            "/api/v1/files/download",
-            { "StorageKey": storageKey },
-            { headers: this.header })
-    }
-
-    deleteFile(storageKey: string) {
-        return this.http.post(
-            "/api/v1/files/delete",
-            { "StorageKey": storageKey },
-            { headers: this.header })
+        return this.http.get(server + "auth/current_user/", {withCredentials: true})
     }
 }

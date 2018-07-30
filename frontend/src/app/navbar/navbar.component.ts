@@ -9,27 +9,35 @@ import {ApiService} from "../api.service";
 })
 export class NavbarComponent implements OnInit {
 
-    user: String ;
     showNavBarMenu : Boolean = false ;
+    user: any ;
 
     constructor(private _apiService: ApiService, private router: Router) { }
-
-    ngOnInit() {
-        // Check if the user is already connected
-        this._apiService.checkAuthentication().subscribe(
-            data => {
-                this.user = <String>data
-            },
-            err => {
-                console.log('HomeComponent')
-                console.log(err);
-                this.router.navigate(['/login'])
-            }
-        )
-    }
 
     logout(){
         this._apiService.logout();
         this.router.navigate(["/login"])
+    }
+
+    getPromotion(user){
+        return "P" + parseInt(user.pseudo);
+    }
+
+    ngOnInit() {
+        if(window.localStorage && localStorage.getItem("user")) {
+            this.user = JSON.parse(localStorage.getItem("user"));
+        } else {
+            this._apiService.checkAuthentication().subscribe(
+                data => {
+                    this.user = data;
+                    if(window.localStorage) {
+                        localStorage.setItem("user", JSON.stringify(data))
+                    }
+                },
+                err => {
+                    this.router.navigate(["/login"])
+                }
+            )
+        }
     }
 }

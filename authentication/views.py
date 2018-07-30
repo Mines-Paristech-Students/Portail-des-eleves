@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
-from authentication.serializers import TokenSerializer
+from authentication.models import User
+from authentication.serializers import TokenSerializer, UserSerializer
 from authentication.settings import api_settings
 from backend import settings
 
@@ -45,4 +46,11 @@ class CheckCredentials(generics.GenericAPIView):
     authentication_classes = [JWTCookieAuthentication]
 
     def post(self, request, *args, **kwargs):
-        return Response(str(request.user), status=status.HTTP_200_OK)
+        return Response({"id": request.user.id, "first_name": request.user.first_name, "last_name": request.user.last_name}, status=status.HTTP_200_OK)
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows user to be viewed or edited.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

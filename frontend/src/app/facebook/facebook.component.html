@@ -1,0 +1,16 @@
+<navbar></navbar>
+
+<div class="container">
+
+    <div *ngIf="users" class="row">
+        <div class="col-md-2 card m-2" *ngFor="let user of users">
+            <a routerLink="/user/{{ user.id }}">
+                <div class="card-body text-center ">
+                    <profile-photo [user]="user"></profile-photo>
+                    <p class="mt-2">{{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div>

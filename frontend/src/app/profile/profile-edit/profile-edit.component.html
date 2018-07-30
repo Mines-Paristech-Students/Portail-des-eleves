@@ -1,0 +1,58 @@
+<navbar></navbar>
+
+<div class="container mt-4">
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="user">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+
+                    <span class="avatar avatar-xl mr-3">{{ user.first_name[0] }}{{ user.last_name[0] }}</span> <!--// TODO: add real photo-->
+                    <h2 class="mt-2 mb-0">
+                        {{ user.first_name }}
+                        <span *ngIf="user.nickname"> "{{ user.nickname }}" </span>
+                        {{ user.last_name }}
+                    </h2>
+
+                    <p>
+                        <a routerLink="/user/{{ user.id }}/edit">Modifier mon profil</a> -
+                        <a routerLink="/monprofil/editer/motdepasse">Modifier mon mot de passe</a>
+                    </p>
+
+                </div>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Informations personnelles</div>
+                    </div>
+                    <div class="card-body">
+                            <strong><label for="nickname">Nickname : </label></strong>
+                            <input id="nickname" name="nickname" type="text" class="form-control" [(ngModel)]="user.nickname"><br>
+
+                            <strong><label for="phone">Téléphone : </label></strong>
+                            <input id="phone" name="phone" type="text" class="form-control" [(ngModel)]="user.phone"><br>
+
+                            <strong><label for="city_of_origin">Ville d'origine : </label></strong>
+                            <input id="city_of_origin" name="city_of_origin" type="text" class="form-control"[(ngModel)]="user.city_of_origin">
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" value="Sauvegarder">
+
+            </form>
+
+
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
