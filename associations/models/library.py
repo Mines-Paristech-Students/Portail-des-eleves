@@ -21,7 +21,7 @@ class Object(models.Model):
     number_left = models.PositiveIntegerField(default=1)
     still_in_the_catalogue = models.BooleanField(default=True)
 
-    # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for biéro
+    # Can someone lend it on the site ?
     orderable_online = models.BooleanField(default=True)
 
 
@@ -38,10 +38,10 @@ class Loan(models.Model):
     real_return_date = models.DateTimeField(auto_now=False, null=True)
 
     STATUS = (
-        ("ORDERED", "Commandé"),  # The buyer passed the purchase order
-        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request
+        ("ORDERED", "Commandé"),  # The person asked for the loan
+        ("VALIDATED", "Validé"),  # The owner confirms it can honor the request
         ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then
-        ("CANCELLED", "Annulé"),  # The buyer cancels the order
-        ("RETURNED", "Rendu"),  # The buyer cancels the order
+        ("CANCELLED", "Annulé"),  # The person cancels the order
+        ("RETURNED", "Rendu"),  # The loan is finished
     )
     status = models.CharField(choices=STATUS)
