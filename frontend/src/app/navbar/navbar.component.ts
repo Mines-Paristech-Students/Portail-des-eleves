@@ -14,15 +14,6 @@ export class NavbarComponent implements OnInit {
 
     constructor(private _apiService: ApiService, private router: Router) { }
 
-    logout(){
-        this._apiService.logout();
-        this.router.navigate(["/login"])
-    }
-
-    getPromotion(user){
-        return "P" + parseInt(user.pseudo);
-    }
-
     ngOnInit() {
         if(window.localStorage && localStorage.getItem("user")) {
             this.user = JSON.parse(localStorage.getItem("user"));
@@ -39,5 +30,14 @@ export class NavbarComponent implements OnInit {
                 }
             )
         }
+    }
+	
+	logout(){
+        this._apiService.logout();
+        this.router.navigate(["/login"])
+    }
+
+    getPromotion(user){
+        return "P" + parseInt(user.pseudo);
     }
 }
