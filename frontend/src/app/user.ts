@@ -27,5 +27,7 @@ export class User {
     is_active?: boolean;
     is_admin?: boolean;
 
-
+    getPromotion()  {
+        return parseInt(this.id);
+    }
 }
