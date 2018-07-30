@@ -3,6 +3,7 @@ from django.utils.text import slugify
 
 from associations.models.marketplace import Marketplace
 from associations.models.library import Library
+from associations.models.publication import Publication
 from authentication.models import User
 
 
@@ -15,6 +16,7 @@ class Association(models.Model):
 
     market = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING)
     library = models.OneToOneField(Library, on_delete=models.DO_NOTHING)
+    publication = models.OneToOneField(Publication, on_delete=models.DO_NOTHING)
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
