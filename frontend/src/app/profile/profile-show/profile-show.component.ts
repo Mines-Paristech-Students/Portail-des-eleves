@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from "../api.service";
+import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  templateUrl: './profile-show.component.html',
+  styleUrls: ['./profile-show.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileShowComponent implements OnInit {
 
   user: any ;
   error: any ;

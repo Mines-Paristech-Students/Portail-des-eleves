@@ -10,8 +10,10 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { ProfileComponent } from './profile/profile.component';
-import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+
+import { ProfileShowComponent } from './profile/profile-show/profile-show.component';
+import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
+
 import { PasswordEditComponent } from './password-edit/password-edit.component';
 import { FacebookComponent } from './facebook/facebook.component';
 // alternatively if you only need to include a subset of languages
@@ -27,7 +29,7 @@ export function highlightJsFactory() {
     HomeComponent,
     LoginComponent,
     NavbarComponent,
-    ProfileComponent,
+    ProfileShowComponent,
     ProfileEditComponent,
     PasswordEditComponent,
     FacebookComponent,
