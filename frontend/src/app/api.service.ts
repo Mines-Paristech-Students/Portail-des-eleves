@@ -73,7 +73,7 @@ export class ApiService {
     authenticate(login: string, password: string) {
         return this.http.post(
             server + "auth/",
-            {"pseudo": login, "password": password},
+            {"id": login, "password": password},
             {withCredentials: true}
         );
     }
