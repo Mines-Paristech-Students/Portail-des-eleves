@@ -16,3 +16,5 @@ class Event(models.Model):
 
     starts_at = models.DateTimeField(auto_now_add=True)
     ends_at = models.DateTimeField(auto_now_add=True)
+
+    place = models.TextField()

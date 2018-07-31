@@ -6,10 +6,13 @@ import { ProfileShowComponent } from "./profile/profile-show/profile-show.compon
 import { ProfileEditComponent} from "./profile/profile-edit/profile-edit.component";
 import {PasswordEditComponent} from "./password-edit/password-edit.component";
 import {FacebookComponent} from "./facebook/facebook.component";
+import { AllAssociationsComponent } from './associations/all-associations/all-associations.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },
+	
+	{ path: 'associations', component: AllAssociationsComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

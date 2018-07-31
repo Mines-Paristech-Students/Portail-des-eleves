@@ -1,6 +1,3 @@
-import datetime
-
-from django.utils.timezone import now
 from django.db import models
 
 from associations.models.association import Association
@@ -11,7 +8,8 @@ class News(models.Model):
     id = models.AutoField(primary_key=True)
 
     title = models.CharField(max_length=200, blank=True, null=True, default=None)
-    date = models.DateTimeField(default=now)
+
+    date = models.DateTimeField(auto_now = True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)

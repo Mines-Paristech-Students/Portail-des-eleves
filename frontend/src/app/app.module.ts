@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { AllAssociationsComponent } from './associations/all-associations/all-associations.component';
 
 import { ProfileShowComponent } from './profile/profile-show/profile-show.component';
 import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
@@ -17,6 +18,9 @@ import { ProfileEditComponent } from './profile/profile-edit/profile-edit.compon
 import { PasswordEditComponent } from './password-edit/password-edit.component';
 import { FacebookComponent } from './facebook/facebook.component';
 import { PhotoComponent } from './profile/photo/photo.component';
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -35,12 +39,14 @@ export function highlightJsFactory() {
     PasswordEditComponent,
     FacebookComponent,
     PhotoComponent,
+    AllAssociationsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+	BsDropdownModule.forRoot()
   ],
   providers: [ApiService, CookieService],
   bootstrap: [AppComponent]

@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     )
 
     nickname = models.CharField(max_length=128, blank=True, default="")
-    birthday = models.DateField(null=True, verbose_name="date de naissance")
+    date_of_birth = models.DateField(null=True, verbose_name="date de naissance")
 
     # Contact the person
     phone = models.CharField(max_length=15, blank=True, verbose_name="numéro de téléphone")

@@ -11,17 +11,9 @@ export class NavbarComponent implements OnInit {
 
     showNavBarMenu : Boolean = false ;
     user: any ;
+	list_associations_short : any[];
 
     constructor(private _apiService: ApiService, private router: Router) { }
-
-    logout(){
-        this._apiService.logout();
-        this.router.navigate(["/login"])
-    }
-
-    getPromotion(user){
-        return "P" + parseInt(user.pseudo);
-    }
 
     ngOnInit() {
         if(window.localStorage && localStorage.getItem("user")) {
@@ -39,5 +31,34 @@ export class NavbarComponent implements OnInit {
                 }
             )
         }
+		
+		this._apiService.list_associations(10).subscribe(
+			data=> {
+				this.list_associations_short = <any []>data;
+			}
+		);
     }
+	
+	logout(){
+        this._apiService.logout();
+        this.router.navigate(["/login"])
+    }
+
+    getPromotion(user){
+        return "P" + parseInt(user.pseudo);
+    }
+	
+	isHome(){
+		return this.router.url === '/';
+	}
+	
+	isAssociations(){
+		var associationsURL = ["/associations"];
+		return associationsURL.includes(this.router.url);
+	}
+	
+	isUser(){
+		var userURL = ["/users"];
+		return userURL.includes(this.router.url);
+	}		
 }
