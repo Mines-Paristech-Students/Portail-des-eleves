@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit {
 
     showNavBarMenu : Boolean = false ;
     user: any ;
+	list_associations_short : any[];
 
     constructor(private _apiService: ApiService, private router: Router) { }
 
@@ -30,6 +31,12 @@ export class NavbarComponent implements OnInit {
                 }
             )
         }
+		
+		this._apiService.list_associations(10).subscribe(
+			data=> {
+				this.list_associations_short = <any []>data;
+			}
+		);
     }
 	
 	logout(){
