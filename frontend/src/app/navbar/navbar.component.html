@@ -41,6 +41,16 @@
 						<a *ngIf="! isHome()" routerLink="/" class="nav-link"><i class="fe fe-home"></i>Accueil</a>
                         <a *ngIf="isHome()" routerLink="/" class="nav-link active"><i class="fe fe-home"></i>Accueil</a>
                     </li>
+										
+					<li class="nav-item dropdown" dropdown>
+						<a *ngIf="! isAssociations()" dropdownToggle class="nav-link"><i class="fe fe-power"></i>Associations</a>
+						<a *ngIf="isAssociations()" dropdownToggle class="nav-link active"><i class="fe fe-power"></i>Associations</a>
+						<div *dropdownMenu class="dropdown-menu dropdown-menu-arrow">
+								<a *ngFor="let association of list_associations_short" class="dropdown-item" href="#">{{association.name}}</a>
+								<div class="dropdown-divider"></div>
+								<a routerLink="associations" class="dropdown-item">Toutes les assos</a>
+						</div>
+                    </li>
                     <li class="nav-item">
 						<a *ngIf="! isUser()" routerLink="/users" class="nav-link"><i class="fe fe-users"></i>Trombinoscope</a>
                         <a *ngIf="isUser()" routerLink="/users" class="nav-link active"><i class="fe fe-users"></i>Trombinoscope</a>

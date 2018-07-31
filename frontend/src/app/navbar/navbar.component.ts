@@ -52,6 +52,11 @@ export class NavbarComponent implements OnInit {
 		return this.router.url === '/';
 	}
 	
+	isAssociations(){
+		var associationsURL = ["/associations"];
+		return associationsURL.includes(this.router.url);
+	}
+	
 	isUser(){
 		var userURL = ["/users"];
 		return userURL.includes(this.router.url);
