@@ -5,6 +5,7 @@ from authentication.models import User
 
 
 class Event(models.Model):
+    id = models.AutoField(primary_key=True)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 

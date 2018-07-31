@@ -8,6 +8,8 @@ from authentication.models import User
 
 class Association(models.Model):
 
+    id = models.AutoField(primary_key=True)
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
 
@@ -36,6 +38,7 @@ class Association(models.Model):
 
 
 class Group(models.Model):
+    id = models.AutoField(primary_key=True)
 
     members = models.ManyToManyField(User, blank=True)
 

@@ -8,11 +8,10 @@ class Marketplace(models.Model):
         Provides an interface to lend objects to people and to follow who has what
     """
 
+    id = models.AutoField(primary_key=True)
 
 class Product(models.Model):
-    class Meta:
-        app_label = "association"
-        db_table = "association_marketplace_product"
+    id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
@@ -31,9 +30,7 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    class Meta:
-        app_label = "association"
-        db_table = "association_marketplace_order"
+    id = models.AutoField(primary_key=True)
 
     product = models.OneToOneField(Product, on_delete=models.CASCADE)
     buyer = models.OneToOneField(User, on_delete=models.CASCADE)

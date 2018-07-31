@@ -11,10 +11,12 @@ class Election(models.Model):
         The election class allows to carry a vote. It should always guarantee the anonymity of the voter.
     """
 
+    id = models.AutoField(primary_key=True)
+
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 
-    registered_voters = models.ManyToManyField(User)  # People who are allowed to vote
-    voters = models.ManyToManyField(User)  # People who have voted already
+    registered_voters = models.ManyToManyField(User, related_name="registered_for_election")  # People who are allowed to vote
+    voters = models.ManyToManyField(User, related_name="voted_in")  # People who have voted already
 
     starts_at = models.DateTimeField(auto_now_add=True)
     ends_at = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(days=1))
@@ -23,12 +25,14 @@ class Election(models.Model):
 
 
 class VoteChoice(models.Model):
+    id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
 
 
 class Vote(models.Model):
+    id = models.AutoField(primary_key=True)
 
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     choices = models.ManyToManyField(VoteChoice)
