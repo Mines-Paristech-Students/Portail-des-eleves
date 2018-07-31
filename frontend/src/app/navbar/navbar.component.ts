@@ -40,4 +40,13 @@ export class NavbarComponent implements OnInit {
     getPromotion(user){
         return "P" + parseInt(user.pseudo);
     }
+	
+	isHome(){
+		return this.router.url === '/';
+	}
+	
+	isUser(){
+		var userURL = ["/users"];
+		return userURL.includes(this.router.url);
+	}		
 }
