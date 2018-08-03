@@ -15,13 +15,13 @@
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
                         <a class="dropdown-item" *ngIf="user" routerLink="/user/{{ user.pseudo }}">
-                            <i class="dropdown-icon fe fe-user"></i> Profile
+                            <i class="dropdown-icon fe fe-user"></i> Profil
                         </a>
                         <a class="dropdown-item" href="#">
-                            <i class="dropdown-icon fe fe-settings"></i> Parmètres
+                            <i class="dropdown-icon fe fe-settings"></i> Paramètres
                         </a>
                         <div class="dropdown-item" (click)="logout()">
-                            <i class="dropdown-icon fe fe-log-out"></i> Déconnection
+                            <i class="dropdown-icon fe fe-log-out"></i> Déconnexion
                         </div>
                     </div>
                 </div>
