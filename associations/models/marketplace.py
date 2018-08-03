@@ -47,4 +47,4 @@ class Order(models.Model):
         ("CANCELLED", "Annulé"),  # The buyer cancels the order
         ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
     )
-    status = models.CharField(choices=STATUS)
+    status = models.CharField(choices=STATUS,max_length=200)

@@ -46,4 +46,4 @@ class Loan(models.Model):
         ("CANCELLED", "Annulé"),  # The person cancels the order
         ("RETURNED", "Rendu"),  # The loan is finished
     )
-    status = models.CharField(choices=STATUS)
+    status = models.CharField(choices=STATUS, max_length=200)
