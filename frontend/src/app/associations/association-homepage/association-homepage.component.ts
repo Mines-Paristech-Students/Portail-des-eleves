@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 
 @Component({
     selector: 'app-association-show',
-    templateUrl: './association-show.component.html',
-    styleUrls: ['./association-show.component.scss']
+    templateUrl: './association-homepage.component.html',
+    styleUrls: ['./association-homepage.component.scss']
 })
-export class AssociationShowComponent implements OnInit {
+export class AssociationHomepageComponent implements OnInit {
 
     association: any ;
 
     user: any ;
   error: any ;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) { }
+  constructor(private api: ApiService, private route: ActivatedRoute){}
 
   ngOnInit() {
       const id = this.route.snapshot.paramMap.get('id');
@@ -24,6 +24,7 @@ export class AssociationShowComponent implements OnInit {
               this.error = error
               console.log(error)
       })
+
   }
 
 }
