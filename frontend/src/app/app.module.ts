@@ -20,6 +20,7 @@ import { FacebookComponent } from './facebook/facebook.component';
 import { PhotoComponent } from './profile/photo/photo.component';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AssociationShowComponent } from './associations/association-show/association-show.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -40,6 +41,7 @@ export function highlightJsFactory() {
     FacebookComponent,
     PhotoComponent,
     AllAssociationsComponent,
+    AssociationShowComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,47 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association">
+        <div class="row">
+            <div class="col-md-3">
+                <h1 class="page-title mb-5">{{ association.name }}</h1>
+                <div>
+                    <div class="list-group list-group-transparent mb-0">
+                        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+                            <span class="icon mr-3"><i class="fe fe-home"></i></span>Accueil
+                        </a>
+                        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+                            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>Page 1
+                        </a>
+                        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+                            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>Page 2
+                        </a>
+                        <hr>
+                        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+                            <span class="icon mr-3"><i class="fe fe-shopping-cart"></i></span>Magasin
+                        </a>
+                        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+                            <span class="icon mr-3"><i class="fe fe-book"></i></span>Bibliothèque
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Accueil</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque ea modi mollitia qui sequi, sint suscipit. Atque, beatae deleniti enim, error eum fugit laborum, nulla possimus rem repellendus sequi tempore.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
