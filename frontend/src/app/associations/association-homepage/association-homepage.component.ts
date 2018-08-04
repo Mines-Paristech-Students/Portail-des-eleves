@@ -22,7 +22,7 @@ export class AssociationHomepageComponent implements OnInit {
 		this.route.params.subscribe((params:Params) => {
         this.id = params['id'];
         this.customInit();
-		}
+		});
     }
 	
 	customInit(){
