@@ -7,13 +7,30 @@
                 <association-sidebar [association]="association"></association-sidebar>
             </div>
             <div class="col-md-9">
-                <h1 class="page-title mb-6">{{ page.title }}</h1>
-                <div class="card">
-                    <div class="card-body">
-                        {{ page.text }}
+                <div class="page-header mb-5">
+                    <h1 class="page-title">
+                        {{ page.title }}
+                        <span *ngIf="editing">(édition)</span>
+                    </h1>
+                    <div class="page-options d-flex">
+                        <a *ngIf="!editing" (click)="editing = true">Editer</a>
                     </div>
                 </div>
 
+                <div *ngIf="!editing">
+                    <div class="card">
+                        <div class="card-body" [innerHtml]="page.text"></div>
+                    </div>
+                </div>
+
+                <div *ngIf="editing">
+
+                    <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
+
+                    <button type="button" class="mr-1 btn btn-success" (click)="save()">Enregistrer</button>
+                    <button type="button" class="mr-1 btn btn-success" (click)="save() ; editing = false">Enregistrer et terminer</button>
+                </div>
+                
             </div>
         </div>
     </div>

@@ -11,8 +11,14 @@ export class AssociationPageComponent implements OnInit {
 
     association: any ;
     page: any;
-
     error: any ;
+
+    editing = false ;
+
+    froalaOptions = {
+        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
+    };
+
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
 
@@ -36,6 +42,10 @@ export class AssociationPageComponent implements OnInit {
             }
         );
 
+    }
+
+    save(){
+        console.log(this.page.text)
     }
 
 }
