@@ -1,0 +1,1 @@
+[  {    "model": "associations.association",    "pk": "bde",    "fields": {      "name": "BDE",      "rank": 1    }  },  {    "model": "associations.association",    "pk": "biero",    "fields": {      "name": "Biéro",      "rank": 2    }  }]

@@ -19,7 +19,8 @@ class Election(models.Model):
     voters = models.ManyToManyField(User, related_name="has_voted")  # People who have voted already
 
     starts_at = models.DateTimeField(auto_now_add=True)
-    ends_at = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(days=1))
+    ends_at = models.DateTimeField(auto_now_add=True)
+
 
     max_choice_number = models.PositiveIntegerField(default=1)
 

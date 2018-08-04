@@ -82,7 +82,7 @@ export class ApiService {
         // Why simply deleting the cookie does not work ?
         // If you have an idea, please write me on Slack
         this.cookieService.set("jwt_access_token", "");
-        localStorage.removeItem("user")
+        localStorage.removeItem("user");
     }
 
     getUser() {
