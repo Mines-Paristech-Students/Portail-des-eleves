@@ -50,7 +50,8 @@ export class NavbarComponent implements OnInit {
     }
 
     isActive(url){
-        return [url].includes(this.router.url);
+		var regex = new RegExp(url);
+        return regex.test(this.router.url);
     }
 
 }
