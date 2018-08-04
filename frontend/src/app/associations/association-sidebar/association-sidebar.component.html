@@ -1,0 +1,18 @@
+<h1 class="page-title mb-5">{{ association.name }}</h1>
+<div>
+    <div class="list-group list-group-transparent mb-0">
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/association/{{ association.id }}">
+            <span class="icon mr-3"><i class="fe fe-home"></i></span>Accueil
+        </a>
+        <a *ngFor="let page of association.pages" class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/association/{{ association.id }}/page/{{ page.id }}">
+            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>{{ page.title }}
+        </a>
+        <hr>
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-shopping-cart"></i></span>Magasin
+        </a>
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-book"></i></span>Bibliothèque
+        </a>
+    </div>
+</div>

@@ -1,9 +1,11 @@
 from django.db import models
 
+
 class Publication(models.Model):
     """
         Provides an interface to publish files on a regular basis
     """
+
 
 class Edition(models.Model):
     class Meta:

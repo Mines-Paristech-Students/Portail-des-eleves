@@ -1,1 +1,61 @@
-[  {    "model": "associations.association",    "pk": "bde",    "fields": {      "name": "BDE",      "rank": 1    }  },  {    "model": "associations.association",    "pk": "biero",    "fields": {      "name": "Biéro",      "rank": 2    }  }]
+[
+  {
+    "model": "associations.association",
+    "pk": "bde",
+    "fields": {
+      "name": "BDE",
+      "rank": 1
+    }
+  },
+  {
+    "model": "associations.page",
+    "pk": "4",
+    "fields": {
+      "title": "La tarte aux pommes",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium atque eos fugiat fugit laudantium magnam molestiae, odit omnis, quam reprehenderit, repudiandae suscipit ullam voluptatem? Consequuntur eius eveniet optio perferendis quisquam! Alias laborum maiores nemo optio perspiciatis porro quaerat sapiente sequi ut voluptatum? Cupiditate deserunt error hic illum impedit iusto molestiae placeat quasi quidem quis quod recusandae repellat sint, veniam voluptates.",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.news",
+    "pk": "1",
+    "fields": {
+      "title": "Amphi La Calchemise",
+      "association": "bde",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.",
+      "date": "2018-08-18T13:19:37+00:00",
+      "author": "17bocquet"
+    }
+  },
+  {
+    "model": "associations.news",
+    "pk": "2",
+    "fields": {
+      "title": "Enorme BALM",
+      "association": "bde",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.",
+      "date": "2018-08-18T13:19:37+00:00",
+      "author": "17bocquet"
+    }
+  },
+  {
+    "model": "associations.association",
+    "pk": "biero",
+    "fields": {
+      "name": "Biéro",
+      "rank": 2
+    }
+  },
+  {
+    "model": "associations.news",
+    "pk": "3",
+    "fields": {
+      "title": "Biérexecption",
+      "association": "biero",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.",
+      "date": "2018-08-18T13:19:37+00:00",
+      "author": "17bocquet"
+    }
+  }
+
+]

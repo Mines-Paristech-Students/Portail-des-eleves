@@ -1,0 +1,27 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association && page">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+            <div class="col-md-9">
+                <h1 class="page-title mb-6">{{ page.title }}</h1>
+                <div class="card">
+                    <div class="card-body">
+                        {{ page.text }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
+

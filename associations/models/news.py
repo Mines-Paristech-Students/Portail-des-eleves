@@ -9,7 +9,7 @@ class News(models.Model):
 
     title = models.CharField(max_length=200, blank=True, null=True, default=None)
 
-    date = models.DateTimeField(auto_now = True)
+    date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)

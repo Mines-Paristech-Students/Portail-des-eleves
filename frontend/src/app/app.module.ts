@@ -21,6 +21,8 @@ import { PhotoComponent } from './profile/photo/photo.component';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AssociationHomepageComponent } from './associations/association-homepage/association-homepage.component';
+import { AssociationSidebarComponent } from './associations/association-sidebar/association-sidebar.component';
+import { AssociationPageComponent } from './associations/association-page/association-page.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -42,6 +44,8 @@ export function highlightJsFactory() {
     PhotoComponent,
     AllAssociationsComponent,
     AssociationHomepageComponent,
+    AssociationSidebarComponent,
+    AssociationPageComponent,
   ],
   imports: [
     BrowserModule,
