@@ -1,10 +1,19 @@
 [
   {
+    "model": "associations.group",
+    "pk": "1",
+    "fields": {
+      "members": ["15veaux"],
+      "role": "President"
+    }
+  },
+  {
     "model": "associations.association",
     "pk": "bde",
     "fields": {
       "name": "BDE",
-      "rank": 1
+      "rank": 1,
+	  "groups" : [1]
     }
   },
   {

@@ -1,0 +1,33 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+            <div class="col-md-9">
+                <div class="page-header mb-5">
+                    <h1 class="page-title">
+						Membres de l'associations
+                    </h1>
+                </div>
+				
+				<div class="card">
+					<div class="card-body">
+						<p *ngFor="let member of members">
+							<a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
+						</p>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
+

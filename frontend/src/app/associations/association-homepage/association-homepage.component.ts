@@ -19,9 +19,10 @@ export class AssociationHomepageComponent implements OnInit {
     constructor(private api: ApiService, private route: ActivatedRoute){}
 
     ngOnInit() {
-		this.route.params.subscribe((params:Params) => {
-        this.id = params['id'];
-        this.customInit();
+		this.route.params.subscribe(
+		(params) => {
+			this.id = params['id'];
+			this.customInit();
 		});
     }
 	
@@ -34,6 +35,7 @@ export class AssociationHomepageComponent implements OnInit {
                 console.log(error);
             }
         );
+		
 
         this.api.get('rest/news/?association=' + this.id).subscribe(
             news => this.news = news,
