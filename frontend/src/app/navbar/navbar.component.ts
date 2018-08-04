@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
             )
         }
 		
-		this._apiService.list_associations(10).subscribe(
+		this._apiService.get("rest/associations/").subscribe(
 			data=> {
 				this.list_associations_short = <any []>data;
 			}

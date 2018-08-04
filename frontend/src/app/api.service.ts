@@ -88,14 +88,5 @@ export class ApiService {
     getUser() {
         return this.http.get(server + "auth/current_user/", {withCredentials: true})
     }
-	
-	list_associations(nb: number) {
-        return this.http.get(
-            server + "associations/list/" + nb,
-            {
-                headers: this.header,
-                withCredentials: true
-            }
-        );
-	}
+
 }

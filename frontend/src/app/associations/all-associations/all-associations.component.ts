@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
+import {User} from "../../user";
 
 @Component({
   selector: 'app-all-associations',
@@ -8,17 +9,14 @@ import {ApiService} from "../../api.service";
 })
 export class AllAssociationsComponent implements OnInit {
 
-	list_associations_long : any[]
+	associations : any[];
 
 	constructor(private _apiService: ApiService) { }
 
 	ngOnInit() {
-		this._apiService.list_associations(0).subscribe(
-			data=> {
-				this.list_associations_long = <any []>data;
-				console.log(data);
-			}
-		);
+		this._apiService.get<any []>("rest/associations/").subscribe(res => {
+            this.associations = res
+        })
 	}
 
 }

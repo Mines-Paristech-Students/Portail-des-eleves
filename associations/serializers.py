@@ -3,7 +3,7 @@ from rest_framework import serializers
 from associations.models.association import Association
 
 
-class AssociationsListSerializer(serializers.ModelSerializer):
+class AssociationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
         fields = ('id', 'name')
