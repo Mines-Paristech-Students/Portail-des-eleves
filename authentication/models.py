@@ -5,20 +5,20 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, id, first_name, last_name, email, password, date_of_birth):
+    def create_user(self, id, first_name, last_name, email, password, birthday):
         """
         Creates and saves a User
         """
-        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=False)
+        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=False)
 
-    def create_superuser(self, id, first_name, last_name, email, password, date_of_birth):
+    def create_superuser(self, id, first_name, last_name, email, password, birthday):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
-        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=True)
+        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=True)
 
-    def _create_user(self, id, first_name, last_name, email, password, date_of_birth, is_admin):
+    def _create_user(self, id, first_name, last_name, email, password, birthday, is_admin):
         """
         Creates and saves a User
         """
@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            birthday=birthday,
         )
 
         user.set_password(password)
@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     )
 
     nickname = models.CharField(max_length=128, blank=True, default="")
-    date_of_birth = models.DateField(null=True, verbose_name="date de naissance")
+    birthday = models.DateField(null=True, verbose_name="date de naissance")
 
     # Contact the person
     phone = models.CharField(max_length=15, blank=True, verbose_name="numéro de téléphone")
@@ -79,7 +79,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'id'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'date_of_birth']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'birthday']
 
     def __str__(self):
         return self.id

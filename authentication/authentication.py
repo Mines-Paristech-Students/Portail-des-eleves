@@ -10,6 +10,7 @@ from authentication.exceptions import TokenError
 from authentication.settings import api_settings
 from authentication.token import Token
 
+
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
     A Django rest authentication class that will:
@@ -30,12 +31,10 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         validated_token = self.get_validated_token(raw_token)
         return self.get_user(validated_token), None
 
-
-
     def validate_csrf_header(self, request):
-        return True # Leave it that what in dev so we can check API from the browser
-        #header = request.META.get('HTTP_X_REQUESTED_WITH')
-        #return header == 'XMLHttpRequest'
+        return True  # Leave it that what in dev so we can check API from the browser
+        # header = request.META.get('HTTP_X_REQUESTED_WITH')
+        # return header == 'XMLHttpRequest'
 
     def get_validated_token(self, raw_token):
         """
