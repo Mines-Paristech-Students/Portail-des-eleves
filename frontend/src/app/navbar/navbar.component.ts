@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit {
     }
 
     getPromotion(user){
-        return "P" + parseInt(user.pseudo);
+        return "P" + parseInt(user.id);
     }
 	
 	isHome(){
