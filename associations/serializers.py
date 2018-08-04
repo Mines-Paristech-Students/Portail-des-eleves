@@ -21,13 +21,22 @@ class PageShortSerializer(serializers.ModelSerializer):
         model = Page
         fields = ("id", "title")
 
+class AssociationsShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        fields = ('id', 'name', 'logo')
+
+    def create(self, validated_data):
+        instance = Association.objects.create(**validated_data)
+        return instance
+
 
 class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True)
 
     class Meta:
         model = Association
-        fields = ('id', 'name', "pages")
+        fields = ('id', 'name', 'logo', 'pages')
 
     def create(self, validated_data):
         instance = Association.objects.create(**validated_data)
