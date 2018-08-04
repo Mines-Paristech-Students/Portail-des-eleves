@@ -5,6 +5,8 @@ import { ApiService } from './api.service';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientModule } from '@angular/common/http';
 
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -52,7 +54,8 @@ export function highlightJsFactory() {
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-	BsDropdownModule.forRoot()
+	BsDropdownModule.forRoot(),
+    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   providers: [ApiService, CookieService],
   bootstrap: [AppComponent]
