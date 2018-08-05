@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-association-page',
@@ -11,16 +11,19 @@ export class AssociationPageComponent implements OnInit {
 
     association: any ;
     page: any;
+
     error: any ;
+    status = "";
 
     editing = false ;
 
     froalaOptions = {
-        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
+        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "wordPaste"],
+        //pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
     };
 
 
-    constructor(private api: ApiService, private route: ActivatedRoute){}
+    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router){}
 
     ngOnInit() {
         const association_id = this.route.snapshot.paramMap.get('association_id');
@@ -36,16 +39,21 @@ export class AssociationPageComponent implements OnInit {
 
         this.api.get('rest/pages/' + page_id + "/").subscribe(
             page => this.page = page,
-            error => {
-                this.error = error;
-                console.log(error);
-            }
+            error => this.error = error.message
         );
 
     }
 
     save(){
-        console.log(this.page.text)
+        this.api.put("rest/pages/" + this.page.id + "/", this.page).subscribe(
+            res => {
+                this.status = "<span class='text-success'>Modifications enregistrées</span>" ;
+                this.association.pages.filter(p => p.id == this.page.id)[0].title = this.page.title ;
+            },
+            err => this.status = "<span class='text-danger'>" + err.message + "</span>"
+        );
+    }
+
     }
 
 }
