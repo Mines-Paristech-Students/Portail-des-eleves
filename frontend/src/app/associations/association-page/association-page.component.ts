@@ -54,6 +54,13 @@ export class AssociationPageComponent implements OnInit {
         );
     }
 
+    delete() {
+        if(alert("Supprimer la page ?")) {
+            this.api.delete("rest/pages/" + this.page.id + "/").subscribe(
+                res => this.router.navigate(["association/" + this.association.id]),
+                err => this.status = "<span class='text-danger'>" + err.message + "</span>"
+            )
+        }
     }
 
 }
