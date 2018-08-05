@@ -13,27 +13,37 @@ export class AssociationHomepageComponent implements OnInit {
     news: any;
 
     error: any ;
+	
+	id : any;
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
 
     ngOnInit() {
-        const id = this.route.snapshot.paramMap.get('id');
-        this.api.get("rest/associations/" + id + "/").subscribe(
+		this.route.params.subscribe(
+		(params) => {
+			this.id = params['id'];
+			this.customInit();
+		});
+    }
+	
+	customInit(){
+		console.log(this.id);
+        this.api.get("rest/association/" + this.id + "/").subscribe(
             association => this.association = association,
             error => {
                 this.error = error;
                 console.log(error);
             }
         );
+		
 
-        this.api.get('rest/news/?association=' + id).subscribe(
+        this.api.get('rest/news/?association=' + this.id).subscribe(
             news => this.news = news,
             error => {
                 this.error = error;
                 console.log(error);
             }
         );
-
-    }
+	}
 
 }

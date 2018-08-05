@@ -17,6 +17,10 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "sports", "roommate", "minesparent"
         )
 
+class UserShortSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name')
 
 class TokenSerializer(serializers.Serializer):
     username_field = get_user_model().USERNAME_FIELD

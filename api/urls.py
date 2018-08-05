@@ -3,11 +3,12 @@ from django.urls import path, include
 from rest_framework import routers
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet
-from associations.views import AssociationViewSet, PageViewSet, NewsViewSet
+from associations.views import AssociationListViewSet, AssociationViewSet, PageViewSet, NewsViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'associations', AssociationViewSet)
+router.register(r'associations', AssociationListViewSet)
+router.register(r'association', AssociationViewSet)
 router.register(r'pages', PageViewSet)
 router.register(r'news', NewsViewSet)
 

@@ -8,10 +8,13 @@
             <span class="icon mr-3"><i class="fe fe-file-text"></i></span>{{ page.title }}
         </a>
         <hr>
-        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+		<a class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/association/{{ association.id }}/members">
+			<span class="icon mr-3"><i class="fe fe-users"></i></span>Membres de l'association
+		</a>
+        <a *ngIf="association.market" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
             <span class="icon mr-3"><i class="fe fe-shopping-cart"></i></span>Magasin
         </a>
-        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+        <a *ngIf="association.library" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
             <span class="icon mr-3"><i class="fe fe-book"></i></span>Bibliothèque
         </a>
     </div>

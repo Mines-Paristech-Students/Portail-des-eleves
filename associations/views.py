@@ -2,12 +2,19 @@ from rest_framework import viewsets
 
 from associations.models import Page, News
 from associations.models.association import Association
-from associations.serializers import AssociationsSerializer, NewsSerializer
+from associations.serializers import AssociationsShortSerializer, AssociationsSerializer, NewsSerializer
 
+
+class AssociationListViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that shows a list of associations
+    """
+    queryset = Association.objects.all()
+    serializer_class = AssociationsShortSerializer
 
 class AssociationViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows user to be viewed or edited.
+    API endpoint that allows association to be viewed or edited.
     """
     queryset = Association.objects.all()
     serializer_class = AssociationsSerializer

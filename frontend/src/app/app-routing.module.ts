@@ -8,6 +8,7 @@ import { PasswordEditComponent } from "./password-edit/password-edit.component";
 import { FacebookComponent } from "./facebook/facebook.component";
 import { AllAssociationsComponent } from './associations/all-associations/all-associations.component';
 import { AssociationHomepageComponent } from "./associations/association-homepage/association-homepage.component";
+import { AssociationMembersComponent } from "./associations/association-members/association-members.component";
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
 	
 	{ path: 'associations', component: AllAssociationsComponent},
 	{ path: 'association/:id', component: AssociationHomepageComponent},
+	{ path: 'association/:id/members', component: AssociationMembersComponent},
 	{ path: 'association/:association_id/page/:page_id', component: AssociationPageComponent},
 
     { path: 'users', component: FacebookComponent },

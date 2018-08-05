@@ -11,6 +11,7 @@ class Group(models.Model):
     id = models.AutoField(primary_key=True)
 
     members = models.ManyToManyField(User, blank=True)
+    role = models.CharField(max_length=200, null=True)
 
     is_admin_group = models.BooleanField(default=False)
 
