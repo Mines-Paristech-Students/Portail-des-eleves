@@ -29,7 +29,7 @@ export class AssociationPageComponent implements OnInit {
         const association_id = this.route.snapshot.paramMap.get('association_id');
         const page_id = this.route.snapshot.paramMap.get('page_id');
 
-        this.api.get("rest/association/" + association_id + "/").subscribe(
+        this.api.get("rest/associations/" + association_id + "/").subscribe(
             association => this.association = association,
             error => {
                 this.error = error;
@@ -57,7 +57,7 @@ export class AssociationPageComponent implements OnInit {
     delete() {
         if(alert("Supprimer la page ?")) {
             this.api.delete("rest/pages/" + this.page.id + "/").subscribe(
-                res => this.router.navigate(["association/" + this.association.id]),
+                res => this.router.navigate(["associations/" + this.association.id]),
                 err => this.status = "<span class='text-danger'>" + err.message + "</span>"
             )
         }

@@ -16,9 +16,9 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
 	
 	{ path: 'associations', component: AllAssociationsComponent},
-	{ path: 'association/:id', component: AssociationHomepageComponent},
-	{ path: 'association/:id/members', component: AssociationMembersComponent},
-	{ path: 'association/:association_id/page/:page_id', component: AssociationPageComponent},
+	{ path: 'associations/:id', component: AssociationHomepageComponent},
+	{ path: 'associations/:id/members', component: AssociationMembersComponent},
+	{ path: 'associations/:association_id/page/:page_id', component: AssociationPageComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

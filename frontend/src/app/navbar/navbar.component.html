@@ -44,7 +44,7 @@
 					<li class="nav-item dropdown" dropdown>
 						<a dropdownToggle class="nav-link" [ngClass]="{'active': isActive('^\/association')}"><i class="fe fe-power"></i>Associations</a>
 						<div *dropdownMenu class="dropdown-menu dropdown-menu-arrow">
-								<a *ngFor="let association of list_associations_short" class="dropdown-item" routerLink="/association/{{ association.id }}">{{association.name}}</a>
+								<a *ngFor="let association of list_associations_short" class="dropdown-item" routerLink="/associations/{{ association.id }}">{{association.name}}</a>
 								<div class="dropdown-divider"></div>
 								<a routerLink="/associations" class="dropdown-item">Toutes les associations</a>
 						</div>
