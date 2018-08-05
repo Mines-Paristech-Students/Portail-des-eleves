@@ -23,12 +23,13 @@ class PageShortSerializer(serializers.ModelSerializer):
         model = Page
         fields = ("id", "title")
 
+
 class GroupSerializer(serializers.ModelSerializer):
     members = UserShortSerializer(many=True)
 
     class Meta:
         model = Group
-        fields = ('id', 'members', 'role', 'is_admin_group', 'static_page','news','marketplace','library','vote','events')
+        fields = ('id', 'members', 'role', 'is_admin_group', 'static_page', 'news', 'marketplace', 'library', 'vote', 'events')
 
 
 class AssociationsShortSerializer(serializers.ModelSerializer):
