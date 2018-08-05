@@ -11,33 +11,14 @@ export class AssociationMembersComponent implements OnInit {
 
 	association: any ;
 	error: any ;
-	members : any[];
 
 	constructor(private api: ApiService, private route: ActivatedRoute){}
 
 	ngOnInit() {
 		const id = this.route.snapshot.paramMap.get('id');
 		this.api.get("rest/associations/" + id + "/").subscribe(
-			association => this.customInit(association),
-			error => {
-				this.error = error;
-				console.log(error);
-			}
+			association => this.association = association,
+			error => this.error = error.message
         );
 	}
-	
-	customInit(association){
-		this.association = association;
-		console.log(association);
-		for(let group of this.association.groups)
-		{
-			var role = group.role;
-			for(let member of group.members)
-			{
-				this.members.push({id:member.id, first_name:member.first_name, last_name:member.last_name, role:role});
-			}
-		}
-		console.log(this.members);
-	}
-
 }

@@ -15,9 +15,11 @@
 				
 				<div class="card">
 					<div class="card-body">
-						<p *ngFor="let member of members">
-							<a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
-						</p>
+						<ul *ngFor="let group of association.groups">
+                            <li *ngFor="let member of group.members">
+							    <a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
+                            </li>
+						</ul>
 					</div>
 				</div>
             </div>
@@ -25,9 +27,7 @@
     </div>
 
     <div *ngIf="error">
-        <p class="text-danger">
-            Une erreur est survenue {{ error }}
-        </p>
+        <p class="text-danger">Une erreur est survenue {{ error }}</p>
     </div>
 </div>
 
