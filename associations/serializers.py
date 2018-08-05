@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from associations.models import Page, News
+from associations.models import Page, News, User
 from associations.models.association import Association, Group
 
 from authentication.serializers import UserShortSerializer
@@ -25,7 +25,8 @@ class PageShortSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    members = UserShortSerializer(many=True)
+    #members = UserShortSerializer(many=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Group
@@ -52,4 +53,9 @@ class AssociationsSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = Association.objects.create(**validated_data)
+        return instance
+
+    def update(self, instance, validated_data):
+
+
         return instance

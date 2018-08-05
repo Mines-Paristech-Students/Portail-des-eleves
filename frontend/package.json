@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^6.0.2",
     "@angular/platform-browser-dynamic": "^6.0.2",
     "@angular/router": "^6.0.2",
+    "@ng-select/ng-select": "^2.3.6",
     "angular-froala-wysiwyg": "^2.8.4-1",
     "angular-highlight-js": "^2.0.1",
     "bootstrap": "^4.1.3",

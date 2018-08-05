@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
-import {User} from "../../user";
+import {User} from "../../models/user";
 
 @Component({
   selector: 'app-all-associations',
