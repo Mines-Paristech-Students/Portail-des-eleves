@@ -15,11 +15,14 @@
 				
 				<div class="card">
 					<div class="card-body">
-						<ul *ngFor="let group of association.groups">
-                            <li *ngFor="let member of group.members">
-							    <a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
-                            </li>
-						</ul>
+                        <div *ngFor="let group of association.groups">
+                            <h2>{{ group.role }}</h2>
+                            <ul>
+                                <li *ngFor="let member of group.members">
+                                    <a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
+                                </li>
+                            </ul>
+                        </div>
 					</div>
 				</div>
             </div>
