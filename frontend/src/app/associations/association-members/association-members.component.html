@@ -9,22 +9,30 @@
             <div class="col-md-9">
                 <div class="page-header mb-5">
                     <h1 class="page-title">
-						Membres de l'associations
+                        Membres de l'associations
                     </h1>
                 </div>
-				
-				<div class="card">
-					<div class="card-body">
-                        <div *ngFor="let group of association.groups">
-                            <h2>{{ group.role }}</h2>
-                            <ul>
-                                <li *ngFor="let member of group.members">
-                                    <a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a><br />{{member.role}}
-                                </li>
-                            </ul>
-                        </div>
-					</div>
-				</div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                    <table class="table card-table table-striped table-vcenter">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let group of association.groups">
+                                <tr *ngFor="let member of group.members">
+                                    <td><a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a></td>
+                                    <td>{{group.role}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
             </div>
         </div>
     </div>
