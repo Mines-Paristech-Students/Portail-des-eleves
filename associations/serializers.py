@@ -25,12 +25,12 @@ class PageShortSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    #members = UserShortSerializer(many=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    members = UserShortSerializer(many=True)
 
     class Meta:
         model = Group
-        fields = ('id', 'members', 'role', 'is_admin_group', 'static_page', 'news', 'marketplace', 'library', 'vote', 'events')
+        fields = ('id', 'members', 'role', 'is_admin_group',
+                  'static_page', 'news', 'marketplace', 'library', 'vote', 'events')
 
 
 class AssociationsShortSerializer(serializers.ModelSerializer):
@@ -55,7 +55,3 @@ class AssociationsSerializer(serializers.ModelSerializer):
         instance = Association.objects.create(**validated_data)
         return instance
 
-    def update(self, instance, validated_data):
-
-
-        return instance

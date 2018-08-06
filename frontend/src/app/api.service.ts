@@ -29,8 +29,7 @@ export class ApiService {
 
     post<T>(url: String, body: any){
         return this.http.post<T>(
-            server + url,
-            body,
+            server + url, body,
             {
                 headers: this.header,
                 withCredentials: true
@@ -40,8 +39,7 @@ export class ApiService {
 
     put<T>(url: String, body: any){
         return this.http.put<T>(
-            server + url,
-            body,
+            server + url, body,
             {
                 headers: this.header,
                 withCredentials: true

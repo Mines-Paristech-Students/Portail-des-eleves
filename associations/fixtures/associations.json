@@ -13,7 +13,8 @@
     "fields": {
       "name": "BDE",
       "rank": 1,
-	  "groups" : [1]
+	  "groups" : [1],
+      "is_admin_group": true
     }
   },
   {
