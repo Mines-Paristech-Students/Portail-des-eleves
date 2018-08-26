@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            birthday=date_of_birth,
         )
 
         user.set_password(password)
