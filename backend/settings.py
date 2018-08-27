@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 't38x6_9$&3cp!6v-t6tmhak%mh=g52
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] + [os.environ.get("PORTAIL_HOSTNAME")]
+ALLOWED_HOSTS = ["localhost"] + [os.environ.get("PORTAIL_HOSTNAME")]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (

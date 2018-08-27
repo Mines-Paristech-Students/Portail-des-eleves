@@ -20,11 +20,12 @@ export class NavbarComponent implements OnInit {
     }
 
     getPromotion(user){
-        return "P" + parseInt(user.pseudo);
+        return "15"
+        //return "P" + parseInt(user.pseudo);
     }
 
     ngOnInit() {
-        if(window.localStorage && localStorage.getItem("user")) {
+        /*if(window.localStorage && localStorage.getItem("user")) {
             this.user = JSON.parse(localStorage.getItem("user"));
         } else {
             this._apiService.checkAuthentication().subscribe(
@@ -38,6 +39,6 @@ export class NavbarComponent implements OnInit {
                     this.router.navigate(["/login"])
                 }
             )
-        }
+        }*/
     }
 }
