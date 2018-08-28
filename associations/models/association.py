@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.text import slugify
 
 from associations.models.marketplace import Marketplace
@@ -30,7 +32,7 @@ class Association(models.Model):
 
     logo = models.ImageField(upload_to="associations/logos/", null=True)
 
-    market = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING, null=True)
+    marketplace = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING, null=True, related_name="association")
     library = models.OneToOneField(Library, on_delete=models.DO_NOTHING, null=True)
     publication = models.OneToOneField(Publication, on_delete=models.DO_NOTHING, null=True)
 
@@ -39,6 +41,9 @@ class Association(models.Model):
                                help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour les valeurs égales)")
 
     groups = models.ManyToManyField(Group, blank=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def _get_unique_slug(self):
         slug = slugify(self.name)
@@ -53,3 +58,11 @@ class Association(models.Model):
         if not self.id:
             self.id = self._get_unique_slug()
         super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=Association)
+def create_favorites(sender, instance, created, **kwargs):
+    if created:
+        instance.marketplace = Marketplace.objects.create()
+        instance.library = Library.objects.create()
+        instance.save()

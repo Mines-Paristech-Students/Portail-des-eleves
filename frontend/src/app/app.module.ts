@@ -27,6 +27,7 @@ import { AssociationHomepageComponent } from './associations/association-homepag
 import { AssociationSidebarComponent } from './associations/association-sidebar/association-sidebar.component';
 import { AssociationPageComponent } from './associations/association-page/association-page.component';
 import { AssociationMembersComponent } from './associations/association-members/association-members.component';
+import { AssociationSettingsComponent } from './associations/association-settings/association-settings.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -51,6 +52,7 @@ export function highlightJsFactory() {
     AssociationSidebarComponent,
     AssociationPageComponent,
     AssociationMembersComponent,
+    AssociationSettingsComponent,
   ],
   imports: [
     BrowserModule,

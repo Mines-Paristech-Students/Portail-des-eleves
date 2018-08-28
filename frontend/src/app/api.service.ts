@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 
-const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
 const server = "http://localhost:8000/api/v1/";
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +35,16 @@ export class ApiService {
 
     put<T>(url: String, body: any){
         return this.http.put<T>(
+            server + url, body,
+            {
+                headers: this.header,
+                withCredentials: true
+            }
+        )
+    }
+
+    patch<T>(url: String, body: any){
+        return this.http.patch<T>(
             server + url, body,
             {
                 headers: this.header,

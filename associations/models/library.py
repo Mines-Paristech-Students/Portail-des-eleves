@@ -9,6 +9,7 @@ class Library(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
+    enabled = models.BooleanField(default=False)
 
 
 class Object(models.Model):

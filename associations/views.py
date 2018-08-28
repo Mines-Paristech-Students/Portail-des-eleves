@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 
-from associations.models import Page, News, Group
+from associations.models import Page, News, Group, Marketplace, Library
 from associations.models.association import Association
 from associations.serializers import AssociationsShortSerializer, AssociationsSerializer, NewsSerializer, \
-    GroupSerializer
+    GroupSerializer, MarketplaceSerializer, LibrarySerializer
 
 
 class AssociationViewSet(viewsets.ModelViewSet):
@@ -57,6 +57,30 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Group.objects.all()
+        association_name = self.request.query_params.get('association', None)
+        if association_name is not None:
+            queryset = queryset.filter(association=association_name)
+        return queryset
+
+
+class MarketplaceViewSet(viewsets.ModelViewSet):
+    queryset = Marketplace.objects.all()
+    serializer_class = MarketplaceSerializer
+
+    def get_queryset(self):
+        queryset = Marketplace.objects.all()
+        association_name = self.request.query_params.get('association', None)
+        if association_name is not None:
+            queryset = queryset.filter(association=association_name)
+        return queryset
+
+
+class LibraryViewSet(viewsets.ModelViewSet):
+    queryset = Library.objects.all()
+    serializer_class = LibrarySerializer
+
+    def get_queryset(self):
+        queryset = Library.objects.all()
         association_name = self.request.query_params.get('association', None)
         if association_name is not None:
             queryset = queryset.filter(association=association_name)

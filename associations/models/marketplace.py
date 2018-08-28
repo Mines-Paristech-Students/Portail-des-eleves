@@ -1,7 +1,8 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from authentication.models import User
-
 
 class Marketplace(models.Model):
     """
@@ -9,6 +10,8 @@ class Marketplace(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
+    enabled = models.BooleanField(default=False)
+
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)

@@ -3,8 +3,23 @@
     "model": "associations.group",
     "pk": "1",
     "fields": {
-      "members": ["15veaux"],
-      "role": "President"
+      "members": ["15veaux", "17bocquet"],
+      "role": "Dreamteam",
+      "is_admin_group": true
+    }
+  },
+  {
+    "model": "associations.marketplace",
+    "pk": "1",
+    "fields": {
+      "enabled": true
+    }
+  },
+  {
+    "model": "associations.library",
+    "pk": "1",
+    "fields": {
+      "enabled": true
     }
   },
   {
@@ -14,7 +29,8 @@
       "name": "BDE",
       "rank": 1,
 	  "groups" : [1],
-      "is_admin_group": true
+      "marketplace": 1,
+      "library": 1
     }
   },
   {
@@ -53,7 +69,23 @@
     "pk": "biero",
     "fields": {
       "name": "Biéro",
-      "rank": 2
+      "rank": 2,
+      "marketplace": 2,
+      "library": 2
+    }
+  },
+  {
+    "model": "associations.marketplace",
+    "pk": "2",
+    "fields": {
+      "enabled": false
+    }
+  },
+  {
+    "model": "associations.library",
+    "pk": "2",
+    "fields": {
+      "enabled": false
     }
   },
   {
@@ -67,5 +99,4 @@
       "author": "17bocquet"
     }
   }
-
 ]
