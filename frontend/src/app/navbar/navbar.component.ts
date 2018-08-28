@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {ApiService} from "../api.service";
+import { Router } from '@angular/router';
+
+import { ApiService } from '../api.service';
+import { User } from '../user';
 
 @Component({
     selector: 'navbar',
@@ -10,35 +12,29 @@ import {ApiService} from "../api.service";
 export class NavbarComponent implements OnInit {
 
     showNavBarMenu : Boolean = false ;
-    user: any ;
+    user: User ;
 
     constructor(private _apiService: ApiService, private router: Router) { }
 
     logout(){
-        this._apiService.logout();
-        this.router.navigate(["/login"])
-    }
-
-    getPromotion(user){
-        return "15"
-        //return "P" + parseInt(user.pseudo);
+        this._apiService.logout().subscribe(
+            data => {},
+            err => {},
+            () => {this.router.navigate(["/login"]);}
+        );
     }
 
     ngOnInit() {
-        /*if(window.localStorage && localStorage.getItem("user")) {
-            this.user = JSON.parse(localStorage.getItem("user"));
-        } else {
-            this._apiService.checkAuthentication().subscribe(
-                data => {
-                    this.user = data;
-                    if(window.localStorage) {
-                        localStorage.setItem("user", JSON.stringify(data))
-                    }
-                },
-                err => {
-                    this.router.navigate(["/login"])
-                }
-            )
-        }*/
+        this._apiService.getUser().subscribe(
+            data => {
+                // The user variable explicitly needs to be from the User type
+                //  so the ".promotion" property can be called from the html template.
+                this.user = new User();
+                Object.assign(this.user, data)
+            },
+            err => {
+                console.log(err)
+            }
+        )
     }
 }

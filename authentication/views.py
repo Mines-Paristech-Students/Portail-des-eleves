@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from rest_framework import generics, status, viewsets
-from rest_framework.response import Response
+from django.http import HttpResponse
 
 from authentication.authentication import JWTCookieAuthentication
 from authentication.models import User
@@ -22,12 +22,12 @@ class JWTSetCookiesView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
         access_token = data['access']
         access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LIFETIME)
-        response = Response(status=status.HTTP_200_OK)
+        response = HttpResponse(status=status.HTTP_200_OK)
         response.set_cookie(
             api_settings.ACCESS_TOKEN_COOKIE_NAME,
             access_token,
@@ -37,6 +37,27 @@ class JWTSetCookiesView(generics.GenericAPIView):
         )
         return response
 
+class LogoutView(generics.GenericAPIView):
+    """
+    This class removes the JWT token saved on the client browser
+    """
+    is_prod_mode = settings.is_prod_mode()
+
+    def post(self, request, *args, **kwargs):
+        """Overwrites the jwt cookie with a dummy value
+        and makes it expire in the past so that most browser will
+        delete the cookie
+        """
+
+        response = HttpResponse(status=status.HTTP_200_OK)
+        response.set_cookie(
+            api_settings.ACCESS_TOKEN_COOKIE_NAME,
+            "deleted because you logged out",
+            expires=datetime.fromtimestamp(0),
+            httponly=True,
+            secure=self.is_prod_mode,
+        )
+        return response
 
 class CheckCredentials(generics.GenericAPIView):
     """
@@ -46,7 +67,7 @@ class CheckCredentials(generics.GenericAPIView):
     authentication_classes = [JWTCookieAuthentication]
 
     def post(self, request, *args, **kwargs):
-        return Response({"id": request.user.id, "first_name": request.user.first_name, "last_name": request.user.last_name}, status=status.HTTP_200_OK)
+        return HttpResponse(status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -54,3 +75,17 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_object(self):
+        """
+        This method is called by the view set to retrieve
+        data for a given user. The user identifier is in the pk kwargs.
+
+        If pk is the string "current", we return the data for the current
+        authenticated user.
+        """
+        pk = self.kwargs.get('pk')
+        if pk == "current":
+            return self.request.user
+
+        return super(UserViewSet, self).get_object()

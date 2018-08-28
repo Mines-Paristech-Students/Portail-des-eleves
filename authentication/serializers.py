@@ -6,7 +6,6 @@ from rest_framework import serializers
 from authentication.models import User
 from authentication.token import Token
 
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -44,6 +43,7 @@ class TokenSerializer(serializers.Serializer):
 
         token = self.get_token(self.user)
 
+        # The JWT token as a string
         data['access'] = text_type(token)
 
         return data
