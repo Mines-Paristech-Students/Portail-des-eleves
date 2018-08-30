@@ -28,6 +28,8 @@ import { AssociationSidebarComponent } from './associations/association-sidebar/
 import { AssociationPageComponent } from './associations/association-page/association-page.component';
 import { AssociationMembersComponent } from './associations/association-members/association-members.component';
 import { AssociationSettingsComponent } from './associations/association-settings/association-settings.component';
+import { MarketplaceHomeComponent } from './marketplace/marketplace-home/marketplace-home.component';
+import { MarketplaceSidebarComponent } from './marketplace/marketplace-sidebar/marketplace-sidebar.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -53,6 +55,8 @@ export function highlightJsFactory() {
     AssociationPageComponent,
     AssociationMembersComponent,
     AssociationSettingsComponent,
+    MarketplaceHomeComponent,
+    MarketplaceSidebarComponent,
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,7 @@ import { AssociationHomepageComponent } from "./associations/association-homepag
 import { AssociationMembersComponent } from "./associations/association-members/association-members.component";
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
 import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
+import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -21,6 +22,8 @@ const routes: Routes = [
 	{ path: 'associations/:id/members', component: AssociationMembersComponent},
 	{ path: 'associations/:id/settings', component: AssociationSettingsComponent},
 	{ path: 'associations/:association_id/page/:page_id', component: AssociationPageComponent},
+
+    { path: 'marketplace/:id', component: MarketplaceHomeComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

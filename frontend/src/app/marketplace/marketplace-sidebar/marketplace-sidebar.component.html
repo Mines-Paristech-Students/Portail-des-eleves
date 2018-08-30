@@ -1,0 +1,22 @@
+
+<div class="card">
+    <div class="card-status bg-green"></div>
+    <div class="card-body p-3 text-center">
+        <div class="text-muted mb-2">Solde actuel</div>
+        <div class="h1 m-0 mb-2">12€</div>
+    </div>
+</div>
+
+<div class="list-group list-group-transparent mb-0">
+
+    <a
+            *ngFor="let page of pages ; let i = index"
+            [ngClass]="{'list-group-item': true, 'list-group-item-action': true, 'd-flex': true, 'align-items-center': true, active: i == active_page}"
+            (click)="active_page = i"
+    >
+        <span class="icon mr-3"></span>{{ page }}
+    </a>
+
+</div>
+
+
