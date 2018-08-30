@@ -60,9 +60,9 @@ class Association(models.Model):
         super().save(*args, **kwargs)
 
 
-@receiver(post_save, sender=Association)
-def create_favorites(sender, instance, created, **kwargs):
-    if created:
-        instance.marketplace = Marketplace.objects.create()
-        instance.library = Library.objects.create()
-        instance.save()
+#@receiver(post_save, sender=Association)
+#def create_favorites(sender, instance, created, **kwargs):
+#    if created:
+#        instance.marketplace = Marketplace.objects.create()
+#        instance.library = Library.objects.create()
+#        instance.save()

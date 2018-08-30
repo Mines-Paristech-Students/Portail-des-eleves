@@ -8,7 +8,7 @@ class Library(models.Model):
         Provides an interface to lend objects to people and to follow who has what
     """
 
-    id = models.AutoField(primary_key=True)
+    id = models.SlugField(max_length=200, primary_key=True)
     enabled = models.BooleanField(default=False)
 
 

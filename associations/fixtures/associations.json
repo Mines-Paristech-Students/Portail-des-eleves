@@ -10,14 +10,14 @@
   },
   {
     "model": "associations.marketplace",
-    "pk": "1",
+    "pk": "bde",
     "fields": {
       "enabled": false
     }
   },
   {
     "model": "associations.library",
-    "pk": "1",
+    "pk": "bde",
     "fields": {
       "enabled": true
     }
@@ -29,8 +29,8 @@
       "name": "BDE",
       "rank": 1,
 	  "groups" : [1],
-      "marketplace": 1,
-      "library": 1
+      "marketplace": "bde",
+      "library": "bde"
     }
   },
   {
@@ -70,13 +70,13 @@
     "fields": {
       "name": "Biéro",
       "rank": 2,
-      "marketplace": 2,
-      "library": 2
+      "marketplace": "biero",
+      "library": "biero"
     }
   },
   {
     "model": "associations.marketplace",
-    "pk": "2",
+    "pk": "biero",
     "fields": {
       "enabled": true
     }
@@ -88,7 +88,7 @@
       "name": "Grenadine",
       "description": "Mélange subtile de fruits des bois pour un rafraichissement sans égal",
       "price": 3.5,
-      "marketplace": 2
+      "marketplace": "biero"
     }
   },
   {
@@ -98,7 +98,7 @@
       "name": "Jus de tomate",
       "description": "Bon pour le corps et l'esprit, le jus de tomate saura ravire vos papilles et votre portefeuille",
       "price": 1.5,
-      "marketplace": 2,
+      "marketplace": "biero",
       "number_left": 18956
     }
   },
@@ -109,13 +109,13 @@
       "name": "Jus de pomme",
       "description": "Pressade de fruits bio pour être en pleine forme. Rassurez vous, y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit déjeuner",
       "price": 12.4,
-      "marketplace": 2,
+      "marketplace": "biero",
       "number_left": 24
     }
   },
   {
     "model": "associations.library",
-    "pk": "2",
+    "pk": "biero",
     "fields": {
       "enabled": false
     }

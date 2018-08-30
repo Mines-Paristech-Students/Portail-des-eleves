@@ -4,12 +4,13 @@ from django.dispatch import receiver
 
 from authentication.models import User
 
+
 class Marketplace(models.Model):
     """
         Provides an interface to lend objects to people and to follow who has what
     """
 
-    id = models.AutoField(primary_key=True)
+    id = models.SlugField(max_length=200, primary_key=True)
     enabled = models.BooleanField(default=False)
 
 
@@ -22,7 +23,7 @@ class Product(models.Model):
     image = models.ImageField()
     comment = models.TextField(null=True)
 
-    marketplace = models.ForeignKey(Marketplace, models.CASCADE)
+    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="products")
 
     # By convention, -1 = unlimited number of this product.
     number_left = models.IntegerField(default=-1)
