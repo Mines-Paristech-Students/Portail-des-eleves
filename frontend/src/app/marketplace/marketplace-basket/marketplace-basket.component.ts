@@ -9,7 +9,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class MarketplaceBasketComponent implements OnInit {
 
-  marketplace: any ;
+    marketplace: any ;
     error: any ;
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
@@ -19,17 +19,10 @@ export class MarketplaceBasketComponent implements OnInit {
 		(params) => {
 			let id = params['id'];
 
-            this.api.get('rest/marketplace/?association=' + id).subscribe(
-                (res : Array<any>) => {
-                    if((res as Array<any>).length >= 1) {
-                        this.marketplace = res[0];
-                    } else {
-                        this.error = "Magasin non trouvé"
-                    }
-                },
+            this.api.get(`rest/marketplace/${id}`).subscribe(
+                marketplace => this.marketplace = marketplace,
                 error => this.error = error.message
             );
 		});
     }
-
 }
