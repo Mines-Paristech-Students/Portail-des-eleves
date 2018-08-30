@@ -5,20 +5,19 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, id, first_name, last_name, email, password, date_of_birth):
+    def create_user(self, id, first_name, last_name, email, password, birthday):
         """
         Creates and saves a User
         """
-        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=False)
+        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=False)
 
-    def create_superuser(self, id, first_name, last_name, email, password, date_of_birth):
+    def create_superuser(self, id, first_name, last_name, email, password, birthday):
         """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
+        Creates and saves a superuser with the given email, birthday and password.
         """
-        return self._create_user(id, first_name, last_name, email, password, date_of_birth, is_admin=True)
+        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=True)
 
-    def _create_user(self, id, first_name, last_name, email, password, date_of_birth, is_admin):
+    def _create_user(self, id, first_name, last_name, email, password, birthday, is_admin):
         """
         Creates and saves a User
         """
@@ -27,7 +26,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
-            birthday=date_of_birth,
+            birthday=birthday,
         )
 
         user.set_password(password)
