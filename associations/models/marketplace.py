@@ -20,7 +20,7 @@ class Product(models.Model):
     description = models.TextField(null=True)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     image = models.ImageField()
-    comment = models.TextField()
+    comment = models.TextField(null=True)
 
     marketplace = models.ForeignKey(Marketplace, models.CASCADE)
 
