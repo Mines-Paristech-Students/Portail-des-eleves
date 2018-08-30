@@ -12,7 +12,7 @@
     "model": "associations.marketplace",
     "pk": "1",
     "fields": {
-      "enabled": true
+      "enabled": false
     }
   },
   {
@@ -78,7 +78,39 @@
     "model": "associations.marketplace",
     "pk": "2",
     "fields": {
-      "enabled": false
+      "enabled": true
+    }
+  },
+  {
+    "model": "associations.product",
+    "pk": 1,
+    "fields": {
+      "name": "Grenadine",
+      "description": "Mélange subtile de fruits des bois pour un rafraichissement sans égal",
+      "price": 3.5,
+      "marketplace": 2
+    }
+  },
+  {
+    "model": "associations.product",
+    "pk": 2,
+    "fields": {
+      "name": "Jus de tomate",
+      "description": "Bon pour le corps et l'esprit, le jus de tomate saura ravire vos papilles et votre portefeuille",
+      "price": 1.5,
+      "marketplace": 2,
+      "number_left": 18956
+    }
+  },
+  {
+    "model": "associations.product",
+    "pk": 3,
+    "fields": {
+      "name": "Jus de pomme",
+      "description": "Pressade de fruits bio pour être en pleine forme. Rassurez vous, y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit déjeuner",
+      "price": 12.4,
+      "marketplace": 2,
+      "number_left": 24
     }
   },
   {
