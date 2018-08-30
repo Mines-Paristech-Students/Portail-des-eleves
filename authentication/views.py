@@ -2,6 +2,7 @@ from datetime import datetime
 
 from rest_framework import generics, status, viewsets
 from django.http import HttpResponse
+from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
 from authentication.models import User
@@ -22,7 +23,7 @@ class JWTSetCookiesView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
         access_token = data['access']
