@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpRequest, HttpResponse, HttpInterceptor, HttpHandler } from '@angular/common/http';
 import { Router } from '@angular/router'
-import { Observable, empty } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 if (err.status === 401 ){
                     this.router.navigate(['/login'])
                 }
-                return empty()
+                return Observable.throw(err);
             }
         ))
     }
