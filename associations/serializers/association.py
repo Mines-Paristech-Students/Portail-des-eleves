@@ -1,27 +1,9 @@
 from rest_framework import serializers
 
-from associations.models import Page, News, User, Marketplace, Library
-from associations.models.association import Association, Group
-
+from associations.models import Group, Association
+from associations.serializers.page import PageShortSerializer
+from associations.serializers.library import LibrarySerializer
 from authentication.serializers import UserShortSerializer
-
-
-class NewsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = News
-        fields = ("id", "title", "text", "association")
-
-
-class PageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Page
-        fields = ("id", "title", "text", "association")
-
-
-class PageShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Page
-        fields = ("id", "title")
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -42,18 +24,7 @@ class AssociationsShortSerializer(serializers.ModelSerializer):
         instance = Association.objects.create(**validated_data)
         return instance
 
-
-class LibrarySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Library
-        fields = ('id', 'enabled')
-
-
-class MarketplaceShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Marketplace
-        fields = ('id', 'enabled', "association")
-
+from associations.serializers.marketplace import MarketplaceShortSerializer
 
 class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True)
@@ -69,11 +40,3 @@ class AssociationsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         instance = Association.objects.create(**validated_data)
         return instance
-
-
-class MarketplaceSerializer(serializers.ModelSerializer):
-    association = AssociationsShortSerializer()
-
-    class Meta:
-        model = Marketplace
-        fields = ("id", "enabled", "association")
