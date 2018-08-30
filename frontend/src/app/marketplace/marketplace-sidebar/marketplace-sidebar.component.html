@@ -9,12 +9,16 @@
 
 <div class="list-group list-group-transparent mb-0">
 
-    <a
-            *ngFor="let page of pages ; let i = index"
-            [ngClass]="{'list-group-item': true, 'list-group-item-action': true, 'd-flex': true, 'align-items-center': true, active: i == active_page}"
-            (click)="active_page = i"
-    >
-        <span class="icon mr-3"></span>{{ page }}
+    <a class="list-group-item list-group-item-action d-flex align-items-center" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/marketplace/{{ marketplace.association.id }}">
+        <span class="icon mr-3"><i class="fe"></i></span>Magasin
+    </a>
+
+    <a class="list-group-item list-group-item-action d-flex align-items-center" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/marketplace/{{ marketplace.association.id }}/basket">
+        <span class="icon mr-3"><i class="fe fe-shopping-cart"></i></span>Mon Panier
+    </a>
+
+    <a class="list-group-item list-group-item-action d-flex align-items-center" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" routerLink="/marketplace/{{ marketplace.association.id }}/history">
+        <span class="icon mr-3"><i class="fe fe-clock"></i></span>Historique
     </a>
 
 </div>

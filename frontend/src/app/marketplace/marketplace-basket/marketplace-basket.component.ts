@@ -3,13 +3,13 @@ import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'app-marketplace-home',
-  templateUrl: './marketplace-home.component.html',
-  styleUrls: ['./marketplace-home.component.scss']
+  selector: 'app-marketplace-basket',
+  templateUrl: './marketplace-basket.component.html',
+  styleUrls: ['./marketplace-basket.component.scss']
 })
-export class MarketplaceHomeComponent implements OnInit {
+export class MarketplaceBasketComponent implements OnInit {
 
-    marketplace: any ;
+  marketplace: any ;
     error: any ;
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
@@ -31,4 +31,5 @@ export class MarketplaceHomeComponent implements OnInit {
             );
 		});
     }
+
 }

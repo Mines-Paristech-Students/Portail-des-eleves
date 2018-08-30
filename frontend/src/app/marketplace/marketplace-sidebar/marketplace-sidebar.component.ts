@@ -7,12 +7,10 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class MarketplaceSidebarComponent implements OnInit {
 
-  @Input() pages: any ;
-  @Input() active_page: any ;
+    @Input() marketplace: any ;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {}
 
 }

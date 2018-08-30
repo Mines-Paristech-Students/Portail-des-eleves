@@ -12,6 +12,8 @@ import { AssociationMembersComponent } from "./associations/association-members/
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
 import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
 import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
+import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
+import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/marketplace-history.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -24,6 +26,8 @@ const routes: Routes = [
 	{ path: 'associations/:association_id/page/:page_id', component: AssociationPageComponent},
 
     { path: 'marketplace/:id', component: MarketplaceHomeComponent},
+    { path: 'marketplace/:id/basket', component: MarketplaceBasketComponent},
+    { path: 'marketplace/:id/history', component: MarketplaceHistoryComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },
