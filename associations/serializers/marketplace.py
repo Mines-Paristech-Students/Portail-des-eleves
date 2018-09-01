@@ -11,7 +11,6 @@ class MarketplaceShortSerializer(serializers.ModelSerializer):
 
 from associations.serializers.association import AssociationsShortSerializer
 
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product

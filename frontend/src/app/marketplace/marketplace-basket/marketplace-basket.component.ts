@@ -19,7 +19,7 @@ export class MarketplaceBasketComponent implements OnInit {
 		(params) => {
 			let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}`).subscribe(
+            this.api.get(`rest/marketplace/${id}/`).subscribe(
                 marketplace => this.marketplace = marketplace,
                 error => this.error = error.message
             );

@@ -13,13 +13,13 @@ export class MarketplaceHomeComponent implements OnInit {
     error: any ;
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
-
+;
     ngOnInit() {
 		this.route.params.subscribe(
 		(params) => {
 			let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}`).subscribe(
+            this.api.get("rest/marketplace/" + id + "/").subscribe(
                 marketplace => this.marketplace = marketplace,
                 error => { this.error = error.message ; console.log(error) ; }
             );
