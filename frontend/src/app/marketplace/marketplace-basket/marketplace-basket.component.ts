@@ -11,18 +11,21 @@ export class MarketplaceBasketComponent implements OnInit {
 
     marketplace: any ;
     error: any ;
+    id: any ;
 
     constructor(private api: ApiService, private route: ActivatedRoute){}
 
     ngOnInit() {
 		this.route.params.subscribe(
 		(params) => {
-			let id = params['id'];
+			this.id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
+            this.api.get(`rest/marketplace/${this.id}/`).subscribe(
                 marketplace => this.marketplace = marketplace,
                 error => this.error = error.message
             );
 		});
     }
+
+
 }

@@ -8,6 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class MarketplaceSidebarComponent implements OnInit {
 
     @Input() marketplace: any ;
+    @Input() numberOfItems: number;
 
     constructor() { }
 
