@@ -94,4 +94,16 @@ export class BasketManagerServiceService {
         return S ;
     }
 
+    getProducts(basket, marketplace) {
+        let res = [] ;
+        
+        for (let product of basket[marketplace]){
+            res.push({
+                quantity: this.getQuantity(basket, marketplace, product),
+                product: product
+            })
+        }
+
+        return res ;
+    }
 }
