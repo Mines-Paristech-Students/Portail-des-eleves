@@ -16,11 +16,14 @@ export class LoginComponent implements OnInit {
     loginClass: string;
     passwordText: string;
     passwordClass: string;
+    checkboxRememberMe: boolean;
 
     constructor(
         private _apiService: ApiService,
         private router: Router,
-    ) { }
+    ) {
+        this.checkboxRememberMe = false
+    }
 
     ngOnInit() {
         this._apiService.checkAuthentication().subscribe(
@@ -48,7 +51,7 @@ export class LoginComponent implements OnInit {
             this.passwordClass = ""
         }
         if (valid) {
-            return this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
+            return this._apiService.authenticate(this.loginText, this.passwordText, this.checkboxRememberMe).subscribe(
                 data => {
                     this.loginText = "";
                     this.passwordText = "";

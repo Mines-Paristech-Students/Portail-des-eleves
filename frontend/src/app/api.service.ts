@@ -51,10 +51,10 @@ export class ApiService {
         );
     }
 
-    authenticate(login: string, password: string) {
+    authenticate(login: string, password: string, stayAuthenticated: boolean) {
         return this.post(
             "auth/",
-            {"id": login, "password": password}
+            {"id": login, "password": password, "longAuth": stayAuthenticated}
         );
     }
 
