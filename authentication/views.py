@@ -27,7 +27,7 @@ class JWTSetCookiesView(generics.GenericAPIView):
 
         data = serializer.validated_data
         access_token = data['access']
-        access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LIFETIME)
+        access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LONG_LIFETIME)
         response = HttpResponse(status=status.HTTP_200_OK)
         response.set_cookie(
             api_settings.ACCESS_TOKEN_COOKIE_NAME,
