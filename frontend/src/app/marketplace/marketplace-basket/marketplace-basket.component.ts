@@ -35,7 +35,13 @@ export class MarketplaceBasketComponent implements OnInit {
     }
 
     order(){
-        console.log("order !")
+        console.log(JSON.stringify(this.inBasket(this.marketplace.products)));
+        this.api.post("association/marketplace/buy/", {
+            products: this.inBasket(this.marketplace.products)
+        }).subscribe(
+            res => console.log(res),
+            err => {this.error = err.message ; }
+        )
     }
 
     inBasket(allProducts) {
@@ -64,7 +70,6 @@ export class MarketplaceBasketComponent implements OnInit {
 
     countItems(){
         this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
-        console.log(this.numberOfItems)
     }
 
 }
