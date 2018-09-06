@@ -12,6 +12,7 @@ from authentication.token import Token
 from backend import settings
 
 
+
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
     A Django rest authentication class that will:

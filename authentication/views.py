@@ -77,6 +77,7 @@ class CheckCredentials(generics.GenericAPIView):
             status=status.HTTP_200_OK)
 
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows user to be viewed or edited.
