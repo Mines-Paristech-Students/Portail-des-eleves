@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import {AppComponent} from "../app.component";
+import { AppComponent } from "../app.component";
 declare var particlesJS: any;
 
 @Component({
@@ -16,21 +16,23 @@ export class LoginComponent implements OnInit {
     loginClass: string;
     passwordText: string;
     passwordClass: string;
+    checkboxRememberMe: boolean;
 
     constructor(
         private _apiService: ApiService,
         private router: Router,
-    ) { }
+    ) {
+        this.checkboxRememberMe = false
+    }
 
     ngOnInit() {
         this._apiService.checkAuthentication().subscribe(
             data => {
-                // Already identified, navigate to the home page
-                this.router.navigate([''])
+                // User is already authenticated, redirect to the home page
+                this.router.navigate(["/"])
             },
-            err => {}
-        )
-
+            err => {console.log(err)},
+        );
         particlesJS.load('particle', 'assets/particles.json');
     }
 
@@ -49,10 +51,8 @@ export class LoginComponent implements OnInit {
             this.passwordClass = ""
         }
         if (valid) {
-
-            return this._apiService.authenticate(this.loginText, this.passwordText).subscribe(
+            return this._apiService.authenticate(this.loginText, this.passwordText, this.checkboxRememberMe).subscribe(
                 data => {
-                    console.log(data);
                     this.loginText = "";
                     this.passwordText = "";
                     this.router.navigate([''])

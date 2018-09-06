@@ -8,9 +8,9 @@
                 <div class="dropdown">
                     <div class="nav-link pr-0 leading-none" (click)="showNavBarMenu = !showNavBarMenu">
                         <span class="avatar"></span>
-                        <span class="ml-2 d-none d-lg-block">
-                            <span class="text-default" *ngIf="user">{{ user.first_name }} {{ user.last_name[0] }}.</span>
-                            <small class="text-muted d-block mt-1">{{ getPromotion(user) }}</small>
+                        <span class="ml-2 d-lg-block">
+                            <span class="text-default">{{ user?.first_name }} {{ user?.last_name[0] }}</span>
+                            <small class="text-muted d-block mt-1">P{{user?.promotion}}</small>
                         </span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
@@ -18,7 +18,7 @@
                             <i class="dropdown-icon fe fe-user"></i> Profile
                         </a>
                         <a class="dropdown-item" href="#">
-                            <i class="dropdown-icon fe fe-settings"></i> Parmètres
+                            <i class="dropdown-icon fe fe-settings"></i> Paramètres
                         </a>
                         <div class="dropdown-item" (click)="logout()">
                             <i class="dropdown-icon fe fe-log-out"></i> Déconnection

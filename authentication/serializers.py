@@ -6,7 +6,6 @@ from rest_framework import serializers
 from authentication.models import User
 from authentication.token import Token
 
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -28,10 +27,11 @@ class TokenSerializer(serializers.Serializer):
             style={'input_type': 'password'},
             write_only=True
         )
+        self.fields['longAuth'] = serializers.BooleanField(default=False)
 
     @classmethod
-    def get_token(cls, user):
-        return Token.for_user(user)
+    def get_token(cls, user, longAuth=False):
+        return Token.for_user(user, longAuth=longAuth)
 
     def validate(self, attrs):
         self.user = authenticate(**{
@@ -41,9 +41,9 @@ class TokenSerializer(serializers.Serializer):
         if self.user is None or not self.user.is_active:
             raise serializers.ValidationError('No active account found with the given credentials')
         data = super(TokenSerializer, self).validate(attrs)
+        token = self.get_token(self.user, longAuth=attrs['longAuth'])
 
-        token = self.get_token(self.user)
-
+        # The JWT token as a string
         data['access'] = text_type(token)
 
         return data
