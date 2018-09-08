@@ -7,21 +7,54 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <marketplace-sidebar [marketplace]="marketplace"></marketplace-sidebar>
+                <marketplace-sidebar [marketplace]="marketplace" [numberOfItems]="numberOfItems"></marketplace-sidebar>
             </div>
             <div class="col-md-9">
-                <div class="card">
+
+                <p class="text-danger" *ngIf="error">
+                    Une erreur est survenue : {{ error }}
+                </p>
+
+                <div class="card" *ngIf="orders && orders.length > 0">
+                    <div class="card-header">
+                        <p class="card-title">Commandes en attente</p>
+                    </div>
+                    <table class="table card-table table-vcenter">
+                        <tbody>
+                        <tr *ngFor="let order of orders ">
+                            <td class="order-img">
+                                <img
+                                    src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
+                                >
+                            </td>
+                            <td>
+                                <strong>{{ order.product.name }}</strong>
+                            </td>
+                            <td class="text-center text-muted d-none d-md-table-cell text-nowrap">
+                                Quantité : {{ order.quantity  }}
+                            </td>
+                            <td class="text-right">
+                                <strong>{{ order.value }}€</strong>
+                            </td>
+                            <td class="text-right">
+                                <span *ngIf="order.status == 'ORDERED'" class="tag tag-blue">Commandée</span>
+                                <span *ngIf="order.status == 'VALIDATED'" class="tag tag-lime">Validée</span>
+                                <span *ngIf="order.status == 'DELIVERED'" class="tag tag-green">Délivrée</span>
+                                <span *ngIf="order.status == 'CANCELLED'" class="tag tag-red">Annulée</span>
+                                <span *ngIf="order.status == 'REFUNED'" class="tag tag-yellow">Remboursée</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="orders && orders.length == 0" class="card">
                     <div class="card-body">
-                        <p></p>
+                        <p class="text-center">Vous n'avez fait aucune commande jusqu'à maintenant</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="error">
-        <p class="text-danger">
-            Une erreur est survenue : {{ error }}
-        </p>
-    </div>
 </div>

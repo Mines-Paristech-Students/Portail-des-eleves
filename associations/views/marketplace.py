@@ -20,6 +20,19 @@ class OrderViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('status', 'buyer')
 
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = Order.objects.all()
+
+        marketplace = self.request.query_params.get('marketplace', None)
+        if marketplace is not None:
+            queryset = queryset.filter(product__marketplace__id=marketplace)
+
+        return queryset
+
     def create(self, request, **kwargs):
 
         body = json.loads(request.body)
