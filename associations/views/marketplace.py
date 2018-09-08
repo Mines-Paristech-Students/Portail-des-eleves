@@ -5,7 +5,7 @@ from django.middleware.csrf import get_token
 from rest_framework import viewsets
 
 from associations.models import Marketplace, Order, Product, User
-from associations.serializers import MarketplaceSerializer
+from associations.serializers import MarketplaceSerializer, OrderSerializer
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
@@ -13,48 +13,51 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
     serializer_class = MarketplaceSerializer
 
 
-def buy(request):
-    return JsonResponse({"coucou": "coucou"})
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
-    user_id = request.POST.get("user")
-    products = json.loads(request.POST.get("products"))
+    def create(self, request, **kwargs):
 
-    orders, errors = [], []
+        body = json.loads(request.body)
+        user_id = body["user"] if "user" in body else None
+        products = body["products"]
 
-    for (product_id, quantity) in enumerate(products):
+        orders, errors = [], []
 
-        product = Product.objects.filter(id=product_id)
+        for product in products:
 
-        if quantity > product.number_left >= 0:
-            errors.append({
-                product_id: "Il n'y a pas assez de {} ({} demandés, {} restants {})".format(product.name, quantity,
-                                                                                           product.number_left)
-            })
-            continue
+            quantity = int(product["quantity"])
+            product = Product.objects.get(pk=product["id"])
 
-        user = request.user.id
-        if user_id:
-            user = User.objects.filter(id=user_id)
+            if quantity > product.number_left >= 0:
+                errors.append({
+                    product.id: "Il n'y a pas assez de {} ({} demandés, {} restants {})".format(product.name, quantity,
+                                                                                                product.number_left)
+                })
+                continue
 
-        order = Order(
-            product=product,
-            buyer=user,
-            quantity=quantity,
-            value=quantity * product.price,
-            status="ORDERED"
-        )
+            user = request.user
+            if user_id:
+                user = User.objects.filter(id=user_id)
 
-        orders.append(order)
+            order = Order(
+                product=product,
+                buyer=user,
+                quantity=quantity,
+                value=quantity * product.price,
+                status="ORDERED"
+            )
 
-    if len(errors) >= 1:
-        return JsonResponse(errors)
+            product.number_left -= quantity
 
-    for order in orders:
-        order.save()
+            orders.append(order)
 
-    return JsonResponse({
-        "user": user_id,
-        "products": products,
-        "token": get_token(request),
-        "orders": orders
-    })
+        if len(errors) >= 1:
+            return JsonResponse(errors)
+
+        for order in orders:
+            order.save()
+            order.product.save()
+
+        return JsonResponse(OrderSerializer(orders, many=True).data, safe=False)

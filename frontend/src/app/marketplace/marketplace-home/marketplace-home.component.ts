@@ -57,7 +57,6 @@ export class MarketplaceHomeComponent implements OnInit {
 
     countItems(){
         this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
-        console.log(this.numberOfItems)
     }
 
 }

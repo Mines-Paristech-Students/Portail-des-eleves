@@ -18,8 +18,9 @@ export class MarketplaceBasketComponent implements OnInit {
     constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerServiceService){
         this.basket = this.manager.load()
     }
-;
+
     ngOnInit() {
+
 		this.route.params.subscribe(
 		(params) => {
             let id = params['id'];
@@ -35,9 +36,8 @@ export class MarketplaceBasketComponent implements OnInit {
     }
 
     order(){
-        console.log(JSON.stringify(this.inBasket(this.marketplace.products)));
-        this.api.post("association/marketplace/buy/", {
-            products: this.inBasket(this.marketplace.products)
+        this.api.post("rest/orders/", {
+            products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })
         }).subscribe(
             res => console.log(res),
             err => {this.error = err.message ; }

@@ -10,7 +10,8 @@ export class ApiService {
     header: any;
 
     constructor(private http: HttpClient, private cookieService: CookieService) {
-        this.header = new HttpHeaders().set('X-REQUESTED-WITH', 'XMLHttpRequest');
+        this.header = new HttpHeaders();
+        //this.header.set('X-REQUESTED-WITH', 'XMLHttpRequest');
     }
 
     get<T>(url: String){
