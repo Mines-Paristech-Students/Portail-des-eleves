@@ -29,6 +29,7 @@
     "ngx-clipboard": "^10.0.0",
     "ngx-cookie-service": "^1.0.10",
     "ngx-highlightjs": "^1.4.1",
+    "ngx-pagination": "^3.2.0",
     "npm": "^6.0.1",
     "particles.js": "^2.0.0",
     "rxjs": "^6.0.0",

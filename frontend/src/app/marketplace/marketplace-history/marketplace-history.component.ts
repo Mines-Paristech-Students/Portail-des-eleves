@@ -14,6 +14,8 @@ export class MarketplaceHistoryComponent implements OnInit {
     orders: any ;
     error: any ;
 
+    p = 1 ; // The current page
+
     numberOfItems = 0 ;
     basket: any ;
 

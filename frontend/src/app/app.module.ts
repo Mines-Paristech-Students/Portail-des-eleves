@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { NgSelectModule } from '@ng-select/ng-select';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +33,7 @@ import { MarketplaceHomeComponent } from './marketplace/marketplace-home/marketp
 import { MarketplaceSidebarComponent } from './marketplace/marketplace-sidebar/marketplace-sidebar.component';
 import { MarketplaceBasketComponent } from './marketplace/marketplace-basket/marketplace-basket.component';
 import { MarketplaceHistoryComponent } from './marketplace/marketplace-history/marketplace-history.component';
+import { PaginationControlsComponent } from './pagination-controls/pagination-controls.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -61,6 +63,7 @@ export function highlightJsFactory() {
     MarketplaceSidebarComponent,
     MarketplaceBasketComponent,
     MarketplaceHistoryComponent,
+    PaginationControlsComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ export function highlightJsFactory() {
     HttpClientModule,
 	BsDropdownModule.forRoot(),
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+    NgxPaginationModule
   ],
   providers: [ApiService, CookieService],
   bootstrap: [AppComponent]

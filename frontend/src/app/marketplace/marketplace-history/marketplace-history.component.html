@@ -16,12 +16,9 @@
                 </p>
 
                 <div class="card" *ngIf="orders && orders.length > 0">
-                    <div class="card-header">
-                        <p class="card-title">Commandes en attente</p>
-                    </div>
                     <table class="table card-table table-vcenter">
                         <tbody>
-                        <tr *ngFor="let order of orders ">
+                        <tr *ngFor="let order of orders | paginate: { itemsPerPage: 5, currentPage: p }">
                             <td class="order-img">
                                 <img
                                     src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
@@ -47,6 +44,13 @@
                         </tbody>
                     </table>
                 </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
+
 
                 <div *ngIf="orders && orders.length == 0" class="card">
                     <div class="card-body">
