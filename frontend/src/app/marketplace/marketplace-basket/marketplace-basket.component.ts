@@ -13,6 +13,7 @@ export class MarketplaceBasketComponent implements OnInit {
     error: any ;
 
     basket: any ;
+    pendingOrders: any ;
     numberOfItems = 0 ;
 
     constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerServiceService){
@@ -32,6 +33,11 @@ export class MarketplaceBasketComponent implements OnInit {
                 },
                 error => { this.error = error.message ; console.log(error) ; }
             );
+
+            this.api.get(`rest/orders/?status=ORDERED`).subscribe(
+                orders => this.pendingOrders = orders,
+                err => { this.error = err.message ; console.log(err) ; }
+            )
 		});
     }
 
@@ -39,8 +45,13 @@ export class MarketplaceBasketComponent implements OnInit {
         this.api.post("rest/orders/", {
             products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })
         }).subscribe(
-            res => console.log(res),
+            res => {
+                this.pendingOrders = this.pendingOrders.concat(res);
+                this.manager.clear(this.basket, this.marketplace);
+                this.countItems();
+            },
             err => {this.error = err.message ; }
+
         )
     }
 
@@ -70,6 +81,24 @@ export class MarketplaceBasketComponent implements OnInit {
 
     countItems(){
         this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
+    }
+
+    cancel(order){
+        this.api.patch(
+        `rest/orders/${order.id}/`,
+        { status: "CANCELLED" }
+        ).subscribe(
+            order => {
+                let index = 0 ;
+                // @ts-ignore
+                while(this.pendingOrders[index].id != order.id){
+                    index ++ ;
+                }
+
+                this.pendingOrders.splice(index, 1);
+            },
+            err => { this.error = err.message ; console.log(err) ; }
+        )
     }
 
 }

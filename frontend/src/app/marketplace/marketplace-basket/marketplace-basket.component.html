@@ -15,6 +15,37 @@
                     Une erreur est survenue : {{ error }}
                 </p>
 
+                <div class="card" *ngIf="pendingOrders && pendingOrders.length > 0">
+                    <div class="card-header">
+                        <p class="card-title">Commandes en attente</p>
+                    </div>
+                    <table class="table card-table table-vcenter">
+                        <tbody>
+                        <tr *ngFor="let order of pendingOrders ">
+                            <td class="order-img">
+                                <img
+                                    src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
+                                >
+                            </td>
+                            <td>
+                                <strong>{{ order.product.name }}</strong>
+                            </td>
+                            <td class="text-center text-muted d-none d-md-table-cell text-nowrap">
+                                Quantité : {{ order.quantity  }}
+                            </td>
+                            <td class="text-right">
+                                <strong>{{ order.value }}€</strong>
+                            </td>
+                            <td class="text-right">
+                                <button class="btn btn-danger" (click)="cancel(order)">
+                                    <i class="fe fe-shopping-cart"></i> Annuler
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="card">
                     <table class="table card-table table-vcenter">
                         <tbody>

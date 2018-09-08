@@ -29,6 +29,8 @@ class MarketplaceSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
 
+    product = ProductSerializer()
+
     class Meta:
         model = Order
         fields = ("id", "product", "buyer", "quantity", "value", "date", "status")

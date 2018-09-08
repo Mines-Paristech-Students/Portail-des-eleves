@@ -1,7 +1,7 @@
 import json
 
 from django.http import JsonResponse
-from django.middleware.csrf import get_token
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 
 from associations.models import Marketplace, Order, Product, User
@@ -16,6 +16,9 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('status', 'buyer')
 
     def create(self, request, **kwargs):
 
