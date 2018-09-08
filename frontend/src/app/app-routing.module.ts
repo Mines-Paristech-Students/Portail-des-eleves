@@ -14,6 +14,9 @@ import {AssociationSettingsComponent} from "./associations/association-settings/
 import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
 import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
 import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/marketplace-history.component";
+import {MarketplaceManagerOrdersComponent} from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
+import {MarketplaceManagerHistoryComponent} from "./marketplace/marketplace-manager-history/marketplace-manager-history.component";
+import {MarketplaceManagerCatalogComponent} from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -28,6 +31,10 @@ const routes: Routes = [
     { path: 'marketplace/:id', component: MarketplaceHomeComponent},
     { path: 'marketplace/:id/basket', component: MarketplaceBasketComponent},
     { path: 'marketplace/:id/history', component: MarketplaceHistoryComponent},
+
+    { path: 'marketplace/:id/manager/orders', component: MarketplaceManagerOrdersComponent},
+    { path: 'marketplace/:id/manager/history', component: MarketplaceManagerHistoryComponent},
+    { path: 'marketplace/:id/manager/catalog', component: MarketplaceManagerCatalogComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

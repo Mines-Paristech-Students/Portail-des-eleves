@@ -2,25 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
+import {BaseMarketplaceComponent} from "../base-marketplace-component";
 
 @Component({
     selector: 'app-marketplace-history',
     templateUrl: './marketplace-history.component.html',
     styleUrls: ['./marketplace-history.component.scss']
 })
-export class MarketplaceHistoryComponent implements OnInit {
+export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 
-    marketplace: any ;
     orders: any ;
-    error: any ;
-
     p = 1 ; // The current page
 
-    numberOfItems = 0 ;
-    basket: any ;
-
-    constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerServiceService){
-        this.basket = this.manager.load()
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+        super(api, route, manager);
     }
 
     ngOnInit() {

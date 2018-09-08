@@ -2,24 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
+import {BaseMarketplaceComponent} from "../base-marketplace-component";
 
 @Component({
   selector: 'app-marketplace-basket',
   templateUrl: './marketplace-basket.component.html',
   styleUrls: ['./marketplace-basket.component.scss']
 })
-export class MarketplaceBasketComponent implements OnInit {
-    marketplace: any ;
-    error: any ;
+export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
 
-    basket: any ;
     pendingOrders: any ;
-    numberOfItems = 0 ;
 
-    constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerServiceService){
-        this.basket = this.manager.load()
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+        super(api, route, manager);
     }
-
     ngOnInit() {
 
 		this.route.params.subscribe(
@@ -41,6 +37,10 @@ export class MarketplaceBasketComponent implements OnInit {
 		});
     }
 
+    getQuantity(product){
+        return this.manager.getQuantity(this.basket, this.marketplace, product);
+    }
+
     order(){
         this.api.post("rest/orders/", {
             products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })
@@ -57,30 +57,6 @@ export class MarketplaceBasketComponent implements OnInit {
 
     inBasket(allProducts) {
         return allProducts.filter(product => this.getQuantity(product) > 0);
-    }
-
-    getQuantity(product){
-        return this.manager.getQuantity(this.basket, this.marketplace, product);
-    }
-
-    setQuantity(product, value){
-        let res =  this.manager.setQuantity(this.basket, this.marketplace, product, value);
-        this.countItems();
-        return res ;
-    }
-
-    add(product){
-        this.manager.add(this.basket, this.marketplace, product) ;
-        this.countItems();
-    }
-
-    remove(product){
-        this.manager.remove(this.basket, this.marketplace, product) ;
-        this.countItems() ;
-    }
-
-    countItems(){
-        this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
     }
 
     cancel(order){

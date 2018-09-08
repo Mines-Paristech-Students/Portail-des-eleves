@@ -34,6 +34,10 @@ import { MarketplaceSidebarComponent } from './marketplace/marketplace-sidebar/m
 import { MarketplaceBasketComponent } from './marketplace/marketplace-basket/marketplace-basket.component';
 import { MarketplaceHistoryComponent } from './marketplace/marketplace-history/marketplace-history.component';
 import { PaginationControlsComponent } from './pagination-controls/pagination-controls.component';
+import { MarketplaceManagerOrdersComponent } from './marketplace/marketplace-manager-orders/marketplace-manager-orders.component';
+import { MarketplaceManagerCatalogComponent } from './marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component';
+import { MarketplaceManagerHistoryComponent } from './marketplace/marketplace-manager-history/marketplace-manager-history.component';
+import {BaseMarketplaceComponent} from "./marketplace/base-marketplace-component";
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -64,6 +68,9 @@ export function highlightJsFactory() {
     MarketplaceBasketComponent,
     MarketplaceHistoryComponent,
     PaginationControlsComponent,
+    MarketplaceManagerOrdersComponent,
+    MarketplaceManagerCatalogComponent,
+    MarketplaceManagerHistoryComponent
   ],
   imports: [
     BrowserModule,

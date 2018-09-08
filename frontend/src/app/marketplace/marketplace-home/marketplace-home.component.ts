@@ -2,37 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
+import {BaseMarketplaceComponent} from "../base-marketplace-component";
 
 @Component({
   selector: 'app-marketplace-home',
   templateUrl: './marketplace-home.component.html',
   styleUrls: ['./marketplace-home.component.scss']
 })
-export class MarketplaceHomeComponent implements OnInit {
+export class MarketplaceHomeComponent extends BaseMarketplaceComponent{
 
-    marketplace: any ;
-    error: any ;
-
-    basket: any ;
-    numberOfItems = 0 ;
-
-    constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerServiceService){
-        this.basket = this.manager.load()
-    }
-;
-    ngOnInit() {
-		this.route.params.subscribe(
-		(params) => {
-            let id = params['id'];
-
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
-                marketplace => {
-                    this.marketplace = marketplace ;
-                    this.countItems();
-                },
-                error => { this.error = error.message ; console.log(error) ; }
-            );
-		});
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+        super(api, route, manager);
     }
 
     getQuantity(product){
@@ -53,10 +33,6 @@ export class MarketplaceHomeComponent implements OnInit {
     remove(product){
         this.manager.remove(this.basket, this.marketplace, product) ;
         this.countItems() ;
-    }
-
-    countItems(){
-        this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
     }
 
 }

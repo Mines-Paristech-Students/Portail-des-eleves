@@ -1,0 +1,24 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="marketplace">
+        <div class="page-header">
+            <h3 class="page-title">Magasin de {{ marketplace.association.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <marketplace-sidebar [marketplace]="marketplace" [numberOfItems]="numberOfItems"></marketplace-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <p *ngIf="error" class="text-danger">Une erreur est survenue : {{ error }}</p>
+
+                <div class="card">
+                    <div class="card-body">
+                        <p>Manage orders</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
