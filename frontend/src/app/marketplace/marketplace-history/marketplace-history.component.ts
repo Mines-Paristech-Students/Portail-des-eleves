@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";

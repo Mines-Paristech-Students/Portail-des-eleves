@@ -13,9 +13,12 @@ from associations.serializers.association import AssociationsShortSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
+    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+
     class Meta:
         model = Product
-        fields = ("id", "name", "description", "price", "number_left", "orderable_online")
+        fields = ("id", "name", "description", "price", "number_left", "orderable_online", "marketplace", "still_in_the_catalogue")
 
 
 class MarketplaceSerializer(serializers.ModelSerializer):

@@ -5,12 +5,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 
 from associations.models import Marketplace, Order, Product, User
-from associations.serializers import MarketplaceSerializer, OrderSerializer
+from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class OrderViewSet(viewsets.ModelViewSet):

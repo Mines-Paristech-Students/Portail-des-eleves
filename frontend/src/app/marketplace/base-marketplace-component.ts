@@ -11,10 +11,10 @@ export abstract class BaseMarketplaceComponent implements OnInit {
     protected basket: any ;
     protected numberOfItems = 0 ;
 
-    constructor(protected api: ApiService, protected route: ActivatedRoute, protected manager: BasketManagerServiceService){
-        this.basket = this.manager.load()
+    protected constructor(protected api: ApiService, protected route: ActivatedRoute, protected manager: BasketManagerServiceService){
+        this.basket = this.manager.load();
     }
-;
+
     ngOnInit() {
 		this.route.params.subscribe(
 		(params) => {
