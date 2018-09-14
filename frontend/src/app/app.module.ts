@@ -38,7 +38,6 @@ import { MarketplaceHistoryComponent } from './marketplace/marketplace-history/m
 import { PaginationControlsComponent } from './pagination-controls/pagination-controls.component';
 import { MarketplaceManagerOrdersComponent } from './marketplace/marketplace-manager-orders/marketplace-manager-orders.component';
 import { MarketplaceManagerCatalogComponent } from './marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component';
-import { MarketplaceManagerHistoryComponent } from './marketplace/marketplace-manager-history/marketplace-manager-history.component';
 import {BaseMarketplaceComponent} from "./marketplace/base-marketplace-component";
 
 // alternatively if you only need to include a subset of languages
@@ -71,8 +70,7 @@ export function highlightJsFactory() {
     MarketplaceHistoryComponent,
     PaginationControlsComponent,
     MarketplaceManagerOrdersComponent,
-    MarketplaceManagerCatalogComponent,
-    MarketplaceManagerHistoryComponent
+    MarketplaceManagerCatalogComponent
   ],
   imports: [
     BrowserModule,

@@ -33,7 +33,6 @@ const routes: Routes = [
     { path: 'marketplace/:id/history', component: MarketplaceHistoryComponent},
 
     { path: 'marketplace/:id/manager/orders', component: MarketplaceManagerOrdersComponent},
-    { path: 'marketplace/:id/manager/history', component: MarketplaceManagerHistoryComponent},
     { path: 'marketplace/:id/manager/catalog', component: MarketplaceManagerCatalogComponent},
 
     { path: 'users', component: FacebookComponent },
