@@ -28,8 +28,6 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
             orderable_online: true
         };
 
-        console.log(product);
-
         this.api.post("rest/products/", product).subscribe(
             product => {
                 this.marketplace.products.push(product) ;

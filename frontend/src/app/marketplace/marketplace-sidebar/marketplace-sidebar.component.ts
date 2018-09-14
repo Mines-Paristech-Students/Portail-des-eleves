@@ -9,6 +9,7 @@ export class MarketplaceSidebarComponent implements OnInit {
 
     @Input() marketplace: any ;
     @Input() numberOfItems: number;
+    @Input() showBalance = false
 
     constructor() { }
 
