@@ -1,7 +1,7 @@
 import json
 
 from django.http import JsonResponse
-from django_filters.rest_framework import DjangoFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
 
 from associations.models import Marketplace, Order, Product, User
@@ -18,6 +18,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
 
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -25,12 +26,13 @@ class OrderViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('status', 'buyer')
 
+
     def get_queryset(self):
         """
         Optionally restricts the returned purchases to a given user,
         by filtering against a `username` query parameter in the URL.
         """
-        queryset = Order.objects.all()
+        queryset = Order.objects.all().order_by("-id")
 
         marketplace = self.request.query_params.get('marketplace', None)
         if marketplace is not None:

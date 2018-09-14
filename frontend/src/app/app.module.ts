@@ -7,7 +7,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { NgSelectModule } from '@ng-select/ng-select';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -80,7 +82,8 @@ export function highlightJsFactory() {
     HttpClientModule,
 	BsDropdownModule.forRoot(),
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgbModule
   ],
   providers: [ApiService, CookieService],
   bootstrap: [AppComponent]

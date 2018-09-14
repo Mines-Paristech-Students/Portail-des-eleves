@@ -19,8 +19,6 @@ export class MarketplaceManagerHistoryComponent extends BaseMarketplaceComponent
     }
 
     ngOnInit() {
-        let user = JSON.parse(localStorage.getItem("user"));
-
 		this.route.params.subscribe(
 		(params) => {
 			let id = params['id'];
