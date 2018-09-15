@@ -1,0 +1,153 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="marketplace">
+        <div class="page-header">
+            <h3 class="page-title">Comptoir de {{ marketplace.association.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <marketplace-sidebar [marketplace]="marketplace" [numberOfItems]="numberOfItems"></marketplace-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <p class="text-danger" *ngIf="error">
+                    Une erreur est survenue : {{ error }}
+                </p>
+
+                <ng-container *ngIf="buyer == null">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="fe fe-search" (click)="updateUserSearch()"></span>
+                            <input type="text" class="form-control border-0" placeholder="Rechercher"
+                                   [(ngModel)]="userSearch" (change)="updateUserSearch()">
+                            <span class="fe fe-x" (click)="userSearch = '' ; updateUserSearch() ;"
+                                  *ngIf="userSearch != ''"></span>
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div *ngFor="let user of users$ | async" class="col-md-2 text-center"
+                                     (click)="buyer = user">
+                                    <profile-photo [user]="user"></profile-photo>
+                                    <p class="mt-2">{{ user.id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="buyer != null">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Achat pour {{ buyer.id }}</div>
+                            <div class="card-options">
+                                <button class="btn btn-danger btn-sm" (click)="buyer = null">Annuler</button>
+                            </div>
+                        </div>
+                        <table class="table card-table table-vcenter">
+                            <tbody>
+                            <ng-container *ngFor="let product of inBasket(marketplace.products)">
+                                <tr *ngIf="product.still_in_the_catalogue">
+                                    <td>
+                                        <p>{{ product.name }}</p>
+                                    </td>
+                                    <td class="text-right text-muted d-none d-md-table-cell text-nowrap">
+                                        <ng-container *ngIf="product.number_left >= 0">
+                                            {{ product.number_left }} restants
+                                        </ng-container>
+
+                                        <ng-container *ngIf="product.number_left < 0">
+                                            Stocks illimités
+                                        </ng-container>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>{{ product.price }}€</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <ng-container
+                                                *ngIf="product.orderable_online && product.number_left != 0 && getQuantity(product) == 0">
+                                            <button class="btn btn-success btn-sm" (click)="add(product)">
+                                                <i class="fe fe-shopping-cart"></i> +1
+                                            </button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="getQuantity(product) > 0">
+                                            <input
+                                                    type="number" class="form-control w-8 pull-right"
+                                                    [ngModel]="getQuantity(product)"
+                                                    (change)="setQuantity(product, $event.target.value)"
+                                            >
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p *ngIf="numberOfBuyerItems > 0">
+                        <button class="btn btn-success" (click)="order()">
+                            <span class="fe fe-cash"></span>
+                            Enregister la commande
+                        </button>
+                    </p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="fe fe-search" (click)="updateProductSearch()"></span>
+                            <input type="text" class="form-control border-0" placeholder="Rechercher"
+                                   [(ngModel)]="productSearch" (change)="updateProductSearch()">
+                            <span class="fe fe-x" (click)="productSearch = '' ; updateProductSearch() ;"
+                                  *ngIf="productSearch != ''"></span>
+
+                        </div>
+                        <table class="table card-table table-vcenter">
+                            <tbody>
+                            <ng-container *ngFor="let product of products$ | async">
+                                <tr *ngIf="product.still_in_the_catalogue">
+                                    <td>
+                                        <p>{{ product.name }}</p>
+                                    </td>
+                                    <td class="text-right text-muted d-none d-md-table-cell text-nowrap">
+                                        <ng-container *ngIf="product.number_left >= 0">
+                                            {{ product.number_left }} restants
+                                        </ng-container>
+
+                                        <ng-container *ngIf="product.number_left < 0">
+                                            Stocks illimités
+                                        </ng-container>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>{{ product.price }}€</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <ng-container
+                                                *ngIf="product.orderable_online && product.number_left != 0 && getQuantity(product) == 0">
+                                            <button class="btn btn-success btn-sm" (click)="add(product)">
+                                                <i class="fe fe-shopping-cart"></i> +1
+                                            </button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="getQuantity(product) > 0">
+                                            <input
+                                                    type="number" class="form-control w-8 pull-right"
+                                                    [ngModel]="getQuantity(product)"
+                                                    (change)="setQuantity(product, $event.target.value)"
+                                            >
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+
+</div>

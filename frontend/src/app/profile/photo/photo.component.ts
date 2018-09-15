@@ -9,6 +9,7 @@ import {User} from "../../models/user";
 export class PhotoComponent implements OnInit {
 
     @Input() user: User;
+    @Input() size = "xxl" ;
 
     constructor() { }
 

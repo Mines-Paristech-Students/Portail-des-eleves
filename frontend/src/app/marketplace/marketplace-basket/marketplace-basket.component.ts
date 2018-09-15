@@ -41,6 +41,12 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
         return this.manager.getQuantity(this.basket, this.marketplace, product);
     }
 
+    setQuantity(product, quantity){
+        let res =  this.manager.setQuantity(this.basket, this.marketplace, product, quantity);
+        this.countItems();
+        return res ;
+    }
+
     order(){
         this.api.post("rest/orders/", {
             products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })

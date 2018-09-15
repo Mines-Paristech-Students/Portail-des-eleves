@@ -2,7 +2,7 @@ import json
 
 from django.http import JsonResponse
 from url_filter.integrations.drf import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 
 from associations.models import Marketplace, Order, Product, User
 from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer
@@ -17,6 +17,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("name",)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -25,7 +27,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('status', 'buyer')
-
 
     def get_queryset(self):
         """
@@ -60,16 +61,18 @@ class OrderViewSet(viewsets.ModelViewSet):
                 })
                 continue
 
+            status = "ORDERED"
             user = request.user
             if user_id:
-                user = User.objects.filter(id=user_id)
+                user = User.objects.get(id=user_id)
+                status = "DELIVERED"
 
             order = Order(
                 product=product,
                 buyer=user,
                 quantity=quantity,
                 value=quantity * product.price,
-                status="ORDERED"
+                status=status
             )
 
             product.number_left -= quantity

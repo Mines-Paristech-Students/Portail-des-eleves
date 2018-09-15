@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, filters
 from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
@@ -57,3 +57,6 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('id', 'first_name')
