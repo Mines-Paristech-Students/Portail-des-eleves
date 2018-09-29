@@ -3,6 +3,9 @@ import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
+import {Observable, of, Subject} from "rxjs";
+import {filter, first, map, mergeMap, scan} from "rxjs/operators";
+import {flatMap} from "tslint/lib/utils";
 
 @Component({
   selector: 'app-marketplace-home',
@@ -11,8 +14,36 @@ import {BaseMarketplaceComponent} from "../base-marketplace-component";
 })
 export class MarketplaceHomeComponent extends BaseMarketplaceComponent{
 
+    p = 0; // The current page
+    products: any;
+
     constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
         super(api, route, manager);
+    }
+
+    ngOnInit() {
+		this.route.params.subscribe(
+		(params) => {
+            let id = params['id'];
+
+            let req = this.api.get(`rest/marketplace/${id}/`);
+
+            req.subscribe(
+                marketplace => {
+                    this.marketplace = marketplace ;
+                    this.countItems();
+                },
+                error => { this.error = error.message ; console.log(error) ; }
+            );
+
+            this.products = req.pipe(
+                // @ts-ignore
+                map(m => m.products),
+                mergeMap(p => p),
+                // @ts-ignore
+                scan((acc, value) => [...acc, value], [])
+            );
+		});
     }
 
     getQuantity(product){

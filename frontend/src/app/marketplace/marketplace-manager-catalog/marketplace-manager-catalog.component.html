@@ -28,11 +28,13 @@
                         <tbody>
                         <tr *ngFor="let product of marketplace.products | paginate: { itemsPerPage: 10, currentPage: p }">
                             <ng-container *ngIf="editing[product.id] == undefined || editing[product.id] == false">
-                                <td class="text-right"><span class="text-primary fe fe-edit" (click)="startEdit(product)"></span></td>
+                                <td class="text-right"><span class="text-primary fe fe-edit"
+                                                             (click)="startEdit(product)"></span></td>
                                 <td>{{ product.name }}</td>
                                 <td class="text-center">
                                     <ng-container *ngIf="product.number_left == -1">∞</ng-container>
-                                    <ng-container *ngIf="product.number_left > -1">{{ product.number_left }}</ng-container>
+                                    <ng-container
+                                            *ngIf="product.number_left > -1">{{ product.number_left }}</ng-container>
 
                                 </td>
                                 <td class="text-center">{{ product.price }}€</td>
@@ -64,7 +66,8 @@
                                     <div class="row">
                                         <div class="input-group col-md-6 mb-2">
 
-                                            <input type="number" class="form-control text-right" aria-label="Prix" [(ngModel)]="product.price">
+                                            <input type="number" class="form-control text-right" aria-label="Prix"
+                                                   [(ngModel)]="product.price">
                                             <span class="input-group-append">
                                                 <span class="input-group-text">€</span>
                                             </span>
@@ -76,7 +79,9 @@
                                                 <span class="input-group-prepend">
                                                     <span class="input-group-text">
                                                         <label class="custom-control custom-checkbox custom-control-inline m-0">
-                                                            <input type="checkbox" class="custom-control-input" (click)="product.number_left = 10" [checked]="product.number_left == -1">
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   (click)="product.number_left = 10"
+                                                                   [checked]="product.number_left == -1">
                                                             <span class="custom-control-label">Quantitée </span>
                                                         </label>
                                                     </span>
@@ -90,12 +95,15 @@
                                                 <span class="input-group-prepend">
                                                     <span class="input-group-text">
                                                         <label class="custom-control custom-checkbox custom-control-inline m-0">
-                                                            <input type="checkbox" class="custom-control-input" (click)="product.number_left = -1" [checked]="product.number_left == -1">
+                                                            <input type="checkbox" class="custom-control-input"
+                                                                   (click)="product.number_left = -1"
+                                                                   [checked]="product.number_left == -1">
                                                             <span class="custom-control-label">Quantitée illimitée</span>
                                                         </label>
                                                     </span>
                                                 </span>
-                                                <input type="number" class="form-control text-right" aria-label="Nombre restant" [(ngModel)]="product.number_left">
+                                                <input type="number" class="form-control text-right"
+                                                       aria-label="Nombre restant" [(ngModel)]="product.number_left">
                                                 <span class="input-group-append">
                                                     <span class="input-group-text">restants</span>
                                                 </span>
@@ -104,13 +112,17 @@
                                         </div>
 
                                         <label class="custom-switch col-md-6">
-                                            <input type="checkbox" class="custom-switch-input" (change)="product.still_in_the_catalogue = !product.still_in_the_catalogue" [(checked)]="!product.still_in_the_catalogue">
+                                            <input type="checkbox" class="custom-switch-input"
+                                                   (change)="product.still_in_the_catalogue = !product.still_in_the_catalogue"
+                                                   [(checked)]="!product.still_in_the_catalogue">
                                             <span class="custom-switch-indicator"></span>
                                             <span class="custom-switch-description">Masquer du catalogue</span>
                                         </label>
 
                                         <label class="custom-switch col-md-6">
-                                            <input type="checkbox" class="custom-switch-input" (change)="product.orderable_online = !product.orderable_online" [(checked)]="product.orderable_online">
+                                            <input type="checkbox" class="custom-switch-input"
+                                                   (change)="product.orderable_online = !product.orderable_online"
+                                                   [(checked)]="product.orderable_online">
                                             <span class="custom-switch-indicator"></span>
                                             <span class="custom-switch-description">Possiblité de le commander en ligne </span>
                                         </label>
@@ -132,10 +144,12 @@
                                     ></textarea>
 
 
-                                    <button type="button" class="btn btn-secondary btn-sm mt-4" (click)="endEdit(product)">
+                                    <button type="button" class="btn btn-secondary btn-sm mt-4"
+                                            (click)="endEdit(product)">
                                         <span class="fe fe-check"></span> Sauvegarder
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-sm mt-4 float-right" (click)="delete(product)">
+                                    <button type="button" class="btn btn-danger btn-sm mt-4 float-right"
+                                            (click)="delete(product)">
                                         <span class="fe fe-x"></span> Supprimer
                                     </button>
 
@@ -144,7 +158,9 @@
                         </tr>
                         <tr>
                             <td colspan="6" class="text-center">
-                                <button class="btn btn-success btn-sm" (click)="newProduct()"><span class="fe fe-plus"></span>Ajouter un produit</button>
+                                <button class="btn btn-success btn-sm" (click)="newProduct()"><span
+                                        class="fe fe-plus"></span>Ajouter un produit
+                                </button>
                             </td>
                         </tr>
                         </tbody>
