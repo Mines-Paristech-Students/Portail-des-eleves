@@ -11,7 +11,8 @@ import {BaseMarketplaceComponent} from "../base-marketplace-component";
 })
 export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 
-    orders: any ;
+    entries = [] ;
+
     p = 1 ; // The current page
 
     constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
@@ -35,7 +36,17 @@ export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 
             // @ts-ignore
             this.api.get(`rest/orders/?marketplace=${id}&buyer=${user.id}`).subscribe(
-                orders => this.orders = orders,
+                orders => this.entries = this.entries
+                    .concat(orders)
+                    .sort((a, b) => a.date < b.date ? 1 : -1),
+                error => this.error = error.message
+            );
+
+            this.api.get(`rest/funding/?marketplace=${id}&user=${user.id}`).subscribe(
+                fundings => this.entries = this.entries
+                    .concat(fundings)
+                    .sort((a, b) => a.date < b.date ? 1 : -1)
+                ,
                 error => this.error = error.message
             );
 		});

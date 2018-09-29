@@ -17,7 +17,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Filter les commandes</div>
+                        <div class="card-title">Filter les versements</div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -91,19 +91,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let order of orders | async | paginate: { itemsPerPage: 10, currentPage: p }">
-                            <td class="text-center">{{ order.value }}€</td>
+                        <tr *ngFor="let funding of fundings | async | paginate: { itemsPerPage: 10, currentPage: p }">
+                            <td class="text-center">{{ funding.value }}€</td>
                             <td class="text-center">
                                 <ng-container *ngFor="let s of status">
                                     <span
                                             [ngbPopover]="popContent"
-                                            *ngIf="order.status == s.value"
+                                            *ngIf="funding.status == s.value"
                                             class="tag tag-{{ s.color }}"
 
                                             placement="right" ngbTooltip="Cliquez pour modifier le status"
                                     >
                                         {{ s.label }}
-                                        <span class="tag-addon" *ngIf="order.activity"><i class="fe fe-{{ order.activity }}"></i></span>
+                                        <span class="tag-addon" *ngIf="funding.activity"><i class="fe fe-{{ funding.activity }}"></i></span>
                                     </span>
                                 </ng-container>
 
@@ -111,14 +111,14 @@
                                     <div class="tags">
                                         <span *ngFor="let s of status"
                                               class="tag tag-{{ s.color }}"
-                                              (click)="updateStatus(order, s)"
+                                              (click)="updateStatus(funding, s)"
                                         >{{ s.label }} </span>
                                     </div>
                                 </ng-template>
 
                             </td>
-                            <td class="text-center">{{ order.user }}</td>
-                            <td class="text-center">{{ order.date | date:"d/MM/yy, hh:mm" }}</td>
+                            <td class="text-center">{{ funding.user }}</td>
+                            <td class="text-center">{{ funding.date | date:"d/MM/yy, HH:mm" }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -131,7 +131,7 @@
                 ></app-pagination-controls>
 
 
-                <div *ngIf="orders && orders.length == 0" class="card">
+                <div *ngIf="fundings && fundings.length == 0" class="card">
                     <div class="card-body">
                         <p class="text-center">Vous n'avez fait aucune commande jusqu'à maintenant</p>
                     </div>

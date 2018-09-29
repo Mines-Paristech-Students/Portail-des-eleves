@@ -11,7 +11,7 @@ import {BasketManagerServiceService} from "../basketManager.service";
 })
 export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponent {
 
-    orders: any;
+    fundings: any;
     p = 1; // The current page
 
     marketplace_id: any ;
@@ -46,7 +46,7 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
                     error => this.error = error.message
                 );
 
-                this.orders = this.api.get(`rest/funding/?marketplace=${this.marketplace_id}`)
+                this.fundings = this.api.get(`rest/funding/?marketplace=${this.marketplace_id}`)
                 this.users = this.api.get('rest/users/')
             });
     }
@@ -67,19 +67,19 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
             url = url + `&status__in=${this.filter.status.map(s => s.value).join(",")}` ;
         }
 
-        this.orders = this.api.get(url);
+        this.fundings = this.api.get(url);
     }
 
-    updateStatus(order, status){
-        order.activity = "upload" ;
-        order.status = status.value ;
+    updateStatus(funding, status){
+        funding.activity = "upload" ;
+        funding.status = status.value ;
 
-        this.api.patch(`rest/funding/${order.id}/`, {
-            status: order.status
+        this.api.patch(`rest/funding/${funding.id}/`, {
+            status: funding.status
         }).subscribe(
             _ => {
-                order.activity = "check" ;
-                setTimeout(() => order.activity = false, 1000)
+                funding.activity = "check" ;
+                setTimeout(() => funding.activity = false, 1000)
             },
             err => this.error = err.message
         )

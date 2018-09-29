@@ -25,24 +25,11 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by("-id")
     serializer_class = OrderSerializer
 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('status', 'buyer')
-
-    def get_queryset(self):
-        """
-        Optionally restricts the returned purchases to a given user,
-        by filtering against a `username` query parameter in the URL.
-        """
-        queryset = Order.objects.all().order_by("-id")
-
-        marketplace = self.request.query_params.get('marketplace', None)
-        if marketplace is not None:
-            queryset = queryset.filter(product__marketplace__id=marketplace)
-
-        return queryset
+    filter_fields = ('status', 'buyer', "date")
 
     def create(self, request, **kwargs):
 
@@ -94,7 +81,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('status', 'user')
+    filter_fields = ('status', 'user', "date")
 
     queryset = Funding.objects.order_by("-id")
     serializer_class = FundingSerializer
