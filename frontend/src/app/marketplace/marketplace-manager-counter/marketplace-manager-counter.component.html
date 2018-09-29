@@ -29,7 +29,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div *ngFor="let user of users$ | async" class="col-md-2 text-center"
-                                     (click)="buyer = user">
+                                     (click)="setBuyer(user)">
                                     <profile-photo [user]="user"></profile-photo>
                                     <p class="mt-2">{{ user.id }}</p>
                                 </div>
@@ -41,7 +41,7 @@
                 <ng-container *ngIf="buyer != null">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Achat pour {{ buyer.id }}</div>
+                            <div class="card-title">Achat pour {{ buyer.id }} ({{ balance }}€ sur le compte)</div>
                             <div class="card-options">
                                 <button class="btn btn-danger btn-sm" (click)="buyer = null">Annuler</button>
                             </div>

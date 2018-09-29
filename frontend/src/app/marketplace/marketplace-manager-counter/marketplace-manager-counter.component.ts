@@ -13,11 +13,12 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
 
     users$: any;
     products$: any ;
+    balance: any ;
 
     userSearch = "" ;
     productSearch = "" ;
 
-    buyer: any = {id: "17bocquet"} ;
+    buyer: any;
     userBasket = {} ;
     numberOfBuyerItems = 0 ;
 
@@ -54,6 +55,14 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
 
     updateProductSearch(){
         this.products$ = this.api.get(`rest/products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
+    }
+
+    setBuyer(user){
+        this.buyer = user ;
+        this.api.get(`rest/marketplace/${this.marketplace.id}/balance/${this.buyer.id}`).subscribe(
+            // @ts-ignore
+            res => this.balance = res.balance
+        )
     }
 
     getQuantity(product){
@@ -120,9 +129,8 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     }
 
     addMoney(){
-        this.api.put(`rest/marketplace/${this.marketplace.id}/balance`, {
+        this.api.put(`rest/marketplace/${this.marketplace.id}/balance/${this.buyer.id}`, {
             amount: parseFloat(this.moneyToAdd),
-            user: this.buyer.id
         }).subscribe(
             res => {
                 this.addMoneyMessage = `${this.moneyToAdd}€ ajoutés`;

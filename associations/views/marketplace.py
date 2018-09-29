@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 
 from django.http import JsonResponse
 from rest_framework.views import APIView
@@ -101,17 +102,34 @@ class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.Ge
 
 class BalanceView(APIView):
 
-    def get(self, request, pk, format=None):
-        return JsonResponse({"balance": 12})
+    def get(self, request, marketplace_id, user_id, format=None):
+        user_id = user_id if user_id else request.user.id
+        balance = Decimal(0.0)
 
-    def put(self, request, pk, format=None):
+        orders = Order.objects.filter(buyer__id=user_id, product__marketplace__id=marketplace_id)
+        fundings = Funding.objects.filter(user__id=user_id, marketplace__id=marketplace_id)
+
+        for order in orders:
+            if order.status == "DELIVERED":
+                balance -= order.value
+
+        for funding in fundings:
+            if funding.status == "FUNDED":
+                balance += funding.value
+
+        return JsonResponse({
+            "balance": balance,
+            "user": user_id
+        })
+
+    def put(self, request, marketplace_id, user_id, format=None):
         body = json.loads(request.body)
-        user = User.objects.get(pk=body["user"])
+        user = User.objects.get(pk=user_id)
 
         try:
             amount = float(body["amount"])
             if amount != 0.0:
-                Funding.objects.create(user=user, value=amount)
+                Funding.objects.create(user=user, value=amount, marketplace_id=marketplace_id)
 
         except ValueError as err:
             return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")

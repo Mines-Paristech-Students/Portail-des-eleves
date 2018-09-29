@@ -61,6 +61,8 @@ class Funding(models.Model):
     value = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateTimeField(auto_now=True)
 
+    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="fundings")
+
     STATUS = (
         ("FUNDED", "Versé"),  # The buyer passed the purchase order
         ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded

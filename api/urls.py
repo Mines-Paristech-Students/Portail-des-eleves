@@ -22,5 +22,5 @@ urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
     url('rest/', include(router.urls)),
-    url(r'^rest/marketplace/(?P<pk>[^/.]+)/balance$', BalanceView.as_view()),
+    url(r'^rest/marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
 ]
