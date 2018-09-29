@@ -22,7 +22,7 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
 		(params) => {
             let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
+            this.api.get(`marketplace/${id}/`).subscribe(
                 marketplace => {
                     this.marketplace = marketplace ;
                     this.countItems();
@@ -30,7 +30,7 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
                 error => { this.error = error.message ; console.log(error) ; }
             );
 
-            this.api.get(`rest/orders/?status=ORDERED`).subscribe(
+            this.api.get(`orders/?status=ORDERED`).subscribe(
                 orders => this.pendingOrders = orders,
                 err => { this.error = err.message ; console.log(err) ; }
             )
@@ -48,7 +48,7 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
     }
 
     order(){
-        this.api.post("rest/orders/", {
+        this.api.post("orders/", {
             products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })
         }).subscribe(
             res => {
@@ -67,7 +67,7 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
 
     cancel(order){
         this.api.patch(
-        `rest/orders/${order.id}/`,
+        `orders/${order.id}/`,
         { status: "CANCELLED" }
         ).subscribe(
             order => {

@@ -28,7 +28,7 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
             orderable_online: true
         };
 
-        this.api.post("rest/products/", product).subscribe(
+        this.api.post("products/", product).subscribe(
             product => {
                 this.marketplace.products.push(product) ;
                 // @ts-ignore
@@ -46,7 +46,7 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
         if(product.name != "" && product.number_left >= -1) {
             this.editing[product.id] = false;
 
-            this.api.put(`rest/products/${product.id}/`, product).subscribe(
+            this.api.put(`products/${product.id}/`, product).subscribe(
                 res => 0,
                 err => {
                     this.error = err.message;
@@ -62,7 +62,7 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
             this.marketplace.products.splice(index, 1);
         }
 
-        this.api.delete(`rest/products/${product.id}/`).subscribe(
+        this.api.delete(`products/${product.id}/`).subscribe(
             res => 0,
             err => this.error = err.message
         )

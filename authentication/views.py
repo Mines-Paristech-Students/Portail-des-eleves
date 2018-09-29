@@ -1,6 +1,9 @@
 from datetime import datetime
 
-from rest_framework import generics, status, viewsets, filters
+from django_filters.rest_framework import filters
+from rest_framework import generics, status, viewsets
+from django.http import HttpResponse
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
@@ -26,12 +29,35 @@ class JWTSetCookiesView(generics.GenericAPIView):
 
         data = serializer.validated_data
         access_token = data['access']
-        access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LIFETIME)
-        response = Response(status=status.HTTP_200_OK)
+        access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LONG_LIFETIME)
+        response = HttpResponse(status=status.HTTP_200_OK)
         response.set_cookie(
             api_settings.ACCESS_TOKEN_COOKIE_NAME,
             access_token,
             expires=access_token_expiration,
+            httponly=True,
+            secure=self.is_prod_mode,
+        )
+        return response
+
+
+class LogoutView(generics.GenericAPIView):
+    """
+    This class removes the JWT token saved on the client browser
+    """
+    is_prod_mode = settings.is_prod_mode()
+
+    def post(self, request, *args, **kwargs):
+        """Overwrites the jwt cookie with a dummy value
+        and makes it expire in the past so that most browser will
+        delete the cookie
+        """
+
+        response = HttpResponse(status=status.HTTP_200_OK)
+        response.set_cookie(
+            api_settings.ACCESS_TOKEN_COOKIE_NAME,
+            "deleted because you logged out",
+            expires=datetime.fromtimestamp(0),
             httponly=True,
             secure=self.is_prod_mode,
         )
@@ -58,5 +84,19 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (SearchFilter,)
     search_fields = ('id', 'first_name')
+
+    def get_object(self):
+        """
+        This method is called by the view set to retrieve
+        data for a given user. The user identifier is in the pk kwargs.
+
+        If pk is the string "current", we return the data for the current
+        authenticated user.
+        """
+        pk = self.kwargs.get('pk')
+        if pk == "current":
+            return self.request.user
+
+        return super(UserViewSet, self).get_object()

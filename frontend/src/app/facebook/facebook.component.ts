@@ -20,9 +20,14 @@ export class FacebookComponent implements OnInit {
     constructor(private apiService: ApiService) { }
 
     ngOnInit() {
-        this.apiService.get<[User]>("rest/users/").subscribe(res => {
-            this.users = res
-        })
+        this.apiService.getUsers().subscribe(
+            data => {
+                this.users = data;
+            },
+            err => {
+                console.log(err)
+            }
+        )
     }
 
 }

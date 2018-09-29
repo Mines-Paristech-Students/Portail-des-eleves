@@ -20,7 +20,7 @@ export abstract class BaseMarketplaceComponent implements OnInit {
 		(params) => {
             let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
+            this.api.get(`marketplace/${id}/`).subscribe(
                 marketplace => {
                     this.marketplace = marketplace ;
                     this.countItems();

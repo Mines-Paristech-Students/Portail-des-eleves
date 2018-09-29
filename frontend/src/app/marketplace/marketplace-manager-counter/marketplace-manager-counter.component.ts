@@ -35,7 +35,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         (params) => {
             let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
+            this.api.get(`marketplace/${id}/`).subscribe(
                 marketplace => {
                     this.marketplace = marketplace;
                     this.countItems();
@@ -50,16 +50,16 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     }
 
     updateUserSearch(){
-        this.users$ = this.api.get(`rest/users/?search=${this.userSearch}`)
+        this.users$ = this.api.get(`users/?search=${this.userSearch}`)
     }
 
     updateProductSearch(){
-        this.products$ = this.api.get(`rest/products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
+        this.products$ = this.api.get(`products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
     }
 
     setBuyer(user){
         this.buyer = user ;
-        this.api.get(`rest/marketplace/${this.marketplace.id}/balance/${this.buyer.id}`).subscribe(
+        this.api.get(`marketplace/${this.marketplace.id}/balance/${this.buyer.id}`).subscribe(
             // @ts-ignore
             res => this.balance = res.balance
         )
@@ -114,7 +114,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
             basket.push({id: id, quantity: this.userBasket[id]});
         }
 
-        this.api.post("rest/orders/", {
+        this.api.post("orders/", {
             products: basket,
             user: this.buyer.id
         }).subscribe(
@@ -129,7 +129,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     }
 
     addMoney(){
-        this.api.put(`rest/marketplace/${this.marketplace.id}/balance/${this.buyer.id}`, {
+        this.api.put(`marketplace/${this.marketplace.id}/balance/${this.buyer.id}`, {
             amount: parseFloat(this.moneyToAdd),
         }).subscribe(
             res => {

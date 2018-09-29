@@ -1,0 +1,70 @@
+# Two stages, one for testing the application. One for tests, one for the deploy
+stages:
+  - test
+  - deploy
+
+# Will check if your branch can merge into the staging branch
+validate-staging-merge:
+  image: florianveaux/portail_gitlabci
+  stage: test
+  script:
+    - sh ci/scripts/validate-merge-with-staging.sh 2>&1 | ts "[%H:%M:%S %Z]  "
+  when: manual
+  except:
+    - staging
+    - master
+
+# Will run the django tests with a fake database
+test-django:
+  image: florianveaux/portail_gitlabci
+  stage: test
+  script:
+    - pipenv --site-packages run pip freeze
+    - pipenv run python manage.py migrate
+    - pipenv run python manage.py test
+  services:
+    - postgres:alpine
+  variables:
+    POSTGRES_DB: "portail"
+    POSTGRES_USER: "ci"
+    POSTGRES_PASSWORD: "password"
+    DATABASE_NAME: "portail"
+    DATABASE_USER: "ci"
+    DATABASE_PASSWORD: "password"
+    DATABASE_HOST: "postgres"
+
+# Deploys django on the staging server using ssh, and will reload services
+deploy-django-staging:
+  image: florianveaux/portail_gitlabci
+  stage: deploy
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$INSTANCE_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - rsync -avP -e "ssh -o StrictHostKeyChecking=no" . portail@ec2-35-180-128-185.eu-west-3.compute.amazonaws.com:/home/portail/src --delete
+    - ssh -o StrictHostKeyChecking=no portail@ec2-35-180-128-185.eu-west-3.compute.amazonaws.com "./src/ci/scripts/deploy.sh"
+  when: manual
+  only:
+    - staging
+
+# Build and deploys angular files using ssh and reload services
+deploy-angular-staging:
+  image: florianveaux/portail_gitlabci
+  stage: deploy
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$INSTANCE_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - cd frontend/
+    - npm install
+    - ./node_modules/@angular/cli/bin/ng build --configuration=staging --no-progress
+    - mv dist/portail/ /tmp/angular-frontend-portail
+    - cd ..
+    - rm -Rf frontend
+    - rsync -avP -e "ssh -o StrictHostKeyChecking=no" /tmp/angular-frontend-portail/ portail@ec2-35-180-128-185.eu-west-3.compute.amazonaws.com:/home/portail/angular/dist/ --delete
+    - ssh -o StrictHostKeyChecking=no portail@ec2-35-180-128-185.eu-west-3.compute.amazonaws.com "./src/ci/scripts/deploy.sh"
+  when: manual
+  only:
+    - staging

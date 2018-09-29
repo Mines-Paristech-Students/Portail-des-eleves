@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 't38x6_9$&3cp!6v-t6tmhak%mh=g52
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"] + [os.environ.get("PORTAIL_HOSTNAME")]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
@@ -78,7 +78,8 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'ACCESS_TOKEN_COOKIE_NAME': 'jwt_access_token',
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LONG_LIFETIME': timedelta(days=7),
     'ALGORITHM': 'HS256',
     'SECRET_KEY': os.environ.get('JWT_PRIVATE_KEY', 'SECRET_KEY'),
     'USER_ID_CLAIM': 'user',
@@ -115,7 +116,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE_NAME', 'portail'),
         'USER': os.environ.get('DATABASE_USER', 'root'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'password'),
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
         'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
 }

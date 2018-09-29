@@ -12,6 +12,7 @@ USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 DEFAULTS = {
     'ACCESS_TOKEN_COOKIE_NAME': 'jwt_access_token',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LONG_LIFETIME': timedelta(days=7),
     'ALGORITHM': 'HS256',
     'SECRET_KEY': settings.SECRET_KEY,
     'USER_ID_CLAIM': 'user',

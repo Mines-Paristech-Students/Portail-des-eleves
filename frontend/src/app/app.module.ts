@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';
 import { CookieService } from 'ngx-cookie-service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -24,23 +24,24 @@ import { ProfileEditComponent } from './profile/profile-edit/profile-edit.compon
 import { PasswordEditComponent } from './password-edit/password-edit.component';
 import { FacebookComponent } from './facebook/facebook.component';
 import { PhotoComponent } from './profile/photo/photo.component';
-
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { AssociationHomepageComponent } from './associations/association-homepage/association-homepage.component';
-import { AssociationSidebarComponent } from './associations/association-sidebar/association-sidebar.component';
-import { AssociationPageComponent } from './associations/association-page/association-page.component';
-import { AssociationMembersComponent } from './associations/association-members/association-members.component';
-import { AssociationSettingsComponent } from './associations/association-settings/association-settings.component';
-import { MarketplaceHomeComponent } from './marketplace/marketplace-home/marketplace-home.component';
-import { MarketplaceSidebarComponent } from './marketplace/marketplace-sidebar/marketplace-sidebar.component';
-import { MarketplaceBasketComponent } from './marketplace/marketplace-basket/marketplace-basket.component';
-import { MarketplaceHistoryComponent } from './marketplace/marketplace-history/marketplace-history.component';
-import { PaginationControlsComponent } from './pagination-controls/pagination-controls.component';
-import { MarketplaceManagerOrdersComponent } from './marketplace/marketplace-manager-orders/marketplace-manager-orders.component';
-import { MarketplaceManagerCatalogComponent } from './marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component';
-import { MarketplaceManagerCounterComponent } from './marketplace/marketplace-manager-counter/marketplace-manager-counter.component';
-import { MarketplaceManagerFundingsComponent } from './marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component';
-
+import {AssociationHomepageComponent} from "./associations/association-homepage/association-homepage.component";
+import {AssociationSidebarComponent} from "./associations/association-sidebar/association-sidebar.component";
+import {AssociationPageComponent} from "./associations/association-page/association-page.component";
+import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
+import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
+import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
+import {MarketplaceSidebarComponent} from "./marketplace/marketplace-sidebar/marketplace-sidebar.component";
+import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
+import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/marketplace-history.component";
+import {PaginationControlsComponent} from "./pagination-controls/pagination-controls.component";
+import {MarketplaceManagerOrdersComponent} from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
+import {MarketplaceManagerCatalogComponent} from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
+import {MarketplaceManagerCounterComponent} from "./marketplace/marketplace-manager-counter/marketplace-manager-counter.component";
+import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
+import {BsDropdownModule} from "ngx-bootstrap";
+import {RequestCacheService} from "./request-cache.service";
+import {CachingInterceptor} from "./caching-interceptor";
+import {AuthInterceptor} from "./auth-interceptor";
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -86,7 +87,13 @@ export function highlightJsFactory() {
     NgxPaginationModule,
     NgbModule
   ],
-  providers: [ApiService, CookieService],
+  providers: [
+    ApiService,
+    CookieService,
+    RequestCacheService,
+    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

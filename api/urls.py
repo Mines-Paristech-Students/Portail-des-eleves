@@ -1,10 +1,10 @@
 from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path
 from rest_framework import routers
 
-from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
-    LibraryViewSet, OrderViewSet, ProductViewSet, BalanceView, FundingViewSet
+    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
+from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -21,6 +21,6 @@ router.register(r'funding', FundingViewSet)
 urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
-    url('rest/', include(router.urls)),
-    url(r'^rest/marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
-]
+    url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
+] + router.urls

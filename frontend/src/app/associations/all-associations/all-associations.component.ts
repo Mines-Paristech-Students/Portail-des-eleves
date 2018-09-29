@@ -14,7 +14,7 @@ export class AllAssociationsComponent implements OnInit {
 	constructor(private _apiService: ApiService) { }
 
 	ngOnInit() {
-		this._apiService.get<any []>("rest/associations/").subscribe(res => {
+		this._apiService.get<any []>("associations/").subscribe(res => {
             this.associations = res
         })
 	}

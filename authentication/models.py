@@ -13,8 +13,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, id, first_name, last_name, email, password, birthday):
         """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
+        Creates and saves a superuser with the given email, birthday and password.
         """
         return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=True)
 

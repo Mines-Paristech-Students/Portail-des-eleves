@@ -29,7 +29,7 @@ export class AssociationPageComponent implements OnInit {
         const association_id = this.route.snapshot.paramMap.get('association_id');
         const page_id = this.route.snapshot.paramMap.get('page_id');
 
-        this.api.get("rest/associations/" + association_id + "/").subscribe(
+        this.api.get("associations/" + association_id + "/").subscribe(
             association => this.association = association,
             error => {
                 this.error = error;
@@ -37,7 +37,7 @@ export class AssociationPageComponent implements OnInit {
             }
         );
 
-        this.api.get('rest/pages/' + page_id + "/").subscribe(
+        this.api.get('pages/' + page_id + "/").subscribe(
             page => this.page = page,
             error => this.error = error.message
         );
@@ -45,7 +45,7 @@ export class AssociationPageComponent implements OnInit {
     }
 
     save(){
-        this.api.put("rest/pages/" + this.page.id + "/", this.page).subscribe(
+        this.api.put("pages/" + this.page.id + "/", this.page).subscribe(
             res => {
                 this.status = "<span class='text-success'>Modifications enregistrées</span>" ;
                 this.association.pages.filter(p => p.id == this.page.id)[0].title = this.page.title ;
@@ -56,7 +56,7 @@ export class AssociationPageComponent implements OnInit {
 
     delete() {
         if(alert("Supprimer la page ?")) {
-            this.api.delete("rest/pages/" + this.page.id + "/").subscribe(
+            this.api.delete("pages/" + this.page.id + "/").subscribe(
                 res => this.router.navigate(["associations/" + this.association.id]),
                 err => this.status = "<span class='text-danger'>" + err.message + "</span>"
             )

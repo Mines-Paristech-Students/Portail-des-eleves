@@ -38,7 +38,7 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
             (params) => {
                 this.marketplace_id = params['id'];
 
-                this.api.get(`rest/marketplace/${this.marketplace_id}/`).subscribe(
+                this.api.get(`marketplace/${this.marketplace_id}/`).subscribe(
                     marketplace => {
                         this.marketplace = marketplace;
                         this.countItems();
@@ -46,13 +46,13 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
                     error => this.error = error.message
                 );
 
-                this.fundings = this.api.get(`rest/funding/?marketplace=${this.marketplace_id}`)
-                this.users = this.api.get('rest/users/')
+                this.fundings = this.api.get(`funding/?marketplace=${this.marketplace_id}`)
+                this.users = this.api.get('users/')
             });
     }
 
     filterOrders(){
-        let url = `rest/funding/?marketplace=${this.marketplace_id}` ;
+        let url = `funding/?marketplace=${this.marketplace_id}` ;
 
         if(this.filter.date){
             // @ts-ignore
@@ -74,7 +74,7 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
         funding.activity = "upload" ;
         funding.status = status.value ;
 
-        this.api.patch(`rest/funding/${funding.id}/`, {
+        this.api.patch(`funding/${funding.id}/`, {
             status: funding.status
         }).subscribe(
             _ => {

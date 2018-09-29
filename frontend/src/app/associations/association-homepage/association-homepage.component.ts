@@ -28,7 +28,7 @@ export class AssociationHomepageComponent implements OnInit {
 	
 	customInit(){
 		console.log(this.id);
-        this.api.get("rest/associations/" + this.id + "/").subscribe(
+        this.api.get("associations/" + this.id + "/").subscribe(
             association => this.association = association,
             error => {
                 this.error = error;
@@ -37,7 +37,7 @@ export class AssociationHomepageComponent implements OnInit {
         );
 		
 
-        this.api.get('rest/news/?association=' + this.id).subscribe(
+        this.api.get('news/?association=' + this.id).subscribe(
             news => this.news = news,
             error => {
                 this.error = error;

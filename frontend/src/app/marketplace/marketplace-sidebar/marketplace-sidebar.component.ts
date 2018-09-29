@@ -18,7 +18,7 @@ export class MarketplaceSidebarComponent implements OnInit {
 
     ngOnInit() {
         if(this.showBalance){
-            this.api.get(`rest/marketplace/${this.marketplace.id}/balance/`).subscribe(
+            this.api.get(`marketplace/${this.marketplace.id}/balance/`).subscribe(
                 // @ts-ignore
                 res => this.balance = res.balance
             )

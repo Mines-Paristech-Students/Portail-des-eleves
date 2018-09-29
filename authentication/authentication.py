@@ -9,6 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from authentication.exceptions import TokenError
 from authentication.settings import api_settings
 from authentication.token import Token
+from backend import settings
 
 
 class JWTCookieAuthentication(authentication.BaseAuthentication):
@@ -31,10 +32,19 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         validated_token = self.get_validated_token(raw_token)
         return self.get_user(validated_token), None
 
+
+    def authenticate_header(self, request):
+        """Used by django to populate the WWW-Authentication header
+        Implementing this method is required for returning a 401 status code if
+        authentication is wrong.
+        """
+        return "Custom authentication method"
+
     def validate_csrf_header(self, request):
-        return True  # Leave it that what in dev so we can check API from the browser
-        # header = request.META.get('HTTP_X_REQUESTED_WITH')
-        # return header == 'XMLHttpRequest'
+        if not settings.is_prod_mode():
+            return True # Leave it like that in dev so we can check API from the browser
+        header = request.META.get('HTTP_X_REQUESTED_WITH')
+        return header == 'XMLHttpRequest'
 
     def get_validated_token(self, raw_token):
         """

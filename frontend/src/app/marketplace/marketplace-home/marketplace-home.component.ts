@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
-import {Observable, of, Subject} from "rxjs";
-import {filter, first, map, mergeMap, scan} from "rxjs/operators";
-import {flatMap} from "tslint/lib/utils";
+import {map, mergeMap, scan} from "rxjs/operators";
 
 @Component({
   selector: 'app-marketplace-home',
@@ -26,7 +24,7 @@ export class MarketplaceHomeComponent extends BaseMarketplaceComponent{
 		(params) => {
             let id = params['id'];
 
-            let req = this.api.get(`rest/marketplace/${id}/`);
+            let req = this.api.get(`marketplace/${id}/`);
 
             req.subscribe(
                 marketplace => {

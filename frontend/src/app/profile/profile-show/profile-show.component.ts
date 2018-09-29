@@ -16,7 +16,7 @@ export class ProfileShowComponent implements OnInit {
 
   ngOnInit() {
       const id = this.route.snapshot.paramMap.get('id');
-      this.api.get("rest/users/" + id + "/").subscribe(
+      this.api.get("users/" + id + "/").subscribe(
           user => this.user = user,
               error => {
               this.error = error

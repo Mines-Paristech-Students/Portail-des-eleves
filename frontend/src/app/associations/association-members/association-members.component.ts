@@ -31,12 +31,12 @@ export class AssociationMembersComponent implements OnInit {
 
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        this.api.get("rest/associations/" + id + "/").subscribe(
+        this.api.get("associations/" + id + "/").subscribe(
             association => this.association = association,
             error => this.error = error.message
         );
 
-        this.api.get('rest/users/').subscribe(
+        this.api.get('users/').subscribe(
             users => this.users = users,
             error => this.error = error.message
         )
@@ -46,7 +46,7 @@ export class AssociationMembersComponent implements OnInit {
         if(this.association.groups.filter(g => g.is_admin_group).map(g => g.members.length).reduce((sum, current) => sum + current, 0) > 0) {
             this.status = "" ;
 
-            this.api.post('rest/groups/', this.groups).subscribe(
+            this.api.post('groups/', this.groups).subscribe(
                 res => {
                     this.status = "<span class='text-success'>Groupes mis à jour</span>"
                     this.editing = false;

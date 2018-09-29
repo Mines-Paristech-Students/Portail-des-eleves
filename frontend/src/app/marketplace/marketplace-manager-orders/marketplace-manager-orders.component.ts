@@ -41,7 +41,7 @@ export class MarketplaceManagerOrdersComponent extends BaseMarketplaceComponent 
             (params) => {
                 this.marketplace_id = params['id'];
 
-                this.api.get(`rest/marketplace/${this.marketplace_id}/`).subscribe(
+                this.api.get(`marketplace/${this.marketplace_id}/`).subscribe(
                     marketplace => {
                         this.marketplace = marketplace;
                         this.countItems();
@@ -49,14 +49,14 @@ export class MarketplaceManagerOrdersComponent extends BaseMarketplaceComponent 
                     error => this.error = error.message
                 );
 
-                this.orders = this.api.get(`rest/orders/?marketplace=${this.marketplace_id}`)
-                this.users = this.api.get('rest/users/')
+                this.orders = this.api.get(`orders/?marketplace=${this.marketplace_id}`)
+                this.users = this.api.get('users/')
             });
     }
 
     filterOrders(){
         console.log("bip");
-        let url = `rest/orders/?marketplace=${this.marketplace_id}` ;
+        let url = `orders/?marketplace=${this.marketplace_id}` ;
 
         if(this.filter.date){
             // @ts-ignore
@@ -79,7 +79,7 @@ export class MarketplaceManagerOrdersComponent extends BaseMarketplaceComponent 
         order.activity = "upload" ;
         order.status = status.value ;
 
-        this.api.patch(`rest/orders/${order.id}/`, {
+        this.api.patch(`orders/${order.id}/`, {
             status: order.status
         }).subscribe(
             _ => {

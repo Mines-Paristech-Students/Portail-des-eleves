@@ -12,7 +12,7 @@ class Token(object):
     new JWT.
     """
 
-    def __init__(self, token=None, verify=True):
+    def __init__(self, token=None, verify=True, longAuth=False):
         """
         !!!! IMPORTANT !!!! MUST raise a TokenError with a user-facing error
         message if the given token is invalid, expired, or otherwise not safe
@@ -38,7 +38,8 @@ class Token(object):
             self.payload = {}
 
             # Set "exp" claim with default value
-            self.payload['exp'] = int((datetime.utcnow() + api_settings.ACCESS_TOKEN_LIFETIME).timestamp())
+            access_token_lifetime = api_settings.ACCESS_TOKEN_LONG_LIFETIME if longAuth else api_settings.ACCESS_TOKEN_LIFETIME
+            self.payload['exp'] = int((datetime.utcnow() + access_token_lifetime).timestamp())
 
             # Set "jti" claim
             self.payload['jti'] = uuid4().hex
@@ -84,7 +85,7 @@ class Token(object):
             raise TokenError('Token has expired')
 
     @classmethod
-    def for_user(cls, user):
+    def for_user(cls, user, longAuth=False):
         """
         Returns an authorization token for the given user that will be provided
         after authenticating the user's credentials.
@@ -93,7 +94,7 @@ class Token(object):
         if not isinstance(user_id, int):
             user_id = str(user_id)
 
-        token = cls()
+        token = cls(longAuth=longAuth)
         token[api_settings.USER_ID_CLAIM] = user_id
 
         return token

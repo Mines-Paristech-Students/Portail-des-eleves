@@ -26,7 +26,7 @@ export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 		(params) => {
 			let id = params['id'];
 
-            this.api.get(`rest/marketplace/${id}/`).subscribe(
+            this.api.get(`marketplace/${id}/`).subscribe(
                 marketplace => {
                     this.marketplace = marketplace;
                     this.countItems();
@@ -35,14 +35,14 @@ export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
             );
 
             // @ts-ignore
-            this.api.get(`rest/orders/?marketplace=${id}&buyer=${user.id}`).subscribe(
+            this.api.get(`orders/?marketplace=${id}&buyer=${user.id}`).subscribe(
                 orders => this.entries = this.entries
                     .concat(orders)
                     .sort((a, b) => a.date < b.date ? 1 : -1),
                 error => this.error = error.message
             );
 
-            this.api.get(`rest/funding/?marketplace=${id}&user=${user.id}`).subscribe(
+            this.api.get(`funding/?marketplace=${id}&user=${user.id}`).subscribe(
                 fundings => this.entries = this.entries
                     .concat(fundings)
                     .sort((a, b) => a.date < b.date ? 1 : -1)
