@@ -5,6 +5,7 @@ from rest_framework import routers
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
 from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView
+from chat.views import ChatMessageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -17,6 +18,7 @@ router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
 router.register(r'funding', FundingViewSet)
+router.register(r'chat', ChatMessageViewSet) # Adds classic REST endpoint + retrieve_up_to + retrieve_from
 
 urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
