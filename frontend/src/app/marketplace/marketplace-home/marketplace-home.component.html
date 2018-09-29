@@ -14,9 +14,9 @@
                 <div class="card">
                     <table class="table card-table table-vcenter">
                         <tbody>
-                        <ng-container *ngFor="let product of marketplace.products">
-                            <tr *ngIf="product.still_in_the_catalogue">
-                                <td>
+                        <ng-container *ngFor="let product of products | async | paginate: { itemsPerPage: 5, currentPage: p }">
+                            <tr>
+                            <td class="img-product">
                                     <img
                                         src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
                                     >
@@ -57,6 +57,12 @@
                         </tbody>
                     </table>
                 </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
             </div>
         </div>
     </div>

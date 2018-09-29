@@ -39,6 +39,7 @@ import { PaginationControlsComponent } from './pagination-controls/pagination-co
 import { MarketplaceManagerOrdersComponent } from './marketplace/marketplace-manager-orders/marketplace-manager-orders.component';
 import { MarketplaceManagerCatalogComponent } from './marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component';
 import { MarketplaceManagerCounterComponent } from './marketplace/marketplace-manager-counter/marketplace-manager-counter.component';
+import { MarketplaceManagerFundingsComponent } from './marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -71,7 +72,8 @@ export function highlightJsFactory() {
     PaginationControlsComponent,
     MarketplaceManagerOrdersComponent,
     MarketplaceManagerCatalogComponent,
-    MarketplaceManagerCounterComponent
+    MarketplaceManagerCounterComponent,
+    MarketplaceManagerFundingsComponent
   ],
   imports: [
     BrowserModule,

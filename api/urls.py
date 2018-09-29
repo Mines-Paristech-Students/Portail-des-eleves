@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
-    LibraryViewSet, OrderViewSet, ProductViewSet
+    LibraryViewSet, OrderViewSet, ProductViewSet, BalanceView, FundingViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -16,9 +16,11 @@ router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
+router.register(r'funding', FundingViewSet)
 
 urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
-    url('rest/', include(router.urls))
+    url('rest/', include(router.urls)),
+    url(r'^rest/marketplace/(?P<pk>[^/.]+)/balance$', BalanceView.as_view()),
 ]

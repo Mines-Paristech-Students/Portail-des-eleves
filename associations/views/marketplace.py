@@ -1,11 +1,13 @@
 import json
 
 from django.http import JsonResponse
+from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, mixins
 
-from associations.models import Marketplace, Order, Product, User
-from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer
+from associations.models import Marketplace, Order, Product, Funding
+from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
+from authentication.models import User
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
@@ -87,3 +89,31 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.product.save()
 
         return JsonResponse(OrderSerializer(orders, many=True).data, safe=False)
+
+
+class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('status', 'user')
+
+    queryset = Funding.objects.order_by("-id")
+    serializer_class = FundingSerializer
+
+
+class BalanceView(APIView):
+
+    def get(self, request, pk, format=None):
+        return JsonResponse({"balance": 12})
+
+    def put(self, request, pk, format=None):
+        body = json.loads(request.body)
+        user = User.objects.get(pk=body["user"])
+
+        try:
+            amount = float(body["amount"])
+            if amount != 0.0:
+                Funding.objects.create(user=user, value=amount)
+
+        except ValueError as err:
+            return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")
+
+        return JsonResponse({"status": "ok"})

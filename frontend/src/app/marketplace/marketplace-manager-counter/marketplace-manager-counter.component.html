@@ -105,7 +105,8 @@
                         </div>
                         <table class="table card-table table-vcenter">
                             <tbody>
-                            <ng-container *ngFor="let product of products$ | async">
+                            <ng-container
+                                    *ngFor="let product of products$ | async | paginate: { itemsPerPage: 7, currentPage: p }">
                                 <tr *ngIf="product.still_in_the_catalogue">
                                     <td>
                                         <p>{{ product.name }}</p>
@@ -144,9 +145,38 @@
                         </table>
                     </div>
 
+                    <app-pagination-controls
+                            (pageChange)="p = $event"
+                            previousLabel="Précédent"
+                            nextLabel="Suivant"
+                    ></app-pagination-controls>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Garnir le compte</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="ex: 3.00" [(ngModel)]="moneyToAdd">
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"> €</span>
+                                    </span>
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-secondary btn-sm" (click)="addMoney()">Valider</button>
+                                    <span [ngClass]="{
+                                        'ml-2': true,
+                                        'text-success': addMoneyStatus == 'success',
+                                        'text-danger': addMoneyStatus == 'error'}
+                                    ">{{ addMoneyMessage }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </ng-container>
 
+
             </div>
+
         </div>
     </div>
 

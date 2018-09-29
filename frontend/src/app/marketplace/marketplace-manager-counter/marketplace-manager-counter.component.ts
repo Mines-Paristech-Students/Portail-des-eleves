@@ -21,6 +21,10 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     userBasket = {} ;
     numberOfBuyerItems = 0 ;
 
+    moneyToAdd: any ;
+    addMoneyMessage = "";
+    addMoneyStatus = "" ;
+
     constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
         super(api, route, manager);
     }
@@ -101,8 +105,6 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
             basket.push({id: id, quantity: this.userBasket[id]});
         }
 
-        console.log(basket)
-
         this.api.post("rest/orders/", {
             products: basket,
             user: this.buyer.id
@@ -114,6 +116,25 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
             },
             err => {this.error = err.message ; }
 
+        )
+    }
+
+    addMoney(){
+        this.api.put(`rest/marketplace/${this.marketplace.id}/balance`, {
+            amount: parseFloat(this.moneyToAdd),
+            user: this.buyer.id
+        }).subscribe(
+            res => {
+                this.addMoneyMessage = `${this.moneyToAdd}€ ajoutés`;
+                this.addMoneyStatus  = "success" ;
+                this.moneyToAdd = "" ;
+
+                //setTimeout(_ => this.addMoneyMessage = "", 3000);
+            },
+            err => {
+                this.addMoneyMessage = err.message;
+                this.addMoneyStatus  = "error" ;
+            }
         )
     }
 }

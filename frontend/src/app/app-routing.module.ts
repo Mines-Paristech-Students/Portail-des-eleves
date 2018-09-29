@@ -17,6 +17,7 @@ import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/mar
 import {MarketplaceManagerOrdersComponent} from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
 import {MarketplaceManagerCatalogComponent} from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
 import {MarketplaceManagerCounterComponent} from "./marketplace/marketplace-manager-counter/marketplace-manager-counter.component";
+import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
     { path: 'marketplace/:id/manager/orders', component: MarketplaceManagerOrdersComponent},
     { path: 'marketplace/:id/manager/catalog', component: MarketplaceManagerCatalogComponent},
     { path: 'marketplace/:id/manager/counter', component: MarketplaceManagerCounterComponent},
+    { path: 'marketplace/:id/manager/fundings', component: MarketplaceManagerFundingsComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

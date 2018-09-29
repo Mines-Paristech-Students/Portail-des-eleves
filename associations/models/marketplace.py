@@ -52,3 +52,17 @@ class Order(models.Model):
         ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
     )
     status = models.CharField(choices=STATUS, max_length=200)
+
+
+class Funding(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    value = models.DecimalField(max_digits=5, decimal_places=2)
+    date = models.DateTimeField(auto_now=True)
+
+    STATUS = (
+        ("FUNDED", "Versé"),  # The buyer passed the purchase order
+        ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
+    )
+    status = models.CharField(choices=STATUS, max_length=200, default="FUNDED")
