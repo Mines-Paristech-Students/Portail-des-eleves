@@ -1,0 +1,79 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="marketplace">
+        <div class="page-header">
+            <h3 class="page-title">Historique d'achat à {{ marketplace.association.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <marketplace-sidebar [marketplace]="marketplace" [numberOfItems]="numberOfItems"
+                                     [showBalance]="true"></marketplace-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <p class="text-danger" *ngIf="error">
+                    Une erreur est survenue : {{ error }}
+                </p>
+
+                <div class="card" *ngIf="entries && entries.length > 0">
+                    <table class="table card-table table-vcenter">
+                        <tbody>
+                        <tr *ngFor="let entry of entries | paginate: { itemsPerPage: 5, currentPage: p }">
+                            <ng-container *ngIf="entry.product">
+                                <td class="img-product">
+                                    <img
+                                            src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
+                                    >
+                                </td>
+                                <td>
+                                    <strong>{{ entry.product.name }}</strong>
+                                </td>
+                                <td class="text-center text-muted d-none d-md-table-cell text-nowrap">
+                                    Quantité : {{ entry.quantity }}
+                                </td>
+                                <td class="text-right">
+                                    <strong>{{ entry.value }}€</strong>
+                                </td>
+                                <td class="text-right">
+                                    <span *ngIf="entry.status == 'ORDERED'" class="tag tag-blue">Commandée</span>
+                                    <span *ngIf="entry.status == 'VALIDATED'" class="tag tag-lime">Validée</span>
+                                    <span *ngIf="entry.status == 'DELIVERED'" class="tag tag-green">Délivrée</span>
+                                    <span *ngIf="entry.status == 'CANCELLED'" class="tag tag-red">Annulée</span>
+                                    <span *ngIf="entry.status == 'REFUNED'" class="tag tag-yellow">Remboursée</span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container *ngIf="!entry.product">
+                                <td colspan="2">Argent versé sur le compte :</td>
+                                <td class="text-center" colspan="2"><strong>{{ entry.value }}€</strong></td>
+                                <td class="text-right">
+                                    <span *ngIf="entry.status == 'FUNDED'" class="tag tag-blue">Versé</span>
+                                    <span *ngIf="entry.status == 'REFUNED'" class="tag tag-yellow">Remboursé</span>
+                                </td>
+                            </ng-container>
+
+                            <td class="text-center">{{ entry.date | date:"d/MM/yy, HH:mm" }}</td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
+
+
+                <div *ngIf="entries && entries.length == 0" class="card">
+                    <div class="card-body">
+                        <p class="text-center">Vous n'avez fait aucune commande jusqu'à maintenant</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

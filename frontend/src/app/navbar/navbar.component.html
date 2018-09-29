@@ -14,14 +14,14 @@
                         </span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow" [ngClass]="{'show' : showNavBarMenu}">
-                        <a class="dropdown-item" *ngIf="user" routerLink="/user/{{ user.pseudo }}">
-                            <i class="dropdown-icon fe fe-user"></i> Profile
+                        <a class="dropdown-item" *ngIf="user" routerLink="/user/{{ user.id }}">
+                            <i class="dropdown-icon fe fe-user"></i> Profil
                         </a>
                         <a class="dropdown-item" href="#">
                             <i class="dropdown-icon fe fe-settings"></i> Paramètres
                         </a>
                         <div class="dropdown-item" (click)="logout()">
-                            <i class="dropdown-icon fe fe-log-out"></i> Déconnection
+                            <i class="dropdown-icon fe fe-log-out"></i> Déconnexion
                         </div>
                     </div>
                 </div>
@@ -38,13 +38,23 @@
             <div class="col-lg order-lg-first">
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     <li class="nav-item">
-                        <a routerLink="/" class="nav-link"><i class="fe fe-home"></i>Accueil</a>
+						<a routerLink="/" class="nav-link" [ngClass]="{'active': isActive('^\/$')}"><i class="fe fe-home"></i>Accueil</a>
+                    </li>
+										
+					<li class="nav-item dropdown" dropdown>
+						<a dropdownToggle class="nav-link" [ngClass]="{'active': isActive('^\/association')}"><i class="fe fe-power"></i>Associations</a>
+						<div *dropdownMenu class="dropdown-menu dropdown-menu-arrow">
+								<a *ngFor="let association of list_associations_short" class="dropdown-item" routerLink="/associations/{{ association.id }}">{{association.name}}</a>
+								<div class="dropdown-divider"></div>
+								<a routerLink="/associations" class="dropdown-item">Toutes les associations</a>
+						</div>
                     </li>
                     <li class="nav-item">
-                        <a routerLink="/users" class="nav-link"><i class="fe fe-users"></i>Trombinoscope</a>
+						<a routerLink="/users" class="nav-link" [ngClass]="{'active': isActive('^\/user')}"><i class="fe fe-users"></i>Trombinoscope</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+

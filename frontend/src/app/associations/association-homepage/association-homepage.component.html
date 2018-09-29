@@ -1,0 +1,39 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Accueil</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ceci est du texte permanent</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque ea modi mollitia qui sequi, sint suscipit. Atque, beatae deleniti enim, error eum fugit laborum, nulla possimus rem repellendus sequi tempore.</p>
+                    </div>
+                </div>
+
+                <div class="card" *ngFor="let n of news">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ n.title }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ n.text }}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
+

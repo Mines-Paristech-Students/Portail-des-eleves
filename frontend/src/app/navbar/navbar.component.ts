@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { ApiService } from '../api.service';
-import { User } from '../user';
+import {User} from "../models/user";
 
 @Component({
     selector: 'navbar',
@@ -13,16 +12,9 @@ export class NavbarComponent implements OnInit {
 
     showNavBarMenu : Boolean = false ;
     user: User ;
+	list_associations_short : any;
 
     constructor(private _apiService: ApiService, private router: Router) { }
-
-    logout(){
-        this._apiService.logout().subscribe(
-            data => {},
-            err => {},
-            () => {this.router.navigate(["/login"]);}
-        );
-    }
 
     ngOnInit() {
         this._apiService.getUser().subscribe(
@@ -36,5 +28,28 @@ export class NavbarComponent implements OnInit {
                 console.log(err)
             }
         )
+
+        this._apiService.get("associations/?limit=10").subscribe(
+		    data => {
+				this.list_associations_short = data["results"];
+			}
+		);
+    }
+
+    getPromotion(user){
+        return "P" + parseInt(user.id);
+    }
+
+    isActive(url) {
+        var regex = new RegExp(url);
+        return regex.test(this.router.url);
+    }
+
+    logout(){
+        this._apiService.logout().subscribe(
+            data => {},
+            err => {},
+            () => {this.router.navigate(["/login"]);}
+        );
     }
 }

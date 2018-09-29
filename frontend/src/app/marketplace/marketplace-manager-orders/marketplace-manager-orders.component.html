@@ -1,0 +1,145 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="marketplace">
+        <div class="page-header">
+            <h3 class="page-title">Commandes de {{ marketplace.association.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <marketplace-sidebar [marketplace]="marketplace" [numberOfItems]="numberOfItems"></marketplace-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <p class="text-danger" *ngIf="error">
+                    Une erreur est survenue : {{ error }}
+                </p>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Filter les commandes</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label">Utilisateurs</label>
+                                    <ng-select
+                                            [items]="users | async"
+                                            [multiple]="true"
+                                            bindLabel="id"
+                                            placeholder="Client"
+                                            [(ngModel)]="filter.users"
+                                            (change)="filterOrders()"
+                                            [closeOnSelect]="false"
+                                    >
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <ng-select
+                                            [items]="status"
+                                            [multiple]="true"
+                                            [searchable]="false"
+                                            bindLabel="label"
+                                            placeholder="Status de la commande"
+                                            [(ngModel)]="filter.status"
+                                            (change)="filterOrders()"
+                                            [closeOnSelect]="false"
+                                    >
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Date</label>
+                                    <div class="input-group">
+                                        <input class="form-control range" placeholder="yyyy-mm-dd"
+                                               name="dp" [(ngModel)]="filter.date" (ngModelChange)="filterOrders()"
+                                               ngbDatepicker #d="ngbDatepicker"
+                                        >
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" (click)="d.toggle()"
+                                                    type="button">
+                                                <span class="fe fe-calendar"></span>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-danger"
+                                                    (click)="filter.date = '' ; filterOrders();" type="button">
+                                                <span class="fe fe-x"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card">
+                    <table class="table card-table table-vcenter">
+                        <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th class="text-center">Quantité</th>
+                            <th class="text-center">Valeur</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Acheteur</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let order of orders | async | paginate: { itemsPerPage: 10, currentPage: p }">
+                            <td>{{ order.product.name }}</td>
+                            <td class="text-center">{{ order.quantity }}</td>
+                            <td class="text-center">{{ order.value }}€</td>
+                            <td class="text-center">
+                                <ng-container *ngFor="let s of status">
+                                    <span
+                                            [ngbPopover]="popContent"
+                                            *ngIf="order.status == s.value"
+                                            class="tag tag-{{ s.color }}"
+
+                                            placement="right" ngbTooltip="Cliquez pour modifier le status"
+                                    >
+                                        {{ s.label }}
+                                        <span class="tag-addon" *ngIf="order.activity"><i class="fe fe-{{ order.activity }}"></i></span>
+                                    </span>
+                                </ng-container>
+
+                                <ng-template #popContent>
+                                    <div class="tags">
+                                        <span *ngFor="let s of status"
+                                              class="tag tag-{{ s.color }}"
+                                              (click)="updateStatus(order, s)"
+                                        >{{ s.label }} </span>
+                                    </div>
+                                </ng-template>
+
+                            </td>
+                            <td class="text-center">{{ order.buyer }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
+
+
+                <div *ngIf="orders && orders.length == 0" class="card">
+                    <div class="card-body">
+                        <p class="text-center">Vous n'avez fait aucune commande jusqu'à maintenant</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

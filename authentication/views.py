@@ -1,7 +1,9 @@
 from datetime import datetime
 
+from django_filters.rest_framework import filters
 from rest_framework import generics, status, viewsets
 from django.http import HttpResponse
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from authentication.authentication import JWTCookieAuthentication
@@ -38,6 +40,7 @@ class JWTSetCookiesView(generics.GenericAPIView):
         )
         return response
 
+
 class LogoutView(generics.GenericAPIView):
     """
     This class removes the JWT token saved on the client browser
@@ -60,6 +63,7 @@ class LogoutView(generics.GenericAPIView):
         )
         return response
 
+
 class CheckCredentials(generics.GenericAPIView):
     """
     This class gets both JWT tokens and sets them as secure cookies.
@@ -68,7 +72,10 @@ class CheckCredentials(generics.GenericAPIView):
     authentication_classes = [JWTCookieAuthentication]
 
     def post(self, request, *args, **kwargs):
-        return HttpResponse(status=status.HTTP_200_OK)
+        return Response(
+            {"id": request.user.id, "first_name": request.user.first_name, "last_name": request.user.last_name},
+            status=status.HTTP_200_OK)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -76,6 +83,9 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    filter_backends = (SearchFilter,)
+    search_fields = ('id', 'first_name')
 
     def get_object(self):
         """

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {User} from "../../user";
+import {User} from "../../models/user";
 
 @Component({
     selector: 'profile-photo',
@@ -9,6 +9,7 @@ import {User} from "../../user";
 export class PhotoComponent implements OnInit {
 
     @Input() user: User;
+    @Input() size = "xxl" ;
 
     constructor() { }
 

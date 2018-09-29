@@ -16,7 +16,7 @@ export class ProfileEditComponent implements OnInit {
 
   ngOnInit() {
       const id = this.route.snapshot.paramMap.get('id');
-      this.api.get("rest/users/" + id + "/").subscribe(
+      this.api.get("users/" + id + "/").subscribe(
           user => this.user = user,
               error => {
               this.error = error
@@ -25,7 +25,7 @@ export class ProfileEditComponent implements OnInit {
   }
 
   onSubmit(){
-      this.api.put("rest/users/" + this.user.id + "/", this.user).subscribe(
+      this.api.put("users/" + this.user.id + "/", this.user).subscribe(
           _ => this.router.navigate(["user/" + this.user.id]),
           err => this.error = err
       )

@@ -1,0 +1,93 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association && users">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+
+            <div class="col-md-9" *ngIf="!editing">
+                <div class="page-header mb-5">
+                    <h1 class="page-title">Membres de l'associations</h1>
+                    <div class="page-options d-flex">
+                        <a (click)="editing = true">Editer</a>
+                    </div>
+                    <p [innerHTML]="status"></p>
+                </div>
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table card-table table-striped table-vcenter">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ng-container *ngFor="let group of association.groups">
+                                <tr *ngFor="let member of group.members">
+                                    <td><a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a></td>
+                                    <td>{{group.role}}</td>
+                                </tr>
+                            </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9" *ngIf="editing">
+                <div class="page-header mb-5">
+                    <h1 class="page-title">Membres de l'associations</h1>
+                    <div class="page-options d-flex">
+                        <a (click)="stopEdit()">Terminer</a>
+                    </div>
+                    <p [innerHTML]="status"></p>
+                </div>
+
+                <div class="card" *ngFor="let group of association.groups">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <input type="text" class="input-lg form-control" [(ngModel)]="group.role">
+                        </div>
+                        <div class="card-options">
+                            <a (click)="deleteGroup(group)">Supprimer</a>
+                        </div>
+                    </div>
+                    <div class="card-body border-bottom">
+                        <div class="form-group">
+
+                            <div class="row">
+                                <div class="col-md-6" *ngFor="let field of rightFields">
+                                    <label class="custom-switch">
+                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" [(ngModel)]="group[field[1]]">
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">{{ field[0] }}</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <ng-select [items]="users"
+                                       bindLabel="id"
+                                       [multiple]="true"
+                                       [(ngModel)]="group.members"
+                                       placeholder="Membres"
+                                       class="mt-4"
+                            >
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <button role="button" class="btn btn-primary" (click)="createGroup()">Créer un groupe</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">Une erreur est survenue {{ error }}</p>
+    </div>
+</div>
+

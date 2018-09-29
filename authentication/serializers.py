@@ -10,11 +10,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name',
-            "nickname", "birthday", "phone",
-            "room", "address", "city_of_origin",
-            "option", "is_ast", "is_isupfere", "is_in_gapyear",
-            "sports", "roommate", "minesparent"
-        )
+                  "nickname", "birthday", "phone",
+                  "room", "address", "city_of_origin",
+                  "option", "is_ast", "is_isupfere", "is_in_gapyear",
+                  "sports", "roommate", "minesparent"
+                  )
+
+
+class UserShortSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name')
 
 
 class TokenSerializer(serializers.Serializer):

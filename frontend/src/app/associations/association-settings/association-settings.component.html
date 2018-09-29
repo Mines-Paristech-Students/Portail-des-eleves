@@ -1,0 +1,61 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="association">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+            <div class="col-md-9">
+                <div *ngIf="error">
+                    <p class="text-danger">
+                        Une erreur est survenue : <br>
+                        {{ error }}
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fonctionnalités</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <h4>Magasin</h4>
+
+                        <p *ngIf="association.marketplace.enabled == false">
+                            Le magasin n'est pas activé pour cette association.
+                            <a class="text-primary" (click)="enableMarketplace()">Activer le magasin</a>
+                        </p>
+
+                        <p *ngIf="association.marketplace.enabled == true">
+                            Le magasin est activé.
+                            <a class="text-primary" (click)="disableMarketplace()">Désactiver le magasin</a>
+                        </p>
+
+                        <h4>Bibliothèque</h4>
+
+                        <p *ngIf="association.library.enabled == false">
+                            La bibliothèque n'est pas activé pour cette association.
+                            <a class="text-primary" (click)="enableLibrary()">Activer La bibliothèque</a>
+                        </p>
+
+                        <p *ngIf="association.library.enabled == true">
+                            La bibliothèque est activé.
+                            <a class="text-primary" (click)="disableLibrary()">Désactiver La bibliothèque</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Supprimer l'association</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-danger">Une fois l'association supprimée, il n'y a pas moyen de la récupérer. Soyez sûr.</p>
+                        <p><a class="btn btn-outline-danger">Supprimer l'association</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

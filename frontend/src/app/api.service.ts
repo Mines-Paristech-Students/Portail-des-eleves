@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-
-import { User } from './../app/user';
-import { environment } from './../environments/environment';
+import {environment} from "../environments/environment";
+import {User} from "./models/user";
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -32,10 +31,11 @@ export class ApiService {
     }
 
     put<T>(url: String, body: any){
-        return this.http.put<T>(
-            server + url,
-            body
-        )
+        return this.http.put<T>(server + url, body)
+    }
+
+    patch<T>(url: String, body: any){
+        return this.http.patch<T>(server + url, body)
     }
 
     delete<T>(url: String){
@@ -50,6 +50,7 @@ export class ApiService {
             null
         );
     }
+
 
     authenticate(login: string, password: string, stayAuthenticated: boolean) {
         return this.post(
@@ -72,4 +73,5 @@ export class ApiService {
     getUsers() {
         return this.get<[User]>("users/");
     }
+
 }

@@ -11,6 +11,7 @@ from authentication.settings import api_settings
 from authentication.token import Token
 from backend import settings
 
+
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
     A Django rest authentication class that will:
@@ -30,6 +31,7 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed("Authorization cookie not set")
         validated_token = self.get_validated_token(raw_token)
         return self.get_user(validated_token), None
+
 
     def authenticate_header(self, request):
         """Used by django to populate the WWW-Authentication header
