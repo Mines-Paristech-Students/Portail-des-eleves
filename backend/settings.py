@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'authentication',
-    'associations'
+    'associations',
+    'chat'
 ]
 
 MIDDLEWARE = [
