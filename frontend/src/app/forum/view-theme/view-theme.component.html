@@ -1,0 +1,41 @@
+<navbar></navbar>
+
+<div class="page">
+    <div class="page-main">
+
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">{{theme.name}}</h1>
+            </div>
+			<h3>{{theme.description}}</h3>
+			
+            <div *ngFor="let topic of list_topics">
+				<p>
+				<a routerLink="/forum/topic/{{ topic.id }}">{{topic.name}}</a><br />
+				<i>{{topic.creator.id}}</i>
+				</p>
+			</div>
+			
+			
+            <div class="col-md-9">
+				<h1>Créer un nouveau sujet</h1>
+                <div class="page-header mb-5">
+                    <input class="input-lg form-control" [(ngModel)]="new_topic.name" />
+                </div>
+				
+				<label class="custom-switch col-md-6" *ngIf="! user.is_1A">
+					<input type="checkbox" class="custom-switch-input" [(ngModel)]="new_topic.is_hidden_1A" >
+					<span class="custom-switch-indicator"></span>
+					<span class="custom-switch-description">Sujet caché aux 1As</span>
+				</label>
+
+                <div>
+                    <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="first_message" ></div>
+
+                    <button type="button" class="mr-1 btn btn-success" (click)="save()">Publier</button>
+                </div>
+            </div>	
+        </div>
+
+    </div>
+</div>

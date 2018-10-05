@@ -4,10 +4,13 @@ from rest_framework import routers
 
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
+from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
+
+# Association
 router.register(r'associations', AssociationViewSet)
 router.register(r'pages', PageViewSet)
 router.register(r'news', NewsViewSet)
@@ -17,6 +20,11 @@ router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
 router.register(r'funding', FundingViewSet)
+
+# Forum
+router.register(r'forum', ThemeViewSet)
+router.register(r'theme', TopicViewSet)
+router.register(r'topic', MessageForumViewSet)
 
 urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),

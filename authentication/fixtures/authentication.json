@@ -35,5 +35,24 @@
             "room": "1234",
             "phone": "+33456789012"
         }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "16leroy",
+        "fields":
+        {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Maxence",
+            "last_name": "Leroy",
+            "email": "maxence.leroy@mines-paristech.fr",
+            "birthday": "1997-10-14",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Ragicarpe",
+            "city_of_origin": "Troupommé-la-forêt",
+            "room": "95 rue Guizot E",
+            "phone": "+33658895122"
+        }
     }
 ]

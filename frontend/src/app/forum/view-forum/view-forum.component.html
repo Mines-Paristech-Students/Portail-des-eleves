@@ -1,0 +1,19 @@
+<navbar></navbar>
+
+<div class="page">
+    <div class="page-main">
+
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Forum</h1>
+            </div>
+            <div *ngFor="let theme of list_themes">
+				<p>
+				<a routerLink="/forum/theme/{{ theme.id }}">{{theme.name}}</a><br />
+				<i>{{theme.description}}</i>
+				</p>
+			</div>
+        </div>
+
+    </div>
+</div>
