@@ -42,6 +42,9 @@ import {BsDropdownModule} from "ngx-bootstrap";
 import {RequestCacheService} from "./request-cache.service";
 import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
+import { WidgetsComponent } from './widgets/widgets.component';
+import { WidgetPollComponent } from './widgets/poll/poll.component';
+import { WidgetChatComponent } from './widgets/chat/chat.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -74,7 +77,10 @@ export function highlightJsFactory() {
     MarketplaceManagerOrdersComponent,
     MarketplaceManagerCatalogComponent,
     MarketplaceManagerCounterComponent,
-    MarketplaceManagerFundingsComponent
+    MarketplaceManagerFundingsComponent,
+    WidgetsComponent,
+    WidgetChatComponent,
+    WidgetPollComponent
   ],
   imports: [
     BrowserModule,
@@ -82,8 +88,9 @@ export function highlightJsFactory() {
     FormsModule,
     NgSelectModule,
     HttpClientModule,
-	BsDropdownModule.forRoot(),
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+	  BsDropdownModule.forRoot(),
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     NgxPaginationModule,
     NgbModule
   ],
@@ -94,6 +101,10 @@ export function highlightJsFactory() {
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    WidgetChatComponent,
+    WidgetPollComponent
+  ]
 })
 export class AppModule { }
