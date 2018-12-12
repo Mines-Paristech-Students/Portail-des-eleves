@@ -20,8 +20,7 @@
     {
         "model": "authentication.user",
         "pk": "17bocquet",
-        "fields":
-        {
+        "fields": {
             "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
             "last_login": null,
             "first_name": "Adrien",
@@ -34,6 +33,42 @@
             "city_of_origin": "Gotham",
             "room": "1234",
             "phone": "+33456789012"
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "17thomas",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Alexandre",
+            "last_name": "Thomas",
+            "email": "alexandre.thomas@mines-paristech.fr",
+            "birthday": "1998-07-13",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "",
+            "city_of_origin": "",
+            "room": "",
+            "phone": ""
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "18leponge",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Bob",
+            "last_name": "L'Éponge",
+            "email": "bob.leponge@mines-paristech.fr",
+            "birthday": "2000-01-01",
+            "is_active": true,
+            "is_admin": false,
+            "nickname": "",
+            "city_of_origin": "Bikini Bottom",
+            "room": "",
+            "phone": ""
         }
     }
 ]
