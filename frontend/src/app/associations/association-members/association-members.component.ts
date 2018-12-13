@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
+import {group} from "@angular/animations";
 
 @Component({
     selector: 'app-association-members',
@@ -37,7 +38,7 @@ export class AssociationMembersComponent implements OnInit {
         );
 
         this.api.get('users/').subscribe(
-            users => this.users = users,
+            users => this.users = (users as Array<any>).map(u => u.id),
             error => this.error = error.message
         )
     }
@@ -46,7 +47,30 @@ export class AssociationMembersComponent implements OnInit {
         if(this.association.groups.filter(g => g.is_admin_group).map(g => g.members.length).reduce((sum, current) => sum + current, 0) > 0) {
             this.status = "" ;
 
-            this.api.post('groups/', this.groups).subscribe(
+            let groups = [];
+            for(let group of this.association.groups){
+                let members = [];
+                for(let m of group.members){
+                    members.push(m)
+                }
+                groups.push({
+                    id: group.id ? group.id : -1,
+                    members: members,
+
+                    is_admin_group: group.is_admin_group,
+                    role: group.role,
+
+                    library: group.library,
+                    marketplace: group.marketplace,
+                    news: group.news,
+                    static_page: group.static_page,
+                    vote: group.vote
+                })
+            }
+
+            console.log(groups)
+
+            this.api.patch(`associations/${this.association.id}/`, {"groups" :groups}).subscribe(
                 res => {
                     this.status = "<span class='text-success'>Groupes mis à jour</span>"
                     this.editing = false;
@@ -65,15 +89,7 @@ export class AssociationMembersComponent implements OnInit {
     }
 
     deleteGroup(group) {
-        this.association.groups.splice(this.association.groups.indexOf(group))
-    }
-
-    addPeople(group){
-        group.members.push()
-    }
-
-    removePeople(group, people){
-        group.members.splice(group.members.indexOf(people), 1)
+        this.association.groups.splice(this.association.groups.indexOf(group), 1)
     }
 
 }

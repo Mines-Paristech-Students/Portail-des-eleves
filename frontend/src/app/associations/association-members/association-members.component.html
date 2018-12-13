@@ -11,10 +11,10 @@
                 <div class="page-header mb-5">
                     <h1 class="page-title">Membres de l'associations</h1>
                     <div class="page-options d-flex">
-                        <a (click)="editing = true">Editer</a>
+                        <a (click)="editing = true ; status = ''">Editer</a>
                     </div>
-                    <p [innerHTML]="status"></p>
                 </div>
+                <p [innerHTML]="status"></p>
 
                 <div class="card">
                     <div class="table-responsive">
@@ -28,7 +28,7 @@
                             <tbody>
                             <ng-container *ngFor="let group of association.groups">
                                 <tr *ngFor="let member of group.members">
-                                    <td><a routerLink="/user/{{ member.id }}">{{member.first_name}} {{member.last_name}}</a></td>
+                                    <td><a routerLink="/user/{{ member }}">{{member}}</a></td>
                                     <td>{{group.role}}</td>
                                 </tr>
                             </ng-container>
@@ -44,8 +44,8 @@
                     <div class="page-options d-flex">
                         <a (click)="stopEdit()">Terminer</a>
                     </div>
-                    <p [innerHTML]="status"></p>
                 </div>
+                <p [innerHTML]="status"></p>
 
                 <div class="card" *ngFor="let group of association.groups">
                     <div class="card-header">
