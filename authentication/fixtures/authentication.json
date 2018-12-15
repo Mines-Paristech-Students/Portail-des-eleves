@@ -70,5 +70,23 @@
             "room": "",
             "phone": ""
         }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "17wan-fat",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Pierre",
+            "last_name": "Wan-Fat",
+            "email": "pierre.wan-fat@mines-paristech.fr",
+            "birthday": "1998-06-26",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Le Rocher",
+            "city_of_origin": "Le Tampon",
+            "room": "802",
+            "phone": ""
+        }
     }
 ]
