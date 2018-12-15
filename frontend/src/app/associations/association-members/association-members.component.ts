@@ -16,7 +16,7 @@ export class AssociationMembersComponent implements OnInit {
     status: string ;
 
     users: any ;
-    editing = true ;
+    editing = false ;
 
     rightFields = [
         ["Administrateur", "is_admin_group"],
@@ -38,7 +38,12 @@ export class AssociationMembersComponent implements OnInit {
         );
 
         this.api.get('users/').subscribe(
-            users => this.users = (users as Array<any>).map(u => u.id),
+            users => {
+                this.users = {};
+                for(let user of (users as Array<any>)){
+                    this.users[user.id] = user
+                }
+            },
             error => this.error = error.message
         )
     }

@@ -16,24 +16,19 @@
                 </div>
                 <p [innerHTML]="status"></p>
 
-                <div class="card">
-                    <div class="table-responsive">
-                        <table class="table card-table table-striped table-vcenter">
-                            <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Role</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <ng-container *ngFor="let group of association.groups">
-                                <tr *ngFor="let member of group.members">
-                                    <td><a routerLink="/user/{{ member }}">{{member}}</a></td>
-                                    <td>{{group.role}}</td>
-                                </tr>
-                            </ng-container>
-                            </tbody>
-                        </table>
+                <div class="card" *ngFor="let group of association.groups">
+                    <div class="card-header">
+                        <div class="card-title">{{ group.role }}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-2 text-center" *ngFor="let member_id of group.members">
+                                <a routerLink="/user/{{ users[member_id].id }}">
+                                    <profile-photo [user]="users[member_id]"></profile-photo>
+                                    <p class="mt-2">{{ users[member_id].first_name }} {{ users[member_id].last_name }}</p>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
