@@ -59,17 +59,32 @@ class AssociationsSerializer(serializers.ModelSerializer):
         groups_data = validated_data.pop('groups')
         instance = super().update(instance, validated_data)
 
+        ids = set()
+
         for group_data in groups_data:
             id = dict(group_data)["id"]
             if id == -1:
                 group_data.pop("id", None)
-                serialised = GroupSerializer(data=group_data)
+                serialized = GroupSerializer(data=group_data)
+
+                if serialized.is_valid():
+                    group = serialized.save()
+                    instance.groups.add(serialized)
+                    ids.add(group.id)
             else:
                 group = Group.objects.get(pk=id)
-                serialised = GroupSerializer(group, data=group_data)
+                serialized = GroupSerializer(group, data=group_data)
 
-            if serialised.is_valid():
-                serialised.save()
+                if serialized.is_valid():
+                    serialized.save()
+                    ids.add(group.id)
+
+            if not serialized.is_valid():
+                raise Exception(serialized.error_messages)
+
+        for group in instance.groups.all():
+            if group.id not in ids:
+                group.delete()
 
         instance.save()
         return instance
