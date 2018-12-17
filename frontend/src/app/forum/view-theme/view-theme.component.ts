@@ -19,7 +19,7 @@ export class ViewThemeComponent implements OnInit {
 	
 	user: User;
 	
-	new_topic_name: Topic;
+	new_topic: Topic;
 	first_message: string;
 
     froalaOptions = {
@@ -31,6 +31,8 @@ export class ViewThemeComponent implements OnInit {
 
     ngOnInit() {
 		this.new_topic = new Topic();
+		this.user = new User();
+		this.theme = new Theme();
 		
 		this.route.params.subscribe(
 		(params) => {
@@ -82,7 +84,7 @@ export class ViewThemeComponent implements OnInit {
 			this.new_topic.is_hidden_1A = false;
 		}
         this.api.post("theme/", {
-			name: this.new_topic.name
+			name: this.new_topic.name,
 			is_hidden_1A: this.new_topic.is_hidden_1A,
 			theme: this.theme.id,
 			}).subscribe(

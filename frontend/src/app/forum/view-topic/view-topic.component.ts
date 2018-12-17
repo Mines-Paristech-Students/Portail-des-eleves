@@ -26,6 +26,8 @@ export class ViewTopicComponent implements OnInit {
     constructor(private api: ApiService, private route: ActivatedRoute, private router: Router){}
 
     ngOnInit() {
+		this.topic = new Topic();
+		
 		this.route.params.subscribe(
 		(params) => {
 			this.topic_id = params['topic'];
@@ -48,7 +50,6 @@ export class ViewTopicComponent implements OnInit {
 		this.api.get<[MessageForum]>("topic/?topic=" + this.topic_id).subscribe(
 		    data => {
 				this.list_messages = data;
-				console.log(this.list_messages.length);
 				if(this.list_messages.length == 0)
 				{
 					this.router.navigate(['forum']);
