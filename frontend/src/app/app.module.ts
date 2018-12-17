@@ -44,6 +44,7 @@ import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
 import { AssociationsAdminComponent } from './admin/associations-admin/associations-admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { CreateUserAdminComponent } from './admin/users-admin/create-user-admin/create-user-admin.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -78,7 +79,8 @@ export function highlightJsFactory() {
     MarketplaceManagerCounterComponent,
     MarketplaceManagerFundingsComponent,
     AssociationsAdminComponent,
-    UsersAdminComponent
+    UsersAdminComponent,
+    CreateUserAdminComponent
   ],
   imports: [
     BrowserModule,

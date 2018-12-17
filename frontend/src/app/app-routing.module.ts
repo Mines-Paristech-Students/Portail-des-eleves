@@ -20,6 +20,8 @@ import {MarketplaceManagerCounterComponent} from "./marketplace/marketplace-mana
 import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
 import {AssociationsAdminComponent} from "./admin/associations-admin/associations-admin.component";
 import {UsersAdminComponent} from "./admin/users-admin/users-admin.component";
+import {CreateUserAdminComponent} from "./admin/users-admin/create-user-admin/create-user-admin.component";
+
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -47,7 +49,9 @@ const routes: Routes = [
     { path: 'monprofil/editer/motdepasse', component: PasswordEditComponent },
 
     { path: 'admin/associations', component: AssociationsAdminComponent },
-    { path: 'admin/users', component: UsersAdminComponent }
+    { path: 'admin/users', component: UsersAdminComponent },
+    { path: 'admin/users/create', component: CreateUserAdminComponent }
+
 
 ];
 
