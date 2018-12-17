@@ -142,5 +142,23 @@
             "room": "420",
             "phone": "0799007766"
         }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "18magne",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Tanguy",
+            "last_name": "MAGNE",
+            "email": "tanguy.magne@mines-paristech.fr",
+            "birthday": "1998-04-04",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Tanguy",
+            "city_of_origin": "Langogne",
+            "room": "327",
+            "phone": "0633499049"
+        }
     }
 ]
