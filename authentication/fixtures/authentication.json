@@ -73,6 +73,24 @@
     },
     {
         "model": "authentication.user",
+        "pk": "18aouir",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Denis",
+            "last_name": "Aouir",
+            "email": "denis.aouir@mines-paristech.fr",
+            "birthday": "1997-10-29",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "",
+            "city_of_origin": "Bikini Bottom",
+            "room": "",
+            "phone": ""
+        }
+    },
+    {
+        "model": "authentication.user",
         "pk": "17wan-fat",
         "fields": {
             "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
