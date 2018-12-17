@@ -107,6 +107,23 @@
             "phone": ""
         }
     },
+    {
+        "model": "authentication.user",
+        "pk": "18chlieh",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Reda",
+            "last_name": "Chlieh",
+            "email": "reda.chlieh@mines-paristech.fr",
+            "birthday": "1998-06-10",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Hulk",
+            "city_of_origin": "Rabat",
+            "room": "105",
+            "phone": ""
+  },
 	{
         "model": "authentication.user",
         "pk": "18goessel",
@@ -125,7 +142,7 @@
             "phone": "+33608502620"
         }
   },
-    {
+  {
         "model": "authentication.user",
         "pk": "18laude",
         "fields": {
