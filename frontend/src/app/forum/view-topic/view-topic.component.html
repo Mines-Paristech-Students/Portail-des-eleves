@@ -8,12 +8,24 @@
                 <h1 class="page-title">{{topic.name}}</h1>
             </div>
 			
-            <div *ngFor="let message of list_messages">
+			<app-pagination-controls
+				(pageChange)="p = $event"
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+            ></app-pagination-controls>
+			
+			<ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
 			    <div class="card">
                     <div class="card-body" [innerHtml]="message.text"></div>
-					<p><i>{{message.author.id}} le {{message.date}}</i></p>
+					<p><i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> le {{message.date}}</i></p>
 				</div>
-			</div>
+			</ng-container>
+			
+			<app-pagination-controls
+				(pageChange)="p = $event"
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+            ></app-pagination-controls>
 			
 			<div class="col-md-9">
 				<h1>Répondre</h1>

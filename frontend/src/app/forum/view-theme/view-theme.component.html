@@ -9,12 +9,18 @@
             </div>
 			<h3>{{theme.description}}</h3>
 			
-            <div *ngFor="let topic of list_topics">
+			<ng-container *ngFor="let topic of list_topics | paginate: { itemsPerPage: 10, currentPage: p }">
 				<p>
 				<a routerLink="/forum/topic/{{ topic.id }}">{{topic.name}}</a><br />
 				<i>{{topic.creator.id}}</i>
 				</p>
-			</div>
+			</ng-container>
+			
+			<app-pagination-controls
+				(pageChange)="p = $event"
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+            ></app-pagination-controls>
 			
 			
             <div class="col-md-9">

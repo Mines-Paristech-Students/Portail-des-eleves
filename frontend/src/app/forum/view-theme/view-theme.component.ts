@@ -11,6 +11,8 @@ import {User} from "../../models/user";
 })
 export class ViewThemeComponent implements OnInit {
 	
+	p = 0; //Current page
+	
 	theme_id: string;
 	theme: Theme;
     list_topics: [Topic] ;
@@ -66,7 +68,7 @@ export class ViewThemeComponent implements OnInit {
 		this.api.get<[Topic]>("theme/?theme=" + this.theme_id).subscribe(
 		    data => {
 				this.list_topics = data;
-				if(this.list_topics.length == 0)
+				if(Number(this.list_topics.length) == 0)
 				{
 					this.router.navigate(['forum']);
 				}

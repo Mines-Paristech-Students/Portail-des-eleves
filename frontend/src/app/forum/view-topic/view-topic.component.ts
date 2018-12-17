@@ -9,7 +9,8 @@ import {Theme, Topic, MessageForum} from "../../models/forum";
   styleUrls: ['./view-topic.component.scss']
 })
 export class ViewTopicComponent implements OnInit {
-
+	p = 0; //Current page
+	
 	topic_id: string;
 	topic: Topic;
     list_messages: [MessageForum] ;
@@ -50,7 +51,8 @@ export class ViewTopicComponent implements OnInit {
 		this.api.get<[MessageForum]>("topic/?topic=" + this.topic_id).subscribe(
 		    data => {
 				this.list_messages = data;
-				if(this.list_messages.length == 0)
+				console.log(this.list_messages.length);
+				if(Number(this.list_messages.length) == 0)
 				{
 					this.router.navigate(['forum']);
 				}
