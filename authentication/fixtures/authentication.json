@@ -106,5 +106,23 @@
             "room": "327",
             "phone": ""
         }
+    },
+    {
+        "Model": "authentication.user",
+        "pk": "18laude",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Alexiane",
+            "last_name": "Laude",
+            "email": "alexiane.laude@mines-paristech.fr",
+            "birthday": "1998-08-24",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Alex?",
+            "city_of_origin": "Aix",
+            "room": "320",
+            "phone": "0750384180"
+        }
     }
 ]
