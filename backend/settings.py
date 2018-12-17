@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 't38x6_9$&3cp!6v-t6tmhak%mh=g52
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost"] + [os.environ.get("PORTAIL_HOSTNAME")]
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200' # Here was the problem indeed and it has to be http://localhost:3000, not http://localhost:3000/

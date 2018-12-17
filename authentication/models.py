@@ -74,6 +74,9 @@ class User(AbstractBaseUser):
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+	
+    # To be improved
+    is_1A = models.BooleanField(default=True)
 
     objects = UserManager()
 
@@ -98,8 +101,3 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
-
-    @property
-    def is_1A(self):
-        # To be coded
-        return True
