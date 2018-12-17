@@ -52,6 +52,16 @@
                     <li class="nav-item">
 						<a routerLink="/users" class="nav-link" [ngClass]="{'active': isActive('^\/user')}"><i class="fe fe-users"></i>Trombinoscope</a>
                     </li>
+
+                    <li class="nav-item dropdown" dropdown>
+						<a dropdownToggle class="nav-link" [ngClass]="{'active': isActive('^\/association')}"><i class="fe fe-power"></i>Admin</a>
+						<div *dropdownMenu class="dropdown-menu dropdown-menu-arrow">
+								<a class="dropdown-item" routerLink="/admin/associations/">Associations</a>
+                                <a class="dropdown-item" routerLink="/admin/users/">Utilisateurs</a>
+								<div class="dropdown-divider"></div>
+						</div>
+                    </li>
+
                 </ul>
             </div>
         </div>

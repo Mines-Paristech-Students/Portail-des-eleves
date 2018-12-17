@@ -42,6 +42,8 @@ import {BsDropdownModule} from "ngx-bootstrap";
 import {RequestCacheService} from "./request-cache.service";
 import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
+import { AssociationsAdminComponent } from './admin/associations-admin/associations-admin.component';
+import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -74,7 +76,9 @@ export function highlightJsFactory() {
     MarketplaceManagerOrdersComponent,
     MarketplaceManagerCatalogComponent,
     MarketplaceManagerCounterComponent,
-    MarketplaceManagerFundingsComponent
+    MarketplaceManagerFundingsComponent,
+    AssociationsAdminComponent,
+    UsersAdminComponent
   ],
   imports: [
     BrowserModule,
