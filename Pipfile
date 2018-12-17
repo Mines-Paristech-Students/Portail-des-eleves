@@ -14,7 +14,6 @@ django-cors-headers = "*"
 pyjwt = "*"
 pillow = "*"
 django-extensions = "*"
-django-url-filter = "*"
 
 [dev-packages]
 pylint = "*"
