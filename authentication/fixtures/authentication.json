@@ -73,6 +73,24 @@
     },
     {
         "model": "authentication.user",
+        "pk": "18aouir",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Denis",
+            "last_name": "Aouir",
+            "email": "denis.aouir@mines-paristech.fr",
+            "birthday": "1997-10-29",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "",
+            "city_of_origin": "Bikini Bottom",
+            "room": "",
+            "phone": ""
+        }
+    },
+    {
+        "model": "authentication.user",
         "pk": "17wan-fat",
         "fields": {
             "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
@@ -105,6 +123,78 @@
             "city_of_origin": "Rabat",
             "room": "105",
             "phone": ""
+  },
+	{
+        "model": "authentication.user",
+        "pk": "18goessel",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Thibault",
+            "last_name": "Goessel",
+            "email": "thibault.goessel@mines-paristech.fr",
+            "birthday": "1998-12-22",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Titi",
+            "city_of_origin": "Rubelles",
+            "room": "1001",
+            "phone": "+33608502620"
+        }
+  },
+  {
+        "model": "authentication.user",
+        "pk": "18laude",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Alexiane",
+            "last_name": "Laude",
+            "email": "alexiane.laude@mines-paristech.fr",
+            "birthday": "1998-08-24",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Alex?",
+            "city_of_origin": "Aix",
+            "room": "320",
+            "phone": "0750384180"
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "15menou",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Hubert",
+            "last_name": "Menou",
+            "email": "hubert.menou@mines-paristech.fr",
+            "birthday": "1996-04-11",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Hub",
+            "city_of_origin": "Pau",
+            "room": "420",
+            "phone": "0799007766"
+
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "18magne",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Tanguy",
+            "last_name": "MAGNE",
+            "email": "tanguy.magne@mines-paristech.fr",
+            "birthday": "1998-04-04",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Tanguy",
+            "city_of_origin": "Langogne",
+            "room": "327",
+            "phone": "0633499049"
         }
     }
 ]
