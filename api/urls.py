@@ -6,6 +6,7 @@ from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, Gro
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView
+from chat.views import ChatMessageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -20,6 +21,7 @@ router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
 router.register(r'funding', FundingViewSet)
+router.register(r'chat', ChatMessageViewSet) # Adds classic REST endpoint + retrieve_up_to + retrieve_from
 
 # Forum
 router.register(r'forum', ThemeViewSet)

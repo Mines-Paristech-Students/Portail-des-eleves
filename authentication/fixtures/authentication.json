@@ -20,8 +20,7 @@
     {
         "model": "authentication.user",
         "pk": "17bocquet",
-        "fields":
-        {
+        "fields": {
             "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
             "last_login": null,
             "first_name": "Adrien",
@@ -53,6 +52,60 @@
             "city_of_origin": "Troupommé-la-forêt",
             "room": "95 rue Guizot E",
             "phone": "+33658895122"
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "17thomas",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Alexandre",
+            "last_name": "Thomas",
+            "email": "alexandre.thomas@mines-paristech.fr",
+            "birthday": "1998-07-13",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "",
+            "city_of_origin": "",
+            "room": "",
+            "phone": ""
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "18leponge",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Bob",
+            "last_name": "L'Éponge",
+            "email": "bob.leponge@mines-paristech.fr",
+            "birthday": "2000-01-01",
+            "is_active": true,
+            "is_admin": false,
+            "nickname": "",
+            "city_of_origin": "Bikini Bottom",
+            "room": "",
+            "phone": ""
+        }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "17wan-fat",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Pierre",
+            "last_name": "Wan-Fat",
+            "email": "pierre.wan-fat@mines-paristech.fr",
+            "birthday": "1998-06-26",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Le Rocher",
+            "city_of_origin": "Le Tampon",
+            "room": "802",
+            "phone": ""
         }
     }
 ]

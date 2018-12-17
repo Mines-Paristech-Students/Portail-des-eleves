@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'authentication',
     'associations',
     'forum'
+    'forum',
+    'chat'
 ]
 
 MIDDLEWARE = [
