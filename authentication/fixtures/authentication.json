@@ -107,6 +107,24 @@
             "phone": ""
         }
     },
+	{
+        "model": "authentication.user",
+        "pk": "18goessel",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Thibault",
+            "last_name": "Goessel",
+            "email": "thibault.goessel@mines-paristech.fr",
+            "birthday": "1998-12-22",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Titi",
+            "city_of_origin": "Rubelles",
+            "room": "1001",
+            "phone": "+33608502620"
+        }
+  },
     {
         "model": "authentication.user",
         "pk": "18laude",
@@ -141,6 +159,7 @@
             "city_of_origin": "Pau",
             "room": "420",
             "phone": "0799007766"
+
         }
     },
     {
