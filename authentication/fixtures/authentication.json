@@ -124,5 +124,23 @@
             "room": "320",
             "phone": "0750384180"
         }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "15menou",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Hubert",
+            "last_name": "Menou",
+            "email": "hubert.menou@mines-paristech.fr",
+            "birthday": "1996-04-11",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "Hub",
+            "city_of_origin": "Pau",
+            "room": "420",
+            "phone": "0799007766"
+        }
     }
 ]
