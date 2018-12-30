@@ -3,42 +3,23 @@ from rest_framework import serializers
 from associations.models import Group, Association, User
 from associations.serializers.page import PageShortSerializer
 from associations.serializers.library import LibrarySerializer
+from authentication.serializers import UserShortSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    members = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=User.objects.all())
+    members_detail = UserShortSerializer(many=True, source="members", read_only=True)
 
     class Meta:
         model = Group
-        fields = ('id', 'members', 'role', 'is_admin_group',
+        fields = ('id', 'members', 'members_detail', 'role', 'is_admin_group',
                   'static_page', 'news', 'marketplace', 'library', 'vote', 'events')
 
         extra_kwargs = {'id': {'read_only': False}}
-
-    def update(self, instance, validated_data):
-        members_data = validated_data.pop('members')
-        for item in validated_data:
-            if Group._meta.get_field(item):
-                setattr(instance, item, validated_data[item])
-
-        instance.members.clear()
-
-        for person in members_data:
-            user = User.objects.get(pk=person)
-            instance.members.add(user)
-
-        instance.save()
-        return instance
-
 
 class AssociationsShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
         fields = ('id', 'name', 'logo')
-
-    def create(self, validated_data):
-        instance = Association.objects.create(**validated_data)
-        return instance
 
 
 from associations.serializers.marketplace import MarketplaceShortSerializer
@@ -46,7 +27,7 @@ from associations.serializers.marketplace import MarketplaceShortSerializer
 
 class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True)
-    groups = GroupSerializer(many=True, read_only=False)
+    groups = GroupSerializer(many=True)
 
     marketplace = MarketplaceShortSerializer()
     library = LibrarySerializer()
@@ -63,16 +44,21 @@ class AssociationsSerializer(serializers.ModelSerializer):
 
         for group_data in groups_data:
             id = dict(group_data)["id"]
+
+            try:
+                group = Group.objects.get(pk=id)
+            except Exception: # help requested : too broad catch
+                id = -1
+
             if id == -1:
                 group_data.pop("id", None)
-                serialized = GroupSerializer(data=group_data)
 
-                if serialized.is_valid():
-                    group = serialized.save()
-                    instance.groups.add(serialized)
-                    ids.add(group.id)
+                group = GroupSerializer().create(group_data) # help requested : no data validation
+                group.save()
+                instance.groups.add(group)
+                ids.add(group.id)
+
             else:
-                group = Group.objects.get(pk=id)
                 serialized = GroupSerializer(group, data=group_data)
 
                 if serialized.is_valid():
@@ -80,7 +66,7 @@ class AssociationsSerializer(serializers.ModelSerializer):
                     ids.add(group.id)
 
             if not serialized.is_valid():
-                raise Exception(serialized.error_messages)
+                raise Exception(serialized.errors)
 
         for group in instance.groups.all():
             if group.id not in ids:
