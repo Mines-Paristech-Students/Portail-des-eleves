@@ -6,12 +6,16 @@
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Sujets dans "{{theme.name}}"</div>
+                    <div class="card-title">{{theme.name}}</div>
                 </div>
 
                 <div class="card-body border-bottom" *ngIf="theme.description != ''" >
                     {{ theme.description }}
                 </div>
+
+            </div>
+
+            <div class="card">
 
                 <div class="table-responsive">
                     <table class="table card-table table-striped table-vcenter">

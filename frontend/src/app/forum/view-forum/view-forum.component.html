@@ -7,11 +7,16 @@
             <div class="page-header">
                 <h1 class="page-title">Forum</h1>
             </div>
-            <div *ngFor="let theme of list_themes">
-				<p>
-				<a routerLink="/forum/theme/{{ theme.id }}">{{theme.name}}</a><br />
-				<i>{{theme.description}}</i>
-				</p>
+
+            <div class="card" *ngFor="let theme of list_themes">
+                <div class="card-header">
+                    <div class="card-title text-primary">
+                        <a routerLink="/forum/theme/{{ theme.id }}">{{theme.name}}</a>
+                    </div>
+                </div>
+				<div class="card-body">
+                    <i>{{theme.description}}</i>
+                </div>
 			</div>
         </div>
 
