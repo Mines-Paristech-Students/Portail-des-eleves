@@ -1,0 +1,40 @@
+<navbar></navbar>
+
+<div class="page">
+    <div class="page-main">
+
+        <div class="container">
+            <div class="mt-5">
+                <p class="pull-right"><a routerLink="/forum/theme/{{ topic.theme.id }}">Retour à {{ topic.theme.name }}</a></p>
+                <h1>{{topic.name}}</h1>
+            </div>
+			
+			<ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
+			    <div class="card">
+                    <div class="card-body" [innerHtml]="message.text"></div>
+					<div class="card-footer text-right">
+                        <i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date}}</i>
+                    </div>
+				</div>
+			</ng-container>
+			
+			<app-pagination-controls
+				(pageChange)="p = $event"
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+            ></app-pagination-controls>
+			
+			<div class="card">
+                <div class="card-header">
+                    <div class="card-title">Répondre</div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="answer_message"></div>
+
+                    <button type="button" class="mr-1 btn btn-success" (click)="save()">Publier</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
