@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {Theme, Topic, MessageForum} from "../../models/forum";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Theme, Topic} from "../../models/forum";
 import {User} from "../../models/user";
 
 @Component({
@@ -24,8 +24,10 @@ export class ViewThemeComponent implements OnInit {
 	new_topic: Topic;
 	first_message: string;
 
+	show_new_topic: false ;
+
     froalaOptions = {
-        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "wordPaste"],
+        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "table", "url", "wordPaste"],
         //pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
     };
 
