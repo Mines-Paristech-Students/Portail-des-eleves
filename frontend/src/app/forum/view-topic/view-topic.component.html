@@ -4,15 +4,10 @@
     <div class="page-main">
 
         <div class="container">
-            <div class="page-header">
-                <h1 class="page-title">{{topic.name}}</h1>
+            <div class="mt-5">
+                <p class="pull-right"><a routerLink="/forum/theme/{{ topic.theme.id }}">Retour à {{ topic.theme.name }}</a></p>
+                <h1>{{topic.name}}</h1>
             </div>
-			
-			<app-pagination-controls
-				(pageChange)="p = $event"
-                previousLabel="Précédent"
-                nextLabel="Suivant"
-            ></app-pagination-controls>
 			
 			<ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
 			    <div class="card">
