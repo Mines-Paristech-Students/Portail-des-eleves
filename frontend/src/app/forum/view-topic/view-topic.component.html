@@ -17,7 +17,9 @@
 			<ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
 			    <div class="card">
                     <div class="card-body" [innerHtml]="message.text"></div>
-					<p><i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> le {{message.date}}</i></p>
+					<div class="card-footer text-right">
+                        <i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date}}</i>
+                    </div>
 				</div>
 			</ng-container>
 			
@@ -27,9 +29,11 @@
                 nextLabel="Suivant"
             ></app-pagination-controls>
 			
-			<div class="col-md-9">
-				<h1>Répondre</h1>
-                <div>
+			<div class="card">
+                <div class="card-header">
+                    <div class="card-title">Répondre</div>
+                </div>
+                <div class="card-body">
                     <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="answer_message"></div>
 
                     <button type="button" class="mr-1 btn btn-success" (click)="save()">Publier</button>
