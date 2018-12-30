@@ -43,7 +43,6 @@ const routes: Routes = [
     { path: 'user/:id/edit', component: ProfileEditComponent },
 
     { path: 'monprofil/editer/motdepasse', component: PasswordEditComponent }
-
 ];
 
 @NgModule({

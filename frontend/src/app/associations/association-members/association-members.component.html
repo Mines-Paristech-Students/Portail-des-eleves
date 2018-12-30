@@ -22,10 +22,10 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-2 text-center" *ngFor="let member_id of group.members">
-                                <a routerLink="/user/{{ users[member_id].id }}">
-                                    <profile-photo [user]="users[member_id]"></profile-photo>
-                                    <p class="mt-2">{{ users[member_id].first_name }} {{ users[member_id].last_name }}</p>
+                            <div class="col-lg-2 col-md-4 col-6 text-center" *ngFor="let member of group.members_detail">
+                                <a routerLink="/user/{{ member.id }}">
+                                    <profile-photo [user]="member"></profile-photo>
+                                    <p class="mt-2">{{ member.first_name }} {{ member.last_name }}</p>
                                 </a>
                             </div>
                         </div>

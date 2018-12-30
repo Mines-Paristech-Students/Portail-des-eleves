@@ -16,7 +16,8 @@ export class AssociationMembersComponent implements OnInit {
     status: string ;
 
     users: any ;
-    editing = false ;
+    users_index: any;
+    editing = false;
 
     rightFields = [
         ["Administrateur", "is_admin_group"],
@@ -32,17 +33,28 @@ export class AssociationMembersComponent implements OnInit {
 
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        this.api.get("associations/" + id + "/").subscribe(
-            association => this.association = association,
-            error => this.error = error.message
-        );
 
         this.api.get('users/').subscribe(
             users => {
-                this.users = {};
+                let users_index = {};
+                this.users = users;
                 for(let user of (users as Array<any>)){
-                    this.users[user.id] = user
+                    users_index[user.id] = user
                 }
+
+                this.api.get("associations/" + id + "/").subscribe(
+                    association => {
+                        this.association = association;
+                        let members = [];
+
+                        for(let m of this.association.members){
+                            members.push(this.users_index[m])
+                        }
+
+                        this.association.members = members ;
+                    },
+                    error => this.error = error.message
+                );
             },
             error => this.error = error.message
         )
@@ -56,7 +68,12 @@ export class AssociationMembersComponent implements OnInit {
             for(let group of this.association.groups){
                 let members = [];
                 for(let m of group.members){
-                    members.push(m)
+                    let id = m;
+                    if(id.hasOwnProperty("id")){
+                        id = id.id
+                    }
+
+                    members.push(id)
                 }
                 groups.push({
                     id: group.id ? group.id : -1,
@@ -79,9 +96,12 @@ export class AssociationMembersComponent implements OnInit {
                 res => {
                     this.status = "<span class='text-success'>Groupes mis à jour</span>"
                     this.editing = false;
+                    this.association = res
                 },
                 err => { console.log(err) ; this.status = "<span class='text-danger'>" + err.message + "</span>" }
             )
+
+            console.log(this.association)
         } else {
             this.status = "<span class='text-danger'>L'association doit avoir au moins un groupe administrateur qui doit avoir au moins un membre</span>"
         }
