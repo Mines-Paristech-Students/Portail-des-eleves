@@ -13,7 +13,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   "nickname", "birthday", "phone",
                   "room", "address", "city_of_origin",
                   "option", "is_ast", "is_isupfere", "is_in_gapyear",
-                  "sports", "roommate", "minesparent"
+                  "sports", "roommate", "minesparent",
+                  "is_1A"
                   )
 
 

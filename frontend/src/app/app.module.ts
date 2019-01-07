@@ -45,6 +45,9 @@ import {AuthInterceptor} from "./auth-interceptor";
 import { WidgetsComponent } from './widgets/widgets.component';
 import { WidgetPollComponent } from './widgets/poll/poll.component';
 import { WidgetChatComponent } from './widgets/chat/chat.component';
+import { ViewForumComponent } from './forum/view-forum/view-forum.component';
+import { ViewThemeComponent } from './forum/view-theme/view-theme.component';
+import { ViewTopicComponent } from './forum/view-topic/view-topic.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -80,7 +83,10 @@ export function highlightJsFactory() {
     MarketplaceManagerFundingsComponent,
     WidgetsComponent,
     WidgetChatComponent,
-    WidgetPollComponent
+    WidgetPollComponent,
+    ViewForumComponent,
+    ViewThemeComponent,
+    ViewTopicComponent
   ],
   imports: [
     BrowserModule,
