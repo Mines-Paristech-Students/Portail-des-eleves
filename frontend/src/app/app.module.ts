@@ -42,6 +42,9 @@ import {BsDropdownModule} from "ngx-bootstrap";
 import {RequestCacheService} from "./request-cache.service";
 import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
+import { WidgetsComponent } from './widgets/widgets.component';
+import { WidgetPollComponent } from './widgets/poll/poll.component';
+import { WidgetChatComponent } from './widgets/chat/chat.component';
 import { ViewForumComponent } from './forum/view-forum/view-forum.component';
 import { ViewThemeComponent } from './forum/view-theme/view-theme.component';
 import { ViewTopicComponent } from './forum/view-topic/view-topic.component';
@@ -78,6 +81,9 @@ export function highlightJsFactory() {
     MarketplaceManagerCatalogComponent,
     MarketplaceManagerCounterComponent,
     MarketplaceManagerFundingsComponent,
+    WidgetsComponent,
+    WidgetChatComponent,
+    WidgetPollComponent,
     ViewForumComponent,
     ViewThemeComponent,
     ViewTopicComponent
@@ -88,8 +94,9 @@ export function highlightJsFactory() {
     FormsModule,
     NgSelectModule,
     HttpClientModule,
-	BsDropdownModule.forRoot(),
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+	  BsDropdownModule.forRoot(),
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     NgxPaginationModule,
     NgbModule
   ],
@@ -100,6 +107,10 @@ export function highlightJsFactory() {
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    WidgetChatComponent,
+    WidgetPollComponent
+  ]
 })
 export class AppModule { }

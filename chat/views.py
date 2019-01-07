@@ -33,6 +33,10 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         and retrieve messages more messages.
         """
 
+        if self.queryset.first() is None:
+            return Response(self.get_serializer(self.queryset.filter(id__lt=0)[:], many=True).data)
+
+
         params = self.request.query_params
 
         number_of_messages = int(params.get('quantity', 10))
@@ -64,8 +68,9 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
             raise ValidationError("The 'from' parameter must be an int and not '%s'" % from_param)
         from_param = int(from_param)
 
-        latest_message_id = self.queryset.first().id
-        if from_param >= latest_message_id:
+
+        latest_message = self.queryset.first()
+        if latest_message is None or from_param >= latest_message.id:
             # No newer message to return
             return Response()
 

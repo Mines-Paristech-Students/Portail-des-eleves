@@ -1,0 +1,7 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="card" *ngFor="let widget of widgets | keyvalue">
+      <ng-container *ngComponentOutlet="widget.value"></ng-container>
+    </div>
+  </div>
+</div>

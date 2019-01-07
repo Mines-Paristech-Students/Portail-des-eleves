@@ -1,0 +1,30 @@
+<div class="card-header">
+    <div class="card-status bg-blue"></div>
+    <h4 class="card-title">Chat</h4>
+</div>
+<div class="card-body">
+    <div class="o-auto chat-content" id="chat-scrollable">
+        <div class="lds-ripple" *ngIf="_isLoadingOlderMessages">
+            <div></div><div></div>
+        </div>
+        <ng-container *ngFor="let message of messages">
+            <strong>
+                <a href="#">
+                    {{message.author}}
+                </a>
+            </strong>
+            {{message.content}}
+            <small class="text-muted">
+                {{message.time}}
+            </small>
+            <br>
+        </ng-container>
+    </div>
+    <form class="input-icon my-3 my-lg-0" method="post" action="">
+        <input type="text" class="form-control header-search" [(ngModel)]="messageToSend" placeholder="Répondre" tabindex="1" name="messageContent">
+        <div class="input-icon-addon">
+            <i class="fe fe-send"></i>
+            <button type="submit" (click)="submitMessage()"  class="btn btn-primary btn-block" hidden="true">Connection</button>
+        </div>
+    </form>
+</div>
