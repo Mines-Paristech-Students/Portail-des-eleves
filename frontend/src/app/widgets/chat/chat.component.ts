@@ -78,7 +78,7 @@ export class WidgetChatComponent extends AbstractWidget implements OnInit {
             }
         })
 
-        interval(300).subscribe(x => {
+        interval(5000).subscribe(x => {
             this._update();
         });
     }
