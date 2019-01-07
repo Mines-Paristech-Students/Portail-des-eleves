@@ -31,16 +31,23 @@ export class WidgetChatComponent extends AbstractWidget implements OnInit {
         this._chatElement = document.getElementById('chat-scrollable');
         this._apiService.get("chat/retrieve_up_to/", new HttpParams().append('quantity', '20')).subscribe(
             (data:string[]) => {
-                this._oldestMessageId = data[0]['id'];
-                this._latestMessageId = data[data.length - 1]['id']
-                this.messages = data.map((item:any) => {
-                    let time = new Date(item['created_at'])
-                    return {
-                        'author': item['user'],
-                        'content': item['message'],
-                        'time': ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2)
-                    }
-                })
+                if( data.length != 0){
+                    this._oldestMessageId = data[0]['id'];
+                    this._latestMessageId = data[data.length - 1]['id']
+                    this.messages = data.map((item:any) => {
+                        let time = new Date(item['created_at'])
+                        return {
+                            'author': item['user'],
+                            'content': item['message'],
+                            'time': ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2) + ":" + ("0" + time.getSeconds()).slice(-2)
+                        }
+                    })
+                } else {
+                    this._oldestMessageId = -1
+                    this._latestMessageId = 0
+                    this.messages = []
+                }
+
             },
             err => {console.log(err)},
         );
