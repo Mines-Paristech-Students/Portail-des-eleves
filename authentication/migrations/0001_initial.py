@@ -34,7 +34,6 @@ class Migration(migrations.Migration):
                 ('sports', models.CharField(blank=True, max_length=512)),
                 ('is_active', models.BooleanField(default=True)),
                 ('is_admin', models.BooleanField(default=False)),
-                ('is_1A', models.BooleanField(default=True)),
                 ('minesparent', models.ManyToManyField(blank=True, related_name='fillots', to=settings.AUTH_USER_MODEL)),
                 ('roommate', models.ManyToManyField(blank=True, related_name='_user_roommate_+', to=settings.AUTH_USER_MODEL)),
             ],
