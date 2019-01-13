@@ -8,7 +8,7 @@ import { ApiService } from '../../api.service';
 })
 export class WidgetBirthdaysComponent extends AbstractWidget implements OnInit {
 
-    birthdays : [];
+    birthdays : any[];
 
     constructor(_apiService: ApiService) {
         super(_apiService) ;
@@ -16,7 +16,7 @@ export class WidgetBirthdaysComponent extends AbstractWidget implements OnInit {
 
     ngOnInit() {
         this._apiService.get("birthdays/365/").subscribe(
-            (data:{"birthdays": []}) => {
+            (data:{"birthdays": any[]}) => {
                 this.birthdays = data.birthdays
                 console.log(this.birthdays)
             },
