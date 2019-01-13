@@ -5,7 +5,7 @@ from rest_framework import routers
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
-from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView
+from authentication.views import UserViewSet, JWTSetCookiesView, CheckCredentials, LogoutView, get_birthdays
 from chat.views import ChatMessageViewSet
 
 router = routers.DefaultRouter()
@@ -33,4 +33,6 @@ urlpatterns = [
     path('auth/check/', CheckCredentials.as_view(), name='check'),
     url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
+    path('birthdays/', get_birthdays, name="get_birthdays"),
+    path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
 ] + router.urls

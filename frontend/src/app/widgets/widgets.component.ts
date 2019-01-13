@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WidgetPollComponent } from './poll/poll.component';
 import { AbstractWidget } from './abstractwidget.component';
+import { WidgetBirthdaysComponent } from './birthdays/birthdays.component';
 import { WidgetChatComponent } from './chat/chat.component';
 import { ApiService } from '../api.service';
 
@@ -12,6 +13,7 @@ import { ApiService } from '../api.service';
 export class WidgetsComponent implements OnInit {
 
   widgets: Map<string, typeof AbstractWidget> = new Map([
+    ['birthdays', WidgetBirthdaysComponent],
     ['chat', WidgetChatComponent],
     ['poll', WidgetPollComponent]
   ]);
