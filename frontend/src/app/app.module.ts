@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';
 import { CookieService } from 'ngx-cookie-service';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
@@ -43,6 +45,7 @@ import {RequestCacheService} from "./request-cache.service";
 import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
 import { WidgetsComponent } from './widgets/widgets.component';
+import { WidgetBirthdaysComponent } from './widgets/birthdays/birthdays.component';
 import { WidgetPollComponent } from './widgets/poll/poll.component';
 import { WidgetChatComponent } from './widgets/chat/chat.component';
 import { ViewForumComponent } from './forum/view-forum/view-forum.component';
@@ -54,6 +57,8 @@ var hljs: any;
 export function highlightJsFactory() {
   return hljs;
 }
+
+registerLocaleData(localeFr)
 
 @NgModule({
   declarations: [
@@ -82,6 +87,7 @@ export function highlightJsFactory() {
     MarketplaceManagerCounterComponent,
     MarketplaceManagerFundingsComponent,
     WidgetsComponent,
+    WidgetBirthdaysComponent,
     WidgetChatComponent,
     WidgetPollComponent,
     ViewForumComponent,
@@ -105,10 +111,12 @@ export function highlightJsFactory() {
     CookieService,
     RequestCacheService,
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: "fr" }
   ],
   bootstrap: [AppComponent],
   entryComponents: [
+    WidgetBirthdaysComponent,
     WidgetChatComponent,
     WidgetPollComponent
   ]
