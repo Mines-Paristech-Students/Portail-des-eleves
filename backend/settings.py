@@ -52,8 +52,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'authentication',
     'associations',
+    'chat',
     'forum',
-    'chat'
+    'polls',
 ]
 
 MIDDLEWARE = [
