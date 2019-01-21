@@ -1,11 +1,10 @@
 import json
-from datetime import date, datetime
+from datetime import datetime
 
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from authentication.models import User
-from authentication.views import get_birthdays
 from backend.tests_utils import BackendTestCase
 
 class AuthenticationTestCase(TestCase):
@@ -13,6 +12,7 @@ class AuthenticationTestCase(TestCase):
     Test the authentication logic.
     TODO(Florian) More to come
     """
+
     def setUp(self):
         User.objects.create_user(
             '15veaux', 'Florian', 'Veaux', 'florian.veaux@mines-paristech.fr',

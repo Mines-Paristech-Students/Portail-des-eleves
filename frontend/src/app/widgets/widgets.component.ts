@@ -12,11 +12,20 @@ import { ApiService } from '../api.service';
 })
 export class WidgetsComponent implements OnInit {
 
-  widgets: Map<string, typeof AbstractWidget> = new Map([
-    ['birthdays', WidgetBirthdaysComponent],
-    ['chat', WidgetChatComponent],
-    ['poll', WidgetPollComponent]
-  ]);
+  widgets: {'name': string, 'class': typeof AbstractWidget}[] = [
+		{
+			'name': 'chat',
+			'class': WidgetChatComponent
+		},
+		{
+			'name': 'poll',
+			'class': WidgetPollComponent,
+		},
+		{
+			'name': 'birthdays',
+			'class': WidgetBirthdaysComponent
+		}
+	]
 
   constructor(_apiService: ApiService) {
   }
