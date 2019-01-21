@@ -10,6 +10,7 @@ export class PhotoComponent implements OnInit {
 
     @Input() user: User;
     @Input() size = "xxl" ;
+    @Input() extra_classes = "";
 
     constructor() { }
 

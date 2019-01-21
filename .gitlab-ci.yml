@@ -19,7 +19,7 @@ test-django:
   image: florianveaux/portail_gitlabci
   stage: test
   script:
-    - pipenv --site-packages run pip freeze
+    - pipenv install
     - pipenv run python manage.py migrate
     - pipenv run python manage.py test
   services:

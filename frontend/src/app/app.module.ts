@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './api.service';
 import { CookieService } from 'ngx-cookie-service';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
@@ -42,12 +44,21 @@ import {BsDropdownModule} from "ngx-bootstrap";
 import {RequestCacheService} from "./request-cache.service";
 import {CachingInterceptor} from "./caching-interceptor";
 import {AuthInterceptor} from "./auth-interceptor";
+import { WidgetsComponent } from './widgets/widgets.component';
+import { WidgetBirthdaysComponent } from './widgets/birthdays/birthdays.component';
+import { WidgetPollComponent } from './widgets/poll/poll.component';
+import { WidgetChatComponent } from './widgets/chat/chat.component';
+import { ViewForumComponent } from './forum/view-forum/view-forum.component';
+import { ViewThemeComponent } from './forum/view-theme/view-theme.component';
+import { ViewTopicComponent } from './forum/view-topic/view-topic.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
 export function highlightJsFactory() {
   return hljs;
 }
+
+registerLocaleData(localeFr)
 
 @NgModule({
   declarations: [
@@ -74,7 +85,14 @@ export function highlightJsFactory() {
     MarketplaceManagerOrdersComponent,
     MarketplaceManagerCatalogComponent,
     MarketplaceManagerCounterComponent,
-    MarketplaceManagerFundingsComponent
+    MarketplaceManagerFundingsComponent,
+    WidgetsComponent,
+    WidgetBirthdaysComponent,
+    WidgetChatComponent,
+    WidgetPollComponent,
+    ViewForumComponent,
+    ViewThemeComponent,
+    ViewTopicComponent
   ],
   imports: [
     BrowserModule,
@@ -82,8 +100,9 @@ export function highlightJsFactory() {
     FormsModule,
     NgSelectModule,
     HttpClientModule,
-	BsDropdownModule.forRoot(),
-    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+	  BsDropdownModule.forRoot(),
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     NgxPaginationModule,
     NgbModule
   ],
@@ -92,8 +111,14 @@ export function highlightJsFactory() {
     CookieService,
     RequestCacheService,
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: "fr" }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    WidgetBirthdaysComponent,
+    WidgetChatComponent,
+    WidgetPollComponent
+  ]
 })
 export class AppModule { }

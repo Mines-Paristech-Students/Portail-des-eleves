@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
             err => {
                 console.log(err)
             }
-        )
+        );
 
         this._apiService.get("associations/?limit=10").subscribe(
 		    data => {

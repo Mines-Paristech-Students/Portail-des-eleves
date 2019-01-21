@@ -3,10 +3,13 @@
 
 rm associations/migrations/*.py
 rm authentication/migrations/*.py
+rm forum/migrations/*.py
 
 python manage.py reset_db --noinput
 python manage.py makemigrations associations
 python manage.py makemigrations authentication
+python manage.py makemigrations forum
 python manage.py migrate
 python manage.py loaddata authentication
 python manage.py loaddata associations
+python manage.py loaddata forum
