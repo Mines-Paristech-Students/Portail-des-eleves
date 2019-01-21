@@ -14,10 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.conf.urls import include, url
+from django.urls import path
 from api import urls as api_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_urls)),
+    # Uses the smart_selects library for Chained fields but enforces authentication
+    url(r'^chaining/', include('smart_selects_auth.urls')),
 ]

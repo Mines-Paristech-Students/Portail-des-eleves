@@ -14,6 +14,7 @@ django-cors-headers = "*"
 pyjwt = "*"
 pillow = "*"
 django-extensions = "*"
+django-smart-selects = {git = "https://github.com/digi604/django-smart-selects.git", ref = "js-unlinting-fixes"}
 
 [dev-packages]
 pylint = "*"

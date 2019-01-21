@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Poll, Choice
+from polls.models import Poll, Choice, Vote
 
 
 class ChoiceInline(admin.TabularInline):
@@ -40,5 +40,10 @@ class PollAdmin(admin.ModelAdmin):
 
 class ChoiceAdmin(admin.ModelAdmin):
     list_display = ('text',)
-
     fields = ('text', 'poll')
+
+
+@admin.register(Vote)
+class VoteAdmin(admin.ModelAdmin):
+    list_display = ('poll', 'user', 'choice')
+    fields = ('poll', 'user', 'choice')

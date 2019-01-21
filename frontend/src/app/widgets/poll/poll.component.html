@@ -1,10 +1,58 @@
 <div class="card-header">
     <div class="card-status bg-green"></div>
-    <h4 class="card-title"><span class="text-muted">Sondage : </span>Tu préfères</h4>
+    <h4 class="card-title"><span class="text-muted">Sondage : </span>{{poll_title}}</h4>
 </div>
+<div class="card-body pt-2 pb-2">
+    <!-- If there is an available poll-->
+    <div *ngIf="is_poll_available; else display_error">
+        <!-- If this is today's poll-->
+        <div *ngIf="is_current_poll(); else oldPoll">
+            <!-- If user has not voted yet-->
+            <div *ngIf="user_vote_id == null; else cannot_vote">
+                <ng-container *ngFor="let choice of choices">
+                    <div class="p-2"><a class="btn btn-block btn-secondary" (click)="vote_for_poll(choice.id)">{{choice.choice}}</a></div>
+                </ng-container>
+            </div>
+            <!-- If user has voted and thus cannot vote anymore -->
+            <ng-template #cannot_vote>
+                <ng-container *ngFor="let choice of choices">
+                    <div class="p-2">
+                        <div *ngIf="choice.id != user_vote_id; else selected_choice">
+                            <div class="btn btn-block btn-secondary disabled">{{choice.choice}}</div>
+                        </div>
+                        <ng-template #selected_choice>
+                            <div class="btn btn-block btn-primary disabled">{{choice.choice}}</div>
+                        </ng-template>
+                    </div>
+                </ng-container>
+            </ng-template>
+        </div>
+        <!-- If it's an old poll-->
+        <ng-template #oldPoll>
+            <ng-container *ngFor="let choice of choices">
+                <div class="p-2">
+                    <div class="btn btn-block btn-secondary btn-progress"
+                    [style.background]="'linear-gradient(to right, #008C9B '+ choice.vote_count/total_vote_count * 100 +'%, #91CED7 ' + choice.vote_count/total_vote_count * 100 + '%)'">
+                        <div style="position: relative">
+                            {{choice.choice}} ({{choice.vote_count/total_vote_count * 100 | number:'1.0-1'}} %)
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-template>
+    </div>
+    <!-- If there is no available poll-->
+    <ng-template #display_error>
+        <div class="p-2"><p style="text-align: center">Claquage complet</p></div>
+    </ng-template>
+</div>
+<div style="border-top: 1px solid rgba(0, 40, 100, 0.12)"></div>
 <div class="card-body pt-0 pb-0">
-    <div class="row">
-        <div class="col-md-6 p-3"><a href="#" class="btn btn-block btn-secondary">Le nouveaux portail</a></div>
-        <div class="col-md-6 p-3"><a href="#" class="btn btn-block btn-secondary">La V2 du portail</a></div>
+    <div class="row pt-2 pb-2">
+        <div class="mx-auto">
+            <a (click)="previous()" class="fa fa-chevron-left pr-2 btn"></a>
+            <span class="text-muted" style="font-size:80%;vertical-align: middle">{{date | date:'d/M/y'}}</span>
+            <a (click)="next()" class="fa fa-chevron-right pl-2 btn"></a>
+        </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractWidget } from '../abstractwidget.component';
 import { ApiService } from '../../api.service';
+import { RequestCacheService} from '../../request-cache.service'
 
 @Component({
     templateUrl: './birthdays.component.html',
@@ -10,15 +11,14 @@ export class WidgetBirthdaysComponent extends AbstractWidget implements OnInit {
 
     birthdays : any[];
 
-    constructor(_apiService: ApiService) {
-        super(_apiService) ;
+    constructor(_apiService: ApiService, _cache: RequestCacheService) {
+        super(_apiService, _cache) ;
     }
 
     ngOnInit() {
         this._apiService.get("birthdays/365/").subscribe(
             (data:{"birthdays": any[]}) => {
                 this.birthdays = data.birthdays
-                console.log(this.birthdays)
             },
             err => {console.log(err)}
         );

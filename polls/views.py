@@ -3,28 +3,14 @@ from datetime import date
 from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions, status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 
-from polls.serializers import RestrictedPollSerializer, WholePollSerializer, SubmitPollSerializer, UpdatePollSerializer
-from polls.models import Poll
-
-
-
-class RetrieveCurrentPoll(RetrieveAPIView):
-    """Returns the currently published poll"""
-    permission_classes = (permissions.IsAuthenticated,)
-    queryset = Poll.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        current_poll = Poll.objects.filter(state='ACCEPTED', publication_date=date.today()).first()
-        if current_poll is None:
-            raise NotFound
-
-        serialized_poll = RestrictedPollSerializer(current_poll)
-        return Response(serialized_poll.data)
+from polls.serializers import RestrictedPollSerializer, WholePollSerializer, SubmitPollSerializer, UpdatePollSerializer, VoteSerializer
+from polls.models import Poll, Choice, Vote
 
 
 class ListSubmittedPolls(ListAPIView):
@@ -70,6 +56,26 @@ class RetrievePoll(APIView):
         return Response(serialized_poll.data)
 
 
+class RetrievePollForDate(APIView):
+    """Retrieve a poll for a specific date"""
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def user_vote(self, user, poll):
+        v = Vote.objects.filter(poll=poll, user=user).first()
+        return v.choice.id if v else None
+
+    def get(self, request, year, month, day):
+        poll = Poll.objects.filter(publication_date=date(year, month, day)).first()
+        if poll is None or not poll.has_been_published():
+            raise NotFound
+
+        serialized_poll = RestrictedPollSerializer(poll, context={'request': request})
+        data = dict(serialized_poll.data)
+        data['user_vote'] = self.user_vote(request.user, poll) # Tell user that he may not be allowed to vote on an old poll
+        return Response(data)
+
+
 class SubmitPoll(CreateAPIView):
     """Create a Poll."""
 
@@ -92,3 +98,40 @@ class UpdatePoll(UpdateAPIView):
 
     queryset = Poll.objects.all()
     serializer_class = UpdatePollSerializer
+
+
+class PollResults(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, _, poll_id):
+        poll = Poll.objects.filter(id=poll_id).first()
+        if poll is None or not poll.has_been_published():
+            raise NotFound
+        if poll.publication_date == date.today():
+            raise NotFound
+
+        choices = Choice.objects.filter(poll=poll)
+        votes = {
+            "results": [{
+                "choice" : c.text,
+                "choice_id": c.id,
+                "vote_count" : Vote.objects.filter(choice=c).count()
+            } for c in choices]
+        }
+        return Response(votes)
+
+
+class CreateVote(CreateAPIView):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+
+    def perform_create(self, serializer):
+        """Overriden from mixins.CreateModelMixin
+        The user field from the serializer is populated with the user doing the request.
+        """
+        current_poll = Poll.objects.filter(state='ACCEPTED', publication_date=date.today()).first()
+        if current_poll is None:
+            raise NotFound
+
+        serializer.save(user=self.request.user, poll=current_poll)

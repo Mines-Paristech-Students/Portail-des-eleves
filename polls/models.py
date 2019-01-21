@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.db import models
+from smart_selects.db_fields import ChainedForeignKey
 
 from authentication.models import User
 
@@ -63,11 +64,14 @@ class Poll(models.Model):
             return False
         return self.publication_date <= td
 
+    def __str__(self):
+        return self.question
+
 
 class Choice(models.Model):
     # The text of the choice.
     text = models.CharField(
-        veborse_name='texte du choix',
+        verbose_name='texte du choix',
         max_length=200,
     )
 
@@ -78,3 +82,41 @@ class Choice(models.Model):
         on_delete=models.CASCADE,
         related_name='choices',
     )
+
+    def __str__(self):
+        return self.text
+
+class Vote(models.Model):
+
+    # The related poll
+    poll = models.ForeignKey(
+        Poll,
+        verbose_name='sondage',
+        on_delete=models.CASCADE,
+    )
+
+    # The user who voted
+    user = models.ForeignKey(
+        User,
+        verbose_name='utilisateur',
+        on_delete=models.CASCADE
+    )
+
+    # The choice
+    # ChainedForeignKey restrict the choice variable to have its 'poll' field equals to the vote 'poll' field
+    choice = ChainedForeignKey(
+        Choice,
+        verbose_name='choix',
+        on_delete=models.CASCADE,
+        chained_field="poll",
+        chained_model_field="poll",
+        show_all=False,
+        auto_choose=False,
+        sort=False
+    )
+
+    class Meta:
+        unique_together = ('poll', 'user')
+
+    def __str__(self):
+        return str(self.choice)

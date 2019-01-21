@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractWidget } from '../abstractwidget.component';
 import { ApiService } from '../../api.service';
 import { HttpParams } from '@angular/common/http';
+import { RequestCacheService} from '../../request-cache.service'
 
 import { interval, fromEvent } from 'rxjs';
 import { delay, finalize } from 'rxjs/operators'
@@ -23,8 +24,8 @@ export class WidgetChatComponent extends AbstractWidget implements OnInit {
     shouldScrollDown : boolean = true; // The chat must scroll down on load after the initial messages are received. But not when loading older messages
     stopLoadingOlderMessages : boolean = false; // Do not load an infinite amount of messages
 
-    constructor(_apiService: ApiService) {
-        super(_apiService) ;
+    constructor(_apiService: ApiService, _cache: RequestCacheService) {
+        super(_apiService, _cache) ;
     }
 
     ngOnInit() {

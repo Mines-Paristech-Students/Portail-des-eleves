@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'smart_selects',
     'authentication',
     'associations',
     'chat',
@@ -163,6 +164,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+USE_DJANGO_JQUERY = True
+JQUERY_URL = False
 
 def is_prod_mode():
     return ENV == 'PROD'

@@ -1,6 +1,8 @@
+from datetime import date
+
 from rest_framework import serializers
 
-from .models import Choice, Poll
+from polls.models import Choice, Poll, Vote
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -9,6 +11,7 @@ class ChoiceSerializer(serializers.ModelSerializer):
         fields = (
             'text',
             'poll',
+            'id',
         )
 
 
@@ -26,6 +29,7 @@ class WholePollSerializer(serializers.HyperlinkedModelSerializer):
     """
     choices = ChoiceSerializer(many=True, read_only=True)
     user = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True)
+    id = serializers.ReadOnlyField()
 
     class Meta:
         model = Poll
@@ -42,7 +46,7 @@ class RestrictedPollSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Poll
-        fields = ('url', 'choices', 'question')
+        fields = ('id', 'url', 'choices', 'question')
 
         extra_kwargs = {
             'url': {'view_name': 'polls-retrieve', 'lookup_field': 'id'},
@@ -81,7 +85,7 @@ class UpdatePollSerializer(serializers.ModelSerializer):
         if choices_data is not None:
             instance.choices.all().delete()
 
-            new_choices_text = {choice['text'] for choice in choices_data}
+            new_choices_text = [choice['text'] for choice in choices_data]
             for choice_text in new_choices_text:
                 Choice.objects.create(poll=instance, text=choice_text)
 
@@ -115,3 +119,38 @@ class SubmitPollSerializer(serializers.ModelSerializer):
             Choice.objects.create(poll=poll, **choice_data)
 
         return poll
+
+class VoteSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+        default=serializers.CurrentUserDefault()
+    )
+    poll = serializers.PrimaryKeyRelatedField(
+        read_only=True,
+    )
+    choice = serializers.PrimaryKeyRelatedField(
+        queryset=Choice.objects.all()
+    )
+
+    class Meta:
+        model = Vote
+        fields = (
+            'user',
+            'poll',
+            'choice'
+        )
+
+    def validate(self, attrs):
+        poll = Poll.objects.filter(state='ACCEPTED', publication_date=date.today()).first()
+        if poll is None:
+            raise serializers.ValidationError("No poll is available today")
+
+        choice = attrs['choice']
+        if choice.poll.id != poll.id:
+            raise serializers.ValidationError("Choice #%d('%s') does not belong to poll #%d('%s')" % (
+                choice.id, choice.text, poll.id, poll.question
+            ))
+
+        if Vote.objects.filter(user=self.context['request'].user, poll=poll).count() != 0:
+            raise serializers.ValidationError("Such a vote for poll and user already exists")
+        return attrs
