@@ -41,23 +41,15 @@ export class AssociationMembersComponent implements OnInit {
                 for(let user of (users as Array<any>)){
                     users_index[user.id] = user
                 }
-
-                this.api.get("associations/" + id + "/").subscribe(
-                    association => {
-                        this.association = association;
-                        let members = [];
-
-                        for(let m of this.association.members){
-                            members.push(this.users_index[m])
-                        }
-
-                        this.association.members = members ;
-                    },
-                    error => this.error = error.message
-                );
             },
             error => this.error = error.message
         )
+        this.api.get("associations/" + id + "/").subscribe(
+            association => {
+                this.association = association;
+            },
+            error => this.error = error.message
+        );
     }
 
     stopEdit(){
@@ -90,9 +82,7 @@ export class AssociationMembersComponent implements OnInit {
                 })
             }
 
-            console.log(groups)
-
-            this.api.patch(`associations/${this.association.id}/`, {"groups" :groups}).subscribe(
+            this.api.patch(`groups/batch_add_update/`, {"groups" :groups, "association": this.association.id}).subscribe(
                 res => {
                     this.status = "<span class='text-success'>Groupes mis à jour</span>"
                     this.editing = false;
@@ -100,8 +90,6 @@ export class AssociationMembersComponent implements OnInit {
                 },
                 err => { console.log(err) ; this.status = "<span class='text-danger'>" + err.message + "</span>" }
             )
-
-            console.log(this.association)
         } else {
             this.status = "<span class='text-danger'>L'association doit avoir au moins un groupe administrateur qui doit avoir au moins un membre</span>"
         }

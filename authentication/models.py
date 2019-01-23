@@ -74,7 +74,7 @@ class User(AbstractBaseUser):
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-	
+
     # To be improved
     is_1A = models.BooleanField(default=True)
 

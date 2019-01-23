@@ -19,9 +19,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name')
+        read_only_fields = ('first_name', 'last_name')
 
 
 class TokenSerializer(serializers.Serializer):
