@@ -37,6 +37,13 @@
                             <angular-markdown-editor textareaId="input{{i}}" [(ngModel)]="n.text" rows="10" name="markdownText" [options]="editorOptions"></angular-markdown-editor>
                         </ng-template>
                     </div>
+                    <div class="card-footer" style="display: flex;">
+                        <div class="card-options">
+                                <span>
+                                    Par <a routerLink="/user/{{n.author}}/" class="ml-0">{{n.author}} </a> le {{n.date | date:'d/M/y'}}
+                                </span>
+                        </div>
+                    </div>
                 </div>
 
             </div>

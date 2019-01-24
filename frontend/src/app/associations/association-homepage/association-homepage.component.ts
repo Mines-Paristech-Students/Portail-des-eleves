@@ -13,7 +13,7 @@ import { finalize } from 'rxjs/operators';
 export class AssociationHomepageComponent implements OnInit {
 
     association: any ;
-    news: {'id': number, 'title': string, 'text': string, 'editing'?: boolean}[]
+    news: {'id': number, 'title': string, 'text': string, 'date': string, 'author': string, 'editing'?: boolean}[]
     error: any ;
 
 	association_id : any;
@@ -86,6 +86,8 @@ export class AssociationHomepageComponent implements OnInit {
             (data:any) => {
                 the_news.title = data.title;
                 the_news.text = data.text
+                the_news.author = data.author
+                the_news.date = data.date
             },
             (err:any)=> {
                 this.error = err;
@@ -96,7 +98,7 @@ export class AssociationHomepageComponent implements OnInit {
     deleteNews(the_news){
         this.api.delete('news/' + the_news.id + "/").subscribe(
             (_:any) => {
-                let news: {'id', 'title': string, 'text': string, 'editing'?: boolean}[] = []
+                let news: any[] = []
                 for (var n of this.news){
                     if (n.id !== the_news.id){
                         news.push(n)
