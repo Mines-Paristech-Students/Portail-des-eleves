@@ -14,4 +14,3 @@ class NewsViewSet(viewsets.ModelViewSet):
         if association_name is not None:
             queryset = queryset.filter(association=association_name)
         return queryset
-

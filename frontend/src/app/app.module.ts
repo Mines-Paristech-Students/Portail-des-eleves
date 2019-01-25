@@ -8,6 +8,9 @@ import localeFr from '@angular/common/locales/fr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -103,6 +106,18 @@ registerLocaleData(localeFr)
 	  BsDropdownModule.forRoot(),
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
+    AngularMarkdownEditorModule.forRoot({ iconlibrary: 'fa' }),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useValue: {
+          breaks: true,
+          gfm: true,
+          // renderer: new Renderer(), Here we can add custom markdown tags
+          sanitize: true
+        }
+      }
+    }),
     NgxPaginationModule,
     NgbModule
   ],
