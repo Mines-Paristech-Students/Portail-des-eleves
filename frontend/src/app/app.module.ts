@@ -7,7 +7,6 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 
@@ -104,8 +103,6 @@ registerLocaleData(localeFr)
     NgSelectModule,
     HttpClientModule,
 	  BsDropdownModule.forRoot(),
-    FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot(),
     AngularMarkdownEditorModule.forRoot({ iconlibrary: 'fa' }),
     MarkdownModule.forRoot({
       markedOptions: {
