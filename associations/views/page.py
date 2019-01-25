@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 
 from associations.models import Page
-from associations.serializers import NewsSerializer
+from associations.serializers import PageSerializer
 
 
 class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
-    serializer_class = NewsSerializer
+    serializer_class = PageSerializer
 
     def get_queryset(self):
         queryset = Page.objects.all()
@@ -14,7 +14,3 @@ class PageViewSet(viewsets.ModelViewSet):
         if association_name is not None:
             queryset = queryset.filter(association=association_name)
         return queryset
-
-
-
-
