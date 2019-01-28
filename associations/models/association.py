@@ -59,6 +59,9 @@ class Association(models.Model):
             self.id = self._get_unique_slug()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return str(self.id)
+
 
 #@receiver(post_save, sender=Association)
 #def create_favorites(sender, instance, created, **kwargs):
