@@ -38,14 +38,14 @@
                 </div>
 
             </div>
-			
+
 			<app-pagination-controls
 				(pageChange)="p = $event"
                 previousLabel="Précédent"
                 nextLabel="Suivant"
             ></app-pagination-controls>
-			
-			
+
+
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Créer un nouveau sujet</div>
@@ -72,11 +72,11 @@
 
                     <div class="form-group">
                         <label class="form-label">Premier message</label>
-                        <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="first_message" ></div>
+                        <!--<div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="first_message" ></div>-->
                         <button type="button" class="mr-1 btn btn-success" (click)="save()">Publier</button>
                     </div>
                 </div>
-            </div>	
+            </div>
         </div>
 
     </div>

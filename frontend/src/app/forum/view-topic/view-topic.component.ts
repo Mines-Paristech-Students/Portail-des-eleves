@@ -10,32 +10,32 @@ import {Theme, Topic, MessageForum} from "../../models/forum";
 })
 export class ViewTopicComponent implements OnInit {
 	p = 0; //Current page
-	
+
 	topic_id: string;
 	topic: Topic;
     list_messages: [MessageForum] ;
 
     error: any ;
-	
+
 	answer_message: any;
-	
-	froalaOptions = {
+
+	/*froalaOptions = {
         pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "wordPaste"],
         //pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
-    };
+    };*/
 
     constructor(private api: ApiService, private route: ActivatedRoute, private router: Router){}
 
     ngOnInit() {
 		this.topic = new Topic();
-		
+
 		this.route.params.subscribe(
 		(params) => {
 			this.topic_id = params['topic'];
 			this.customInit();
 		});
 	}
-	
+
 	customInit() {
 		this.api.get<Topic>("theme/" + this.topic_id + "/").subscribe(
 		    data => {
@@ -47,7 +47,7 @@ export class ViewTopicComponent implements OnInit {
                 console.log(error);
             }
 		);
-		
+
 		this.api.get<[MessageForum]>("topic/?topic=" + this.topic_id).subscribe(
 		    data => {
 				this.list_messages = data;
@@ -63,7 +63,7 @@ export class ViewTopicComponent implements OnInit {
             }
 		);
     }
-	
+
 	save(){
         this.api.post("topic/", {
 			message: this.answer_message,

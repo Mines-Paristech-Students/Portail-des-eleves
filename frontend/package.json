@@ -22,7 +22,6 @@
     "@angular/router": "^6.1.10",
     "@ng-bootstrap/ng-bootstrap": "^3.3.1",
     "@ng-select/ng-select": "^2.15.1",
-    "angular-froala-wysiwyg": "^2.9.1",
     "angular-highlight-js": "^2.0.1",
     "angular-markdown-editor": "^2.0.2",
     "bootstrap": "^4.2.1",
