@@ -18,7 +18,7 @@
                 <div class="card-header">
                     <div class="card-title">Personnaliser la page</div>
                     <div class="card-options">
-                            <button class="btn btn-success" (click)=saveSettings()>Sauvegarder</button>
+                        <button class="btn btn-success" (click)=saveSettings()>Sauvegarder</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -49,44 +49,51 @@
                             </div>
                         </div>
                         <div class="col-lg-7">
-                                <div class="form-group">
-                                    <div class="form-label">Souscriptions</div>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-4">
-                                            <div class="custom-switches-stacked">
-                                                <label class="custom-switch" *ngFor="let ass of associations | slice:0:(associations.length+2)/3">
-                                                    <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">{{ass.displayed_name}}</span>
-                                                </label>
-                                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Souscriptions</div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="custom-switches-stacked">
+                                            <label class="custom-switch" *ngFor="let ass of associations | slice:0:(associations.length+2)/3">
+                                                <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">{{ass.displayed_name}}</span>
+                                            </label>
                                         </div>
-                                        <div class="col-sm-6 col-md-4">
-                                            <div class="custom-switches-stacked">
-                                                <label class="custom-switch" *ngFor="let ass of associations | slice:(associations.length+2)/3:2*(associations.length+2)/3">
-                                                    <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">{{ass.displayed_name}}</span>
-                                                </label>
-                                            </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="custom-switches-stacked">
+                                            <label class="custom-switch" *ngFor="let ass of associations | slice:(associations.length+2)/3:2*(associations.length+2)/3">
+                                                <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">{{ass.displayed_name}}</span>
+                                            </label>
                                         </div>
-                                        <div class="col-sm-6 col-md-4">
-                                            <div class="custom-switches-stacked">
-                                                <label class="custom-switch" *ngFor="let ass of associations | slice:2*(associations.length+2)/3:associations.length">
-                                                    <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
-                                                    <span class="custom-switch-indicator"></span>
-                                                    <span class="custom-switch-description">{{ass.displayed_name}}</span>
-                                                </label>
-                                            </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="custom-switches-stacked">
+                                            <label class="custom-switch" *ngFor="let ass of associations | slice:2*(associations.length+2)/3:associations.length">
+                                                <input type="checkbox" [(ngModel)]="ass.subscribed" name="custom-switch-checkbox" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">{{ass.displayed_name}}</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
 
             </div>
-            <widgets [widgets_status]=widgets></widgets>
+            <div class="row">
+                <div class="col-md-4">
+                    <widgets [widgets_status]=widgets></widgets>
+                </div>
+                <div class="col-md-8">
+                    <timeline [asso_status]=associations></timeline>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -8,6 +8,9 @@ class Theme(models.Model):
     description = models.TextField()
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Caché aux 1A")
 
+    def __str__(self):
+        return self.name
+
 class Topic(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
@@ -15,6 +18,9 @@ class Topic(models.Model):
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Caché aux 1A")
 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return self.name
 
 class MessageForum(models.Model):
     id = models.AutoField(primary_key=True)

@@ -4,6 +4,7 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import { MarkdownService } from 'ngx-markdown'
 import { EditorOption } from 'angular-markdown-editor';
 import { finalize } from 'rxjs/operators';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
     selector: 'app-association-show',
@@ -47,10 +48,11 @@ export class AssociationHomepageComponent implements OnInit {
             }
         );
 
-
-        this.api.get('news/?association=' + this.association_id).subscribe(
+        let params = new HttpParams().set("association", this.association_id)
+        params = params.set("page_size", String(10))
+        this.api.get('news/', params).subscribe(
             (news:any) => {
-                this.news = news;
+                this.news = news.results;
             },
             (error:any) => {
                 this.error = error;
