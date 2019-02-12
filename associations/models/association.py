@@ -9,23 +9,6 @@ from associations.models.publication import Publication
 from authentication.models import User
 
 
-class Group(models.Model):
-    id = models.AutoField(primary_key=True)
-
-    members = models.ManyToManyField(User, blank=True)
-    role = models.CharField(max_length=200, null=True)
-
-    is_admin_group = models.BooleanField(default=False)
-
-    # has editing rights on :
-    static_page = models.BooleanField(default=False)
-    news = models.BooleanField(default=False)
-    marketplace = models.BooleanField(default=False)
-    library = models.BooleanField(default=False)
-    vote = models.BooleanField(default=False)
-    events = models.BooleanField(default=False)
-
-
 class Association(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=200)
@@ -39,8 +22,6 @@ class Association(models.Model):
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
                                help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour les valeurs égales)")
-
-    groups = models.ManyToManyField(Group, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,9 +44,36 @@ class Association(models.Model):
         return str(self.id)
 
 
-#@receiver(post_save, sender=Association)
-#def create_favorites(sender, instance, created, **kwargs):
-#    if created:
-#        instance.marketplace = Marketplace.objects.create()
-#        instance.library = Library.objects.create()
-#        instance.save()
+class Role(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="roles"
+    )
+    association = models.ForeignKey(
+        Association,
+        on_delete=models.CASCADE,
+        null=False,
+        related_name="roles"
+    )
+    role = models.CharField(max_length=200, null=False)
+    rank = models.IntegerField(
+        default=0, help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
+    )
+    # Permissions:
+    static_page = models.BooleanField(default=False)
+    news = models.BooleanField(default=False)
+    marketplace = models.BooleanField(default=False)
+    library = models.BooleanField(default=False)
+    vote = models.BooleanField(default=False)
+    events = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("user", "association")
+        ordering = ['rank']
+
+    def __str__(self):
+        return self.user.id + "-" + self.association.id + "-" + self.role

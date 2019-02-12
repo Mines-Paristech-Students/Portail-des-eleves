@@ -13,7 +13,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { DragulaModule } from 'ng2-dragula'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -118,7 +118,8 @@ registerLocaleData(localeFr)
       }
     }),
     NgxPaginationModule,
-    NgbModule
+    NgbModule,
+    DragulaModule.forRoot()
   ],
   providers: [
     ApiService,

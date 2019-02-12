@@ -28,6 +28,7 @@
     "bootstrap-markdown": "^2.10.0",
     "core-js": "^2.6.3",
     "moment": "^2.24.0",
+    "ng2-dragula": "^2.1.1",
     "ngx-bootstrap": "^3.2.0",
     "ngx-cookie-service": "^1.0.10",
     "ngx-highlightjs": "^1.4.1",

@@ -1,16 +1,16 @@
 from django.conf.urls import url, include
 from django.urls import path
-from rest_framework import routers
+from rest_framework_bulk.routes import BulkRouter
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
-from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
-    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
+from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
+    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
 import subscriptions.urls
 
-router = routers.DefaultRouter()
+router = BulkRouter()
 
 router.register(r'users', UserViewSet)
 router.register(r'chat', ChatMessageViewSet) # Adds classic REST endpoint + retrieve_up_to + retrieve_from
@@ -19,7 +19,7 @@ router.register(r'chat', ChatMessageViewSet) # Adds classic REST endpoint + retr
 router.register(r'associations', AssociationViewSet)
 router.register(r'pages', PageViewSet)
 router.register(r'news', NewsViewSet)
-router.register(r'groups', GroupViewSet)
+router.register(r'roles', RoleViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)

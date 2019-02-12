@@ -1,3 +1,3 @@
 <!--// TODO: add real photo-->
 
-<span class="avatar avatar-{{ size }} mr-3 {{extra_classes}}">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+<span class="avatar avatar-{{ size }} mr-3 {{extra_classes}}">{{ user.first_name ? user.first_name[0] : '' }}{{ user.last_name ? user.last_name[0] : '' }}</span>
