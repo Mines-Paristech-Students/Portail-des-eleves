@@ -28,10 +28,9 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/bootstrap-markdown/css/bootstrap-markdown.min.css",
               "node_modules/uikit/dist/css/uikit.min.css",
               "node_modules/tabler-ui/dist/assets/css/tabler.css",
-              "node_modules/froala-editor/css/froala_editor.pkgd.min.css",
-              "node_modules/froala-editor/css/froala_style.min.css",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/@ng-select/ng-select/themes/default.theme.css"
             ],
@@ -40,7 +39,7 @@
               "node_modules/uikit/dist/js/uikit-icons.min.js",
               "node_modules/particles.js/particles.js",
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/froala-editor/js/froala_editor.pkgd.min.js"
+              "node_modules/bootstrap-markdown/js/bootstrap-markdown.js"
             ]
           },
           "configurations": {

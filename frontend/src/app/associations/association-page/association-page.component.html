@@ -16,7 +16,9 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-body" [innerHtml]="page.text"></div>
+                    <div class="card-body">
+                        <markdown [data]="page.text"></markdown>
+                    </div>
                 </div>
 
             </div>
@@ -28,12 +30,10 @@
                 </div>
 
                 <div>
-                    <div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
+                    <angular-markdown-editor textareaId="page_edit" [(ngModel)]="page.text" rows="10" name="markdownText" [options]="editorOptions"></angular-markdown-editor>
 
-                    <button type="button" class="mr-1 btn btn-success" (click)="save()">Enregistrer</button>
-                    <button type="button" class="mr-1 btn btn-success" (click)="save() ; editing = false">Enregistrer et terminer</button>
-
-                    <button type="button" class="mr-1 btn btn-danger" (click)="delete()">Supprimer la page</button>
+                    <button type="button" class="mr-2 mt-2 btn btn-success" (click)="save()">Enregistrer</button>
+                    <button type="button" class="mr-1 mt-2 btn btn-danger" (click)="delete()">Supprimer la page</button>
                 </div>
 
             </div>

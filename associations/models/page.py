@@ -2,7 +2,6 @@ from django.db import models
 
 from associations.models.association import Association
 
-
 class Page(models.Model):
     id = models.AutoField(primary_key=True)
 

@@ -3,7 +3,10 @@
 
 rm associations/migrations/*.py
 rm authentication/migrations/*.py
+rm chat/migrations/*.py
 rm forum/migrations/*.py
+rm polls/migrations/*.py
+rm subscriptions/migrations/*.py
 
 python manage.py reset_db --noinput
 python manage.py makemigrations associations

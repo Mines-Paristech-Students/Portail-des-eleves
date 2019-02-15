@@ -142,7 +142,8 @@
             "city_of_origin": "Rabat",
             "room": "105",
             "phone": ""
-  },
+        }
+    },
 	{
         "model": "authentication.user",
         "pk": "18goessel",

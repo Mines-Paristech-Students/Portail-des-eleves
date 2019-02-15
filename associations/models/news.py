@@ -15,6 +15,8 @@ class News(models.Model):
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=True, default=None)
 
+    class Meta:
+        ordering = ['-date']
 
 class NewsPhoto(models.Model):
     id = models.AutoField(primary_key=True)

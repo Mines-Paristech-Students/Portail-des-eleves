@@ -1,8 +1,9 @@
 <pagination-template #p="paginationApi"
-                     (pageChange)="pageChange.emit($event)">
+                     (pageChange)="pageChange.emit($event)"
+                     [id]="id">
 
-    <nav>
-        <ul class="pagination">
+    <nav style="display: flex;">
+        <ul class="pagination mx-auto">
              <li [ngClass]="{disabled: p.isFirstPage(), 'page-item': true}">
                 <a (click)="p.previous()" [ngClass]="{'page-link': true, disabled: p.isFirstPage()}">Précedent</a>
             </li>

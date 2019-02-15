@@ -8,7 +8,7 @@ from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, Gro
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
-
+import subscriptions.urls
 
 router = routers.DefaultRouter()
 
@@ -39,4 +39,5 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
+    path('subscriptions/', include(subscriptions.urls))
 ] + router.urls

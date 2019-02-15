@@ -4,6 +4,7 @@ from associations.models import Page
 
 
 class PageSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Page
         fields = ("id", "title", "text", "association")

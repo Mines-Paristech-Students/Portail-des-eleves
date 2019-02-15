@@ -7,7 +7,9 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { AngularMarkdownEditorModule } from 'angular-markdown-editor';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -51,6 +53,7 @@ import { WidgetChatComponent } from './widgets/chat/chat.component';
 import { ViewForumComponent } from './forum/view-forum/view-forum.component';
 import { ViewThemeComponent } from './forum/view-theme/view-theme.component';
 import { ViewTopicComponent } from './forum/view-topic/view-topic.component';
+import { TimelineComponent } from './timeline/timeline.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -92,7 +95,8 @@ registerLocaleData(localeFr)
     WidgetPollComponent,
     ViewForumComponent,
     ViewThemeComponent,
-    ViewTopicComponent
+    ViewTopicComponent,
+    TimelineComponent
   ],
   imports: [
     BrowserModule,
@@ -101,8 +105,18 @@ registerLocaleData(localeFr)
     NgSelectModule,
     HttpClientModule,
 	  BsDropdownModule.forRoot(),
-    FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot(),
+    AngularMarkdownEditorModule.forRoot({ iconlibrary: 'fa' }),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useValue: {
+          breaks: true,
+          gfm: true,
+          // renderer: new Renderer(), Here we can add custom markdown tags
+          sanitize: true
+        }
+      }
+    }),
     NgxPaginationModule,
     NgbModule
   ],
