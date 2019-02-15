@@ -1,14 +1,5 @@
 [
   {
-    "model": "associations.group",
-    "pk": "1",
-    "fields": {
-      "members": ["15veaux", "17bocquet"],
-      "role": "Dreamteam",
-      "is_admin_group": true
-    }
-  },
-  {
     "model": "associations.marketplace",
     "pk": "bde",
     "fields": {
@@ -28,9 +19,28 @@
     "fields": {
       "name": "BDE",
       "rank": 1,
-	  "groups" : [1],
       "marketplace": "bde",
       "library": "bde"
+    }
+  },
+  {
+    "model": "associations.permission",
+    "pk": "1",
+    "fields": {
+      "user": "15veaux",
+      "role": "President",
+      "is_admin": true,
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.permission",
+    "pk": "2",
+    "fields": {
+      "user": "17bocquet",
+      "role": "CTO",
+      "is_admin": true,
+      "association": "bde"
     }
   },
   {

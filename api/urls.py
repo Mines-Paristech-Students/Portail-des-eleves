@@ -3,8 +3,8 @@ from django.urls import path
 from rest_framework import routers
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
-from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
-    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
+from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
+    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, PermissionViewSet
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
@@ -19,8 +19,8 @@ router.register(r'chat', ChatMessageViewSet) # Adds classic REST endpoint + retr
 router.register(r'associations', AssociationViewSet)
 router.register(r'pages', PageViewSet)
 router.register(r'news', NewsViewSet)
-router.register(r'groups', GroupViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
+router.register(r'permissions', PermissionViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
