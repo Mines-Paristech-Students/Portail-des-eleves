@@ -15,7 +15,7 @@ from associations.serializers.association import AssociationsShortSerializer
 class LoanableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loanable
-        fields = ("id", "name", "description", "image")
+        fields = ("id", "name", "description", "image", "comment")
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
