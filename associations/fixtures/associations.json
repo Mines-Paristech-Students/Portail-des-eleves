@@ -42,6 +42,28 @@
     }
   },
   {
+    "model": "associations.loan",
+    "pk": 1,
+    "fields": {
+      "loanable": 1,
+      "user": "17bocquet",
+      "loan_date": "2019-01-01",
+      "expected_return_date": "2050-12-01",
+      "status": "RETURNED"
+    }
+  },
+  {
+    "model": "associations.loan",
+    "pk": 2,
+    "fields": {
+      "loanable": 1,
+      "user": "17bocquet",
+      "loan_date":  "2018-03-04",
+      "expected_return_date":  "2018-06-01",
+      "status":  "RETURNED"
+    }
+  },
+  {
     "model": "associations.association",
     "pk": "bde",
     "fields": {
