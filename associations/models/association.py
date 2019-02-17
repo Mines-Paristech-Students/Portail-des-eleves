@@ -48,13 +48,10 @@ class Permission(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=200, null=True)
-    association = models.ForeignKey(Association, on_delete=models.CASCADE, related_name="members")
+    association = models.ForeignKey(Association, on_delete=models.CASCADE, related_name="permissions")
 
     is_admin = models.BooleanField(default=False)
-
-    # the dates the person took and released their reponsability
-    started_at = models.DateField(default=datetime.now, blank=True)
-    ended_at = models.DateField(blank=True, null=True)
+    is_archived = models.BooleanField(default=False)  # archived permissions are not operating anymore but they allow to remember who was in the association
 
     # has editing rights on :
     static_page = models.BooleanField(default=False)

@@ -16,19 +16,17 @@
                 </div>
                 <p [innerHTML]="status"></p>
 
-                <div class="card" *ngFor="let group of association.groups">
-                    <div class="card-header">
-                        <div class="card-title">{{ group.role }}</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-2 col-md-4 col-6 text-center" *ngFor="let member of group.members">
-                                <a routerLink="/user/{{ member.id }}">
-                                    <profile-photo [user]="member"></profile-photo>
-                                    <p class="mt-2">{{ member.first_name }} {{ member.last_name }}</p>
-                                </a>
-                            </div>
+                <div class="row">
+                    <div class="col-md-4 card m-2" *ngFor="let permission of association.permissions">
+                        <div class="card-body text-center ">
+                            <profile-photo [user]="permission.user"></profile-photo>
+                            <p class="mt-2">
+                                <a routerLink="/user/{{ permission.user.id }}">{{ permission.user.first_name }} {{ permission.user.last_name }}</a>
+                                <br>
+                                <span class="font-weight-light">{{ permission.role }}</span>
+                            </p>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -37,46 +35,49 @@
                 <div class="page-header mb-5">
                     <h1 class="page-title">Membres de l'associations</h1>
                     <div class="page-options d-flex">
-                        <a (click)="stopEdit()">Terminer</a>
+                        <a (click)="editing = false">Terminer</a>
                     </div>
                 </div>
                 <p [innerHTML]="status"></p>
 
-                <div class="card" *ngFor="let group of association.groups">
+                <div class="card" *ngFor="let permission of association.permissions">
                     <div class="card-header">
-                        <div class="card-title">
-                            <input type="text" class="input-lg form-control" [(ngModel)]="group.role">
+                        <div class="card-title col-md-6 p-0">
+                            <ng-select [items]="users"
+                                       bindLabel="id"
+                                       [(ngModel)]="permission.user"
+                                       placeholder="Utilisateur"
+                                       class="mt-4 ml-0"
+                                       (change)="savePermission(permission)"
+                            >
+                            </ng-select>
                         </div>
                         <div class="card-options">
-                            <a (click)="deleteGroup(group)">Supprimer</a>
+                            <a (click)="deletePermission(permission)">Supprimer</a>
                         </div>
                     </div>
                     <div class="card-body border-bottom">
-                        <div class="form-group">
+                        <div class="form-permission">
+                            <input type="text" class="input-lg form-control mb-4 permission_role" [(ngModel)]="permission.role"  appDebounceChange (debounceChange)="savePermission(permission)" [debounceTime]="700">
 
                             <div class="row">
                                 <div class="col-md-6" *ngFor="let field of rightFields">
                                     <label class="custom-switch">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" [(ngModel)]="group[field[1]]">
+                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input"
+                                               [(ngModel)]="permission[field[1]]"
+                                               (click)="savePermission(permission)"
+                                        >
                                         <span class="custom-switch-indicator"></span>
                                         <span class="custom-switch-description">{{ field[0] }}</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <ng-select [items]="users"
-                                       bindLabel="id"
-                                       [multiple]="true"
-                                       [(ngModel)]="group.members"
-                                       placeholder="Membres"
-                                       class="mt-4"
-                            >
-                            </ng-select>
                         </div>
                     </div>
                 </div>
 
-                <button role="button" class="btn btn-primary" (click)="createGroup()">Créer un groupe</button>
+                <button role="button" class="btn btn-primary" (click)="addPermission()">Ajouter un membre</button>
             </div>
         </div>
     </div>

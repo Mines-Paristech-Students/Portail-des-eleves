@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
-import {group} from "@angular/animations";
 
 @Component({
     selector: 'app-association-members',
@@ -11,12 +10,10 @@ import {group} from "@angular/animations";
 export class AssociationMembersComponent implements OnInit {
 
     association: any ;
-    groups: any ;
     error: string ;
     status: string ;
 
     users: any ;
-    users_index: any;
     editing = false;
 
     rightFields = [
@@ -35,15 +32,9 @@ export class AssociationMembersComponent implements OnInit {
         const id = this.route.snapshot.paramMap.get('id');
 
         this.api.get('users/').subscribe(
-            users => {
-                let users_index = {};
-                this.users = users;
-                for(let user of (users as Array<any>)){
-                    users_index[user.id] = user
-                }
-            },
+            users => this.users = users,
             error => this.error = error.message
-        )
+        );
         this.api.get("associations/" + id + "/").subscribe(
             association => {
                 this.association = association;
@@ -52,57 +43,45 @@ export class AssociationMembersComponent implements OnInit {
         );
     }
 
-    stopEdit(){
-        if(this.association.groups.filter(g => g.is_admin_group).map(g => g.members.length).reduce((sum, current) => sum + current, 0) > 0) {
-            this.status = "" ;
-
-            let groups = [];
-            for(let group of this.association.groups){
-                let members = [];
-                for(let m of group.members){
-                    let id = m;
-                    if(id.hasOwnProperty("id")){
-                        id = id.id
-                    }
-
-                    members.push(id)
-                }
-                groups.push({
-                    id: group.id ? group.id : -1,
-                    members: members,
-
-                    is_admin_group: group.is_admin_group,
-                    role: group.role,
-
-                    library: group.library,
-                    marketplace: group.marketplace,
-                    news: group.news,
-                    static_page: group.static_page,
-                    vote: group.vote
-                })
-            }
-
-            this.api.patch(`groups/batch_add_update/`, {"groups" :groups, "association": this.association.id}).subscribe(
-                res => {
-                    this.status = "<span class='text-success'>Groupes mis à jour</span>"
-                    this.editing = false;
-                    this.association = res
-                },
-                err => { console.log(err) ; this.status = "<span class='text-danger'>" + err.message + "</span>" }
-            )
-        } else {
-            this.status = "<span class='text-danger'>L'association doit avoir au moins un groupe administrateur qui doit avoir au moins un membre</span>"
-        }
-    }
-
-    createGroup(){
-        this.association.groups.push({
-            role: "Nouveau groupe"
+    addPermission(){
+        this.association.permissions.push({
+            "role": "Membre",
+            "association": this.association.id
         })
     }
 
-    deleteGroup(group) {
-        this.association.groups.splice(this.association.groups.indexOf(group), 1)
+    savePermission(permission){
+
+        let req = Object.assign({}, permission) ;
+        req.user = req.user.id ;
+
+
+        if(permission.id){
+            this.api.put(`permissions/${permission.id}/`, req).subscribe(
+                res => this.status = "Toutes les modifications en enregistrées",
+                error => this.error = error.message
+            )
+        } else {
+            this.api.post(`permissions/`, req).subscribe(
+                (res:any) => {
+                    permission.id = res.id ;
+                    this.status = "Toutes les modifications en enregistrées";
+                },
+                error => this.error = error.message
+            )
+        }
+    }
+
+    deletePermission(permission) {
+        console.log(permission);
+        this.status = "Supression...";
+        this.api.delete(`permissions/${permission.id}/`).subscribe(
+            res => {
+                this.status = "Autorisation retirée" ;
+                this.association.permissions.splice(this.association.permissions.indexOf(permission), 1)
+            },
+            error => this.error = error.message
+        )
     }
 
 }
