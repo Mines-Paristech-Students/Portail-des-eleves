@@ -31,7 +31,6 @@ export class NavbarComponent implements OnInit {
 
         this._apiService.get("associations/").subscribe(
 		    (data:any) => {
-                console.log(data)
 				this.list_associations_short = data.slice(0, 10);
 			}
 		);
