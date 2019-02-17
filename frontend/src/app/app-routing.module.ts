@@ -21,6 +21,7 @@ import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-man
 import {ViewForumComponent} from "./forum/view-forum/view-forum.component"
 import {ViewThemeComponent} from "./forum/view-theme/view-theme.component"
 import {ViewTopicComponent} from "./forum/view-topic/view-topic.component"
+import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -40,6 +41,8 @@ const routes: Routes = [
     { path: 'marketplace/:id/manager/catalog', component: MarketplaceManagerCatalogComponent},
     { path: 'marketplace/:id/manager/counter', component: MarketplaceManagerCounterComponent},
     { path: 'marketplace/:id/manager/fundings', component: MarketplaceManagerFundingsComponent},
+
+    { path: 'library/:id', component: LibraryCatalogComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

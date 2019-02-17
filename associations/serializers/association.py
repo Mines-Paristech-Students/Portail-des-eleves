@@ -2,7 +2,6 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from associations.models import Association, Permission, User
-from associations.serializers.library import LibrarySerializer
 from associations.serializers.page import PageShortSerializer
 from authentication.serializers import UserShortSerializer
 
@@ -14,6 +13,7 @@ class AssociationsShortSerializer(serializers.ModelSerializer):
 
 
 from associations.serializers.marketplace import MarketplaceShortSerializer
+from associations.serializers.library import LibraryShortSerializer
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -34,11 +34,10 @@ class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
 
     marketplace = MarketplaceShortSerializer()
-    library = LibrarySerializer()
+    library = LibraryShortSerializer()
 
     permissions = PermissionSerializer(many=True)
 
     class Meta:
         model = Association
         fields = ('id', 'name', 'logo', 'pages', 'marketplace', 'library', 'permissions')
-

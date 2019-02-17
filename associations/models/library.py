@@ -12,28 +12,20 @@ class Library(models.Model):
     enabled = models.BooleanField(default=False)
 
 
-class Object(models.Model):
+class Loanable(models.Model):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True)
-    image = models.ImageField()
-    comment = models.TextField()
+    image = models.ImageField(null=True)
+    comment = models.TextField(null=True)
 
-    library = models.ForeignKey(Library, models.CASCADE)
-
-    # By convention, -1 = unlimited number of this product.
-    number_left = models.PositiveIntegerField(default=1)
-    still_in_the_catalogue = models.BooleanField(default=True)
-
-    # Can someone lend it on the site ?
-    orderable_online = models.BooleanField(default=True)
-
+    library = models.ForeignKey(Library, models.CASCADE, related_name="loanables")
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)
 
-    object = models.OneToOneField(Object, on_delete=models.CASCADE)
+    loanable = models.ForeignKey(Loanable, on_delete=models.CASCADE, related_name="loans")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     loan_date = models.DateTimeField(auto_now=True)

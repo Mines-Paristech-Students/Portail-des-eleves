@@ -55,6 +55,8 @@ import {ViewThemeComponent} from './forum/view-theme/view-theme.component';
 import {ViewTopicComponent} from './forum/view-topic/view-topic.component';
 import {TimelineComponent} from './timeline/timeline.component';
 import {DebounceChangeDirective} from "./associations/association-members/debounce-change.directive";
+import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
+import {LibrarySidebarComponent} from "./library/library-sidebar/library-sidebar.component";
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -98,7 +100,9 @@ registerLocaleData(localeFr)
         ViewThemeComponent,
         ViewTopicComponent,
         TimelineComponent,
-        DebounceChangeDirective
+        DebounceChangeDirective,
+        LibraryCatalogComponent,
+        LibrarySidebarComponent
     ],
     imports: [
         BrowserModule,
