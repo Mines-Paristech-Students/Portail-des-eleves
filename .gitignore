@@ -114,3 +114,6 @@ venv.bak/
 
 # vscode
 .vscode/
+associations/migrations/*.py
+authentication/migrations/*.py
+forum/migrations/*.py
