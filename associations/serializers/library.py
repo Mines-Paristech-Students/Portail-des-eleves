@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from associations.models import Library, Loanable, Loan
 
@@ -35,13 +36,18 @@ class LoanableSerializer(serializers.ModelSerializer):
 
 
 class LoanSerializer(serializers.ModelSerializer):
-    loanable = LoanableSerializer()
+    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
 
     class Meta:
         model = Loan
         fields = ("id", "user", "status", "loanable",
                   "expected_return_date", "loan_date", "real_return_date")
 
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+        res["library"] = instance.loanable.library.id
+        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
+        return res
 
 class LibrarySerializer(serializers.ModelSerializer):
     association = AssociationsShortSerializer()

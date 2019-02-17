@@ -59,6 +59,7 @@ import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog
 import {LibrarySidebarComponent} from "./library/library-sidebar/library-sidebar.component";
 import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
 import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
+import {LibraryManagerLoansComponent} from "./library/library-manager-loans/library-manager-loans.component";
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -106,7 +107,8 @@ registerLocaleData(localeFr)
         LibraryCatalogComponent,
         LibrarySidebarComponent,
         LibraryLoansComponent,
-        LibraryManagerCatalogComponent
+        LibraryManagerCatalogComponent,
+        LibraryManagerLoansComponent
     ],
     imports: [
         BrowserModule,

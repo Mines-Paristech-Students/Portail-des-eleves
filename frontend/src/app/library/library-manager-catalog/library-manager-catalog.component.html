@@ -104,13 +104,7 @@
         </div>
     </div>
 
-    <div *ngIf="!library">
-        <p class="text-primary">
-            Chargement en cours...
-        </p>
-    </div>
-
-    <div *ngIf="error">
+    <div *ngIf="!library && error">
         <p class="text-danger">
             Une erreur est survenue : {{ error }}
         </p>
