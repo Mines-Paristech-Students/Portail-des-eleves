@@ -23,6 +23,8 @@ export class NavbarComponent implements OnInit {
                 //  so the ".promotion" property can be called from the html template.
                 this.user = new User();
                 Object.assign(this.user, data)
+
+                localStorage.setItem("user", JSON.stringify(this.user))
             },
             err => {
                 console.log(err)
