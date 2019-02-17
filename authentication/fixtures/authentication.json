@@ -216,5 +216,23 @@
             "room": "327",
             "phone": "0633499049"
         }
+    },
+    {
+        "model": "authentication.user",
+        "pk": "14alarro",
+        "fields": {
+            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
+            "last_login": null,
+            "first_name": "Arnaud",
+            "last_name": "Larroche",
+            "email": "arnaud.larroche@mines-paris.org",
+            "birthday": "1994-05-30",
+            "is_active": true,
+            "is_admin": true,
+            "nickname": "",
+            "city_of_origin": "Paris",
+            "room": "",
+            "phone": "+33623149119"
+        }
     }
 ]
