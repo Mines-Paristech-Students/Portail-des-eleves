@@ -26,7 +26,7 @@ class Loan(models.Model):
     id = models.AutoField(primary_key=True)
 
     loanable = models.ForeignKey(Loanable, on_delete=models.CASCADE, related_name="loans")
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     loan_date = models.DateTimeField(auto_now=True)
     expected_return_date = models.DateTimeField(auto_now=False, null=True)

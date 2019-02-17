@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from associations.models import Library, Loanable
+from associations.models import Library, Loanable, Loan
 
 
 class LibraryShortSerializer(serializers.ModelSerializer):
@@ -11,6 +11,10 @@ class LibraryShortSerializer(serializers.ModelSerializer):
 
 from associations.serializers.association import AssociationsShortSerializer
 
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = ("id", "user", "status")
 
 class LoanableSerializer(serializers.ModelSerializer):
 
@@ -21,7 +25,16 @@ class LoanableSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
 
-        res["last_loan"] = instance.loans.order_by("loan_date").first()
+        status = "available"
+        expected_return_date = None
+
+        for loan in instance.loans.all():
+            if loan.real_return_date is None:
+                expected_return_date = loan.expected_return_date
+                status = "borrowed"
+
+        res["status"] = status
+        res["expected_return_date"] = expected_return_date
 
         return res
 
