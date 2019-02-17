@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from associations.models import Library, Loan
-from associations.serializers import LibrarySerializer, LoanSerializer
+from associations.models import Library, Loan, Loanable
+from associations.serializers import LibrarySerializer, LoanSerializer, LoanableSerializer
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
@@ -12,3 +12,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
+
+class LoanableViewSet(viewsets.ModelViewSet):
+    queryset = Loanable.objects.all()
+    serializer_class = LoanableSerializer

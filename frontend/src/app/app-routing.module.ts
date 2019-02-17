@@ -23,6 +23,7 @@ import {ViewThemeComponent} from "./forum/view-theme/view-theme.component"
 import {ViewTopicComponent} from "./forum/view-topic/view-topic.component"
 import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
 import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
+import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -45,6 +46,7 @@ const routes: Routes = [
 
     { path: 'library/:id', component: LibraryCatalogComponent},
     { path: 'library/:id/loans', component: LibraryLoansComponent},
+    { path: 'library/:id/manager/catalog', component: LibraryManagerCatalogComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

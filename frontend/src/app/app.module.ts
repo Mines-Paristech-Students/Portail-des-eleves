@@ -58,6 +58,7 @@ import {DebounceChangeDirective} from "./associations/association-members/deboun
 import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
 import {LibrarySidebarComponent} from "./library/library-sidebar/library-sidebar.component";
 import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
+import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -105,6 +106,7 @@ registerLocaleData(localeFr)
         LibraryCatalogComponent,
         LibrarySidebarComponent,
         LibraryLoansComponent,
+        LibraryManagerCatalogComponent
     ],
     imports: [
         BrowserModule,

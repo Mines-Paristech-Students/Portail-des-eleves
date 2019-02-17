@@ -1,0 +1,104 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="library">
+        <div class="page-header">
+            <h3 class="page-title">Prêts de {{ library.association.name }}</h3>
+        </div>
+        <div class="row">
+            <p *ngIf="error" class="text-danger">Une erreur est survenue : {{ error }}</p>
+
+            <div class="col-md-3">
+                <library-sidebar [library]="library"></library-sidebar>
+            </div>
+
+            <div class="col-md-9">
+                <div class="card" *ngIf="library">
+                    <table class="table card-table table-vcenter">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nom</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let loanable of library.loanables | paginate: { itemsPerPage: 10, currentPage: p }">
+                            <ng-container *ngIf="editing[loanable.id] == undefined || editing[loanable.id] == false">
+                                <td class="text-right"><span class="text-primary fe fe-edit"
+                                                             (click)="startEdit(loanable)"></span></td>
+                                <td>{{ loanable.name }}</td>
+                            </ng-container>
+
+                            <ng-container
+                                    *ngIf="editing[loanable.id] == true"
+                            >
+                                <td></td>
+                                <td colspan="2">
+
+                                    <input type="text"
+                                           [ngClass]="{'form-control': true, 'is-invalid': loanable.name.length == 0}"
+                                           [(ngModel)]="loanable.name" placeholder="Nom du produit"
+                                           #name="ngModel"
+                                           required minlength="4"
+                                    >
+
+                                    <br>
+
+                                    <label
+                                            for="description_{{ loanable.id }}"
+                                            class="form-label"
+                                    >
+                                        Description
+                                    </label>
+                                    <textarea
+                                            [(ngModel)]="loanable.description"
+                                            class="form-control"
+                                            id="description_{{ loanable.id }}"
+                                    ></textarea>
+
+
+                                    <button type="button" class="btn btn-secondary btn-sm mt-4"
+                                            (click)="endEdit(loanable)">
+                                        <span class="fe fe-check"></span> Sauvegarder
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm mt-4 float-right"
+                                            (click)="delete(loanable)">
+                                        <span class="fe fe-x"></span> Supprimer
+                                    </button>
+
+                                </td>
+                            </ng-container>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <button class="btn btn-success btn-sm" (click)="newLoanable()"><span
+                                        class="fe fe-plus"></span>Ajouter un objet à préter
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
+
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!library">
+        <p class="text-primary">
+            Chargement en cours...
+        </p>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue : {{ error }}
+        </p>
+    </div>
+</div>
