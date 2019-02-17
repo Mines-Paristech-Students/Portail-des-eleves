@@ -11,13 +11,8 @@ class LibraryShortSerializer(serializers.ModelSerializer):
 
 from associations.serializers.association import AssociationsShortSerializer
 
-class LoanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Loan
-        fields = ("id", "user", "status")
 
 class LoanableSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Loanable
         fields = ("id", "name", "description", "image")
@@ -37,6 +32,16 @@ class LoanableSerializer(serializers.ModelSerializer):
         res["expected_return_date"] = expected_return_date
 
         return res
+
+
+class LoanSerializer(serializers.ModelSerializer):
+    loanable = LoanableSerializer()
+
+    class Meta:
+        model = Loan
+        fields = ("id", "user", "status", "loanable",
+                  "expected_return_date", "loan_date", "real_return_date")
+
 
 class LibrarySerializer(serializers.ModelSerializer):
     association = AssociationsShortSerializer()

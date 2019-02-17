@@ -57,6 +57,7 @@ import {TimelineComponent} from './timeline/timeline.component';
 import {DebounceChangeDirective} from "./associations/association-members/debounce-change.directive";
 import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
 import {LibrarySidebarComponent} from "./library/library-sidebar/library-sidebar.component";
+import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -102,7 +103,8 @@ registerLocaleData(localeFr)
         TimelineComponent,
         DebounceChangeDirective,
         LibraryCatalogComponent,
-        LibrarySidebarComponent
+        LibrarySidebarComponent,
+        LibraryLoansComponent,
     ],
     imports: [
         BrowserModule,

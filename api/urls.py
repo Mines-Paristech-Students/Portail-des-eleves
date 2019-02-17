@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
-    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, PermissionViewSet
+    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, PermissionViewSet, LoansViewSet
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
@@ -24,6 +24,7 @@ router.register(r'permissions', PermissionViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
+router.register(r'loans', LoansViewSet)
 router.register(r'funding', FundingViewSet)
 
 # Forum

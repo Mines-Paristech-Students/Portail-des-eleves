@@ -22,6 +22,7 @@ import {ViewForumComponent} from "./forum/view-forum/view-forum.component"
 import {ViewThemeComponent} from "./forum/view-theme/view-theme.component"
 import {ViewTopicComponent} from "./forum/view-topic/view-topic.component"
 import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
+import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -43,6 +44,7 @@ const routes: Routes = [
     { path: 'marketplace/:id/manager/fundings', component: MarketplaceManagerFundingsComponent},
 
     { path: 'library/:id', component: LibraryCatalogComponent},
+    { path: 'library/:id/loans', component: LibraryLoansComponent},
 
     { path: 'users', component: FacebookComponent },
     { path: 'user/:id', component: ProfileShowComponent },

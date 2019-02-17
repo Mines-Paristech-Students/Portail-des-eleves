@@ -33,9 +33,7 @@ class Loan(models.Model):
     real_return_date = models.DateTimeField(auto_now=False, null=True)
 
     STATUS = (
-        ("ORDERED", "Commandé"),  # The person asked for the loan
-        ("VALIDATED", "Validé"),  # The owner confirms it can honor the request
-        ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then
+        ("BORROWED", "Emprunté"),  # The product has been given. The order cannot be CANCELLED then
         ("CANCELLED", "Annulé"),  # The person cancels the order
         ("RETURNED", "Rendu"),  # The loan is finished
     )

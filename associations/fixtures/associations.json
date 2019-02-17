@@ -49,7 +49,7 @@
       "user": "17bocquet",
       "loan_date": "2019-01-01",
       "expected_return_date": "2050-12-01",
-      "status": "RETURNED"
+      "status": "BORROWED"
     }
   },
   {
