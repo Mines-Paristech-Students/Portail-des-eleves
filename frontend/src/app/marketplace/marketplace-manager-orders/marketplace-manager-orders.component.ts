@@ -56,7 +56,7 @@ export class MarketplaceManagerOrdersComponent extends BaseMarketplaceComponent 
 
     filterOrders(){
         console.log("bip");
-        let url = `orders/?marketplace=${this.marketplace_id}` ;
+        let url = `orders/?product__marketplace=${this.marketplace_id}` ;
 
         if(this.filter.date){
             // @ts-ignore
