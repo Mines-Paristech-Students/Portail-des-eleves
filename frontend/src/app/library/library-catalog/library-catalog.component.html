@@ -21,8 +21,9 @@
                                     <p>{{ loanable.name }}</p>
                                     <p class="small text-muted">{{ loanable.description }}</p>
                                 </td>
-                                <td>
-                                    Status:
+                                <td class="text-center">
+                                    <span *ngIf="loanable.status == 'available'" class="tag tag-green">Disponible</span>
+                                    <span *ngIf="loanable.status == 'borrowed'" class="tag tag-red">Emprunté</span>
                                 </td>
                             </tr>
                         </ng-container>
