@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin
 from rest_framework.views import APIView
@@ -12,11 +13,12 @@ from rest_framework_bulk.generics import BulkModelViewSet
 from associations.models import Role
 from associations.models import Association
 from associations.serializers import AssociationsShortSerializer, AssociationsSerializer, RoleSerializer, RoleShortSerializer
-
+from associations.permissions import IsAssociationMember
 
 class RoleViewSet(BulkModelViewSet):
     queryset = Role.objects.all()
     model = Role
+    permission_classes = (IsAssociationMember,)
 
     def get_queryset(self):
         queryset = Role.objects.all()
@@ -40,6 +42,7 @@ class AssociationViewSet(viewsets.ModelViewSet):
     """
     queryset = Association.objects.all()
     serializer_class = AssociationsSerializer
+    permission_classes = (IsAssociationMember,)
 
     action_serializers = {
         'retrieve': AssociationsSerializer,

@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import News, Page, Role
+from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product
 
 def _get_role_for_user(user, association):
     qs = Role.objects.filter(user=user, association=association)
@@ -64,3 +64,36 @@ class CanEditNews(BasePermission):
         if not role:
             return False
         return role.news
+
+class IsAssociationMember(BasePermission):
+
+    message = "Editing association is not allowed."
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return bool(request.user and request.user.is_authenticated and request.user.is_admin and request.user.is_staff)
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        if not self.has_permission(request, view):
+            return False
+
+        if isinstance(obj, Association):
+            role = _get_role_for_user(request.user, obj)
+        elif isinstance(obj, Library):
+            import pdb; pdb.set_trace()
+            role = _get_role_for_user(request.user, obj)
+        elif isinstance(obj, Marketplace):
+            import pdb; pdb.set_trace()
+            role = _get_role_for_user(request.user, obj)
+        elif isinstance(obj, Role):
+            role = _get_role_for_user(request.user, obj.association)
+        elif isinstance(obj, Order):
+            role = _get_role_for_user(request.user, obj.product.marketplace.association)
+        elif isinstance(obj, Product):
+            role = _get_role_for_user(request.user, obj.marketplace.association)
+        else:
+            import pdb; pdb.set_trace()
+        return bool(role)

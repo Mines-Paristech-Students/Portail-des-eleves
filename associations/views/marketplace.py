@@ -5,8 +5,10 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets, filters, mixins
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from associations.models import Marketplace, Order, Product, Funding
+from associations.permissions import IsAssociationMember
 from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
 from authentication.models import User
 
@@ -14,12 +16,13 @@ from authentication.models import User
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
+    permission_classes = (IsAssociationMember,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    permission_classes = (IsAssociationMember,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
 
@@ -27,7 +30,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all().order_by("-id")
     serializer_class = OrderSerializer
-
+    permission_classes = (IsAssociationMember,)
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('status', 'buyer', "date")
 
@@ -82,12 +85,14 @@ class OrderViewSet(viewsets.ModelViewSet):
 class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('status', 'user', "date")
+    permission_classes = (IsAssociationMember,)
 
     queryset = Funding.objects.order_by("-id")
     serializer_class = FundingSerializer
 
 
 class BalanceView(APIView):
+    permission_classes = (IsAssociationMember,)
 
     def get(self, request, marketplace_id, user_id, format=None):
         user_id = user_id if user_id else request.user.id
