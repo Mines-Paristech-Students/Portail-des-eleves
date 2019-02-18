@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path
 from rest_framework import routers
 
+from associations.views.filesystem import FileViewSet, FolderViewSet
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
@@ -25,6 +26,8 @@ router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
 router.register(r'funding', FundingViewSet)
+router.register(r'file', FileViewSet)
+router.register(r'folder', FolderViewSet)
 
 # Forum
 router.register(r'forum', ThemeViewSet)
