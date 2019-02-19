@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.urls import path
 from rest_framework import routers
 
-from associations.views.filesystem import FileViewSet, FolderViewSet
+from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, GroupViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView
@@ -38,6 +38,7 @@ urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
     path('polls/', include(polls.urls)),
+    url(r'^associations/(?P<association_id>[^/.]+)/filesystem/root$', FileSystemView.as_view()),
     url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),

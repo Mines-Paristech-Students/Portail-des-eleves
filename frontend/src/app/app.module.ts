@@ -32,6 +32,7 @@ import {AssociationHomepageComponent} from "./associations/association-homepage/
 import {AssociationSidebarComponent} from "./associations/association-sidebar/association-sidebar.component";
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
 import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
+import {AssociationFilesystemComponent} from "./associations/association-filesystem/association-filesystem.component";
 import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
 import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
 import {MarketplaceSidebarComponent} from "./marketplace/marketplace-sidebar/marketplace-sidebar.component";
@@ -96,7 +97,8 @@ registerLocaleData(localeFr)
     ViewForumComponent,
     ViewThemeComponent,
     ViewTopicComponent,
-    TimelineComponent
+    TimelineComponent,
+    AssociationFilesystemComponent
   ],
   imports: [
     BrowserModule,

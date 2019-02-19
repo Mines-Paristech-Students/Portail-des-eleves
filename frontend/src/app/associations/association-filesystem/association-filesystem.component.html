@@ -1,0 +1,38 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+
+    <div *ngIf="association">
+        <div class="row">
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table card-table table-striped table-vcenter">
+                            <thead>
+                            <tr>
+                                <th colspan="2">Nom</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let file of ($folder | async).files">
+                                <td>{{ file.name }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
