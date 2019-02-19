@@ -1,10 +1,8 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.text import slugify
 
-from associations.models.marketplace import Marketplace
 from associations.models.library import Library
+from associations.models.marketplace import Marketplace
 from associations.models.publication import Publication
 from authentication.models import User
 
@@ -63,6 +61,9 @@ class Role(models.Model):
     rank = models.IntegerField(
         default=0, help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
     )
+
+    is_admin = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False) # archived permissions are not operating anymore but they allow to remember who was in the association
     # Permissions:
     static_page = models.BooleanField(default=False)
     news = models.BooleanField(default=False)

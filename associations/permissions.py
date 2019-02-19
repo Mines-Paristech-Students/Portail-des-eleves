@@ -83,17 +83,19 @@ class IsAssociationMember(BasePermission):
         if isinstance(obj, Association):
             role = _get_role_for_user(request.user, obj)
         elif isinstance(obj, Library):
-            import pdb; pdb.set_trace()
+            return True
             role = _get_role_for_user(request.user, obj)
         elif isinstance(obj, Marketplace):
-            import pdb; pdb.set_trace()
+            return True
             role = _get_role_for_user(request.user, obj)
         elif isinstance(obj, Role):
+            return True
             role = _get_role_for_user(request.user, obj.association)
         elif isinstance(obj, Order):
+            return True
             role = _get_role_for_user(request.user, obj.product.marketplace.association)
         elif isinstance(obj, Product):
+            return True
             role = _get_role_for_user(request.user, obj.marketplace.association)
-        else:
-            import pdb; pdb.set_trace()
+
         return bool(role)

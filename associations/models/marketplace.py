@@ -26,7 +26,7 @@ class Product(models.Model):
     number_left = models.IntegerField(default=-1)
     still_in_the_catalogue = models.BooleanField(default=True)
 
-    # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for biéro
+    # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for BDA
     orderable_online = models.BooleanField(default=True)
 
     def __str__(self):

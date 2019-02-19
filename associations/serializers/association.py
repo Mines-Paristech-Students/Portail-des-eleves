@@ -1,14 +1,13 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 from rest_framework_bulk.drf3.serializers import BulkListSerializer, BulkSerializerMixin
 from rest_framework_bulk.serializers import BulkListSerializer
-from rest_framework.exceptions import ValidationError
 
 
 from associations.models import Association, Role
 from associations.serializers.page import PageShortSerializer
-from associations.serializers.library import LibrarySerializer
-from authentication.models import User
 from authentication.serializers import UserShortSerializer
 
 
@@ -87,13 +86,13 @@ class RoleShortSerializer(serializers.ModelSerializer):
         return response
 
 from associations.serializers.marketplace import MarketplaceShortSerializer
-
+from associations.serializers.library import LibraryShortSerializer
 
 class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
     my_role = serializers.SerializerMethodField(read_only=True)
     marketplace = MarketplaceShortSerializer()
-    library = LibrarySerializer()
+    library = LibraryShortSerializer()
 
     class Meta:
         model = Association

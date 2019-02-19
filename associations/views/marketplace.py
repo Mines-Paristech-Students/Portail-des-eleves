@@ -32,7 +32,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsAssociationMember,)
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('status', 'buyer', "date")
+    filter_fields = ('product', 'status', 'buyer', 'date')
 
     def create(self, request, **kwargs):
 

@@ -3,8 +3,8 @@ from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
-from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
-    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
+from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, LoansViewSet, LoanableViewSet,\
+    MarketplaceViewSet, ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
@@ -24,6 +24,8 @@ router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)
+router.register(r'loans', LoansViewSet)
+router.register(r'loanables', LoanableViewSet)
 router.register(r'funding', FundingViewSet)
 
 # Forum

@@ -49,7 +49,7 @@ export class MarketplaceManagerOrdersComponent extends BaseMarketplaceComponent 
                     error => this.error = error.message
                 );
 
-                this.orders = this.api.get(`orders/?marketplace=${this.marketplace_id}`)
+                this.orders = this.api.get(`orders/?product__marketplace=${this.marketplace_id}`)
                 this.users = this.api.get('users/')
             });
     }
