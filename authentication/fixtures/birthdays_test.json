@@ -1063,24 +1063,6 @@
     },
     {
         "fields": {
-            "birthday": "1996-02-29",
-            "city_of_origin": "",
-            "email": "user59@mines-paristech.fr",
-            "first_name": "User59",
-            "is_active": true,
-            "is_admin": true,
-            "last_login": null,
-            "last_name": "User59",
-            "nickname": "",
-            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
-            "phone": "",
-            "room": ""
-        },
-        "model": "authentication.user",
-        "pk": "user59"
-    },
-    {
-        "fields": {
             "birthday": "1996-03-01",
             "city_of_origin": "",
             "email": "user60@mines-paristech.fr",
@@ -27358,24 +27340,6 @@
         },
         "model": "authentication.user",
         "pk": "user1519"
-    },
-    {
-        "fields": {
-            "birthday": "2000-02-29",
-            "city_of_origin": "",
-            "email": "user1520@mines-paristech.fr",
-            "first_name": "User1520",
-            "is_active": true,
-            "is_admin": true,
-            "last_login": null,
-            "last_name": "User1520",
-            "nickname": "",
-            "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
-            "phone": "",
-            "room": ""
-        },
-        "model": "authentication.user",
-        "pk": "user1520"
     },
     {
         "fields": {
