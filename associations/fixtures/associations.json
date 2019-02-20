@@ -3,7 +3,10 @@
     "model": "associations.group",
     "pk": "1",
     "fields": {
-      "members": ["15veaux", "17bocquet"],
+      "members": [
+        "15veaux",
+        "17bocquet"
+      ],
       "role": "Dreamteam",
       "is_admin_group": true
     }
@@ -28,7 +31,9 @@
     "fields": {
       "name": "BDE",
       "rank": 1,
-	  "groups" : [1],
+      "groups": [
+        1
+      ],
       "marketplace": "bde",
       "library": "bde"
     }
@@ -129,6 +134,64 @@
       "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.",
       "date": "2018-08-18T13:19:37+00:00",
       "author": "17bocquet"
+    }
+  },
+  {
+    "model": "associations.folder",
+    "pk": 1,
+    "fields": {
+      "name": "recettes",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 1,
+    "fields": {
+      "name": "Lorem Ipsum",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "file": "lorem-ipsum.pdf",
+      "uploaded_on": "2017-08-24T17:41:28+00:00",
+      "uploaded_by":"17bocquet",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 2,
+    "fields": {
+      "name": "Logo mint",
+      "description": "Logo de Mint",
+      "file": "mint.png",
+      "uploaded_on": "2017-08-24T18:41:28+00:00",
+      "uploaded_by": "15veaux",
+      "association":  "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 3,
+    "fields": {
+      "name": "Recette des pancakes",
+      "description": "Tout ce qu'il vous faut pour faire de bons pancakes",
+      "file": "pancakes.txt",
+      "folder": 1,
+      "uploaded_on": "2017-08-24T19:32:28+00:00",
+      "uploaded_by": "14alarro",
+      "association":  "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 4,
+    "fields": {
+      "name": "Recette de la tartiflette",
+      "description": "Pour la tartiflette il vous faut - oups - no spoiler",
+      "file": "tartiflette.txt",
+      "folder": 1,
+      "uploaded_on": "2017-08-25T17:02:52+00:00",
+      "uploaded_by": "17bocquet",
+      "association":  "bde"
     }
   }
 ]
