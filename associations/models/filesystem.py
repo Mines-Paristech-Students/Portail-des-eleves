@@ -15,14 +15,14 @@ class Folder(models.Model):
     name = models.CharField(max_length=250)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children")
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True)
 
 
 class File(models.Model):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=250)
-    description = models.TextField()
+    description = models.TextField(null=True)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
     file = models.FileField(Association, storage=fs)

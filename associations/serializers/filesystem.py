@@ -32,6 +32,6 @@ class FileSerializer(serializers.ModelSerializer):
         folder = instance.folder
         while folder is not None:
             res["filiation"].append(folder.name)
-            folder = folder.folder
+            folder = folder.parent
 
         return res
