@@ -40,6 +40,7 @@ class User(AbstractBaseUser):
     id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
     first_name = models.CharField(max_length=50, verbose_name="User first name")
     last_name = models.CharField(max_length=50, verbose_name="User last name")
+    promo = models.IntegerField(verbose_name="Promotion", default=18)
 
     email = models.EmailField(
         verbose_name='email address',
@@ -82,6 +83,9 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'birthday']
+
+    class Meta:
+        ordering = ['-promo', 'last_name', 'first_name']
 
     def __str__(self):
         return self.id

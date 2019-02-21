@@ -141,5 +141,9 @@
             </div>
         </div>
     </div>
-
+    <div *ngIf="!marketplace && error">
+        <p class="text-danger">
+            Une erreur est survenue : {{ error }}
+        </p>
+    </div>
 </div>
