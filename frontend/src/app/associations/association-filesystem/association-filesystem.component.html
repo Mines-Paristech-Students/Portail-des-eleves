@@ -12,8 +12,8 @@
             <div class="col-md-3">
                 <association-sidebar [association]="association"></association-sidebar>
             </div>
-            <div class="col-md-9" *ngIf="$folder | async">
 
+            <div class="col-md-9">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <ng-container *ngIf="($folder|async).filiation">
@@ -25,58 +25,62 @@
                                     {{ a.name }}
                                 </a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{($folder|async).name}}</li>
+
+                            <li *ngIf="!selected_file" class="breadcrumb-item active"
+                                aria-current="page">{{($folder|async).name}}</li>
+                            <li *ngIf="selected_file" class="breadcrumb-item text-primary" aria-current="page"
+                                (click)="selected_file = null">
+                                {{($folder|async).name}}
+                            </li>
                         </ng-container>
+
                         <ng-container *ngIf="!($folder|async).filiation">
-                            <li class="breadcrumb-item">{{association.name}}</li>
+                            <li *ngIf="!selected_file" class="breadcrumb-item">{{association.name}}</li>
+                            <li *ngIf="selected_file" class="breadcrumb-item text-primary" aria-current="page"
+                                (click)="selected_file = null">
+                                {{association.name}}
+                            </li>
                         </ng-container>
+
+                        <li *ngIf="selected_file" class="breadcrumb-item active" aria-current="page">
+                            {{selected_file.name}}
+                        </li>
                     </ol>
                 </nav>
 
-                <ng-container *ngIf="($folder | async).children.length > 0">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Dossiers</div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table card-table table-striped table-vcenter">
-                                <tbody>
-                                <tr *ngFor="let folder of ($folder | async).children" (click)="moveToFolder(folder)">
-                                    <td>{{ folder.name }}</td>
-                                    <td class="text-muted text-right">{{ folder.number_of_elements }} éléments</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </ng-container>
+                <div class="card" *ngIf="selected_file == null">
+                    <div class="card-body">
+                        <div class="row">
+                            <p *ngFor="let folder of ($folder | async).children"
+                               (click)="moveToFolder(folder)"
+                               class="col-md-3 text-center"
+                            >
+                                <img src="/assets/folder.svg" alt="Folder icon"><br>
+                                {{ folder.name }} <br>
+                                <span class="text-muted">{{ folder.number_of_elements }} éléments</span>
+                            </p>
 
-                <div class="row" *ngIf="($folder | async).files.length > 0">
-                    <div [ngClass]="{'col-md-6': selected_file != null, 'col-12': selected_file == null}">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Fichiers</div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <p *ngFor="let file of ($folder | async).files" (click)="selectFile(file)"
-                                         class="col-md-3 text-center">
-                                        <img src="/assets/file.svg" alt="File icon"><br>
-                                        {{ file.name }} <br>
-                                        <span class="text-muted">{{ file.uploaded_on | date:"dd/MM/yyyy" }}</span>
-                                    </p>
-                                </div>
-                            </div>
+                            <p *ngFor="let file of ($folder | async).files"
+                               (click)="selectFile(file)"
+                               class="col-md-3 text-center"
+                            >
+                                <img src="/assets/file.svg" alt="File icon"><br>
+                                {{ file.name }} <br>
+                                <span class="text-muted">{{ file.uploaded_on | date:"dd/MM/yyyy" }}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6" *ngIf="selected_file != null">
+                <div *ngIf="selected_file != null">
                     <div class="card">
                         <div class="card-header">
                             <ng-container *ngIf="!editing">
                                 <div class="card-title">{{ selected_file.name }}</div>
                                 <div class="card-options">
+                                    <button class="btn btn-secondary btn-sm ml-2"
+                                            (click)="selected_file = null">Fermer
+                                    </button>
                                     <button class="btn btn-secondary btn-sm ml-2"
                                             (click)="editing = true">Editer
                                     </button>
@@ -102,7 +106,8 @@
                         <div class="card">
                             <div class="card-body">Mis en ligne
                                 le {{ selected_file.uploaded_on | date:"dd/MM/yyyy" }}
-                                par {{ selected_file.uploaded_by }}</div>
+                                par {{ selected_file.uploaded_by }}
+                            </div>
                         </div>
                     </ng-container>
 

@@ -4,7 +4,6 @@
     "secure": false,
     "pathRewrite": {
       "^/assets": "/assets"
-    },
-    "logLevel": "debug"
+    }
   }
 }

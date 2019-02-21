@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-filesystem',
@@ -17,7 +18,7 @@ export class AssociationFilesystemComponent implements OnInit {
     selected_file: any;
     editing = false;
 
-    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) {
+    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router, private modalService: NgbModal) {
     }
 
     ngOnInit() {
@@ -63,7 +64,7 @@ export class AssociationFilesystemComponent implements OnInit {
     }
 
     saveFile(file) {
-        let clone = {... file};
+        let clone = {...file};
         delete clone["file"];
         console.log(clone)
 
@@ -77,6 +78,13 @@ export class AssociationFilesystemComponent implements OnInit {
         this.api.delete(`file/${file.id}/`).subscribe(
             _ => this.selected_file = null,
             err => this.error = err.message
+        );
+    }
+
+    openModal(content) {
+        this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then(
+            _ => this.selected_file = null,
+            _ => this.selected_file = null
         );
     }
 }
