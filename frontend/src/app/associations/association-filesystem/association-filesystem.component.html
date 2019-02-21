@@ -14,6 +14,25 @@
             </div>
             <div class="col-md-9" *ngIf="$folder | async">
 
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <ng-container *ngIf="($folder|async).filiation">
+                            <li class="breadcrumb-item">
+                                <a routerLink="/associations/{{association.id}}/files">{{association.name}}</a>
+                            </li>
+                            <li class="breadcrumb-item" *ngFor="let a of ($folder|async).filiation">
+                                <a routerLink="/associations/{{association.id}}/files/{{folder.id}}">
+                                    {{ a.name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{($folder|async).name}}</li>
+                        </ng-container>
+                        <ng-container *ngIf="!($folder|async).filiation">
+                            <li class="breadcrumb-item">{{association.name}}</li>
+                        </ng-container>
+                    </ol>
+                </nav>
+
                 <ng-container *ngIf="($folder | async).children.length > 0">
                     <div class="card">
                         <div class="card-header">
@@ -21,16 +40,10 @@
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-striped table-vcenter">
-                                <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
                                 <tbody>
                                 <tr *ngFor="let folder of ($folder | async).children" (click)="moveToFolder(folder)">
                                     <td>{{ folder.name }}</td>
-                                    <td class="text-muted">{{ folder.number_of_elements }} éléments</td>
+                                    <td class="text-muted text-right">{{ folder.number_of_elements }} éléments</td>
                                 </tr>
                                 </tbody>
                             </table>

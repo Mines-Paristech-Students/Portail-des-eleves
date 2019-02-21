@@ -9,22 +9,12 @@ class FolderShortSerializer(serializers.ModelSerializer):
         model = Folder
         fields = ("id", "name")
 
+
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ("id", "name", "description", "association", "file", "folder", "uploaded_on", "uploaded_by")
         read_only_fields = ("uploaded_on", "uploaded_by")
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["filiation"] = []
-
-        folder = instance.folder
-        while folder is not None:
-            res["filiation"].append(folder.name)
-            folder = folder.parent
-
-        return res
 
 
 class FolderSerializer(serializers.ModelSerializer):
@@ -41,5 +31,14 @@ class FolderSerializer(serializers.ModelSerializer):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
         res["number_of_elements"] = instance.children.count() + instance.files.count()
 
-        return res
+        res["filiation"] = []
 
+        folder = instance.parent
+        while folder is not None:
+            res["filiation"].append({
+                "id": folder.id,
+                "name": folder.name
+            })
+            folder = folder.parent
+
+        return res
