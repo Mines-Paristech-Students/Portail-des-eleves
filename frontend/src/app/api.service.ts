@@ -8,40 +8,40 @@ const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const server = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
 
+    server = environment.apiUrl;
     header: any;
 
     constructor(public http: HttpClient, private cookieService: CookieService) {}
 
     get<T>(url: String, params?: HttpParams){
         return this.http.get<T>(
-            server + url,
+            this.server + url,
             {params: params}
         );
     }
 
     post<T>(url: String, body: any){
         return this.http.post<T>(
-            server + url,
+            this.server + url,
             body
         )
     }
 
     put<T>(url: String, body: any){
-        return this.http.put<T>(server + url, body)
+        return this.http.put<T>(this.server + url, body)
     }
 
     patch<T>(url: String, body: any){
-        return this.http.patch<T>(server + url, body)
+        return this.http.patch<T>(this.server + url, body)
     }
 
     delete<T>(url: String){
         return this.http.delete<T>(
-            server + url
+            this.server + url
         )
     }
 

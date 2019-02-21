@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.conf.urls import include, url
 from django.urls import path
 from api import urls as api_urls
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(api_urls)),
     # Uses the smart_selects library for Chained fields but enforces authentication
     url(r'^chaining/', include('smart_selects_auth.urls')),
-]
+] + staticfiles_urlpatterns()

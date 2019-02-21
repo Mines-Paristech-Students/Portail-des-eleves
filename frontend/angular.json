@@ -66,14 +66,15 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.staging.ts"
                 }
-              ],
+              ]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "portail:build"
+            "browserTarget": "portail:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
