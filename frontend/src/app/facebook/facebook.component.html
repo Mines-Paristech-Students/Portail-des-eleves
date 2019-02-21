@@ -2,15 +2,26 @@
 
 <div class="container">
 
-    <div *ngIf="users" class="row">
-        <div class="col-md-2 card m-2" *ngFor="let user of users">
-            <a routerLink="/user/{{ user.id }}">
-                <div class="card-body text-center ">
-                    <profile-photo [user]="user"></profile-photo>
-                    <p class="mt-2">{{ user.first_name }} {{ user.last_name }}</p>
+    <div *ngIf="$users">
+        <div class="row">
+            <div class="col-md-2 p-2"
+                 *ngFor="let user of $users | async | paginate: { itemsPerPage: 50, currentPage: p }">
+                <div class="card mb-0">
+                    <a routerLink="/user/{{ user.id }}">
+                        <div class="card-body text-center ">
+                            <profile-photo [user]="user"></profile-photo>
+                            <p class="mt-2">{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
+
+        <app-pagination-controls
+                (pageChange)="p = $event"
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+        ></app-pagination-controls>
     </div>
 
 </div>

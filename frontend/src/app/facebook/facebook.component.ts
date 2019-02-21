@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {User} from "../models/user";
+import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
 
 /**
@@ -15,19 +14,15 @@ import {ApiService} from "../api.service";
 })
 export class FacebookComponent implements OnInit {
 
-    users: [User] ;
+    $users: any;
+    p = 0; // The current page
 
-    constructor(private apiService: ApiService) { }
+
+    constructor(private apiService: ApiService) {
+    }
 
     ngOnInit() {
-        this.apiService.getUsers().subscribe(
-            data => {
-                this.users = data;
-            },
-            err => {
-                console.log(err)
-            }
-        )
+        this.$users = this.apiService.getUsers();
     }
 
 }
