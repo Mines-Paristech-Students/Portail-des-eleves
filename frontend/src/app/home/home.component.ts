@@ -3,6 +3,7 @@ import { timer } from 'rxjs';
 
 import { ApiService } from '../api.service';
 import widgets from '../widgets/widgets.component'
+import { NotifierService } from 'angular-notifier';
 
 @Component({
     selector: 'app-home',
@@ -14,14 +15,12 @@ export class HomeComponent implements OnInit {
     is_settings_displayed: boolean;
     widgets: {"name": string, "displayed": boolean}[]
     associations: any[];
-    status_message_html: string;
 
-    constructor(private _apiService: ApiService) {
+    constructor(private apiService: ApiService, private notifier: NotifierService) {
     }
 
     ngOnInit() {
         this.is_settings_displayed = false;
-        this.status_message_html = "";
         this.widgets =  widgets.map(
             res => {
                 return {
@@ -30,7 +29,7 @@ export class HomeComponent implements OnInit {
                 }
             }
         )
-        this._apiService.get("subscriptions/get_associations/").subscribe(
+        this.apiService.get("subscriptions/get_associations/").subscribe(
             (data:{"associations": any[]}) => {
                 this.associations = data.associations
             },
@@ -38,7 +37,7 @@ export class HomeComponent implements OnInit {
                 console.log(err)
             }
         )
-        this._apiService.get("subscriptions/get_widgets/").subscribe(
+        this.apiService.get("subscriptions/get_widgets/").subscribe(
             (data:{"widgets": {"name": string, "displayed": boolean}[]}) => {
                 this.widgets = data.widgets
             },
@@ -53,29 +52,12 @@ export class HomeComponent implements OnInit {
     }
 
     saveSettings() {
-        this._apiService.post("subscriptions/", {"widgets": this.widgets, "associations": this.associations}).subscribe(
+        this.apiService.post("subscriptions/", {"widgets": this.widgets, "associations": this.associations}).subscribe(
             res => {
                 this.is_settings_displayed = false;
+                this.notifier.notify('success', "Paramètres mis à jour !")
             },
-            err => this.setErrorMessage(err)
+            err => this.notifier.notify('error', err)
         )
     }
-
-    cleanStatusMessageLater(sec: number){
-        timer(sec*1000).subscribe(
-            val => {
-                this.status_message_html = ""
-            }
-        )
-    }
-    setErrorMessage(mess: string){
-        this.status_message_html = `<p class="text-red">${mess}</p>`
-        this.cleanStatusMessageLater(500)
-    }
-
-    setSuccessMessage(mess: string){
-        this.status_message_html = `<p class="text-green">${mess}</p>`
-        this.cleanStatusMessageLater(5)
-    }
-
 }

@@ -14,6 +14,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { NgxPaginationModule } from "ngx-pagination";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { DragulaModule } from "ng2-dragula";
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -126,6 +127,46 @@ registerLocaleData(localeFr);
           // renderer: new Renderer(), Here we can add custom markdown tags
           sanitize: true
         }
+      }
+    }),
+    NotifierModule.withConfig({
+      position: {
+        horizontal: {
+          position: 'right',
+          distance: 12
+        },
+        vertical: {
+          position: 'bottom',
+          distance: 12,
+          gap: 10
+        }
+      },
+      theme: 'material',
+      behaviour: {
+        autoHide: 5000,
+        onClick: 'hide',
+        onMouseover: 'pauseAutoHide',
+        showDismissButton: true,
+        stacking: 6
+      },
+      animations: {
+        enabled: true,
+        show: {
+          preset: 'slide',
+          speed: 500,
+          easing: 'ease'
+        },
+        hide: {
+          preset: 'slide',
+          speed: 500,
+          easing: 'ease',
+          offset: 50
+        },
+        shift: {
+          speed: 500,
+          easing: 'ease'
+        },
+        overlap: 250
       }
     }),
     NgxPaginationModule,
