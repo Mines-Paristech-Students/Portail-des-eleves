@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-filesystem',
@@ -9,12 +9,15 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class AssociationFilesystemComponent implements OnInit {
 
-    association: any ;
-    error = "" ;
+    association: any;
+    error = "";
 
-    $folder: any ;
+    $folder: any;
 
-    constructor(private api: ApiService, private route: ActivatedRoute) {
+    selected_file: any;
+    editing = false;
+
+    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) {
     }
 
     ngOnInit() {
@@ -22,10 +25,11 @@ export class AssociationFilesystemComponent implements OnInit {
         this.route.params.subscribe(
             (params) => {
                 let association_id = params['id'];
+                let folder_id = params['folder_id'];
                 this.api.get(`associations/${association_id}/`).subscribe(
                     association => {
-                        this.association = association ;
-                        this.loadFolder(null);
+                        this.association = association;
+                        this.loadFolder(folder_id);
                     },
                     error => {
                         this.error = error;
@@ -36,11 +40,43 @@ export class AssociationFilesystemComponent implements OnInit {
     };
 
 
-    loadFolder(folder){
+    loadFolder(folder) {
 
-        if(folder == null){
+        if (folder == null) {
             this.$folder = this.api.get(`associations/${this.association.id}/filesystem/root`)
+        } else {
+            this.$folder = this.api.get(`folder/${folder}`)
         }
 
+    }
+
+    moveToFolder(folder) {
+        this.router.navigateByUrl(`associations/${this.association.id}/files/${folder.id}`);
+    }
+
+    selectFile(file) {
+        if (this.selected_file == file) {
+            this.selected_file = null;
+        } else {
+            this.selected_file = file;
+        }
+    }
+
+    saveFile(file) {
+        let clone = {... file};
+        delete clone["file"];
+        console.log(clone)
+
+        this.api.patch(`file/${file.id}/`, clone).subscribe(
+            _ => 0,
+            err => this.error = err.message
+        );
+    }
+
+    deleteFile(file) {
+        this.api.delete(`file/${file.id}/`).subscribe(
+            _ => this.selected_file = null,
+            err => this.error = err.message
+        );
     }
 }

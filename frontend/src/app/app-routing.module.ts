@@ -31,6 +31,7 @@ const routes: Routes = [
     {path: 'associations/:id', component: AssociationHomepageComponent},
     {path: 'associations/:id/members', component: AssociationMembersComponent},
     {path: 'associations/:id/files', component: AssociationFilesystemComponent},
+    {path: 'associations/:id/files/:folder_id', component: AssociationFilesystemComponent},
     {path: 'associations/:id/settings', component: AssociationSettingsComponent},
     {path: 'associations/:association_id/page/:page_id', component: AssociationPageComponent},
 

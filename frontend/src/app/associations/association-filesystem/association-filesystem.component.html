@@ -12,22 +12,127 @@
             <div class="col-md-3">
                 <association-sidebar [association]="association"></association-sidebar>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9" *ngIf="$folder | async">
 
-                <div class="card">
-                    <div class="table-responsive">
-                        <table class="table card-table table-striped table-vcenter">
-                            <thead>
-                            <tr>
-                                <th colspan="2">Nom</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let file of ($folder | async).files">
-                                <td>{{ file.name }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                <ng-container *ngIf="($folder | async).children.length > 0">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Dossiers</div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table card-table table-striped table-vcenter">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let folder of ($folder | async).children" (click)="moveToFolder(folder)">
+                                    <td>{{ folder.name }}</td>
+                                    <td class="text-muted">{{ folder.number_of_elements }} éléments</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="row" *ngIf="($folder | async).files.length > 0">
+                    <div [ngClass]="{'col-md-6': selected_file != null, 'col-12': selected_file == null}">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Fichiers</div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table card-table table-striped table-vcenter">
+                                    <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th class="text-right">Mise en ligne</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let file of ($folder | async).files" (click)="selectFile(file)">
+                                        <td>{{ file.name }}</td>
+                                        <td class="text-muted text-right">{{ file.uploaded_on | date:"dd/MM/yyyy" }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" *ngIf="selected_file != null">
+                        <div class="card">
+                            <div class="card-header">
+                                <ng-container *ngIf="!editing">
+                                    <div class="card-title">{{ selected_file.name }}</div>
+                                    <div class="card-options">
+                                        <button class="btn btn-secondary btn-sm ml-2"
+                                                (click)="editing = true">Editer
+                                        </button>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="editing">
+                                    <input type="text" class="form-control input-lg" [(ngModel)]="selected_file.name">
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="!editing">
+                            <div class="card" *ngIf="selected_file.description">
+                                <div class="card-header">
+                                    <div class="card-title">Description</div>
+                                </div>
+                                <div class="card-body">
+                                    {{ selected_file.description }}
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">Mis en ligne
+                                    le {{ selected_file.uploaded_on | date:"dd/MM/yyyy" }}
+                                    par {{ selected_file.uploaded_by }}</div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="editing">
+                            <div class="card" *ngIf="selected_file.description">
+                                <div class="card-header">
+                                    <div class="card-title">Description</div>
+                                </div>
+                                <div class="card-body">
+                                    <textarea [(ngModel)]="selected_file.description" class="form-control" cols="50"
+                                              rows="10"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-secondary btn-sm"
+                                                    (click)="saveFile(selected_file) ; editing = false">Enregister
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-block btn-sm btn-danger"
+                                                    (click)="deleteFile(selected_file) ; editing = false">Surpprimer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div class="card"
+                     *ngIf="($folder | async).files.length == 0  && ($folder | async).children.length == 0">
+                    <div class="card-body text-center">
+                        Le dossier est vide.
                     </div>
                 </div>
 
