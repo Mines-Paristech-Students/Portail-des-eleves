@@ -8,7 +8,6 @@ from associations.serializers.filesystem import FolderSerializer, FileSerializer
 
 
 class FileSystemView(APIView):
-
     def get(self, request, association_id, format=None):
         folders = Folder.objects.filter(association__id=association_id, parent=None)
         files = File.objects.filter(association__id=association_id, folder=None)

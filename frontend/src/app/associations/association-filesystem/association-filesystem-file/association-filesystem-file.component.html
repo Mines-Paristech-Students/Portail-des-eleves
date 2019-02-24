@@ -1,0 +1,70 @@
+<div *ngIf="file != null">
+    <!-- Check whether the file is being edited. -->
+    <ng-container
+            *ngIf="editing; then editPanel; else viewPanel;"
+    ></ng-container>
+
+    <!-- File viewing mode. -->
+    <ng-template #viewPanel>
+        <div class="card">
+            <div class="card-title">
+                {{ file.name }}
+            </div>
+
+            <div class="card">
+                <div class="card-title">Description</div>
+                <div class="card-body" *ngIf="file.description">
+                    {{ file.description }}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">Mis en ligne
+                    le {{ file.uploaded_on | date:"dd/MM/yyyy" }}
+                    par {{ file.uploaded_by }}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-options">
+                    <button class="btn btn-secondary btn-sm ml-2"
+                            (click)="file = null">Fermer
+                    </button>
+                    <button class="btn btn-secondary btn-sm ml-2"
+                            (click)="editing = true">Editer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <!-- File editing mode. -->
+    <ng-template #editPanel>
+        <div class="card">
+            <div class="card-title">
+                <input type="text" class="form-control input-lg" [(ngModel)]="file.name">
+            </div>
+
+            <div class="card-body">
+                <textarea [(ngModel)]="file.description" class="form-control" cols="50" rows="10"></textarea>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-block btn-secondary btn-sm"
+                                    (click)="saveFile(file) ; editing = false">Enregistrer
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-block btn-sm btn-danger"
+                                    (click)="deleteFile(file) ; editing = false">Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

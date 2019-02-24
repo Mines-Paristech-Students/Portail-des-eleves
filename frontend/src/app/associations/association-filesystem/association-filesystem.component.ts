@@ -9,20 +9,16 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ['./association-filesystem.component.scss']
 })
 export class AssociationFilesystemComponent implements OnInit {
-
     association: any;
-    error = "";
-
+    error: string = "";
     $folder: any;
-
     selected_file: any;
-    editing = false;
+    adding_file: boolean = false;
 
     constructor(private api: ApiService, private route: ActivatedRoute, private router: Router, private modalService: NgbModal) {
     }
 
     ngOnInit() {
-
         this.route.params.subscribe(
             (params) => {
                 let association_id = params['id'];
@@ -42,16 +38,14 @@ export class AssociationFilesystemComponent implements OnInit {
 
 
     loadFolder(folder) {
-
         if (folder == null) {
             this.$folder = this.api.get(`associations/${this.association.id}/filesystem/root`)
         } else {
             this.$folder = this.api.get(`folder/${folder}`)
         }
-
     }
 
-    moveToFolder(folder) {
+    openFolder(folder) {
         this.router.navigateByUrl(`associations/${this.association.id}/files/${folder.id}`);
     }
 
@@ -61,24 +55,6 @@ export class AssociationFilesystemComponent implements OnInit {
         } else {
             this.selected_file = file;
         }
-    }
-
-    saveFile(file) {
-        let clone = {...file};
-        delete clone["file"];
-        console.log(clone)
-
-        this.api.patch(`file/${file.id}/`, clone).subscribe(
-            _ => 0,
-            err => this.error = err.message
-        );
-    }
-
-    deleteFile(file) {
-        this.api.delete(`file/${file.id}/`).subscribe(
-            _ => this.selected_file = null,
-            err => this.error = err.message
-        );
     }
 
     openModal(content) {

@@ -55,6 +55,7 @@ import { ViewForumComponent } from './forum/view-forum/view-forum.component';
 import { ViewThemeComponent } from './forum/view-theme/view-theme.component';
 import { ViewTopicComponent } from './forum/view-topic/view-topic.component';
 import { TimelineComponent } from './timeline/timeline.component';
+import { AssociationFilesystemFileComponent } from './associations/association-filesystem/association-filesystem-file/association-filesystem-file.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -98,7 +99,8 @@ registerLocaleData(localeFr)
     ViewThemeComponent,
     ViewTopicComponent,
     TimelineComponent,
-    AssociationFilesystemComponent
+    AssociationFilesystemComponent,
+    AssociationFilesystemFileComponent
   ],
   imports: [
     BrowserModule,
