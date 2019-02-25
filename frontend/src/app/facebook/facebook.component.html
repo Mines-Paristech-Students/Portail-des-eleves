@@ -3,8 +3,16 @@
 <div class="container">
 
     <div *ngIf="$users">
+        <div class="row mt-3 p-2">
+            <input type="text" class="form-control col-md-3" placeholder="Rechercher">
+            <select class="custom-select col-md-3 offset-md-6">
+                <option value="">Toutes</option>
+                <option *ngFor="let i of [14, 15, 16, 17, 18]" value="{{i}}">P{{i}}</option>
+            </select>
+        </div>
+
         <div class="row">
-            <div class="col-md-2 p-2"
+            <div class="col-lg-2 col-sm-3 col-6 p-2"
                  *ngFor="let user of $users | async | paginate: { itemsPerPage: 50, currentPage: p }">
                 <div class="card mb-0">
                     <a routerLink="/user/{{ user.id }}">
