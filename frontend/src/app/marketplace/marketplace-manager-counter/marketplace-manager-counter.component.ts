@@ -86,7 +86,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         this.numberOfBuyerItems = this.marketplace.products.reduce((acc, product) => acc + this.getQuantity(product), 0);
     }
 
-    add(product){
+    addProduct(product){
         if(this.userBasket[product.id] != undefined){
             this.userBasket[product.id] += 1 ;
         } else {
