@@ -48,13 +48,13 @@
                         </div>
                         <table class="table card-table table-vcenter">
                             <tbody>
-                            <ng-container *ngFor="let product of inBasket(marketplace.products)">
+                            <ng-container *ngFor="let basketItem of userBasket | keyvalue">
                                 <tr marketplace-counter-product
-                                    *ngIf="product.still_in_the_catalogue"
-                                    [product]="product"
-                                    [basketQuantity]="userBasket[product.id] || 0"
-                                    (addProduct)="addProduct(product)"
-                                    (changeQuantity)="setQuantity(product, $event)"
+                                    *ngIf="basketItem.value.product.still_in_the_catalogue"
+                                    [product]="basketItem.value.product"
+                                    [basketQuantity]="userBasket[basketItem.value.product.id].quantity"
+                                    (addProduct)="addProduct(basketItem.value.product)"
+                                    (changeQuantity)="setQuantity(basketItem.value.product, $event)"
                                 ></tr>
                             </ng-container>
                             </tbody>
@@ -84,7 +84,7 @@
                                 <tr marketplace-counter-product
                                     *ngIf="product.still_in_the_catalogue"
                                     [product]="product"
-                                    [basketQuantity]="userBasket[product.id] || 0"
+                                    [basketQuantity]="userBasket[product.id] ? userBasket[product.id].quantity : 0"
                                     (addProduct)="addProduct(product)"
                                     (changeQuantity)="setQuantity(product, $event)"
                                 ></tr>

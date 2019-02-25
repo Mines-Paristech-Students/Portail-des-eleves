@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
 import {ApiService} from "../../api.service";
 import {BasketManagerServiceService} from "../basketManager.service";
-import { Product, RawProduct } from './models';
+import { BasketItem, Product, RawProduct } from './models';
 
 @Component({
     selector: 'app-marketplace-counter',
@@ -23,7 +23,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     productSearch = "" ;
 
     buyer: any;
-    userBasket: { [id: number] : number } = {} ;
+    userBasket: { [id: number] : BasketItem } = {} ;
     numberOfBuyerItems = 0 ;
 
     moneyToAdd: any ;
@@ -57,7 +57,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         this.users$ = this.api.get(`users/?search=${this.userSearch}`)
     }
 
-    updateProductSearch(){
+    updateProductSearch() {
         const getProductsFromRaw = map((rawProducts: RawProduct[]) => rawProducts.map(rawProduct => new Product(rawProduct)));
         this.products$ = this.api.get<RawProduct[]>(`products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
             .pipe(getProductsFromRaw);
@@ -71,53 +71,49 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         )
     }
 
-    getQuantity(product: Product){
-        if(this.userBasket[product.id] == undefined){
+    getQuantity(product: Product): number {
+        if (this.userBasket[product.id] == undefined) {
             return 0 ;
         } else {
-            return this.userBasket[product.id];
+            return this.userBasket[product.id].quantity;
         }
     }
 
-    setQuantity(product: Product, value: number){
-        this.userBasket[product.id] = value;
+    setQuantity(product: Product, value: number) {
+        this.userBasket[product.id].quantity = value;
         this.countBuyerItems();
-    }
-
-    inBasket() {
-        return this.marketplace.products.filter(product => product.id in this.userBasket);
     }
 
     countBuyerItems(){
         this.numberOfBuyerItems = this.marketplace.products.reduce((acc, product) => acc + this.getQuantity(product), 0);
     }
 
-    addProduct(product: Product){
-        if(this.userBasket[product.id] != undefined){
-            this.userBasket[product.id] += 1 ;
+    addProduct(product: Product) {
+        if (this.userBasket[product.id] == undefined){
+            this.userBasket[product.id] = new BasketItem(product, 1);
         } else {
-            this.userBasket[product.id] = 1 ;
+            this.userBasket[product.id].quantity += 1;
         }
 
         this.countBuyerItems();
     }
 
-    remove(product){
-        if(this.userBasket[product.id] != undefined && this.userBasket[product.id] > 0){
-            this.userBasket[product.id] -= 1 ;
+    remove(product: Product) {
+        if(this.userBasket[product.id] != undefined && this.userBasket[product.id].quantity > 0){
+            this.userBasket[product.id].quantity -= 1 ;
         }
 
-        if(this.userBasket[product.id] == 0){
+        if(this.userBasket[product.id].quantity == 0){
             delete this.userBasket[product.id];
         }
 
         this.countBuyerItems();
     }
 
-    order(){
+    order() {
         let basket = [] ;
-        for(let id in this.userBasket){
-            basket.push({id: id, quantity: this.userBasket[id]});
+        for (let id in this.userBasket) {
+            basket.push({ id: id, quantity: this.userBasket[id].quantity });
         }
 
         this.api.post("orders/", {
@@ -134,7 +130,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         )
     }
 
-    addMoney(){
+    addMoney() {
         this.api.put(`marketplace/${this.marketplace.id}/balance/${this.buyer.id}`, {
             amount: parseFloat(this.moneyToAdd),
         }).subscribe(
