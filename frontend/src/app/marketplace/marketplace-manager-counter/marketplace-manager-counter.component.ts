@@ -74,7 +74,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     }
 
     setQuantity(product, value){
-        this.userBasket[product.id] = value ;
+        this.userBasket[product.id] = Number(value);
         this.countBuyerItems();
     }
 
