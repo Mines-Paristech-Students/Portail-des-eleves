@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import {environment} from "../environments/environment";
 import {User} from "./models/user";
@@ -17,7 +18,7 @@ export class ApiService {
 
     constructor(public http: HttpClient, private cookieService: CookieService) {}
 
-    get<T>(url: String, params?: HttpParams){
+    get<T>(url: String, params?: HttpParams): Observable<T> {
         return this.http.get<T>(
             server + url,
             {params: params}

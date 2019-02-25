@@ -14,7 +14,7 @@ export class MarketplaceCounterProductComponent extends Component {
         this.addProduct.emit();
     }
 
-    handleChangeQuantityButtonClick(newQuantity: number) {
-        this.changeQuantity.emit(newQuantity);
+    handleChangeQuantityButtonClick(newQuantity: string) {
+        this.changeQuantity.emit(Number(newQuantity));
     }
 }

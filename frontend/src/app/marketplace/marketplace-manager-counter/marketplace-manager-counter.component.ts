@@ -1,8 +1,12 @@
 import {Component} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
 import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
 import {BasketManagerServiceService} from "../basketManager.service";
+import { Product, RawProduct } from './models';
 
 @Component({
     selector: 'app-marketplace-counter',
@@ -12,14 +16,14 @@ import {BasketManagerServiceService} from "../basketManager.service";
 export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent {
 
     users$: any;
-    products$: any ;
+    products$: Observable<Product[]>;
     balance: any ;
 
     userSearch = "" ;
     productSearch = "" ;
 
     buyer: any;
-    userBasket = {} ;
+    userBasket: { [id: number] : number } = {} ;
     numberOfBuyerItems = 0 ;
 
     moneyToAdd: any ;
@@ -54,7 +58,9 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     }
 
     updateProductSearch(){
-        this.products$ = this.api.get(`products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
+        const getProductsFromRaw = map((rawProducts: RawProduct[]) => rawProducts.map(rawProduct => new Product(rawProduct)));
+        this.products$ = this.api.get<RawProduct[]>(`products/?marketplace=${this.marketplace.id}&search=${this.productSearch}`)
+            .pipe(getProductsFromRaw);
     }
 
     setBuyer(user){
@@ -65,7 +71,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         )
     }
 
-    getQuantity(product){
+    getQuantity(product: Product){
         if(this.userBasket[product.id] == undefined){
             return 0 ;
         } else {
@@ -73,8 +79,8 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         }
     }
 
-    setQuantity(product, value){
-        this.userBasket[product.id] = Number(value);
+    setQuantity(product: Product, value: number){
+        this.userBasket[product.id] = value;
         this.countBuyerItems();
     }
 
@@ -86,7 +92,7 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
         this.numberOfBuyerItems = this.marketplace.products.reduce((acc, product) => acc + this.getQuantity(product), 0);
     }
 
-    addProduct(product){
+    addProduct(product: Product){
         if(this.userBasket[product.id] != undefined){
             this.userBasket[product.id] += 1 ;
         } else {
