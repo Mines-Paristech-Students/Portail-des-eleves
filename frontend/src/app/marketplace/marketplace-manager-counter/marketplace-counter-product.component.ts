@@ -1,20 +1,22 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+import { Product } from './models';
+
 @Component({
     selector: '[marketplace-counter-product]',
     templateUrl: './marketplace-counter-product.component.html',
 })
 export class MarketplaceCounterProductComponent extends Component {
-    @Input() product;
+    @Input() product: Product;
     @Input() basketQuantity: number;
     @Output() addProduct = new EventEmitter();
     @Output() changeQuantity = new EventEmitter<number>();
 
-    handleAddButtonClick() {
+    handleAddButtonClick(): void {
         this.addProduct.emit();
     }
 
-    handleChangeQuantityButtonClick(newQuantity: string) {
+    handleChangeQuantityButtonClick(newQuantity: string): void {
         this.changeQuantity.emit(Number(newQuantity));
     }
 }
