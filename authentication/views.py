@@ -3,7 +3,7 @@ from collections import defaultdict
 import json
 
 from django_filters.rest_framework import filters
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
@@ -184,4 +184,4 @@ def get_birthdays(request, days=7):
 def get_promotions(request):
     query = list(User.objects.order_by().values("promo").distinct())
     res = [e["promo"] for e in query]
-    return HttpResponse(json.dumps(res))
+    return JsonResponse({"promotions": res})

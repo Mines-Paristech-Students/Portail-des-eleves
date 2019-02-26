@@ -15,14 +15,23 @@ import {ApiService} from "../api.service";
 export class FacebookComponent implements OnInit {
 
     $users: any;
+    promotions = [];
     p = 0; // The current page
 
 
-    constructor(private apiService: ApiService) {
+    constructor(private api: ApiService) {
     }
 
     ngOnInit() {
-        this.$users = this.apiService.getUsers();
+        this.$users = this.api.getUsers();
+        this.api.get("promotions/").subscribe(
+            res => {
+                for(let p of res["promotions"]){
+                    this.promotions.push(p)
+                }
+            },
+            err => 0
+        )
     }
 
 }

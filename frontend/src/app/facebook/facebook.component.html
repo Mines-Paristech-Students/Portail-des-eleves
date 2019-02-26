@@ -5,9 +5,9 @@
     <div *ngIf="$users">
         <div class="row mt-3 p-2">
             <input type="text" class="form-control col-md-3" placeholder="Rechercher">
-            <select class="custom-select col-md-3 offset-md-6">
+            <select class="custom-select col-md-2 offset-md-7">
                 <option value="">Toutes</option>
-                <option *ngFor="let i of [14, 15, 16, 17, 18]" value="{{i}}">P{{i}}</option>
+                <option *ngFor="let i of promotions" value="{{i}}">P{{i}}</option>
             </select>
         </div>
 
