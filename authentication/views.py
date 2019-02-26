@@ -178,3 +178,10 @@ def get_birthdays(request, days=7):
 
     # Using the BirthdaysEncoder class to make the last format step
     return HttpResponse(json.dumps(birthdays, cls=BirthdaysEncoder), status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_promotions(request):
+    query = list(User.objects.order_by().values("promo").distinct())
+    res = [e["promo"] for e in query]
+    return HttpResponse(json.dumps(res))

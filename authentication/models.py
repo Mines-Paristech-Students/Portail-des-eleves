@@ -40,7 +40,7 @@ class User(AbstractBaseUser):
     id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
     first_name = models.CharField(max_length=50, verbose_name="User first name")
     last_name = models.CharField(max_length=50, verbose_name="User last name")
-    promo = models.IntegerField(verbose_name="Promotion", default=18)
+    promo = models.IntegerField(verbose_name="Promotion")
 
     email = models.EmailField(
         verbose_name='email address',

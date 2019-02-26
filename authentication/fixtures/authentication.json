@@ -14,7 +14,8 @@
             "nickname": "the fair",
             "city_of_origin": "Panem",
             "room": "REDRUM",
-            "phone": "+33000000000"
+            "phone": "+33000000000",
+            "promo": 15
         }
     },
     {
@@ -32,7 +33,8 @@
             "nickname": "the roc",
             "city_of_origin": "Gotham",
             "room": "1234",
-            "phone": "+33456789012"
+            "phone": "+33456789012",
+            "promo": 17
         }
     },
     {
@@ -51,7 +53,8 @@
             "nickname": "Ragicarpe",
             "city_of_origin": "Troupommé-la-forêt",
             "room": "95 rue Guizot E",
-            "phone": "+33658895122"
+            "phone": "+33658895122",
+            "promo": 16
         }
     },
     {
@@ -69,7 +72,8 @@
             "nickname": "",
             "city_of_origin": "",
             "room": "",
-            "phone": ""
+            "phone": "",
+            "promo": 17
         }
     },
     {
@@ -87,7 +91,8 @@
             "nickname": "",
             "city_of_origin": "Bikini Bottom",
             "room": "",
-            "phone": ""
+            "phone": "",
+            "promo": 18
         }
     },
     {
@@ -105,7 +110,8 @@
             "nickname": "",
             "city_of_origin": "Bikini Bottom",
             "room": "",
-            "phone": ""
+            "phone": "",
+            "promo": 18
         }
     },
     {
@@ -123,7 +129,8 @@
             "nickname": "Le Rocher",
             "city_of_origin": "Le Tampon",
             "room": "802",
-            "phone": ""
+            "phone": "",
+            "promo": 17
         }
     },
     {
@@ -141,7 +148,8 @@
             "nickname": "Hulk",
             "city_of_origin": "Rabat",
             "room": "105",
-            "phone": ""
+            "phone": "",
+            "promo": 18
         }
     },
 	{
@@ -159,7 +167,8 @@
             "nickname": "Titi",
             "city_of_origin": "Rubelles",
             "room": "1001",
-            "phone": "+33608502620"
+            "phone": "+33608502620",
+            "promo": 18
         }
   },
   {
@@ -177,7 +186,8 @@
             "nickname": "Alex?",
             "city_of_origin": "Aix",
             "room": "320",
-            "phone": "0750384180"
+            "phone": "0750384180",
+            "promo": 18
         }
     },
     {
@@ -195,7 +205,8 @@
             "nickname": "Hub",
             "city_of_origin": "Pau",
             "room": "420",
-            "phone": "0799007766"
+            "phone": "0799007766",
+            "promo": 15
 
         }
     },
@@ -214,7 +225,8 @@
             "nickname": "Tanguy",
             "city_of_origin": "Langogne",
             "room": "327",
-            "phone": "0633499049"
+            "phone": "0633499049",
+            "promo": 18
         }
     },
     {
@@ -232,7 +244,8 @@
             "nickname": "",
             "city_of_origin": "Paris",
             "room": "",
-            "phone": "+33623149119"
+            "phone": "+33623149119",
+            "promo": 14
         }
     }
 ]

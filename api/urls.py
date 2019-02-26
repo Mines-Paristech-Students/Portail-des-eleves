@@ -2,7 +2,8 @@ from django.conf.urls import url, include
 from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
-from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
+from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
+    get_promotions
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, LoansViewSet, LoanableViewSet,\
     MarketplaceViewSet, ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
 from chat.views import ChatMessageViewSet
@@ -41,5 +42,6 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
+    path('promotions/', get_promotions, name="get_promotions"),
     path('subscriptions/', include(subscriptions.urls))
 ] + router.urls
