@@ -5,8 +5,8 @@ import { map } from 'rxjs/operators';
 
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
 import {ApiService} from "../../api.service";
-import {BasketManagerServiceService} from "../basketManager.service";
-import { BasketItem, Product, RawProduct } from './models';
+import { BasketManagerService } from "../basket-manager.service";
+import { BasketItem, Marketplace, Product, RawMarketplace, RawProduct } from '../models';
 
 @Component({
     selector: 'app-marketplace-counter',
@@ -30,18 +30,17 @@ export class MarketplaceManagerCounterComponent extends BaseMarketplaceComponent
     addMoneyMessage = "";
     addMoneyStatus = "" ;
 
-    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerService) {
         super(api, route, manager);
     }
 
     ngOnInit() {
-        this.route.params.subscribe(
-        (params) => {
-            let id = params['id'];
+        this.route.params.subscribe(params => {
+            const id = params['id'];
 
-            this.api.get(`marketplace/${id}/`).subscribe(
-                marketplace => {
-                    this.marketplace = marketplace;
+            this.api.get<RawMarketplace>(`marketplace/${id}/`).subscribe(
+                rawMarketplace => {
+                    this.marketplace = new Marketplace(rawMarketplace);
                     this.countItems();
                     this.updateProductSearch();
                 },

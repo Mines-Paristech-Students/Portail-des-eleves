@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
-import {BasketManagerServiceService} from "../basketManager.service";
-import {BaseMarketplaceComponent} from "../base-marketplace-component";
+import { ActivatedRoute } from "@angular/router";
+
+import { ApiService } from "../../api.service";
+import { Marketplace, Product, RawMarketplace } from './../models';
+import { BasketManagerService } from "../basket-manager.service";
+import { BaseMarketplaceComponent } from "../base-marketplace-component";
 
 @Component({
   selector: 'app-marketplace-basket',
@@ -13,18 +15,16 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
 
     pendingOrders: any ;
 
-    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerService) {
         super(api, route, manager);
     }
     ngOnInit() {
+		this.route.params.subscribe(params => {
+            const id = params['id'];
 
-		this.route.params.subscribe(
-		(params) => {
-            let id = params['id'];
-
-            this.api.get(`marketplace/${id}/`).subscribe(
-                marketplace => {
-                    this.marketplace = marketplace ;
+            this.api.get<RawMarketplace>(`marketplace/${id}/`).subscribe(
+                rawMarketplace => {
+                    this.marketplace = new Marketplace(rawMarketplace);
                     this.countItems();
                 },
                 error => { this.error = error.message ; console.log(error) ; }
@@ -37,17 +37,16 @@ export class MarketplaceBasketComponent extends BaseMarketplaceComponent {
 		});
     }
 
-    getQuantity(product){
+    getQuantity(product: Product): number {
         return this.manager.getQuantity(this.basket, this.marketplace, product);
     }
 
-    setQuantity(product, quantity){
-        let res =  this.manager.setQuantity(this.basket, this.marketplace, product, quantity);
+    setQuantity(product: Product, quantity: number): void {
+        this.manager.setQuantity(this.basket, this.marketplace, product, quantity);
         this.countItems();
-        return res ;
     }
 
-    order(){
+    order(): void {
         this.api.post("orders/", {
             products: this.inBasket(this.marketplace.products).map(p => { return { id: p.id, quantity: this.getQuantity(p)} })
         }).subscribe(

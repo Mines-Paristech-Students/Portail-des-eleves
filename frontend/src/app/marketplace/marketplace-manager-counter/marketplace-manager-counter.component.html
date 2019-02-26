@@ -49,7 +49,7 @@
                         <table class="table card-table table-vcenter">
                             <tbody>
                             <ng-container *ngFor="let basketItem of userBasket | keyvalue">
-                                <tr marketplace-counter-product
+                                <tr marketplace-product
                                     *ngIf="basketItem.value.product.still_in_the_catalogue"
                                     [product]="basketItem.value.product"
                                     [basketQuantity]="userBasket[basketItem.value.product.id].quantity"
@@ -81,7 +81,7 @@
                             <tbody>
                             <ng-container
                                     *ngFor="let product of products$ | async | paginate: { itemsPerPage: 7, currentPage: p }">
-                                <tr marketplace-counter-product
+                                <tr marketplace-product
                                     *ngIf="product.still_in_the_catalogue"
                                     [product]="product"
                                     [basketQuantity]="userBasket[product.id] ? userBasket[product.id].quantity : 0"

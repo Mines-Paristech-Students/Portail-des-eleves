@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
-import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
-import {BasketManagerServiceService} from "../basketManager.service";
+
+import {ApiService} from "../../api.service";
+import { BasketManagerService } from "../basket-manager.service";
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
+import { Marketplace, RawMarketplace } from '../models';
 
 @Component({
     selector: 'app-marketplace-history',
@@ -15,20 +17,19 @@ export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 
     p = 1 ; // The current page
 
-    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerService) {
         super(api, route, manager);
     }
 
     ngOnInit() {
         let user = JSON.parse(localStorage.getItem("user"));
 
-		this.route.params.subscribe(
-		(params) => {
-			let id = params['id'];
+		this.route.params.subscribe(params => {
+			const id = params['id'];
 
-            this.api.get(`marketplace/${id}/`).subscribe(
-                marketplace => {
-                    this.marketplace = marketplace;
+            this.api.get<RawMarketplace>(`marketplace/${id}/`).subscribe(
+                rawMarketplace => {
+                    this.marketplace = new Marketplace(rawMarketplace);
                     this.countItems();
                 },
                 error => this.error = error.message
@@ -52,7 +53,7 @@ export class MarketplaceHistoryComponent extends BaseMarketplaceComponent{
 		});
     }
 
-    countItems(){
-        this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
+    countItems(): void {
+        this.numberOfItems = this.manager.countItems(this.basket, this.marketplace);
     }
 }

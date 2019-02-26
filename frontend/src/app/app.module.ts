@@ -42,7 +42,7 @@ import { PaginationControlsComponent } from "./pagination-controls/pagination-co
 import { MarketplaceManagerOrdersComponent } from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
 import { MarketplaceManagerCatalogComponent } from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
 import { MarketplaceManagerCounterComponent } from "./marketplace/marketplace-manager-counter/marketplace-manager-counter.component";
-import { MarketplaceCounterProductComponent } from './marketplace/marketplace-manager-counter/marketplace-counter-product.component';
+import { MarketplaceProductComponent } from './marketplace/marketplace-product.component';
 import { MarketplaceManagerFundingsComponent } from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
 import { BsDropdownModule } from "ngx-bootstrap";
 import { RequestCacheService } from "./request-cache.service";
@@ -93,10 +93,10 @@ registerLocaleData(localeFr);
     MarketplaceBasketComponent,
     MarketplaceHistoryComponent,
     PaginationControlsComponent,
+    MarketplaceProductComponent,
     MarketplaceManagerOrdersComponent,
     MarketplaceManagerCatalogComponent,
     MarketplaceManagerCounterComponent,
-    MarketplaceCounterProductComponent,
     MarketplaceManagerFundingsComponent,
     WidgetsComponent,
     WidgetBirthdaysComponent,
