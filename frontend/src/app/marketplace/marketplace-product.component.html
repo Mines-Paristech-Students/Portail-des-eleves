@@ -1,5 +1,11 @@
+<td *ngIf="displayImage" class="img-product">
+    <img
+        src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
+    >
+</td>
 <td>
     <p>{{ product.name }}</p>
+    <p *ngIf="displayDescription" class="small text-muted">{{ product.description }}</p>
 </td>
 <td class="text-right text-muted d-none d-md-table-cell text-nowrap">
     <ng-container *ngIf="product.number_left >= 0">

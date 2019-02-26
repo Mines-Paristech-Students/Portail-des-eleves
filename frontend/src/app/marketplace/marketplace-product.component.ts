@@ -3,12 +3,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Product } from './models';
 
 @Component({
-    selector: '[marketplace-counter-product]',
-    templateUrl: './marketplace-counter-product.component.html',
+    selector: '[marketplace-product]',
+    templateUrl: './marketplace-product.component.html',
 })
-export class MarketplaceCounterProductComponent extends Component {
+export class MarketplaceProductComponent extends Component {
     @Input() product: Product;
     @Input() basketQuantity: number;
+    @Input() displayImage = false;
+    @Input() displayDescription = false;
     @Output() addProduct = new EventEmitter();
     @Output() changeQuantity = new EventEmitter<number>();
 

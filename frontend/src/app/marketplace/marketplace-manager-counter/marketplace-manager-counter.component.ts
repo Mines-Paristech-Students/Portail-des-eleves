@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
 import {ApiService} from "../../api.service";
 import {BasketManagerServiceService} from "../basketManager.service";
-import { BasketItem, Product, RawProduct } from './models';
+import { BasketItem, Product, RawProduct } from '../models';
 
 @Component({
     selector: 'app-marketplace-counter',
