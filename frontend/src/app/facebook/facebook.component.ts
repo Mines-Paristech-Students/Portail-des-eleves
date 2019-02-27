@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {ApiService} from "../api.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {User} from "../models/user";
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from "../api.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { User } from "../models/user";
 
 /**
  * IMPORTANT NOTE
@@ -14,7 +14,7 @@ import {User} from "../models/user";
     templateUrl: './facebook.component.html',
     styleUrls: ['./facebook.component.scss']
 })
-export class FacebookComponent {
+export class FacebookComponent implements OnInit {
 
     $users: any;
     promotions = [];
@@ -23,9 +23,12 @@ export class FacebookComponent {
     search_promotion = "";
     search_text = "";
 
-    constructor(private api: ApiService, private activatedRoute: ActivatedRoute, private router: Router) {
+    constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute, private router: Router) {
+    }
+
+    ngOnInit() {
         this.activatedRoute.queryParams.subscribe(params => this.refreshPromotion(params));
-        this.api.get("promotions/").subscribe(
+        this.apiService.get("promotions/").subscribe(
             res => {
                 for (let p of res["promotions"]) {
                     this.promotions.push(p)
@@ -37,32 +40,32 @@ export class FacebookComponent {
 
     refreshPromotion(params) {
         let url = "users/";
-        let added_one_param = false ;
+        let added_one_param = false;
 
         if (params["promo"]) {
-            url += added_one_param ? "&" : "?" ; // Ok there is no need to add a condition, be let's be consistant
+            url += added_one_param ? "&" : "?"; // Ok there is no need to add a condition, be let's be consistant
             url += "promo=" + params["promo"];
-            added_one_param = true ;
+            added_one_param = true;
         }
 
         if (params["search"]) {
-            url += added_one_param ? "&" : "?" ;
+            url += added_one_param ? "&" : "?";
             url += "search=" + params["search"];
         }
 
-        this.$users = this.api.get(url);
+        this.$users = this.apiService.get(url);
     }
 
     updateParameters() {
 
         let params = {};
         let promo = parseInt(this.search_promotion);
-        if(!isNaN(promo)){
-            params["promo"] = promo ;
+        if (!isNaN(promo)) {
+            params["promo"] = promo;
         }
 
-        if(this.search_text.length > 0){
-            params["search"] = this.search_text.trim() ;
+        if (this.search_text.length > 0) {
+            params["search"] = this.search_text.trim();
         }
 
         this.router.navigate(
