@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {User} from "../models/user";
-import {ApiService} from "../api.service";
+import { ApiService } from "../api.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { User } from "../models/user";
 
 /**
  * IMPORTANT NOTE
@@ -15,19 +16,64 @@ import {ApiService} from "../api.service";
 })
 export class FacebookComponent implements OnInit {
 
-    users: [User] ;
+    $users: any;
+    promotions = [];
+    p = 0; // The current page
 
-    constructor(private apiService: ApiService) { }
+    search_promotion = "";
+    search_text = "";
+
+    constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute, private router: Router) {
+    }
 
     ngOnInit() {
-        this.apiService.getUsers().subscribe(
-            data => {
-                this.users = data;
+        this.activatedRoute.queryParams.subscribe(params => this.refreshPromotion(params));
+        this.apiService.get("promotions/").subscribe(
+            res => {
+                for (let p of res["promotions"]) {
+                    this.promotions.push(p)
+                }
             },
-            err => {
-                console.log(err)
-            }
+            err => 0
         )
+    }
+
+    refreshPromotion(params) {
+        let url = "users/";
+        let added_one_param = false;
+
+        if (params["promo"]) {
+            url += added_one_param ? "&" : "?"; // Ok there is no need to add a condition, be let's be consistant
+            url += "promo=" + params["promo"];
+            added_one_param = true;
+        }
+
+        if (params["search"]) {
+            url += added_one_param ? "&" : "?";
+            url += "search=" + params["search"];
+        }
+
+        this.$users = this.apiService.get(url);
+    }
+
+    updateParameters() {
+
+        let params = {};
+        let promo = parseInt(this.search_promotion);
+        if (!isNaN(promo)) {
+            params["promo"] = promo;
+        }
+
+        if (this.search_text.length > 0) {
+            params["search"] = this.search_text.trim();
+        }
+
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: params
+            });
     }
 
 }
