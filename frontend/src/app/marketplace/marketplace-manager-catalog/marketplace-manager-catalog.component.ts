@@ -1,8 +1,10 @@
+import { Product } from './../models';
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+
 import {BaseMarketplaceComponent} from "../base-marketplace-component";
 import {ApiService} from "../../api.service";
-import {ActivatedRoute} from "@angular/router";
-import {BasketManagerServiceService} from "../basketManager.service";
+import { BasketManagerService } from "../basket-manager.service";
 
 @Component({
   selector: 'app-marketplace-seller-products',
@@ -13,22 +15,22 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
 
     editing = {} ;
 
-    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerService) {
         super(api, route, manager);
     }
 
-    newProduct(){
-        let product = {
+    newProduct(): void {
+        const product = {
             name: "Nouveau produit",
             price: 3.0,
-            comment: "",
+            description: "",
             marketplace: this.marketplace.id,
             number_left: 10,
             still_in_the_catalogue: true,
             orderable_online: true
         };
 
-        this.api.post("products/", product).subscribe(
+        this.api.post<Product>("products/", product).subscribe(
             product => {
                 this.marketplace.products.push(product) ;
                 // @ts-ignore
@@ -56,7 +58,7 @@ export class MarketplaceManagerCatalogComponent extends BaseMarketplaceComponent
         }
     }
 
-    delete(product){
+    delete(product: Product): void {
         const index: number = this.marketplace.products.indexOf(product);
         if (index !== -1) {
             this.marketplace.products.splice(index, 1);

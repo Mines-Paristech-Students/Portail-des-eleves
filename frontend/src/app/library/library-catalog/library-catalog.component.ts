@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../../api.service";
 import { ActivatedRoute } from "@angular/router";
-import { BasketManagerServiceService } from "../../marketplace/basketManager.service";
+import { BasketManagerService } from "../../marketplace/basket-manager.service";
 import { map, mergeMap, scan } from "rxjs/operators";
 
 @Component({
@@ -20,7 +20,7 @@ export class LibraryCatalogComponent implements OnInit {
   constructor(
     private api: ApiService,
     private route: ActivatedRoute,
-    private manager: BasketManagerServiceService
+    private manager: BasketManagerService
   ) {}
 
   ngOnInit() {
