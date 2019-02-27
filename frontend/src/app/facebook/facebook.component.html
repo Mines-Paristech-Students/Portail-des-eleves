@@ -4,9 +4,14 @@
 
     <div *ngIf="$users">
         <div class="row mt-3 p-2">
-            <input type="text" class="form-control col-md-3" placeholder="Rechercher">
-            <select class="custom-select col-md-2 offset-md-7">
-                <option value="">Toutes</option>
+            <input
+                    type="text" class="form-control col-md-3" placeholder="Rechercher"
+                    [(ngModel)]="search_text" appDebounceChange (debounceChange)="updateParameters()"
+                    [debounceTime]="700"
+            >
+            <select class="custom-select col-md-2 offset-md-7" ngModel="selectedPromotion"
+                    [(ngModel)]="search_promotion" (change)="updateParameters()">
+                <option value="-1">Toutes</option>
                 <option *ngFor="let i of promotions" value="{{i}}">P{{i}}</option>
             </select>
         </div>
@@ -23,6 +28,12 @@
                     </a>
                 </div>
             </div>
+        </div>
+
+        <div *ngIf="($users|async).length == 0" class="container text-center">
+            <div class="display-1 text-muted mb-5"><i class="si si-exclamation"></i> 404</div>
+            <h1 class="h2 mb-3">Nous n'avons trouvé personne...</h1>
+            <p class="h4 text-muted font-weight-normal mb-7">Peut être avez vous fait une faute de frappe ?</p>
         </div>
 
         <app-pagination-controls
