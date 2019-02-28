@@ -14,8 +14,13 @@
                     <div class="card-body">
 						<markdown [data]="message.text"></markdown>
 					</div>
+					<a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green" *ngIf="message.my_vote == 1"></span></a>
+					<a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black" *ngIf="message.my_vote != 1"></span></a>
+					<p>{{message.ratio}}</p>
+					<a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red" *ngIf="message.my_vote == -1"></span></a>
+					<a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black" *ngIf="message.my_vote != -1"></span></a>
 					<div class="card-footer text-right">
-                        <i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date}}</i>
+                        <i><a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date:'medium'}}</i>
                     </div>
 				</div>
 			</ng-container>

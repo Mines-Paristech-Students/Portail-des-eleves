@@ -83,7 +83,21 @@ export class ViewTopicComponent implements OnInit {
 				this.answer_message_editor.setContent("");
             },
             err => this.error = err.message
-        )
+        );
     }
+	
+	new_vote(message, vote){
+		var old_vote = message.my_vote;
+		message.my_vote = vote;
+		message.ratio += (-old_vote + vote);
+		
+		this.api.put("message-forum-vote/", {
+			message_id: message.id,
+			new_vote: vote
+			}).subscribe(
+			data => {},
+			err => this.error = err.message
+			);
+	}
 
 }

@@ -6,7 +6,7 @@ from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSe
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, LoansViewSet, LoanableViewSet,\
     MarketplaceViewSet, ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
 from chat.views import ChatMessageViewSet
-from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
+from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
 import polls.urls
 import subscriptions.urls
 
@@ -41,5 +41,6 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
-    path('subscriptions/', include(subscriptions.urls))
+    path('subscriptions/', include(subscriptions.urls)),
+    url(r'^message-forum-vote/$', NewVoteMessageView.as_view())
 ] + router.urls

@@ -20,4 +20,6 @@ export class MessageForum{
 	text: string;
 	date: string;
 	topic: Topic;
+	ratio: string;
+	my_vote: string;
 }

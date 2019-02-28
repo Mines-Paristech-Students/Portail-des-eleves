@@ -1,5 +1,6 @@
 import json
-from rest_framework import viewsets
+from rest_framework import permissions, viewsets
+from rest_framework.views import APIView
 from django.http import JsonResponse
 
 from forum.models import Theme, Topic, MessageForum
@@ -106,3 +107,33 @@ class MessageForumViewSet(viewsets.ModelViewSet):
 
         else :
             return JsonResponse("No topic")
+
+class NewVoteMessageView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        return JsonResponse({"status": "error", "message": "Can not see vote"}, status="405")
+
+    def put(self, request, format=None):
+        body = json.loads(request.body)
+        user = request.user
+
+        try:
+            new_vote = int(body["new_vote"])
+            message_id = int(body["message_id"])
+            message = MessageForum.objects.get(pk=message_id)
+
+            if message.up_vote.filter(id=user.id).count() != 0:
+                message.up_vote.remove(user)
+            if message.down_vote.filter(id=user.id).count() != 0:
+                message.down_vote.remove(user)
+
+            if new_vote == 1 :
+                message.up_vote.add(user)
+            elif new_vote == -1 :
+                message.down_vote.add(user)
+
+        except ValueError as err:
+            return JsonResponse({"status": "error", "message": "Missing argument"}, status="400")
+
+        return JsonResponse({"status": "ok"})
