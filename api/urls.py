@@ -10,6 +10,7 @@ from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 import polls.urls
 import subscriptions.urls
+from rer.views import get_rer_timetable
 
 router = BulkRouter()
 
@@ -43,5 +44,6 @@ urlpatterns = [
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
     path('promotions/', get_promotions, name="get_promotions"),
+    path('rer/', get_rer_timetable, name="get_rer_timetable"),
     path('subscriptions/', include(subscriptions.urls))
 ] + router.urls
