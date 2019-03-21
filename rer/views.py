@@ -12,6 +12,9 @@ def choice(tab, n=1):
 
 @api_view(["GET"])
 def get_rer_timetable(request):
+    # @gl-mr you can add you magic here !
+    # The structure of the answer is defined in res
+
     stations = [
         "Aéroport Ch. de Gaulle 2 TGV",
         "Aéroport Ch. de Gaulle 1",
