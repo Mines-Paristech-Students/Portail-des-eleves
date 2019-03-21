@@ -1,30 +1,30 @@
-import {BrowserModule} from "@angular/platform-browser";
-import {NgModule, LOCALE_ID} from "@angular/core";
-import {FormsModule} from "@angular/forms";
-import {ApiService} from "./api.service";
-import {CookieService} from "ngx-cookie-service";
-import {registerLocaleData} from "@angular/common";
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule, LOCALE_ID } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ApiService } from "./api.service";
+import { CookieService } from "ngx-cookie-service";
+import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
-import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
-import {AngularMarkdownEditorModule} from "angular-markdown-editor";
-import {MarkdownModule, MarkedOptions} from "ngx-markdown";
+import { AngularMarkdownEditorModule } from "angular-markdown-editor";
+import { MarkdownModule, MarkedOptions } from "ngx-markdown";
 
-import {NgSelectModule} from "@ng-select/ng-select";
-import {NgxPaginationModule} from "ngx-pagination";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {DragulaModule} from "ng2-dragula";
-import {NotifierModule, NotifierOptions} from 'angular-notifier';
+import { NgSelectModule } from "@ng-select/ng-select";
+import { NgxPaginationModule } from "ngx-pagination";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { DragulaModule } from "ng2-dragula";
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
 
-import {AppRoutingModule} from "./app-routing.module";
-import {AppComponent} from "./app.component";
-import {HomeComponent} from "./home/home.component";
-import {LoginComponent} from "./login/login.component";
-import {NavbarComponent} from "./navbar/navbar.component";
-import {AllAssociationsComponent} from "./associations/all-associations/all-associations.component";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { HomeComponent } from "./home/home.component";
+import { LoginComponent } from "./login/login.component";
+import { NavbarComponent } from "./navbar/navbar.component";
+import { AllAssociationsComponent } from "./associations/all-associations/all-associations.component";
 
-import {ProfileShowComponent} from "./profile/profile-show/profile-show.component";
-import {ProfileEditComponent} from "./profile/profile-edit/profile-edit.component";
+import { ProfileShowComponent } from "./profile/profile-show/profile-show.component";
+import { ProfileEditComponent } from "./profile/profile-edit/profile-edit.component";
 
 import { PasswordEditComponent } from "./password-edit/password-edit.component";
 import { FacebookComponent } from "./facebook/facebook.component";
@@ -62,6 +62,7 @@ import { LibraryLoansComponent } from "./library/library-loans/library-loans.com
 import { LibraryManagerCatalogComponent } from "./library/library-manager-catalog/library-manager-catalog.component";
 import { LibraryManagerLoansComponent } from "./library/library-manager-loans/library-manager-loans.component";
 import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
+import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -112,7 +113,8 @@ registerLocaleData(localeFr);
         LibraryLoansComponent,
         LibraryManagerCatalogComponent,
         LibraryManagerLoansComponent,
-        DebounceChangeDirective
+        DebounceChangeDirective,
+        RerTimetableComponent
     ],
     imports: [
         BrowserModule,

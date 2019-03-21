@@ -25,6 +25,7 @@ import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog
 import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
 import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
 import {LibraryManagerLoansComponent} from "./library/library-manager-loans/library-manager-loans.component";
+import { RerTimetableComponent } from "./rer-timetable/rer-timetable.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -58,7 +59,9 @@ const routes: Routes = [
 
 	{ path: 'forum', component: ViewForumComponent},
 	{ path: 'forum/theme/:theme', component: ViewThemeComponent},
-	{ path: 'forum/topic/:topic', component: ViewTopicComponent}
+	{ path: 'forum/topic/:topic', component: ViewTopicComponent},
+
+    { path: 'rer', component: RerTimetableComponent }
 
 ];
 
