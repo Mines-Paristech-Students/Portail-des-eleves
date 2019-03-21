@@ -1,19 +1,20 @@
+import random
+import time
+
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+
+
+def choice(tab, n=1):
+    random.shuffle(tab)
+    return tab[0:min(n, len(tab))]
 
 
 @api_view(["GET"])
 def get_rer_timetable(request):
     stations = [
         "Aéroport Ch. de Gaulle 2 TGV",
-        "Mitry–Claye",
         "Aéroport Ch. de Gaulle 1",
-        "Villeparisis Mitry-le-Neuf",
-        "Parc des Expositions",
-        "Vert-Galant Sevran–Livry",
-        "Villepinte",
-        "Sevran Beaudottes",
-        "Aulnay-sous-Bois",
         "Le Blanc-Mesnil",
         "Drancy",
         "Le Bourget",
@@ -38,12 +39,22 @@ def get_rer_timetable(request):
 
     res = [{
         "direction": "Cité universitaire",
-        "stops": [{s: [{t: "12:" + str(10 * i + j)} for (j, t) in enumerate(trains)]} for (i, s) in
-                  enumerate(stations)]
+        "stops": [{
+            "name": s,
+            "timetable": [{
+                "time": (time.time() + 60 * (10 * i + j)) * 1000,
+                "train_id": t
+            } for (j, t) in enumerate(choice(trains, 2))]
+        } for (i, s) in enumerate(stations)]
     }, {
         "direction": "Châtelet–Les Halles",
-        "stops": [{s: [{t: "12:" + str(10 * i + j)} for (j, t) in enumerate(trains)]} for (i, s) in
-                  enumerate(reversed(stations))]
+        "stops": [{
+            "name": s,
+            "timetable": [{
+                "time": (time.time() + 60 * (10 * i + j)) * 1000,
+                "train_id": t
+            } for (j, t) in enumerate(choice(trains, 2))]
+        } for (i, s) in enumerate(reversed(stations))]
     }]
 
     return JsonResponse({"trains": res})

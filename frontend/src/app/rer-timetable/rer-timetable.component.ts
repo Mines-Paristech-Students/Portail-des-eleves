@@ -1,15 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from "../api.service";
 
 @Component({
-  selector: 'app-rer-timetable',
-  templateUrl: './rer-timetable.component.html',
-  styleUrls: ['./rer-timetable.component.scss']
+    selector: 'app-rer-timetable',
+    templateUrl: './rer-timetable.component.html',
+    styleUrls: ['./rer-timetable.component.scss']
 })
 export class RerTimetableComponent implements OnInit {
 
-  constructor() { }
+    trains: {};
+    error = "";
+    close_stops = ["Luxembourg", "Port-Royal"];
 
-  ngOnInit() {
-  }
+    constructor(private apiService: ApiService) {
+    }
+
+    ngOnInit() {
+        this.apiService.get("rer").subscribe(
+            res => this.trains = res["trains"],
+            error => this.error = error
+        )
+    }
 
 }

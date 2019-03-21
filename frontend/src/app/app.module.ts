@@ -63,6 +63,7 @@ import { LibraryManagerCatalogComponent } from "./library/library-manager-catalo
 import { LibraryManagerLoansComponent } from "./library/library-manager-loans/library-manager-loans.component";
 import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
+import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -114,7 +115,8 @@ registerLocaleData(localeFr);
         LibraryManagerCatalogComponent,
         LibraryManagerLoansComponent,
         DebounceChangeDirective,
-        RerTimetableComponent
+        RerTimetableComponent,
+        WaitTimePipe
     ],
     imports: [
         BrowserModule,
