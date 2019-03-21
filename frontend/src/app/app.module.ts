@@ -61,6 +61,7 @@ import { LibrarySidebarComponent } from "./library/library-sidebar/library-sideb
 import { LibraryLoansComponent } from "./library/library-loans/library-loans.component";
 import { LibraryManagerCatalogComponent } from "./library/library-manager-catalog/library-manager-catalog.component";
 import { LibraryManagerLoansComponent } from "./library/library-manager-loans/library-manager-loans.component";
+import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -97,6 +98,7 @@ registerLocaleData(localeFr);
         MarketplaceManagerCatalogComponent,
         MarketplaceManagerCounterComponent,
         MarketplaceManagerFundingsComponent,
+        MarketplaceProductComponent,
         WidgetsComponent,
         WidgetBirthdaysComponent,
         WidgetChatComponent,
