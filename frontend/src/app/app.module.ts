@@ -61,6 +61,9 @@ import { LibrarySidebarComponent } from "./library/library-sidebar/library-sideb
 import { LibraryLoansComponent } from "./library/library-loans/library-loans.component";
 import { LibraryManagerCatalogComponent } from "./library/library-manager-catalog/library-manager-catalog.component";
 import { LibraryManagerLoansComponent } from "./library/library-manager-loans/library-manager-loans.component";
+import { RepartitionsSidebarComponent } from './repartitions/repartitions-sidebar/repartitions-sidebar.component';
+import { RepartitionsPageComponent } from './repartitions/repartitions-page/repartitions-page.component';
+import { RepartitionsCarteCampagneComponent } from './repartitions/repartitions-carte-campagne/repartitions-carte-campagne.component';
 
 // alternatively if you only need to include a subset of languages
 var hljs: any;
@@ -110,7 +113,10 @@ registerLocaleData(localeFr);
     LibrarySidebarComponent,
     LibraryLoansComponent,
     LibraryManagerCatalogComponent,
-    LibraryManagerLoansComponent
+    LibraryManagerLoansComponent,
+    RepartitionsSidebarComponent,
+    RepartitionsPageComponent,
+    RepartitionsCarteCampagneComponent
   ],
   imports: [
     BrowserModule,

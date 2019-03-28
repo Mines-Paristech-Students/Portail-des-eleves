@@ -1,0 +1,35 @@
+<h1 class="page-title mb-5">Répartitions</h1>
+<div>
+    <div class="list-group list-group-transparent mb-0">
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center" *ngIf="campagnes != null && campagnes.notStarted.length != 0">
+            <span class="icon mr-3"><i class="fe fe-home"></i></span>En préparation
+        </a>
+        <a *ngFor="let cmpg of campagnes.notStarted" class="list-group-item list-group-item-action px-1 d-flex align-items-center" routerLink="/repartitions/{{ cmpg.id }}">
+            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>{{ cmpg.title }}
+        </a>
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center" *ngIf="campagnes != null && campagnes.current.length != 0">
+            <span class="icon mr-3"><i class="fe fe-home"></i></span>En cours
+        </a>
+        <a *ngFor="let cmpg of campagnes.current" class="list-group-item list-group-item-action px-1 d-flex align-items-center" routerLink="/repartitions/{{ cmpg.id }}">
+            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>{{ cmpg.title }}
+        </a>
+        <a class="list-group-item list-group-item-action px-0 d-flex align-items-center" *ngIf="campagnes != null && campagnes.finished.length != 0">
+            <span class="icon mr-3"><i class="fe fe-home"></i></span>Terminé
+        </a>
+        <a *ngFor="let cmpg of campagnes.finished" class="list-group-item list-group-item-action px-1 d-flex align-items-center" routerLink="/repartitions/{{ cmpg.id }}">
+            <span class="icon mr-3"><i class="fe fe-file-text"></i></span>{{ cmpg.title }}
+        </a>
+        <a *ngIf="campagnes != null && campagnes.deleted.length != 0" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-trash"></i></span>Poubelle
+        </a>
+        <a *ngIf="displayParameters.canEdit" class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/repartitions/new">
+            <span class="icon mr-3"><i class="fe fe-plus"></i></span>Nouvelle
+        </a>
+        <a *ngIf="displayParameters.shouldDisplayEmptyMessage" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-trash"></i></span>Rien à afficher
+        </a>
+        <a *ngIf="displayParameters.receivedParts < 2" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-trash"></i></span>Chargement
+        </a>
+    </div>
+</div>

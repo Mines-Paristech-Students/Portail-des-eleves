@@ -1,0 +1,22 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div>
+        <div class="row">
+            <div class="col-md-3">
+                <repartitions-sidebar [(campagnes)]="campagnes" [(displayParameters)]="displayParameters"></repartitions-sidebar>
+            </div>
+
+            <div class="col-md-9">
+              <repartitions-carte-campagne *ngFor="let cmpg of campagnes.notStarted; let j = index" [(campagne)]="campagnes.notStarted[j]"></repartitions-carte-campagne>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
+

@@ -7,8 +7,10 @@ from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, Loa
     MarketplaceViewSet, ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
+
 import polls.urls
 import subscriptions.urls
+import repartitions.urls
 
 router = BulkRouter()
 
@@ -41,5 +43,6 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
-    path('subscriptions/', include(subscriptions.urls))
+    path('subscriptions/', include(subscriptions.urls)),
+    path('repartitions/', include(repartitions.urls))
 ] + router.urls
