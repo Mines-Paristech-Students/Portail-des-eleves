@@ -7,6 +7,12 @@
             <div class="mt-5">
                 <p class="pull-right"><a routerLink="/forum/theme/{{ topic.theme.id }}">Retour à {{ topic.theme.name }}</a></p>
                 <h1>{{topic.name}}</h1>
+				<p class="pull-right">
+					<select name="order" (change)="change_order($event.target.value)">
+						<option value="date">Order by date</option>
+						<option value="ratio">Order by ratio</option>
+					</select>
+				</p>
             </div>
 
 			<ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">

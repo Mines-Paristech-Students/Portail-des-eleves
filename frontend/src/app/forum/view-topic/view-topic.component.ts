@@ -70,6 +70,27 @@ export class ViewTopicComponent implements OnInit {
             }
 		);
     }
+	
+	change_order(new_order) {
+		if(new_order == "date"){
+			this.sort_messages_by_date();
+		}
+		else if(new_order == "ratio") {
+			this.sort_messages_by_ratio();
+		}
+	}
+	
+	sort_messages_by_ratio() {
+		this.list_messages.sort(function(a,b){
+			return parseInt(b.ratio,10) - parseInt(a.ratio,10);
+		});
+	}
+	
+	sort_messages_by_date() {
+		this.list_messages.sort(function(a,b){
+			return parseInt(a.id,10) - parseInt(b.id,10);
+		});
+	}
 
 	save(){
         this.api.post("topic/", {
