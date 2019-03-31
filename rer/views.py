@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -14,6 +15,8 @@ def choice(tab, n=1):
 def get_rer_timetable(request):
     # @gl-mr you can add you magic here !
     # The structure of the answer is defined in res
+
+    API_KEY = os.environ.get('api_key')
 
     stations = [
         "Aéroport Ch. de Gaulle 2 TGV",
