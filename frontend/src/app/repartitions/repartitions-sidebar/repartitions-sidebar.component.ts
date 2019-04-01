@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {ApiService} from "../../api.service";
 
 @Component({
@@ -12,10 +12,17 @@ export class RepartitionsSidebarComponent implements OnInit {
     @Input() campagnes: any
     @Input() displayParameters: any
 
+    @Output() onNewRequested = new EventEmitter();
+
     constructor(private apiService: ApiService) { }
 
     ngOnInit() {
-    	console.log("EUSSOU")
+    
+    }
+
+    requestNew()
+    {
+    	this.onNewRequested.emit();
     }
 
 }

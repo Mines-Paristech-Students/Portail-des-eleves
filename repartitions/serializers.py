@@ -5,4 +5,4 @@ from repartitions.models import Repartition
 class RepartitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Repartition
-        fields = ("id", "title", "promotion", "status")
+        fields = ("id", "title", "promotion", "status", "equirepartition")

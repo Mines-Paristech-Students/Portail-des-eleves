@@ -1,3 +1,27 @@
-<p>
-  repartitions-carte-campagne works!
-</p>
+<div class="card">
+    <div class="card-header" *ngIf="isEditing">
+        <button class="btn btn-primary btn-red" style="float: right; min-width: unset" (click)="cancelEdition()" [(disabled)]="controlLock" *ngIf="isEditing"><i class="fe fe-trash-2"></i>Annuler</button>
+        <input type="text" class="form-control ml-2 mr-2" [(ngModel)]="edit_campagne.title" [(disabled)]="controlLock" placeholder="Nouveau" *ngIf="isEditing"/>
+        <button class="btn btn-primary btn-green" style="float: right; min-width: unset" (click)="submitInput()" [(disabled)]="controlLock" *ngIf="isEditing"><i class="fe fe-save"></i>Valider</button>
+    </div>
+    <div class="card-header" *ngIf="!isEditing">
+        <h3 class="card-title">{{ campagne.title }}</h3>
+        <div class="card-options" *ngIf="displayParameters.canEdit">
+			<label class="custom-switch m-0">
+				<input type="checkbox" name="custom-switch-checkbox" [(ngModel)]="asAdmin" [(disabled)]="controlLock" class="custom-switch-input">
+				<!-- <span class="custom-switch-description" *ngIf="!isEditing">Mode admin</span> -->
+				<span class="custom-switch-indicator"></span>
+			</label>
+        </div>
+    </div>
+    <div class="card-alert alert alert-danger mb-0" *ngIf="shownMessage != null">{{ shownMessage }}</div>
+    <div class="card-body">
+        Status = {{ campagne.status }}<br>
+        Promotion = {{ campagne.promotion }}
+    </div>
+    <div class="card-footer" *ngIf="asAdmin && !isEditing && campagne.status == 0">
+        <button [(disabled)]="controlLock" class="btn btn-primary btn-default mr-1 ml-1" style="float: left; min-width: unset" (click)="startEditing()"><i class="fe fe-edit-2 ml-1 mr-1"></i>Editer</button>
+        <button [(disabled)]="controlLock" class="btn btn-primary btn-default mr-1 ml-1" style="float: middle; min-width: unset" (click)="deleteCampaign()"><i class="fe fe-trash ml-1 mr-1"></i>Supprimer</button>
+        <button [(disabled)]="controlLock" class="btn btn-primary btn-default mr-1 ml-1" style="float: right; min-width: unset" (click)="startCampaign()"><i class="fe fe-send ml-1 mr-1"></i>Lancer</button>
+    </div>
+</div>
