@@ -1,4 +1,5 @@
 from django.db import models
+from authentication.models import User
 
 class Repartition(models.Model):
     id = models.AutoField(primary_key=True)
@@ -17,3 +18,12 @@ class Proposition(models.Model):
 
     min_eleves = models.IntegerField()
     max_eleves = models.IntegerField()
+
+class Voeux(models.Model):
+    id = models.AutoField(primary_key=True)
+
+    campagne = models.ForeignKey(Repartition, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    voeux = models.TextField()
+    isNew = models.BooleanField(default=True)
+    outcome = models.IntegerField(default=-1)

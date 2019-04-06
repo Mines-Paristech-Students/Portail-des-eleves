@@ -19,7 +19,6 @@ export class RepartitionsPageComponent implements OnInit {
     displayParameters: any;
     error: any;
     status = "";
-    messages: string[];
 
     constructor(
         private api: ApiService,
@@ -29,26 +28,40 @@ export class RepartitionsPageComponent implements OnInit {
 
     ngOnInit() {
         this.error = null;
-        this.displayParameters = {canEdit: false, receivedBase: false, receivedCanEdit: false, // data reception
+        this.displayParameters = {canEdit: false, restriction: [], receivedBase: false, receivedCanEdit: false, // data reception
             editingNew: false, //current status
             shouldDisplayEmptyMessage: false, shouldDisplayLoader: true}; //autocomputed
 
-        this.api.get<[Repartition]>("repartitions/all").subscribe(
+        this.api.get<any[]>("repartitions/").subscribe(
             campagnes =>
             {
                 this.displayParameters.receivedBase = true;
-                this.messages = []
                 this.campagnes = []
                 for(let cmpg of campagnes)
                 {
-                    this.messages.push(null)
                     var n = new Repartition();
                     n.id = cmpg.id;
                     n.status = cmpg.status;
                     n.promotion = ""+cmpg.promotion;
                     n.title = ""+cmpg.title;
                     n.equirepartition = cmpg.equirepartition;
+                    n.resultat = cmpg.resultat;
                     n.propositions = [];
+                    n.progress = cmpg.progress;
+                    n.voeux = [];
+                    for(let j of cmpg.voeux)
+                    {
+                        n.voeux.push(j);
+                    }
+                    for(let p of cmpg.propositions)
+                    {
+                        var np = new Proposition();
+                        np.max = p.max
+                        np.min = p.min
+                        np.name = p.name
+                        np.id = p.num
+                        n.propositions.push(np)
+                    }
                     this.campagnes.push(n);
                 }
                 this.updateDisplayParameters();
@@ -64,7 +77,8 @@ export class RepartitionsPageComponent implements OnInit {
             res =>
             {
                 this.displayParameters.receivedCanEdit = true;
-                this.displayParameters.canEdit = res;
+                this.displayParameters.canEdit = res["canEdit"];
+                this.displayParameters.restriction = res["restriction"];
                 this.updateDisplayParameters();
             },
             error => {
@@ -90,62 +104,123 @@ export class RepartitionsPageComponent implements OnInit {
         n.status = null;
         n.propositions = [];
         n.equirepartition = true;
+        n.promotion = "P18"
+        n.progress = {}
+        n.resultat = null
         this.displayParameters.editingNew = true;
 
-        this.messages.unshift(null);
         this.campagnes.unshift(n);
     }
 
-    onCampaignSubmitRequested(id: number)
+    onCampaignSubmitRequested(res: any)
     {
-        var i = 0;
-        while(i < this.campagnes.length)
+        var id = res.id;
+        var callback = res.callback;
+        var toPut = res.edited;
+        if(id == null)
         {
-            if(this.campagnes[i].id == id)
-            {
-                this.messages[i] = null;
-                this.messages[i] = ("Not implemented");
-            }
-            i++;
+            this.api.put("repartitions/", toPut).subscribe(
+                msg => {
+                    callback(true, msg);
+                    this.displayParameters.editingNew = false;
+                    this.updateDisplayParameters()
+                },
+                err => callback(false, err));
+            return;
         }
+        this.api.patch("repartitions/"+id, toPut).subscribe(
+            msg => {
+                callback(true, msg);
+                this.updateDisplayParameters()
+            },
+            err => callback(false, err));
     }
 
-    onCampaignDeletionRequested(id: number)
+    onCampaignDeletionRequested(res: any)
     {
-        console.log(id)
+        var id = res.id;
+        var callback = res.callback;
         if(id == null)
         {
             var i = 0;
             this.displayParameters.editingNew = false;
-            this.messages.shift();
             this.campagnes.shift();
             this.updateDisplayParameters()
             return
         }
-        var i = 0;
+        var i = 0; //useless loop
         while(i < this.campagnes.length)
         {
             if(this.campagnes[i].id == id)
             {
-                this.messages[i] = null;
-                this.messages[i] = ("Not implemented");
+                this.api.delete("repartitions/"+id).subscribe(
+                    msg =>
+                    {
+                        callback(true, msg);
+                        this.removeCampaignFromList(id);
+                    },
+                    err => callback(false, err)
+                );
             }
             i++;
         }
     }
 
-    onCampaignStartRequested(id: number)
+    onPositionChangeRequested(res: any, direction: string)
+    {
+        this.api.post("repartitions/changeVoeux", {id: res.id, direction: direction, voeux: res.pos}).subscribe(
+            msg=>res.callback(true, msg),
+            err=>res.callback(false, err));
+    }
+
+    onPositionDecreaseRequested(res: any)
+    {
+        this.onPositionChangeRequested(res, "down");
+    }
+
+    onPositionIncreaseRequested(res: any)
+    {
+        this.onPositionChangeRequested(res, "up");
+    }
+
+    removeCampaignFromList(id: number)
     {
         var i = 0;
         while(i < this.campagnes.length)
         {
             if(this.campagnes[i].id == id)
             {
-                this.messages[i] = null;
-                this.messages[i] = ("Not implemented");
+                this.campagnes.splice(i, 1);
+                this.updateDisplayParameters();
+                return;
             }
             i++;
         }
     }
 
+    onCampaignStartRequested(res: any)
+    {
+        var id = res.id;
+        var callback = res.callback;
+        this.api.post("repartitions/startCampaign", {id: id}).subscribe(
+            msg =>
+            {
+                callback(true, msg);
+            },
+            err => callback(false, err)
+        );
+    }
+
+    onCampaignStopRequested(res: any)
+    {
+        var id = res.id;
+        var callback = res.callback;
+        this.api.post("repartitions/stopCampaign", {id: id}).subscribe(
+            msg =>
+            {
+                callback(true, msg);
+            },
+            err => callback(false, err)
+        );
+    }
 }

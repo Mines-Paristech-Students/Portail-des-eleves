@@ -22,6 +22,9 @@ export class Repartition {
     public title: string;
     public equirepartition: boolean;
     public propositions: Proposition[];
+    public progress: any;
+    public voeux: number[];
+    public resultat: number;
 
     clone(): Repartition
     {

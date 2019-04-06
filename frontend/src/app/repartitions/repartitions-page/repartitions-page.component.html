@@ -9,8 +9,8 @@
 
             <div class="col-md-9 align-items-center">
                 <div class="loader" *ngIf="displayParameters.shouldDisplayLoader" style="margin-right:50%;margin-left:50%;margin-bottom: 1.5rem"></div>
-              <repartitions-carte-campagne *ngFor="let cmpg of campagnes; let j = index" [(messages)]="messages[j]"
-[(campagne)]="campagnes[j]" [(displayParameters)]="displayParameters" (onSubmitRequested)="onCampaignSubmitRequested($event)" (onDeletionRequested)="onCampaignDeletionRequested($event)" (onStartRequested)="onCampaignStartRequested($event)"></repartitions-carte-campagne>
+              <repartitions-carte-campagne *ngFor="let cmpg of campagnes; let j = index"
+[(campagne)]="campagnes[j]" [(displayParameters)]="displayParameters" (onSubmitRequested)="onCampaignSubmitRequested($event)" (onDeletionRequested)="onCampaignDeletionRequested($event)" (onStartRequested)="onCampaignStartRequested($event)" (onPositionIncreaseRequested)="onPositionIncreaseRequested($event)" (onPositionDecreaseRequested)="onPositionDecreaseRequested($event)" (onStopRequested)="onCampaignStopRequested($event)"></repartitions-carte-campagne>
             </div>
         </div>
     </div>
