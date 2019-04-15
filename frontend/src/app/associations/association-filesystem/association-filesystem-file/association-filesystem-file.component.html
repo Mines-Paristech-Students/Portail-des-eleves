@@ -1,70 +1,54 @@
 <div *ngIf="file != null">
     <!-- Check whether the file is being edited. -->
     <ng-container
-            *ngIf="editing; then editPanel; else viewPanel;"
+            *ngIf="isEditing; then editPanel; else viewPanel;"
     ></ng-container>
 
     <!-- File viewing mode. -->
     <ng-template #viewPanel>
         <div class="card">
-            <div class="card-title">
-                {{ file.name }}
-            </div>
+            <!-- File header: display the name of the file and the actions: edit or close. -->
+            <div class="card-header">
+                <h3 class="card-title">{{ file.name }}</h3>
 
-            <div class="card">
-                <div class="card-title">Description</div>
-                <div class="card-body" *ngIf="file.description">
-                    {{ file.description }}
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">Mis en ligne
-                    le {{ file.uploaded_on | date:"dd/MM/yyyy" }}
-                    par {{ file.uploaded_by }}
-                </div>
-            </div>
-
-            <div class="card">
                 <div class="card-options">
-                    <button class="btn btn-secondary btn-sm ml-2"
-                            (click)="file = null">Fermer
-                    </button>
-                    <button class="btn btn-secondary btn-sm ml-2"
-                            (click)="editing = true">Editer
+                    <button class="btn btn-primary btn-sm ml-2"
+                            (click)="handleEditButton()">Modifier
                     </button>
                 </div>
             </div>
+
+            <div class="card-body" *ngIf="file.description">
+                <p>{{ file.description }}</p>
+            </div>
+
+            <p class="card-footer">
+                Mis en ligne le {{ file.uploaded_on | date:"dd/MM/yyyy" }} par {{ file.uploaded_by }}.
+            </p>
         </div>
     </ng-template>
+</div>
 
-    <!-- File editing mode. -->
-    <ng-template #editPanel>
-        <div class="card">
+<!-- File editing mode. -->
+<ng-template #editPanel>
+    <div class="card">
+        <div class="card-header">
             <div class="card-title">
                 <input type="text" class="form-control input-lg" [(ngModel)]="file.name">
             </div>
 
-            <div class="card-body">
-                <textarea [(ngModel)]="file.description" class="form-control" cols="50" rows="10"></textarea>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <button class="btn btn-block btn-secondary btn-sm"
-                                    (click)="saveFile(file) ; editing = false">Enregistrer
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-block btn-sm btn-danger"
-                                    (click)="deleteFile(file) ; editing = false">Supprimer
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="card-options">
+                <button class="btn btn-sm btn-danger ml-2"
+                        (click)="handleDeleteButton()">Supprimer
+                </button>
+                <button class="btn btn-success btn-sm ml-2"
+                        (click)="handleSaveButton()">Enregistrer
+                </button>
             </div>
         </div>
-    </ng-template>
-</div>
+
+        <div class="card-body">
+            <textarea [(ngModel)]="file.description" class="form-control" cols="50" rows="10"></textarea>
+        </div>
+    </div>
+</ng-template>

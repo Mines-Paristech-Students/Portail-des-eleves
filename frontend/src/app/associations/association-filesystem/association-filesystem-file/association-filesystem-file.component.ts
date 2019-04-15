@@ -1,7 +1,7 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {ApiService} from "../../../api.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { ApiService } from "../../../api.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-association-filesystem-file',
@@ -10,13 +10,17 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 })
 export class AssociationFilesystemFileComponent implements OnInit {
     @Input() file: any;
+    @Output() exitEmitter: EventEmitter<boolean>;
+
+    isEditing: boolean = false;
+
     error = "";
-    editing = false;
 
     constructor(private api: ApiService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private modalService: NgbModal) {
+        this.exitEmitter = new EventEmitter<boolean>();
     }
 
     ngOnInit() {
@@ -38,5 +42,23 @@ export class AssociationFilesystemFileComponent implements OnInit {
             _ => this.file = null,
             err => this.error = err.message
         );
+    }
+
+    exitFile() {
+        this.exitEmitter.emit(true);
+    }
+
+    handleEditButton() {
+        this.isEditing = true;
+    }
+
+    handleDeleteButton() {
+        this.deleteFile(this.file);
+        this.exitFile()
+    }
+
+    handleSaveButton() {
+        this.saveFile(this.file);
+        this.exitFile();
     }
 }

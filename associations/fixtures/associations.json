@@ -193,5 +193,53 @@
       "uploaded_by": "17bocquet",
       "association":  "bde"
     }
+  },
+  {
+    "model": "associations.file",
+    "pk": 5,
+    "fields": {
+      "name": "Lorem Ipsum 2",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "file": "lorem-ipsum.pdf",
+      "uploaded_on": "2017-08-24T17:41:28+00:00",
+      "uploaded_by":"17bocquet",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 6,
+    "fields": {
+      "name": "Lorem Ipsum 3",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "file": "lorem-ipsum.pdf",
+      "uploaded_on": "2017-08-24T17:41:28+00:00",
+      "uploaded_by":"17bocquet",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 7,
+    "fields": {
+      "name": "Lorem Ipsum 4",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "file": "lorem-ipsum.pdf",
+      "uploaded_on": "2017-08-24T17:41:28+00:00",
+      "uploaded_by":"17bocquet",
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.file",
+    "pk": 8,
+    "fields": {
+      "name": "Lorem Ipsum 5",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "file": "lorem-ipsum.pdf",
+      "uploaded_on": "2017-08-24T17:41:28+00:00",
+      "uploaded_by":"17bocquet",
+      "association": "bde"
+    }
   }
 ]

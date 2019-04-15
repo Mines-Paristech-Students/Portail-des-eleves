@@ -17,6 +17,31 @@ class FileSerializer(serializers.ModelSerializer):
         read_only_fields = ("uploaded_on", "uploaded_by")
 
 
+class SubmitFileSerializer(serializers.ModelSerializer):
+    """An user submitting a file should only submit the name, the description, the association, the file and
+    the folder."""
+
+    class Meta:
+        model = File
+        fields = (
+            'name',
+            'description',
+            'association',
+            'file',
+            'folder'
+        )
+
+    def create(self, validated_data):
+        file_data = validated_data
+        file_data['uploaded_by'] = self.context['request'].user
+
+        # Create the new file
+        file = File.objects.create(**file_data)
+        file.save()
+
+        return file
+
+
 class FolderSerializer(serializers.ModelSerializer):
     association = AssociationsShortSerializer()
     parent = FolderShortSerializer()

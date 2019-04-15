@@ -1,0 +1,30 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Ajouter un fichier à {{ folder.id }}</h3>
+        <div class="card-options">
+            <button class="btn btn-secondary btn-sm ml-2"
+                    (click)="handleExitButton()">Annuler</button>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form class="form-group" [formGroup]="addFileForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label class="form-label">Nom du fichier<span class="form-required">*</span></label>
+                <input type="text" formControlName="fileName" class="form-control" required/>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description (facultative)</label>
+                <textarea formControlName="description" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Fichier</label>
+                <input type="file" formControlName="file" class="form-control" (change)="onFileChange($event)"/>
+            </div>
+
+            <button type="submit" [disabled]="!addFileForm.valid" class="btn btn-success">Envoyer</button>
+        </form>
+    </div>
+</div>

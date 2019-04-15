@@ -1,10 +1,15 @@
 from django.http import JsonResponse
+
 from rest_framework import viewsets
+
 from django_filters import rest_framework as filters
+
+from rest_framework import permissions, status
 from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from associations.models import Folder, File
-from associations.serializers.filesystem import FolderSerializer, FileSerializer
+from associations.serializers.filesystem import FolderSerializer, FileSerializer, SubmitFileSerializer
 
 
 class FileSystemView(APIView):
@@ -33,3 +38,11 @@ class FileViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ("association", "folder")
+
+    def create(self, request, *args, **kwargs):
+        serializer = SubmitFileSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

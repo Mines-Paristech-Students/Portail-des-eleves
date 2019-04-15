@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ApiService} from "../../api.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from "../../api.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { HttpHeaders } from "@angular/common/http";
 
 @Component({
     selector: 'app-filesystem',
@@ -9,9 +10,13 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ['./association-filesystem.component.scss']
 })
 export class AssociationFilesystemComponent implements OnInit {
-    association: any;
     error: string = "";
-    $folder: any;
+
+    association_id: string;
+    association: any;
+    folder_id: number;
+    folder: any;
+
     selected_file: any;
     adding_file: boolean = false;
 
@@ -21,12 +26,13 @@ export class AssociationFilesystemComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(
             (params) => {
-                let association_id = params['id'];
-                let folder_id = params['folder_id'];
-                this.api.get(`associations/${association_id}/`).subscribe(
+                this.association_id = params['id'];
+                this.folder_id = params['folder_id'];
+
+                this.api.get(`associations/${this.association_id}/`).subscribe(
                     association => {
                         this.association = association;
-                        this.loadFolder(folder_id);
+                        this.loadFolderById(this.folder_id);
                     },
                     error => {
                         this.error = error;
@@ -37,11 +43,11 @@ export class AssociationFilesystemComponent implements OnInit {
     };
 
 
-    loadFolder(folder) {
-        if (folder == null) {
-            this.$folder = this.api.get(`associations/${this.association.id}/filesystem/root`)
+    loadFolderById(folderId) {
+        if (folderId == null) {
+            this.folder = this.api.get(`associations/${this.association.id}/filesystem/root`)
         } else {
-            this.$folder = this.api.get(`folder/${folder}`)
+            this.folder = this.api.get(`folder/${folderId}`)
         }
     }
 
@@ -57,10 +63,36 @@ export class AssociationFilesystemComponent implements OnInit {
         }
     }
 
-    openModal(content) {
-        this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then(
-            _ => this.selected_file = null,
-            _ => this.selected_file = null
+    onExitAddingFile() {
+        this.adding_file = false;
+        this.loadFolderById(this.folder_id);
+    }
+
+    onExitFile() {
+        this.selected_file = null;
+        this.loadFolderById(this.folder_id);
+    }
+
+    onSubmitFile(data) {
+        let url = `file/`;
+
+        data = {
+            name: data.fileName,
+            description: data.description,
+            association: this.association.id,
+            file: data.file,
+            folder: this.folder_id === undefined ? null : this.folder_id
+        };
+
+        console.log(data);
+
+        let headers = new HttpHeaders();
+        headers.set('Content-Type', 'undefined');
+
+        this.api.post<Object>(url, data, headers).subscribe(
+            next => console.log(next),
+            error => console.error(error),
         );
+        this.onExitAddingFile();
     }
 }

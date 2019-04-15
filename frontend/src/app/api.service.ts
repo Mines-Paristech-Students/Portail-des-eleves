@@ -1,45 +1,49 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import {environment} from "../environments/environment";
-import {User} from "./models/user";
+import { environment } from "../environments/environment";
+import { User } from "./models/user";
 
 const httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class ApiService {
 
     server = environment.apiUrl;
     header: any;
 
-    constructor(public http: HttpClient, private cookieService: CookieService) {}
+    constructor(public http: HttpClient, private cookieService: CookieService) {
+    }
 
-    get<T>(url: String, params?: HttpParams){
+    get<T>(url: String, params?: HttpParams) {
         return this.http.get<T>(
             this.server + url,
             {params: params}
         );
     }
 
-    post<T>(url: String, body: any){
+    post<T>(url: String, body: any, headers: HttpHeaders = undefined) {
+        let httpOptions = { headers: headers};
+
         return this.http.post<T>(
             this.server + url,
-            body
+            body,
+            httpOptions
         )
     }
 
-    put<T>(url: String, body: any){
+    put<T>(url: String, body: any) {
         return this.http.put<T>(this.server + url, body)
     }
 
-    patch<T>(url: String, body: any){
+    patch<T>(url: String, body: any) {
         return this.http.patch<T>(this.server + url, body)
     }
 
-    delete<T>(url: String){
+    delete<T>(url: String) {
         return this.http.delete<T>(
             this.server + url
         )
@@ -60,7 +64,7 @@ export class ApiService {
         );
     }
 
-    logout(){
+    logout() {
         return this.post(
             "auth/logout/",
             null
