@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { ApiService } from "../../../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-association-filesystem-file',
@@ -9,8 +8,12 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ['./association-filesystem-file.component.scss']
 })
 export class AssociationFilesystemFileComponent implements OnInit {
-    @Input() file: any;
-    @Output() exitEmitter: EventEmitter<boolean>;
+
+    association: any;
+    file: any;
+
+    association_id: string;
+    file_id: string;
 
     isEditing: boolean = false;
 
@@ -18,12 +21,32 @@ export class AssociationFilesystemFileComponent implements OnInit {
 
     constructor(private api: ApiService,
                 private route: ActivatedRoute,
-                private router: Router,
-                private modalService: NgbModal) {
-        this.exitEmitter = new EventEmitter<boolean>();
+                private router: Router) {
     }
 
     ngOnInit() {
+        this.route.params.subscribe(
+            (params) => {
+                this.association_id = params['id'];
+                this.file_id = params['file_id'];
+
+                this.api.get(`associations/${this.association_id}/`).subscribe(
+                    association => this.association = association,
+                    error => {
+                        this.error = error.message;
+                        console.log(error);
+                    }
+                );
+
+                this.api.get(`file/${this.file_id}/`).subscribe(
+                    file => this.file = file,
+                    error => {
+                        this.error = error.message;
+                        console.log(error);
+                    }
+                );
+            }
+        );
     }
 
     saveFile(file) {
@@ -45,7 +68,6 @@ export class AssociationFilesystemFileComponent implements OnInit {
     }
 
     exitFile() {
-        this.exitEmitter.emit(true);
     }
 
     handleEditButton() {

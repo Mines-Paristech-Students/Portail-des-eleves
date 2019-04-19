@@ -1,30 +1,53 @@
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Ajouter un fichier à {{ folder.id }}</h3>
-        <div class="card-options">
-            <button class="btn btn-secondary btn-sm ml-2"
-                    (click)="handleExitButton()">Annuler</button>
-        </div>
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
     </div>
 
-    <div class="card-body">
-        <form class="form-group" [formGroup]="addFileForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label class="form-label">Nom du fichier<span class="form-required">*</span></label>
-                <input type="text" formControlName="fileName" class="form-control" required/>
+    <div *ngIf="association && folder">
+        <div class="row">
+            <!-- Association sidebar. -->
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Description (facultative)</label>
-                <textarea formControlName="description" class="form-control"></textarea>
-            </div>
+            <!-- Association folder. -->
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Ajouter un fichier à {{ folder.id }}</h3>
+                        <div class="card-options">
+                            <button class="btn btn-secondary btn-sm ml-2"
+                                    (click)="handleExitButton()">Annuler
+                            </button>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <label class="form-label">Fichier</label>
-                <input type="file" formControlName="file" class="form-control" (change)="onFileChange($event)"/>
-            </div>
+                    <div class="card-body">
+                        <form class="form-group" [formGroup]="addFileForm" (ngSubmit)="onSubmit()">
+                            <div class="form-group">
+                                <label class="form-label">Nom du fichier<span class="form-required">*</span></label>
+                                <input type="text" formControlName="name" class="form-control" required />
+                            </div>
 
-            <button type="submit" [disabled]="!addFileForm.valid" class="btn btn-success">Envoyer</button>
-        </form>
+                            <div class="form-group">
+                                <label class="form-label">Description (facultative)</label>
+                                <textarea formControlName="description" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Fichier</label>
+                                <input type="file" formControlName="file" class="form-control" id="file" (change)="onFileChange($event)" #fileInput>
+                            </div>
+
+                            <button type="submit" [disabled]="!addFileForm.valid" class="btn btn-success">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

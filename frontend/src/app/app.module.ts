@@ -32,7 +32,7 @@ import {AssociationHomepageComponent} from "./associations/association-homepage/
 import {AssociationSidebarComponent} from "./associations/association-sidebar/association-sidebar.component";
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
 import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
-import {AssociationFilesystemComponent} from "./associations/association-filesystem/association-filesystem.component";
+import {AssociationFilesystemBrowserComponent} from "./associations/association-filesystem/association-filesystem-browser/association-filesystem-browser.component";
 import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
 import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
 import {MarketplaceSidebarComponent} from "./marketplace/marketplace-sidebar/marketplace-sidebar.component";
@@ -57,6 +57,7 @@ import {ViewTopicComponent} from './forum/view-topic/view-topic.component';
 import {TimelineComponent} from './timeline/timeline.component';
 import {AssociationFilesystemFileComponent} from './associations/association-filesystem/association-filesystem-file/association-filesystem-file.component';
 import {AssociationFilesystemAddfileComponent} from './associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component';
+import { AssociationFilesystemBreadcrumbComponent } from './associations/association-filesystem/association-filesystem-breadcrumb/association-filesystem-breadcrumb.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -100,9 +101,10 @@ registerLocaleData(localeFr)
         ViewThemeComponent,
         ViewTopicComponent,
         TimelineComponent,
-        AssociationFilesystemComponent,
+        AssociationFilesystemBrowserComponent,
         AssociationFilesystemFileComponent,
-        AssociationFilesystemAddfileComponent
+        AssociationFilesystemAddfileComponent,
+        AssociationFilesystemBreadcrumbComponent
     ],
     imports: [
         BrowserModule,

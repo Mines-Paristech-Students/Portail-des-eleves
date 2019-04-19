@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AssociationFilesystemComponent } from './association-filesystem.component';
+import { AssociationFilesystemBrowserComponent } from "./association-filesystem-browser.component";
 
 describe('AssociationFilesystemComponent', () => {
-  let component: AssociationFilesystemComponent;
-  let fixture: ComponentFixture<AssociationFilesystemComponent>;
+  let component: AssociationFilesystemBrowserComponent;
+  let fixture: ComponentFixture<AssociationFilesystemBrowserComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssociationFilesystemComponent ]
+      declarations: [ AssociationFilesystemBrowserComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AssociationFilesystemComponent);
+    fixture = TestBed.createComponent(AssociationFilesystemBrowserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

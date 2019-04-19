@@ -10,7 +10,7 @@ import {AllAssociationsComponent} from './associations/all-associations/all-asso
 import {AssociationHomepageComponent} from "./associations/association-homepage/association-homepage.component";
 import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
 import {AssociationPageComponent} from "./associations/association-page/association-page.component";
-import {AssociationFilesystemComponent} from "./associations/association-filesystem/association-filesystem.component";
+import {AssociationFilesystemBrowserComponent} from "./associations/association-filesystem/association-filesystem-browser/association-filesystem-browser.component";
 import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
 import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
 import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
@@ -22,6 +22,8 @@ import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-man
 import {ViewForumComponent} from "./forum/view-forum/view-forum.component"
 import {ViewThemeComponent} from "./forum/view-theme/view-theme.component"
 import {ViewTopicComponent} from "./forum/view-topic/view-topic.component"
+import { AssociationFilesystemAddfileComponent } from "./associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component";
+import { AssociationFilesystemFileComponent } from "./associations/association-filesystem/association-filesystem-file/association-filesystem-file.component";
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -30,10 +32,14 @@ const routes: Routes = [
     {path: 'associations', component: AllAssociationsComponent},
     {path: 'associations/:id', component: AssociationHomepageComponent},
     {path: 'associations/:id/members', component: AssociationMembersComponent},
-    {path: 'associations/:id/files', component: AssociationFilesystemComponent},
-    {path: 'associations/:id/files/:folder_id', component: AssociationFilesystemComponent},
     {path: 'associations/:id/settings', component: AssociationSettingsComponent},
     {path: 'associations/:association_id/page/:page_id', component: AssociationPageComponent},
+
+    {path: 'associations/:id/files', component: AssociationFilesystemBrowserComponent},
+    {path: 'associations/:id/files/:folder_id', component: AssociationFilesystemBrowserComponent},
+    {path: 'associations/:id/files/:folder_id/add', component: AssociationFilesystemAddfileComponent},
+    {path: 'associations/:id/files/add/root', component: AssociationFilesystemAddfileComponent},
+    {path: 'associations/:id/file/:file_id', component: AssociationFilesystemFileComponent},
 
     {path: 'marketplace/:id', component: MarketplaceHomeComponent},
     {path: 'marketplace/:id/basket', component: MarketplaceBasketComponent},
