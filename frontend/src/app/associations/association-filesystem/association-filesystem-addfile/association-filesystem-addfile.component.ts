@@ -53,7 +53,7 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
                 this.api.get(
                     this.folder_id == undefined ?
                         `associations/${this.association_id}/filesystem/root` :
-                        `associations/${this.association_id}/folder/${this.folder_id}/`
+                        `folder/${this.folder_id}/`
                 ).subscribe(
                     folder => this.folder = folder,
                     error => {
@@ -86,8 +86,13 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
         input.append('name', this.addFileForm.get('name').value);
         input.append('description', this.addFileForm.get('description').value);
         input.append('file', this.addFileForm.get('file').value);
-        input.append('association', this.folder.association);
-        input.append('folder', this.folder.id);
+        input.append('association', this.association.id);
+
+        if (this.folder.id) {
+            console.log(this.folder)
+            input.append('folder', this.folder.id);
+        }
+
         return input;
     }
 
@@ -99,10 +104,6 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
             res => alert(res),
             err => console.log(err)
         )
-    }
-
-    handleExitButton() {
-        alert("TODO !")
     }
 
     /*addFileForm: FormGroup;

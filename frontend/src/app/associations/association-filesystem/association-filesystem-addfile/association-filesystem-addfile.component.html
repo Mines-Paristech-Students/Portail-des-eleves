@@ -18,11 +18,19 @@
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Ajouter un fichier à {{ folder.id }}</h3>
+                        <h3 class="card-title">Ajouter un fichier à {{ folder.name }}</h3>
                         <div class="card-options">
-                            <button class="btn btn-secondary btn-sm ml-2"
-                                    (click)="handleExitButton()">Annuler
-                            </button>
+                            <a
+                                class="btn btn-secondary btn-sm ml-2"
+                                *ngIf="folder.id"
+                                routerLink="/associations/{{association.id}}/files/{{folder.id}}"
+                            >Annuler</a>
+
+                            <a
+                                class="btn btn-secondary btn-sm ml-2"
+                                *ngIf="!folder.id"
+                                routerLink="/associations/{{association.id}}/files"
+                            >Annuler</a>
                         </div>
                     </div>
 
