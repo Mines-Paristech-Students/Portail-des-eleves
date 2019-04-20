@@ -24,6 +24,7 @@ class SubmitFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = (
+            'id',
             'name',
             'description',
             'association',

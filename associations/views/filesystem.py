@@ -1,12 +1,10 @@
 from django.http import JsonResponse
-
-from rest_framework import viewsets
-
 from django_filters import rest_framework as filters
-
-from rest_framework import permissions, status
-from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from associations.models import Folder, File
 from associations.serializers.filesystem import FolderSerializer, FileSerializer, SubmitFileSerializer
@@ -38,6 +36,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ("association", "folder")
+
+    parser_classes = (MultiPartParser,)
 
     def create(self, request, *args, **kwargs):
         serializer = SubmitFileSerializer(data=request.data, context={'request': request})

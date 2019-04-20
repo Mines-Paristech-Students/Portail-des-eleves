@@ -1,16 +1,12 @@
 import {
     Component,
     ElementRef,
-    EventEmitter,
-    Input,
     OnInit,
-    Output,
     ViewChild
 } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { ApiService } from "../../../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpHeaders } from "@angular/common/http";
 
 @Component({
     selector: 'app-association-filesystem-addfile',
@@ -89,7 +85,7 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
         input.append('association', this.association.id);
 
         if (this.folder.id) {
-            console.log(this.folder)
+            console.log(this.folder);
             input.append('folder', this.folder.id);
         }
 
@@ -101,61 +97,10 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
         this.loading = true;
         // In a real-world app you'd have a http request / service call here like
         this.api.post('file/', formModel).subscribe(
-            res => alert(res),
+            (res: any) => {
+                this.router.navigate([`associations/${this.association_id}/file/${res.id}`])
+            },
             err => console.log(err)
         )
     }
-
-    /*addFileForm: FormGroup;
-
-    constructor(private cd: ChangeDetectorRef) {
-        this.fileEmitter = new EventEmitter<any>();
-        this.exitEmitter = new EventEmitter<boolean>();
-    }
-
-    ngOnInit(): void {
-        this.addFileForm = new FormGroup({
-            name: new FormControl('', Validators.required),
-            description: new FormControl(''),
-            file: new FormControl('')
-        });
-    }
-
-    show() {
-        console.log(this.addFileForm);
-    }
-
-
-
-    onFileChange(event) {
-        if (event.target.files.length > 0) {
-            let file = event.target.files[0];
-            this.addFileForm.get('file').setValue(file);
-        }
-    }*/
-
-    /*
-    onFileChange(event) {
-        let reader = new FileReader();
-
-        if (event.target.files && event.target.files.length > 0) {
-            const [file] = event.target.files;
-            reader.readAsDataURL(file);
-
-            reader.onload = () => {
-                this.addFileForm.patchValue({
-                    file: reader.result
-                });
-
-                console.log(this.addFileForm.value);
-            };
-
-            this.cd.markForCheck();
-        }
-    }
-
-    onSubmit() {
-        this.fileEmitter.emit(this.addFileForm.value);
-    }
-    */
 }
