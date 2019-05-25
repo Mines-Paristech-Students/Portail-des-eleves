@@ -35,8 +35,7 @@
     "particles.js": "^2.0.0",
     "rxjs": "^6.5.2",
     "tabler-ui": "0.0.34",
-    "tar": "^4.4.8",
-    "typescript": "^3.4.5",
+    "typescript": "^3.2.4",
     "uikit": "^3.1.5",
     "zone.js": "^0.8.29"
   },
