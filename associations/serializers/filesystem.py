@@ -14,7 +14,7 @@ class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ("id", "name", "description", "association", "file", "folder", "uploaded_on", "uploaded_by")
-        read_only_fields = ("uploaded_on", "uploaded_by")
+        read_only_fields = ("uploaded_on", "uploaded_by", "file")
 
 
 class SubmitFileSerializer(serializers.ModelSerializer):

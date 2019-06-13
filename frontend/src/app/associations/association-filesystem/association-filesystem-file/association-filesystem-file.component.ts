@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from "../../../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -50,19 +50,25 @@ export class AssociationFilesystemFileComponent implements OnInit {
     }
 
     saveFile(file) {
-        let clone = {...file};
-        delete clone["file"];
-        console.log(clone);
+        let input = new FormData();
+        input.append('name', file.name);
+        input.append('description', file.description);
+        input.append('association', this.association.id);
 
-        this.api.patch(`file/${file.id}/`, clone).subscribe(
-            _ => 0,
+        if (file.folder) {
+            console.log(file.folder);
+            input.append('folder', file.folder);
+        }
+
+        this.api.patch(`file/${file.id}/`, input).subscribe(
+            _ => this.isEditing = false,
             err => this.error = err.message
         );
     }
 
     deleteFile(file) {
         this.api.delete(`file/${file.id}/`).subscribe(
-            _ => this.file = null,
+            _ => this.router.navigate([`associations/${this.association.id}/files`]),
             err => this.error = err.message
         );
     }

@@ -16,11 +16,17 @@ export class AssociationFilesystemBreadcrumbComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.selected_file)
+        console.log(this.selected_file);
         if (this.selected_file && !this.folder) {
-            this.api.get(`folder/${this.selected_file.folder}/`).subscribe(
+            var  url = `associations/${this.selected_file.association}/filesystem/root`;
+            if (this.selected_file.folder != null) {
+                `folder/${this.selected_file.folder}/` ;
+            }
+
+            this.api.get(url).subscribe(
                 folder => {
                     this.folder = folder;
+                    console.log(url);
                     console.log(folder)
                 },
                 err => console.log(err)
