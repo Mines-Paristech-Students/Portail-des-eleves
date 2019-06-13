@@ -39,13 +39,16 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
     };
 
     loadFolderById(folderId) {
+        let uniqToken = "?unique=" + Date.now(); // This token prevents the cache from being called, which leads to
+                                                 // displaying files that were just deleted in the database
+
         if (folderId == null) {
-             this.api.get(`associations/${this.association.id}/filesystem/root`).subscribe(
+             this.api.get(`associations/${this.association.id}/filesystem/root` + uniqToken).subscribe(
                  folder => this.folder = folder,
                  error => this.error = error
              )
         } else {
-             this.api.get(`folder/${folderId}`).subscribe(
+             this.api.get(`folder/${folderId}` + uniqToken).subscribe(
                  folder => this.folder = folder,
                  error => this.error = error
              )
