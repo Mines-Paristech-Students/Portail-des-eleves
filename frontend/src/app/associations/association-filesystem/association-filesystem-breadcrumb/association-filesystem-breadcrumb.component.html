@@ -12,9 +12,7 @@
 
             <!-- The following links: the path. -->
             <li class="breadcrumb-item" *ngFor="let a of folder.filiation">
-                <a routerLink="/associations/{{ association.id }}/files/{{ folder.id }}">
-                    {{ a.name }}
-                </a>
+                <a routerLink="/associations/{{ association.id }}/files/{{ a.id }}">{{ a.name }}</a>
             </li>
 
             <li *ngIf="!selected_file" class="breadcrumb-item active" aria-current="page">{{ folder.name }}</li>

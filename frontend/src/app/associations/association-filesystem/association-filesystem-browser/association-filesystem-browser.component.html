@@ -26,6 +26,12 @@
                 <div class="card">
                     <!-- Add file button. -->
                     <div class="card-header">
+                        <div *ngIf="folder.id">
+                            <span class="fe fe-folder-plus mr-2" (click)="createFolder()"></span>
+                            <span class="fe fe-folder-minus mr-2" (click)="deleteFolder()"></span>
+                            <span class="fe fe-edit" (click)="editFolderName()"></span>
+                        </div>
+
                         <div class="card-options">
                             <a class="btn btn-primary btn-sm ml-2"
                                *ngIf="folder.id"
@@ -41,7 +47,7 @@
 
                     <!-- Check whether the folder is empty. -->
                     <ng-container
-                            *ngIf="folder.files.length == 0 && (folder | async).children.length == 0;
+                            *ngIf="folder.files.length == 0 && folder.children.length == 0;
                                    then emptyFolder;
                                    else notEmptyFolder;"
                     ></ng-container>

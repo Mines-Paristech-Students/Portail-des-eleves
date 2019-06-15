@@ -43,15 +43,15 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
                                                  // displaying files that were just deleted in the database
 
         if (folderId == null) {
-             this.api.get(`associations/${this.association.id}/filesystem/root` + uniqToken).subscribe(
-                 folder => this.folder = folder,
-                 error => this.error = error
-             )
+            this.api.get(`associations/${this.association.id}/filesystem/root` + uniqToken).subscribe(
+                folder => this.folder = folder,
+                error => this.error = error
+            )
         } else {
-             this.api.get(`folder/${folderId}` + uniqToken).subscribe(
-                 folder => this.folder = folder,
-                 error => this.error = error
-             )
+            this.api.get(`folder/${folderId}` + uniqToken).subscribe(
+                folder => this.folder = folder,
+                error => this.error = error
+            )
         }
     }
 
@@ -59,8 +59,47 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
         this.router.navigateByUrl(`associations/${this.association.id}/files/${folder.id}`);
     }
 
-    openFile(file){
+    openFile(file) {
         this.router.navigateByUrl(`associations/${this.association.id}/file/${file.id}`);
+    }
+
+    createFolder() {
+        let name = prompt("Entrez le nom du nouveau dossier");
+
+        if (name && name.length > 0) {
+            this.api.post("folder/", {
+                "name": name,
+                "parent": this.folder_id,
+                "association": this.folder.association,
+                "children": [],
+                "files": []
+            }).subscribe(
+                res => this.folder.children.push(res),
+                err => this.error = err.message
+            )
+        }
+    }
+
+    deleteFolder() {
+        if(confirm("Supprimer le dossier ? Tous ses élements seront transférés dans le dossier parent")){
+            this.api.delete(`folder/${this.folder_id}/`).subscribe(
+                res =>  this.router.navigateByUrl(`associations/${this.association.id}/files/${this.folder.parent}`),
+                err => this.error = err.message
+            )
+        }
+    }
+
+    editFolderName() {
+        let name = prompt("Entrez le nouveau nom du dossier");
+
+        if (name && name.length > 0) {
+            this.api.patch(`folder/${this.folder_id}/`, {
+                "name": name,
+            }).subscribe(
+                res => this.folder = res,
+                err => this.error = err.message
+            )
+        }
     }
 
 }

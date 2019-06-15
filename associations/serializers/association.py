@@ -7,7 +7,6 @@ from authentication.serializers import UserShortSerializer
 
 
 class GroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Group
         fields = ('id', 'members', 'role', 'is_admin_group',
@@ -24,6 +23,7 @@ class GroupSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['members'] = UserShortSerializer(instance.members, many=True).data
         return response
+
 
 class AssociationsShortSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +44,3 @@ class AssociationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
         fields = ('id', 'name', 'logo', 'pages', 'marketplace', 'library', 'groups')
-
