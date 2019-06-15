@@ -33,6 +33,11 @@
                             <h3 class="card-title">{{ file.name }}</h3>
 
                             <div class="card-options">
+                                <a class="btn btn-success btn-sm ml-2" href="{{file.file}}">
+                                    <span class="fe fe-download"></span>
+                                    Télécharger
+                                </a>
+
                                 <button class="btn btn-primary btn-sm ml-2"
                                         (click)="handleEditButton()">Modifier
                                 </button>
