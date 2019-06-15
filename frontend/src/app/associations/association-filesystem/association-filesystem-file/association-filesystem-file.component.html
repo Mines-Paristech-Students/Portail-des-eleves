@@ -38,6 +38,11 @@
                                     Télécharger
                                 </a>
 
+                                <app-association-filesystem-move
+                                    [file]="file"
+                                    (movedFile)="handleFileMoved($event)"
+                                ></app-association-filesystem-move>
+
                                 <button class="btn btn-primary btn-sm ml-2"
                                         (click)="handleEditButton()">Modifier
                                 </button>
@@ -47,7 +52,7 @@
                         <div class="card-body" *ngIf="file.description">
                             <p>{{ file.description }}</p>
                         </div>
-                        
+
                         <p class="card-body" *ngIf="file.type.split('/')[0] == 'image'">
                             <img src="{{file.file}}" alt="{{file.name}}">
                         </p>

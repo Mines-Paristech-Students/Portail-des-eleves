@@ -58,6 +58,7 @@ import {TimelineComponent} from './timeline/timeline.component';
 import {AssociationFilesystemFileComponent} from './associations/association-filesystem/association-filesystem-file/association-filesystem-file.component';
 import {AssociationFilesystemAddfileComponent} from './associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component';
 import { AssociationFilesystemBreadcrumbComponent } from './associations/association-filesystem/association-filesystem-breadcrumb/association-filesystem-breadcrumb.component';
+import { AssociationFilesystemMoveComponent } from './associations/association-filesystem/association-filesystem-move/association-filesystem-move.component';
 // alternatively if you only need to include a subset of languages
 var hljs: any;
 
@@ -104,7 +105,8 @@ registerLocaleData(localeFr)
         AssociationFilesystemBrowserComponent,
         AssociationFilesystemFileComponent,
         AssociationFilesystemAddfileComponent,
-        AssociationFilesystemBreadcrumbComponent
+        AssociationFilesystemBreadcrumbComponent,
+        AssociationFilesystemMoveComponent
     ],
     imports: [
         BrowserModule,

@@ -18,6 +18,8 @@ class FileSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "description", "association", "file", "folder", "uploaded_on", "uploaded_by")
         read_only_fields = ("uploaded_on", "uploaded_by", "file")
 
+    folder = serializers.PrimaryKeyRelatedField(allow_null=True, queryset=Folder.objects.all())
+
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
 
@@ -30,6 +32,8 @@ class FileSerializer(serializers.ModelSerializer):
             res["type"] = None
 
         return res
+
+
 
 
 class SubmitFileSerializer(serializers.ModelSerializer):

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiService } from "../../../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import { AssociationFilesystemBreadcrumbComponent } from "../association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
 
 @Component({
     selector: 'app-association-filesystem-file',
@@ -19,10 +20,14 @@ export class AssociationFilesystemFileComponent implements OnInit {
 
     error = "";
 
+    @ViewChild(AssociationFilesystemBreadcrumbComponent) breadcrumb ;
+
     constructor(private api: ApiService,
                 private route: ActivatedRoute,
                 private router: Router) {
     }
+
+
 
     ngOnInit() {
         this.route.params.subscribe(
@@ -80,6 +85,7 @@ export class AssociationFilesystemFileComponent implements OnInit {
         this.isEditing = true;
     }
 
+
     handleDeleteButton() {
         this.deleteFile(this.file);
         this.exitFile()
@@ -88,5 +94,11 @@ export class AssociationFilesystemFileComponent implements OnInit {
     handleSaveButton() {
         this.saveFile(this.file);
         this.exitFile();
+    }
+
+    handleFileMoved($event){
+        this.file.folder = $event.folder;
+        this.breadcrumb.folder = null;
+        this.breadcrumb.refreshDisplay();
     }
 }

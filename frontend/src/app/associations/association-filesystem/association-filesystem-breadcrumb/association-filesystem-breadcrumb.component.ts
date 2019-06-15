@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApiService } from "../../../api.service";
 
 @Component({
@@ -16,11 +16,14 @@ export class AssociationFilesystemBreadcrumbComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.selected_file);
+        this.refreshDisplay();
+    }
+
+    refreshDisplay() {
         if (this.selected_file && !this.folder) {
-            var  url = `associations/${this.selected_file.association}/filesystem/root`;
+            var url = `associations/${this.selected_file.association}/filesystem/root`;
             if (this.selected_file.folder != null) {
-                url = `folder/${this.selected_file.folder}/` ;
+                url = `folder/${this.selected_file.folder}/`;
             }
 
             this.api.get(url).subscribe(
