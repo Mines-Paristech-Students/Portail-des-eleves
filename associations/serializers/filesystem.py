@@ -1,3 +1,5 @@
+import mimetypes
+
 from rest_framework import serializers
 
 from associations.models import Folder, File
@@ -15,6 +17,19 @@ class FileSerializer(serializers.ModelSerializer):
         model = File
         fields = ("id", "name", "description", "association", "file", "folder", "uploaded_on", "uploaded_by")
         read_only_fields = ("uploaded_on", "uploaded_by", "file")
+
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+
+        mimetype = mimetypes.guess_type(instance.file.name)
+
+        type = [x for x in mimetype if x is not None]
+        if len(type) > 0:
+            res["type"] = type[0]
+        else:
+            res["type"] = None
+
+        return res
 
 
 class SubmitFileSerializer(serializers.ModelSerializer):

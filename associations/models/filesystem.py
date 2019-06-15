@@ -1,12 +1,11 @@
+from django.conf.global_settings import MEDIA_ROOT
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
 from associations.models.association import Association
 from authentication.models import User
 
-from os.path import dirname, join, realpath
-
-fs = FileSystemStorage(location=join(dirname(realpath(__file__)), "..", "..", 'medias', 'uploads', 'associations'))
+fs = FileSystemStorage(location=MEDIA_ROOT)
 
 
 class Folder(models.Model):

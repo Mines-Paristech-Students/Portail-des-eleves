@@ -42,6 +42,16 @@
                         <div class="card-body" *ngIf="file.description">
                             <p>{{ file.description }}</p>
                         </div>
+                        
+                        <p class="card-body" *ngIf="file.type.split('/')[0] == 'image'">
+                            <img src="{{file.file}}" alt="{{file.name}}">
+                        </p>
+
+                        <p class="card-body" *ngIf="file.type.split('/')[0] == 'video'">
+                            <video controls>
+                                <source src="{{file.file}}" type="{{file.type}}">
+                            </video>
+                        </p>
 
                         <p class="card-footer">
                             Mis en ligne le {{ file.uploaded_on | date:"dd/MM/yyyy" }} par {{ file.uploaded_by }}.

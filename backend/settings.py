@@ -14,6 +14,8 @@ import os
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from os.path import join, dirname, realpath
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -84,7 +86,7 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'ACCESS_TOKEN_COOKIE_NAME': 'jwt_access_token',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'ACCESS_TOKEN_LONG_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LONG_LIFETIME': timedelta(days=140),
     'ALGORITHM': 'HS256',
     'SECRET_KEY': os.environ.get('JWT_PRIVATE_KEY', 'SECRET_KEY'),
     'USER_ID_CLAIM': 'user',
@@ -164,10 +166,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/assets/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "medias", "assets"),)
+STATICFILES_DIRS = (join(BASE_DIR, "medias", "assets"),)
 
 USE_DJANGO_JQUERY = True
 JQUERY_URL = False
+
+MEDIA_ROOT = "/" + join(BASE_DIR, 'medias', 'uploads', 'associations')
+MEDIA_URL = "/" + join('uploads', 'associations') + "/"
 
 def is_prod_mode():
     return ENV == 'PROD'
