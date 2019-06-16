@@ -1,0 +1,49 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="library">
+        <div class="page-header">
+            <h3 class="page-title">Prêts de {{ library.association.name }}</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <library-sidebar [library]="library"></library-sidebar>
+            </div>
+            <div class="col-md-9">
+
+                <div class="card">
+                    <table class="table card-table table-vcenter">
+                        <tbody>
+                        <ng-container
+                                *ngFor="let loan of loans | async | paginate: { itemsPerPage: 5, currentPage: p }">
+                            <tr>
+                                <td>
+                                    <p>{{ loan.loanable.name }}</p>
+                                    <p class="small text-muted">{{ loan.loanable.description }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <span *ngIf="loan.status == 'RETURNED' || loan.status == 'CANCELLED'" class="tag tag-green">Rendu</span>
+                                    <span *ngIf="loan.status == 'BORROWED'" class="tag tag-yellow">Emprunté</span>
+                                    <span *ngIf="loan.status == 'BORROWED' && loan.expected_return_date > today" class="tag tag-red">Retour en retard</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+
+                <app-pagination-controls
+                        (pageChange)="p = $event"
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                ></app-pagination-controls>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue : {{ error }}
+        </p>
+    </div>
+</div>

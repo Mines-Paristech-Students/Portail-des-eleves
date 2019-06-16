@@ -14,7 +14,7 @@
         <a *ngIf="association.marketplace.enabled" class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/marketplace/{{ association.id }}">
             <span class="icon mr-3"><i class="fe fe-shopping-cart"></i></span>Magasin
         </a>
-        <a *ngIf="association.library.enabled" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+        <a *ngIf="association.library.enabled" class="list-group-item list-group-item-action px-0 d-flex align-items-center" routerLink="/library/{{ association.id }}">
             <span class="icon mr-3"><i class="fe fe-book"></i></span>Bibliothèque
         </a>
 

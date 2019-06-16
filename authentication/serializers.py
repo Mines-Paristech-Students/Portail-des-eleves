@@ -6,6 +6,7 @@ from rest_framework import serializers
 from authentication.models import User
 from authentication.token import Token
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -14,12 +15,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   "room", "address", "city_of_origin",
                   "option", "is_ast", "is_isupfere", "is_in_gapyear",
                   "sports", "roommate", "minesparent",
-                  "is_1A"
+                  "is_1A", 'promo'
                   )
 
 
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name')

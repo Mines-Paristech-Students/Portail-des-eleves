@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {BaseMarketplaceComponent} from "../base-marketplace-component";
-import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
-import {BasketManagerServiceService} from "../basketManager.service";
+
+import {ApiService} from "../../api.service";
+import {BaseMarketplaceComponent} from "../base-marketplace-component";
+import { BasketManagerService } from "../basket-manager.service";
+import { Marketplace, RawMarketplace } from '../models';
 
 @Component({
   selector: 'app-marketplace-manager-fundings',
@@ -29,26 +31,25 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
         {value: "REFUNDED", label: "Remboursé", color: "yellow"}
     ] ;
 
-    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerServiceService) {
+    constructor(api: ApiService, route: ActivatedRoute, manager: BasketManagerService) {
         super(api, route, manager);
     }
 
     ngOnInit() {
-        this.route.params.subscribe(
-            (params) => {
-                this.marketplace_id = params['id'];
+        this.route.params.subscribe(params => {
+            this.marketplace_id = params['id'];
 
-                this.api.get(`marketplace/${this.marketplace_id}/`).subscribe(
-                    marketplace => {
-                        this.marketplace = marketplace;
-                        this.countItems();
-                    },
-                    error => this.error = error.message
-                );
+            this.api.get<RawMarketplace>(`marketplace/${this.marketplace_id}/`).subscribe(
+                rawMarketplace => {
+                    this.marketplace = new Marketplace(rawMarketplace);
+                    this.countItems();
+                },
+                error => this.error = error.message
+            );
 
-                this.fundings = this.api.get(`funding/?marketplace=${this.marketplace_id}`)
-                this.users = this.api.get('users/')
-            });
+            this.fundings = this.api.get(`funding/?marketplace=${this.marketplace_id}`)
+            this.users = this.api.get('users/')
+        });
     }
 
     filterOrders(){

@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
                 //  so the ".promotion" property can be called from the html template.
                 this.user = new User();
                 Object.assign(this.user, data)
+                localStorage.setItem("user", JSON.stringify(this.user))
             },
             err => {
                 console.log(err)
@@ -30,7 +31,9 @@ export class NavbarComponent implements OnInit {
         );
 
         this._apiService.get("associations/").subscribe(
-		    (data:any) => this.list_associations_short = data.slice(0, 10)
+		    (data:any) => {
+				this.list_associations_short = data.slice(0, 10);
+			}
 		);
     }
 

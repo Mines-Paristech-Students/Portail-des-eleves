@@ -16,7 +16,7 @@ class AuthenticationTestCase(TestCase):
     def setUp(self):
         User.objects.create_user(
             '15veaux', 'Florian', 'Veaux', 'florian.veaux@mines-paristech.fr',
-            'password', '1996-08-28'
+            'password', '1996-08-28', 15
         )
 
     def test_user(self):

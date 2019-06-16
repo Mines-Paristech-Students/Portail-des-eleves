@@ -20,11 +20,11 @@ class BackendTestCase(APITestCase):
 
         if admin:
             return User.objects.create_superuser(
-                id, 'Admin_' + str(id), 'User', 'admin_' + str(id) + '@mines-paristech.fr', password, '2018-06-06'
+                id, 'Admin_' + str(id), 'User', 'admin_' + str(id) + '@mines-paristech.fr', password, '2018-06-06', 18
             )
         else:
             return User.objects.create_user(
-                id, 'Simple_' + str(id), 'User', 'simple_' + str(id) + '@mines-paristech.fr', password, '2018-06-06'
+                id, 'Simple_' + str(id), 'User', 'simple_' + str(id) + '@mines-paristech.fr', password, '2018-06-06', 18
             )
 
     def logout(self):

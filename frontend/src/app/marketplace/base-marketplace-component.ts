@@ -1,17 +1,18 @@
 import { OnInit } from '@angular/core';
-import {ApiService} from "../api.service";
-import {ActivatedRoute} from "@angular/router";
-import {BasketManagerServiceService} from "./basketManager.service";
+import { ActivatedRoute } from "@angular/router";
+
+import { ApiService } from "../api.service";
+import { BasketManagerService } from "./basket-manager.service";
+import { Basket, Marketplace, RawMarketplace } from './models';
 
 export abstract class BaseMarketplaceComponent implements OnInit {
-
-    protected marketplace: any ;
+    protected marketplace: Marketplace ;
     protected error: any ;
 
-    protected basket: any ;
+    protected basket: Basket ;
     protected numberOfItems = 0 ;
 
-    protected constructor(protected api: ApiService, protected route: ActivatedRoute, protected manager: BasketManagerServiceService){
+    protected constructor(protected api: ApiService, protected route: ActivatedRoute, protected manager: BasketManagerService){
         this.basket = this.manager.load();
     }
 
@@ -20,9 +21,9 @@ export abstract class BaseMarketplaceComponent implements OnInit {
 		(params) => {
             let id = params['id'];
 
-            this.api.get(`marketplace/${id}/`).subscribe(
+            this.api.get<RawMarketplace>(`marketplace/${id}/`).subscribe(
                 marketplace => {
-                    this.marketplace = marketplace ;
+                    this.marketplace = new Marketplace(marketplace) ;
                     this.countItems();
                 },
                 error => { this.error = error.message ; console.log(error) ; }
@@ -30,7 +31,7 @@ export abstract class BaseMarketplaceComponent implements OnInit {
 		});
     }
 
-    countItems(){
+    countItems(): void {
         this.numberOfItems = this.manager.countItems(this.basket, this.marketplace)
     }
 }

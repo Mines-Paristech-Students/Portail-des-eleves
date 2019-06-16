@@ -1,17 +1,5 @@
 [
   {
-    "model": "associations.group",
-    "pk": "1",
-    "fields": {
-      "members": [
-        "15veaux",
-        "17bocquet"
-      ],
-      "role": "Dreamteam",
-      "is_admin_group": true
-    }
-  },
-  {
     "model": "associations.marketplace",
     "pk": "bde",
     "fields": {
@@ -26,14 +14,61 @@
     }
   },
   {
+    "model": "associations.loanable",
+    "pk": 1,
+    "fields": {
+      "name": "Le bouclier d'auvergne",
+      "description": "Lorem ipsum sic amet et doloris",
+      "comment": "Private comment",
+      "library": "bde"
+    }
+  },
+  {
+    "model": "associations.loanable",
+    "pk": 2,
+    "fields": {
+      "name": "Tintin chez les chtis",
+      "description": "Lorem ipsum sic amet et doloris",
+      "library": "bde"
+    }
+  },
+  {
+    "model": "associations.loanable",
+    "pk": 3,
+    "fields": {
+      "name": "Asterix contre César",
+      "description": "Lorem ipsum sic amet et doloris",
+      "library": "bde"
+    }
+  },
+  {
+    "model": "associations.loan",
+    "pk": 1,
+    "fields": {
+      "loanable": 1,
+      "user": "17bocquet",
+      "loan_date": "2019-01-01",
+      "expected_return_date": "2050-12-01",
+      "status": "BORROWED"
+    }
+  },
+  {
+    "model": "associations.loan",
+    "pk": 2,
+    "fields": {
+      "loanable": 1,
+      "user": "17bocquet",
+      "loan_date":  "2018-03-04",
+      "expected_return_date":  "2018-06-01",
+      "status":  "RETURNED"
+    }
+  },
+  {
     "model": "associations.association",
     "pk": "bde",
     "fields": {
       "name": "BDE",
       "rank": 1,
-      "groups": [
-        1
-      ],
       "marketplace": "bde",
       "library": "bde"
     }

@@ -49,44 +49,15 @@
                 <div class="card">
                     <table class="table card-table table-vcenter">
                         <tbody>
-                        <tr *ngFor="let product of inBasket(marketplace.products) ">
-                            <td>
-                                <img
-                                    src="http://cdn2.foodviva.com/static-content/food-images/juice-recipes/fresh-tomato-juice-recipe/fresh-tomato-juice-recipe.jpg"
-                                >
-                            </td>
-                            <td>
-                                <p>{{ product.name }}</p>
-                                <p class="small text-muted">{{ product.description }}</p>
-                            </td>
-                            <td class="text-right text-muted d-none d-md-table-cell text-nowrap">
-                                <ng-container *ngIf="product.number_left >= 0">
-                                    {{ product.number_left }} restants
-                                </ng-container>
-
-                                <ng-container *ngIf="product.number_left < 0">
-                                    Stocks illimités
-                                </ng-container>
-                            </td>
-                            <td class="text-right">
-                                <strong>{{ product.price }}€</strong>
-                            </td>
-                            <td>
-                                <ng-container *ngIf="product.orderable_online && product.number_left != 0 && getQuantity(product) == 0">
-                                    <button class="btn btn-success" (click)="add(product)">
-                                        <i class="fe fe-shopping-cart"></i> Acheter
-                                    </button>
-                                </ng-container>
-
-                                <ng-container *ngIf="getQuantity(product) > 0">
-                                    <input
-                                        type="number" class="form-control w-8"
-                                        [ngModel]="getQuantity(product)"
-                                        (change)="setQuantity(product, $event.target.value)"
-                                    >
-                                </ng-container>
-                            </td>
-                        </tr>
+                            <tr marketplace-product
+                                *ngFor="let product of inBasket(marketplace.products)"
+                                [product]="product"
+                                [basketQuantity]="getQuantity(product)"
+                                [displayImage]="true"
+                                [displayDescription]="true"
+                                (addProduct)="add(product)"
+                                (changeQuantity)="setQuantity(product, $event)"
+                            ></tr>
                         </tbody>
                     </table>
 

@@ -22,6 +22,10 @@ import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-man
 import {ViewForumComponent} from "./forum/view-forum/view-forum.component"
 import {ViewThemeComponent} from "./forum/view-theme/view-theme.component"
 import {ViewTopicComponent} from "./forum/view-topic/view-topic.component"
+import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
+import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
+import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
+import {LibraryManagerLoansComponent} from "./library/library-manager-loans/library-manager-loans.component";
 import { AssociationFilesystemAddfileComponent } from "./associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component";
 import { AssociationFilesystemFileComponent } from "./associations/association-filesystem/association-filesystem-file/association-filesystem-file.component";
 
@@ -50,6 +54,11 @@ const routes: Routes = [
     {path: 'marketplace/:id/manager/counter', component: MarketplaceManagerCounterComponent},
     {path: 'marketplace/:id/manager/fundings', component: MarketplaceManagerFundingsComponent},
 
+    { path: 'library/:id', component: LibraryCatalogComponent},
+    { path: 'library/:id/loans', component: LibraryLoansComponent},
+    { path: 'library/:id/manager/catalog', component: LibraryManagerCatalogComponent},
+    { path: 'library/:id/manager/loans', component: LibraryManagerLoansComponent},
+
     {path: 'users', component: FacebookComponent},
     {path: 'user/:id', component: ProfileShowComponent},
     {path: 'user/:id/edit', component: ProfileEditComponent},
@@ -59,7 +68,6 @@ const routes: Routes = [
     {path: 'forum', component: ViewForumComponent},
     {path: 'forum/theme/:theme', component: ViewThemeComponent},
     {path: 'forum/topic/:topic', component: ViewTopicComponent}
-
 ];
 
 @NgModule({

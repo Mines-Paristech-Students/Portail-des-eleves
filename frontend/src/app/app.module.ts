@@ -1,65 +1,72 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, LOCALE_ID} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ApiService} from './api.service';
-import {CookieService} from 'ngx-cookie-service';
-import {registerLocaleData} from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 
-import {AngularMarkdownEditorModule} from 'angular-markdown-editor';
-import {MarkdownModule, MarkedOptions} from 'ngx-markdown';
-
-import {NgSelectModule} from '@ng-select/ng-select';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
-import {LoginComponent} from './login/login.component';
-import {NavbarComponent} from './navbar/navbar.component';
-import {AllAssociationsComponent} from './associations/all-associations/all-associations.component';
-
-import {ProfileShowComponent} from './profile/profile-show/profile-show.component';
-import {ProfileEditComponent} from './profile/profile-edit/profile-edit.component';
-
-import {PasswordEditComponent} from './password-edit/password-edit.component';
-import {FacebookComponent} from './facebook/facebook.component';
-import {PhotoComponent} from './profile/photo/photo.component';
-import {AssociationHomepageComponent} from "./associations/association-homepage/association-homepage.component";
-import {AssociationSidebarComponent} from "./associations/association-sidebar/association-sidebar.component";
-import {AssociationPageComponent} from "./associations/association-page/association-page.component";
-import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
-import {AssociationFilesystemBrowserComponent} from "./associations/association-filesystem/association-filesystem-browser/association-filesystem-browser.component";
-import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
-import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
-import {MarketplaceSidebarComponent} from "./marketplace/marketplace-sidebar/marketplace-sidebar.component";
-import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
-import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/marketplace-history.component";
-import {PaginationControlsComponent} from "./pagination-controls/pagination-controls.component";
-import {MarketplaceManagerOrdersComponent} from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
-import {MarketplaceManagerCatalogComponent} from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
-import {MarketplaceManagerCounterComponent} from "./marketplace/marketplace-manager-counter/marketplace-manager-counter.component";
-import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
-import {BsDropdownModule} from "ngx-bootstrap";
-import {RequestCacheService} from "./request-cache.service";
-import {CachingInterceptor} from "./caching-interceptor";
-import {AuthInterceptor} from "./auth-interceptor";
-import {WidgetsComponent} from './widgets/widgets.component';
-import {WidgetBirthdaysComponent} from './widgets/birthdays/birthdays.component';
-import {WidgetPollComponent} from './widgets/poll/poll.component';
-import {WidgetChatComponent} from './widgets/chat/chat.component';
-import {ViewForumComponent} from './forum/view-forum/view-forum.component';
-import {ViewThemeComponent} from './forum/view-theme/view-theme.component';
-import {ViewTopicComponent} from './forum/view-topic/view-topic.component';
-import {TimelineComponent} from './timeline/timeline.component';
-import {AssociationFilesystemFileComponent} from './associations/association-filesystem/association-filesystem-file/association-filesystem-file.component';
-import {AssociationFilesystemAddfileComponent} from './associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component';
-import {AssociationFilesystemBreadcrumbComponent} from './associations/association-filesystem/association-filesystem-breadcrumb/association-filesystem-breadcrumb.component';
-import {AssociationFilesystemMoveComponent} from './associations/association-filesystem/association-filesystem-move/association-filesystem-move.component';
 // alternatively if you only need to include a subset of languages
+import {registerLocaleData} from "@angular/common";
+import {AllAssociationsComponent} from "./associations/all-associations/all-associations.component";
+import {AppComponent} from "./app.component";
+import {AssociationFilesystemAddfileComponent} from "./associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component";
+import {AssociationFilesystemBreadcrumbComponent} from "./associations/association-filesystem/association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
+import {AssociationFilesystemBrowserComponent} from "./associations/association-filesystem/association-filesystem-browser/association-filesystem-browser.component";
+import {AssociationFilesystemFileComponent} from "./associations/association-filesystem/association-filesystem-file/association-filesystem-file.component";
+import {LOCALE_ID, NgModule} from "@angular/core";
+import {AssociationPageComponent} from "./associations/association-page/association-page.component";
+import {CookieService} from "ngx-cookie-service";
+import {PhotoComponent} from "./profile/photo/photo.component";
+import {NgxPaginationModule} from "ngx-pagination";
+import {HomeComponent} from "./home/home.component";
+import {AssociationSidebarComponent} from "./associations/association-sidebar/association-sidebar.component";
+import {WidgetBirthdaysComponent} from "./widgets/birthdays/birthdays.component";
+import {BsDropdownModule} from "ngx-bootstrap";
+import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
+import {NavbarComponent} from "./navbar/navbar.component";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ViewTopicComponent} from "./forum/view-topic/view-topic.component";
+import {WidgetsComponent} from "./widgets/widgets.component";
+import {AngularMarkdownEditorModule} from "angular-markdown-editor";
+import {PasswordEditComponent} from "./password-edit/password-edit.component";
+import {ViewForumComponent} from "./forum/view-forum/view-forum.component";
+import {ProfileEditComponent} from "./profile/profile-edit/profile-edit.component";
+import {AssociationMembersComponent} from "./associations/association-members/association-members.component";
+import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
+import {FacebookComponent} from "./facebook/facebook.component";
+import {CachingInterceptor} from "./caching-interceptor";
+import {NgSelectModule} from "@ng-select/ng-select";
+import {DragulaModule} from "ng2-dragula";
+import {WidgetPollComponent} from "./widgets/poll/poll.component";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {AssociationSettingsComponent} from "./associations/association-settings/association-settings.component";
+import {MarketplaceManagerCatalogComponent} from "./marketplace/marketplace-manager-catalog/marketplace-manager-catalog.component";
+import {ApiService} from "./api.service";
+import {MarketplaceBasketComponent} from "./marketplace/marketplace-basket/marketplace-basket.component";
+import {MarketplaceManagerFundingsComponent} from "./marketplace/marketplace-manager-fundings/marketplace-manager-fundings.component";
+import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog.component";
+import {WidgetChatComponent} from "./widgets/chat/chat.component";
+import {LibrarySidebarComponent} from "./library/library-sidebar/library-sidebar.component";
+import {NotifierModule} from "angular-notifier";
+import {AuthInterceptor} from "./auth-interceptor";
+import {LoginComponent} from "./login/login.component";
+import {ProfileShowComponent} from "./profile/profile-show/profile-show.component";
+import {MarketplaceHistoryComponent} from "./marketplace/marketplace-history/marketplace-history.component";
+import {AssociationHomepageComponent} from "./associations/association-homepage/association-homepage.component";
+import {AppRoutingModule} from "./app-routing.module";
+import {MarketplaceManagerOrdersComponent} from "./marketplace/marketplace-manager-orders/marketplace-manager-orders.component";
+import {MarketplaceProductComponent} from "./marketplace/marketplace-product.component";
+import {DebounceChangeDirective} from "./facebook/debounce-change.directive";
+import {MarketplaceHomeComponent} from "./marketplace/marketplace-home/marketplace-home.component";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {LibraryManagerLoansComponent} from "./library/library-manager-loans/library-manager-loans.component";
+import {RequestCacheService} from "./request-cache.service";
+import {MarkdownModule, MarkedOptions} from "ngx-markdown";
+import {BrowserModule} from "@angular/platform-browser";
+import {ViewThemeComponent} from "./forum/view-theme/view-theme.component";
+import {AssociationFilesystemMoveComponent} from "./associations/association-filesystem/association-filesystem-move/association-filesystem-move.component";
+import {MarketplaceSidebarComponent} from "./marketplace/marketplace-sidebar/marketplace-sidebar.component";
+import {TimelineComponent} from "./timeline/timeline.component";
+import {MarketplaceManagerCounterComponent} from "./marketplace/marketplace-manager-counter/marketplace-manager-counter.component";
+
+import localeFr from "@angular/common/locales/fr";
+import {PaginationControlsComponent} from "./pagination-controls/pagination-controls.component";
+
+
 var hljs: any;
 
 export function highlightJsFactory() {
@@ -70,53 +77,61 @@ registerLocaleData(localeFr);
 
 @NgModule({
     declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,
-        NavbarComponent,
-        ProfileShowComponent,
-        ProfileEditComponent,
-        PasswordEditComponent,
-        FacebookComponent,
-        PhotoComponent,
         AllAssociationsComponent,
+        AppComponent,
+        AssociationFilesystemAddfileComponent,
+        AssociationFilesystemBreadcrumbComponent,
+        AssociationFilesystemBrowserComponent,
+        AssociationFilesystemFileComponent,
+        AssociationFilesystemMoveComponent,
         AssociationHomepageComponent,
-        AssociationSidebarComponent,
-        AssociationPageComponent,
         AssociationMembersComponent,
+        AssociationPageComponent,
         AssociationSettingsComponent,
-        MarketplaceHomeComponent,
-        MarketplaceSidebarComponent,
+        AssociationSidebarComponent,
+        DebounceChangeDirective,
+        FacebookComponent,
+        HomeComponent,
+        LibraryCatalogComponent,
+        LibraryLoansComponent,
+        LibraryManagerCatalogComponent,
+        LibraryManagerLoansComponent,
+        LibrarySidebarComponent,
+        LoginComponent,
         MarketplaceBasketComponent,
         MarketplaceHistoryComponent,
-        PaginationControlsComponent,
-        MarketplaceManagerOrdersComponent,
+        MarketplaceHomeComponent,
         MarketplaceManagerCatalogComponent,
         MarketplaceManagerCounterComponent,
         MarketplaceManagerFundingsComponent,
-        WidgetsComponent,
-        WidgetBirthdaysComponent,
-        WidgetChatComponent,
-        WidgetPollComponent,
+        MarketplaceManagerOrdersComponent,
+        MarketplaceProductComponent,
+        MarketplaceSidebarComponent,
+        NavbarComponent,
+        PaginationControlsComponent,
+        PasswordEditComponent,
+        PhotoComponent,
+        ProfileEditComponent,
+        ProfileShowComponent,
+        TimelineComponent,
         ViewForumComponent,
         ViewThemeComponent,
         ViewTopicComponent,
-        TimelineComponent,
-        AssociationFilesystemBrowserComponent,
-        AssociationFilesystemFileComponent,
-        AssociationFilesystemAddfileComponent,
-        AssociationFilesystemBreadcrumbComponent,
-        AssociationFilesystemMoveComponent
+        WidgetBirthdaysComponent,
+        WidgetChatComponent,
+        WidgetPollComponent,
+        WidgetsComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        NgSelectModule,
         HttpClientModule,
         BsDropdownModule.forRoot(),
         AngularMarkdownEditorModule.forRoot({iconlibrary: 'fa'}),
+        NgSelectModule,
+        HttpClientModule,
         MarkdownModule.forRoot({
             markedOptions: {
                 provide: MarkedOptions,
@@ -128,8 +143,49 @@ registerLocaleData(localeFr);
                 }
             }
         }),
+        NotifierModule.withConfig({
+            position: {
+                horizontal: {
+                    position: 'right',
+                    distance: 12
+                },
+                vertical: {
+                    position: 'bottom',
+                    distance: 12,
+                    gap: 10
+                }
+            },
+            theme: 'material',
+            behaviour: {
+                autoHide: 5000,
+                onClick: 'hide',
+                onMouseover: 'pauseAutoHide',
+                showDismissButton: true,
+                stacking: 6
+            },
+            animations: {
+                enabled: true,
+                show: {
+                    preset: 'slide',
+                    speed: 500,
+                    easing: 'ease'
+                },
+                hide: {
+                    preset: 'slide',
+                    speed: 500,
+                    easing: 'ease',
+                    offset: 50
+                },
+                shift: {
+                    speed: 500,
+                    easing: 'ease'
+                },
+                overlap: 250
+            }
+        }),
         NgxPaginationModule,
-        NgbModule
+        NgbModule,
+        DragulaModule.forRoot()
     ],
     providers: [
         ApiService,
@@ -139,12 +195,15 @@ registerLocaleData(localeFr);
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: "fr"}
     ],
-    bootstrap: [AppComponent],
-    entryComponents: [
-        WidgetBirthdaysComponent,
-        WidgetChatComponent,
-        WidgetPollComponent
-    ]
+    bootstrap:
+        [AppComponent],
+    entryComponents:
+        [
+            WidgetBirthdaysComponent,
+            WidgetChatComponent,
+            WidgetPollComponent
+        ]
 })
+
 export class AppModule {
 }
