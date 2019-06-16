@@ -43,7 +43,7 @@ export class AssociationMembersComponent implements OnInit {
                 }
             },
             error => this.error = error.message
-        )
+        );
         this.api.get("associations/" + id + "/").subscribe(
             association => {
                 this.association = association;
@@ -84,7 +84,7 @@ export class AssociationMembersComponent implements OnInit {
 
             this.api.patch(`groups/batch_add_update/`, {"groups" :groups, "association": this.association.id}).subscribe(
                 res => {
-                    this.status = "<span class='text-success'>Groupes mis à jour</span>"
+                    this.status = "<span class='text-success'>Groupes mis à jour</span>";
                     this.editing = false;
                     this.association = res
                 },

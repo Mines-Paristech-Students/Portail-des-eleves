@@ -4,9 +4,9 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { ApiService } from "../../../api.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
+import {ApiService} from "../../../api.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-association-filesystem-addfile',

@@ -16,6 +16,14 @@ class Folder(models.Model):
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True)
 
+    def number_of_elements(self):
+        res = self.files.count()
+
+        for c in self.children.all():
+            res += c.number_of_elements()
+
+        return res
+
 
 class File(models.Model):
     id = models.AutoField(primary_key=True)

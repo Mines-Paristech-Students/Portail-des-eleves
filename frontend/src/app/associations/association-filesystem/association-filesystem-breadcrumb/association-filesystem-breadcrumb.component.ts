@@ -1,5 +1,5 @@
-import { Component, Input, OnInit} from '@angular/core';
-import { ApiService } from "../../../api.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {ApiService} from "../../../api.service";
 
 @Component({
     selector: 'association-filesystem-breadcrumb',

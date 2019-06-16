@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiService } from "../../../api.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AssociationFilesystemBreadcrumbComponent } from "../association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ApiService} from "../../../api.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AssociationFilesystemBreadcrumbComponent} from "../association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
 
 @Component({
     selector: 'app-association-filesystem-file',
@@ -20,13 +20,12 @@ export class AssociationFilesystemFileComponent implements OnInit {
 
     error = "";
 
-    @ViewChild(AssociationFilesystemBreadcrumbComponent) breadcrumb ;
+    @ViewChild(AssociationFilesystemBreadcrumbComponent) breadcrumb;
 
     constructor(private api: ApiService,
                 private route: ActivatedRoute,
                 private router: Router) {
     }
-
 
 
     ngOnInit() {
@@ -87,8 +86,10 @@ export class AssociationFilesystemFileComponent implements OnInit {
 
 
     handleDeleteButton() {
-        this.deleteFile(this.file);
-        this.exitFile()
+        if (confirm("Supprimer le fichier ? Cette action est irréversible")) {
+            this.deleteFile(this.file);
+            this.exitFile()
+        }
     }
 
     handleSaveButton() {
@@ -96,7 +97,7 @@ export class AssociationFilesystemFileComponent implements OnInit {
         this.exitFile();
     }
 
-    handleFileMoved($event){
+    handleFileMoved($event) {
         this.file.folder = $event.folder;
         this.breadcrumb.folder = null;
         this.breadcrumb.refreshDisplay();

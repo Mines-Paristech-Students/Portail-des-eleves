@@ -17,8 +17,8 @@
             <!-- File viewing mode. -->
             <div class="col-md-9">
                 <association-filesystem-breadcrumb
-                    [association]="association"
-                    [selected_file]="file"
+                        [association]="association"
+                        [selected_file]="file"
                 ></association-filesystem-breadcrumb>
 
                 <!-- Check whether the file is being edited. -->
@@ -39,8 +39,8 @@
                                 </a>
 
                                 <app-association-filesystem-move
-                                    [file]="file"
-                                    (movedFile)="handleFileMoved($event)"
+                                        [file]="file"
+                                        (movedFile)="handleFileMoved($event)"
                                 ></app-association-filesystem-move>
 
                                 <button class="btn btn-primary btn-sm ml-2"
@@ -53,15 +53,17 @@
                             <p>{{ file.description }}</p>
                         </div>
 
-                        <p class="card-body" *ngIf="file.type.split('/')[0] == 'image'">
-                            <img src="{{file.file}}" alt="{{file.name}}">
-                        </p>
+                        <ng-container *ngIf="file.type && file.type.length > 0">
+                            <p class="card-body" *ngIf="file.type.split('/')[0] == 'image'">
+                                <img src="{{file.file}}" alt="{{file.name}}">
+                            </p>
 
-                        <p class="card-body" *ngIf="file.type.split('/')[0] == 'video'">
-                            <video controls>
-                                <source src="{{file.file}}" type="{{file.type}}">
-                            </video>
-                        </p>
+                            <p class="card-body" *ngIf="file.type.split('/')[0] == 'video'">
+                                <video controls>
+                                    <source src="{{file.file}}" type="{{file.type}}">
+                                </video>
+                            </p>
+                        </ng-container>
 
                         <p class="card-footer">
                             Mis en ligne le {{ file.uploaded_on | date:"dd/MM/yyyy" }} par {{ file.uploaded_by }}.
@@ -96,3 +98,4 @@
             </div>
         </div>
     </div>
+</div>

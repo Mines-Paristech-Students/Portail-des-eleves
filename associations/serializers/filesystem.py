@@ -2,8 +2,7 @@ import mimetypes
 
 from rest_framework import serializers
 
-from associations.models import Folder, File, Association
-from associations.serializers import AssociationsShortSerializer
+from associations.models import Folder, File
 
 
 class FolderShortSerializer(serializers.ModelSerializer):
@@ -16,7 +15,6 @@ class FolderShortSerializer(serializers.ModelSerializer):
         res["number_of_elements"] = instance.children.count() + instance.files.count()
 
         return res
-
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -77,7 +75,7 @@ class FolderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["number_of_elements"] = instance.children.count() + instance.files.count()
+        res["number_of_elements"] = instance.number_of_elements()
 
         res["filiation"] = []
 

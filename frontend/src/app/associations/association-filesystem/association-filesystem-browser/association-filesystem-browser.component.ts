@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from "../../../api.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {ApiService} from "../../../api.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-filesystem',
@@ -43,7 +43,7 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
                                                  // displaying files that were just deleted in the database
 
         if (folderId == null) {
-            this.api.get(`associations/${this.association.id}/filesystem/root` + uniqToken).subscribe(
+            this.api.get(`associations/${this.association_id}/filesystem/root` + uniqToken).subscribe(
                 folder => this.folder = folder,
                 error => this.error = error
             )
@@ -56,11 +56,11 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
     }
 
     openFolder(folder) {
-        this.router.navigateByUrl(`associations/${this.association.id}/files/${folder.id}`);
+        this.router.navigateByUrl(`associations/${this.association_id}/files/${folder.id}`);
     }
 
     openFile(file) {
-        this.router.navigateByUrl(`associations/${this.association.id}/file/${file.id}`);
+        this.router.navigateByUrl(`associations/${this.association_id}/file/${file.id}`);
     }
 
     createFolder() {
@@ -70,7 +70,7 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
             this.api.post("folder/", {
                 "name": name,
                 "parent": this.folder_id,
-                "association": this.folder.association,
+                "association": this.association_id,
                 "children": [],
                 "files": []
             }).subscribe(
@@ -81,9 +81,16 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
     }
 
     deleteFolder() {
-        if(confirm("Supprimer le dossier ? Tous ses élements seront transférés dans le dossier parent")){
+        if (confirm("Supprimer le dossier ? Tous ses élements seront transférés dans le dossier parent")) {
             this.api.delete(`folder/${this.folder_id}/`).subscribe(
-                res =>  this.router.navigateByUrl(`associations/${this.association.id}/files/${this.folder.parent}`),
+                res => {
+                    let folder = "";
+                    if (this.folder.parent) {
+                        folder = this.folder.parent;
+                    }
+
+                    this.router.navigateByUrl(`associations/${this.association_id}/files/${folder}`)
+                },
                 err => this.error = err.message
             )
         }

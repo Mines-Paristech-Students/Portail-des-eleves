@@ -18,16 +18,17 @@
             <div class="col-md-9">
                 <!-- Folder view. -->
                 <association-filesystem-breadcrumb
-                    [association]="association"
-                    [folder]="folder"
+                        [association]="association"
+                        [folder]="folder"
                 ></association-filesystem-breadcrumb>
 
                 <!-- Not adding a file: display the folder. -->
                 <div class="card">
-                    <!-- Add file button. -->
                     <div class="card-header">
+
+                        <!-- Actions on folders -->
+                        <span class="fe fe-folder-plus mr-2" (click)="createFolder()"></span>
                         <div *ngIf="folder.id">
-                            <span class="fe fe-folder-plus mr-2" (click)="createFolder()"></span>
                             <span class="fe fe-folder-minus mr-2" (click)="deleteFolder()"></span>
                             <span class="fe fe-edit" (click)="editFolderName()"></span>
                         </div>

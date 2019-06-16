@@ -8,7 +8,7 @@ import {ApiService} from "../../api.service";
 })
 export class AssociationSidebarComponent implements OnInit {
 
-    @Input() association: any
+    @Input() association: any;
 
     constructor(private apiService: ApiService) { }
 

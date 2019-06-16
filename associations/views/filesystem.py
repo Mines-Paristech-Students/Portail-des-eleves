@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import JsonResponse
 from django_filters import rest_framework as filters
 from rest_framework import status
@@ -28,6 +29,27 @@ class FolderViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ("association", "parent")
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        files = File.objects.filter(folder=instance)
+        children = Folder.objects.filter(parent=instance)
+
+        parent = instance.parent
+
+        with transaction.atomic():
+            for f in files:
+                f.folder = parent
+                f.save()
+
+            for c in children:
+                c.parent = parent
+                c.save()
+
+            self.perform_destroy(instance)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class FileViewSet(viewsets.ModelViewSet):
