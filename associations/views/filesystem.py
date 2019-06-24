@@ -8,10 +8,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from associations.models import Folder, File
+from associations.permissions import IsAssociationMember
 from associations.serializers.filesystem import FolderSerializer, FileSerializer, SubmitFileSerializer
 
 
 class FileSystemView(APIView):
+
+    permission_classes = (IsAssociationMember,)
+
     def get(self, request, association_id, format=None):
         folders = Folder.objects.filter(association__id=association_id, parent=None)
         files = File.objects.filter(association__id=association_id, folder=None)
@@ -29,6 +33,8 @@ class FolderViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = ("association", "parent")
+
+    permission_classes = (IsAssociationMember,)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -60,6 +66,8 @@ class FileViewSet(viewsets.ModelViewSet):
     filterset_fields = ("association", "folder")
 
     parser_classes = (MultiPartParser,)
+
+    permission_classes = (IsAssociationMember,)
 
     def create(self, request, *args, **kwargs):
         serializer = SubmitFileSerializer(data=request.data, context={'request': request})
