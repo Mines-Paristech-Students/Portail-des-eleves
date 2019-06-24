@@ -66,6 +66,34 @@ class CanEditNews(BasePermission):
         return role.news
 
 
+class CanEditFiles(BasePermission):
+    message = 'Editing files is not allowed.'
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        if request.method == 'DELETE':
+            news_id = view.kwargs.get('pk', -1)
+            try:
+                news = News.objects.get(pk=news_id)
+            except News.DoesNotExist:
+                # Let it fail with a Page Not Found Error later
+                return True
+
+            association = news.association
+        else:
+            try:
+                association = request.data['association']
+            except KeyError:
+                return False
+
+        role = _get_role_for_user(request.user, association)
+        if not role:
+            return False
+        return role.news
+
+
 class IsAssociationMember(BasePermission):
     message = "Editing association is not allowed."
 
@@ -81,7 +109,8 @@ class IsAssociationMember(BasePermission):
             role = _get_role_for_user(user_id, association_id)
             return role is not None
 
-        return bool(request.user) and bool(request.user.is_authenticated) and bool(request.user.is_admin) and bool(request.user.is_staff)
+        return bool(request.user) and bool(request.user.is_authenticated) and bool(request.user.is_admin) and bool(
+            request.user.is_staff)
 
     def has_object_permission(self, request, view, obj):
 

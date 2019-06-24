@@ -276,5 +276,25 @@
       "uploaded_by":"17bocquet",
       "association": "bde"
     }
+  },
+  {
+    "model": "associations.role",
+    "pk": 1,
+    "fields": {
+      "user": "17bocquet",
+      "association": "bde",
+      "role": "Programmeur",
+      "is_admin": true
+    }
+  },
+  {
+    "model": "associations.role",
+    "pk": 2,
+    "fields": {
+      "user": "17bocquet",
+      "association": "biero",
+      "role": "Programmeur / Brasseur",
+      "is_admin": true
+    }
   }
 ]
