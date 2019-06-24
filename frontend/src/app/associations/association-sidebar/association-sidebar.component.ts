@@ -6,12 +6,8 @@ import {ApiService} from "../../api.service";
     templateUrl: './association-sidebar.component.html',
     styleUrls: ['./association-sidebar.component.scss']
 })
-export class AssociationSidebarComponent implements OnInit {
+export class AssociationSidebarComponent  {
 
     @Input() association: any;
-
-    constructor(private apiService: ApiService) { }
-
-    ngOnInit() {}
 
 }
