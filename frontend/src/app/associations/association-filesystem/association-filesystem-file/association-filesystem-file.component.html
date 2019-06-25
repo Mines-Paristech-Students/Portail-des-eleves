@@ -38,14 +38,17 @@
                                     Télécharger
                                 </a>
 
-                                <app-association-filesystem-move
-                                        [file]="file"
-                                        (movedFile)="handleFileMoved($event)"
-                                ></app-association-filesystem-move>
+                                <ng-container *ngIf="this.role.hasPermission('files') | async">
+                                    <app-association-filesystem-move
+                                            [file]="file"
+                                            (movedFile)="handleFileMoved($event)"
+                                    ></app-association-filesystem-move>
 
-                                <button class="btn btn-primary btn-sm ml-2"
-                                        (click)="handleEditButton()">Modifier
-                                </button>
+                                    <button class="btn btn-primary btn-sm ml-2"
+                                            (click)="handleEditButton()">Modifier
+                                    </button>
+
+                                </ng-container>
                             </div>
                         </div>
 

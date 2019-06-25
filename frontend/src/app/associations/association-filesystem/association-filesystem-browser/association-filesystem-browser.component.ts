@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../../../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {GetRoleService} from "../../get-role.service";
 
 @Component({
     selector: 'app-filesystem',
     templateUrl: './association-filesystem-browser.component.html',
-    styleUrls: ['./association-filesystem-browser.component.scss']
+    styleUrls: ['./association-filesystem-browser.component.scss'],
+    providers: [GetRoleService]
+
 })
 export class AssociationFilesystemBrowserComponent implements OnInit {
     error: string = "";
@@ -15,7 +18,11 @@ export class AssociationFilesystemBrowserComponent implements OnInit {
     folder_id: number;
     folder: any;
 
-    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) {
+    constructor(
+        private api: ApiService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private role: GetRoleService) {
     }
 
     ngOnInit() {

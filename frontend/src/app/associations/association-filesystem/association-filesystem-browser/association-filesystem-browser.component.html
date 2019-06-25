@@ -24,27 +24,28 @@
 
                 <!-- Not adding a file: display the folder. -->
                 <div class="card">
-                    <div class="card-header">
+                    <ng-container *ngIf="this.role.hasPermission('files') | async">
+                        <div class="card-header">
+                            <!-- Actions on folders -->
+                            <span class="fe fe-folder-plus mr-2" (click)="createFolder()"></span>
+                            <div *ngIf="folder.id">
+                                <span class="fe fe-folder-minus mr-2" (click)="deleteFolder()"></span>
+                                <span class="fe fe-edit" (click)="editFolderName()"></span>
+                            </div>
 
-                        <!-- Actions on folders -->
-                        <span class="fe fe-folder-plus mr-2" (click)="createFolder()"></span>
-                        <div *ngIf="folder.id">
-                            <span class="fe fe-folder-minus mr-2" (click)="deleteFolder()"></span>
-                            <span class="fe fe-edit" (click)="editFolderName()"></span>
+                            <div class="card-options">
+                                <a class="btn btn-primary btn-sm ml-2"
+                                   *ngIf="folder.id"
+                                   routerLink="/associations/{{association.id}}/files/{{folder.id}}/add"
+                                >Ajouter un fichier</a>
+
+                                <a class="btn btn-primary btn-sm ml-2"
+                                   *ngIf="!folder.id"
+                                   routerLink="/associations/{{association.id}}/files/add/root"
+                                >Ajouter un fichier</a>
+                            </div>
                         </div>
-
-                        <div class="card-options">
-                            <a class="btn btn-primary btn-sm ml-2"
-                               *ngIf="folder.id"
-                               routerLink="/associations/{{association.id}}/files/{{folder.id}}/add"
-                            >Ajouter un fichier</a>
-
-                            <a class="btn btn-primary btn-sm ml-2"
-                               *ngIf="!folder.id"
-                               routerLink="/associations/{{association.id}}/files/add/root"
-                            >Ajouter un fichier</a>
-                        </div>
-                    </div>
+                    </ng-container>
 
                     <!-- Check whether the folder is empty. -->
                     <ng-container

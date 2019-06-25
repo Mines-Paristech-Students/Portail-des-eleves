@@ -2,11 +2,13 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from "../../../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AssociationFilesystemBreadcrumbComponent} from "../association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
+import {GetRoleService} from "../../get-role.service";
 
 @Component({
     selector: 'app-association-filesystem-file',
     templateUrl: './association-filesystem-file.component.html',
-    styleUrls: ['./association-filesystem-file.component.scss']
+    styleUrls: ['./association-filesystem-file.component.scss'],
+    providers: [GetRoleService]
 })
 export class AssociationFilesystemFileComponent implements OnInit {
 
@@ -24,13 +26,15 @@ export class AssociationFilesystemFileComponent implements OnInit {
 
     constructor(private api: ApiService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private role: GetRoleService) {
     }
 
 
     ngOnInit() {
+
         this.route.params.subscribe(
-            (params) => {
+            params => {
                 this.association_id = params['id'];
                 this.file_id = params['file_id'];
 
@@ -49,6 +53,8 @@ export class AssociationFilesystemFileComponent implements OnInit {
                         console.log(error);
                     }
                 );
+
+
             }
         );
     }
