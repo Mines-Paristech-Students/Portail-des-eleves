@@ -1,3 +1,4 @@
+from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework_bulk.generics import BulkModelViewSet
 
@@ -12,6 +13,9 @@ class RoleViewSet(BulkModelViewSet):
     queryset = Role.objects.all()
     model = Role
     permission_classes = (IsAssociationMember,)
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('user', 'association')
 
     def get_queryset(self):
         queryset = Role.objects.all()

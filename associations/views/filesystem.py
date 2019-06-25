@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from associations.models import Folder, File
-from associations.permissions import IsAssociationMember, CanEditFiles
+from associations.permissions import CanEditFiles
 from associations.serializers.filesystem import FolderSerializer, FileSerializer, SubmitFileSerializer
 
 

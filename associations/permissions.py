@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product
+from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File
 
 
 def _get_role_for_user(user, association):
@@ -73,26 +73,40 @@ class CanEditFiles(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'DELETE':
-            news_id = view.kwargs.get('pk', -1)
-            try:
-                news = News.objects.get(pk=news_id)
-            except News.DoesNotExist:
-                # Let it fail with a Page Not Found Error later
-                return True
-
-            association = news.association
-        else:
-            try:
+        if request.method == 'CREATE':
+            if 'association' in request.data:
                 association = request.data['association']
-            except KeyError:
+            else:
                 return False
 
-        role = _get_role_for_user(request.user, association)
-        if not role:
-            return False
-        return role.news
+            role = _get_role_for_user(request.user, association)
 
+            if not role:
+                return False
+
+            return role.files
+
+        return True
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in SAFE_METHODS:
+            return True
+
+        association = None
+        if isinstance(obj, File):
+            association = obj.association
+        elif isinstance(obj, Folder):
+            association = obj.association
+        else:
+            return True
+
+        role = _get_role_for_user(request.user, association)
+
+        if not role or association is None:
+            return False
+
+        return role.files
 
 class IsAssociationMember(BasePermission):
     message = "Editing association is not allowed."
