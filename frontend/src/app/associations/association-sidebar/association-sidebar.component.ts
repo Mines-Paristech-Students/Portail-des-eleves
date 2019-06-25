@@ -1,5 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {ApiService} from "../../api.service";
+import {Component, Input} from '@angular/core';
 
 @Component({
     selector: 'association-sidebar',

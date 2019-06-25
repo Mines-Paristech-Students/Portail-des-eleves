@@ -1,9 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
 import {ApiService} from "../../../api.service";
 import {ActivatedRoute, Router} from "@angular/router";

@@ -108,6 +108,7 @@ class CanEditFiles(BasePermission):
 
         return role.files
 
+
 class IsAssociationMember(BasePermission):
     message = "Editing association is not allowed."
 
