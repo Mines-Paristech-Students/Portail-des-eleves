@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from "../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { User } from "../models/user";
 
 /**
  * IMPORTANT NOTE
@@ -42,7 +41,7 @@ export class FacebookComponent implements OnInit {
         let url = "users/";
         let added_one_param = false;
 
-        if (params["promo"]) {
+        if (params["promo"] && params["promo"] != -1) {
             url += added_one_param ? "&" : "?"; // Ok there is no need to add a condition, be let's be consistant
             url += "promo=" + params["promo"];
             added_one_param = true;
@@ -60,7 +59,7 @@ export class FacebookComponent implements OnInit {
 
         let params = {};
         let promo = parseInt(this.search_promotion);
-        if (!isNaN(promo)) {
+        if (!isNaN(promo) && promo != -1) {
             params["promo"] = promo;
         }
 
