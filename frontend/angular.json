@@ -30,7 +30,7 @@
               "src/styles.scss",
               "node_modules/bootstrap-markdown/css/bootstrap-markdown.min.css",
               "node_modules/uikit/dist/css/uikit.min.css",
-              "node_modules/tabler-ui/dist/assets/css/tabler.css",
+              "node_modules/tabler-ui/dist/assets/css/dashboard.css",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/@ng-select/ng-select/themes/default.theme.css",
               "node_modules/angular-notifier/styles.scss"

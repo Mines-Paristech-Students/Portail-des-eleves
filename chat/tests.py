@@ -14,7 +14,7 @@ class ChatTestCase(APITestCase):
     def setUpClass(cls):
         cls.user = User.objects.create_user(
             '15veaux', 'Florian', 'Veaux', 'florian.veaux@mines-paristech.fr',
-            'password', '1996-08-28'
+            'password', '1996-08-28', 15
         )
         for i in range(0, cls.NUMBER_OF_MESSAGES):
             ChatMessage.objects.create(
