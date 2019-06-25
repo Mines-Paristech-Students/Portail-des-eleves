@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from "@angular/router";
  * IMPORTANT NOTE
  * This is NOT a component that interacts in a way or another with facebook.com (in a nutshell, the social network)
  * This component is called "facebook" because it's the closest translation of the french "trombinoscope"
+ *
+ * Suggestion for the futur: allow to filter according to more criterions, such as being an ISUPFERE or not for instance
  */
 
 @Component({
