@@ -31,9 +31,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost"] + [os.environ.get("PORTAIL_HOSTNAME")]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:4200'
-]
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:4200', # Here was the problem indeed and it has to be http://localhost:3000, not http://localhost:3000/
+)
 
 ENV = "DEV"  # Can be 'DEV' or 'PROD'
 AUTH_USER_MODEL = 'authentication.User'

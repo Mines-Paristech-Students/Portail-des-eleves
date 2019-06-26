@@ -10,7 +10,9 @@ from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystem
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
     get_promotions
 from chat.views import ChatMessageViewSet
-from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
+from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
+import polls.urls
+import subscriptions.urls
 
 router = BulkRouter()
 
@@ -46,6 +48,8 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
+    path('subscriptions/', include(subscriptions.urls)),
+    url(r'^message-forum-vote/$', NewVoteMessageView.as_view())
     path('promotions/', get_promotions, name="get_promotions"),
     path('subscriptions/', include(subscriptions.urls))
 ] + router.urls

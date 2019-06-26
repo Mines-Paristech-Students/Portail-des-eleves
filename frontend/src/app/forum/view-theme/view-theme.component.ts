@@ -3,6 +3,8 @@ import {ApiService} from "../../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Theme, Topic} from "../../models/forum";
 import {User} from "../../models/user";
+import { MarkdownService } from 'ngx-markdown';
+import { EditorOption } from 'angular-markdown-editor';
 
 @Component({
   selector: 'app-view-theme',
@@ -22,16 +24,15 @@ export class ViewThemeComponent implements OnInit {
 	user: User;
 	
 	new_topic: Topic;
-	first_message: string;
+	first_message: any;
+	editorOptions: any;
 
 	show_new_topic: false ;
 
-    froalaOptions = {
-        pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "table", "url", "wordPaste"],
-        //pluginsEnabled: ["align", "colors", "draggable", "embedly", "emoticons", "entities", "file", "image", "imageManager", "lineBreaker", "link", "lists", "paragraphFormat", "paragraphStyle", "quickInsert", "quote", "save", "table", "url", "video", "wordPaste"],
-    };
-
-    constructor(private api: ApiService, private route: ActivatedRoute, private router: Router){}
+    constructor(private api: ApiService,
+				private route: ActivatedRoute,
+				private router: Router,
+				private markdownService: MarkdownService){}
 
     ngOnInit() {
 		this.new_topic = new Topic();
@@ -53,6 +54,10 @@ export class ViewThemeComponent implements OnInit {
                 console.log(err)
             }
         );
+		
+        this.editorOptions = {
+			parser: (val) => this.markdownService.compile(val.trim())
+		};
 	}
 	
 	customInit() {
