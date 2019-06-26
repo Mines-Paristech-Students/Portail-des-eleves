@@ -60,9 +60,6 @@
                         <label class="form-label">Nouveau sujet</label>
                         <input type="text" class="input-lg form-control" placeholder="Nouveau sujet" [(ngModel)]="new_topic.name" />
                       </div>
-                    <div class="page-header mb-5">
-
-                    </div>
 
                     <label class="custom-switch col-md-6" *ngIf="!user.is_1A">
                         <input type="checkbox" class="custom-switch-input" [(ngModel)]="new_topic.is_hidden_1A" >
@@ -72,7 +69,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Premier message</label>
-                        <!--<div class="mb-3" [froalaEditor]="froalaOptions" [(froalaModel)]="first_message" ></div>-->
+                        <angular-markdown-editor textareaId="first_message" [(ngModel)]="first_message" rows="10" name="markdownText" [options]="editorOptions"></angular-markdown-editor>
                         <button type="button" class="mr-1 btn btn-success" (click)="save()">Publier</button>
                     </div>
                 </div>
