@@ -43,7 +43,7 @@ urlpatterns = [
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
     path('subscriptions/', include(subscriptions.urls)),
-    url(r'^message-forum-vote/$', NewVoteMessageView.as_view())
+    url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
     path('promotions/', get_promotions, name="get_promotions"),
     path('subscriptions/', include(subscriptions.urls))
 ] + router.urls
