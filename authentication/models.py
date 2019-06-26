@@ -5,19 +5,19 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, id, first_name, last_name, email, password, birthday):
+    def create_user(self, id, first_name, last_name, email, password, birthday, promo):
         """
         Creates and saves a User
         """
-        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=False)
+        return self._create_user(id, first_name, last_name, email, password, birthday, promo, is_admin=False)
 
-    def create_superuser(self, id, first_name, last_name, email, password, birthday):
+    def create_superuser(self, id, first_name, last_name, email, password, birthday, promo):
         """
         Creates and saves a superuser with the given email, birthday and password.
         """
-        return self._create_user(id, first_name, last_name, email, password, birthday, is_admin=True)
+        return self._create_user(id, first_name, last_name, email, password, birthday, promo, is_admin=True)
 
-    def _create_user(self, id, first_name, last_name, email, password, birthday, is_admin):
+    def _create_user(self, id, first_name, last_name, email, password, birthday, promo, is_admin):
         """
         Creates and saves a User
         """
@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
             last_name=last_name,
             email=self.normalize_email(email),
             birthday=birthday,
+            promo=promo
         )
 
         user.set_password(password)
@@ -40,7 +41,7 @@ class User(AbstractBaseUser):
     id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
     first_name = models.CharField(max_length=50, verbose_name="User first name")
     last_name = models.CharField(max_length=50, verbose_name="User last name")
-    promo = models.IntegerField(verbose_name="Promotion", default=18)
+    promo = models.IntegerField(verbose_name="Promotion")
 
     email = models.EmailField(
         verbose_name='email address',

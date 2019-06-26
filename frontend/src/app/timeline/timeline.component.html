@@ -1,25 +1,27 @@
-
-<div class="card" *ngFor="let n of news | async | paginate: { id: 'test', itemsPerPage: 1, currentPage: p, totalItems: total }; let i = index">
-  <div class="card-header">
-    <h3 class="card-title">{{ n.title }}</h3>
-    <div class="card-options">
-        Par <a routerLink="/associations/{{n.association}}/" class="mx-1"> {{n.association}} </a> {{moment(n.date).fromNow()}}
+<div class="card"
+     *ngFor="let n of news | async | paginate: { itemsPerPage: 10, currentPage: p }">
+    <div class="card-header">
+        <h3 class="card-title">{{ n.title }}</h3>
+        <div class="card-options">
+            Par <a routerLink="/associations/{{n.association}}/"
+                   class="mx-1"> {{n.association}} </a> {{moment(n.date).fromNow()}}
+        </div>
     </div>
-  </div>
-  <div class="card-body">
-    <div>
-      <markdown [data]="n.text"></markdown>
+    <div class="card-body">
+        <div>
+            <markdown [data]="n.text"></markdown>
+        </div>
     </div>
-  </div>
-  <div class="card-footer" style="display: flex;">
-    <div class="card-options">
+    <div class="card-footer" style="display: flex;">
+        <div class="card-options">
       <span>
       </span>
+        </div>
     </div>
-  </div>
 </div>
 
 <app-pagination-controls
-id='test'
-(pageChange)="getPage($event)"
+        (pageChange)="p = $event"
+        previousLabel="Précédent"
+        nextLabel="Suivant"
 ></app-pagination-controls>
