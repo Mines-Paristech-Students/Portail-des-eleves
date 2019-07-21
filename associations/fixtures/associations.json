@@ -74,7 +74,7 @@
     }
   },
   {
-    "model": "associations.permission",
+    "model": "associations.role",
     "pk": "1",
     "fields": {
       "user": "15veaux",
@@ -84,7 +84,7 @@
     }
   },
   {
-    "model": "associations.permission",
+    "model": "associations.role",
     "pk": "2",
     "fields": {
       "user": "17bocquet",
@@ -295,16 +295,6 @@
       "uploaded_on": "2017-08-24T17:41:28+00:00",
       "uploaded_by":"17bocquet",
       "association": "bde"
-    }
-  },
-  {
-    "model": "associations.role",
-    "pk": 1,
-    "fields": {
-      "user": "17bocquet",
-      "association": "bde",
-      "role": "Programmeur",
-      "is_admin": true
     }
   },
   {
