@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
-from associations.models import Library, Loan, Loanable
+from associations.models import Library, Loanable, Loan
 
 
 class LibraryShortSerializer(serializers.ModelSerializer):
@@ -48,6 +48,7 @@ class LoanSerializer(serializers.ModelSerializer):
         res["library"] = instance.loanable.library.id
         res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
         return res
+
 
 class LibrarySerializer(serializers.ModelSerializer):
     association = AssociationsShortSerializer()

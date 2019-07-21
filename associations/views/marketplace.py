@@ -2,10 +2,9 @@ import json
 from decimal import Decimal
 
 from django.http import JsonResponse
+from rest_framework import viewsets, filters, mixins
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
-from rest_framework import viewsets, filters, mixins
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from associations.models import Marketplace, Order, Product, Funding
 from associations.permissions import IsAssociationMember
@@ -32,7 +31,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsAssociationMember,)
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('product', 'status', 'buyer', 'date')
+    filter_fields = ("product", 'status', 'buyer', "date")
 
     def create(self, request, **kwargs):
 

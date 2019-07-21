@@ -65,6 +65,7 @@ class Role(models.Model):
     is_admin = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False) # archived permissions are not operating anymore but they allow to remember who was in the association
     # Permissions:
+
     static_page = models.BooleanField(default=False)
     news = models.BooleanField(default=False)
     marketplace = models.BooleanField(default=False)

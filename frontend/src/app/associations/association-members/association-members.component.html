@@ -14,7 +14,6 @@
                     <div class="btn btn-success ml-auto" *ngIf="is_editing && editing === null && !creating" (click)="finishEditing()">Terminer</div>
                 </div>
                 <p [innerHTML]="status"></p>
-
                 <div class="members-grid" *ngIf="!creating" dragula="MEMBERS" [(dragulaModel)]="roles">
                     <ng-container *ngFor="let role of roles">
                         <div *ngIf="editing == null" style="display:flex">
@@ -127,6 +126,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <!--End of creating component-->

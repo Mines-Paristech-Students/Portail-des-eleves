@@ -29,6 +29,7 @@ class RoleViewSet(BulkModelViewSet):
     def allow_bulk_destroy(self, qs, filtered):
         return False
 
+
 class AssociationViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows association to be viewed or edited.

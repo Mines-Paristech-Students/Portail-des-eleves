@@ -2,14 +2,16 @@ from django.conf.urls import url, include
 from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
-from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
-    get_promotions
-from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, LoansViewSet, LoanableViewSet,\
-    MarketplaceViewSet, ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, RoleViewSet
-from chat.views import ChatMessageViewSet
-from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
 import polls.urls
 import subscriptions.urls
+from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
+    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, PermissionViewSet, LoansViewSet, \
+    LoanableViewSet
+from associations.views import RoleViewSet
+from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
+from authentication.views import get_promotions
+from chat.views import ChatMessageViewSet
+from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
 
 router = BulkRouter()
 
@@ -22,6 +24,7 @@ router.register(r'pages', PageViewSet)
 router.register(r'news', NewsViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
+router.register(r'permissions', PermissionViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'orders', OrderViewSet)
 router.register(r'library', LibraryViewSet)

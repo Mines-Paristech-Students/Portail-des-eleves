@@ -147,7 +147,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let loan of loans | async | paginate: { itemsPerPage: 10, currentPage: p }">
+                        <tr *ngFor="let loan of loans | async | paginate: { itemsPerPage: 10, currentPage: p }">
                             <td>{{ loan.loanable.name }}</td>
                             <td class="text-center">{{ loan.loan_date | date:"dd/MM/yyy" }}</td>
                             <td class="text-center">{{ loan.user }}</td>

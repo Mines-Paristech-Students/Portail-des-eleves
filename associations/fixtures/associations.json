@@ -74,6 +74,26 @@
     }
   },
   {
+    "model": "associations.permission",
+    "pk": "1",
+    "fields": {
+      "user": "15veaux",
+      "role": "President",
+      "is_admin": true,
+      "association": "bde"
+    }
+  },
+  {
+    "model": "associations.permission",
+    "pk": "2",
+    "fields": {
+      "user": "17bocquet",
+      "role": "CTO",
+      "is_admin": true,
+      "association": "bde"
+    }
+  },
+  {
     "model": "associations.page",
     "pk": "4",
     "fields": {

@@ -128,4 +128,3 @@ export class LibraryManagerLoansComponent implements OnInit {
         }
     }
 }
-

@@ -5,47 +5,48 @@ import { BasketManagerService } from "../../marketplace/basket-manager.service";
 import { map, mergeMap, scan } from "rxjs/operators";
 
 @Component({
-  selector: "library",
-  templateUrl: "./library-catalog.component.html",
-  styleUrls: ["./library-catalog.component.scss"]
+    selector: 'library',
+    templateUrl: './library-catalog.component.html',
+    styleUrls: ['./library-catalog.component.scss']
 })
 export class LibraryCatalogComponent implements OnInit {
-  p = 0; // The current page
-  protected numberOfItems = 0;
-  loanables: any;
 
-  library: any;
-  error: any;
+    p = 0; // The current page
+    protected numberOfItems = 0 ;
+    loanables: any;
 
-  constructor(
-    private api: ApiService,
-    private route: ActivatedRoute,
-    private manager: BasketManagerService
-  ) {}
+    library: any;
+    error: any;
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      let id = params["id"];
 
-      let req = this.api.get(`library/${id}/`);
+    constructor(private api: ApiService, private route: ActivatedRoute, private manager: BasketManagerService) {
+    }
 
-      req.subscribe(
-        library => {
-          this.library = library;
-        },
-        error => {
-          this.error = error.message;
-          console.log(error);
-        }
-      );
+    ngOnInit() {
+        this.route.params.subscribe(
+            (params) => {
+                let id = params['id'];
 
-      this.loanables = req.pipe(
-        // @ts-ignore
-        map(m => m.loanables),
-        mergeMap(p => p),
-        // @ts-ignore
-        scan((acc, value) => [...acc, value], [])
-      );
-    });
-  }
+                let req = this.api.get(`library/${id}/`);
+
+                req.subscribe(
+                    library => {
+                        this.library = library;
+                    },
+                    error => {
+                        this.error = error.message;
+                        console.log(error);
+                    }
+                );
+
+                this.loanables = req.pipe(
+                    // @ts-ignore
+                    map(m => m.loanables),
+                    mergeMap(p => p),
+                    // @ts-ignore
+                    scan((acc, value) => [...acc, value], [])
+                );
+            });
+    }
+
 }

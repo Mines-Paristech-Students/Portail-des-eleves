@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
-import { DragulaService } from "ng2-dragula";
-import { Observable, pipe } from 'rxjs'
-import { map } from 'rxjs/operators'
+
+import {DragulaService} from "ng2-dragula";
+import {Observable} from 'rxjs'
+import {map} from 'rxjs/operators'
+
 @Component({
     selector: 'app-association-members',
     templateUrl: './association-members.component.html',
@@ -34,11 +36,12 @@ export class AssociationMembersComponent implements OnInit {
         ["Créer des évenements", "events"]
     ];
 
-    constructor(private api: ApiService, private route: ActivatedRoute, private dragulaService: DragulaService){}
+    constructor(private api: ApiService, private route: ActivatedRoute, private dragulaService: DragulaService) {
+    }
 
     ngOnInit() {
-        this.roles = []
-        this.creating_role = {}
+        this.roles = [];
+        this.creating_role = {};
 
         const association_id = this.route.snapshot.paramMap.get('id');
 
@@ -63,7 +66,7 @@ export class AssociationMembersComponent implements OnInit {
         );
 
         this.api.get(`roles/?association=${association_id}`).subscribe(
-            (roles:any[]) => {
+            (roles: any[]) => {
                 this.roles = roles.map(
                     el => {
                         el.editing = false
@@ -81,20 +84,20 @@ export class AssociationMembersComponent implements OnInit {
         this.ng_select_value = null;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.dragulaService.destroy("MEMBERS")
     }
 
-    startEditing(){
+    startEditing() {
         this.is_editing = true;
         this.load_more_user('')
     }
 
-    onEdit(role){
+    onEdit(role) {
         this.editing = role.id
     }
 
-    deleteRole(){
+    deleteRole() {
         let role_i = this.roles.findIndex(x => x.id === this.editing)
         let role = this.roles[role_i]
         this.api.delete(`roles/${role.id}/`).subscribe(
@@ -108,10 +111,11 @@ export class AssociationMembersComponent implements OnInit {
             }
         )
     }
-    saveSingleRole(){
+
+    saveSingleRole() {
         let role_i = this.roles.findIndex(x => x.id === this.editing)
         let data = JSON.parse(JSON.stringify(this.roles[role_i]))
-        if(this.ng_select_value !== null && this.ng_select_value.id !== data.user.id){
+        if (this.ng_select_value !== null && this.ng_select_value.id !== data.user.id) {
             delete data.id
             data.user = this.ng_select_value.id
             this.api.post('roles/', data).subscribe(
@@ -148,16 +152,15 @@ export class AssociationMembersComponent implements OnInit {
     }
 
     createRole() {
-        if(this.ng_select_value !== null){
+        if (this.ng_select_value !== null) {
             let data = JSON.parse(JSON.stringify(this.creating_role))
             data.association = this.association.id
             data.user = data.user.id
-            if(this.roles.length > 0){
+            if (this.roles.length > 0) {
                 data.rank = this.roles.reduce(function (prev, current) {
                     return (prev.rank > current.rank) ? prev : current
-                 }).rank + 1;
-            }
-            else {
+                }).rank + 1;
+            } else {
                 data.rank = 0;
             }
             this.api.post('roles/', data).subscribe(
@@ -171,7 +174,7 @@ export class AssociationMembersComponent implements OnInit {
         }
     }
 
-    finishEditing(){
+    finishEditing() {
         let role_copy = JSON.parse(JSON.stringify(this.roles));
         for (let i = 0; i < this.roles.length; i++) {
             this.roles[i].rank = i
@@ -189,20 +192,20 @@ export class AssociationMembersComponent implements OnInit {
         )
     }
 
-    addMember(){
+    addMember() {
         this.creating = true;
     }
 
-    load_more_user(event){
+    load_more_user(event) {
         this.ng_select_loading = true;
-        let known_users = []
+        let known_users = [];
         for (let i = 0; i < this.roles.length; i++) {
             const role = this.roles[i];
             known_users.push(role.user.id)
         }
         this.ng_select_users = this.api.get(`users/?startswith=${event}&quantity=10`).pipe(
             map(
-                (elements:any[]) => {
+                (elements: any[]) => {
                     return elements.filter(el => !known_users.includes(el.id))
                 }
             )
@@ -214,61 +217,8 @@ export class AssociationMembersComponent implements OnInit {
         )
     }
 
-    user_changed(event){
+    user_changed(event) {
         this.ng_select_value = event;
     }
-/*
-    stopEdit(){
-        if(this.association.groups.filter(g => g.is_admin_group).map(g => g.members.length).reduce((sum, current) => sum + current, 0) > 0) {
-            this.status = "" ;
-
-            let groups = [];
-            for(let group of this.association.groups){
-                let members = [];
-                for(let m of group.members){
-                    let id = m;
-                    if(id.hasOwnProperty("id")){
-                        id = id.id
-                    }
-
-                    members.push(id)
-                }
-                groups.push({
-                    id: group.id ? group.id : -1,
-                    members: members,
-
-                    is_admin_group: group.is_admin_group,
-                    role: group.role,
-
-                    library: group.library,
-                    marketplace: group.marketplace,
-                    news: group.news,
-                    static_page: group.static_page,
-                    vote: group.vote
-                })
-            }
-
-            this.api.patch(`groups/batch_add_update/`, {"groups" :groups, "association": this.association.id}).subscribe(
-                res => {
-                    this.status = "<span class='text-success'>Groupes mis à jour</span>"
-                    this.editing = false;
-                    this.association = res
-                },
-                err => { console.log(err) ; this.status = "<span class='text-danger'>" + err.message + "</span>" }
-            )
-        } else {
-            this.status = "<span class='text-danger'>L'association doit avoir au moins un groupe administrateur qui doit avoir au moins un membre</span>"
-        }
-    }
-
-    createGroup(){
-        this.association.groups.push({
-            role: "Nouveau groupe"
-        })
-    }
-
-    deleteGroup(group) {
-        this.association.groups.splice(this.association.groups.indexOf(group), 1)
-    }*/
 
 }
