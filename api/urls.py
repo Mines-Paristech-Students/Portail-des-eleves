@@ -13,6 +13,7 @@ from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
 import polls.urls
 import subscriptions.urls
+from rer.views import get_rer_timetable
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
     ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, PermissionViewSet, LoansViewSet, \
     LoanableViewSet
@@ -60,5 +61,6 @@ urlpatterns = [
     path('subscriptions/', include(subscriptions.urls)),
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
     path('promotions/', get_promotions, name="get_promotions"),
+    path('rer/', get_rer_timetable, name="get_rer_timetable"),
     path('subscriptions/', include(subscriptions.urls))
 ] + router.urls
