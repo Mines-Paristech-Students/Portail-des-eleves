@@ -10,6 +10,11 @@ from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystem
 from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
     get_promotions
 from chat.views import ChatMessageViewSet
+from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
+
+import polls.urls
+import subscriptions.urls
+import repartitions.urls
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
 import polls.urls
 import subscriptions.urls
@@ -59,6 +64,7 @@ urlpatterns = [
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
     path('subscriptions/', include(subscriptions.urls)),
+    path('repartitions/', include(repartitions.urls))
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
     path('promotions/', get_promotions, name="get_promotions"),
     path('rer/', get_rer_timetable, name="get_rer_timetable"),

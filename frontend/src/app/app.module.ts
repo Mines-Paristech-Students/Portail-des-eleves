@@ -61,6 +61,9 @@ import { LibrarySidebarComponent } from "./library/library-sidebar/library-sideb
 import { LibraryLoansComponent } from "./library/library-loans/library-loans.component";
 import { LibraryManagerCatalogComponent } from "./library/library-manager-catalog/library-manager-catalog.component";
 import { LibraryManagerLoansComponent } from "./library/library-manager-loans/library-manager-loans.component";
+import { RepartitionsSidebarComponent } from './repartitions/repartitions-sidebar/repartitions-sidebar.component';
+import { RepartitionsPageComponent } from './repartitions/repartitions-page/repartitions-page.component';
+import { RepartitionsCarteCampagneComponent } from './repartitions/repartitions-carte-campagne/repartitions-carte-campagne.component';
 import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
 import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
@@ -130,6 +133,9 @@ registerLocaleData(localeFr);
         WidgetChatComponent,
         WidgetPollComponent,
         WidgetsComponent,
+      RepartitionsSidebarComponent,
+    RepartitionsPageComponent,
+    RepartitionsCarteCampagneComponent
     ],
     imports: [
         BrowserModule,

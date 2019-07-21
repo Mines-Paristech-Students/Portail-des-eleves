@@ -1,0 +1,24 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div>
+        <div class="row">
+            <div class="col-md-3">
+                <repartitions-sidebar [(campagnes)]="campagnes" [(displayParameters)]="displayParameters" (onNewRequested)="onNewRequested()"></repartitions-sidebar>
+            </div>
+
+            <div class="col-md-9 align-items-center">
+                <div class="loader" *ngIf="displayParameters.shouldDisplayLoader" style="margin-right:50%;margin-left:50%;margin-bottom: 1.5rem"></div>
+              <repartitions-carte-campagne *ngFor="let cmpg of campagnes; let j = index"
+[(campagne)]="campagnes[j]" [(displayParameters)]="displayParameters" (onSubmitRequested)="onCampaignSubmitRequested($event)" (onDeletionRequested)="onCampaignDeletionRequested($event)" (onStartRequested)="onCampaignStartRequested($event)" (onPositionIncreaseRequested)="onPositionIncreaseRequested($event)" (onPositionDecreaseRequested)="onPositionDecreaseRequested($event)" (onStopRequested)="onCampaignStopRequested($event)"></repartitions-carte-campagne>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+</div>
+

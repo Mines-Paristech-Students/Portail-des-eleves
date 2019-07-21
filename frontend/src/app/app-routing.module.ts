@@ -26,6 +26,7 @@ import {LibraryCatalogComponent} from "./library/library-catalog/library-catalog
 import {LibraryLoansComponent} from "./library/library-loans/library-loans.component";
 import {LibraryManagerCatalogComponent} from "./library/library-manager-catalog/library-manager-catalog.component";
 import {LibraryManagerLoansComponent} from "./library/library-manager-loans/library-manager-loans.component";
+import { RepartitionsPageComponent } from './repartitions/repartitions-page/repartitions-page.component';
 import { RerTimetableComponent } from "./rer-timetable/rer-timetable.component";
 import { AssociationFilesystemAddfileComponent } from "./associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component";
 import { AssociationFilesystemFileComponent } from "./associations/association-filesystem/association-filesystem-file/association-filesystem-file.component";
@@ -68,6 +69,11 @@ const routes: Routes = [
 	  { path: 'forum/theme/:theme', component: ViewThemeComponent},
 	  { path: 'forum/topic/:topic', component: ViewTopicComponent},
 
+    { path: 'repartitions', component: RepartitionsPageComponent },
+
+	{ path: 'forum', component: ViewForumComponent},
+	{ path: 'forum/theme/:theme', component: ViewThemeComponent},
+	{ path: 'forum/topic/:topic', component: ViewTopicComponent}
     { path: 'rer', component: RerTimetableComponent }
     {path: 'monprofil/editer/motdepasse', component: PasswordEditComponent},
 

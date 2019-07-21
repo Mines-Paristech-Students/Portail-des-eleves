@@ -1,0 +1,16 @@
+<h1 class="page-title mb-5">Répartitions</h1>
+<div>
+    <div class="list-group list-group-transparent mb-0">
+        <a *ngIf="displayParameters.canEdit && !displayParameters.editingNew" class="list-group-item list-group-item-action px-0 d-flex align-items-center" (click)="requestNew()">
+            <span class="icon mr-3"><i class="fe fe-plus"></i></span>Nouvelle
+        </a>
+        <a *ngFor="let cmpg of campagnes" class="list-group-item list-group-item-action px-1 d-flex align-items-center" routerLink="/repartitions/{{ cmpg.id }}">
+            <!-- <span class="icon mr-3" *ngIf="cmpg.status == 0"><i class="fa fa-hourglass-0"></i></span> -->
+            <!-- <span class="icon mr-3" *ngIf="cmpg.status == 1"><i class="fa fa-hourglass-1"></i></span> -->
+            <!-- <span class="icon mr-3" *ngIf="cmpg.status == 2"><i class="fa fa-hourglass-2"></i></span> -->{{ cmpg.title }}
+        </a>
+        <a *ngIf="displayParameters.shouldDisplayEmptyMessage" class="list-group-item list-group-item-action px-0 d-flex align-items-center">
+            <span class="icon mr-3"><i class="fe fe-trash"></i></span>Rien à afficher
+        </a>
+    </div>
+</div>

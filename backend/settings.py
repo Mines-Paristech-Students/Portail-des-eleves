@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'forum',
     'polls',
     'subscriptions',
+    'repartitions',
 ]
 
 MIDDLEWARE = [
