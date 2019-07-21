@@ -4,13 +4,8 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
 from rest_framework_bulk.serializers import BulkListSerializer
 
-from associations.models import Association, Permission, User
-from associations.models import Role
-
-from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
-from rest_framework_bulk.serializers import BulkListSerializer
-
 from associations.models import Association, Role
+from associations.models import User
 from associations.serializers.page import PageShortSerializer
 from authentication.serializers import UserShortSerializer
 
@@ -114,18 +109,4 @@ class AssociationsSerializer(serializers.ModelSerializer):
             return serializer.data
         else:
             return {}
-
-
-class PermissionSerializer(serializers.ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=User.objects.all())
-
-    class Meta:
-        model = Permission
-        fields = ("id", "user", "role", "is_admin", "is_archived", "static_page", "news", "marketplace",
-                  "library", "vote", "events", "association")
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["user"] = UserShortSerializer().to_representation(instance.user)
-        return res
 

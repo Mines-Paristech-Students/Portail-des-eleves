@@ -67,8 +67,11 @@ import { RepartitionsCarteCampagneComponent } from './repartitions/repartitions-
 import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
 import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
-
-let hljs: any;
+import {AssociationFilesystemAddfileComponent} from "./associations/association-filesystem/association-filesystem-addfile/association-filesystem-addfile.component";
+import {AssociationFilesystemBreadcrumbComponent} from "./associations/association-filesystem/association-filesystem-breadcrumb/association-filesystem-breadcrumb.component";
+import {AssociationFilesystemBrowserComponent} from "./associations/association-filesystem/association-filesystem-browser/association-filesystem-browser.component";
+import {AssociationFilesystemFileComponent} from "./associations/association-filesystem/association-filesystem-file/association-filesystem-file.component";
+import {AssociationFilesystemMoveComponent} from "./associations/association-filesystem/association-filesystem-move/association-filesystem-move.component";
 
 registerLocaleData(localeFr);
 
