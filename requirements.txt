@@ -1,7 +1,7 @@
 scipy
 astroid==2.1.0
 cached-property==1.5.1
-Django==2.1.7
+Django==2.2.3
 django-extensions==2.1.5
 django-filter==2.1.0
 django-organizations==1.1.1
