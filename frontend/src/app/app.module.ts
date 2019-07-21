@@ -64,136 +64,162 @@ import { LibraryManagerLoansComponent } from "./library/library-manager-loans/li
 import { RepartitionsSidebarComponent } from './repartitions/repartitions-sidebar/repartitions-sidebar.component';
 import { RepartitionsPageComponent } from './repartitions/repartitions-page/repartitions-page.component';
 import { RepartitionsCarteCampagneComponent } from './repartitions/repartitions-carte-campagne/repartitions-carte-campagne.component';
+import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
+import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
+import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
 
-// alternatively if you only need to include a subset of languages
 var hljs: any;
 
 export function highlightJsFactory() {
-  return hljs;
+    return hljs;
 }
 
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    LoginComponent,
-    NavbarComponent,
-    ProfileShowComponent,
-    ProfileEditComponent,
-    PasswordEditComponent,
-    FacebookComponent,
-    PhotoComponent,
-    AllAssociationsComponent,
-    AssociationHomepageComponent,
-    AssociationSidebarComponent,
-    AssociationPageComponent,
-    AssociationMembersComponent,
-    AssociationSettingsComponent,
-    MarketplaceHomeComponent,
-    MarketplaceSidebarComponent,
-    MarketplaceBasketComponent,
-    MarketplaceHistoryComponent,
-    PaginationControlsComponent,
-    MarketplaceProductComponent,
-    MarketplaceManagerOrdersComponent,
-    MarketplaceManagerCatalogComponent,
-    MarketplaceManagerCounterComponent,
-    MarketplaceManagerFundingsComponent,
-    WidgetsComponent,
-    WidgetBirthdaysComponent,
-    WidgetChatComponent,
-    WidgetPollComponent,
-    ViewForumComponent,
-    ViewThemeComponent,
-    ViewTopicComponent,
-    TimelineComponent,
-    LibraryCatalogComponent,
-    LibrarySidebarComponent,
-    LibraryLoansComponent,
-    LibraryManagerCatalogComponent,
-    LibraryManagerLoansComponent,
-    RepartitionsSidebarComponent,
+    declarations: [
+        AllAssociationsComponent,
+        AppComponent,
+        AssociationFilesystemAddfileComponent,
+        AssociationFilesystemBreadcrumbComponent,
+        AssociationFilesystemBrowserComponent,
+        AssociationFilesystemFileComponent,
+        AssociationFilesystemMoveComponent,
+        AssociationHomepageComponent,
+        AssociationMembersComponent,
+        AssociationPageComponent,
+        AssociationSettingsComponent,
+        AssociationSidebarComponent,
+        DebounceChangeDirective,
+        FacebookComponent,
+        HomeComponent,
+        LibraryCatalogComponent,
+        LibraryLoansComponent,
+        LibraryManagerCatalogComponent,
+        LibraryManagerLoansComponent,
+        LibrarySidebarComponent,
+        LoginComponent,
+        MarketplaceBasketComponent,
+        MarketplaceHistoryComponent,
+        MarketplaceHomeComponent,
+        MarketplaceManagerCatalogComponent,
+        MarketplaceManagerCounterComponent,
+        MarketplaceManagerFundingsComponent,
+        MarketplaceManagerOrdersComponent,
+        MarketplaceProductComponent,
+        MarketplaceSidebarComponent,
+        NavbarComponent,
+        PaginationControlsComponent,
+        PasswordEditComponent,
+        PhotoComponent,
+        ProfileEditComponent,
+        ProfileShowComponent,
+        TimelineComponent,
+        ViewForumComponent,
+        ViewThemeComponent,
+        ViewTopicComponent,
+        TimelineComponent,
+        DebounceChangeDirective,
+        LibraryCatalogComponent,
+        LibrarySidebarComponent,
+        LibraryLoansComponent,
+        LibraryManagerCatalogComponent,
+        LibraryManagerLoansComponent,
+        DebounceChangeDirective,
+        RerTimetableComponent,
+        WaitTimePipe
+        LibraryManagerLoansComponent,
+        WidgetBirthdaysComponent,
+        WidgetChatComponent,
+        WidgetPollComponent,
+        WidgetsComponent,
+      RepartitionsSidebarComponent,
     RepartitionsPageComponent,
     RepartitionsCarteCampagneComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    NgSelectModule,
-    HttpClientModule,
-    BsDropdownModule.forRoot(),
-    AngularMarkdownEditorModule.forRoot({ iconlibrary: "fa" }),
-    MarkdownModule.forRoot({
-      markedOptions: {
-        provide: MarkedOptions,
-        useValue: {
-          breaks: true,
-          gfm: true,
-          // renderer: new Renderer(), Here we can add custom markdown tags
-          sanitize: true
-        }
-      }
-    }),
-    NotifierModule.withConfig({
-      position: {
-        horizontal: {
-          position: 'right',
-          distance: 12
-        },
-        vertical: {
-          position: 'bottom',
-          distance: 12,
-          gap: 10
-        }
-      },
-      theme: 'material',
-      behaviour: {
-        autoHide: 5000,
-        onClick: 'hide',
-        onMouseover: 'pauseAutoHide',
-        showDismissButton: true,
-        stacking: 6
-      },
-      animations: {
-        enabled: true,
-        show: {
-          preset: 'slide',
-          speed: 500,
-          easing: 'ease'
-        },
-        hide: {
-          preset: 'slide',
-          speed: 500,
-          easing: 'ease',
-          offset: 50
-        },
-        shift: {
-          speed: 500,
-          easing: 'ease'
-        },
-        overlap: 250
-      }
-    }),
-    NgxPaginationModule,
-    NgbModule,
-    DragulaModule.forRoot()
-  ],
-  providers: [
-    ApiService,
-    CookieService,
-    RequestCacheService,
-    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: LOCALE_ID, useValue: "fr" }
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    WidgetBirthdaysComponent,
-    WidgetChatComponent,
-    WidgetPollComponent
-  ]
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        BsDropdownModule.forRoot(),
+        AngularMarkdownEditorModule.forRoot({iconlibrary: "fa"}),
+        NgSelectModule,
+        HttpClientModule,
+        MarkdownModule.forRoot({
+            markedOptions: {
+                provide: MarkedOptions,
+                useValue: {
+                    breaks: true,
+                    gfm: true,
+                    // renderer: new Renderer(), Here we can add custom markdown tags
+                    sanitize: true
+                }
+            }
+        }),
+        NotifierModule.withConfig({
+            position: {
+                horizontal: {
+                    position: 'right',
+                    distance: 12
+                },
+                vertical: {
+                    position: 'bottom',
+                    distance: 12,
+                    gap: 10
+                }
+            },
+            theme: 'material',
+            behaviour: {
+                autoHide: 5000,
+                onClick: 'hide',
+                onMouseover: 'pauseAutoHide',
+                showDismissButton: true,
+                stacking: 6
+            },
+            animations: {
+                enabled: true,
+                show: {
+                    preset: 'slide',
+                    speed: 500,
+                    easing: 'ease'
+                },
+                hide: {
+                    preset: 'slide',
+                    speed: 500,
+                    easing: 'ease',
+                    offset: 50
+                },
+                shift: {
+                    speed: 500,
+                    easing: 'ease'
+                },
+                overlap: 250
+            }
+        }),
+        NgxPaginationModule,
+        NgbModule,
+        DragulaModule.forRoot(),
+        NgxPaginationModule
+    ],
+    providers: [
+        ApiService,
+        CookieService,
+        RequestCacheService,
+        {provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+        {provide: LOCALE_ID, useValue: "fr"}
+    ],
+    bootstrap:
+        [AppComponent],
+    entryComponents:
+        [
+            WidgetBirthdaysComponent,
+            WidgetChatComponent,
+            WidgetPollComponent
+        ]
 })
-export class AppModule {}
+
+export class AppModule {
+}

@@ -1,16 +1,17 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework import viewsets
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from associations.models import Library, Loan, Loanable
-from associations.serializers import LibrarySerializer, LoanSerializer, LoanableSerializer
 from associations.permissions import IsAssociationMember
+from associations.serializers import LibrarySerializer, LoanSerializer, LoanableSerializer
+
 
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
     permission_classes = (IsAssociationMember,)
+
 
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()

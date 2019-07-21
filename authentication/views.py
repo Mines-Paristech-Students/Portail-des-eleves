@@ -2,8 +2,8 @@ from datetime import date, datetime, timedelta
 from collections import defaultdict
 import json
 
-from django_filters.rest_framework import filters
-from django.http import HttpResponse
+from django_filters.rest_framework import filters, DjangoFilterBackend
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
@@ -89,8 +89,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    filter_backends = (SearchFilter,)
-    search_fields = ('id', 'first_name')
+    filter_backends = (SearchFilter, DjangoFilterBackend)
+    search_fields = ('id', 'first_name', 'last_name')
+    filter_fields = ('promo',)
 
     def get_object(self):
         """
@@ -149,17 +150,31 @@ def get_birthdays(request, days=7):
     users = []
     if len(month_idx) == 1:
         # Only one month, fetch birthdays between start and end
-        users.extend(User.objects.all().filter(birthday__month=month_idx[0], birthday__day__gte=start.day, birthday__day__lte=end.day).order_by('birthday__day').all())
+        users.extend(User.objects.all().filter(
+            birthday__month=month_idx[0],
+            birthday__day__gte=start.day,
+            birthday__day__lte=end.day
+        ).order_by('birthday__day').all())
     elif len(month_idx) == 2:
         # Only two months, fetch birthdays from start in month 1 and from 1 to end in month 2
-        users.extend(User.objects.all().filter(birthday__month=month_idx[0], birthday__day__gte=start.day).order_by('birthday__day').all())
-        users.extend(User.objects.all().filter(birthday__month=month_idx[1], birthday__day__lte=end.day).order_by('birthday__day').all())
+        users.extend(User.objects.all().filter(
+            birthday__month=month_idx[0],
+            birthday__day__gte=start.day
+        ).order_by('birthday__day').all())
+        users.extend(User.objects.all().filter(
+            birthday__month=month_idx[1],
+            birthday__day__lte=end.day
+        ).order_by('birthday__day').all())
+
     else: # len(month_idx) > 2
         # More than two months, fetch birthdays from start in month 1, all birthdays from 1 to end in last month, and all birthdays in between
-        users.extend(User.objects.all().filter(birthday__month=month_idx[0], birthday__day__gte=start.day).order_by('birthday__day').all())
+        users.extend(User.objects.all().filter(
+            birthday__month=month_idx[0], birthday__day__gte=start.day).order_by('birthday__day').all())
         for i in range(1, len(month_idx) - 1):
-            users.extend(User.objects.all().filter(birthday__month=month_idx[i]).order_by('birthday__day').all())
-        users.extend(User.objects.all().filter(birthday__month=month_idx[-1], birthday__day__lte=end.day).order_by('birthday__day').all())
+            users.extend(User.objects.all().filter(
+                birthday__month=month_idx[i]).order_by('birthday__day').all())
+        users.extend(User.objects.all().filter(
+            birthday__month=month_idx[-1], birthday__day__lte=end.day).order_by('birthday__day').all())
 
     # No more sql request from here
     # Here we just format the answer as a json dict
@@ -178,3 +193,11 @@ def get_birthdays(request, days=7):
 
     # Using the BirthdaysEncoder class to make the last format step
     return HttpResponse(json.dumps(birthdays, cls=BirthdaysEncoder), status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def get_promotions(request):
+    query = list(User.objects.order_by().values("promo").distinct())
+    res = [e["promo"] for e in query]
+    res.sort(reverse=True)
+    return JsonResponse({"promotions": res})
