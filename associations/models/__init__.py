@@ -1,5 +1,6 @@
 from associations.models.association import *
 from associations.models.events import *
+from associations.models.filesystem import *
 from associations.models.library import *
 from associations.models.marketplace import *
 from associations.models.news import *

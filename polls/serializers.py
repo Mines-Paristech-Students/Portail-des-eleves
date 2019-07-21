@@ -120,6 +120,7 @@ class SubmitPollSerializer(serializers.ModelSerializer):
 
         return poll
 
+
 class VoteSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         read_only=True,

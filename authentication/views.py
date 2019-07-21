@@ -199,4 +199,5 @@ def get_birthdays(request, days=7):
 def get_promotions(request):
     query = list(User.objects.order_by().values("promo").distinct())
     res = [e["promo"] for e in query]
+    res.sort(reverse=True)
     return JsonResponse({"promotions": res})

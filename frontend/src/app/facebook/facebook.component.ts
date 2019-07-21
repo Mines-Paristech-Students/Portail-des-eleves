@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from "../api.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { User } from "../models/user";
 
 /**
  * IMPORTANT NOTE
  * This is NOT a component that interacts in a way or another with facebook.com (in a nutshell, the social network)
  * This component is called "facebook" because it's the closest translation of the french "trombinoscope"
+ *
+ * Suggestion for the futur: allow to filter according to more criterions, such as being an ISUPFERE or not for instance
  */
 
 @Component({
@@ -42,7 +43,7 @@ export class FacebookComponent implements OnInit {
         let url = "users/";
         let added_one_param = false;
 
-        if (params["promo"]) {
+        if (params["promo"] && params["promo"] != -1) {
             url += added_one_param ? "&" : "?"; // Ok there is no need to add a condition, be let's be consistant
             url += "promo=" + params["promo"];
             added_one_param = true;
@@ -60,7 +61,7 @@ export class FacebookComponent implements OnInit {
 
         let params = {};
         let promo = parseInt(this.search_promotion);
-        if (!isNaN(promo)) {
+        if (!isNaN(promo) && promo != -1) {
             params["promo"] = promo;
         }
 

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import { MarkdownService } from 'ngx-markdown'
-import { EditorOption } from 'angular-markdown-editor';
-import { finalize } from 'rxjs/operators';
-import { HttpParams } from '@angular/common/http';
+import {MarkdownService} from 'ngx-markdown'
+import {EditorOption} from 'angular-markdown-editor';
+import {finalize} from 'rxjs/operators';
+import {HttpParams} from '@angular/common/http';
 
 @Component({
     selector: 'app-association-show',
@@ -13,25 +13,26 @@ import { HttpParams } from '@angular/common/http';
 })
 export class AssociationHomepageComponent implements OnInit {
 
-    association: any ;
-    news: {'id': number, 'title': string, 'text': string, 'date': string, 'author': string, 'editing'?: boolean}[]
-    error: any ;
+    association: any;
+    news: { 'id': number, 'title': string, 'text': string, 'date': string, 'author': string, 'editing'?: boolean }[];
+    error: any;
 
-	association_id : any;
+    association_id: any;
 
     editorOptions: EditorOption;
 
-    is_writing_news : boolean;
-    the_new_news : {'title': string, 'text': string}
+    is_writing_news: boolean;
+    the_new_news: { 'title': string, 'text': string };
 
-    constructor(private api: ApiService, private route: ActivatedRoute, private markdownService: MarkdownService){}
+    constructor(private api: ApiService, private route: ActivatedRoute, private markdownService: MarkdownService) {
+    }
 
     ngOnInit() {
-		this.route.params.subscribe(
-		(params) => {
-			this.association_id = params['id'];
-			this.load_association_data();
-        });
+        this.route.params.subscribe(
+            (params) => {
+                this.association_id = params['id'];
+                this.load_association_data();
+            });
         this.editorOptions = {
             parser: (val) => this.markdownService.compile(val.trim())
         };
@@ -39,7 +40,7 @@ export class AssociationHomepageComponent implements OnInit {
         this.the_new_news = {'title': '', 'text': ''}
     }
 
-	load_association_data(){
+    load_association_data() {
         this.api.get("associations/" + this.association_id + "/").subscribe(
             association => this.association = association,
             error => {
@@ -48,36 +49,36 @@ export class AssociationHomepageComponent implements OnInit {
             }
         );
 
-        let params = new HttpParams().set("association", this.association_id)
-        params = params.set("page_size", String(10))
+        let params = new HttpParams().set("association", this.association_id);
+        params = params.set("page_size", String(10));
         this.api.get('news/', params).subscribe(
-            (news:any) => {
+            (news: any) => {
                 this.news = news.results;
             },
-            (error:any) => {
+            (error: any) => {
                 this.error = error;
                 console.log(error);
             }
         );
     }
 
-    createNews(){
+    createNews() {
         this.is_writing_news = true;
         this.the_new_news = {'title': '', 'text': ''}
     }
 
-    editNews(the_news){
+    editNews(the_news) {
         // Display a markdown editor to change the content of the news
         the_news.editing = true
     }
 
-    finishEditing(the_news){
+    finishEditing(the_news) {
         // Stop editing and publish news to the server
         let data = {
             "title": the_news.title,
             "text": the_news.text,
             "association": this.association_id
-        }
+        };
         this.api.put('news/' + the_news.id + "/", data).pipe(
             finalize(
                 () => {
@@ -85,24 +86,24 @@ export class AssociationHomepageComponent implements OnInit {
                 }
             )
         ).subscribe(
-            (data:any) => {
+            (data: any) => {
                 the_news.title = data.title;
-                the_news.text = data.text
-                the_news.author = data.author
+                the_news.text = data.text;
+                the_news.author = data.author;
                 the_news.date = data.date
             },
-            (err:any)=> {
+            (err: any) => {
                 this.error = err;
             }
         )
     }
 
-    deleteNews(the_news){
+    deleteNews(the_news) {
         this.api.delete('news/' + the_news.id + "/").subscribe(
-            (_:any) => {
-                let news: any[] = []
-                for (var n of this.news){
-                    if (n.id !== the_news.id){
+            (_: any) => {
+                let news: any[] = [];
+                for (let n of this.news) {
+                    if (n.id !== the_news.id) {
                         news.push(n)
                     }
                 }
@@ -114,12 +115,12 @@ export class AssociationHomepageComponent implements OnInit {
         )
     }
 
-    publishNews(){
+    publishNews() {
         let post_data = {
             "title": this.the_new_news.title,
             "text": this.the_new_news.text,
             "association": this.association_id
-        }
+        };
         this.api.post('news/', post_data).pipe(
             finalize(
                 () => {
@@ -128,16 +129,16 @@ export class AssociationHomepageComponent implements OnInit {
                 }
             )
         ).subscribe(
-            (data:any) => {
+            (data: any) => {
                 this.news.unshift(data)
             },
-            (err:any) => {
+            (err: any) => {
                 this.error = err;
             }
         )
     }
 
-    cancelPublishNews(){
+    cancelPublishNews() {
         this.is_writing_news = false;
         this.the_new_news = {'title': '', 'text': ''}
     }

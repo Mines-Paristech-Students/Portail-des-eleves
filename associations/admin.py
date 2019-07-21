@@ -10,7 +10,7 @@ class RoleAdmin(admin.ModelAdmin):
             'fields': ('user', 'association', 'role', 'rank')
         }),
         ('Permissions', {
-            'fields': ('static_page', 'news', 'marketplace', 'library', 'vote', 'events')
+            'fields': ('static_page', 'news', 'marketplace', 'library', 'vote', 'events', 'files')
         })
     )
 

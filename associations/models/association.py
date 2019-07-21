@@ -72,6 +72,7 @@ class Role(models.Model):
     library = models.BooleanField(default=False)
     vote = models.BooleanField(default=False)
     events = models.BooleanField(default=False)
+    files = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("user", "association")

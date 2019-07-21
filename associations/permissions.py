@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product
+from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File
+
 
 def _get_role_for_user(user, association):
     qs = Role.objects.filter(user=user, association=association)
@@ -10,7 +11,6 @@ def _get_role_for_user(user, association):
 
 
 class CanEditStaticPage(BasePermission):
-
     message = 'Editing static page is not allowed.'
 
     def has_permission(self, request, view):
@@ -37,8 +37,8 @@ class CanEditStaticPage(BasePermission):
             return False
         return role.static_page
 
-class CanEditNews(BasePermission):
 
+class CanEditNews(BasePermission):
     message = 'Editing news is not allowed.'
 
     def has_permission(self, request, view):
@@ -65,20 +65,77 @@ class CanEditNews(BasePermission):
             return False
         return role.news
 
-class IsAssociationMember(BasePermission):
 
-    message = "Editing association is not allowed."
+class CanEditFiles(BasePermission):
+    message = 'Editing files is not allowed.'
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
-        return bool(request.user and request.user.is_authenticated and request.user.is_admin and request.user.is_staff)
+
+        if request.method == 'CREATE':
+            if 'association' in request.data:
+                association = request.data['association']
+            else:
+                return False
+
+            role = _get_role_for_user(request.user, association)
+
+            if not role:
+                return False
+
+            return role.files
+
+        return True
 
     def has_object_permission(self, request, view, obj):
+
         if request.method in SAFE_METHODS:
             return True
+
+        association = None
+        if isinstance(obj, File):
+            association = obj.association
+        elif isinstance(obj, Folder):
+            association = obj.association
+        else:
+            return True
+
+        role = _get_role_for_user(request.user, association)
+
+        if not role or association is None:
+            return False
+
+        return role.files
+
+
+class IsAssociationMember(BasePermission):
+    message = "Editing association is not allowed."
+
+    def has_permission(self, request, view):
+
+        if request.method in SAFE_METHODS:
+            return True
+
+        user_id = getattr(request.user, 'id')
+        association_id = request.data.get('association', None)
+
+        if association_id is not None:
+            role = _get_role_for_user(user_id, association_id)
+            return role is not None
+
+        return bool(request.user) and bool(request.user.is_authenticated) and bool(request.user.is_admin) and bool(
+            request.user.is_staff)
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in SAFE_METHODS:
+            return True
+
         if not self.has_permission(request, view):
             return False
+
+        role = False
 
         if isinstance(obj, Association):
             role = _get_role_for_user(request.user, obj)

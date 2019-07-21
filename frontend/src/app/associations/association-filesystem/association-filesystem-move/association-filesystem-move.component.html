@@ -1,0 +1,30 @@
+<div ngbDropdown #moveDropdown="ngbDropdown" class="ml-2" *ngIf="current_dir">
+    <button class="btn btn-primary btn-sm" id="dropdown_move_file" ngbDropdownToggle>Déplacer</button>
+    <div ngbDropdownMenu aria-labelledby="dropdown_move_file" class="p-3">
+        <p *ngIf="err">{{err}}</p>
+
+        <p class="lead font-weight-bold">{{current_dir.name}}</p>
+        <ul *ngIf="current_dir" class="list-group list-group-flush mb-3">
+            <li class="list-group-item list-group-item-action p-1" *ngIf="current_dir.parent" (click)="moveTo(current_dir.parent)">..</li>
+            <li class="list-group-item list-group-item-action p-1" *ngIf="!current_dir.parent && current_dir.id" (click)="moveToRoot()">..</li>
+            <li class="list-group-item list-group-item-action p-1" *ngFor="let dir of current_dir.children" (click)="moveTo(dir.id)">
+                {{ dir.name }}
+            </li>
+        </ul>
+
+        <div class="text-center">
+            <button
+                    ngbDropdownItem class="btn btn-secondary btn-sm m-0 mr-2"
+                    (click)="$event.stopPropagation(); moveDropdown.close();"
+            >Annuler
+            </button>
+
+            <button
+                    ngbDropdownItem class="btn btn-success btn-sm m-0"
+                    (click)="moveFile(); moveDropdown.close()"
+            >Déplacer
+            </button>
+        </div>
+    </div>
+</div>
+

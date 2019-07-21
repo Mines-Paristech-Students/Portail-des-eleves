@@ -6,6 +6,11 @@ from rest_framework_bulk.serializers import BulkListSerializer
 
 from associations.models import Association, Permission, User
 from associations.models import Role
+
+from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
+from rest_framework_bulk.serializers import BulkListSerializer
+
+from associations.models import Association, Role
 from associations.serializers.page import PageShortSerializer
 from authentication.serializers import UserShortSerializer
 
