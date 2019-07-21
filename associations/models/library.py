@@ -19,9 +19,7 @@ class Loanable(models.Model):
     description = models.TextField(null=True)
     image = models.ImageField(null=True)
     comment = models.TextField(null=True)
-
     library = models.ForeignKey(Library, models.CASCADE, related_name="loanables")
-
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)

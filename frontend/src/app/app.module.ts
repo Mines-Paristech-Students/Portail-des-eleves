@@ -65,7 +65,6 @@ import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
 import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
 
-// alternatively if you only need to include a subset of languages
 var hljs: any;
 
 export function highlightJsFactory() {
@@ -76,39 +75,48 @@ registerLocaleData(localeFr);
 
 @NgModule({
     declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,
-        NavbarComponent,
-        ProfileShowComponent,
-        ProfileEditComponent,
-        PasswordEditComponent,
-        FacebookComponent,
-        PhotoComponent,
         AllAssociationsComponent,
+        AppComponent,
+        AssociationFilesystemAddfileComponent,
+        AssociationFilesystemBreadcrumbComponent,
+        AssociationFilesystemBrowserComponent,
+        AssociationFilesystemFileComponent,
+        AssociationFilesystemMoveComponent,
         AssociationHomepageComponent,
-        AssociationSidebarComponent,
-        AssociationPageComponent,
         AssociationMembersComponent,
+        AssociationPageComponent,
         AssociationSettingsComponent,
-        MarketplaceHomeComponent,
-        MarketplaceSidebarComponent,
+        AssociationSidebarComponent,
+        DebounceChangeDirective,
+        FacebookComponent,
+        HomeComponent,
+        LibraryCatalogComponent,
+        LibraryLoansComponent,
+        LibraryManagerCatalogComponent,
+        LibraryManagerLoansComponent,
+        LibrarySidebarComponent,
+        LoginComponent,
         MarketplaceBasketComponent,
         MarketplaceHistoryComponent,
-        PaginationControlsComponent,
-        MarketplaceManagerOrdersComponent,
+        MarketplaceHomeComponent,
         MarketplaceManagerCatalogComponent,
         MarketplaceManagerCounterComponent,
         MarketplaceManagerFundingsComponent,
+        MarketplaceManagerOrdersComponent,
         MarketplaceProductComponent,
-        WidgetsComponent,
-        WidgetBirthdaysComponent,
-        WidgetChatComponent,
-        WidgetPollComponent,
+        MarketplaceSidebarComponent,
+        NavbarComponent,
+        PaginationControlsComponent,
+        PasswordEditComponent,
+        PhotoComponent,
+        ProfileEditComponent,
+        ProfileShowComponent,
+        TimelineComponent,
         ViewForumComponent,
         ViewThemeComponent,
         ViewTopicComponent,
         TimelineComponent,
+        DebounceChangeDirective,
         LibraryCatalogComponent,
         LibrarySidebarComponent,
         LibraryLoansComponent,
@@ -117,15 +125,22 @@ registerLocaleData(localeFr);
         DebounceChangeDirective,
         RerTimetableComponent,
         WaitTimePipe
+        LibraryManagerLoansComponent,
+        WidgetBirthdaysComponent,
+        WidgetChatComponent,
+        WidgetPollComponent,
+        WidgetsComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         FormsModule,
-        NgSelectModule,
+        ReactiveFormsModule,
         HttpClientModule,
         BsDropdownModule.forRoot(),
         AngularMarkdownEditorModule.forRoot({iconlibrary: "fa"}),
+        NgSelectModule,
+        HttpClientModule,
         MarkdownModule.forRoot({
             markedOptions: {
                 provide: MarkedOptions,
@@ -179,7 +194,8 @@ registerLocaleData(localeFr);
         }),
         NgxPaginationModule,
         NgbModule,
-        DragulaModule.forRoot()
+        DragulaModule.forRoot(),
+        NgxPaginationModule
     ],
     providers: [
         ApiService,
@@ -189,12 +205,15 @@ registerLocaleData(localeFr);
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: "fr"}
     ],
-    bootstrap: [AppComponent],
-    entryComponents: [
-        WidgetBirthdaysComponent,
-        WidgetChatComponent,
-        WidgetPollComponent
-    ]
+    bootstrap:
+        [AppComponent],
+    entryComponents:
+        [
+            WidgetBirthdaysComponent,
+            WidgetChatComponent,
+            WidgetPollComponent
+        ]
 })
+
 export class AppModule {
 }

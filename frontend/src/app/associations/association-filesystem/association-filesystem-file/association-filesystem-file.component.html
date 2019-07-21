@@ -1,0 +1,104 @@
+<navbar></navbar>
+
+<div class="container mt-5">
+    <div *ngIf="error">
+        <p class="text-danger">
+            Une erreur est survenue {{ error }}
+        </p>
+    </div>
+
+    <div *ngIf="association && file">
+        <div class="row">
+            <!-- Association sidebar. -->
+            <div class="col-md-3">
+                <association-sidebar [association]="association"></association-sidebar>
+            </div>
+
+            <!-- File viewing mode. -->
+            <div class="col-md-9">
+                <association-filesystem-breadcrumb
+                        [association]="association"
+                        [selected_file]="file"
+                ></association-filesystem-breadcrumb>
+
+                <!-- Check whether the file is being edited. -->
+                <ng-container
+                        *ngIf="isEditing; then editPanel; else viewPanel;"
+                ></ng-container>
+
+                <ng-template #viewPanel>
+                    <div class="card">
+                        <!-- File header: display the name of the file and the actions: edit or close. -->
+                        <div class="card-header">
+                            <h3 class="card-title">{{ file.name }}</h3>
+
+                            <div class="card-options">
+                                <a class="btn btn-success btn-sm ml-2" href="{{file.file}}">
+                                    <span class="fe fe-download"></span>
+                                    Télécharger
+                                </a>
+
+                                <ng-container *ngIf="this.role.hasPermission('files') | async">
+                                    <app-association-filesystem-move
+                                            [file]="file"
+                                            (movedFile)="handleFileMoved($event)"
+                                    ></app-association-filesystem-move>
+
+                                    <button class="btn btn-primary btn-sm ml-2"
+                                            (click)="handleEditButton()">Modifier
+                                    </button>
+
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <div class="card-body" *ngIf="file.description">
+                            <p>{{ file.description }}</p>
+                        </div>
+
+                        <ng-container *ngIf="file.type && file.type.length > 0">
+                            <p class="card-body" *ngIf="file.type.split('/')[0] == 'image'">
+                                <img src="{{file.file}}" alt="{{file.name}}">
+                            </p>
+
+                            <p class="card-body" *ngIf="file.type.split('/')[0] == 'video'">
+                                <video controls>
+                                    <source src="{{file.file}}" type="{{file.type}}">
+                                </video>
+                            </p>
+                        </ng-container>
+
+                        <p class="card-footer">
+                            Mis en ligne le {{ file.uploaded_on | date:"dd/MM/yyyy" }} par {{ file.uploaded_by }}.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <!-- File editing mode. -->
+                <ng-template #editPanel>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <input type="text" class="form-control input-lg" [(ngModel)]="file.name">
+                            </div>
+
+                            <div class="card-options">
+                                <button class="btn btn-sm btn-danger ml-2"
+                                        (click)="handleDeleteButton()">Supprimer
+                                </button>
+                                <button class="btn btn-success btn-sm ml-2"
+                                        (click)="handleSaveButton()">Enregistrer
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <textarea [(ngModel)]="file.description" class="form-control" cols="50"
+                                      rows="10" placeholder="Entrez une description pour le fichier"></textarea>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

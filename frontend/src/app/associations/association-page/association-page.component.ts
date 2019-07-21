@@ -37,8 +37,8 @@ export class AssociationPageComponent implements OnInit {
         };
         this.route.params.subscribe(
             params => {
-                const association_id = params['association_id']
-                const page_id = params['page_id']
+                const association_id = params['association_id'];
+                const page_id = params['page_id'];
                 this.loadAssociationData(association_id, page_id)
             }
         )
@@ -74,8 +74,8 @@ export class AssociationPageComponent implements OnInit {
         if(confirm("Supprimer la page ?")) {
             this.api.delete("pages/" + this.page.id + "/").subscribe(
                 res => {
-                    this.cache.remove(`associations/${this.association.id}/`)
-                    this.cache.remove(`pages/${this.page.id}/`)
+                    this.cache.remove(`associations/${this.association.id}/`);
+                    this.cache.remove(`pages/${this.page.id}/`);
                     this.router.navigate(["associations/" + this.association.id])
                 },
                 err => this.status = "<span class='text-danger'>" + err.message + "</span>"
