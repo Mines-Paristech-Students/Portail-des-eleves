@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
                 // The user variable explicitly needs to be from the User type
                 //  so the ".promotion" property can be called from the html template.
                 this.user = new User();
-                Object.assign(this.user, data)
+                Object.assign(this.user, data);
                 localStorage.setItem("user", JSON.stringify(this.user))
             },
             err => {

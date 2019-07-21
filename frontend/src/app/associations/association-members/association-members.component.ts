@@ -37,8 +37,9 @@ export class AssociationMembersComponent implements OnInit {
     constructor(private api: ApiService, private route: ActivatedRoute, private dragulaService: DragulaService){}
 
     ngOnInit() {
-        this.roles = []
-        this.creating_role = {}
+
+        this.roles = [];
+        this.creating_role = {};
 
         const association_id = this.route.snapshot.paramMap.get('id');
 
@@ -52,7 +53,8 @@ export class AssociationMembersComponent implements OnInit {
                 },
                 direction: 'horizontal'
             }
-        )
+        );
+
         this.api.get(`associations/${association_id}/`).subscribe(
             association => {
                 this.association = association;
@@ -206,7 +208,7 @@ export class AssociationMembersComponent implements OnInit {
                     return elements.filter(el => !known_users.includes(el.id))
                 }
             )
-        )
+        );
         this.ng_select_users.subscribe(
             data => {
                 this.ng_select_loading = false;
@@ -250,7 +252,7 @@ export class AssociationMembersComponent implements OnInit {
 
             this.api.patch(`groups/batch_add_update/`, {"groups" :groups, "association": this.association.id}).subscribe(
                 res => {
-                    this.status = "<span class='text-success'>Groupes mis à jour</span>"
+                    this.status = "<span class='text-success'>Groupes mis à jour</span>";
                     this.editing = false;
                     this.association = res
                 },

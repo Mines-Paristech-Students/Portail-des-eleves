@@ -1,10 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.relations import PrimaryKeyRelatedField
-from rest_framework.serializers import ModelSerializer
-from rest_framework_bulk.drf3.serializers import BulkListSerializer, BulkSerializerMixin
+from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
 from rest_framework_bulk.serializers import BulkListSerializer
-
 
 from associations.models import Association, Role
 from associations.serializers.page import PageShortSerializer
@@ -15,6 +12,7 @@ class AssociationsShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
         fields = ('id', 'name', 'logo')
+
 
 class AdaptedBulkListSerializerMixin(object):
     def to_internal_value(self, data):
@@ -60,11 +58,12 @@ class AdaptedBulkListSerializerMixin(object):
 
         return ret
 
+
 class AdaptedBulkListSerializer(AdaptedBulkListSerializerMixin, BulkListSerializer):
     pass
 
-class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
+class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = "__all__"
@@ -74,6 +73,7 @@ class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserShortSerializer(instance.user).data
         return response
+
 
 class RoleShortSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,8 +85,10 @@ class RoleShortSerializer(serializers.ModelSerializer):
         response['user'] = UserShortSerializer(instance.user).data
         return response
 
+
 from associations.serializers.marketplace import MarketplaceShortSerializer
 from associations.serializers.library import LibraryShortSerializer
+
 
 class AssociationsSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
