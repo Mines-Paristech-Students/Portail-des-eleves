@@ -37,12 +37,13 @@ export class NavbarComponent implements OnInit {
 		);
     }
 
+    // noinspection JSMethodCanBeStatic
     getPromotion(user){
         return "P" + parseInt(user.id);
     }
 
     isActive(url) {
-        var regex = new RegExp(url);
+        const regex = new RegExp(url);
         return regex.test(this.router.url);
     }
 

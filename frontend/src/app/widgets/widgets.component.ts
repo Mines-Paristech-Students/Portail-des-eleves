@@ -10,7 +10,7 @@ import { WidgetChatComponent } from './chat/chat.component';
 })
 export class WidgetsComponent implements OnInit {
 
-    widgets =  widgets
+    widgets =  widgets;
 
     @Input() widgets_status: {"name": string, "displayed": boolean}[];
 
@@ -48,5 +48,5 @@ let widgets = [
 		'display_name': 'Anniversaires',
 		'class': WidgetBirthdaysComponent
 	}
-]
+];
 export default widgets;

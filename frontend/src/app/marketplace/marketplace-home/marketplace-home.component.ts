@@ -44,7 +44,7 @@ export class MarketplaceHomeComponent extends BaseMarketplaceComponent{
     }
 
     getQuantity(product: Product): number {
-        console.log('get quantity')
+        console.log('get quantity');
         return this.manager.getQuantity(this.basket, this.marketplace, product);
     }
 

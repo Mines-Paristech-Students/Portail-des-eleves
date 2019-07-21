@@ -48,8 +48,9 @@ class OrderViewSet(viewsets.ModelViewSet):
 
             if quantity > product.number_left >= 0:
                 errors.append({
-                    product.id: "Il n'y a pas assez de {} ({} demandés, {} restants {})".format(product.name, quantity,
-                                                                                                product.number_left)
+                    product.id: "Il n'y a pas assez de {} ({} demandés, {} restants)".format(
+                        product.name, quantity, product.number_left
+                    )
                 })
                 continue
 

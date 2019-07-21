@@ -265,7 +265,7 @@ class RepartitionsStopCampaignView(views.APIView):
 					rejets_propositions[l]+=i
 			meilleures_props = list(range(n_propositions))
 			meilleures_props.sort(key = lambda x: rejets_propositions[x])
-			nombre_de_places_par_prop = [x.min if not c.equirepartition else (n_users)//(n_propositions) for x in ps]
+			nombre_de_places_par_prop = [x.min if not c.equirepartition else n_users // n_propositions for x in ps]
 			j = 0
 			while sum(nombre_de_places_par_prop) < n_users:
 				if c.equirepartition:
@@ -286,7 +286,7 @@ class RepartitionsStopCampaignView(views.APIView):
 			outcomes = [-1]*n_users
 			for i in range(n_users):
 				outcomes[b[0][i]] = int(proposition_par_j[b[1][i]])
-			for x in (vs):
+			for x in vs:
 				x.outcome = outcomes[0]
 				outcomes = outcomes[1:]
 				x.save()

@@ -1,6 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, LOCALE_ID } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ApiService } from "./api.service";
 import { CookieService } from "ngx-cookie-service";
 import { registerLocaleData } from "@angular/common";
@@ -14,7 +14,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { NgxPaginationModule } from "ngx-pagination";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { DragulaModule } from "ng2-dragula";
-import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { NotifierModule} from 'angular-notifier';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -68,11 +68,7 @@ import { DebounceChangeDirective } from "./facebook/debounce-change.directive";
 import { RerTimetableComponent } from './rer-timetable/rer-timetable.component';
 import { WaitTimePipe } from "./rer-timetable/next-time.pipe";
 
-var hljs: any;
-
-export function highlightJsFactory() {
-    return hljs;
-}
+let hljs: any;
 
 registerLocaleData(localeFr);
 
@@ -127,7 +123,7 @@ registerLocaleData(localeFr);
         LibraryManagerLoansComponent,
         DebounceChangeDirective,
         RerTimetableComponent,
-        WaitTimePipe
+        WaitTimePipe,
         LibraryManagerLoansComponent,
         WidgetBirthdaysComponent,
         WidgetChatComponent,

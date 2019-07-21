@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
-import { AppComponent } from "../app.component";
+
 declare var particlesJS: any;
 
 @Component({
@@ -37,15 +36,15 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        var valid = true;
+        let valid = true;
         if (!this.loginText) {
-            valid = false
+            valid = false;
             this.loginClass = "is-invalid"
         } else {
             this.loginClass = ""
         }
         if (!this.passwordText) {
-            valid = false
+            valid = false;
             this.passwordClass = "is-invalid"
         } else {
             this.passwordClass = ""

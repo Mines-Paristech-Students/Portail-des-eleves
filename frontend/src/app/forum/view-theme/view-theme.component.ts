@@ -4,7 +4,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Theme, Topic} from "../../models/forum";
 import {User} from "../../models/user";
 import { MarkdownService } from 'ngx-markdown';
-import { EditorOption } from 'angular-markdown-editor';
 
 @Component({
   selector: 'app-view-theme',

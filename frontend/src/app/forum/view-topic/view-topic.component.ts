@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {Theme, Topic, MessageForum} from "../../models/forum";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Topic, MessageForum} from "../../models/forum";
 import { MarkdownService } from 'ngx-markdown';
-import { EditorInstance, EditorOption } from 'angular-markdown-editor';
+import { EditorInstance} from 'angular-markdown-editor';
 
 @Component({
   selector: 'app-view-topic',
@@ -108,8 +108,8 @@ export class ViewTopicComponent implements OnInit {
     }
 	
 	new_vote(message, vote){
-		var old_vote = message.my_vote;
-		message.my_vote = vote;
+        const old_vote = message.my_vote;
+        message.my_vote = vote;
 		message.ratio += (-old_vote + vote);
 		
 		this.api.put("message-forum-vote/", {

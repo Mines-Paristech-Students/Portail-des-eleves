@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter, SimpleChange, Input} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {Repartition, Proposition} from "../../models/repartition";
 
@@ -48,7 +48,7 @@ export class RepartitionsCarteCampagneComponent implements OnInit {
 
   cancelEdition() {
     if(this.controlLock)return;
-    if(this.campagne.id == null)this.deleteCampaign()
+    if(this.campagne.id == null)this.deleteCampaign();
     this.isEditing = false;
   }
 
@@ -99,33 +99,33 @@ export class RepartitionsCarteCampagneComponent implements OnInit {
 
   submitInput() {
     if(this.controlLock)return;
-    this.controlLock = true
-    this.clearMessage()
-    this.waitingSubmitReply = true
+    this.controlLock = true;
+    this.clearMessage();
+    this.waitingSubmitReply = true;
     this.onSubmitRequested.emit({id: this.campagne.id, edited: this.edit_campagne, callback:(ok: boolean, err: string)=>this.handleReply(ok,err)})
   }
 
   deleteCampaign() {
     if(this.controlLock)return;
-    this.controlLock = true
-    this.clearMessage()
-    this.waitingDeletionReply = true
+    this.controlLock = true;
+    this.clearMessage();
+    this.waitingDeletionReply = true;
     this.onDeletionRequested.emit({id: this.campagne.id, callback:(ok: boolean, err: string)=>this.handleReply(ok,err)});
   }
 
   startCampaign() {
     if(this.controlLock)return;
-    this.controlLock = true
-    this.clearMessage()
-    this.waitingStartReply = true
+    this.controlLock = true;
+    this.clearMessage();
+    this.waitingStartReply = true;
     this.onStartRequested.emit({id: this.campagne.id, callback:(ok: boolean, err: string)=>this.handleReply(ok,err)});
   }
 
   stopCampaign() {
     if(this.controlLock)return;
-    this.controlLock = true
-    this.clearMessage()
-    this.waitingStopReply = true
+    this.controlLock = true;
+    this.clearMessage();
+    this.waitingStopReply = true;
     this.onStopRequested.emit({id: this.campagne.id, callback:(ok: boolean, err: string)=>this.handleReply(ok,err)});
   }
 
@@ -138,7 +138,7 @@ export class RepartitionsCarteCampagneComponent implements OnInit {
       this.campagne.title = msg.title;
       this.campagne.equirepartition = msg.equirepartition;
       this.campagne.resultat = msg.resultat;
-      this.campagne.propositions = []
+      this.campagne.propositions = [];
       this.campagne.progress = msg.progress;
       this.campagne.voeux = [];
       for(let j of msg.voeux)
@@ -148,17 +148,17 @@ export class RepartitionsCarteCampagneComponent implements OnInit {
 
       for(let p of msg.propositions)
       {
-        var np = new Proposition();
-        np.max = p.max
-        np.min = p.min
-        np.name = p.name
-        np.id = p.num
+          const np = new Proposition();
+          np.max = p.max;
+        np.min = p.min;
+        np.name = p.name;
+        np.id = p.num;
         this.campagne.propositions.push(np)
       }
       this.edit_campagne = null;
       this.isEditing = false;
     }
-    this.clearMessage()
+    this.clearMessage();
     this.waitingSubmitReply = false;
     this.waitingStartReply = false;
     this.waitingStopReply = false;
@@ -189,11 +189,11 @@ export class RepartitionsCarteCampagneComponent implements OnInit {
 
   newProposition()
   {
-    var np = new Proposition();
-    np.max = 999
-    np.min = 0
-    np.name = ""
-    np.id = 0
+      const np = new Proposition();
+      np.max = 999;
+    np.min = 0;
+    np.name = "";
+    np.id = 0;
     this.edit_campagne.propositions.push(np);    
   }
 }

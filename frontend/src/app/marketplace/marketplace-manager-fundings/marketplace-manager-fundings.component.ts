@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 
 import {ApiService} from "../../api.service";
@@ -47,7 +47,7 @@ export class MarketplaceManagerFundingsComponent extends BaseMarketplaceComponen
                 error => this.error = error.message
             );
 
-            this.fundings = this.api.get(`funding/?marketplace=${this.marketplace_id}`)
+            this.fundings = this.api.get(`funding/?marketplace=${this.marketplace_id}`);
             this.users = this.api.get('users/')
         });
     }

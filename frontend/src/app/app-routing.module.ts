@@ -73,8 +73,8 @@ const routes: Routes = [
 
 	{ path: 'forum', component: ViewForumComponent},
 	{ path: 'forum/theme/:theme', component: ViewThemeComponent},
-	{ path: 'forum/topic/:topic', component: ViewTopicComponent}
-    { path: 'rer', component: RerTimetableComponent }
+	{ path: 'forum/topic/:topic', component: ViewTopicComponent},
+    { path: 'rer', component: RerTimetableComponent },
     {path: 'monprofil/editer/motdepasse', component: PasswordEditComponent},
 
     {path: 'forum', component: ViewForumComponent},

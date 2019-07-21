@@ -1,5 +1,5 @@
 import { Product } from './../models';
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 
 import {BaseMarketplaceComponent} from "../base-marketplace-component";

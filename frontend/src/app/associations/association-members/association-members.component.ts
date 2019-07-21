@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../../api.service";
 import {ActivatedRoute} from "@angular/router";
 
@@ -11,7 +11,7 @@ import {map} from 'rxjs/operators'
     templateUrl: './association-members.component.html',
     styleUrls: ['./association-members.component.scss']
 })
-export class AssociationMembersComponent implements OnInit {
+export class AssociationMembersComponent implements OnInit, OnDestroy {
 
     association: any;
     error: string;
@@ -23,8 +23,8 @@ export class AssociationMembersComponent implements OnInit {
     creating_role: any;
 
     // For the ng select field
-    ng_select_loading: boolean
-    ng_select_users: Observable<any[]>
+    ng_select_loading: boolean;
+    ng_select_users: Observable<any[]>;
     ng_select_value: any;
 
     rightFields = [
@@ -70,7 +70,7 @@ export class AssociationMembersComponent implements OnInit {
             (roles: any[]) => {
                 this.roles = roles.map(
                     el => {
-                        el.editing = false
+                        el.editing = false;
                         return el
                     }
                 )
@@ -78,7 +78,7 @@ export class AssociationMembersComponent implements OnInit {
             error => {
                 this.error = error.message
             }
-        )
+        );
 
         this.editing = null;
         this.is_editing = false;
@@ -99,12 +99,12 @@ export class AssociationMembersComponent implements OnInit {
     }
 
     deleteRole() {
-        let role_i = this.roles.findIndex(x => x.id === this.editing)
-        let role = this.roles[role_i]
+        let role_i = this.roles.findIndex(x => x.id === this.editing);
+        let role = this.roles[role_i];
         this.api.delete(`roles/${role.id}/`).subscribe(
             data => {
-                this.roles.splice(role_i, 1) // Remove the role from the role list
-                this.editing = null
+                this.roles.splice(role_i, 1); // Remove the role from the role list
+                this.editing = null;
                 this.ng_select_value = null
             },
             err => {
@@ -114,19 +114,19 @@ export class AssociationMembersComponent implements OnInit {
     }
 
     saveSingleRole() {
-        let role_i = this.roles.findIndex(x => x.id === this.editing)
-        let data = JSON.parse(JSON.stringify(this.roles[role_i]))
+        let role_i = this.roles.findIndex(x => x.id === this.editing);
+        let data = JSON.parse(JSON.stringify(this.roles[role_i]));
         if (this.ng_select_value !== null && this.ng_select_value.id !== data.user.id) {
-            delete data.id
-            data.user = this.ng_select_value.id
+            delete data.id;
+            data.user = this.ng_select_value.id;
             this.api.post('roles/', data).subscribe(
                 d1 => {
                     this.api.delete(`roles/${this.editing}/`).subscribe(
                         d2 => {
-                            console.log(d1)
-                            this.roles[role_i] = d1
-                            console.log(this.roles)
-                            this.editing = null
+                            console.log(d1);
+                            this.roles[role_i] = d1;
+                            console.log(this.roles);
+                            this.editing = null;
                             this.ng_select_value = null
                         },
                         err2 => {
@@ -139,10 +139,10 @@ export class AssociationMembersComponent implements OnInit {
                 }
             )
         } else {
-            data.user = data.user.id
+            data.user = data.user.id;
             this.api.patch(`roles/${this.editing}/`, data).subscribe(
                 d => {
-                    this.editing = null
+                    this.editing = null;
                     this.ng_select_value = null
                 },
                 err => {
@@ -154,9 +154,9 @@ export class AssociationMembersComponent implements OnInit {
 
     createRole() {
         if (this.ng_select_value !== null) {
-            let data = JSON.parse(JSON.stringify(this.creating_role))
-            data.association = this.association.id
-            data.user = data.user.id
+            let data = JSON.parse(JSON.stringify(this.creating_role));
+            data.association = this.association.id;
+            data.user = data.user.id;
             if (this.roles.length > 0) {
                 data.rank = this.roles.reduce(function (prev, current) {
                     return (prev.rank > current.rank) ? prev : current
@@ -166,9 +166,9 @@ export class AssociationMembersComponent implements OnInit {
             }
             this.api.post('roles/', data).subscribe(
                 d => {
-                    this.creating = false
-                    this.creating_role = {}
-                    this.roles.push(d)
+                    this.creating = false;
+                    this.creating_role = {};
+                    this.roles.push(d);
                     this.ng_select_value = null
                 }
             )
@@ -178,8 +178,8 @@ export class AssociationMembersComponent implements OnInit {
     finishEditing() {
         let role_copy = JSON.parse(JSON.stringify(this.roles));
         for (let i = 0; i < this.roles.length; i++) {
-            this.roles[i].rank = i
-            role_copy[i].rank = i
+            this.roles[i].rank = i;
+            role_copy[i].rank = i;
             role_copy[i].user = role_copy[i].user.id
         }
         this.api.patch(`roles/`, role_copy).subscribe(

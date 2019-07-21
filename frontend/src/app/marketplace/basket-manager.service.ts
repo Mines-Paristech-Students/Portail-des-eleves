@@ -77,18 +77,4 @@ export class BasketManagerService {
     }
 
     // This function is broken
-    getProducts(basket, marketplace) {
-        throw new Error('Not implemented');
-        let res = [] ;
-        
-        // This doesn't work, as basket[marketplace] is not iterable
-        for (let product of basket[marketplace]){
-            res.push({
-                quantity: this.getQuantity(basket, marketplace, product), // product would not be of the right type
-                product: product
-            })
-        }
-
-        return res ;
-    }
 }

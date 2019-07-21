@@ -19,7 +19,7 @@ export class ProfileEditComponent implements OnInit {
       this.api.get("users/" + id + "/").subscribe(
           user => this.user = user,
               error => {
-              this.error = error
+              this.error = error;
               console.log(error)
       })
   }

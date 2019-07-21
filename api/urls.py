@@ -64,7 +64,7 @@ urlpatterns = [
     path('birthdays/', get_birthdays, name="get_birthdays"),
     path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
     path('subscriptions/', include(subscriptions.urls)),
-    path('repartitions/', include(repartitions.urls))
+    path('repartitions/', include(repartitions.urls)),
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
     path('promotions/', get_promotions, name="get_promotions"),
     path('rer/', get_rer_timetable, name="get_rer_timetable"),

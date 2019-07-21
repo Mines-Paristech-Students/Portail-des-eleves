@@ -21,7 +21,7 @@ export class AssociationFilesystemBreadcrumbComponent implements OnInit {
 
     refreshDisplay() {
         if (this.selected_file && !this.folder) {
-            var url = `associations/${this.selected_file.association}/filesystem/root`;
+            let url = `associations/${this.selected_file.association}/filesystem/root`;
             if (this.selected_file.folder != null) {
                 url = `folder/${this.selected_file.folder}/`;
             }

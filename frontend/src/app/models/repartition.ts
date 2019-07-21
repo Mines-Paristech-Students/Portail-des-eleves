@@ -6,8 +6,8 @@ export class Proposition {
 	
 	clone(): Proposition 
 	{
-		var n = new Proposition();
-		n.id = this.id;
+        const n = new Proposition();
+        n.id = this.id;
 		n.name = ""+this.name;
 		n.min = this.min;
 		n.max = this.max;
@@ -28,11 +28,11 @@ export class Repartition {
 
     clone(): Repartition
     {
-    	var n = new Repartition();
-    	n.id = this.id;
+        const n = new Repartition();
+        n.id = this.id;
 		n.status = this.status;
 		n.promotion = ""+this.promotion;
-		n.title = ""+this.title;;
+		n.title = "" + this.title;
 		n.equirepartition = this.equirepartition;
 		n.propositions = [];
 		for(let a of this.propositions)

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../../api.service";
 import {Repartition, Proposition} from "../../models/repartition";
 import {ActivatedRoute, Router} from "@angular/router";
-import { EditorOption } from 'angular-markdown-editor';
 import { RequestCacheService} from '../../request-cache.service'
 
 @Component({
@@ -36,10 +35,10 @@ export class RepartitionsPageComponent implements OnInit {
             campagnes =>
             {
                 this.displayParameters.receivedBase = true;
-                this.campagnes = []
+                this.campagnes = [];
                 for(let cmpg of campagnes)
                 {
-                    var n = new Repartition();
+                    const n = new Repartition();
                     n.id = cmpg.id;
                     n.status = cmpg.status;
                     n.promotion = ""+cmpg.promotion;
@@ -55,11 +54,11 @@ export class RepartitionsPageComponent implements OnInit {
                     }
                     for(let p of cmpg.propositions)
                     {
-                        var np = new Proposition();
-                        np.max = p.max
-                        np.min = p.min
-                        np.name = p.name
-                        np.id = p.num
+                        const np = new Proposition();
+                        np.max = p.max;
+                        np.min = p.min;
+                        np.name = p.name;
+                        np.id = p.num;
                         n.propositions.push(np)
                     }
                     this.campagnes.push(n);
@@ -91,22 +90,22 @@ export class RepartitionsPageComponent implements OnInit {
     }
 
     updateDisplayParameters() {
-        var allReceived = this.displayParameters.receivedCanEdit && this.displayParameters.receivedBase;
+        const allReceived = this.displayParameters.receivedCanEdit && this.displayParameters.receivedBase;
         this.displayParameters.shouldDisplayEmptyMessage = allReceived && !this.displayParameters.canEdit && this.campagnes.length == 0;
         this.displayParameters.shouldDisplayLoader = !allReceived;
     }
 
     onNewRequested() {
-        var n: Repartition;
+        let n: Repartition;
         n = new Repartition();
         n.id = null;
         n.title = "Nouvelle repartition";
         n.status = null;
         n.propositions = [];
         n.equirepartition = true;
-        n.promotion = "P18"
-        n.progress = {}
-        n.resultat = null
+        n.promotion = "P18";
+        n.progress = {};
+        n.resultat = null;
         this.displayParameters.editingNew = true;
 
         this.campagnes.unshift(n);
@@ -114,9 +113,9 @@ export class RepartitionsPageComponent implements OnInit {
 
     onCampaignSubmitRequested(res: any)
     {
-        var id = res.id;
-        var callback = res.callback;
-        var toPut = res.edited;
+        const id = res.id;
+        const callback = res.callback;
+        const toPut = res.edited;
         if(id == null)
         {
             this.api.put("repartitions/", toPut).subscribe(
@@ -138,14 +137,14 @@ export class RepartitionsPageComponent implements OnInit {
 
     onCampaignDeletionRequested(res: any)
     {
-        var id = res.id;
-        var callback = res.callback;
+        const id = res.id;
+        const callback = res.callback;
         if(id == null)
         {
             var i = 0;
             this.displayParameters.editingNew = false;
             this.campagnes.shift();
-            this.updateDisplayParameters()
+            this.updateDisplayParameters();
             return
         }
         var i = 0; //useless loop
@@ -185,7 +184,7 @@ export class RepartitionsPageComponent implements OnInit {
 
     removeCampaignFromList(id: number)
     {
-        var i = 0;
+        let i = 0;
         while(i < this.campagnes.length)
         {
             if(this.campagnes[i].id == id)
@@ -200,8 +199,8 @@ export class RepartitionsPageComponent implements OnInit {
 
     onCampaignStartRequested(res: any)
     {
-        var id = res.id;
-        var callback = res.callback;
+        const id = res.id;
+        const callback = res.callback;
         this.api.post("repartitions/startCampaign", {id: id}).subscribe(
             msg =>
             {
@@ -213,8 +212,8 @@ export class RepartitionsPageComponent implements OnInit {
 
     onCampaignStopRequested(res: any)
     {
-        var id = res.id;
-        var callback = res.callback;
+        const id = res.id;
+        const callback = res.callback;
         this.api.post("repartitions/stopCampaign", {id: id}).subscribe(
             msg =>
             {
