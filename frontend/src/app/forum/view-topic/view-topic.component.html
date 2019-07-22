@@ -32,15 +32,19 @@
 
             Votes : {{first_message.ratio}}
 
-            <a (click)="new_vote(first_message, 0)"><span class="fe fe-arrow-up" style="color:green"
-                                                          *ngIf="first_message.my_vote == 1"></span></a>
-            <a (click)="new_vote(first_message, 1)"><span class="fe fe-arrow-up" style="color:black"
-                                                          *ngIf="first_message.my_vote != 1"></span></a>
+            <a (click)="new_vote(first_message, 0)">
+                <span class="fe fe-arrow-up" style="color:green" *ngIf="first_message.my_vote == 1"></span>
+            </a>
+            <a (click)="new_vote(first_message, 1)">
+                <span class="fe fe-arrow-up" style="color:black" *ngIf="first_message.my_vote != 1"></span>
+            </a>
 
-            <a (click)="new_vote(first_message, 0)"><span class="fe fe-arrow-down" style="color:red"
-                                                          *ngIf="first_message.my_vote == -1"></span></a>
-            <a (click)="new_vote(first_message, -1)"><span class="fe fe-arrow-down" style="color:black"
-                                                           *ngIf="first_message.my_vote != -1"></span></a>
+            <a (click)="new_vote(first_message, 0)">
+                <span class="fe fe-arrow-down" style="color:red" *ngIf="first_message.my_vote == -1"></span>
+            </a>
+            <a (click)="new_vote(first_message, -1)">
+                <span class="fe fe-arrow-down" style="color:black" *ngIf="first_message.my_vote != -1"></span>
+            </a>
         </div>
     </div>
 
@@ -60,15 +64,20 @@
 
                     Votes : {{message.ratio}}
 
-                    <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green"
-                                                            *ngIf="message.my_vote == 1"></span></a>
-                    <a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black"
-                                                            *ngIf="message.my_vote != 1"></span></a>
+                    <a (click)="new_vote(message, 0)">
+                        <span class="fe fe-arrow-up" style="color:green" *ngIf="message.my_vote == 1"></span>
+                    </a>
 
-                    <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red"
-                                                            *ngIf="message.my_vote == -1"></span></a>
-                    <a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black"
-                                                             *ngIf="message.my_vote != -1"></span></a>
+                    <a (click)="new_vote(message, 1)">
+                        <span class="fe fe-arrow-up" style="color:black" *ngIf="message.my_vote != 1"></span>
+                    </a>
+
+                    <a (click)="new_vote(message, 0)">
+                        <span class="fe fe-arrow-down" style="color:red" *ngIf="message.my_vote == -1"></span>
+                    </a>
+                    <a (click)="new_vote(message, -1)">
+                        <span class="fe fe-arrow-down" style="color:black" *ngIf="message.my_vote != -1"></span>
+                    </a>
                 </div>
             </div>
         </ng-container>
