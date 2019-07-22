@@ -13,31 +13,65 @@
         </p>
     </div>
 
-    <ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
-        <div class="card">
-            <div class="card-body pb-0">
-                <markdown [data]="message.text"></markdown>
-            </div>
 
-            <div class="card-footer">
-                <i class="pull-right">
-                    <a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date:'medium'}}
-                </i>
+    <div class="card" *ngIf="order == 'ratio'">
 
-
-                Votes : {{message.ratio}}
-
-                <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green"
-                                                        *ngIf="message.my_vote == 1"></span></a>
-                <a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black"
-                                                        *ngIf="message.my_vote != 1"></span></a>
-
-                <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red"
-                                                        *ngIf="message.my_vote == -1"></span></a>
-                <a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black"
-                                                         *ngIf="message.my_vote != -1"></span></a>
-            </div>
+        <div class="card-header">
+            Message original
         </div>
+
+        <div class="card-body pb-0">
+            <markdown [data]="first_message.text"></markdown>
+        </div>
+
+        <div class="card-footer">
+            <i class="pull-right">
+                <a routerLink="/user/{{first_message.author.id}}">{{first_message.author.id}}</a> {{first_message.date | date:'medium'}}
+            </i>
+
+
+            Votes : {{first_message.ratio}}
+
+            <a (click)="new_vote(first_message, 0)"><span class="fe fe-arrow-up" style="color:green"
+                                                          *ngIf="first_message.my_vote == 1"></span></a>
+            <a (click)="new_vote(first_message, 1)"><span class="fe fe-arrow-up" style="color:black"
+                                                          *ngIf="first_message.my_vote != 1"></span></a>
+
+            <a (click)="new_vote(first_message, 0)"><span class="fe fe-arrow-down" style="color:red"
+                                                          *ngIf="first_message.my_vote == -1"></span></a>
+            <a (click)="new_vote(first_message, -1)"><span class="fe fe-arrow-down" style="color:black"
+                                                           *ngIf="first_message.my_vote != -1"></span></a>
+        </div>
+    </div>
+
+    <ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
+        <ng-container *ngIf="message.id != first_message.id || order != 'ratio'">
+            <div class="card">
+
+                <div class="card-body pb-0">
+                    <markdown [data]="message.text"></markdown>
+                </div>
+
+                <div class="card-footer">
+                    <i class="pull-right">
+                        <a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date:'medium'}}
+                    </i>
+
+
+                    Votes : {{message.ratio}}
+
+                    <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green"
+                                                            *ngIf="message.my_vote == 1"></span></a>
+                    <a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black"
+                                                            *ngIf="message.my_vote != 1"></span></a>
+
+                    <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red"
+                                                            *ngIf="message.my_vote == -1"></span></a>
+                    <a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black"
+                                                             *ngIf="message.my_vote != -1"></span></a>
+                </div>
+            </div>
+        </ng-container>
     </ng-container>
 
     <app-pagination-controls
