@@ -20,10 +20,7 @@ export class RepartitionsPageComponent implements OnInit {
     status = "";
 
     constructor(
-        private api: ApiService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private cache: RequestCacheService){}
+        private api: ApiService){}
 
     ngOnInit() {
         this.error = null;
