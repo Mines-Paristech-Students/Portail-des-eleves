@@ -11,7 +11,7 @@
             >
             <select class="custom-select col-md-2 offset-md-7" ngModel="selectedPromotion"
                     [(ngModel)]="search_promotion" (change)="updateParameters()">
-                <option value="-1">Toutes les promos</option>
+                <option value="-1" selected="selected">Toutes les promos</option>
                 <option *ngFor="let i of promotions" value="{{i}}">P{{i}}</option>
             </select>
         </div>
