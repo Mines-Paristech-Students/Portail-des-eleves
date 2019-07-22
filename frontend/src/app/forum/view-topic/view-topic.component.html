@@ -1,60 +1,60 @@
 <navbar></navbar>
 
-<div class="page">
-    <div class="page-main" *ngIf="topic.theme">
-        <div class="container">
-            <div class="mt-5">
-                <p class="pull-right"><a routerLink="/forum/theme/{{ topic.theme.id }}">Retour
-                    à {{ topic.theme.name }}</a></p>
-                <h1>{{topic.name}}</h1>
-                <p class="pull-right">
-                    <select class="custom-select" name="order" (change)="change_order($event.target.value)">
-                        <option value="date">Trier par date</option>
-                        <option value="ratio">Trier par votes</option>
-                    </select>
-                </p>
+<div class="container" *ngIf="topic.theme">
+    <div class="mt-5">
+        <p class="pull-right"><a routerLink="/forum/theme/{{ topic.theme.id }}">Retour
+            à {{ topic.theme.name }}</a></p>
+        <h1>{{topic.name}}</h1>
+        <p class="pull-right">
+            <select class="custom-select" name="order" (change)="change_order($event.target.value)">
+                <option value="date">Trier par date</option>
+                <option value="ratio">Trier par votes</option>
+            </select>
+        </p>
+    </div>
+
+    <ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
+        <div class="card">
+            <div class="card-body pb-0">
+                <markdown [data]="message.text"></markdown>
             </div>
 
-            <ng-container *ngFor="let message of list_messages | paginate: { itemsPerPage: 10, currentPage: p }">
-                <div class="card">
-                    <div class="card-body pb-0">
-                        <markdown [data]="message.text"></markdown>
-                    </div>
-
-                    <div class="card-footer">
-                        <i class="pull-right">
-                            <a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date:'medium'}}
-                        </i>
+            <div class="card-footer">
+                <i class="pull-right">
+                    <a routerLink="/user/{{message.author.id}}">{{message.author.id}}</a> {{message.date | date:'medium'}}
+                </i>
 
 
-                        Votes : {{message.ratio}}
+                Votes : {{message.ratio}}
 
-                        <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green" *ngIf="message.my_vote == 1"></span></a>
-                        <a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black" *ngIf="message.my_vote != 1"></span></a>
+                <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-up" style="color:green"
+                                                        *ngIf="message.my_vote == 1"></span></a>
+                <a (click)="new_vote(message, 1)"><span class="fe fe-arrow-up" style="color:black"
+                                                        *ngIf="message.my_vote != 1"></span></a>
 
-                        <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red" *ngIf="message.my_vote == -1"></span></a>
-                        <a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black" *ngIf="message.my_vote != -1"></span></a>
-                    </div>
-                </div>
-            </ng-container>
-
-            <app-pagination-controls
-                    (pageChange)="p = $event"
-                    previousLabel="Précédent"
-                    nextLabel="Suivant"
-            ></app-pagination-controls>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Répondre</div>
-                </div>
-                <div class="card-body p-0">
-                    <angular-markdown-editor textareaId="answer_message" [(ngModel)]="answer_message" rows="10"
-                                             name="markdownText" [options]="editorOptions"></angular-markdown-editor>
-                    <button type="button" class="m-4 btn btn-success" (click)="save()">Publier</button>
-                </div>
+                <a (click)="new_vote(message, 0)"><span class="fe fe-arrow-down" style="color:red"
+                                                        *ngIf="message.my_vote == -1"></span></a>
+                <a (click)="new_vote(message, -1)"><span class="fe fe-arrow-down" style="color:black"
+                                                         *ngIf="message.my_vote != -1"></span></a>
             </div>
         </div>
+    </ng-container>
 
+    <app-pagination-controls
+            (pageChange)="p = $event"
+            previousLabel="Précédent"
+            nextLabel="Suivant"
+    ></app-pagination-controls>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Répondre</div>
+        </div>
+        <div class="card-body p-0">
+            <angular-markdown-editor textareaId="answer_message" [(ngModel)]="answer_message" rows="10"
+                                     name="markdownText" [options]="editorOptions"></angular-markdown-editor>
+            <button type="button" class="m-4 btn btn-success" (click)="save()">Publier</button>
+        </div>
     </div>
 </div>
+
