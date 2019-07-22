@@ -62,7 +62,7 @@ export class LibraryManagerLoansComponent implements OnInit {
     }
 
     filterOrders() {
-        let url = `loans/?loanable__library__id=${this.library_id}`;
+        let url = `loans/?loanable__library__id=${this.library_id}&ordering=-loan_date`;
 
         if (this.filter.date) {
             // @ts-ignore
