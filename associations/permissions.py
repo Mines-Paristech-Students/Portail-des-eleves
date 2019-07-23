@@ -142,7 +142,7 @@ class CanManageLibrary(BasePermission):
 
             role = _get_role_for_user(request.user, obj.association.id)
         elif isinstance(obj, Loan):
-            if obj.user == request.user:
+            if obj.user == request.user and request.method in SAFE_METHODS:
                 return True
 
             role = _get_role_for_user(request.user, obj.loanable.library.id)
