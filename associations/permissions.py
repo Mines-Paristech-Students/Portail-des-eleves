@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File
+from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File, Loan, \
+    Loanable
 
 
 def _get_role_for_user(user, association):
@@ -107,6 +108,56 @@ class CanEditFiles(BasePermission):
             return False
 
         return role.files
+
+
+class CanManageLibrary(BasePermission):
+    message = 'Library management is not allowed.'
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        if request.method == 'CREATE':
+            if 'library' in request.data:
+                org_id = request.data['library']
+            elif 'association' in request.data:
+                org_id = request.data["association"]
+            else:
+                return False
+
+            role = _get_role_for_user(request.user, org_id)
+
+            if not role:
+                return False
+
+            return role.library or role.is_admin
+
+        return True
+
+    def has_object_permission(self, request, view, obj):
+
+        if isinstance(obj, Library):
+            if request.method in SAFE_METHODS:
+                return True
+
+            role = _get_role_for_user(request.user, obj.association.id)
+        elif isinstance(obj, Loan):
+            if obj.user == request.user:
+                return True
+
+            role = _get_role_for_user(request.user, obj.loanable.library.id)
+        elif isinstance(obj, Loanable):
+            if request.method in SAFE_METHODS:
+                return True
+
+            role = _get_role_for_user(request.user, obj.library.association.id)
+        else:
+            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
+
+        if not role:
+            return False
+
+        return role.library or role.is_admin
 
 
 class IsAssociationMember(BasePermission):

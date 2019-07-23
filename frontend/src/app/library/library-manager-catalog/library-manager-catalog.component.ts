@@ -29,6 +29,7 @@ export class LibraryManagerCatalogComponent implements OnInit {
 
     newLoanable() {
         let loanable = {
+            library: this.library.id,
             name: "Nouveau produit",
             description: "",
             comment: "",

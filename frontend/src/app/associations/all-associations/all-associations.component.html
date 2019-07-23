@@ -1,16 +1,11 @@
 <navbar></navbar>
 
-<div class="page">
-    <div class="page-main">
 
-        <div class="container">
-            <div class="page-header">
-                <h1 class="page-title">Liste des associations</h1>
-            </div>
-            <div *ngFor="let association of associations">
-				<p><a routerLink="/associations/{{ association.id }}">{{association.name}}</a></p>
-			</div>
-        </div>
-
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Liste des associations</h1>
+    </div>
+    <div *ngFor="let association of associations">
+        <p><a routerLink="/associations/{{ association.id }}">{{association.name}}</a></p>
     </div>
 </div>

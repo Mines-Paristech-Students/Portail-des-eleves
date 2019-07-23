@@ -25,7 +25,7 @@ export class GetRoleService {
 
             let checkPermissions = () => {
                 for (let p of this.permissions) {
-                    if (p[permissionType] && !p.is_archived) {
+                    if ((p[permissionType] || p.is_admin)&& !p.is_archived) {
                         observer.next(true);
                         return;
                     }
