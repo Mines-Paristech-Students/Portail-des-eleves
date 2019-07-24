@@ -1,10 +1,11 @@
-from django.shortcuts import render
-from rest_framework import mixins, status, viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+
 from chat.models import ChatMessage
 from chat.serializers import ChatMessageSerializer
+
 
 class ChatMessageViewSet(mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
@@ -36,7 +37,6 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         if self.queryset.first() is None:
             return Response(self.get_serializer(self.queryset.filter(id__lt=0)[:], many=True).data)
 
-
         params = self.request.query_params
 
         number_of_messages = int(params.get('quantity', 10))
@@ -67,7 +67,6 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         if not from_param.isdigit():
             raise ValidationError("The 'from' parameter must be an int and not '%s'" % from_param)
         from_param = int(from_param)
-
 
         latest_message = self.queryset.first()
         if latest_message is None or from_param >= latest_message.id:

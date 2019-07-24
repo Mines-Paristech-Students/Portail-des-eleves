@@ -24,7 +24,7 @@ python manage.py migrate
 
 python manage.py loaddata authentication
 python manage.py loaddata associations
-python manage.py loaddata chat
+python manage.py loaddata messages
 python manage.py loaddata forum
 python manage.py loaddata polls
 python manage.py loaddata repartitions

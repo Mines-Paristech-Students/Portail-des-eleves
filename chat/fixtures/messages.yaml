@@ -1,12 +1,14 @@
-- model: chat.ChatMessage:
+- model: chat.ChatMessage
   pk: 1
   fields:
     user: 14alarro
     message: Vamos a la playa senor zorro
+    created_at: 2019-07-23T13:19:37+00:00
 
-- model: chat.ChatMessage:
+- model: chat.ChatMessage
   pk: 2
   fields:
     user: 17bocquet
     message: Un jour j'ai gagné un concours de cuisine chinoise en leur faisant un méchoui
+    created_at: 2019-07-23T13:19:39+00:00
 
