@@ -5,14 +5,16 @@
         <div class="page-header">
             <h3 class="page-title">Prêts de {{ library.association.name }}</h3>
         </div>
-        <div class="row">
-            <p *ngIf="error" class="text-danger">Une erreur est survenue : {{ error }}</p>
 
+        <div class="row">
             <div class="col-md-3">
                 <library-sidebar [library]="library"></library-sidebar>
             </div>
 
             <div class="col-md-9">
+                <p *ngIf="error" class="text-danger">Une erreur est survenue : {{ error }}</p>
+
+
                 <div class="card" *ngIf="library">
                     <table class="table card-table table-vcenter">
                         <thead>

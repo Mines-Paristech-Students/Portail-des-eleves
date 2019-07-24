@@ -16,10 +16,11 @@ class Loanable(models.Model):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True)
-    comment = models.TextField(null=True)
+    comment = models.TextField(null=True, blank=True)
     library = models.ForeignKey(Library, models.CASCADE, related_name="loanables")
+
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)
