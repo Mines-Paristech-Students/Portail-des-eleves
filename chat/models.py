@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import User
 
+
 class ChatMessage(models.Model):
     """
     Represents a chat entry in the database
