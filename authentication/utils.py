@@ -1,6 +1,6 @@
-from collections import OrderedDict
-from datetime import datetime, date, timedelta
 import json
+from datetime import date, timedelta
+
 
 class Birthday:
     """Utils class to represent, sort, index and compare birthdays
@@ -45,7 +45,7 @@ class Birthday:
             return True
         elif self.month == other.month:
             return self.day > other.day
-        else: # self.month < other.month
+        else:  # self.month < other.month
             return False
 
     def __ge__(self, other):
@@ -56,7 +56,7 @@ class Birthday:
             return True
         elif self.month == other.month:
             return self.day >= other.day
-        else: # self.month < other.month
+        else:  # self.month < other.month
             return False
 
     def __lt__(self, other):
@@ -97,6 +97,3 @@ class BirthdaysEncoder(json.JSONEncoder):
 
     def encode(self, obj):
         return super(BirthdaysEncoder, self).encode(self._encode(obj))
-
-
-

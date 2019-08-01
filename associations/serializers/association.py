@@ -1,13 +1,11 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
 from rest_framework_bulk.serializers import BulkListSerializer
 
 from associations.models import Association, Role
-from associations.models import User
 from associations.serializers.page import PageShortSerializer
-from authentication.serializers import UserShortSerializer
+from authentication.serializers.user import UserShortSerializer
 
 
 class AssociationsShortSerializer(serializers.ModelSerializer):

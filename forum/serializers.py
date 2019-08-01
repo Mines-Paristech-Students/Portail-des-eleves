@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from forum.models import Theme, Topic, MessageForum
-from authentication.serializers import UserShortSerializer
+from authentication.serializers.user import UserShortSerializer
 
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:

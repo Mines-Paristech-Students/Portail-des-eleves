@@ -18,7 +18,7 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         """Overriden from mixins.CreateModelMixin
-        The user field from the serializer is populated with the user doing the request.
+        The user field from the serializers is populated with the user doing the request.
         """
         serializer.save(user=self.request.user)
 
