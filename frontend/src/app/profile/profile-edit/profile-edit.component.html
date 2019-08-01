@@ -9,7 +9,8 @@
             <div class="card">
                 <div class="card-body text-center">
 
-                    <span class="avatar avatar-xl mr-3">{{ user.first_name[0] }}{{ user.last_name[0] }}</span> <!--// TODO: add real photo-->
+                    <span class="avatar avatar-xl mr-3">{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+                    <!--// TODO: add real photo-->
                     <h2 class="mt-2 mb-0">
                         {{ user.first_name }}
                         <span *ngIf="user.nickname"> "{{ user.nickname }}" </span>
@@ -31,14 +32,38 @@
                         <div class="card-title">Informations personnelles</div>
                     </div>
                     <div class="card-body">
-                            <strong><label for="nickname">Nickname : </label></strong>
-                            <input id="nickname" name="nickname" type="text" class="form-control" [(ngModel)]="user.nickname"><br>
+                        <strong><label for="nickname">Nickname : </label></strong>
+                        <input
+                                id="nickname" name="nickname" type="text" class="form-control"
+                                [(ngModel)]="user.nickname"
+                        ><br>
 
-                            <strong><label for="phone">Téléphone : </label></strong>
-                            <input id="phone" name="phone" type="text" class="form-control" [(ngModel)]="user.phone"><br>
+                        <strong><label for="phone">Téléphone : </label></strong>
+                        <input
+                                id="phone" name="phone" type="text" class="form-control"
+                                [(ngModel)]="user.phone"
+                        ><br>
 
-                            <strong><label for="city_of_origin">Ville d'origine : </label></strong>
-                            <input id="city_of_origin" name="city_of_origin" type="text" class="form-control"[(ngModel)]="user.city_of_origin">
+                        <strong><label for="city_of_origin">Ville d'origine : </label></strong>
+                        <input
+                                id="city_of_origin" name="city_of_origin" type="text"
+                                class="form-control" [(ngModel)]="user.city_of_origin"
+                        >
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Questions de personnalité</div>
+                    </div>
+                    <div class="card-body">
+                        <div *ngFor="let question of questions ; let i = index">
+                            <strong><label for="{{i}}">{{question.text}} : </label></strong>
+                            <input
+                                    id="{{i}}" name="{{i}}" type="text" class="form-control"
+                                    [(ngModel)]="question.answer.text"
+                            ><br>
+                        </div>
                     </div>
                 </div>
 

@@ -29,3 +29,4 @@ python manage.py loaddata forum
 python manage.py loaddata polls
 python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
+python manage.py loaddata profile

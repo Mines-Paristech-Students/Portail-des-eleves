@@ -40,6 +40,11 @@
 
                     <strong>Option : </strong> {{ user.option }} <br>
                     <strong>Sports : </strong> {{ user.sport }} <br>
+
+                    <div *ngFor="let question of questions">
+                        <strong>{{question.text}}</strong> :
+                        <span *ngIf="question.answer">{{question.answer.text}}</span>
+                    </div>
                 </div>
             </div>
 

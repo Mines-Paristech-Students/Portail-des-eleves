@@ -1,0 +1,19 @@
+
+- model: authentication.ProfileQuestion
+  pk: 1
+  fields:
+    text: "Ton plat préféré ?"
+
+- model: authentication.ProfileQuestion
+  pk: 2
+  fields:
+    text: "Combien d'assiettes sur le bateau ?"
+
+
+
+- model: authentication.ProfileAnswer
+  pk: 1
+  fields:
+    text: "Les lasagnes"
+    user: 17bocquet
+    question: 1

@@ -10,6 +10,7 @@ import {ActivatedRoute} from "@angular/router";
 export class ProfileShowComponent implements OnInit {
 
   user: any ;
+  questions: any;
   error: any ;
 
   constructor(private api: ApiService, private route: ActivatedRoute) { }
@@ -21,7 +22,14 @@ export class ProfileShowComponent implements OnInit {
               error => {
               this.error = error;
               console.log(error)
-      })
+      });
+
+      this.api.get("profile/questions/" + id).subscribe(
+          res => this.questions = res["questions"],
+              error => {
+              this.error = error;
+              console.log(error)
+      });
   }
 
 }

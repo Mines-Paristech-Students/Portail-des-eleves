@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 
 
 class GroupTestCase(TestCase):
-    fixtures = ['authentication.yaml', 'associations.json']
+    fixtures = ['authentication.yaml', 'associations.yaml']
     client = APIClient(enforce_csrf_checks=True)
 
     def logout(self):

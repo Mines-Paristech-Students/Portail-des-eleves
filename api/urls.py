@@ -12,7 +12,8 @@ from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, Mar
     LoanableViewSet
 from associations.views import RoleViewSet
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
-from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays
+from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
+    ProfileAnswerViewSet, ProfileQuestionViewSet, get_profile_questions
 from authentication.views import get_promotions
 from chat.views import ChatMessageViewSet
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet, NewVoteMessageView
@@ -43,6 +44,10 @@ router.register(r'forum', ThemeViewSet)
 router.register(r'theme', TopicViewSet)
 router.register(r'topic', MessageForumViewSet)
 
+# Profile
+router.register(r'profile_question', ProfileQuestionViewSet)
+router.register(r'profile_answer', ProfileAnswerViewSet)
+
 urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
@@ -57,5 +62,6 @@ urlpatterns = [
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
     path('promotions/', get_promotions, name="get_promotions"),
     path('rer/', get_rer_timetable, name="get_rer_timetable"),
-    path('subscriptions/', include(subscriptions.urls))
+    path('subscriptions/', include(subscriptions.urls)),
+    path('profile/questions/<user_pk>', get_profile_questions)
 ] + router.urls

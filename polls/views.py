@@ -128,7 +128,7 @@ class CreateVote(CreateAPIView):
 
     def perform_create(self, serializer):
         """Overriden from mixins.CreateModelMixin
-        The user field from the serializer is populated with the user doing the request.
+        The user field from the serializers is populated with the user doing the request.
         """
         current_poll = Poll.objects.filter(state='ACCEPTED', publication_date=date.today()).first()
         if current_poll is None:
