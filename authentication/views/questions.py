@@ -27,6 +27,7 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
         request.data["user"] = request.user.id
         return super(ProfileAnswerViewSet, self).create(request)
 
+
 @api_view(['GET'])
 def get_profile_questions(request, user_pk):
     questions = ProfileQuestion.objects.all()
