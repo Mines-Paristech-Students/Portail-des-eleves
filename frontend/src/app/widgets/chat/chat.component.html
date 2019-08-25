@@ -20,11 +20,7 @@
             <br>
         </ng-container>
     </div>
-    <form class="input-icon my-3 my-lg-0" method="post" action="">
-        <input type="text" class="form-control header-search" [(ngModel)]="messageToSend" placeholder="Répondre" tabindex="1" name="messageContent">
-        <div class="input-icon-addon">
-            <i class="fe fe-send"></i>
-            <button type="submit" (click)="submitMessage()"  class="btn btn-primary btn-block" hidden="true">Connection</button>
-        </div>
+    <form class="input-icon my-3 my-lg-0">
+        <input type="text" class="form-control header-search" [(ngModel)]="messageToSend" (keypress)="submitMessage($event)" placeholder="Répondre" tabindex="1" name="messageContent">
     </form>
 </div>

@@ -10,9 +10,11 @@ from authentication.utils import Birthday, BirthdaysEncoder
 
 
 @api_view(['GET'])
-def get_birthdays(request, days=7):
-    """API endpoint to get birthdays information in the following X days
-    """
+def get_birthdays(request):
+    """API endpoint to get birthdays information in the following X days"""
+
+    days = request.GET.get("days", 7)
+    days = int(days)
 
     # Any request with more than 365 days basically mean to fetch all incoming birthdays over the year
     if days > 365:

@@ -113,9 +113,9 @@ export class WidgetChatComponent extends AbstractWidget implements OnInit {
         this._chatElement.scrollTop = this._chatElement.scrollHeight;
     }
 
-    public submitMessage(): void {
-        if(this.messageToSend){
-            console.log(this.messageToSend);
+
+    public submitMessage($event): void {
+        if(this.messageToSend && $event.key == "Enter"){
             this._apiService.post("chat/", {'message': this.messageToSend}).subscribe(
                 _ => {this._update()},
                 err => {console.log(err)}

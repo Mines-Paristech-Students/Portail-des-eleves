@@ -56,7 +56,6 @@ urlpatterns = [
     url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/', get_birthdays, name="get_birthdays"),
-    path('birthdays/<int:days>/', get_birthdays, name="get_birthdays"),
     path('subscriptions/', include(subscriptions.urls)),
     path('repartitions/', include(repartitions.urls)),
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),

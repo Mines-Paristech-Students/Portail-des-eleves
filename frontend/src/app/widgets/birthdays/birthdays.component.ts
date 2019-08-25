@@ -16,7 +16,7 @@ export class WidgetBirthdaysComponent extends AbstractWidget implements OnInit {
     }
 
     ngOnInit() {
-        this._apiService.get("birthdays/365/").subscribe(
+        this._apiService.get("birthdays?days=7").subscribe(
             (data:{"birthdays": any[]}) => {
                 this.birthdays = data.birthdays
             },

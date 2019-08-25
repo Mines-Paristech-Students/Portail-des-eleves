@@ -23,7 +23,7 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
     filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ('user',)
 
-    def create(self, request):
+    def create(self, request, **kwargs):
         request.data["user"] = request.user.id
         return super(ProfileAnswerViewSet, self).create(request)
 

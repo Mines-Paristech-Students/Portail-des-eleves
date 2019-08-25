@@ -1,0 +1,5 @@
+- model: polls.Poll
+  pk: 1
+  fields:
+    user: 17bocquet
+    state: ACCEPTED
