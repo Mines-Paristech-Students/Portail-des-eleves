@@ -1,0 +1,50 @@
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 2
+    marketplace: biero
+
+- model: associations.marketplace
+  pk: biero
+  fields:
+    enabled: true
+
+- model: associations.product
+  pk: 1
+  fields:
+    name: Grenadine
+    description: Mélange subtile de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 2
+  fields:
+    name: Jus de tomate
+    description: Bon pour le corps et l'esprit, le jus de tomate saura ravire vos
+      papilles et votre portefeuille
+    price: 1.5
+    marketplace: biero
+    number_left: 180
+
+- model: associations.product
+  pk: 3
+  fields:
+    name: Jus de pomme
+    description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
+      y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
+      déjeuner
+    price: 12.0
+    marketplace: biero
+    number_left: 24
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17bocquet
+    association: biero
+    role: Programmeur / Brasseur
+    is_admin: false
+    marketplace: true

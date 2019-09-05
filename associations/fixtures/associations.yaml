@@ -1,4 +1,3 @@
-
 - model: associations.marketplace
   pk: bde
   fields:
@@ -31,16 +30,16 @@
   fields:
     loanable: 1
     user: 17bocquet
-    loan_date: '2019-01-01'
-    expected_return_date: '2050-12-01'
+    loan_date: '2019-01-01T00:00:00+00:00'
+    expected_return_date: '2050-12-01T00:00:00+00:00'
     status: BORROWED
 - model: associations.loan
   pk: 2
   fields:
     loanable: 1
     user: 17bocquet
-    loan_date: '2018-03-04'
-    expected_return_date: '2018-06-01'
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-06-01T00:00:00+00:00'
     status: RETURNED
 - model: associations.association
   pk: bde
@@ -176,7 +175,7 @@
     description: Tout ce qu'il vous faut pour faire de bons pancakes
     file: pancakes.txt
     folder: 1
-    uploaded_on: '2017-08-24T19:32:28+00:00'
+    uploaded_on: '2017-08-24T19:32:28+02:00'
     uploaded_by: 14alarro
     association: bde
 - model: associations.file
@@ -186,7 +185,7 @@
     description: Pour la tartiflette il vous faut - oups - no spoiler
     file: tartiflette.txt
     folder: 1
-    uploaded_on: '2017-08-25T17:02:52+00:00'
+    uploaded_on: '2017-08-25T17:02:52+02:00'
     uploaded_by: 17bocquet
     association: bde
 - model: associations.file
@@ -195,7 +194,7 @@
     name: Lorem Ipsum 2
     description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
     file: lorem-ipsum.pdf
-    uploaded_on: '2017-08-24T17:41:28+00:00'
+    uploaded_on: '2017-08-24T17:41:28+02:00'
     uploaded_by: 17bocquet
     association: bde
 - model: associations.file
@@ -232,4 +231,3 @@
     association: biero
     role: Programmeur / Brasseur
     is_admin: true
-

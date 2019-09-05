@@ -1,13 +1,14 @@
 import json
 from decimal import Decimal
 
-from django.http import JsonResponse
-from rest_framework import viewsets, filters, mixins
+from django.http import JsonResponse, Http404, HttpResponseForbidden
+from rest_framework import viewsets, filters, mixins, status
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Order, Product, Funding
-from associations.permissions import IsAssociationMember
+from associations.permissions import IsAssociationMember, CanManageMarketplace, _get_role_for_user
 from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
 from authentication.models import User
 
@@ -15,7 +16,7 @@ from authentication.models import User
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
-    permission_classes = (IsAssociationMember,)
+    permission_classes = (CanManageMarketplace,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -35,7 +36,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def create(self, request, **kwargs):
 
-        body = json.loads(request.body)
+        body = request.data
         user_id = body["user"] if "user" in body else None
         products = body["products"]
 
@@ -92,11 +93,14 @@ class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.Ge
 
 
 class BalanceView(APIView):
-    permission_classes = (IsAssociationMember,)
 
     def get(self, request, marketplace_id, user_id, format=None):
         user_id = user_id if user_id else request.user.id
         balance = Decimal(0.0)
+
+        role = _get_role_for_user(request.user, marketplace_id)
+        if user_id != request.user.id and (role is None or (not role.marketplace and not role.is_admin)):
+            return HttpResponseForbidden()
 
         orders = Order.objects.filter(buyer__id=user_id, product__marketplace__id=marketplace_id)
         fundings = Funding.objects.filter(user__id=user_id, marketplace__id=marketplace_id)
@@ -115,7 +119,12 @@ class BalanceView(APIView):
         })
 
     def put(self, request, marketplace_id, user_id, format=None):
-        body = json.loads(request.body)
+
+        role = _get_role_for_user(request.user, marketplace_id)
+        if role is None or (not role.marketplace and not role.is_admin):
+            return HttpResponseForbidden()
+
+        body = request.data
         user = User.objects.get(pk=user_id)
 
         try:
