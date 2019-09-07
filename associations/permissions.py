@@ -94,7 +94,6 @@ class CanEditFiles(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        association = None
         if isinstance(obj, File):
             association = obj.association
         elif isinstance(obj, Folder):
@@ -126,10 +125,8 @@ class CanManageMarketplace(BasePermission):
                 return False
 
             role = _get_role_for_user(request.user, org_id)
-
             if not role:
                 return False
-
             return role.marketplace or role.is_admin
 
         return False
@@ -142,7 +139,8 @@ class CanManageMarketplace(BasePermission):
 
             role = _get_role_for_user(request.user, obj.id)
         elif isinstance(obj, Order):
-            if obj.user == request.user and request.method in SAFE_METHODS:
+            raise Exception(obj, request)
+            if obj.buyer == request.user and request.method in SAFE_METHODS:
                 return True
 
             role = _get_role_for_user(request.user, obj.product.marketplace.id)
@@ -157,8 +155,37 @@ class CanManageMarketplace(BasePermission):
         if not role:
             return False
 
-        return role.library or role.is_admin
+        return role.marketplace or role.is_admin
 
+class OrderPermission(BasePermission):
+    message = 'You cannot act on this order.'
+
+    def has_permission(self, request, view):
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if isinstance(obj, Marketplace):
+            if request.method in SAFE_METHODS:
+                return True
+
+            role = _get_role_for_user(request.user, obj.id)
+        elif isinstance(obj, Order):
+            if obj.buyer == request.user and request.method in SAFE_METHODS:
+                return True
+
+            role = _get_role_for_user(request.user, obj.product.marketplace.id)
+        elif isinstance(obj, Product):
+            if request.method in SAFE_METHODS:
+                return True
+
+            role = _get_role_for_user(request.user, obj.marketplace.id)
+        else:
+            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
+
+        if not role:
+            return False
+
+        return role.marketplace or role.is_admin
 
 class CanManageLibrary(BasePermission):
     message = 'Library management is not allowed.'
