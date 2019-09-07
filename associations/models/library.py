@@ -35,6 +35,8 @@ class Loan(models.Model):
     STATUS = (
         ("BORROWED", "Emprunté"),  # The product has been given. The order cannot be CANCELLED then
         ("CANCELLED", "Annulé"),  # The person cancels the order
+        ("PENDING", "En attente"),  # The person has asked for the loan
+        ("REJECTED", "Refusé"),  # The library manager has refused to loan the product
         ("RETURNED", "Rendu"),  # The loan is finished
     )
     status = models.CharField(choices=STATUS, max_length=200)
