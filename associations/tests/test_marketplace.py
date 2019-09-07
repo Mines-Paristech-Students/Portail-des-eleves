@@ -55,8 +55,6 @@ class MarketplaceTestCase(BaseTestCase):
 
         self.login("17wan-fat")
         res = self.client.get("/api/v1/orders/", format='json', content_type='application/json')
-        import pdb
-        pdb.set_trace()
         self.assertEqual(res.content, [])
 
     def test_balance_is_correcly_computed(self):

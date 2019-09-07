@@ -1,0 +1,70 @@
+- model: authentication.user
+  pk: 17admin
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Admin
+    last_name: Admin
+    email: admin@mpt.fr
+    is_admin: true
+    promo: 17
+
+- model: authentication.user
+  pk: 17simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Simple
+    last_name: Simple
+    email: simple@mpt.fr
+    is_admin: false
+    promo: 17
+
+- model: authentication.user
+  pk: 17bocquet
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Adrien
+    last_name: Bocquet
+    email: 17bocquet@mpt.fr
+    birthday: '1997-01-08'
+    is_active: true
+    is_admin: true
+    nickname: the roc
+    city_of_origin: Gotham
+    room: '1234'
+    phone: "+33456789012"
+    promo: 17
+
+- model: authentication.user
+  pk: 17wan-fat
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Pierre
+    last_name: Wan-Fat
+    email: 17wan-fat@mpt.fr
+    birthday: '1998-06-26'
+    is_active: true
+    is_admin: false
+    nickname: Le Rocher
+    city_of_origin: Le Tampon
+    room: '802'
+    phone: ''
+    promo: 17
+
+- model: authentication.user
+  pk: 18chlieh
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Reda
+    last_name: Chlieh
+    email: 18chlieh@mpt.fr
+    birthday: '1998-06-10'
+    is_active: true
+    is_admin: false
+    nickname: Hulk
+    city_of_origin: Rabat
+    room: '105'
+    phone: ''
+    promo: 18
