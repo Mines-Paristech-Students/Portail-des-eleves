@@ -15,10 +15,10 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     image = models.ImageField()
-    comment = models.TextField(null=True)
+    comment = models.TextField(null=True, blank=True)
 
     marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="products")
 

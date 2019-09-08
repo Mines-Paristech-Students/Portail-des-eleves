@@ -1,5 +1,6 @@
 import json
 
+from associations.models import Order
 from associations.tests.base_test import BaseTestCase
 
 
@@ -8,32 +9,33 @@ class MarketplaceTestCase(BaseTestCase):
 
     def make_order(self):
         self.login("16leroy")
-        return self.client.post("/api/v1/orders/", {"products": [
+        res = self.client.post("/api/v1/orders/", {"products": [
             {"id": 2, "quantity": 2},
             {"id": 3, "quantity": 4}
         ]}, format='json', content_type='application/json')
+
+        self.assertEqual(res.status_code, 200)
+
+        return res
 
     def test_make_order(self):
         res = self.make_order()
         self.assertEqual(res.status_code, 200)
 
-        res = self.client.get("/api/v1/orders/", format='json', content_type='application/json')
+        res = self.client.get("/api/v1/orders/?marketplace=biero", format='json', content_type='application/json')
 
         self.assertEqual(res.status_code, 200)
-
         res = json.loads(res.content)
-        self.assertEqual(len(res), 0)
+        self.assertEqual(len(res), 2)
         res = res[0]
-        self.assertEqual(res["buyer"], "17leroy")
+        self.assertEqual(res["buyer"], "16leroy")
         self.assertEqual(res["product"]["id"], 3)
         self.assertEqual(res["quantity"], 4)
 
     def test_cannot_access_product_management_if_not_in_team(self):
         self.make_order()
 
-        self.login("17wan-fat")
-
-        res = self.client.post("/api/v1/products", {"product": {
+        res = self.client.post("/api/v1/products/", {
             "name": "Nouveau produit",
             "price": 3.0,
             "description": "",
@@ -41,34 +43,35 @@ class MarketplaceTestCase(BaseTestCase):
             "number_left": 10,
             "still_in_the_catalogue": True,
             "orderable_online": True
-        }}, format='json', content_type='application/json')
+        }, format='json', content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
-        res = self.client.put("/api/v1/products/1", format='json', content_type='application/json')
+        res = self.client.put("/api/v1/products/1/", format='json', content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
-        res = self.client.delete("/api/v1/products/1", format='json', content_type='application/json')
+        res = self.client.delete("/api/v1/products/1/", format='json', content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
     def test_cannot_see_others_orders(self):
         self.make_order()
 
         self.login("17wan-fat")
-        res = self.client.get("/api/v1/orders/", format='json', content_type='application/json')
-        self.assertEqual(res.content, [])
+        res = self.client.get("/api/v1/orders/?marketplace=biero", format='json', content_type='application/json')
+        self.assertEqual(json.loads(res.content), [])
+
+        self.login("16leroy")
+        res = self.client.get("/api/v1/orders/?marketplace=biero", format='json', content_type='application/json')
+        self.assertNotEqual(json.loads(res.content), [])
 
     def test_balance_is_correcly_computed(self):
-        self.make_order() # leroy orders but nothing is validated
-
+        self.make_order()  # leroy orders but nothing is validated
         self.login("16leroy")  # the orders are now taken into account
 
         res = json.loads(self.client.get("/api/v1/marketplace/biero/balance/").content)
         self.assertEqual(res["user"], "16leroy")
-        self.assertEqual(float(res["balance"]), 0)  # 4 * 12 + 2 * 1.5 = 51
-
-        self.login("17wan-fat") # wan fat validates
-        orders = json.loads(self.client.get("/api/v1/orders/?buyer=16leroy").content)
-
+        self.assertEqual(float(res["balance"]), 0)
+        self.login("17bocquet")  # wan fat validates
+        orders = json.loads(self.client.get("/api/v1/orders/?marketplace=biero").content)
         for order in orders:
             res = self.client.patch(
                 "/api/v1/orders/{}/".format(order.get("id")),
@@ -76,7 +79,6 @@ class MarketplaceTestCase(BaseTestCase):
                 content_type='application/json'
             )
             self.assertEqual(res.status_code, 200)
-
         self.login("16leroy")  # the orders are now taken into account
 
         res = json.loads(self.client.get("/api/v1/marketplace/biero/balance/").content)
