@@ -99,6 +99,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 
         instance.enabled = validated_data.get('enabled', instance.enabled)
         instance.save()
+        return instance
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
