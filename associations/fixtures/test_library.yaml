@@ -1,0 +1,273 @@
+# Some explanations about the three libraries here (bd-tek, biero and bde).
+#
+# * bd-tek is an enabled library with some loanables.
+# * biero is a disabled library with some loanables.
+# * bde's library does not exist and thus has no loanables.
+#
+# An user called 17simple_xxx is a simple member of the association xxx.
+# An user called 17library_xxx is a library administrator of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx but NOT a library manager of this association.
+
+- model: associations.association
+  pk: bd-tek
+  fields:
+    name: BD-tek
+    rank: 1
+    library: bd-tek
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 2
+    library: biero
+
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 3
+
+- model: associations.library
+  pk: biero
+  fields:
+    enabled: false
+
+- model: associations.library
+  pk: bd-tek
+  fields:
+    enabled: true
+
+- model: associations.loanable
+  pk: 1
+  fields:
+    name: Écocup
+    description: Toujours pas dépassé la flemme d’aller chercher un verre au A2Pas ? La biéro t’assure.
+    comment: 17chabert a peut-être pissé dedans, lave-la bien d’abord.
+    library: biero
+
+- model: associations.loanable
+  pk: 2
+  fields:
+    name: Clés de l’Octo
+    description: Pour pouvoir profiter de la cuisine du -2 !
+    comment: Les cafards sont inclus.
+    library: biero
+
+- model: associations.loanable
+  pk: 3
+  fields:
+    name: BD-primé
+    description: Pour les soirs de pluie, les veilles de vacances ou les lendemains de pâle de maths.
+    comment: Dis-toi qu’il y a toujours un AST plus dans la merde que toi.
+    library: bd-tek
+
+- model: associations.loanable
+  pk: 4
+  fields:
+    name: BD-bile
+    description: Un recueil des blagues de 17bocquet.
+    comment: Oui c’est moi... git blame associations/fixtures/test_library.yaml
+    library: bd-tek
+
+- model: authentication.user
+  pk: 17admin_bd-tek
+  fields:
+    email: 17admin_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Admin
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_bd-tek
+    association: bd-tek
+    role: Admin no library
+    is_admin: true
+    library: false
+
+- model: authentication.user
+  pk: 17library_bd-tek
+  fields:
+    email: 17library_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Library administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17library_bd-tek
+    association: bd-tek
+    role: Library administrator
+    is_admin: false
+    library: true
+
+- model: authentication.user
+  pk: 17member_bd-tek
+  fields:
+    email: 17member_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Member
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17member_bd-tek
+    association: bd-tek
+    role: Simple member
+    is_admin: false
+    library: false
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biero
+    last_name: Manager
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin no library
+    is_admin: true
+    library: false
+
+- model: authentication.user
+  pk: 17library_biero
+  fields:
+    email: 17library_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Library administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17library_biero
+    association: biero
+    role: Library administrator
+    is_admin: false
+    library: true
+
+- model: authentication.user
+  pk: 17library_bde
+  fields:
+    email: 17library_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Library administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17library_bde
+    association: bde
+    role: Library administrator
+    is_admin: false
+    library: true
+
+- model: authentication.user
+  pk: 17admin_bde
+  fields:
+    email: 17admin_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Admin
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_bde
+    association: bde
+    role: Admin no library
+    is_admin: true
+    library: false
+
+- model: associations.loan
+  pk: 0
+  fields:
+    loanable: 1
+    user: 17library_bd-tek
+    loan_date: '2019-01-01T00:00:00+00:00'
+    expected_return_date: '2019-01-07T00:00:00+00:00'
+    real_return_date: '2019-01-02T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 1
+  fields:
+    loanable: 1
+    user: 17admin_bd-tek
+    loan_date: '2019-01-03T00:00:00+00:00'
+    expected_return_date: '2019-01-09T00:00:00+00:00'
+    real_return_date: '2019-01-04T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 2
+  fields:
+    loanable: 1
+    user: 17admin
+    loan_date: '2019-01-05T00:00:00+00:00'
+    expected_return_date: '2019-01-11T00:00:00+00:00'
+    real_return_date: '2019-01-06T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 3
+  fields:
+    loanable: 1
+    user: 17member_bd-tek
+    loan_date: '2019-01-07T00:00:00+00:00'
+    expected_return_date: '2019-01-13T00:00:00+00:00'
+    real_return_date: '2019-01-08T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 10
+  fields:
+    loanable: 1
+    user: 17simple
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    real_return_date: '2018-03-07T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 11
+  fields:
+    loanable: 3
+    user: 17simple
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    real_return_date: '2018-03-07T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 20
+  fields:
+    loanable: 4
+    user: 17wan-fat
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: BORROWED

@@ -6,6 +6,8 @@ from rest_framework.test import APIClient
 class BaseTestCase(TestCase):
     client = APIClient(enforce_csrf_checks=True)
 
+    api_base = '/api/v1/'
+
     def logout(self):
         """Log the current user out."""
         self.client.logout()
@@ -23,3 +25,21 @@ class BaseTestCase(TestCase):
         url = reverse('token_obtain_pair')
         data = {'id': username, 'password': password}
         return self.client.post(url, data, format='json')
+
+    def delete(self, endpoint=''):
+        return self.client.delete(self.api_base + endpoint)
+
+    def get(self, endpoint=''):
+        return self.client.get(self.api_base + endpoint, format='json', content_type='application/json')
+
+    def patch(self, endpoint='', data=''):
+        return self.client.patch(self.api_base + endpoint,
+                                 data=data,
+                                 format='json',
+                                 content_type='application/json')
+
+    def post(self, endpoint='', data=''):
+        return self.client.post(self.api_base + endpoint,
+                                data=data,
+                                format='json',
+                                content_type='application/json')
