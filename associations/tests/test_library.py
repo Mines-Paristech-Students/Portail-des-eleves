@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from associations.tests.base_test import BaseTestCase
 from associations.models.association import Association, Role
@@ -7,9 +8,11 @@ from associations.models.library import Library, Loanable, Loan
 
 # Please see the comments on test_library.yaml to get a better understanding of the test fixtures.
 
-class LibraryTestCase(BaseTestCase):
+class BaseLibraryTestCase(BaseTestCase):
     fixtures = ['test_authentication.yaml', 'test_library.yaml']
 
+
+class LibraryTestCase(BaseLibraryTestCase):
     ########
     # LIST #
     ########
@@ -108,9 +111,7 @@ class LibraryTestCase(BaseTestCase):
         self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bd-tek')
 
 
-class LoanableTestCase(BaseTestCase):
-    fixtures = ['test_authentication.yaml', 'test_library.yaml']
-
+class LoanableTestCase(BaseLibraryTestCase):
     ########
     # LIST #
     ########
@@ -247,9 +248,7 @@ class LoanableTestCase(BaseTestCase):
         self.assertFalse(Loanable.objects.filter(pk=3).exists())
 
 
-class LibraryRolesTestCase(BaseTestCase):
-    fixtures = ['test_authentication.yaml', 'test_library.yaml']
-
+class LibraryRolesTestCase(BaseLibraryTestCase):
     def test_if_not_association_admin_then_cannot_add_library_role(self):
         for user in ['17simple',  # A simple user.
                      '17admin',  # A global administrator.
@@ -287,3 +286,125 @@ class LibraryRolesTestCase(BaseTestCase):
         res = self.patch('roles/1/', data={'library': False})
         self.assertEqual(res.status_code, 200)
         self.assertFalse(Role.objects.get(pk=1).library)
+
+
+class LoanTestCase(BaseLibraryTestCase):
+    nb_loans = {library: len(Loan.objects.filter(loanable__library=library)) for library in ['bd_tek']}
+
+    # Can X see the loans of Y?
+    #
+    # || X \\ Y             | Herself | Association members | Everyone ||
+    # || Simple user        | Yes     | No                  | No       ||
+    # || Association member | Yes     | No                  | No       ||
+    # || Library admin      | Yes     | Yes                 | No       ||
+    # || Association admin  | Yes     | No                  | No       ||
+    # || Global admin       | Yes     | No                  | No       ||
+
+    def assertCanListLoans(self, loans, code=200, user=''):
+        """Fail if the loans listed at "loans/" do not contain the loans passed as a parameter."""
+
+        res = self.get('loans/')
+        self.assertEqual(res.status_code, code)
+
+        res_ids = set([loan['id'] for loan in res.data])
+        for loan in loans:
+            self.assertIn(loan.id, res_ids, msg=f'User {user} cannot list loan {loan.id}.')
+
+    def assertCanOnlyListLoans(self, loans, code=200, user=''):
+        """Fail if the loans listed at "loans/" are not exactly the loans passed as a parameter."""
+
+        res = self.get('loans/')
+        self.assertEqual(res.status_code, code)
+
+        res_ids = set([loan['id'] for loan in res.data])
+        expected_ids = set([loan.id for loan in loans])
+        self.assertEqual(res_ids, expected_ids, msg=f'User {user}: expected list {expected_ids}, got list {res_ids}.')
+
+    def assertAccessToLoan(self, loan_id, code=200, user=''):
+        """Fail if access is not given to loan loan_id."""
+
+        res = self.get(f'loans/{loan_id}/')
+        self.assertEqual(res.status_code, code, msg=f'User {user} cannot access loan {loan_id}.')
+
+    def assertNoAccessToLoan(self, loan_id, code=403, user=''):
+        """Fail if access is given to loan loan_id."""
+
+        res = self.get(f'loans/{loan_id}/')
+        self.assertEqual(res.status_code, code, msg=f'User {user} can access loan {loan_id}.')
+
+    ########
+    # LIST #
+    ########
+
+    def test_if_not_logged_in_then_no_access_to_loans(self):
+        res = self.get('loans/')
+        self.assertEqual(res.status_code, 401)
+
+    def test_if_user_then_access_to_own_loans(self):
+        for user in ['17simple',
+                     '17member_bd-tek',
+                     '17admin_bd-tek',
+                     '17library_biero',
+                     '17admin']:
+            self.login(user)
+            self.assertCanOnlyListLoans(Loan.objects.filter(user=user), 200, user)
+
+    def test_if_not_library_admin_then_only_access_to_own_loans(self):
+        for user in ['17simple',
+                     '17member_bd-tek',
+                     '17admin_bd-tek',
+                     '17library_biero',
+                     '17admin']:
+            self.login(user)
+            self.assertCanOnlyListLoans(Loan.objects.filter(user=user), 200, user)
+
+    def test_if_library_admin_then_only_access_to_association_loans_and_own_loans(self):
+        user = '17library_bd-tek'
+        loans = Loan.objects.filter(Q(user=user) | Q(loanable__library='bd-tek'))
+        self.assertCanOnlyListLoans(loans, 200, user)
+
+    ############
+    # RETRIEVE #
+    ############
+
+    def test_if_not_logged_in_then_no_access_to_loan(self):
+        self.assertNoAccessToLoan(0, 401)
+
+    def test_if_user_then_access_to_own_loan(self):
+        for user in ['17simple',
+                     '17member_bd-tek',
+                     '17library_bd-tek',
+                     '17admin_bd-tek',
+                     '17admin']:
+            self.login(user)
+
+            for loan in Loan.objects.filter(user=user):
+                self.assertAccessToLoan(loan.id, code=200, user=user)
+
+    def test_if_not_library_admin_then_only_access_to_own_loan(self):
+        for user in ['17simple',
+                     '17member_bd-tek',
+                     '17admin_bd-tek',
+                     '17library_biero',
+                     '17admin']:
+            self.login(user)
+
+            for loan in Loan.objects.all():
+                if loan.user == user:
+                    self.assertAccessToLoan(loan.id, code=200, user=user)
+                else:
+                    self.assertNoAccessToLoan(loan.id, code=403, user=user)
+
+    def test_if_library_admin_then_only_access_to_own_loan_and_association_loan(self):
+        user = '17library_bd-tek'
+        self.login(user)
+
+        for loan in Loan.objects.all():
+            if loan.user == user or loan.loanable.library == 'bd-tek':
+                self.assertAccessToLoan(loan.id, 200, user=user)
+            else:
+                self.assertNoAccessToLoan(loan.id, 403, user=user)
+
+    def test_if_loan_does_not_exist_then_404(self):
+        self.login('17simple')
+        self.assertNoAccessToLoan(42, 404)
