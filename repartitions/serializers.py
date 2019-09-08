@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from repartitions.models import Repartition
+from repartitions.models import Campaign
 
 class RepartitionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Repartition
-        fields = ("id", "title", "promotion", "status", "equirepartition")
+        model = Campaign
+        fields = ("id", "title")

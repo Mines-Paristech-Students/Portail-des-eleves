@@ -23,3 +23,21 @@ class BaseTestCase(TestCase):
         url = reverse('token_obtain_pair')
         data = {'id': username, 'password': password}
         return self.client.post(url, data, format='json')
+
+    def get(self, url, data=None):
+        return self.client.get("/api/v1" + url, data)
+
+    def post(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.post("/api/v1" + url, data, format=format, content_type=content_type)
+
+    def patch(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.patch("/api/v1" + url, data, format=format, content_type=content_type)
+
+    def delete(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.delete("/api/v1" + url, data, format=format, content_type=content_type)
+
+    def head(self, url, data=None):
+        return self.client.head("/api/v1" + url, data)
+
+    def options(self, url, data=None):
+        return self.client.options("/api/v1" + url, data)

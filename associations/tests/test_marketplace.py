@@ -1,6 +1,5 @@
 import json
 
-from associations.models import Order
 from associations.tests.base_test import BaseTestCase
 
 

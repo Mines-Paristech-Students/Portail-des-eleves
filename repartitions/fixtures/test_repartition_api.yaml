@@ -1,0 +1,39 @@
+- model: repartitions.campaign
+  pk: 1
+  fields:
+    name: Material science groups
+    manager: 17bocquet
+
+- model: repartitions.category
+  pk: 1
+  fields:
+    name: Everyone
+
+- model: repartitions.proposition
+  pk: 1
+  fields:
+    campaign: 1
+    name: Metals
+    number_of_places: 5
+- model: repartitions.proposition
+  pk: 2
+  fields:
+    campaign: 1
+    name: Polymers
+    number_of_places: 5
+
+- model: repartitions.usercampaign
+  fields:
+    user: 17bocquet
+    campaign: 1
+    category: 1
+- model: repartitions.usercampaign
+  fields:
+    user: 15menou
+    campaign: 1
+    category: 1
+- model: repartitions.usercampaign
+  fields:
+    user: 18chlieh
+    campaign: 1
+    category: 1
