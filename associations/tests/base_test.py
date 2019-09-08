@@ -27,34 +27,18 @@ class BaseTestCase(TestCase):
         return self.client.post(url, data, format='json')
 
     def delete(self, endpoint=''):
-        """Shortcut for self.client.delete('/api/v1/' + endpoint)."""
         return self.client.delete(self.api_base + endpoint)
 
     def get(self, endpoint=''):
-        """Shortcut for self.client.get('/api/v1/' + endpoint, format='json', content_type='application/json')."""
         return self.client.get(self.api_base + endpoint, format='json', content_type='application/json')
 
     def patch(self, endpoint='', data=''):
-        """
-            Shortcut for self.client.get(
-                '/api/v1/' + endpoint,
-                data=data,
-                format='json',
-                content_type='application/json').
-        """
         return self.client.patch(self.api_base + endpoint,
                                  data=data,
                                  format='json',
                                  content_type='application/json')
 
     def post(self, endpoint='', data=''):
-        """
-        Shortcut for self.client.post(
-                '/api/v1/' + endpoint,
-                data=data,
-                format='json',
-                content_type='application/json').
-        """
         return self.client.post(self.api_base + endpoint,
                                 data=data,
                                 format='json',

@@ -94,7 +94,7 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_library_admin_then_can_update_library(self):
         self.login('17library_bd-tek')
         res = self.patch('library/bd-tek/', data={'enabled': 'false'})
-        self.assertIn(res.status_code, [200, 204])
+        self.assertEqual(res.status_code, 204)
         self.assertFalse(Library.objects.get(pk='bd-tek').enabled)
 
     ##########
