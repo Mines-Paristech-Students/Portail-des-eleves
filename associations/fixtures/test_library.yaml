@@ -1,3 +1,13 @@
+# Some explanations about the three libraries here (bd-tek, biero and bde).
+#
+# * bd-tek is an enabled library with some loanables.
+# * biero is a disabled library with some loanables.
+# * bde's library does not exist and thus has no loanables.
+#
+# An user called 17simple_xxx is a simple member of the association xxx.
+# An user called 17library_xxx is a library administrator of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx but NOT a library manager of this association.
+
 - model: associations.association
   pk: bd-tek
   fields:
@@ -47,7 +57,7 @@
 - model: associations.loanable
   pk: 3
   fields:
-    name: BD-primante
+    name: BD-primé
     description: Pour les soirs de pluie, les veilles de vacances ou les lendemains de pâle de maths.
     comment: Dis-toi qu’il y a toujours un AST plus dans la merde que toi.
     library: bd-tek
@@ -61,7 +71,7 @@
     library: bd-tek
 
 - model: associations.loan
-  pk: 1
+  pk: 4
   fields:
     loanable: 1
     user: 17bocquet
@@ -71,7 +81,7 @@
     status: RETURNED
 
 - model: associations.loan
-  pk: 2
+  pk: 3
   fields:
     loanable: 4
     user: 17wan-fat
@@ -113,7 +123,7 @@
     email: 17library_bd-tek@mpt.fr
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
-    last_name: Library manager
+    last_name: Library administrator
     is_admin: false
     promo: 17
 
@@ -122,7 +132,7 @@
   fields:
     user: 17library_bd-tek
     association: bd-tek
-    role: Library manager
+    role: Library administrator
     is_admin: false
     library: true
 
@@ -165,12 +175,31 @@
     library: false
 
 - model: authentication.user
+  pk: 17library_biero
+  fields:
+    email: 17library_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Library administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17library_biero
+    association: biero
+    role: Library administrator
+    is_admin: false
+    library: true
+
+- model: authentication.user
   pk: 17library_bde
   fields:
     email: 17library_bde@mpt.fr
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
-    last_name: Library manager
+    last_name: Library administrator
     is_admin: false
     promo: 17
 
@@ -179,7 +208,7 @@
   fields:
     user: 17library_bde
     association: bde
-    role: Library manager
+    role: Library administrator
     is_admin: false
     library: true
 
