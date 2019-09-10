@@ -9,7 +9,7 @@ class BaseTestCase(TestCase):
     api_base = '/api/v1/'
 
     def assertStatusCode(self, res, status_code):
-        self.assertEqual(res.status_code, status_code, msg=f'\nres.content:\n{res.content}')
+        self.assertEqual(res.status_code, status_code, msg=f'URL: {res.url}\nContent: {res.content}')
 
     def logout(self):
         """Log the current user out."""
