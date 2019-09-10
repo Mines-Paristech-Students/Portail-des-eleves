@@ -29,12 +29,12 @@ class LibraryTestCase(BaseLibraryTestCase):
 
     def test_if_not_logged_in_then_no_access_to_libraries(self):
         res = self.get('library/')
-        self.assertEqual(res.status_code, 401, msg=res.content)
+        self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_libraries(self):
         self.login('17simple')
         res = self.get('library/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
 
     ############
     # RETRIEVE #
@@ -42,24 +42,24 @@ class LibraryTestCase(BaseLibraryTestCase):
 
     def test_if_not_logged_in_then_no_access_to_library(self):
         res = self.get('library/bd-tek/')
-        self.assertEqual(res.status_code, 401, msg=res.content)
+        self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_library(self):
         self.login('17simple')
         res = self.get('library/bd-tek/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
 
     def test_if_library_disabled_then_no_access_to_library(self):
         self.login('17simple')
         res = self.get('library/biero/')
         self.assertFalse(Library.objects.get(pk='biero').enabled)
-        self.assertEqual(res.status_code, 403, msg=res.content)
+        self.assertStatusCode(res, 403)
 
     def test_if_library_does_not_exist_then_404(self):
         self.login('17simple')
         res = self.get('library/bde/')
         self.assertFalse(Library.objects.filter(pk='bde').exists())
-        self.assertEqual(res.status_code, 404, msg=res.content)
+        self.assertStatusCode(res, 404)
 
     ##########
     # CREATE #
@@ -69,14 +69,14 @@ class LibraryTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
             res = self.post('library/', data={'id': 'bde', 'enabled': 'true', 'association': 'bde', 'loanables': []})
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bde')
 
     def test_if_library_admin_then_can_create_own_library(self):
         self.login('17library_bde')  # Library administrator.
         res = self.post('library/',
                         data={'id': 'bde', 'enabled': 'true', 'loanables': [], 'association': 'bde'})
-        self.assertEqual(res.status_code, 201, msg=res.content)
+        self.assertStatusCode(res, 201)
         self.assertTrue(Library.objects.filter(pk='bde').exists())
         self.assertEqual(Association.objects.get(pk='bde').library, Library.objects.get(pk='bde'))
 
@@ -88,7 +88,7 @@ class LibraryTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
             res = self.patch('library/bd-tek/', data={'enabled': 'false'})
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertTrue(Library.objects.get(pk='bd-tek').enabled)
 
     def test_if_library_admin_then_can_update_library(self):
@@ -105,13 +105,13 @@ class LibraryTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
             res = self.delete('library/bd-tek/')
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertTrue(Library.objects.filter(pk='bd-tek').exists())
 
     def test_if_library_admin_then_can_delete_own_library(self):
         self.login('17library_bd-tek')  # Library administrator.
         res = self.delete('library/bd-tek/')
-        self.assertEqual(res.status_code, 204, msg=res.content)
+        self.assertStatusCode(res, 204)
         self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bd-tek')
 
 
@@ -122,24 +122,24 @@ class LoanableTestCase(BaseLibraryTestCase):
 
     def test_if_not_logged_in_then_no_access_to_loanables(self):
         res = self.get('loanables/')
-        self.assertEqual(res.status_code, 401, msg=res.content)
+        self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_loanables(self):
         self.login('17simple')
         res = self.get('loanables/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
 
     def test_if_library_disabled_then_loanables_dont_show(self):
         self.login('17simple')
         res = self.get('loanables/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         libraries = set([x['library'] for x in res.data])
         self.assertNotIn('biero', libraries)
 
     def test_if_library_disabled_and_library_admin_then_loanables_show(self):
         self.login('17library_biero')
         res = self.get('loanables/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         libraries = set([x['library'] for x in res.data])
         self.assertIn('biero', libraries)
 
@@ -149,30 +149,30 @@ class LoanableTestCase(BaseLibraryTestCase):
 
     def test_if_not_logged_in_then_no_access_to_loanable(self):
         res = self.get('loanables/1/')
-        self.assertEqual(res.status_code, 401, msg=res.content)
+        self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_loanable(self):
         self.login('17simple')
         res = self.get('loanables/3/')
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
 
     def test_if_library_disabled_then_no_access_to_loanable(self):
         self.login('17simple')
         res = self.get('loanables/1/')
         self.assertFalse(Library.objects.get(pk='biero').enabled)
-        self.assertEqual(res.status_code, 403, msg=res.content)
+        self.assertStatusCode(res, 403)
 
     def test_if_loanable_does_not_exist_then_404(self):
         self.login('17simple')
         res = self.get('loanables/42/')
         self.assertFalse(Loanable.objects.filter(pk='42').exists())
-        self.assertEqual(res.status_code, 404, msg=res.content)
+        self.assertStatusCode(res, 404)
 
     def test_if_library_disabled_and_library_admin_then_access_to_loanable(self):
         self.login('17library_biero')
         res = self.get('loanables/1/')
         self.assertFalse(Library.objects.get(pk='biero').enabled)
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
 
     ##########
     # CREATE #
@@ -184,7 +184,7 @@ class LoanableTestCase(BaseLibraryTestCase):
             data = {'name': 'La Piche', 'description': 'Manuel de la Piche',
                     'comment': 'Écrit par Léo Chabeauf', 'library': 'bd-tek'}
             res = self.post('loanables/', data=data)
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertRaises(ObjectDoesNotExist, Loanable.objects.get, pk=data['name'])
 
     def test_if_library_admin_then_can_create_loanable(self):
@@ -192,7 +192,7 @@ class LoanableTestCase(BaseLibraryTestCase):
         data = {'name': 'La Piche', 'description': 'Manuel de la Piche',
                 'comment': 'Écrit par Léo Chabeauf', 'library': 'bd-tek'}
         res = self.post('loanables/', data=data)
-        self.assertEqual(res.status_code, 201, msg=res.content)
+        self.assertStatusCode(res, 201)
         self.assertTrue(Loanable.objects.filter(name=data['name']).exists())
         self.assertEqual(Loanable.objects.get(name=data['name']).description, data['description'])
         self.assertEqual(Loanable.objects.get(name=data['name']).comment, data['comment'])
@@ -207,14 +207,14 @@ class LoanableTestCase(BaseLibraryTestCase):
             self.login(user)
             res = self.patch('loanables/3/',
                              data={'pk': 3, 'name': 'BD-laissé', 'description': 'Une BD pas très populaire…'})
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertEqual(Loanable.objects.get(pk=3).name, 'BD-primé')
 
     def test_if_library_admin_then_can_update_loanable(self):
         self.login('17library_bd-tek')
         data = {'pk': 3, 'name': 'BD-laissé', 'description': 'Une BD pas très populaire…'}
         res = self.patch('loanables/3/', data)
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         self.assertEqual(Library.objects.get(pk=3).name, data['name'])
         self.assertEqual(Library.objects.get(pk=3).description, data['description'])
 
@@ -222,7 +222,7 @@ class LoanableTestCase(BaseLibraryTestCase):
         self.login('17library_biero')
         data = {'pk': 2, 'name': 'Chaise', 'description': 'Une belle chaise en plastique orange'}
         res = self.patch('loanables/2/', data)
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         self.assertEqual(Loanable.objects.get(pk=2).name, data['name'])
         self.assertEqual(Loanable.objects.get(pk=2).description, data['description'])
 
@@ -234,13 +234,13 @@ class LoanableTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
             res = self.delete('loanables/3/')
-            self.assertEqual(res.status_code, 403, msg=res.content)
+            self.assertStatusCode(res, 403)
             self.assertTrue(Loanable.objects.filter(pk=3).exists())
 
     def test_if_library_admin_then_can_delete_loanable(self):
         self.login('17library_bd-tek')  # Library administrator.
         res = self.delete('loanables/3/')
-        self.assertEqual(res.status_code, 204, msg=res.content)
+        self.assertStatusCode(res, 204)
         self.assertFalse(Loanable.objects.filter(pk=3).exists())
 
 
@@ -257,7 +257,7 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
         self.login('17admin_bd-tek')
         self.assertFalse(Role.objects.get(pk=2).library)
         res = self.patch('roles/2/', data={'library': True})
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         self.assertTrue(Role.objects.get(pk=2).library)
 
     def test_if_not_association_admin_then_cannot_remove_library_role(self):
@@ -272,7 +272,7 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
         self.login('17admin_bd-tek')
         self.assertTrue(Role.objects.get(pk=1).library)
         res = self.patch('roles/1/', data={'library': False})
-        self.assertEqual(res.status_code, 200, msg=res.content)
+        self.assertStatusCode(res, 200)
         self.assertFalse(Role.objects.get(pk=1).library)
 
 
@@ -324,7 +324,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
     def test_if_not_logged_in_then_no_access_to_loans(self):
         res = self.get('loans/')
-        self.assertEqual(res.status_code, 401, msg=res.content)
+        self.assertStatusCode(res, 401)
 
     def test_if_user_then_access_to_own_loans(self):
         for user in ALL_USERS:
@@ -433,7 +433,7 @@ class LoanTestCase(BaseLibraryTestCase):
             self.login(user)
             res = self.post('loans/', data={'loanable': loanable_id})
             
-            self.assertEqual(res.status_code, 201, msg=res.content)
+            self.assertStatusCode(res, 201)
             last_loan = Loan.objects.order_by(-Loan.id)[0]
             self.assertEqual(last_loan.loanable_id, loanable_id)
             self.assertEqual(last_loan.user, user)
@@ -477,6 +477,8 @@ class LoanTestCase(BaseLibraryTestCase):
 ##########
 # UPDATE #
 ##########
+
+                
 
 ##########
 # DELETE #
