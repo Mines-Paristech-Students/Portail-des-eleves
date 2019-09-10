@@ -1,14 +1,43 @@
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
+from authentication.models import User
 from associations.models import Association, Library, Loanable, Loan
 from associations.serializers.association import AssociationsShortSerializer
 
 
-class LibraryShortSerializer(serializers.ModelSerializer):
+class CreateLoanSerializer(serializers.ModelSerializer):
+    """Only serialize the loanable and the user."""
+    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
-        model = Library
-        fields = ('id', 'enabled', "association")
+        model = Loan
+        fields = ('loanable', 'user')
+
+
+class UpdateLoanSerializer(serializers.ModelSerializer):
+    """Only serialize the status and the dates."""
+
+    class Meta:
+        model = Loan
+        fields = ('status', 'expected_return_date', 'loan_date', 'real_return_date')
+
+
+class LoanSerializer(serializers.ModelSerializer):
+    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Loan
+        fields = ("id", "user", "status", "loanable",
+                  "expected_return_date", "loan_date", "real_return_date")
+
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+        res["library"] = instance.loanable.library.id
+        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
+        return res
 
 
 class LoanableShortSerializer(serializers.ModelSerializer):
@@ -43,19 +72,10 @@ class LoanableSerializer(serializers.ModelSerializer):
         return res
 
 
-class LoanSerializer(serializers.ModelSerializer):
-    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
-
+class LibraryShortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Loan
-        fields = ("id", "user", "status", "loanable",
-                  "expected_return_date", "loan_date", "real_return_date")
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["library"] = instance.loanable.library.id
-        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
-        return res
+        model = Library
+        fields = ('id', 'enabled', "association")
 
 
 class LibrarySerializer(serializers.ModelSerializer):
