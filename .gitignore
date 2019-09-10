@@ -122,4 +122,5 @@ authentication/migrations/*.py
 chat/migrations/*.py
 forum/migrations/*.py
 polls/migrations/*.py
+repartitions/migrations/*.py
 subscriptions/migrations/*.py
