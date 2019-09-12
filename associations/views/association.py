@@ -6,13 +6,13 @@ from associations.models import Role
 from associations.models import Association
 from associations.serializers import AssociationsShortSerializer, AssociationsSerializer, \
     RoleSerializer, RoleShortSerializer
-from associations.permissions import IsAssociationMember
+from associations.permissions import IsAssociationMember, IsAssociationAdminOrReadOnly
 
 
 class RoleViewSet(BulkModelViewSet):
     queryset = Role.objects.all()
     model = Role
-    permission_classes = (IsAssociationMember,)
+    permission_classes = (IsAssociationAdminOrReadOnly,)
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('user', 'association')
