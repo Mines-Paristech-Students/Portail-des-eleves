@@ -57,7 +57,7 @@ class BaseTestCase(TestCase):
     def patch(self, url, data=None, format='json', content_type='application/json'):
         return self.client.patch(self.api_base + url, data, format=format, content_type=content_type)
 
-    def delete(self, url, data=None, format='json', content_type='application/json'):
+    def delete(self, url, data=None, format=None, content_type=None):
         return self.client.delete(self.api_base + url, data, format=format, content_type=content_type)
 
     def head(self, url, data=None):
