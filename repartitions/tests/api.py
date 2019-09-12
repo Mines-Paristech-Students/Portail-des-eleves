@@ -11,45 +11,48 @@ class APITestCase(BaseTestCase):
         # For an admin
 
         self.login("17bocquet")
-        res = self.post("/repatitions/", {"name": "MIGs groups"})
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"})
         self.assertEqual(res.status_code, 201)
 
-        res = self.get("/repartitions/")
-        self.assertEqual(len(json.loads(res)), 2)  # we created the campaign
+        res = self.get("/repartitions/campaigns/")
+        self.assertEqual(len(json.loads(res.content)), 2)  # we created the campaign
 
-        res = self.delete("/repatitions/2/")
-        self.assertEqual(res.status_code, 200)
+        res = self.delete("/repartitions/campaigns/2/")
+        self.assertEqual(res.status_code, 204)
 
-        res = self.get("/repartitions/")
-        self.assertEqual(len(json.loads(res)), 1)  # we created the campaign
+        res = self.get("/repartitions/campaigns/")
+        self.assertEqual(len(json.loads(res.content)), 1)  # we created the campaign
 
         # For a non admin
 
-        self.login("15menou")
-        res = self.get("/repartitions/")
-        self.assertEqual(len(json.loads(res)), 1)  # this user is not linked to the new campaign
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"}) # recreate a new campaign
+        self.assertEqual(res.status_code, 201)
 
-        res = self.post("/repatitions/", {"name": "MIGs groups 2"})
+        self.login("15menou")
+        res = self.get("/repartitions/campaigns/")
+        self.assertEqual(len(json.loads(res.content)), 1)  # this user is not linked to the new campaign
+
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups 2"})
         self.assertEqual(res.status_code, 403)
 
     def test_patch_campaign(self):
         self.login("17bocquet")
-        res = self.patch("/repatitions/1/", {"status": "OPEN"})
+        res = self.patch("/repartitions/campaigns/1/", {"status": "OPEN"})
         self.assertEqual(res.status_code, 200)
 
         self.login("15menou")
-        res = self.patch("/repartitions/1/")
+        res = self.patch("/repartitions/campaigns/1/")
         self.assertEqual(res.status_code, 403)
 
     def test_change_status(self):
         for status in ["CLOSED", "OPENED", "RESULTS"]:
             self.login("17bocquet")
-            res = self.patch("/repatitions/1/", {"status": status})
+            res = self.patch("/repartitions/campaigns/1/", {"status": status})
             self.assertEqual(res.status_code, 200)
 
         for status in ["closed", "frozen-waffles", "RESULT"]:
             self.login("17bocquet")
-            res = self.patch("/repatitions/1/", {"status": status})
+            res = self.patch("/repartitions/campaigns/1/", {"status": status})
             self.assertEqual(res.status_code, 400)
 
     def test_user_endpoints(self):

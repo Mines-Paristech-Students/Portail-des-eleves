@@ -8,6 +8,7 @@
   pk: 1
   fields:
     name: Everyone
+    campaign: 1
 
 - model: repartitions.proposition
   pk: 1

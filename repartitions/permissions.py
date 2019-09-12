@@ -1,5 +1,15 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+from authentication.models import User
 from repartitions.models import Wish, Campaign, Proposition
+
+
+def user_in_campaign(user: User, campaign: Campaign) -> bool:
+    for category in campaign.categories.all():
+        if user in [uc.user for uc in category.users_campaign.all()]:
+            return True
+
+    return False
 
 
 class CanManageCampaign(BasePermission):
@@ -14,7 +24,10 @@ class CanManageCampaign(BasePermission):
 
     def has_object_permission(self, request, view, obj):
 
-        if request.method in SAFE_METHODS:
+        if request.method in ('HEAD', 'OPTIONS'):
+            return True
+
+        if isinstance(obj, Campaign) and user_in_campaign(request.user, obj):
             return True
 
         if request.user.is_admin:

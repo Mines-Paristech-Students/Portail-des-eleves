@@ -17,6 +17,9 @@ class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
 
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name="categories")
+
+
 class Proposition(models.Model):
     id = models.AutoField(primary_key=True)
 
@@ -29,7 +32,7 @@ class UserCampaign(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     campaign = models.ForeignKey(Campaign, on_delete=models.DO_NOTHING)
 
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="users_campaign")
     fixed_to = models.ForeignKey(Proposition, on_delete=models.DO_NOTHING, null=True)
 
     class Meta:

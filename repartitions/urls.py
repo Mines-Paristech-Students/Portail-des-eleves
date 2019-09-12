@@ -1,5 +1,6 @@
-from django.urls import path
-from rest_framework_bulk.routes import BulkRouter
+from rest_framework.routers import DefaultRouter
+
+from repartitions.views import CampaignView
 
 """
 Routes (all nested under /api/v1):
@@ -45,6 +46,8 @@ Routes (all nested under /api/v1):
         
 """
 
+router = DefaultRouter()
+router.register(r'campaigns', CampaignView, basename='campaigns')
+
 urlpatterns = [
-    #path('stopCampaign', RepartitionsStopCampaignView.as_view(), name="stopCampaign")
-]
+] + router.urls
