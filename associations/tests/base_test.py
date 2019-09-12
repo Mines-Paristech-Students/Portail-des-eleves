@@ -48,20 +48,20 @@ class BaseTestCase(TestCase):
         data = {'id': username, 'password': password}
         return self.client.post(url, data, format='json')
 
-    def delete(self, endpoint=''):
-        return self.client.delete(self.api_base + endpoint)
+    def get(self, url, data=None):
+        return self.client.get(self.api_base + url, data)
 
-    def get(self, endpoint=''):
-        return self.client.get(self.api_base + endpoint, format='json', content_type='application/json')
+    def post(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.post(self.api_base + url, data, format=format, content_type=content_type)
 
-    def patch(self, endpoint='', data=''):
-        return self.client.patch(self.api_base + endpoint,
-                                 data=data,
-                                 format='json',
-                                 content_type='application/json')
+    def patch(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.patch(self.api_base + url, data, format=format, content_type=content_type)
 
-    def post(self, endpoint='', data=''):
-        return self.client.post(self.api_base + endpoint,
-                                data=data,
-                                format='json',
-                                content_type='application/json')
+    def delete(self, url, data=None, format='json', content_type='application/json'):
+        return self.client.delete(self.api_base + url, data, format=format, content_type=content_type)
+
+    def head(self, url, data=None):
+        return self.client.head(self.api_base + url, data)
+
+    def options(self, url, data=None):
+        return self.client.options(self.api_base + url, data)

@@ -120,7 +120,7 @@
     email: 18chlieh@mpt.fr
     birthday: '1998-06-10'
     is_active: true
-    is_admin: true
+    is_admin: false
     nickname: Hulk
     city_of_origin: Rabat
     room: '105'
@@ -168,7 +168,7 @@
     email: 15menou@mpt.fr
     birthday: '1996-04-11'
     is_active: true
-    is_admin: true
+    is_admin: false
     nickname: Hub
     city_of_origin: Pau
     room: '420'
