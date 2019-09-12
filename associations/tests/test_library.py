@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -6,6 +6,7 @@ from django.db.models import Q
 from associations.tests.base_test import BaseTestCase
 from associations.models.association import Association, Role
 from associations.models.library import Library, Loanable, Loan
+from authentication.models.user import User
 
 # Please see the comments on test_library.yaml to get a better understanding of the test fixtures.
 # TODO: test which fields are serialized.
@@ -15,6 +16,9 @@ ALL_USERS = ['17simple', '17member_bd-tek', '17library_bd-tek', '17admin_bd-tek'
 
 ALL_USERS_EXCEPT_LIBRARY_BD_TEK = [user for user in ALL_USERS if user != '17library_bd-tek']
 """Same as ALL_USERS, but with 17library_bd-tek removed."""
+
+ALL_USERS_EXCEPT_LIBRARY_BIERO = [user for user in ALL_USERS if user != '17library_biero']
+"""Same as ALL_USERS, but with 17library_biero removed."""
 
 ALL_USERS_EXCEPT_ADMIN_BD_TEK = [user for user in ALL_USERS if user != '17admin_bd-tek']
 """Same as ALL_USERS, but with 17admin_bd-tek removed."""
@@ -74,7 +78,8 @@ class LibraryTestCase(BaseLibraryTestCase):
         for user in ALL_USERS:
             if user != '17library_bde':
                 self.login(user)
-                res = self.post('library/', data={'id': 'bde', 'enabled': 'true', 'association': 'bde', 'loanables': []})
+                res = self.post('library/',
+                                data={'id': 'bde', 'enabled': 'true', 'association': 'bde', 'loanables': []})
                 self.assertStatusCode(res, 403)
                 self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bde')
 
@@ -100,7 +105,7 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_library_admin_then_can_update_library(self):
         self.login('17library_bd-tek')
         res = self.patch('library/bd-tek/', data={'enabled': 'false'})
-        self.assertStatusCode(res, 204)
+        self.assertStatusCode(res, 200)
         self.assertFalse(Library.objects.get(pk='bd-tek').enabled)
 
     ##########
@@ -191,7 +196,7 @@ class LoanableTestCase(BaseLibraryTestCase):
                     'comment': 'Écrit par Léo Chabeauf', 'library': 'bd-tek'}
             res = self.post('loanables/', data=data)
             self.assertStatusCode(res, 403)
-            self.assertRaises(ObjectDoesNotExist, Loanable.objects.get, pk=data['name'])
+            self.assertRaises(ObjectDoesNotExist, Loanable.objects.get, name=data['name'])
 
     def test_if_library_admin_then_can_create_loanable(self):
         self.login('17library_bd-tek')  # Library administrator.
@@ -221,8 +226,8 @@ class LoanableTestCase(BaseLibraryTestCase):
         data = {'pk': 3, 'name': 'BD-laissé', 'description': 'Une BD pas très populaire…'}
         res = self.patch('loanables/3/', data)
         self.assertStatusCode(res, 200)
-        self.assertEqual(Library.objects.get(pk=3).name, data['name'])
-        self.assertEqual(Library.objects.get(pk=3).description, data['description'])
+        self.assertEqual(Loanable.objects.get(pk=3).name, data['name'])
+        self.assertEqual(Loanable.objects.get(pk=3).description, data['description'])
 
     def test_if_library_admin_and_library_disabled_then_can_update_loanable(self):
         self.login('17library_biero')
@@ -260,7 +265,10 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
             self.assertFalse(Role.objects.get(pk=2).library)
 
     def test_if_association_admin_then_can_add_library_role(self):
-        self.login('17admin_bd-tek')
+        user = '17admin_bd-tek'
+        self.login(user)
+        self.assertTrue(User.objects.get(pk=user).get_role(Association.objects.get(pk='bd-tek')).is_admin)
+
         self.assertFalse(Role.objects.get(pk=2).library)
         res = self.patch('roles/2/', data={'library': True})
         self.assertStatusCode(res, 200)
@@ -269,7 +277,6 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
     def test_if_not_association_admin_then_cannot_remove_library_role(self):
         for user in ALL_USERS_EXCEPT_ADMIN_BD_TEK:
             self.login(user)
-            self.assertTrue(Role.objects.get(pk=1).library)
             res = self.patch('roles/1/', data={'library': False})
             self.assertEqual(res.status_code, 403, msg=f'{user} did not get a 403.')
             self.assertTrue(Role.objects.get(pk=1).library)
@@ -347,18 +354,20 @@ class LoanTestCase(BaseLibraryTestCase):
         res = self.get('loans/')
         self.assertStatusCode(res, 401)
 
-    def test_if_user_then_access_to_own_loans(self):
+    def test_if_user_then_access_to_own_loans_in_enabled_libraries(self):
         for user in ALL_USERS:
-            self.assertCanListTheseLoans(Loan.objects.filter(user=user), 200, user)
+            self.assertCanListTheseLoans(Loan.objects.filter(user=user, loanable__library__enabled=True), 200,
+                                         user)
 
     def test_if_not_library_admin_then_only_access_to_own_loans(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
-            self.assertCanOnlyListTheseLoans(Loan.objects.filter(user=user), 200, user)
+            self.assertCanOnlyListTheseLoans(Loan.objects.filter(user=user, loanable__library__enabled=True), 200, user)
 
     def test_if_library_admin_then_only_access_to_association_loans_and_own_loans(self):
         user = '17library_bd-tek'
         self.login(user)
-        loans = Loan.objects.filter(Q(user=user) | Q(loanable__library='bd-tek'))
+        loans = Loan.objects.filter((Q(user__id=user) & Q(loanable__library__enabled=True)) |
+                                    Q(loanable__library='bd-tek'))
         self.assertCanOnlyListTheseLoans(loans, 200, user)
 
     ############
@@ -371,11 +380,15 @@ class LoanTestCase(BaseLibraryTestCase):
         res = self.get(f'loans/{loan_id}/')
         self.assertEqual(res.status_code, code, msg=f'User {user} cannot access loan {loan_id}.')
 
-    def assertNoAccessToLoan(self, loan_id, code=403, user=''):
+    def assertNoAccessToLoan(self, loan_id, code=403, codes=None, user=''):
         """Fail if access is given to loan loan_id."""
 
         res = self.get(f'loans/{loan_id}/')
-        self.assertEqual(res.status_code, code, msg=f'User {user} can access loan {loan_id}.')
+
+        if codes is not None:
+            self.assertIn(res.status_code, codes, msg=f'User {user} can access loan {loan_id}.')
+        else:
+            self.assertEqual(res.status_code, code, msg=f'User {user} can access loan {loan_id}.')
 
     def test_if_not_logged_in_then_no_access_to_loan(self):
         self.assertNoAccessToLoan(0, 401)
@@ -384,28 +397,30 @@ class LoanTestCase(BaseLibraryTestCase):
         for user in ALL_USERS:
             self.login(user)
 
-            for loan in Loan.objects.filter(user=user):
+            for loan in Loan.objects.filter(user=user, loanable__library__enabled=True):
                 self.assertAccessToLoan(loan.id, code=200, user=user)
 
-    def test_if_not_library_admin_then_only_access_to_own_loan(self):
+    def test_if_not_library_admin_then_only_access_to_own_loan_in_enabled_libraries(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
             self.login(user)
 
             for loan in Loan.objects.all():
-                if loan.user.id == user:
+                if loan.user.id == user and loan.loanable.library.enabled:
                     self.assertAccessToLoan(loan.id, code=200, user=user)
                 else:
-                    self.assertNoAccessToLoan(loan.id, code=404, user=user)
+                    # Either the loan is in a disabled library, or it does not exist.
+                    self.assertNoAccessToLoan(loan.id, codes=[403, 404], user=user)
 
     def test_if_library_admin_then_only_access_to_own_loans_and_library_loans(self):
         user = '17library_bd-tek'
         self.login(user)
 
         for loan in Loan.objects.all():
-            if loan.user.id == user or loan.loanable.library == 'bd-tek':
+            if (loan.user.id == user or loan.loanable.library.id == 'bd-tek') and loan.loanable.library.enabled:
                 self.assertAccessToLoan(loan.id, 200, user=user)
             else:
-                self.assertNoAccessToLoan(loan.id, 403, user=user)
+                # Either the library is not enabled, so 403, or the loan doesn't exist.
+                self.assertNoAccessToLoan(loan.id, codes=[403, 404], user=user)
 
     def test_if_loan_does_not_exist_then_404(self):
         self.login('17simple')
@@ -462,18 +477,18 @@ class LoanTestCase(BaseLibraryTestCase):
             self.assertEqual(last_loan.expected_return_date, None)
             self.assertEqual(last_loan.real_return_date, None)
 
-    def test_if_library_disabled_then_cannot_create_loan(self):
+    def test_if_not_library_administrator_and_library_disabled_then_cannot_create_loan(self):
         loanable_id = 1
         self.assertFalse(Loanable.objects.get(pk=loanable_id).library.enabled,
                          f'Test premise is wrong: library of loanable {loanable_id} is not disabled')
 
-        for user in ALL_USERS:
+        for user in ALL_USERS_EXCEPT_LIBRARY_BIERO:
             self.assertCannotCreateLoan(user, data={'user': user, 'loanable': loanable_id})
 
     def test_if_not_library_administrator_then_cannot_create_loan_for_another_user_in_own_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             if user != '17wan-fat':
-                self.assertCannotCreateLoan(user, data={'loanable': 3, 'user': '17wan-fat'})
+                self.assertCannotCreateLoan(user, data={'loanable': 3, 'user': '17wan-fat'}, code=400)
 
     def test_if_not_library_administrator_and_loanable_already_borrowed_then_cannot_create_loan(self):
         loanable_id = 4
@@ -481,7 +496,7 @@ class LoanTestCase(BaseLibraryTestCase):
                         f'Test premise is wrong: loanable {loanable_id} is not borrowed.')
 
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
-            self.assertCannotCreateLoan(user, data={'user': user, 'loanable': loanable_id})
+            self.assertCannotCreateLoan(user, data={'user': user, 'loanable': loanable_id}, code=400)
 
     ##########
     # UPDATE #
@@ -499,10 +514,16 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in [x for x in loans if x.status == old_status]:
             res = self.patch(f'loans/{loan.id}/', {'status': new_status})
-            self.assertStatusCode(res, 204)
-            self.assertEqual(Loan.objects.get(id=loan.id).status, new_status,
-                             msg=f'User {user} did not manage to update the status of loan {loan.id}'
+            self.assertStatusCode(res, 200)
+
+            loan = Loan.objects.get(id=loan.id)
+            self.assertEqual(loan.status, new_status,
+                             msg=f'User {user} did not manage to update the status of loan {loan.id} '
                                  f'from {old_status}to {new_status}.')
+            # Revert the change.
+            loan.status = old_status
+            loan.save()
+
             run = True
 
         return run
@@ -527,10 +548,12 @@ class LoanTestCase(BaseLibraryTestCase):
 
         return run
 
-    def test_every_user_can_update_own_loan_status_from_pending_to_cancelled(self):
-        for user in ALL_USERS:
-            self.assertTrue(self.assertCanUpdateStatus(user, Loan.objects.filter(user=user), 'PENDING', 'CANCELLED'),
-                            msg=f'The test needs {user} to have a PENDING loan.')
+    def test_every_user_can_update_own_loan_status_from_pending_to_cancelled_in_enabled_libraries(self):
+        for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
+            self.assertTrue(self.assertCanUpdateStatus(user,
+                                                       Loan.objects.filter(user=user, loanable__library__enabled=True),
+                                                       'PENDING', 'CANCELLED'),
+                            msg=f'The test needs {user} to have a PENDING loan in an enabled library.')
 
     def test_if_not_library_administrator_then_cannot_update_own_loan_status_except_from_pending_to_cancelled(self):
         for (old_status, new_status) in self.STATUS_COUPLES:
@@ -564,15 +587,42 @@ class LoanTestCase(BaseLibraryTestCase):
             if old_status == 'PENDING' and new_status == 'CANCELLED':
                 loans = loans.exclude(user=user)
 
-            self.assertTrue(self.assertCanUpdateStatus(user, loans, old_status, new_status),
+            self.assertTrue(self.assertCannotUpdateStatus(user, loans, old_status, new_status),
                             msg=f'The test needs a Loan not from bd-tek and with {old_status} status to run.')
+
+    def test_if_library_administrator_then_cannot_update_with_inconsistent_dates(self):
+        user = '17library_bd-tek'
+        self.login(user)
+
+        for loan in Loan.objects.filter(loanable__library='bd-tek'):
+            loan_date = datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)
+            # Expected return date before the loan date.
+            expected_return_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
+            # Real return date before the loan date.
+            real_return_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
+
+            res = self.patch(f'loans/{loan.id}/',
+                             {'loan_date': loan_date, 'expected_return_date': expected_return_date})
+            self.assertStatusCode(res, 400)
+            self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
+                             msg=f'User {user} did manage to update loan id {loan.id}.')
+            self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, loan.expected_return_date,
+                             msg=f'User {user} did manage to update loan id {loan.id}.')
+
+            res = self.patch(f'loans/{loan.id}/',
+                             {'loan_date': loan_date, 'real_return_date': real_return_date})
+            self.assertStatusCode(res, 400)
+            self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
+                             msg=f'User {user} did manage to update loan id {loan.id}.')
+            self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, loan.real_return_date,
+                             msg=f'User {user} did manage to update loan id {loan.id}.')
 
     def test_if_library_administrator_then_can_update_with_consistent_loan_date(self):
         user = '17library_bd-tek'
         self.login(user)
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            loan_date = '2018-01-01T12:00:00+00:00'
+            loan_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
             res = self.patch(f'loans/{loan.id}/', {'loan_date': loan_date})
             self.assertStatusCode(res, 200)
             self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan_date,
@@ -593,7 +643,7 @@ class LoanTestCase(BaseLibraryTestCase):
                 loan_date = loan.real_return_date + timedelta(10)
             res = self.patch(f'loans/{loan.id}/', {'loan_date': loan_date})
             self.assertStatusCode(res, 400)
-            self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan_date,
+            self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
                              msg=f'User {user} did manage to update loan_date of loan id {loan.id}.')
 
     def test_if_library_administrator_then_can_update_with_consistent_expected_return_date(self):
@@ -602,7 +652,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
             if loan.loan_date is None:
-                expected_return_date = '2018-01-01T12:00:00+00:00'
+                expected_return_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
             else:
                 expected_return_date = loan.loan_date + timedelta(days=7)
 
@@ -622,7 +672,7 @@ class LoanTestCase(BaseLibraryTestCase):
             expected_return_date = loan.loan_date - timedelta(10)
             res = self.patch(f'loans/{loan.id}/', {'expected_return_date': expected_return_date})
             self.assertStatusCode(res, 400)
-            self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, expected_return_date,
+            self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, loan.expected_return_date,
                              msg=f'User {user} did manage to update expected_return_date of loan id {loan.id}.')
 
     def test_if_library_administrator_then_can_update_with_consistent_real_return_date(self):
@@ -630,9 +680,9 @@ class LoanTestCase(BaseLibraryTestCase):
         self.login(user)
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            if loan.expected_return_date is None:
+            if loan.expected_return_date is None or loan.loan_date is None:
                 if loan.loan_date is None:
-                    real_return_date = '2018-01-01T12:00:00+00:00'
+                    real_return_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
                 else:
                     real_return_date = loan.loan_date + timedelta(days=5)
             else:
@@ -654,7 +704,7 @@ class LoanTestCase(BaseLibraryTestCase):
             real_return_date = loan.loan_date - timedelta(10)
             res = self.patch(f'loans/{loan.id}/', {'real_return_date': real_return_date})
             self.assertStatusCode(res, 400)
-            self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, real_return_date,
+            self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, loan.real_return_date,
                              msg=f'User {user} did manage to update real_return_date of loan id {loan.id}.')
 
     def test_if_library_administrator_then_cannot_update_dates_of_other_library_loans(self):
@@ -689,8 +739,9 @@ class LoanTestCase(BaseLibraryTestCase):
             self.login(user)
 
             for loan in Loan.objects.all():
-                res = self.delete(f'/loans/{loan.id}/')
-                self.assertIn(res.status_code, [403, 404])  # Depends on whether the user can see the loan.
+                res = self.delete(f'loans/{loan.id}/')
+                # Depends on whether the user can see the loan.
+                self.assertIn(res.status_code, [403, 404], msg=f'User {user} did manage to delete Loan id {loan.id}.')
                 self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                                 msg=f'User {user} did manage to delete Loan id {loan.id}.')
 
@@ -699,8 +750,8 @@ class LoanTestCase(BaseLibraryTestCase):
         self.login(user)
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            res = self.delete(f'/loans/{loan.id}/')
-            self.assertStatusCode(res, 200)
+            res = self.delete(f'loans/{loan.id}/')
+            self.assertStatusCode(res, 204, user_msg=f'{loan.id}')
             self.assertFalse(Loan.objects.filter(id=loan.id).exists(),
                              msg=f'User {user} did not manage to delete Loan id {loan.id}.')
 
@@ -712,7 +763,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.assertNotEqual(len(loans), 0, msg='The test needs a Loan not belonging to bd-tek to run.')
 
         for loan in loans:
-            res = self.delete(f'/loans/{loan.id}/')
+            res = self.delete(f'loans/{loan.id}/')
             self.assertIn(res.status_code, (403, 404))  # Depends on whether the user can see the loan (own loan).
             self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                             msg=f'User {user} did manage to delete Loan id {loan.id}.')
