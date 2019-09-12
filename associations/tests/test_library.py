@@ -115,13 +115,13 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_delete_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.delete('library/bd-tek/')
+            res = self.delete('library/bd-tek/', '')
             self.assertStatusCode(res, 403)
             self.assertTrue(Library.objects.filter(pk='bd-tek').exists())
 
     def test_if_library_admin_then_can_delete_own_library(self):
         self.login('17library_bd-tek')  # Library administrator.
-        res = self.delete('library/bd-tek/')
+        res = self.delete('library/bd-tek/', '')
         self.assertStatusCode(res, 204)
         self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bd-tek')
 
@@ -244,13 +244,13 @@ class LoanableTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_delete_loanable(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.delete('loanables/3/')
+            res = self.delete('loanables/3/', '')
             self.assertStatusCode(res, 403)
             self.assertTrue(Loanable.objects.filter(pk=3).exists())
 
     def test_if_library_admin_then_can_delete_loanable(self):
         self.login('17library_bd-tek')  # Library administrator.
-        res = self.delete('loanables/3/')
+        res = self.delete('loanables/3/', '')
         self.assertStatusCode(res, 204)
         self.assertFalse(Loanable.objects.filter(pk=3).exists())
 
@@ -488,7 +488,7 @@ class LoanTestCase(BaseLibraryTestCase):
     def test_if_not_library_administrator_then_cannot_create_loan_for_another_user_in_own_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             if user != '17wan-fat':
-                self.assertCannotCreateLoan(user, data={'loanable': 3, 'user': '17wan-fat'}, code=400)
+                self.assertCannotCreateLoan(user, data={'loanable': 3, 'user': '17wan-fat'}, code=403)
 
     def test_if_not_library_administrator_and_loanable_already_borrowed_then_cannot_create_loan(self):
         loanable_id = 4
@@ -528,7 +528,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         return run
 
-    def assertCannotUpdateStatus(self, user, loans, old_status, new_status):
+    def Status(self, user, loans, old_status, new_status):
         """
         Fail if there exist at least one loan from loans such as loan.status = old_status and the provided user
         can update the status of loan to new_status.
@@ -739,7 +739,7 @@ class LoanTestCase(BaseLibraryTestCase):
             self.login(user)
 
             for loan in Loan.objects.all():
-                res = self.delete(f'loans/{loan.id}/')
+                res = self.delete(f'loans/{loan.id}/', '')
                 # Depends on whether the user can see the loan.
                 self.assertIn(res.status_code, [403, 404], msg=f'User {user} did manage to delete Loan id {loan.id}.')
                 self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
@@ -750,7 +750,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.login(user)
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            res = self.delete(f'loans/{loan.id}/')
+            res = self.delete(f'loans/{loan.id}/', '')
             self.assertStatusCode(res, 204, user_msg=f'{loan.id}')
             self.assertFalse(Loan.objects.filter(id=loan.id).exists(),
                              msg=f'User {user} did not manage to delete Loan id {loan.id}.')
@@ -763,7 +763,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.assertNotEqual(len(loans), 0, msg='The test needs a Loan not belonging to bd-tek to run.')
 
         for loan in loans:
-            res = self.delete(f'loans/{loan.id}/')
+            res = self.delete(f'loans/{loan.id}/', '')
             self.assertIn(res.status_code, (403, 404))  # Depends on whether the user can see the loan (own loan).
             self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                             msg=f'User {user} did manage to delete Loan id {loan.id}.')
