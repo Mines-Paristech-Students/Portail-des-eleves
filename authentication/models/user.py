@@ -106,3 +106,9 @@ class User(AbstractBaseUser):
         """Is the user a member of staff?"""
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def get_role(self, association):
+        for role in self.roles.all():
+            if role.association == association:
+                return role
+        return None
