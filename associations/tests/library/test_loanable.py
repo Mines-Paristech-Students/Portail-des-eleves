@@ -122,12 +122,12 @@ class LoanableTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_delete_loanable(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.delete('loanables/3/', '')
+            res = self.delete('loanables/3/')
             self.assertStatusCode(res, 403)
             self.assertTrue(Loanable.objects.filter(pk=3).exists())
 
     def test_if_library_admin_then_can_delete_loanable(self):
         self.login('17library_bd-tek')  # Library administrator.
-        res = self.delete('loanables/3/', '')
+        res = self.delete('loanables/3/')
         self.assertStatusCode(res, 204)
         self.assertFalse(Loanable.objects.filter(pk=3).exists())

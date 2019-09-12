@@ -90,12 +90,12 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_delete_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.delete('library/bd-tek/', '')
+            res = self.delete('library/bd-tek/')
             self.assertStatusCode(res, 403)
             self.assertTrue(Library.objects.filter(pk='bd-tek').exists())
 
     def test_if_library_admin_then_can_delete_own_library(self):
         self.login('17library_bd-tek')  # Library administrator.
-        res = self.delete('library/bd-tek/', '')
+        res = self.delete('library/bd-tek/')
         self.assertStatusCode(res, 204)
         self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bd-tek')

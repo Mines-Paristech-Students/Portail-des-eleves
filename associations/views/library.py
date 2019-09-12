@@ -65,6 +65,19 @@ class LoansViewSet(viewsets.ModelViewSet):
 
         return False
 
+    @classmethod
+    def check_date_permission_against_instance(cls, data, instance, user):
+        user_role = user.get_role(instance.loanable.library.association)
+        user_is_library_admin = user_role is not None and user_role.library
+
+        if user_is_library_admin:
+            return True
+        else:
+            if 'loan_date' not in data and 'expected_return_date' not in data and 'real_return_date' not in data:
+                return True
+
+        return False
+
     def get_serializer_class(self):
         if self.action in ('create',):
             return CreateLoanSerializer
@@ -117,6 +130,9 @@ class LoansViewSet(viewsets.ModelViewSet):
 
         if not self.check_status_consistency_against_instance(serializer.validated_data, instance, request.user):
             return http.HttpResponseForbidden('You are not allowed to change the status of this loan.')
+
+        if not self.check_date_permission_against_instance(serializer.validated_data, instance, request.user):
+            return http.HttpResponseForbidden('You are not allowed to change the dates of this loan.')
 
         self.perform_update(serializer)
 

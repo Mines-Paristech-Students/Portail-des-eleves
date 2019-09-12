@@ -284,6 +284,23 @@ class LoanTestCase(BaseLibraryTestCase):
             self.assertTrue(run, msg=f'The test needs a Loan which status is {old_status} and'
                                      f'which belongs to someone who is not a library manager to run.')
 
+    def test_if_not_library_administrator_then_cannot_update_dates(self):
+        for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
+            for loan in Loan.objects.filter(user__id=user):
+                self.login(user)
+                res = self.patch(f'loans/{loan.id}/',
+                                 data={'status': 'PENDING',
+                                       'loan_date': datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc),
+                                       'expected_return_date': datetime(2018, 1, 3, 15, 00, 00, tzinfo=timezone.utc),
+                                       'real_return_date': datetime(2018, 1, 3, 20, 00, 00, tzinfo=timezone.utc)})
+                self.assertStatusCode(res, 403)
+                self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
+                                 msg=f'User {user} did manage to update loan id {loan.id}.')
+                self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, loan.real_return_date,
+                                 msg=f'User {user} did manage to update loan id {loan.id}.')
+                self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, loan.expected_return_date,
+                                 msg=f'User {user} did manage to update loan id {loan.id}.')
+
     def test_if_library_administrator_then_can_update_status_of_own_library_loans(self):
         user = '17library_bd-tek'
 
@@ -456,7 +473,7 @@ class LoanTestCase(BaseLibraryTestCase):
             self.login(user)
 
             for loan in Loan.objects.all():
-                res = self.delete(f'loans/{loan.id}/', '')
+                res = self.delete(f'loans/{loan.id}/')
                 # Depends on whether the user can see the loan.
                 self.assertIn(res.status_code, [403, 404], msg=f'User {user} did manage to delete Loan id {loan.id}.')
                 self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
@@ -467,7 +484,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.login(user)
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            res = self.delete(f'loans/{loan.id}/', '')
+            res = self.delete(f'loans/{loan.id}/')
             self.assertStatusCode(res, 204, user_msg=f'{loan.id}')
             self.assertFalse(Loan.objects.filter(id=loan.id).exists(),
                              msg=f'User {user} did not manage to delete Loan id {loan.id}.')
@@ -480,7 +497,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.assertNotEqual(len(loans), 0, msg='The test needs a Loan not belonging to bd-tek to run.')
 
         for loan in loans:
-            res = self.delete(f'loans/{loan.id}/', '')
+            res = self.delete(f'loans/{loan.id}/')
             self.assertIn(res.status_code, (403, 404))  # Depends on whether the user can see the loan (own loan).
             self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                             msg=f'User {user} did manage to delete Loan id {loan.id}.')
