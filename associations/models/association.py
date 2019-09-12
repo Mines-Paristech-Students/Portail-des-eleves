@@ -13,9 +13,9 @@ class Association(models.Model):
 
     logo = models.ImageField(upload_to="associations/logos/", null=True)
 
-    marketplace = models.OneToOneField(Marketplace, on_delete=models.DO_NOTHING, null=True, related_name="association")
-    library = models.OneToOneField(Library, on_delete=models.DO_NOTHING, null=True)
-    publication = models.OneToOneField(Publication, on_delete=models.DO_NOTHING, null=True)
+    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name="association")
+    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name="association")
+    publication = models.OneToOneField(Publication, on_delete=models.SET_NULL, null=True, related_name="association")
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
