@@ -7,8 +7,6 @@ from associations.tests.library.base_test_library import *
 
 
 class LoanTestCase(BaseLibraryTestCase):
-    NB_LOANS = {library: len(Loan.objects.filter(loanable__library=library)) for library in ['bd_tek']}
-
     # Please see the diagram in associations.models.library.Loan.
     STATUS_COUPLES = [
         ('PENDING', 'CANCELLED'),
