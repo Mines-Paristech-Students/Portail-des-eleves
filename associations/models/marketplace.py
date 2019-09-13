@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from authentication.models import User
 
@@ -12,18 +13,23 @@ class Marketplace(models.Model):
 
 
 class Product(models.Model):
+    """
+        A product sold in a Marketplace.
+    """
+
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2, min_value=0)
+    price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)
 
     marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="products")
 
-    # By convention, -1 = unlimited number of this product.
-    number_left = models.IntegerField(default=-1)
+    number_left = models.IntegerField(default=-1,
+                                      help_text='The number of products left.'
+                                                'By convention, -1 means unlimited products left.')
     still_in_the_catalogue = models.BooleanField(default=True)
 
     # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for BDA

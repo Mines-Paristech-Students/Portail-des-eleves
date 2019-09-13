@@ -34,7 +34,7 @@ class MarketplaceTestCase(BaseMarketPlaceTestCase):
     def test_if_marketplace_disabled_then_no_access_to_marketplace(self):
         self.login('17simple')
         res = self.get('marketplace/pdm/')
-        self.assertFalse(Marketplace.objects.get(pk='biero').enabled)
+        self.assertFalse(Marketplace.objects.get(pk='pdm').enabled)
         self.assertStatusCode(res, 403)
 
     def test_if_marketplace_does_not_exist_then_404(self):
@@ -73,13 +73,13 @@ class MarketplaceTestCase(BaseMarketPlaceTestCase):
             self.login(user)
             res = self.patch('marketplace/biero/', data={'enabled': 'false'})
             self.assertStatusCode(res, 403)
-            self.assertTrue(Marketplace.objects.get(pk='bd-tek').enabled)
+            self.assertTrue(Marketplace.objects.get(pk='biero').enabled)
 
     def test_if_marketplace_admin_then_can_update_marketplace(self):
-        self.login('17marketplace_bd-tek')
+        self.login('17market_biero')
         res = self.patch('marketplace/biero/', data={'enabled': 'false'})
         self.assertStatusCode(res, 200)
-        self.assertFalse(Marketplace.objects.get(pk='bd-tek').enabled)
+        self.assertFalse(Marketplace.objects.get(pk='biero').enabled)
 
     ##########
     # DELETE #
@@ -90,10 +90,10 @@ class MarketplaceTestCase(BaseMarketPlaceTestCase):
             self.login(user)
             res = self.delete('marketplace/biero/')
             self.assertStatusCode(res, 403)
-            self.assertTrue(Marketplace.objects.filter(pk='bd-tek').exists())
+            self.assertTrue(Marketplace.objects.filter(pk='biero').exists())
 
     def test_if_marketplace_admin_then_can_delete_own_marketplace(self):
-        self.login('17marketplace_bd-tek')  # Marketplace administrator.
+        self.login('17market_biero')  # Marketplace administrator.
         res = self.delete('marketplace/biero/')
         self.assertStatusCode(res, 204)
-        self.assertRaises(ObjectDoesNotExist, Marketplace.objects.get, pk='bd-tek')
+        self.assertRaises(ObjectDoesNotExist, Marketplace.objects.get, pk='biero')

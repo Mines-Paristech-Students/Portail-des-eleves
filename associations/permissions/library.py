@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from associations.models import Association, Library, Loan, Loanable
-from associations.permissions import extract_id
+from associations.permissions.base_permissions import extract_id
 
 
 def get_library(request):

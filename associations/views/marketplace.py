@@ -1,14 +1,14 @@
-import json
 from decimal import Decimal
 
 from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
-from rest_framework import viewsets, filters, mixins, status
+from rest_framework import viewsets, filters, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Order, Product, Funding
-from associations.permissions import IsAssociationMember, CanManageMarketplace, OrderPermission
+from associations.permissions import IsAssociationMember, OrderPermission, IfMarketplaceAdminThenCRUDElseCRU, \
+    IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD
 from associations.permissions.base_permissions import _get_role_for_user
 from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
 from authentication.models import User
@@ -17,13 +17,13 @@ from authentication.models import User
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
-    permission_classes = (CanManageMarketplace,)
+    permission_classes = (IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (CanManageMarketplace,)
+    permission_classes = (IfMarketplaceAdminThenCRUDElseCRU, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD)
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
 

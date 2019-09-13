@@ -78,7 +78,7 @@
 - model: associations.product
   pk: 5
   fields:
-    name: Pain au chocolatine
+    name: Pain au chocolat
     description: 😊😋😋😋 
     price: 1.5
     marketplace: pdm
