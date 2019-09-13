@@ -1,6 +1,8 @@
 from decimal import Decimal
 
 from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
+from django.db.models import Q
+
 from rest_framework import viewsets, filters, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,9 +25,19 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IfMarketplaceAdminThenCRUDElseCRU, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD)
+    permission_classes = (IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD,)
+
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
+
+    def get_queryset(self):
+        """The user has access to the products coming from every enabled marketplace and to the products of every
+        marketplace she is a library administrator of."""
+
+        # The library for which the user is library administrator.
+        marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
+
+        return Product.objects.filter(Q(marketplace__enabled=True) | Q(marketplace__in=marketplaces))
 
 
 class OrderViewSet(viewsets.ModelViewSet):
