@@ -1,21 +1,48 @@
+# Some explanations about the three associations here (biero, bde and pdm).
+#
+# * biero is an enabled marketplace with some products.
+# * pdm is a disabled marketplace with some products.
+# * bde's marketplace does not exist and thus has no products.
+#
+# An user called 17simple_xxx is a simple member of the association xxx.
+# An user called 17market_xxx is a marketplace administrator of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx but NOT a marketplace administrator of this association.
 
 - model: associations.association
   pk: biero
   fields:
     name: Biéro
-    rank: 2
+    rank: 1
     marketplace: biero
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+    marketplace: pdm
+
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 3
 
 - model: associations.marketplace
   pk: biero
   fields:
     enabled: true
 
+- model: associations.marketplace
+  pk: pdm
+  fields:
+    enabled: false
+
 - model: associations.product
   pk: 1
   fields:
     name: Grenadine
-    description: Mélange subtile de fruits des bois pour un rafraichissement sans égal
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal.
     price: 3.5
     marketplace: biero
 
@@ -23,8 +50,7 @@
   pk: 2
   fields:
     name: Jus de tomate
-    description: Bon pour le corps et l'esprit, le jus de tomate saura ravire vos
-      papilles et votre portefeuille
+    description: Bon pour le corps et l'esprit, le jus de tomate saura ravir vos papilles et votre portefeuille.
     price: 1.5
     marketplace: biero
     number_left: 180
@@ -35,16 +61,157 @@
     name: Jus de pomme
     description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
       y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
-      déjeuner
+      déjeuner.
     price: 12.0
     marketplace: biero
     number_left: 24
+    
+- model: associations.product
+  pk: 4
+  fields:
+    name: Baguette
+    description: Croustillante à l’extérieur, mœlleuse à l’intérieur.
+    price: 1.0
+    marketplace: pdm
+    number_left: 24
+    
+- model: associations.product
+  pk: 5
+  fields:
+    name: Pain au chocolatine
+    description: 😊😋😋😋 
+    price: 1.5
+    marketplace: pdm
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Admin
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin no marketplace
+    is_admin: true
+    marketplace: false
+
+- model: authentication.user
+  pk: 17market_biero
+  fields:
+    email: 17market_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Marketplace administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17market_biero
+    association: biero
+    role: Marketplace administrator
+    is_admin: false
+    marketplace: true
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Member
+    is_admin: false
+    promo: 17
 
 - model: associations.role
   pk: 2
   fields:
-    user: 17bocquet
+    user: 17member_biero
     association: biero
-    role: Programmeur / Brasseur
+    role: Simple member
+    is_admin: false
+    marketplace: false
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Pain de Mine
+    last_name: Admin
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin no marketplace
+    is_admin: true
+    marketplace: false
+
+- model: authentication.user
+  pk: 17market_pdm
+  fields:
+    email: 17market_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Pain de Mine
+    last_name: Marketplace administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17market_pdm
+    association: pdm
+    role: Marketplace administrator
     is_admin: false
     marketplace: true
+
+- model: authentication.user
+  pk: 17market_bde
+  fields:
+    email: 17market_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Marketplace administrator
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17market_bde
+    association: bde
+    role: Marketplace administrator
+    is_admin: false
+    marketplace: true
+
+- model: authentication.user
+  pk: 17admin_bde
+  fields:
+    email: 17admin_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Admin
+    is_admin: false
+    promo: 17
+
+- model: associations.role
+  pk: 6
+  fields:
+    user: 17admin_bde
+    association: bde
+    role: Admin no marketplace
+    is_admin: true
+    marketplace: false

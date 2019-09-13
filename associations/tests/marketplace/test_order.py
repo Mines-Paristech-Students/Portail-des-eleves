@@ -1,11 +1,12 @@
 import json
 
-from associations.tests.base_test import BaseTestCase
+from django.core.exceptions import ObjectDoesNotExist
+
+from associations.models import Association, Marketplace
+from associations.tests.marketplace import *
 
 
-class MarketplaceTestCase(BaseTestCase):
-    fixtures = ['authentication.yaml', 'test_marketplace.yaml']
-
+class OrderTestCase(BaseMarketPlaceTestCase):
     def make_order(self):
         self.login("16leroy")
         res = self.client.post("/api/v1/orders/", {"products": [
