@@ -19,6 +19,24 @@ class LibraryViewSet(viewsets.ModelViewSet):
     permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
 
 
+class LoanableViewSet(viewsets.ModelViewSet):
+    queryset = Loanable.objects.all()
+    serializer_class = LoanableSerializer
+    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ("library__id",)
+
+    def get_queryset(self):
+        """The user has access to the loanables coming from every enabled library and to the loanables of every
+        library she is a library administrator of."""
+
+        # The library for which the user is library administrator.
+        libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
+
+        return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))
+
+
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (IfLibraryAdminThenCRUDElseCRU, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD,)
@@ -144,21 +162,3 @@ class LoansViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
-
-
-class LoanableViewSet(viewsets.ModelViewSet):
-    queryset = Loanable.objects.all()
-    serializer_class = LoanableSerializer
-    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ("library__id",)
-
-    def get_queryset(self):
-        """The user has access to the loanables coming from every enabled library and to the loanables of every
-        library she is a library administrator of."""
-
-        # The library for which the user is library administrator.
-        libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
-
-        return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))
