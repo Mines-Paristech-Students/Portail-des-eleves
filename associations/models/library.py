@@ -42,7 +42,7 @@ class Loan(models.Model):
     #           --- CANCELLED
     #          /
     # PENDING ----- ACCEPTED ------ BORROWED ----- RETURNED
-    #         \
+    #          \
     #           --- REJECTED
 
     STATUS = (

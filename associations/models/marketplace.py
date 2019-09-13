@@ -44,12 +44,19 @@ class Order(models.Model):
                                 decimal_places=2)  # Total value should be remembered because the price might change
     date = models.DateTimeField(auto_now=True)
 
+    #           --- CANCELLED
+    #          /
+    # ORDERED ----- VALIDATED ------ DELIVERED ----- REFUNDED
+    #          \
+    #           --- REJECTED
+
     STATUS = (
-        ("ORDERED", "Commandé"),  # The buyer passed the purchase order
-        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request
-        ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then
-        ("CANCELLED", "Annulé"),  # The buyer cancels the order
-        ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
+        ("ORDERED", "Commandé"),  # The buyer passed the purchase order.
+        ("CANCELLED", "Annulé"),  # The buyer cancels the order.
+        ("REJECTED", "Refusé"),  # The seller cannot honor the request.
+        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request.
+        ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then.
+        ("REFUNDED", "Remboursé"),  # The order has been delivered but it was faulty (or else), so it has been refunded.
     )
     status = models.CharField(choices=STATUS, max_length=200)
 
