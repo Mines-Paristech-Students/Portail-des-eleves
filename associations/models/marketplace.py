@@ -4,7 +4,7 @@ from authentication.models import User
 
 class Marketplace(models.Model):
     """
-        Provides an interface to lend objects to people and to follow who has what
+        Provide an interface to sell objects to people.
     """
 
     id = models.SlugField(max_length=200, primary_key=True)
@@ -16,7 +16,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=2, min_value=0)
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)
 

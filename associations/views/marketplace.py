@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Order, Product, Funding
-from associations.permissions import IsAssociationMember, CanManageMarketplace, _get_role_for_user, OrderPermission
+from associations.permissions import IsAssociationMember, CanManageMarketplace, OrderPermission
+from associations.permissions.base_permissions import _get_role_for_user
 from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
 from authentication.models import User
 

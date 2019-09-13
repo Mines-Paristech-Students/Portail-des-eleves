@@ -7,8 +7,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
-from associations.permissions import IsLibraryAdminOrReadOnly, IsLibraryAdminOrReadPostPatchOnly, \
-    IsLibraryEnabledOrLibraryAdminOnly
+from associations.permissions import IfLibraryAdminThenCRUDElseR, IfLibraryAdminThenCRUDElseCRU, \
+    IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD
 from associations.serializers import LibrarySerializer, CreateLoanSerializer, UpdateLoanSerializer, LoanSerializer, \
     LoanableSerializer
 
@@ -16,12 +16,12 @@ from associations.serializers import LibrarySerializer, CreateLoanSerializer, Up
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
-    permission_classes = (IsLibraryAdminOrReadOnly, IsLibraryEnabledOrLibraryAdminOnly)
+    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
 
 
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
-    permission_classes = (IsLibraryAdminOrReadPostPatchOnly, IsLibraryEnabledOrLibraryAdminOnly,)
+    permission_classes = (IfLibraryAdminThenCRUDElseCRU, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD,)
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filter_fields = ('status', 'user', 'loan_date', 'loanable__library__id')
@@ -67,6 +67,8 @@ class LoansViewSet(viewsets.ModelViewSet):
 
     @classmethod
     def check_date_permission_against_instance(cls, data, instance, user):
+        """If the user is not a library admin, she is not allowed to changed the dates of the Loan."""
+
         user_role = user.get_role(instance.loanable.library.association)
         user_is_library_admin = user_role is not None and user_role.library
 
@@ -147,7 +149,7 @@ class LoansViewSet(viewsets.ModelViewSet):
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
     serializer_class = LoanableSerializer
-    permission_classes = (IsLibraryAdminOrReadOnly, IsLibraryEnabledOrLibraryAdminOnly)
+    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ("library__id",)
