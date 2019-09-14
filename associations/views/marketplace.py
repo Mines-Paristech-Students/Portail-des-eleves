@@ -10,9 +10,7 @@ from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Product, Transaction, Funding
-from associations.permissions import FundingPermission, IfMarketplaceAdminThenCRUDElseR, \
-    IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU, \
-    IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD
+from associations.permissions import MarketplacePermission, ProductPermission, TransactionPermission, FundingPermission
 from associations.serializers import MarketplaceSerializer, ProductSerializer, TransactionSerializer, \
     CreateTransactionSerializer, UpdateTransactionSerializer, FundingSerializer, CreateFundingSerializer, \
     UpdateFundingSerializer
@@ -22,15 +20,13 @@ from authentication.models import User
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
-    permission_classes = (IfMarketplaceAdminThenCRUDElseR,
-                          IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD,)
+    permission_classes = (MarketplacePermission,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IfMarketplaceAdminThenCRUDElseR,
-                          IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD,)
+    permission_classes = (ProductPermission,)
 
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
@@ -48,7 +44,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-    permission_classes = (IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU,)
+    permission_classes = (TransactionPermission,)
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('product', 'status', 'buyer', 'date')
@@ -180,7 +176,7 @@ class BalanceView(APIView):
 
             if not user_id:
                 # List the balances of all the users.
-                if role.marketplace:
+                if role and role.marketplace:
                     return JsonResponse([self.get_balance_in_json(u, marketplace) for u in User.objects.all()],
                                         safe=False)
                 else:

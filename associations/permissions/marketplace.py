@@ -70,64 +70,75 @@ def get_role_in_marketplace(request):
     return role
 
 
-class IfMarketplaceAdminThenCRUDElseR(BasePermission):
+class MarketplacePermission(BasePermission):
     """
-        Every user has the read permission.\n
-        An user has the CRUD permissions iff the user is a marketplace administrator of the edited marketplace.
+               | Enabled | Disabled |
+        Admin  | CRUD    | CRUD     |
+        Simple | R       |          |
     """
 
-    message = 'You are not allowed to edit this marketplace because you are not an administrator of this marketplace.'
+    message = 'You are not allowed to edit this marketplace.'
 
     def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
         role = get_role_in_marketplace(request)
 
-        if role is not None:
-            return role.marketplace
+        if role and role.marketplace:
+            return True
+        else:
+            # Simple user.
+            marketplace = get_marketplace(request)
 
+            if marketplace:
+                if marketplace.enabled and request.method in SAFE_METHODS:
+                    return True
+            # If the marketplace could not be found, give access to the safe methods.
+            elif request.method in SAFE_METHODS:
+                return True
         return False
 
 
-class IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU(BasePermission):
+class ProductPermission(BasePermission):
     """
-        If the marketplace is enabled, every user has CRU permissions.\n
-        If the marketplace is disabled, an user has the CRU permissions iff the user is a marketplace administrator of
-        the edited marketplace.\n
-        If the marketplace does not exist, only the safe methods are allowed.\n
-        The DELETE operation is never allowed.
+               | Enabled | Disabled |
+        Admin  | CRUD    | CRUD     |
+        Simple | CRUD    |          |
+
+        Same as Marketplace.
     """
-    message = 'You are not allowed to view this marketplace because it is disabled.'
 
-    def has_permission(self, request, view):
-        if request.method == 'DELETE':
-            return False
-
-        return IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD().has_permission(request, view)
+    message = 'You are not allowed to edit this product.'
+    has_permission = MarketplacePermission.has_permission
 
 
-class IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD(BasePermission):
+class TransactionPermission(BasePermission):
     """
-        If the marketplace is enabled, every user has every permission.\n
-        If the marketplace is disabled, an user has the write permission iff the user is a marketplace administrator of
-        the edited marketplace.\n
-        If the marketplace does not exist, only the safe methods are allowed.
+               | Enabled | Disabled |
+        Admin  | CRU     | CRU      |
+        Simple | CRU     | R        |
+
+        Same as Marketplace.
     """
-    message = 'You are not allowed to view this marketplace because it is disabled.'
+
+    message = 'You are not allowed to edit this transaction.'
 
     def has_permission(self, request, view):
         role = get_role_in_marketplace(request)
 
-        if role is not None and role.marketplace:
-            # Marketplace administrator, give all the rights.
+        if request.method in ('DELETE', ):
+            self.message = 'Transactions cannot be deleted.'
+            return False
+
+        if role and role.marketplace:
+            # Marketplace administrator.
             return True
         else:
             marketplace = get_marketplace(request)
 
             if marketplace:
-                # The marketplace is enabled, give all the rights.
-                return marketplace.enabled
+                if marketplace.enabled:
+                    return True
+                else:
+                    return request.method in SAFE_METHODS
             # If the marketplace could not be found, give access to the safe methods.
             elif request.method in SAFE_METHODS:
                 return True

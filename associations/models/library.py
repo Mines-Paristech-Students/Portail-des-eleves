@@ -35,10 +35,10 @@ class Loanable(models.Model):
         return True
 
     def get_expected_return_date(self):
-        return (Loan.objects
-                .filter(loanable=self, status__in=['BORROWED', 'ACCEPTED'])
-                .order_by('-id')[0]
-                .expected_return_date)
+        loans = (Loan.objects
+                 .filter(loanable=self, status__in=['BORROWED', 'ACCEPTED'])
+                 .order_by('-id'))
+        return loans[0].expected_return_date if len(loans) > 0 else None
 
 
 class Loan(models.Model):

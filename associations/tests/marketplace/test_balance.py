@@ -18,7 +18,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
     def test_if_logged_in_then_can_retrieve_balance(self):
         self.login('17simple')
-        res = self.get('marketplace/biero/balance/')
+        res = self.get('marketplace/biero/balance/17simple')
         self.assertStatusCode(res, 200)
 
         content = json.loads(res.content)
