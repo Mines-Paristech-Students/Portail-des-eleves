@@ -1,12 +1,11 @@
-from rest_framework import serializers
-from rest_framework.relations import PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
 from associations.serializers.association import AssociationsShortSerializer
 from authentication.models import User
 
 
-class CreateTransactionSerializer(serializers.ModelSerializer):
+class CreateTransactionSerializer(ModelSerializer):
     """Only serialize the product, the user and the quantity."""
 
     product = PrimaryKeyRelatedField(queryset=Product.objects.all())
@@ -27,7 +26,7 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
         return Transaction.objects.create(**validated_data)
 
 
-class UpdateTransactionSerializer(serializers.ModelSerializer):
+class UpdateTransactionSerializer(ModelSerializer):
     """Only the status or the date can be updated."""
 
     class Meta:
@@ -35,7 +34,7 @@ class UpdateTransactionSerializer(serializers.ModelSerializer):
         fields = ('status', 'date')
 
 
-class TransactionSerializer(serializers.ModelSerializer):
+class TransactionSerializer(ModelSerializer):
     product = PrimaryKeyRelatedField(queryset=Product.objects.all())
     buyer = PrimaryKeyRelatedField(queryset=User.objects.all())
 
@@ -50,34 +49,51 @@ class TransactionSerializer(serializers.ModelSerializer):
         return res
 
 
-class ProductShortSerializer(serializers.ModelSerializer):
+class ProductShortSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'description', 'price', 'number_left', 'transactionable_online', 'marketplace',
-                  'still_in_the_catalogue')
+        fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+class ProductSerializer(ModelSerializer):
+    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
 
     class Meta:
         model = Product
         fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
 
 
-class FundingSerializer(serializers.ModelSerializer):
+class CreateFundingSerializer(ModelSerializer):
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+
     class Meta:
         model = Funding
-        fields = ('id', 'value', 'date', 'user', 'status')
+        fields = ('value', 'user', 'marketplace')
 
 
-class MarketplaceShortSerializer(serializers.ModelSerializer):
+class UpdateFundingSerializer(ModelSerializer):
+    class Meta:
+        model = Funding
+        fields = ('status',)
+
+
+class FundingSerializer(ModelSerializer):
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+
+    class Meta:
+        model = Funding
+        fields = ('id', 'user', 'value', 'date', 'marketplace', 'status')
+
+
+class MarketplaceShortSerializer(ModelSerializer):
     class Meta:
         model = Marketplace
         fields = ('id', 'enabled', 'association')
 
 
-class MarketplaceSerializer(serializers.ModelSerializer):
+class MarketplaceSerializer(ModelSerializer):
     products = ProductShortSerializer(many=True)
 
     class Meta:
@@ -123,7 +139,7 @@ class MarketplaceSerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
+        res = super(ModelSerializer, self).to_representation(instance)
 
         res['association'] = AssociationsShortSerializer().to_representation(
             Association.objects.get(pk=res['association']))

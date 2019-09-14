@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Marketplace, Transaction, Product
-from associations.permissions.base_permissions import extract_id, _get_role_for_user
+from associations.models import Association, Marketplace, Funding, Transaction, Product
+from associations.permissions.base_permissions import extract_id
 
 
 def get_marketplace(request):
@@ -28,6 +28,10 @@ def get_marketplace(request):
                 product_id = extract_id('products', request.path)
                 if product_id:
                     marketplace_id = Product.objects.get(id=product_id).marketplace.id
+            elif 'funding' in request.path:
+                product_id = extract_id('funding', request.path)
+                if product_id:
+                    marketplace_id = Funding.objects.get(id=product_id).marketplace.id
             elif 'marketplace' in request.path:
                 marketplace_id = extract_id('marketplace', request.path)
         except ObjectDoesNotExist:
@@ -124,6 +128,37 @@ class IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD(BasePermissio
             if marketplace:
                 # The marketplace is enabled, give all the rights.
                 return marketplace.enabled
+            # If the marketplace could not be found, give access to the safe methods.
+            elif request.method in SAFE_METHODS:
+                return True
+        return False
+
+
+class FundingPermission(BasePermission):
+    """
+               | Enabled | Disabled |
+        Admin  | CRU     | RU       |
+        Simple | R       | R        |
+    """
+
+    message = 'You are not allowed to access this funding.'
+
+    def has_permission(self, request, view):
+        role = get_role_in_marketplace(request)
+
+        if not role or not role.marketplace:
+            # Simple user: read permission only.
+            self.message = 'You are not allowed to edit this funding because you are not a marketplace administrator.'
+            return request.method in SAFE_METHODS
+        else:
+            # Marketplace administrator.
+            marketplace = get_marketplace(request)
+
+            if marketplace:
+                if marketplace.enabled:
+                    return request.method in SAFE_METHODS or request.method in ('POST', 'PATCH')
+                else:
+                    return request.method in SAFE_METHODS or request.method in ('PATCH',)
             # If the marketplace could not be found, give access to the safe methods.
             elif request.method in SAFE_METHODS:
                 return True

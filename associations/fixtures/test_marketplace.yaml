@@ -435,3 +435,30 @@
     value: 10
     date: '2019-01-01T00:00:00+00:00'
     status: REFUNDED
+
+- model: associations.funding
+  pk: 0
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: biero
+    status: FUNDED
+
+- model: associations.funding
+  pk: 1
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: pdm
+    status: FUNDED
+
+- model: associations.funding
+  pk: 2
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: biero
+    status: REFUNDED
