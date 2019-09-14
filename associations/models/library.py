@@ -28,6 +28,18 @@ class Loanable(models.Model):
 
         return False
 
+    def is_available(self):
+        for loan in self.loans.all():
+            if loan.status in ['BORROWED', 'ACCEPTED']:
+                return False
+        return True
+
+    def get_expected_return_date(self):
+        loans = (Loan.objects
+                 .filter(loanable=self, status__in=['BORROWED', 'ACCEPTED'])
+                 .order_by('-id'))
+        return loans[0].expected_return_date if len(loans) > 0 else None
+
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)
@@ -42,7 +54,7 @@ class Loan(models.Model):
     #           --- CANCELLED
     #          /
     # PENDING ----- ACCEPTED ------ BORROWED ----- RETURNED
-    #         \
+    #          \
     #           --- REJECTED
 
     STATUS = (

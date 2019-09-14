@@ -7,8 +7,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
-from associations.permissions import IsLibraryAdminOrReadOnly, IsLibraryAdminOrReadPostPatchOnly, \
-    IsLibraryEnabledOrLibraryAdminOnly
+from associations.permissions import IfLibraryAdminThenCRUDElseR, IfLibraryAdminThenCRUDElseCRU, \
+    IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD
 from associations.serializers import LibrarySerializer, CreateLoanSerializer, UpdateLoanSerializer, LoanSerializer, \
     LoanableSerializer
 
@@ -16,12 +16,30 @@ from associations.serializers import LibrarySerializer, CreateLoanSerializer, Up
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
-    permission_classes = (IsLibraryAdminOrReadOnly, IsLibraryEnabledOrLibraryAdminOnly)
+    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+
+
+class LoanableViewSet(viewsets.ModelViewSet):
+    queryset = Loanable.objects.all()
+    serializer_class = LoanableSerializer
+    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ("library__id",)
+
+    def get_queryset(self):
+        """The user has access to the loanables coming from every enabled library and to the loanables of every
+        library she is a library administrator of."""
+
+        # The library for which the user is library administrator.
+        libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
+
+        return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))
 
 
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
-    permission_classes = (IsLibraryAdminOrReadPostPatchOnly, IsLibraryEnabledOrLibraryAdminOnly,)
+    permission_classes = (IfLibraryAdminThenCRUDElseCRU, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD,)
 
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filter_fields = ('status', 'user', 'loan_date', 'loanable__library__id')
@@ -67,6 +85,8 @@ class LoansViewSet(viewsets.ModelViewSet):
 
     @classmethod
     def check_date_permission_against_instance(cls, data, instance, user):
+        """If the user is not a library admin, she is not allowed to changed the dates of the Loan."""
+
         user_role = user.get_role(instance.loanable.library.association)
         user_is_library_admin = user_role is not None and user_role.library
 
@@ -142,21 +162,3 @@ class LoansViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
-
-
-class LoanableViewSet(viewsets.ModelViewSet):
-    queryset = Loanable.objects.all()
-    serializer_class = LoanableSerializer
-    permission_classes = (IsLibraryAdminOrReadOnly, IsLibraryEnabledOrLibraryAdminOnly)
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ("library__id",)
-
-    def get_queryset(self):
-        """The user has access to the loanables coming from every enabled library and to the loanables of every
-        library she is a library administrator of."""
-
-        # The library for which the user is library administrator.
-        libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
-
-        return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))

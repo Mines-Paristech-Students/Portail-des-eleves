@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
-
 class UserManager(BaseUserManager):
     def create_user(self, id, first_name, last_name, email, password, birthday, promo):
         """

@@ -1,147 +1,198 @@
-import json
 from decimal import Decimal
 
-from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
-from rest_framework import viewsets, filters, mixins, status
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest, Http404
+from django.db.models import Q
+
+from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from associations.models import Marketplace, Order, Product, Funding
-from associations.permissions import IsAssociationMember, CanManageMarketplace, _get_role_for_user, OrderPermission
-from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
+from associations.models import Marketplace, Product, Transaction, Funding
+from associations.permissions import MarketplacePermission, ProductPermission, TransactionPermission, FundingPermission
+from associations.serializers import MarketplaceSerializer, ProductSerializer, TransactionSerializer, \
+    CreateTransactionSerializer, UpdateTransactionSerializer, FundingSerializer, CreateFundingSerializer, \
+    UpdateFundingSerializer
 from authentication.models import User
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
-    permission_classes = (CanManageMarketplace,)
+    permission_classes = (MarketplacePermission,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (CanManageMarketplace,)
+    permission_classes = (ProductPermission,)
+
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
 
+    def get_queryset(self):
+        """The user has access to the products coming from every enabled marketplace and to the products of every
+        marketplace she is a library administrator of."""
 
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all().order_by("-id")
-    serializer_class = OrderSerializer
-    permission_classes = (OrderPermission,)
+        # The library for which the user is library administrator.
+        marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
+
+        return Product.objects.filter(Q(marketplace__enabled=True) | Q(marketplace__in=marketplaces))
+
+
+class TransactionViewSet(viewsets.ModelViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = (TransactionPermission,)
+
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ("product", 'status', 'buyer', "date")
+    filter_fields = ('product', 'status', 'buyer', 'date')
+
+    def get_queryset(self):
+        """The user has access to all of her transactions and to the transactions of every marketplace she is an
+        administrator of."""
+
+        # The marketplaces for which the user is administrator.
+        marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
+
+        q = Transaction.objects.filter((Q(buyer=self.request.user) & Q(product__marketplace__enabled=True)) |
+                                       Q(product__marketplace__in=marketplaces))
+        return q
+
+    def get_serializer_class(self):
+        if self.action in ('create',):
+            return CreateTransactionSerializer
+        elif self.action in ('update', 'partial_update'):
+            return UpdateTransactionSerializer
+        else:
+            return TransactionSerializer
 
     def create(self, request, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        body = request.data
-        user_id = body["user"] if "user" in body else None
-        products = body["products"]
+        product = Product.objects.get(pk=serializer.validated_data['product'].id)
 
-        orders, errors = [], []
+        # Check if there are enough products remaining.
+        if 'quantity' not in serializer.validated_data or \
+                product.number_left < serializer.validated_data['quantity']:
+            return HttpResponseBadRequest('Not enough products remaining.')
 
-        for product in products:
+        # Check whether the user can create a Transaction for another user.
+        user_role = request.user.get_role(product.marketplace.association)
+        user_is_marketplace_admin = user_role is not None and user_role.marketplace
 
-            quantity = int(product["quantity"])
-            product = Product.objects.get(pk=product["id"])
+        if not user_is_marketplace_admin:
+            if serializer.validated_data['buyer'].id != request.user.id:
+                return HttpResponseForbidden('Cannot create a Transaction for another user.')
 
-            if quantity > product.number_left >= 0:
-                errors.append({
-                    product.id: "Il n'y a pas assez de {} ({} demandés, {} restants)".format(
-                        product.name, quantity, product.number_left
-                    )
-                })
-                continue
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-            status = "ORDERED"
-            user = request.user
-            if user_id:
-                user = User.objects.get(id=user_id)
-                status = "DELIVERED"
 
-            order = Order(
-                product=product,
-                buyer=user,
-                quantity=quantity,
-                value=quantity * product.price,
-                status=status
-            )
+class FundingViewSet(viewsets.ModelViewSet):
+    queryset = Funding.objects.all()
+    serializer_class = FundingSerializer
+    permission_classes = (FundingPermission,)
 
-            product.number_left -= quantity
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('status', 'user', 'date')
 
-            orders.append(order)
+    def get_queryset(self):
+        """The user has access to all her funding and to the funding of every marketplace she is an administrator of."""
+        # The marketplaces for which the user is administrator.
+        marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
 
-        if len(errors) >= 1:
-            return JsonResponse(errors)
+        q = Funding.objects.filter(Q(user=self.request.user) | Q(marketplace__in=marketplaces))
+        return q
 
-        for order in orders:
-            order.save()
-            order.product.save()
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action in ('update', 'partial_update'):
+            return UpdateFundingSerializer
+        elif self.action in ('create',):
+            return CreateFundingSerializer
+        else:
+            return FundingSerializer
 
-        return JsonResponse(OrderSerializer(orders, many=True).data, safe=False)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
 
-    def list(self, request, *args, **kwargs):
-        marketplace_id = request.GET.get("marketplace")
-        if not marketplace_id:
-            return HttpResponseBadRequest("Marketplace id must be given")
+        if len(serializer.validated_data) != 1 and 'status' not in serializer.validated_data:
+            return HttpResponseForbidden('You are not allowed to update this Funding.')
 
-        user = request.user
-        role = _get_role_for_user(user, marketplace_id)
+        self.perform_update(serializer)
 
-        queryset = Order.objects.filter(product__marketplace__id=marketplace_id)
-
-        if not role or not (role.marketplace or role.is_admin):
-            queryset = queryset.filter(buyer__id=user.id)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
 
 
-class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('status', 'user', "date")
-    permission_classes = (IsAssociationMember,)
+def compute_balance(user, marketplace):
+    balance = Decimal()
 
-    queryset = Funding.objects.order_by("-id")
-    serializer_class = FundingSerializer
+    for f in Funding.objects.filter(marketplace=marketplace, user=user):
+        if f.value_in_balance:
+            balance += f.value
+
+    for t in Transaction.objects.filter(product__marketplace=marketplace, buyer=user):
+        if t.value_in_balance:
+            balance -= t.value
+
+    return balance
 
 
 class BalanceView(APIView):
+    @staticmethod
+    def get_balance_in_json(user, marketplace):
+        return {
+            'balance': compute_balance(user, marketplace),
+            'marketplace': marketplace.id,
+            'user': user.id
+        }
 
-    def get(self, request, marketplace_id, user_id):
-        user_id = user_id if user_id else request.user.id
-        balance = Decimal(0.0)
+    def get(self, request, marketplace_id=None, user_id=None):
+        if not marketplace_id:
+            # List all the balances of all the marketplaces.
+            m = set([f.marketplace for f in Funding.objects.filter(user=self.request.user)])
+            m.union(set([f.product.marketplace for f in Transaction.objects.filter(buyer=self.request.user)]))
 
-        role = _get_role_for_user(request.user, marketplace_id)
-        if user_id != request.user.id and (role is None or (not role.marketplace and not role.is_admin)):
-            return HttpResponseForbidden()
+            return JsonResponse([self.get_balance_in_json(request.user, marketplace) for marketplace in m], safe=False)
+        else:
+            try:
+                marketplace = Marketplace.objects.get(pk=marketplace_id)
+            except ObjectDoesNotExist:
+                return Http404('This marketplace does not exist.')
 
-        orders = Order.objects.filter(buyer__id=user_id, product__marketplace=marketplace_id)
-        fundings = Funding.objects.filter(user__id=user_id, marketplace=marketplace_id)
+            user = User.objects.get(pk=user_id) if user_id else self.request.user
+            role = self.request.user.get_role(marketplace.association)
 
-        for order in orders:
-            if order.status == "DELIVERED":
-                balance -= order.value
+            if not user_id:
+                # List the balances of all the users.
+                if role and role.marketplace:
+                    return JsonResponse([self.get_balance_in_json(u, marketplace) for u in User.objects.all()],
+                                        safe=False)
+                else:
+                    return HttpResponseForbidden('You are not a marketplace administrator.')
+            else:
+                # Retrieve the balance of one user.
+                if user != request.user:
+                    if role is None or not role.marketplace:
+                        return HttpResponseForbidden('You are not allowed to view the balance of this user.')
 
-        for funding in fundings:
-            if funding.status == "FUNDED":
-                balance += funding.value
+                return JsonResponse(self.get_balance_in_json(user, marketplace))
 
-        return JsonResponse({
-            "balance": balance,
-            "user": user_id
-        })
 
+"""
     def put(self, request, marketplace_id, user_id, format=None):
-
-        role = _get_role_for_user(request.user, marketplace_id)
+        role = request.user.get_role(marketplace_id)
         if role is None or (not role.marketplace and not role.is_admin):
             return HttpResponseForbidden()
 
@@ -157,3 +208,4 @@ class BalanceView(APIView):
             return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")
 
         return JsonResponse({"status": "ok"})
+"""

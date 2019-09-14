@@ -93,19 +93,11 @@ class LoanableSerializer(serializers.ModelSerializer):
         model = Loanable
         fields = ("id", "name", "description", "image", "comment", "library")
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
 
-        status = "available"
-        expected_return_date = None
-
-        for loan in instance.loans.all():
-            if loan.real_return_date is None:
-                expected_return_date = loan.expected_return_date
-                status = "borrowed"
-
-        res["status"] = status
-        res["expected_return_date"] = expected_return_date
+        res['status'] = 'AVAILABLE' if instance.is_available() else 'BORROWED'
+        res['expected_return_date'] = instance.get_expected_return_date()
 
         return res
 

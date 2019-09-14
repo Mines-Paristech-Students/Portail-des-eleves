@@ -5,10 +5,9 @@ from django.db.models import Q
 from associations.models.library import Loanable, Loan
 from associations.tests.library.base_test_library import *
 
+# TODO: forbid the deletes.
 
 class LoanTestCase(BaseLibraryTestCase):
-    NB_LOANS = {library: len(Loan.objects.filter(loanable__library=library)) for library in ['bd_tek']}
-
     # Please see the diagram in associations.models.library.Loan.
     STATUS_COUPLES = [
         ('PENDING', 'CANCELLED'),

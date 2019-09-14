@@ -1,10 +1,11 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from authentication.models import User
 
 
 class Marketplace(models.Model):
     """
-        Provides an interface to lend objects to people and to follow who has what
+        Provide an interface to sell objects to people.
     """
 
     id = models.SlugField(max_length=200, primary_key=True)
@@ -12,18 +13,23 @@ class Marketplace(models.Model):
 
 
 class Product(models.Model):
+    """
+        A product sold in a Marketplace.
+    """
+
     id = models.AutoField(primary_key=True)
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)
 
-    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="products")
+    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name='products')
 
-    # By convention, -1 = unlimited number of this product.
-    number_left = models.IntegerField(default=-1)
+    number_left = models.IntegerField(default=-1,
+                                      help_text='The number of products left.'
+                                                'By convention, -1 means unlimited products left.')
     still_in_the_catalogue = models.BooleanField(default=True)
 
     # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for BDA
@@ -33,38 +39,73 @@ class Product(models.Model):
         return "{} ({})".format(self.name, self.marketplace.id)
 
 
-class Order(models.Model):
+class Transaction(models.Model):
+    """
+        A Transaction links a product, a buyer, a quantity and a value (the overall value of the transaction, not of
+        one copy of the product). It goes through several statuses during its lifetime.\n
+        Transaction objects are also used to keep track of the spending of an user.\n
+        The money should be considered spent when the status is ORDERED, VALIDATED or DELIVERED.\n
+        The object should be considered gone from the marketplace stock once the order is VALIDATED.
+    """
+
     id = models.AutoField(primary_key=True)
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)
-
     quantity = models.PositiveIntegerField(default=1)
-    value = models.DecimalField(max_digits=5,
-                                decimal_places=2)  # Total value should be remembered because the price might change
-    date = models.DateTimeField(auto_now=True)
 
-    STATUS = (
-        ("ORDERED", "Commandé"),  # The buyer passed the purchase order
-        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request
-        ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then
-        ("CANCELLED", "Annulé"),  # The buyer cancels the order
-        ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
-    )
-    status = models.CharField(choices=STATUS, max_length=200)
-
-
-class Funding(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    # Total value is remembered because the price might change, the product might be deleted, etc.
     value = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateTimeField(auto_now=True)
 
-    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="fundings")
+    #           --- CANCELLED
+    #          /
+    # ORDERED ----- VALIDATED ------ DELIVERED ----- REFUNDED
+    #          \
+    #           --- REJECTED
 
     STATUS = (
-        ("FUNDED", "Versé"),  # The buyer passed the purchase order
-        ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
+        ('ORDERED', 'Commandé'),  # The buyer passed the purchase order.
+        ('CANCELLED', 'Annulé'),  # The buyer cancels the order.
+        ('REJECTED', 'Refusé'),  # The seller cannot honor the request.
+        ('VALIDATED', 'Validé'),  # The seller confirms it can honor the request.
+        ('DELIVERED', 'Transmis'),  # The product has been given. The order cannot be CANCELLED then.
+        ('REFUNDED', 'Remboursé'),  # The order has been delivered but it was faulty (or else), so it has been refunded.
     )
-    status = models.CharField(choices=STATUS, max_length=200, default="FUNDED")
+    status = models.CharField(choices=STATUS, max_length=200)
+
+    @property
+    def value_in_balance(self):
+        """
+            :return True iff the value of the transaction must be removed from her balance.
+        """
+        return self.status in ('ORDERED', 'VALIDATED', 'DELIVERED')
+
+
+class Funding(models.Model):
+    """
+        A Funding represents the action of topping a marketplace account up with some money.\n
+        Only the marketplace managers should be able to create Funding objects and update their status.\n
+        It should be added to her balance iff its status is FUNDED.
+    """
+
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    value = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
+    date = models.DateTimeField(auto_now=True)
+
+    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name='fundings')
+
+    STATUS = (
+        ('FUNDED', 'Versé'),
+        ('REFUNDED', 'Remboursé')
+    )
+    status = models.CharField(choices=STATUS, max_length=200, default='FUNDED')
+
+    @property
+    def value_in_balance(self):
+        """
+            :return True iff the value of the funding must be added to her balance.
+        """
+        return self.status in ('FUNDED')
