@@ -75,12 +75,11 @@ class Transaction(models.Model):
     status = models.CharField(choices=STATUS, max_length=200)
 
     @property
-    def value_is_spent(self):
+    def value_in_balance(self):
         """
-            :return True iff the value of the transaction can be considered as spent by the buyer (i.e. must be removed
-            from her balance).
+            :return True iff the value of the transaction must be removed from her balance.
         """
-        return self.status in ['ORDERED', 'VALIDATED', 'DELIVERED']
+        return self.status in ('ORDERED', 'VALIDATED', 'DELIVERED')
 
 
 class Funding(models.Model):
@@ -103,3 +102,10 @@ class Funding(models.Model):
         ('REFUNDED', 'Remboursé')
     )
     status = models.CharField(choices=STATUS, max_length=200, default='FUNDED')
+
+    @property
+    def value_in_balance(self):
+        """
+            :return True iff the value of the funding must be added to her balance.
+        """
+        return self.status in ('FUNDED')

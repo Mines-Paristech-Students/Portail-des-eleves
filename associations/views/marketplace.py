@@ -1,6 +1,7 @@
 from decimal import Decimal
 
-from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django.db.models import Q
 
 from rest_framework import viewsets, filters, status
@@ -138,31 +139,62 @@ class FundingViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+def compute_balance(user, marketplace):
+    balance = Decimal()
+
+    for f in Funding.objects.filter(marketplace=marketplace, user=user):
+        if f.value_in_balance:
+            balance += f.value
+
+    for t in Transaction.objects.filter(product__marketplace=marketplace, buyer=user):
+        if t.value_in_balance:
+            balance -= t.value
+
+    return balance
+
+
 class BalanceView(APIView):
-    def get(self, request, marketplace_id, user_id):
-        user_id = user_id if user_id else request.user.id
-        balance = Decimal(0.0)
+    @staticmethod
+    def get_balance_in_json(user, marketplace):
+        return {
+            'balance': compute_balance(user, marketplace),
+            'marketplace': marketplace.id,
+            'user': user.id
+        }
 
-        role = request.user.get_role(marketplace_id)
-        if user_id != request.user.id and (role is None or (not role.marketplace and not role.is_admin)):
-            return HttpResponseForbidden()
+    def get(self, request, marketplace_id=None, user_id=None):
+        if not marketplace_id:
+            # List all the balances of all the marketplaces.
+            m = set([f.marketplace for f in Funding.objects.filter(user=self.request.user)])
+            m.union(set([f.product.marketplace for f in Transaction.objects.filter(buyer=self.request.user)]))
 
-        orders = Transaction.objects.filter(buyer__id=user_id, product__marketplace=marketplace_id)
-        fundings = Funding.objects.filter(user__id=user_id, marketplace=marketplace_id)
+            return JsonResponse([self.get_balance_in_json(request.user, marketplace) for marketplace in m], safe=False)
+        else:
+            try:
+                marketplace = Marketplace.objects.get(pk=marketplace_id)
+            except ObjectDoesNotExist:
+                return Http404('This marketplace does not exist.')
 
-        for order in orders:
-            if order.status == "DELIVERED":
-                balance -= order.value
+            user = User.objects.get(pk=user_id) if user_id else self.request.user
+            role = self.request.user.get_role(marketplace.association)
 
-        for funding in fundings:
-            if funding.status == "FUNDED":
-                balance += funding.value
+            if not user_id:
+                # List the balances of all the users.
+                if role.marketplace:
+                    return JsonResponse([self.get_balance_in_json(u, marketplace) for u in User.objects.all()],
+                                        safe=False)
+                else:
+                    return HttpResponseForbidden('You are not a marketplace administrator.')
+            else:
+                # Retrieve the balance of one user.
+                if user != request.user:
+                    if role is None or not role.marketplace:
+                        return HttpResponseForbidden('You are not allowed to view the balance of this user.')
 
-        return JsonResponse({
-            "balance": balance,
-            "user": user_id
-        })
+                return JsonResponse(self.get_balance_in_json(user, marketplace))
 
+
+"""
     def put(self, request, marketplace_id, user_id, format=None):
         role = request.user.get_role(marketplace_id)
         if role is None or (not role.marketplace and not role.is_admin):
@@ -180,3 +212,4 @@ class BalanceView(APIView):
             return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")
 
         return JsonResponse({"status": "ok"})
+"""

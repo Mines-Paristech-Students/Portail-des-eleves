@@ -61,6 +61,7 @@ urlpatterns = [
     path('subscriptions/', include(subscriptions.urls)),
     path('profile/questions/<user_pk>', get_profile_questions),
     url(r'^associations/(?P<association_id>[^/.]+)/filesystem/root$', FileSystemView.as_view()),
-    url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
+    url(r'^marketplace/balance/', BalanceView.as_view()),
+    url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)/?$', BalanceView.as_view()),
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
 ] + router.urls

@@ -1,4 +1,4 @@
-from associations.models.association import *
+from associations.models.association import Association, Role
 from associations.models.events import *
 from associations.models.filesystem import *
 from associations.models.library import *

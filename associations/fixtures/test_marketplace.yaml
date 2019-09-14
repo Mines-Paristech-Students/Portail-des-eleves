@@ -62,7 +62,7 @@
     description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
       y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
       déjeuner.
-    price: 12.0
+    price: 5.0
     marketplace: biero
     number_left: 24
 
@@ -215,6 +215,16 @@
     role: Admin no marketplace
     is_admin: true
     marketplace: false
+
+- model: authentication.user
+  pk: 17consumer
+  fields:
+    email: 17consumer@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Consumer
+    last_name: Consumer
+    is_admin: false
+    promo: 17
 
 - model: associations.transaction
   pk: 0
