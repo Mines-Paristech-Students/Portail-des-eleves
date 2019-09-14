@@ -18,7 +18,6 @@ from os.path import join, dirname, realpath
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -32,7 +31,8 @@ ALLOWED_HOSTS = ["localhost"] + [os.environ.get("PORTAIL_HOSTNAME")] + ["127.0.0
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:4200', # Here was the problem indeed and it has to be http://localhost:3000, not http://localhost:3000/
+    'http://localhost:4200',
+# Here was the problem indeed and it has to be http://localhost:3000, not http://localhost:3000/
 )
 
 ENV = "DEV"  # Can be 'DEV' or 'PROD'
@@ -114,7 +114,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -128,7 +127,6 @@ DATABASES = {
         'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -148,7 +146,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -162,7 +159,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
@@ -174,6 +170,12 @@ JQUERY_URL = False
 
 MEDIA_ROOT = join(BASE_DIR, 'medias', 'uploads', 'associations')
 MEDIA_URL = "/" + join('uploads', 'associations') + "/"
+
+
+# Customized settings.
+
+SHOW_TO_FIRST_YEAR_STUDENTS = False
+
 
 def is_prod_mode():
     return ENV == 'PROD'

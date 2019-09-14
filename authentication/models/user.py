@@ -1,7 +1,9 @@
+from datetime import date
+
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
-)
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
 
 class UserManager(BaseUserManager):
     def create_user(self, id, first_name, last_name, email, password, birthday, promo):
@@ -37,42 +39,34 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
-    first_name = models.CharField(max_length=50, verbose_name="User first name")
-    last_name = models.CharField(max_length=50, verbose_name="User last name")
-    promo = models.IntegerField(verbose_name="Promotion")
+    id = models.CharField(primary_key=True, max_length=30)
 
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=160,
-        unique=True,
-    )
-
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     nickname = models.CharField(max_length=128, blank=True, default="")
-    birthday = models.DateField(null=True, verbose_name="date de naissance")
+    birthday = models.DateField(null=True)
+    email = models.EmailField(max_length=160, unique=True)
+    promo = models.IntegerField(verbose_name="Promotion",
+                                help_text="The last two digits of the User's entrance year at school.")
 
-    # Contact the person
-    phone = models.CharField(max_length=15, blank=True, verbose_name="numéro de téléphone")
-
-    room = models.CharField(max_length=128, blank=True, verbose_name="numéro de chambre")  # null if the person is PAM
+    phone = models.CharField(max_length=15, blank=True)
+    room = models.CharField(max_length=128, blank=True, help_text="Blank if the User is PAM.")
     address = models.CharField(max_length=512, blank=True,
-                               help_text="adresse en dehors de la Meuh")  # null if the person is not PAM
-    city_of_origin = models.CharField(max_length=128, blank=True, help_text="ville d'origine")
+                               help_text="Address outside the Meuh. Blank if the User is not PAM.")
+    city_of_origin = models.CharField(max_length=128, blank=True)
 
-    # Cursus
+    # Education.
     option = models.CharField(max_length=128, blank=True)
     is_ast = models.BooleanField(default=False)
     is_isupfere = models.BooleanField(default=False)
     is_in_gapyear = models.BooleanField(default=False)
 
-    # Life in Mines
+    # Life at school.
     sports = models.CharField(max_length=512, blank=True)
     roommate = models.ManyToManyField('self', symmetrical=True, blank=True)
-    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False,
-                                         blank=True)  # the Mines godparent
+    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, blank=True)
 
     # Life on portail
-
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -90,21 +84,29 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.id
 
-    def has_perm(self, perm, obj=None):
-        """Does the user have a specific permission?"""
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        """Does the user have permissions to view the app `app_label`?"""
-        # Simplest possible answer: Yes, always
-        return True
-
     @property
     def is_staff(self):
-        """Is the user a member of staff?"""
-        # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    @property
+    def is_in_first_year(self):
+        """Return True iff the User is in her first year at the school, depending on her promotion."""
+        today = date.today()
+
+        if today.month >= 8:
+            # Between August and December, the new students have the same school year as the current year.
+            return self.promo == today.year % 100
+        else:
+            # Between January and July, the school year of the new students is the current year minus one.
+            return self.promo == (today.year % 100) - 1
+
+    @property
+    def show_secret(self):
+        """Return True iff the User can be shown… the SECRET."""
+        if settings.SHOW_TO_FIRST_YEAR_STUDENTS:
+            return True
+        else:
+            return not self.is_in_first_year
 
     def get_role(self, association):
         for role in self.roles.all():
