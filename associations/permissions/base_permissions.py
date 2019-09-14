@@ -3,7 +3,7 @@ import re
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File
+from associations.models import Association, Library, Marketplace, News, Page, Role, Transaction, Product, Folder, File
 
 
 def _get_role_for_user(user, association):
@@ -163,7 +163,7 @@ class IsAssociationMember(BasePermission):
         elif isinstance(obj, Role):
             return True
             role = _get_role_for_user(request.user, obj.association)
-        elif isinstance(obj, Order):
+        elif isinstance(obj, Transaction):
             return True
             role = _get_role_for_user(request.user, obj.product.marketplace.association)
         elif isinstance(obj, Product):

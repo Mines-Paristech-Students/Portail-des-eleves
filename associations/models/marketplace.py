@@ -39,15 +39,24 @@ class Product(models.Model):
         return "{} ({})".format(self.name, self.marketplace.id)
 
 
-class Order(models.Model):
+class Transaction(models.Model):
+    """
+        A Transaction links a product, a buyer, a quantity and a value (the overall value of the transaction, not of
+        one copy of the product). It goes through several statuses during its lifetime.\n
+        Transaction objects are also used to keep track of the spending of an user.\n
+        The money should be considered spent when the status is ORDERED, VALIDATED or DELIVERED. It should be considered
+        refunded when the status is CANCELLED, REJECTED or REFUNDED.\n
+        The object should be considered gone from the marketplace stock once the order is VALIDATED.
+    """
+
     id = models.AutoField(primary_key=True)
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)
-
     quantity = models.PositiveIntegerField(default=1)
-    value = models.DecimalField(max_digits=5,
-                                decimal_places=2)  # Total value should be remembered because the price might change
+
+    # Total value is remembered because the price might change, the product might be deleted, etc.
+    value = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateTimeField(auto_now=True)
 
     #           --- CANCELLED
@@ -61,7 +70,7 @@ class Order(models.Model):
         ("CANCELLED", "Annulé"),  # The buyer cancels the order.
         ("REJECTED", "Refusé"),  # The seller cannot honor the request.
         ("VALIDATED", "Validé"),  # The seller confirms it can honor the request.
-        ("DELIVERED", "Délivré"),  # The product has been given. The order cannot be CANCELLED then.
+        ("DELIVERED", "Transmis"),  # The product has been given. The order cannot be CANCELLED then.
         ("REFUNDED", "Remboursé"),  # The order has been delivered but it was faulty (or else), so it has been refunded.
     )
     status = models.CharField(choices=STATUS, max_length=200)
@@ -77,7 +86,7 @@ class Funding(models.Model):
     marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name="fundings")
 
     STATUS = (
-        ("FUNDED", "Versé"),  # The buyer passed the purchase order
-        ("REFUNDED", "Remboursé")  # The order has been delivered but it was faulty (or else), so it has been refunded
+        ("FUNDED", "Versé"),
+        ("REFUNDED", "Remboursé")
     )
     status = models.CharField(choices=STATUS, max_length=200, default="FUNDED")

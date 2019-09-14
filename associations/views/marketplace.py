@@ -1,31 +1,35 @@
 from decimal import Decimal
 
-from django.http import JsonResponse, Http404, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.db.models import Q
 
-from rest_framework import viewsets, filters, mixins
+from rest_framework import viewsets, filters, status, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from associations.models import Marketplace, Order, Product, Funding
-from associations.permissions import IsAssociationMember, OrderPermission, IfMarketplaceAdminThenCRUDElseCRU, \
-    IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD
+from associations.models import Marketplace, Transaction, Product, Funding
+from associations.permissions import IsAssociationMember, IfMarketplaceAdminThenCRUDElseR, \
+    IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU, \
+    IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD
 from associations.permissions.base_permissions import _get_role_for_user
-from associations.serializers import MarketplaceSerializer, OrderSerializer, ProductSerializer, FundingSerializer
+from associations.serializers import MarketplaceSerializer, TransactionSerializer, ProductSerializer, \
+    FundingSerializer, UpdateTransactionSerializer, CreateTransactionSerializer
 from authentication.models import User
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
-    permission_classes = (IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD,)
+    permission_classes = (IfMarketplaceAdminThenCRUDElseR,
+                          IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IfMarketplaceAdminThenCRUDElseR, IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD,)
+    permission_classes = (IfMarketplaceAdminThenCRUDElseR,
+                          IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD,)
 
     filter_backends = (filters.SearchFilter,)
     search_fields = ("name",)
@@ -40,81 +44,55 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Product.objects.filter(Q(marketplace__enabled=True) | Q(marketplace__in=marketplaces))
 
 
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all().order_by("-id")
-    serializer_class = OrderSerializer
-    permission_classes = (OrderPermission,)
+class TransactionViewSet(viewsets.ModelViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = (IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU,)
+
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ("product", 'status', 'buyer', "date")
+    filter_fields = ('product', 'status', 'buyer', 'date')
+
+    def get_queryset(self):
+        """The user has access to all of her transactions and to the transactions of every marketplace she is an
+        administrator of."""
+
+        # The marketplaces for which the user is administrator.
+        marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
+
+        q = Transaction.objects.filter((Q(buyer=self.request.user) & Q(product__marketplace__enabled=True)) |
+                                       Q(product__marketplace__in=marketplaces))
+        return q
+
+    def get_serializer_class(self):
+        if self.action in ('create',):
+            return CreateTransactionSerializer
+        elif self.action in ('update', 'partial_update'):
+            return UpdateTransactionSerializer
+        else:
+            return TransactionSerializer
 
     def create(self, request, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        body = request.data
-        user_id = body["user"] if "user" in body else None
-        products = body["products"]
+        product = Product.objects.get(pk=serializer.validated_data['product'].id)
 
-        orders, errors = [], []
+        # Check if there are enough products remaining.
+        if 'quantity' not in serializer.validated_data or \
+                product.number_left < serializer.validated_data['quantity']:
+            return HttpResponseBadRequest('Not enough products remaining.')
 
-        for product in products:
+        # Check whether the user can create a Transaction for another user.
+        user_role = request.user.get_role(product.marketplace.association)
+        user_is_marketplace_admin = user_role is not None and user_role.marketplace
 
-            quantity = int(product["quantity"])
-            product = Product.objects.get(pk=product["id"])
+        if not user_is_marketplace_admin:
+            if serializer.validated_data['buyer'].id != request.user.id:
+                return HttpResponseForbidden('Cannot create a Transaction for another user.')
 
-            if quantity > product.number_left >= 0:
-                errors.append({
-                    product.id: "Il n'y a pas assez de {} ({} demandés, {} restants)".format(
-                        product.name, quantity, product.number_left
-                    )
-                })
-                continue
-
-            status = "ORDERED"
-            user = request.user
-            if user_id:
-                user = User.objects.get(id=user_id)
-                status = "DELIVERED"
-
-            order = Order(
-                product=product,
-                buyer=user,
-                quantity=quantity,
-                value=quantity * product.price,
-                status=status
-            )
-
-            product.number_left -= quantity
-
-            orders.append(order)
-
-        if len(errors) >= 1:
-            return JsonResponse(errors)
-
-        for order in orders:
-            order.save()
-            order.product.save()
-
-        return JsonResponse(OrderSerializer(orders, many=True).data, safe=False)
-
-    def list(self, request, *args, **kwargs):
-        marketplace_id = request.GET.get("marketplace")
-        if not marketplace_id:
-            return HttpResponseBadRequest("Marketplace id must be given")
-
-        user = request.user
-        role = _get_role_for_user(user, marketplace_id)
-
-        queryset = Order.objects.filter(product__marketplace__id=marketplace_id)
-
-        if not role or not (role.marketplace or role.is_admin):
-            queryset = queryset.filter(buyer__id=user.id)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -127,7 +105,6 @@ class FundingViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin, viewsets.Ge
 
 
 class BalanceView(APIView):
-
     def get(self, request, marketplace_id, user_id):
         user_id = user_id if user_id else request.user.id
         balance = Decimal(0.0)
@@ -136,7 +113,7 @@ class BalanceView(APIView):
         if user_id != request.user.id and (role is None or (not role.marketplace and not role.is_admin)):
             return HttpResponseForbidden()
 
-        orders = Order.objects.filter(buyer__id=user_id, product__marketplace=marketplace_id)
+        orders = Transaction.objects.filter(buyer__id=user_id, product__marketplace=marketplace_id)
         fundings = Funding.objects.filter(user__id=user_id, marketplace=marketplace_id)
 
         for order in orders:
@@ -153,7 +130,6 @@ class BalanceView(APIView):
         })
 
     def put(self, request, marketplace_id, user_id, format=None):
-
         role = _get_role_for_user(request.user, marketplace_id)
         if role is None or (not role.marketplace and not role.is_admin):
             return HttpResponseForbidden()

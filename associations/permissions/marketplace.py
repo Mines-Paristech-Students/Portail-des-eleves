@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Marketplace, Order, Product
+from associations.models import Association, Marketplace, Transaction, Product
 from associations.permissions.base_permissions import extract_id, _get_role_for_user
 
 
@@ -20,10 +20,10 @@ def get_marketplace(request):
                 marketplace_id = request.data['marketplace']
             elif 'product' in request.data:
                 marketplace_id = Product.objects.get(id=request.data['product']).marketplace.id
-            elif 'orders' in request.path:
-                order_id = extract_id('order', request.path)
-                if order_id:
-                    marketplace_id = Order.objects.get(id=order_id).product.marketplace.id
+            elif 'transactions' in request.path:
+                transaction_id = extract_id('transactions', request.path)
+                if transaction_id:
+                    marketplace_id = Transaction.objects.get(id=transaction_id).product.marketplace.id
             elif 'products' in request.path:
                 product_id = extract_id('products', request.path)
                 if product_id:
@@ -66,21 +66,6 @@ def get_role_in_marketplace(request):
     return role
 
 
-class IfMarketplaceAdminThenCRUDElseCRU(BasePermission):
-    """
-        Every user has the create / read / update permissions.\n
-        An user has the delete permission iff the user is a marketplace administrator of the edited marketplace.
-    """
-
-    message = 'You are not allowed to edit this marketplace because you are not an administrator of this marketplace.'
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS or request.method in ('POST', 'PATCH'):
-            return True
-
-        return IfMarketplaceAdminThenCRUDElseR().has_permission(request, view)
-
-
 class IfMarketplaceAdminThenCRUDElseR(BasePermission):
     """
         Every user has the read permission.\n
@@ -101,11 +86,28 @@ class IfMarketplaceAdminThenCRUDElseR(BasePermission):
         return False
 
 
-class IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD(BasePermission):
+class IfMarketplaceEnabledThenCRUElseRAndMarketplaceAdminOnlyCRU(BasePermission):
+    """
+        If the marketplace is enabled, every user has CRU permissions.\n
+        If the marketplace is disabled, an user has the CRU permissions iff the user is a marketplace administrator of
+        the edited marketplace.\n
+        If the marketplace does not exist, only the safe methods are allowed.\n
+        The DELETE operation is never allowed.
+    """
+    message = 'You are not allowed to view this marketplace because it is disabled.'
+
+    def has_permission(self, request, view):
+        if request.method == 'DELETE':
+            return False
+
+        return IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD().has_permission(request, view)
+
+
+class IfMarketplaceEnabledThenCRUDElseRAndMarketplaceAdminOnlyCRUD(BasePermission):
     """
         If the marketplace is enabled, every user has every permission.\n
         If the marketplace is disabled, an user has the write permission iff the user is a marketplace administrator of
-        the edited marketplace.
+        the edited marketplace.\n
         If the marketplace does not exist, only the safe methods are allowed.
     """
     message = 'You are not allowed to view this marketplace because it is disabled.'
@@ -126,83 +128,3 @@ class IfMarketplaceEnabledThenCRUDElseMarketplaceAdminOnlyCRUD(BasePermission):
             elif request.method in SAFE_METHODS:
                 return True
         return False
-
-
-class CanManageMarketplace(BasePermission):
-    message = 'Marketplace management is not allowed.'
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        if request.method == 'CREATE':
-            if 'marketplace' in request.data:
-                org_id = request.data['marketplace']
-            elif 'association' in request.data:
-                org_id = request.data["association"]
-            else:
-                return False
-
-            role = _get_role_for_user(request.user, org_id)
-            if not role:
-                return False
-            return role.marketplace or role.is_admin
-
-        return False
-
-    def has_object_permission(self, request, view, obj):
-
-        if isinstance(obj, Marketplace):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.id)
-        elif isinstance(obj, Order):
-            raise Exception(obj, request)
-            if obj.buyer == request.user and request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.product.marketplace.id)
-        elif isinstance(obj, Product):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.marketplace.id)
-        else:
-            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
-
-        if not role:
-            return False
-
-        return role.marketplace or role.is_admin
-
-
-class OrderPermission(BasePermission):
-    message = 'You cannot act on this order.'
-
-    def has_permission(self, request, view):
-        return True
-
-    def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Marketplace):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.id)
-        elif isinstance(obj, Order):
-            if obj.buyer == request.user and request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.product.marketplace.id)
-        elif isinstance(obj, Product):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.marketplace.id)
-        else:
-            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
-
-        if not role:
-            return False
-
-        return role.marketplace or role.is_admin

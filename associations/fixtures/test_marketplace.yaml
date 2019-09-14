@@ -65,7 +65,7 @@
     price: 12.0
     marketplace: biero
     number_left: 24
-    
+
 - model: associations.product
   pk: 4
   fields:
@@ -74,12 +74,12 @@
     price: 1.0
     marketplace: pdm
     number_left: 24
-    
+
 - model: associations.product
   pk: 5
   fields:
     name: Pain au chocolat
-    description: 😊😋😋😋 
+    description: 😊😋😋😋
     price: 1.5
     marketplace: pdm
 
@@ -215,3 +215,223 @@
     role: Admin no marketplace
     is_admin: true
     marketplace: false
+
+- model: associations.transaction
+  pk: 0
+  fields:
+    product: 1
+    buyer: 17admin_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 1
+  fields:
+    product: 1
+    buyer: 17market_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 2
+  fields:
+    product: 1
+    buyer: 17member_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 3
+  fields:
+    product: 1
+    buyer: 17admin_pdm
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 4
+  fields:
+    product: 1
+    buyer: 17market_pdm
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 5
+  fields:
+    product: 1
+    buyer: 17market_bde
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 6
+  fields:
+    product: 1
+    buyer: 17admin_bde
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 7
+  fields:
+    product: 1
+    buyer: 17admin
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 10
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 11
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 12
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: CANCELLED
+
+- model: associations.transaction
+  pk: 13
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: CANCELLED
+
+- model: associations.transaction
+  pk: 14
+  fields:
+    product: 1
+    buyer: 17member_biero
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 15
+  fields:
+    product: 1
+    buyer: 17admin_biero
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 16
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: VALIDATED
+
+- model: associations.transaction
+  pk: 17
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: VALIDATED
+
+- model: associations.transaction
+  pk: 18
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REJECTED
+
+- model: associations.transaction
+  pk: 19
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REJECTED
+
+- model: associations.transaction
+  pk: 20
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: DELIVERED
+
+- model: associations.transaction
+  pk: 21
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: DELIVERED
+
+- model: associations.transaction
+  pk: 22
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REFUNDED
+
+- model: associations.transaction
+  pk: 23
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REFUNDED

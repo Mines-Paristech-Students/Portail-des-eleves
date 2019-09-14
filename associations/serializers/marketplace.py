@@ -1,7 +1,60 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
-from associations.models import Association, Marketplace, Product, Order, Funding
+from associations.models import Association, Marketplace, Product, Transaction, Funding
 from associations.serializers.association import AssociationsShortSerializer
+from authentication.models import User
+
+
+class CreateTransactionSerializer(serializers.ModelSerializer):
+    """Only serialize the product, the user and the quantity."""
+
+    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
+    buyer = PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Transaction
+        fields = ('product', 'buyer', 'quantity')
+
+    def create(self, validated_data):
+        """Create a new instance of Product based upon validated_data."""
+
+        # Compute the value of the transaction.
+        product = Product.objects.get(pk=validated_data['product'].id)
+        validated_data['value'] = product.price * validated_data['quantity']
+        validated_data['status'] = 'ORDERED'
+
+        return Transaction.objects.create(**validated_data)
+
+
+class UpdateTransactionSerializer(serializers.ModelSerializer):
+    """Only the status or the date can be updated."""
+
+    class Meta:
+        model = Transaction
+        fields = ('status', 'date')
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
+    buyer = PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Transaction
+        fields = ('id', 'product', 'buyer', 'quantity', 'value', 'date', 'status')
+
+    def to_representation(self, instance):
+        res = super(TransactionSerializer, self).to_representation(instance)
+        res['marketplace'] = instance.product.marketplace.id
+        res['product'] = ProductSerializer().to_representation(instance.product)
+        return res
+
+
+class ProductShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('name', 'description', 'price', 'number_left', 'transactionable_online', 'marketplace',
+                  'still_in_the_catalogue')
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -12,31 +65,16 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
 
 
-class ProductShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ('name', 'description', 'price', 'number_left', "orderable_online", "marketplace",
-                  "still_in_the_catalogue")
-
-
-class OrderSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
-
-    class Meta:
-        model = Order
-        fields = ("id", "product", "buyer", "quantity", "value", "date", "status")
-
-
 class FundingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Funding
-        fields = ("id", "value", "date", "user", "status")
+        fields = ('id', 'value', 'date', 'user', 'status')
 
 
 class MarketplaceShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marketplace
-        fields = ('id', 'enabled', "association")
+        fields = ('id', 'enabled', 'association')
 
 
 class MarketplaceSerializer(serializers.ModelSerializer):
@@ -44,7 +82,7 @@ class MarketplaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Marketplace
-        fields = ("id", "enabled", "association", "products")
+        fields = ('id', 'enabled', 'association', 'products')
 
     def create(self, validated_data):
         """Create a new instance of Marketplace based upon validated_data."""

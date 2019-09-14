@@ -28,6 +28,18 @@ class Loanable(models.Model):
 
         return False
 
+    def is_available(self):
+        for loan in self.loans.all():
+            if loan.status in ['BORROWED', 'ACCEPTED']:
+                return False
+        return True
+
+    def get_expected_return_date(self):
+        return (Loan.objects
+                .filter(loanable=self, status__in=['BORROWED', 'ACCEPTED'])
+                .order_by('-id')[0]
+                .expected_return_date)
+
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)
