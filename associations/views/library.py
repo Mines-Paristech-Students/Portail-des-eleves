@@ -29,7 +29,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
-        library she is a library administrator of."""
+        library they are a library administrator of."""
 
         # The library for which the user is library administrator.
         libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
@@ -74,7 +74,7 @@ class LoansViewSet(viewsets.ModelViewSet):
         if user_is_library_admin:
             return True
         else:
-            # The user is not a library admin: she is only allowed to change the status of her loan from PENDING
+            # The user is not a library admin: they are only allowed to change the status of their loan from PENDING
             # to CANCELLED.
             if 'status' in data:
                 if instance.status == data['status'] or (
@@ -85,7 +85,7 @@ class LoansViewSet(viewsets.ModelViewSet):
 
     @classmethod
     def check_date_permission_against_instance(cls, data, instance, user):
-        """If the user is not a library admin, she is not allowed to changed the dates of the Loan."""
+        """If the user is not a library admin, they are not allowed to changed the dates of the Loan."""
 
         user_role = user.get_role(instance.loanable.library.association)
         user_is_library_admin = user_role is not None and user_role.library
@@ -107,8 +107,8 @@ class LoansViewSet(viewsets.ModelViewSet):
             return LoanSerializer
 
     def get_queryset(self):
-        """The user has access to her loans coming from an enabled library and to the loans of every library she is a
-        library administrator of."""
+        """The user has access to their loans coming from an enabled library and to the loans of every library they are
+        a library administrator of."""
 
         # The library for which the user is library administrator.
         libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
