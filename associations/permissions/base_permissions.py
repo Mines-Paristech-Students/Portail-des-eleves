@@ -1,13 +1,29 @@
+import re
+
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Order, Product, Folder, File, Loan, \
-    Loanable
+from associations.models import Association, Library, Marketplace, News, Page, Role, Transaction, Product, Folder, File
 
 
 def _get_role_for_user(user, association):
     qs = Role.objects.filter(user=user, association=association)
     if qs.exists():
         return qs[0]
+    return None
+
+
+def extract_id(base, string):
+    """
+        Extracts the characters between the two slashes (/) following base in string.
+        :return the id if found, None otherwise.
+    """
+    # +* is not greedy.
+    match = re.search(f'{base}/(.+?)/', string)
+
+    if match:
+        return match.group(1)
+
     return None
 
 
@@ -109,139 +125,10 @@ class CanEditFiles(BasePermission):
         return role.files
 
 
-class CanManageMarketplace(BasePermission):
-    message = 'Marketplace management is not allowed.'
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        if request.method == 'CREATE':
-            if 'marketplace' in request.data:
-                org_id = request.data['marketplace']
-            elif 'association' in request.data:
-                org_id = request.data["association"]
-            else:
-                return False
-
-            role = _get_role_for_user(request.user, org_id)
-            if not role:
-                return False
-            return role.marketplace or role.is_admin
-
-        return False
-
-    def has_object_permission(self, request, view, obj):
-
-        if isinstance(obj, Marketplace):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.id)
-        elif isinstance(obj, Order):
-            raise Exception(obj, request)
-            if obj.buyer == request.user and request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.product.marketplace.id)
-        elif isinstance(obj, Product):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.marketplace.id)
-        else:
-            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
-
-        if not role:
-            return False
-
-        return role.marketplace or role.is_admin
-
-class OrderPermission(BasePermission):
-    message = 'You cannot act on this order.'
-
-    def has_permission(self, request, view):
-        return True
-
-    def has_object_permission(self, request, view, obj):
-        if isinstance(obj, Marketplace):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.id)
-        elif isinstance(obj, Order):
-            if obj.buyer == request.user and request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.product.marketplace.id)
-        elif isinstance(obj, Product):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.marketplace.id)
-        else:
-            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
-
-        if not role:
-            return False
-
-        return role.marketplace or role.is_admin
-
-class CanManageLibrary(BasePermission):
-    message = 'Library management is not allowed.'
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        if request.method == 'CREATE':
-            if 'library' in request.data:
-                org_id = request.data['library']
-            elif 'association' in request.data:
-                org_id = request.data["association"]
-            else:
-                return False
-
-            role = _get_role_for_user(request.user, org_id)
-
-            if not role:
-                return False
-
-            return role.library or role.is_admin
-
-        return True
-
-    def has_object_permission(self, request, view, obj):
-
-        if isinstance(obj, Library):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.association.id)
-        elif isinstance(obj, Loan):
-            if obj.user == request.user and request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.loanable.library.id)
-        elif isinstance(obj, Loanable):
-            if request.method in SAFE_METHODS:
-                return True
-
-            role = _get_role_for_user(request.user, obj.library.association.id)
-        else:
-            raise Exception("Object {} is not supported (yet)".format(obj.__class__))
-
-        if not role:
-            return False
-
-        return role.library or role.is_admin
-
-
 class IsAssociationMember(BasePermission):
     message = "Editing association is not allowed."
 
     def has_permission(self, request, view):
-
         if request.method in SAFE_METHODS:
             return True
 
@@ -276,7 +163,7 @@ class IsAssociationMember(BasePermission):
         elif isinstance(obj, Role):
             return True
             role = _get_role_for_user(request.user, obj.association)
-        elif isinstance(obj, Order):
+        elif isinstance(obj, Transaction):
             return True
             role = _get_role_for_user(request.user, obj.product.marketplace.association)
         elif isinstance(obj, Product):
@@ -284,3 +171,41 @@ class IsAssociationMember(BasePermission):
             role = _get_role_for_user(request.user, obj.marketplace.association)
 
         return bool(role)
+
+
+class IsAssociationAdminOrReadOnly(BasePermission):
+    """
+    Every user has the read permission.\n
+    An user has the write permission iff the user is an administrator of the edited association. The edited association
+    is inferred from either an 'association' field in request.data or the content of request.path.
+    """
+
+    message = 'You are not allowed to edit this association because you are not an administrator of this association.'
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        if request.user is not None:
+            association_id = None
+
+            # The case of 'roles/' is an exception.
+            if 'roles' in request.path:
+                role_id = extract_id('roles', request.path)
+                if role_id:
+                    association_id = Role.objects.get(id=role_id).association
+            elif 'associations' in request.path:
+                association_id = extract_id('associations', request.path)
+            elif 'association' in request.data:
+                association_id = request.data['association']
+
+            if association_id is not None:
+                try:
+                    association = Association.objects.get(id=association_id)
+                    role = request.user.get_role(association)
+                    if role is not None:
+                        return role.is_admin
+                except ObjectDoesNotExist:
+                    pass
+
+        return False

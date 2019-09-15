@@ -1,4 +1,4 @@
-# Some explanations about the three libraries here (bd-tek, biero and bde).
+# Some explanations about the three associations here (bd-tek, biero and bde).
 #
 # * bd-tek is an enabled library with some loanables.
 # * biero is a disabled library with some loanables.
@@ -157,7 +157,7 @@
     promo: 17
 
 - model: associations.role
-  pk: 1
+  pk: 4
   fields:
     user: 17library_biero
     association: biero
@@ -176,7 +176,7 @@
     promo: 17
 
 - model: associations.role
-  pk: 4
+  pk: 5
   fields:
     user: 17library_bde
     association: bde
@@ -195,7 +195,7 @@
     promo: 17
 
 - model: associations.role
-  pk: 3
+  pk: 6
   fields:
     user: 17admin_bde
     association: bde
@@ -244,6 +244,37 @@
     status: RETURNED
 
 - model: associations.loan
+  pk: 4
+  fields:
+    loanable: 3
+    user: 17member_bd-tek
+    status: PENDING
+
+- model: associations.loan
+  pk: 5
+  fields:
+    loanable: 4
+    user: 17admin_bd-tek
+    loan_date: '2019-01-03T00:00:00+00:00'
+    expected_return_date: '2019-01-09T00:00:00+00:00'
+    real_return_date: '2019-01-04T00:00:00+00:00'
+    status: PENDING
+
+- model: associations.loan
+  pk: 6
+  fields:
+    loanable: 3
+    user: 17library_biero
+    status: PENDING
+
+- model: associations.loan
+  pk: 7
+  fields:
+    loanable: 3
+    user: 17admin
+    status: PENDING
+
+- model: associations.loan
   pk: 10
   fields:
     loanable: 1
@@ -264,9 +295,93 @@
     status: RETURNED
 
 - model: associations.loan
+  pk: 12
+  fields:
+    loanable: 4
+    user: 17simple
+    status: PENDING
+
+- model: associations.loan
+  pk: 13
+  fields:
+    loanable: 1
+    user: 17simple
+    status: CANCELLED
+
+- model: associations.loan
   pk: 20
   fields:
     loanable: 4
+    user: 17wan-fat
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: BORROWED
+
+- model: associations.loan
+  pk: 21
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    status: PENDING
+
+- model: associations.loan
+  pk: 22
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: PENDING
+
+- model: associations.loan
+  pk: 23
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: CANCELLED
+
+- model: associations.loan
+  pk: 24
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: ACCEPTED
+
+- model: associations.loan
+  pk: 25
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: REJECTED
+
+- model: associations.loan
+  pk: 26
+  fields:
+    loanable: 4
+    user: 17wan-fat
+    loan_date: '2018-02-04T00:00:00+00:00'
+    expected_return_date: '2018-02-11T00:00:00+00:00'
+    real_return_date: '2018-02-09T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 27
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: ACCEPTED
+
+- model: associations.loan
+  pk: 28
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    status: REJECTED
+
+- model: associations.loan
+  pk: 29
+  fields:
+    loanable: 1
     user: 17wan-fat
     loan_date: '2018-03-04T00:00:00+00:00'
     expected_return_date: '2018-03-11T00:00:00+00:00'

@@ -80,3 +80,5 @@ class Role(models.Model):
 
     def __str__(self):
         return self.user.id + "-" + self.association.id + "-" + self.role
+
+    # TODO: enforce the uniqueness of any (user, association) combination?

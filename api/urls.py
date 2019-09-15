@@ -8,7 +8,7 @@ import repartitions.urls
 import subscriptions.urls
 import subscriptions.urls
 from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
-    ProductViewSet, OrderViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
+    ProductViewSet, TransactionViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
     LoanableViewSet
 from associations.views import RoleViewSet
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
@@ -31,7 +31,7 @@ router.register(r'news', NewsViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
-router.register(r'orders', OrderViewSet)
+router.register(r'transactions', TransactionViewSet)
 router.register(r'library', LibraryViewSet)
 router.register(r'loans', LoansViewSet)
 router.register(r'loanables', LoanableViewSet)
@@ -61,6 +61,7 @@ urlpatterns = [
     path('subscriptions/', include(subscriptions.urls)),
     path('profile/questions/<user_pk>', get_profile_questions),
     url(r'^associations/(?P<association_id>[^/.]+)/filesystem/root$', FileSystemView.as_view()),
-    url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)$', BalanceView.as_view()),
+    url(r'^marketplace/balance/', BalanceView.as_view()),
+    url(r'^marketplace/(?P<marketplace_id>[^/.]+)/balance/(?P<user_id>[^/.]*)/?$', BalanceView.as_view()),
     url(r'^message-forum-vote/$', NewVoteMessageView.as_view()),
 ] + router.urls

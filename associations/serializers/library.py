@@ -1,14 +1,81 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
 
+from authentication.models import User
 from associations.models import Association, Library, Loanable, Loan
 from associations.serializers.association import AssociationsShortSerializer
 
 
-class LibraryShortSerializer(serializers.ModelSerializer):
+class CreateLoanSerializer(serializers.ModelSerializer):
+    """Only serialize the loanable and the user."""
+
+    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
-        model = Library
-        fields = ('id', 'enabled', "association")
+        model = Loan
+        fields = ('loanable', 'user')
+
+
+class UpdateLoanSerializer(serializers.ModelSerializer):
+    """Only serialize the status and the dates."""
+
+    class Meta:
+        model = Loan
+        fields = ('status', 'loan_date', 'real_return_date', 'expected_return_date')
+
+    @classmethod
+    def validate_date_order(cls, data, before_date_field_name, after_date_field_name):
+        if data[before_date_field_name] >= data[after_date_field_name]:
+            raise ValidationError({'field_errors': f'field {before_date_field_name} is not consistent with '
+                                                   f'field {after_date_field_name}.'})
+
+    @classmethod
+    def validate_dates(cls, data):
+        loan_date = data.get('loan_date', None)
+        real_return_date = data.get('real_return_date', None)
+        expected_return_date = data.get('expected_return_date', None)
+
+        if loan_date and expected_return_date:
+            cls.validate_date_order(data, 'loan_date', 'expected_return_date')
+        if loan_date and real_return_date:
+            cls.validate_date_order(data, 'loan_date', 'real_return_date')
+
+    def is_valid(self, raise_exception=False):
+        """Check the consistency of the provided dates against themselves, NOT against the updated object."""
+
+        is_valid_super = super(UpdateLoanSerializer, self).is_valid(raise_exception=True)
+
+        if is_valid_super:
+            try:
+                self.validate_dates(self.initial_data)
+            except ValidationError as e:
+                self._validated_data = {}
+                self._errors = e.detail
+            else:
+                self._errors = {}
+
+            if self._errors and raise_exception:
+                raise ValidationError(self.errors)
+
+        return is_valid_super and not bool(self._errors)
+
+
+class LoanSerializer(serializers.ModelSerializer):
+    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Loan
+        fields = ("id", "user", "status", "loanable",
+                  "expected_return_date", "loan_date", "real_return_date")
+
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+        res["library"] = instance.loanable.library.id
+        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
+        return res
 
 
 class LoanableShortSerializer(serializers.ModelSerializer):
@@ -26,36 +93,19 @@ class LoanableSerializer(serializers.ModelSerializer):
         model = Loanable
         fields = ("id", "name", "description", "image", "comment", "library")
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
 
-        status = "available"
-        expected_return_date = None
-
-        for loan in instance.loans.all():
-            if loan.real_return_date is None:
-                expected_return_date = loan.expected_return_date
-                status = "borrowed"
-
-        res["status"] = status
-        res["expected_return_date"] = expected_return_date
+        res['status'] = 'AVAILABLE' if instance.is_available() else 'BORROWED'
+        res['expected_return_date'] = instance.get_expected_return_date()
 
         return res
 
 
-class LoanSerializer(serializers.ModelSerializer):
-    loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
-
+class LibraryShortSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Loan
-        fields = ("id", "user", "status", "loanable",
-                  "expected_return_date", "loan_date", "real_return_date")
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["library"] = instance.loanable.library.id
-        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
-        return res
+        model = Library
+        fields = ('id', 'enabled', "association")
 
 
 class LibrarySerializer(serializers.ModelSerializer):

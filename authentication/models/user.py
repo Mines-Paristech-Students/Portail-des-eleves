@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
-
 class UserManager(BaseUserManager):
     def create_user(self, id, first_name, last_name, email, password, birthday, promo):
         """
@@ -106,3 +105,9 @@ class User(AbstractBaseUser):
         """Is the user a member of staff?"""
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    def get_role(self, association):
+        for role in self.roles.all():
+            if role.association == association:
+                return role
+        return None
