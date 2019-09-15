@@ -87,7 +87,7 @@ class User(AbstractBaseUser):
 
     @property
     def is_in_first_year(self):
-        """Return True iff the User is in her first year at the school, depending on her promotion."""
+        """Return True iff the User is in their first year at the school, depending on their promotion."""
         today = date.today()
 
         if today.month >= 8:

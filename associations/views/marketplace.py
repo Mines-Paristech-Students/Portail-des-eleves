@@ -33,7 +33,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
-        marketplace she is a library administrator of."""
+        marketplace they are a library administrator of."""
 
         # The library for which the user is library administrator.
         marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
@@ -50,7 +50,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     filter_fields = ('product', 'status', 'buyer', 'date')
 
     def get_queryset(self):
-        """The user has access to all of her transactions and to the transactions of every marketplace she is an
+        """The user has access to all of their transactions and to the transactions of every marketplace they are an
         administrator of."""
 
         # The marketplaces for which the user is administrator.
@@ -101,7 +101,8 @@ class FundingViewSet(viewsets.ModelViewSet):
     filter_fields = ('status', 'user', 'date')
 
     def get_queryset(self):
-        """The user has access to all her funding and to the funding of every marketplace she is an administrator of."""
+        """The user has access to all their funding and to the funding of every marketplace they are an administrator
+        of."""
         # The marketplaces for which the user is administrator.
         marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
 
