@@ -12,7 +12,7 @@ from associations.views import AssociationViewSet, PageViewSet, NewsViewSet, Mar
     LoanableViewSet
 from associations.views import RoleViewSet
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
-from authentication.views import CheckCredentials, JWTSetCookiesView, UserViewSet, LogoutView, get_birthdays, \
+from authentication.views import CheckCredentials, JWTSetCookiesView, ProfileViewSet, LogoutView, get_birthdays, \
     ProfileAnswerViewSet, ProfileQuestionViewSet, get_profile_questions
 from authentication.views import get_promotions
 from chat.views import ChatMessageViewSet
@@ -21,7 +21,7 @@ from rer.views import get_rer_timetable
 
 router = BulkRouter()
 
-router.register(r'users', UserViewSet)
+router.register(r'users', ProfileViewSet)
 router.register(r'chat', ChatMessageViewSet)  # Adds classic REST endpoint + retrieve_up_to + retrieve_from
 
 # Association
