@@ -51,20 +51,3 @@
     room: '802'
     phone: ''
     promo: 17
-
-- model: authentication.user
-  pk: 18chlieh
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Reda
-    last_name: Chlieh
-    email: 18chlieh@mpt.fr
-    birthday: '1998-06-10'
-    is_active: true
-    is_admin: false
-    nickname: Hulk
-    city_of_origin: Rabat
-    room: '105'
-    phone: ''
-    promo: 18
