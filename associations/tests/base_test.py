@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 class BaseTestCase(TestCase):
     client = APIClient(enforce_csrf_checks=True)
 
-    api_base = '/api/v1/'
+    api_base = '/api/v1'
 
     def logout(self):
         """Log the current user out."""

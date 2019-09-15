@@ -3,7 +3,6 @@ from associations.tests.base_test import BaseTestCase
 
 
 class APITestCase(BaseTestCase):
-
     fixtures = ['authentication.yaml', 'test_repartition_api.yaml']
 
     def test_create_campaign(self):
@@ -25,7 +24,7 @@ class APITestCase(BaseTestCase):
 
         # For a non admin
 
-        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"}) # recreate a new campaign
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"})  # recreate a new campaign
         self.assertEqual(res.status_code, 201)
 
         self.login("15menou")
@@ -45,7 +44,7 @@ class APITestCase(BaseTestCase):
         self.assertEqual(res.status_code, 403)
 
     def test_change_status(self):
-        for status in ["CLOSED", "OPENED", "RESULTS"]:
+        for status in ["CLOSED", "OPEN", "RESULTS"]:
             self.login("17bocquet")
             res = self.patch("/repartitions/campaigns/1/", {"status": status})
             self.assertEqual(res.status_code, 200)
@@ -60,112 +59,109 @@ class APITestCase(BaseTestCase):
 
         self.login("17bocquet")
 
-        res = self.get("/repatitions/1/users/")
+        res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "15menou", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "18chlieh", "wishes": [], "category": "Everyone", "fixed_to": None},
-            ]
-        })
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "15menou", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "18chlieh", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+        ])
 
-        res = self.post("/repatitions/1/users/", {"id": "17wan-fat", "category": "Everyone"})
-        self.assertEqual(res.status_code, 200)
-        res = self.get("/repatitions/1/users/")  # Check that the user was added
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "15menou", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "18chlieh", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "17wan-fat", "wishes": [], "category": "Everyone", "fixed_to": None},
-            ]
-        })
+        res = self.post("/repartitions/campaigns/1/users/",
+                        {"user": "17wan-fat", "category": 1, "wishes": [], "fixed_to": None})
+        self.assertEqual(res.status_code, 201)
+        res = self.get("/repartitions/campaigns/1/users/")  # Check that the user was added
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet", "wishes": [], "category": {"id": 1, "name": "Everyone"},
+             "fixed_to": None},
+            {"user": "15menou", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "18chlieh", "wishes": [], "category": {"id": 1, "name": "Everyone"},
+             "fixed_to": None},
+            {"user": "17wan-fat", "wishes": [], "category": {"id": 1, "name": "Everyone"},
+             "fixed_to": None},
+        ])
 
-        res = self.delete("/repatitions/1/users/17wan-fat")
+        res = self.get("/repartitions/campaigns/1/users/17wan-fat/")
         self.assertEqual(res.status_code, 200)
-        res = self.get("/repatitions/1/users/")  # Check that the user was removed
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "15menou", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "18chlieh", "wishes": [], "category": "Everyone", "fixed_to": None},
-            ]
-        })
+
+        res = self.delete("/repartitions/campaigns/1/users/17wan-fat/")
+        self.assertEqual(res.status_code, 204)
+        res = self.get("/repartitions/campaigns/1/users/")  # Check that the user was removed
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet", "wishes": [], "category": {"id": 1, "name": "Everyone"},
+             "fixed_to": None},
+            {"user": "15menou", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "18chlieh", "wishes": [], "category": {"id": 1, "name": "Everyone"},
+             "fixed_to": None},
+        ]
+                         )
 
         # For a non admin
 
         self.login("15menou")
-        res = self.get("/repatitions/1/users/")
+        res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet"},
-                {"id": "15menou"},
-                {"id": "18chlieh"},
-            ]
-        })
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet"},
+            {"user": "15menou"},
+            {"user": "18chlieh"},
+        ])
 
-        res = self.post("/repatitions/1/users/", {"id": "17wan-fat", "category": "Everyone"})
+        res = self.post("/repartitions/campaigns/1/users/", {"user": "17wan-fat", "category": "Everyone"})
         self.assertEqual(res.status_code, 403)
 
-        res = self.delete("/repatitions/1/users/17wan-fat")
+        res = self.delete("/repartitions/campaigns/1/users/17wan-fat/")
         self.assertEqual(res.status_code, 403)
 
     def test_fix_user(self):
         self.login("17bocquet")
 
-        res = self.post("/repatitions/1/users/", {"id": "15menou", "category": "Everyone", "fixed_to": 1})
+        res = self.patch("/repartitions/campaigns/1/users/15menou/", {"fixed_to": 1})
         self.assertEqual(res.status_code, 200)
-        res = self.get("/repatitions/1/users/")  # Check that the user was added
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "15menou", "wishes": [], "category": "Everyone", "fixed_to": 1},
-                {"id": "18chlieh", "wishes": [], "category": "Everyone", "fixed_to": None},
-            ]
-        })
+        res = self.get("/repartitions/campaigns/1/users/")  # Check that the user was added
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "18chlieh", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "15menou", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": 1},
+        ])
 
-        res = self.post("/repatitions/1/users/", {"id": "15menou", "category": "Everyone"})
+        res = self.patch("/repartitions/campaigns/1/users/15menou/", {"fixed_to": None})
         self.assertEqual(res.status_code, 200)
-        res = self.get("/repatitions/1/users/")  # Check that the user was added
-        self.assertEqual(json.loads(res.content), {
-            "users": [
-                {"id": "17bocquet", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "15menou", "wishes": [], "category": "Everyone", "fixed_to": None},
-                {"id": "18chlieh", "wishes": [], "category": "Everyone", "fixed_to": None},
-            ]
-        })
+        res = self.get("/repartitions/campaigns/1/users/")  # Check that the user was added
+        self.assertEqual(json.loads(res.content), [
+            {"user": "17bocquet", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "18chlieh", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+            {"user": "15menou", "wishes": [], "category": {"id": 1, "name": "Everyone"}, "fixed_to": None},
+        ])
 
     def test_submit_wishes(self):
         self.login("17bocquet")
-        self.patch("/repartitions/1/", data={"status": "OPEN"})
+        res = self.patch("/repartitions/campaigns/1/", data={"status": "OPEN"})
+        self.assertEqual(res.status_code, 200)
 
         self.login("15menou")
 
         # good request
 
-        res = self.post("/repatitions/1/wishes/", {
+        res = self.post("/repartitions/1/wishes/", {
             "wishes": [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},
                 {"proposition": 3, "rank": 3}
             ]
         })
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 202)
 
-        res = self.get("/repatitions/1/wishes/")  # Check that the user was added
-        self.assertEqual(json.loads(res.content), {
-            "wishes": [
-                {"proposition": 1, "rank": 1},
-                {"proposition": 2, "rank": 2},
-                {"proposition": 3, "rank": 3}
-            ]
-        })
+        res = self.get("/repartitions/1/wishes/")  # Check that the user was added
+        self.assertEqual(json.loads(res.content), [
+            {"proposition": 1, "rank": 1},
+            {"proposition": 2, "rank": 2},
+            {"proposition": 3, "rank": 3}
+        ])
 
         # bad requests
 
-        res = self.post("/repatitions/1/wishes/", {
+        res = self.post("/repartitions/1/wishes/", {
             "wishes": [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},
@@ -173,7 +169,7 @@ class APITestCase(BaseTestCase):
         })
         self.assertEqual(res.status_code, 400)
 
-        res = self.post("/repatitions/1/wishes/", {
+        res = self.post("/repartitions/1/wishes/", {
             "wishes": [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},
@@ -182,7 +178,7 @@ class APITestCase(BaseTestCase):
         })
         self.assertEqual(res.status_code, 400)
 
-        res = self.post("/repatitions/1/wishes/", {
+        res = self.post("/repartitions/1/wishes/", {
             "wishes": [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},
@@ -191,7 +187,7 @@ class APITestCase(BaseTestCase):
         })
         self.assertEqual(res.status_code, 400)
 
-        res = self.post("/repatitions/1/wishes/", {
+        res = self.post("/repartitions/1/wishes/", {
             "wishes": [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},
@@ -203,16 +199,17 @@ class APITestCase(BaseTestCase):
     def test_only_submit_when_open(self):
         tests = [
             ("CLOSED", 403),
-            ("OPENED", 200),
+            ("OPEN", 202),
             ("RESULTS", 403),
         ]
 
         for (status, code) in tests:
             self.login("17bocquet")
-            self.patch("/repartitions/1/", data={"status": status})
+            res = self.patch("/repartitions/campaigns/1/", data={"status": status})
+            self.assertEqual(res.status_code, 200)
 
             self.login("15menou")
-            res = self.post("/repatitions/1/wishes/", {
+            res = self.post("/repartitions/1/wishes/", {
                 "wishes": [
                     {"proposition": 1, "rank": 1},
                     {"proposition": 2, "rank": 2},
@@ -224,20 +221,20 @@ class APITestCase(BaseTestCase):
     def test_get_repartition(self):
         tests = [
             ("CLOSED", 403),
-            ("OPENED", 403),
+            ("OPEN", 403),
             ("RESULTS", 200),
         ]
 
         for (status, code) in tests:
             self.login("17bocquet")
-            self.patch("/repartitions/1/", data={"status": status})
+            self.patch("/repartitions/campaigns/1/", data={"status": status})
 
-            res = self.get("/repatitions/1/results/")
+            res = self.get("/repartitions/1/results/")
             self.assertEqual(res.status_code, code)
 
             self.login("15menou")
-            res = self.get("/repatitions/1/results/")
+            res = self.get("/repartitions/1/results/")
             self.assertEqual(res.status_code, 403)
 
-            res = self.get("/repatitions/1/results/me")
+            res = self.get("/repartitions/1/results/me")
             self.assertEqual(res.status_code, code)

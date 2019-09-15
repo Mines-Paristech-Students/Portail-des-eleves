@@ -22,6 +22,12 @@
     campaign: 1
     name: Polymers
     number_of_places: 5
+- model: repartitions.proposition
+  pk: 3
+  fields:
+    campaign: 1
+    name: Bio-materials
+    number_of_places: 5
 
 - model: repartitions.usercampaign
   fields:

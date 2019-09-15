@@ -3,7 +3,7 @@ from authentication.models import User
 
 
 class Campaign(models.Model):
-    STATUS = ("CLOSED", "OPENED", "RESULTS")
+    STATUS = ("CLOSED", "OPEN", "RESULTS")
 
     id = models.AutoField(primary_key=True)
 
@@ -42,6 +42,6 @@ class UserCampaign(models.Model):
 class Wish(models.Model):
     id = models.AutoField(primary_key=True)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_campaign = models.ForeignKey(UserCampaign, on_delete=models.CASCADE, related_name="wishes")
     proposition = models.ForeignKey(Proposition, on_delete=models.CASCADE)
     rank = models.IntegerField()
