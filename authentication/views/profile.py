@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from authentication.models import User
 from authentication.permissions import ProfilePermission
-from authentication.serializers.user import UpdateUserSerializer, UserSerializer, UserShortSerializer
+from authentication.serializers.user import UserSerializer, UserShortSerializer
 
 
 class ProfileViewSetPagination(PageNumberPagination):
@@ -22,24 +22,13 @@ class ProfileViewSetPagination(PageNumberPagination):
 class ProfileViewSet(viewsets.ModelViewSet):
     """API endpoint that allows an user profile to be viewed or edited."""
 
-    SIMPLE_USERS_EDITABLE_FIELDS = ['nickname',
-                                    'phone',
-                                    'room',
-                                    'address',
-                                    'city_of_origin',
-                                    'option',
-                                    'sports',
-                                    'roommate',
-                                    'minesparent', ]
-    """The profile fields editable by a simple (non-admin) user."""
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [ProfilePermission]
 
     filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ('id', 'first_name', 'last_name')
-    filter_fields = ('promo',)
+    filter_fields = ('year_of_entry',)
     pagination_class = ProfileViewSetPagination
 
     def get_object(self):
@@ -55,20 +44,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
         return super(ProfileViewSet, self).get_object()
 
-    def get_serializer_class(self):
-        if self.action in ('update', 'partial_update'):
-            return UpdateUserSerializer
-        elif self.action in ('list', ):
-            return UserShortSerializer
-        else:
-            return UserSerializer
-
     def update(self, request, *args, **kwargs):
         """
             Can X update Y? \n
-            X / Y       | Herself                               | Another user | \n
-            Simple user | Only the SIMPLE_USERS_EDITABLE_FIELDS | No           | \n
-            Admin       | Yes                                   | Yes          |
+            X / Y       | Herself  | Another user | \n
+            Simple user | Yes      | No           | \n
+            Admin       | Yes      | Yes          | \n
+            NB: not all the fields can be updated, this logic is implemented in UserSerializer.
         """
 
         partial = kwargs.pop('partial', False)
@@ -80,11 +62,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
             # A simple user tries to edit another user.
             if instance.id != self.request.user.id:
                 return HttpResponseForbidden('You are not allowed to edit this user.')
-
-            # A simple user tries to edit a forbidden field in an another user.
-            for field in serializer.validated_data:
-                if field not in self.SIMPLE_USERS_EDITABLE_FIELDS:
-                    return HttpResponseForbidden('You are not allowed to edit this user.')
 
         self.perform_update(serializer)
 
