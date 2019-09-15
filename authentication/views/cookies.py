@@ -66,7 +66,7 @@ class CheckCredentials(generics.GenericAPIView):
     This class gets both JWT tokens and sets them as secure cookies.
     """
     is_prod_mode = settings.is_prod_mode()
-    authentication_classes = [JWTCookieAuthentication]
+    authentication_classes = (JWTCookieAuthentication,)
 
     def post(self, request, *args, **kwargs):
         return Response(

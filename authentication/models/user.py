@@ -1,8 +1,9 @@
 from datetime import date
 
 from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -39,6 +40,16 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    STUDENT_TYPES = (('AST', 'AST'),
+                     ('ISUPFERE', 'ISUPFERE'),
+                     ('EV', 'EV'),
+                     ('IC', 'IC'))
+
+    ACADEMIC_YEARS = (('1A', '1A'),
+                      ('2A', '2A'),
+                      ('GAP YEAR', 'CÉSURE'),
+                      ('3A', '3A'),)
+
     id = models.CharField(primary_key=True, max_length=30)
 
     first_name = models.CharField(max_length=50)
@@ -46,8 +57,7 @@ class User(AbstractBaseUser):
     nickname = models.CharField(max_length=128, blank=True, default="")
     birthday = models.DateField(null=True)
     email = models.EmailField(max_length=160, unique=True)
-    promo = models.IntegerField(verbose_name="Promotion",
-                                help_text="The last two digits of the User's entrance year at school.")
+    year_of_entry = models.IntegerField(validators=(MinValueValidator(1783),))  # The year MINES ParisTech was created.
 
     phone = models.CharField(max_length=15, blank=True)
     room = models.CharField(max_length=128, blank=True, help_text="Blank if the User is PAM.")
@@ -57,16 +67,15 @@ class User(AbstractBaseUser):
 
     # Education.
     option = models.CharField(max_length=128, blank=True)
-    is_ast = models.BooleanField(default=False)
-    is_isupfere = models.BooleanField(default=False)
-    is_in_gapyear = models.BooleanField(default=False)
+    student_type = models.CharField(max_length=10, choices=STUDENT_TYPES)
+    current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
 
     # Life at school.
     sports = models.CharField(max_length=512, blank=True)
-    roommate = models.ManyToManyField('self', symmetrical=True, blank=True)
-    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, blank=True)
+    roommate = models.ManyToManyField('self', symmetrical=True, default=None)
+    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, default=None)
 
-    # Life on portail
+    # Life on portail.
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -76,7 +85,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'birthday']
 
     class Meta:
-        ordering = ['-promo', 'last_name', 'first_name']
+        ordering = ['-year_of_entry', 'last_name', 'first_name']
 
     def __str__(self):
         return self.id
@@ -87,6 +96,7 @@ class User(AbstractBaseUser):
 
     @property
     def is_in_first_year(self):
+        # TODO: fix this.
         """Return True iff the User is in their first year at the school, depending on their promotion."""
         today = date.today()
 
@@ -98,12 +108,17 @@ class User(AbstractBaseUser):
             return self.promo == (today.year % 100) - 1
 
     @property
-    def show_secret(self):
-        """Return True iff the User can be shown… the SECRET."""
+    def show(self):
+        """Return True iff the User can be shown."""
         if settings.SHOW_TO_FIRST_YEAR_STUDENTS:
             return True
         else:
             return not self.is_in_first_year
+
+    @property
+    def promotion(self):
+        """The last two digits of the User's entrance year at school."""
+        return self.year_of_entry % 100
 
     def get_role(self, association):
         for role in self.roles.all():

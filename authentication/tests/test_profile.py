@@ -57,28 +57,26 @@ class ProfileTestCase(BackendTestCase):
         'last_name': 'Test',
         'email': 'test@mpt.fr',
         'is_admin': 'false',
-        'promo': '17'
+        'year_of_entry': 2017
     }
 
-    def test_if_not_logged_in_then_cannot_create_user(self):
+    def test_cannot_create_user(self):
         res = self.post('users/', self.new_user_data)
         self.assertStatusCode(res, 401)
 
-    def test_if_not_admin_then_cannot_create_user(self):
         self.login('17simple')
         res = self.post('users/', self.new_user_data)
         self.assertStatusCode(res, 403)
 
-    def test_if_admin_then_can_create_user(self):
         self.login('17admin')
         res = self.post('users/', self.new_user_data)
-        self.assertStatusCode(res, 201)
-        self.assertTrue(User.objects.filter(pk='17test').exists())
+        self.assertStatusCode(res, 403)
 
     ##########
     # UPDATE #
     ##########
 
+    # TODO: test the edited fields…
     limited_edit_user_data = {
         'nickname': 'Nick',
         'phone': '123456',
@@ -89,28 +87,6 @@ class ProfileTestCase(BackendTestCase):
         'sports': 'Pichage',
         'roommate': ['17bocquet'],
         'minesparent': ['17wan-fat'],
-    }
-
-    full_edit_user_data = {
-        'first_name': 'Matthieu',
-        'last_name': 'Mazières',
-        'nickname': 'Nick',
-        'birthday': date(1963, 2, 3),
-        'email': 'matmaz@mpt.fr',
-        'promo': 62,
-        'phone': '123456',
-        'room': '123',
-        'address': '60 boulevard SM',
-        'city_of_origin': 'Paris',
-        'option': 'Mécatro',
-        'is_ast': True,
-        'is_isupfere': True,
-        'is_in_gapyear': True,
-        'sports': 'Pichage',
-        'roommate': ['17bocquet'],
-        'minesparent': ['17wan-fat'],
-        'is_active': True,
-        'is_admin': True,
     }
 
     def test_if_user_then_can_edit_own_profile_with_limited_data(self):
@@ -146,14 +122,13 @@ class ProfileTestCase(BackendTestCase):
     # DELETE #
     ##########
 
-    def test_if_not_admin_then_cannot_delete_user(self):
+    def test_cannot_delete_user(self):
         self.login('17simple')
         res = self.delete('users/17simple/')
         self.assertStatusCode(res, 403)
         self.assertTrue(User.objects.filter(pk='17simple').exists())
 
-    def test_if_admin_then_can_delete_user(self):
         self.login('17admin')
         res = self.delete('users/17simple/')
-        self.assertStatusCode(res, 204)
-        self.assertFalse(User.objects.filter(pk='17simple').exists())
+        self.assertStatusCode(res, 403)
+        self.assertTrue(User.objects.filter(pk='17simple').exists())
