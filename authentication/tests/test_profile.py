@@ -76,8 +76,7 @@ class ProfileTestCase(BackendTestCase):
     # UPDATE #
     ##########
 
-    # TODO: test the edited fields…
-    limited_edit_user_data = {
+    allowed_edits = {
         'nickname': 'Nick',
         'phone': '123456',
         'room': '123',
@@ -89,34 +88,66 @@ class ProfileTestCase(BackendTestCase):
         'minesparent': ['17wan-fat'],
     }
 
-    def test_if_user_then_can_edit_own_profile_with_limited_data(self):
+    not_allowed_edits = {
+        'first_name': 'New',
+        'last_name': 'Name',
+        'birthday': '1942-01-02',
+        'email': 'new.email@mpt.fr',
+        'year_of_entry': 2014,
+        'student_type': 'IC',
+        'is_active': True,
+        'is_admin': False,
+    }
+
+    def test_if_not_admin_then_can_edit_own_profile_with_allowed_edits(self):
         self.login('17simple')
-        res = self.patch('users/17simple/', data=self.limited_edit_user_data)
+        res = self.patch('users/17simple/', data=self.allowed_edits)
         self.assertStatusCode(res, 200)
 
         user = User.objects.get(pk='17simple')
-        for field in self.limited_edit_user_data:
+        for field in self.allowed_edits:
             if field in ['roommate', 'minesparent']:
-                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.limited_edit_user_data[field])
+                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.allowed_edits[field])
             else:
-                self.assertEqual(user.__getattribute__(field), self.limited_edit_user_data[field])
+                self.assertEqual(user.__getattribute__(field), self.allowed_edits[field])
+
+    def test_if_not_admin_then_cannot_edit_own_profile_with_disallowed_edits(self):
+        self.login('17simple')
+
+        user_before = User.objects.get(pk='17simple')
+        res = self.patch('users/17simple/', data=self.not_allowed_edits)
+        self.assertStatusCode(res, 200)
+        user_after = User.objects.get(pk='17simple')
+
+        for field in self.not_allowed_edits:
+            self.assertEqual(user_before.__getattribute__(field), user_after.__getattribute__(field))
 
     def test_if_not_admin_then_cannot_edit_other_user_profile(self):
         self.login('17simple')
-        res = self.patch('users/17bocquet/', data=self.limited_edit_user_data)
+        res = self.patch('users/17bocquet/', data=self.allowed_edits)
         self.assertStatusCode(res, 403)
 
-    def test_if_admin_then_can_edit_other_user_profile(self):
+    def test_if_admin_then_can_edit_other_user_profile_with_allowed_edits(self):
         self.login('17admin')
-        res = self.patch('users/17simple/', data=self.full_edit_user_data)
+        res = self.patch('users/17simple/', data=self.allowed_edits)
         self.assertStatusCode(res, 200)
 
         user = User.objects.get(pk='17simple')
-        for field in self.full_edit_user_data:
+        for field in self.allowed_edits:
             if field in ('roommate', 'minesparent'):
-                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.full_edit_user_data[field])
+                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.allowed_edits[field])
             else:
-                self.assertEqual(user.__getattribute__(field), self.full_edit_user_data[field])
+                self.assertEqual(user.__getattribute__(field), self.allowed_edits[field])
+
+    def test_if_admin_then_cannot_edit_other_user_profile_with_disallowed_edits(self):
+        self.login('17admin')
+        user_before = User.objects.get(pk='17simple')
+        res = self.patch('users/17simple/', data=self.not_allowed_edits)
+        self.assertStatusCode(res, 200)
+        user_after = User.objects.get(pk='17simple')
+
+        for field in self.not_allowed_edits:
+            self.assertEqual(user_before.__getattribute__(field), user_after.__getattribute__(field))
 
     ##########
     # DELETE #
