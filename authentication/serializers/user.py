@@ -13,11 +13,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'nickname', 'birthday', 'email', 'year_of_entry', 'phone', 'room',
-                  'address', 'city_of_origin', 'option', 'student_type', 'current_academic_year', 'sports', 'roommate',
-                  'minesparent', 'is_active', 'is_admin',)
-        read_only_fields = ('first_name' 'last_name', 'birthday', 'email', 'year_of_entry', 'student_type', 'is_active',
+        read_only_fields = ('first_name', 'last_name', 'birthday', 'email', 'year_of_entry', 'student_type', 'is_active',
                             'is_admin',)
+        fields = read_only_fields + ('nickname', 'phone', 'room', 'address', 'city_of_origin', 'option', 'sports',
+                                     'roommate', 'minesparent',)
 
 
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):
