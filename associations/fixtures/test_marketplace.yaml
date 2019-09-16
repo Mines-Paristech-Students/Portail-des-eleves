@@ -91,7 +91,7 @@
     first_name: Biéro
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 0
@@ -110,7 +110,7 @@
     first_name: Biéro
     last_name: Marketplace administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 1
@@ -129,7 +129,7 @@
     first_name: Biéro
     last_name: Member
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 2
@@ -148,7 +148,7 @@
     first_name: Pain de Mine
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 3
@@ -167,7 +167,7 @@
     first_name: Pain de Mine
     last_name: Marketplace administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 4
@@ -186,7 +186,7 @@
     first_name: BDE
     last_name: Marketplace administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 5
@@ -205,7 +205,7 @@
     first_name: BDE
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 6
@@ -224,7 +224,7 @@
     first_name: Consumer
     last_name: Consumer
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.transaction
   pk: 0
