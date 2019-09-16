@@ -7,16 +7,16 @@ from authentication.models import User
 from authentication.token import Token
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    roommate = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+    minesparent = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name',
-                  "nickname", "birthday", "phone",
-                  "room", "address", "city_of_origin",
-                  "option", "is_ast", "is_isupfere", "is_in_gapyear",
-                  "sports", "roommate", "minesparent",
-                  "is_1A", 'promo'
-                  )
+        read_only_fields = ('first_name', 'last_name', 'birthday', 'email', 'year_of_entry', 'student_type', 'is_active',
+                            'is_admin',)
+        fields = read_only_fields + ('nickname', 'phone', 'room', 'address', 'city_of_origin', 'option', 'sports',
+                                     'roommate', 'minesparent',)
 
 
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):

@@ -18,7 +18,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
     def test_if_logged_in_then_can_retrieve_balance(self):
         self.login('17simple')
-        res = self.get('marketplace/biero/balance/17simple')
+        res = self.get('marketplace/biero/balance/17simple/')
         self.assertStatusCode(res, 200)
 
         content = json.loads(res.content)
@@ -59,7 +59,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
     def test_if_library_administrator_then_can_retrieve_all_users_balances(self):
         self.login('17market_biero')
-        res = self.get('marketplace/balance/biero/')
+        res = self.get('marketplace/biero/balance/')
         self.assertStatusCode(res, 200)
 
         content = json.loads(res.content)
@@ -84,7 +84,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
             self.login(consumer.id)
             self.assertEqual(compute_balance(consumer, biero), biero_funding)
 
-            biero_content = json.loads(self.get(f'marketplace/balance/biero/{consumer.id}/').content)
+            biero_content = json.loads(self.get(f'marketplace/biero/balance/{consumer.id}/').content)
             biero_balance = 0 if biero_content == [] else Decimal(biero_content[0]['balance'])
             self.assertEqual(biero_balance, biero_funding)
 

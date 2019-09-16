@@ -77,7 +77,7 @@ class Transaction(models.Model):
     @property
     def value_in_balance(self):
         """
-            :return True iff the value of the transaction must be removed from her balance.
+            :return True iff the value of the transaction must be removed from their balance.
         """
         return self.status in ('ORDERED', 'VALIDATED', 'DELIVERED')
 
@@ -86,7 +86,7 @@ class Funding(models.Model):
     """
         A Funding represents the action of topping a marketplace account up with some money.\n
         Only the marketplace managers should be able to create Funding objects and update their status.\n
-        It should be added to her balance iff its status is FUNDED.
+        It should be added to their balance iff its status is FUNDED.
     """
 
     id = models.AutoField(primary_key=True)
@@ -106,6 +106,6 @@ class Funding(models.Model):
     @property
     def value_in_balance(self):
         """
-            :return True iff the value of the funding must be added to her balance.
+            :return True iff the value of the funding must be added to their balance.
         """
         return self.status in ('FUNDED')

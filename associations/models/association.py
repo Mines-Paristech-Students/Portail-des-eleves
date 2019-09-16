@@ -19,7 +19,8 @@ class Association(models.Model):
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
-                               help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour les valeurs égales)")
+                               help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour"
+                                         "les valeurs égales)")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,7 +30,7 @@ class Association(models.Model):
         unique_slug = slug
         num = 1
         while Association.objects.filter(id=unique_slug).exists():
-            unique_slug = '{}-{}'.format(slug, num)
+            unique_slug = "{}-{}".format(slug, num)
             num += 1
         return unique_slug
 
@@ -59,11 +60,13 @@ class Role(models.Model):
     )
     role = models.CharField(max_length=200, null=False)
     rank = models.IntegerField(
-        default=0, help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
+        default=0,
+        help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
     )
 
     is_admin = models.BooleanField(default=False)
-    is_archived = models.BooleanField(default=False) # archived permissions are not operating anymore but they allow to remember who was in the association
+    is_archived = models.BooleanField(
+        default=False)  # archived permissions are not operating anymore but they allow to remember who was in the association
     # Permissions:
 
     static_page = models.BooleanField(default=False)
@@ -76,9 +79,7 @@ class Role(models.Model):
 
     class Meta:
         unique_together = ("user", "association")
-        ordering = ['rank']
+        ordering = ("rank",)
 
     def __str__(self):
         return self.user.id + "-" + self.association.id + "-" + self.role
-
-    # TODO: enforce the uniqueness of any (user, association) combination?
