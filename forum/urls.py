@@ -12,5 +12,5 @@ router.register(r'theme', TopicViewSet)
 router.register(r'topic', MessageForumViewSet)
 
 urlpatterns = [
-    path('message-forum-vote/', NewVoteMessageView.as_view(), name='new-vote-message'),
+    path('message-vote/', NewVoteMessageView.as_view(), name='new-vote-message'),
 ] + router.urls

@@ -13,18 +13,11 @@ class ProfilePermission(BasePermission):
     message = 'You are not allowed to edit this profile.'
 
     def has_permission(self, request, view):
-        if request.method in ('POST', 'DELETE',):
-            return False
-
-        return True
+        return request.method not in ('POST', 'DELETE',)
 
     def has_object_permission(self, request, view, target_user):
         if request.user.is_admin:
             return True
         else:
-            if request.method in SAFE_METHODS:
-                return True
-            elif request.method in ('PATCH', ):
-                return target_user.id == request.user.id
-
-        return False
+            return request.method in SAFE_METHODS or \
+                   (request.method in ('PATCH', ) and target_user.id == request.user.id)
