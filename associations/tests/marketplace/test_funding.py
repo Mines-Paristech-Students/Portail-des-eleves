@@ -108,8 +108,8 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                     self.assertStatusCode(res, 403)
 
                     for key in data:
-                        self.assertEqual(funding.__getattribute__(key),
-                                         Funding.objects.get(id=funding.id).__getattribute__(key),
+                        self.assertEqual(getattr(funding, key),
+                                         getattr(Funding.objects.get(id=funding.id), key),
                                          msg=f'User {user} managed to update Funding id {funding.id}.')
 
     def test_if_marketplace_admin_then_can_update_status_in_own_market(self):
@@ -140,8 +140,8 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                 self.assertStatusCode(res, 403, user_msg=data)
 
                 for key in data:
-                    self.assertEqual(funding.__getattribute__(key),
-                                     Funding.objects.get(id=funding.id).__getattribute__(key),
+                    self.assertEqual(getattr(funding, key),
+                                     getattr(Funding.objects.get(id=funding.id), key),
                                      msg=f'User {user} managed to update Funding id {funding.id}.')
 
     def test_if_marketplace_admin_then_cannot_update_other_market_funding(self):
@@ -158,8 +158,8 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                 self.assertStatusCode(res, 403)
 
                 for key in data:
-                    self.assertEqual(funding.__getattribute__(key),
-                                     Funding.objects.get(id=funding.id).__getattribute__(key),
+                    self.assertEqual(getattr(funding, key),
+                                     getattr(Funding.objects.get(id=funding.id), key),
                                      msg=f'User {user} managed to update Funding id {funding.id}.')
 
     ##########
