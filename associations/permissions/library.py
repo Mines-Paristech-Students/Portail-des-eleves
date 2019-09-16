@@ -50,19 +50,38 @@ def get_library(request):
     return None
 
 
-class IfLibraryAdminThenCRUDElseCRU(BasePermission):
+class LoansPermission(BasePermission):
     """
-        Every user has the create / read / update permissions.\n
-        An user has the delete permission iff the user is a library administrator of the edited library.
+               | Enabled | Disabled | Not found |\n
+        Admin  | CRU     | CRU      | R         |\n
+        Simple | CRU     | R        | R         |
     """
 
-    message = 'You are not allowed to edit this library because you are not an administrator of this library.'
+    message = 'You are not allowed to edit this loan.'
 
     def has_permission(self, request, view):
-        if request.method in SAFE_METHODS or request.method in ('POST', 'PATCH'):
-            return True
+        if request.method in ('DELETE',):
+            self.message = 'Loans cannot be deleted.'
+            return False
 
-        return IfLibraryAdminThenCRUDElseR().has_permission(request, view)
+        library = get_library(request)
+        if not library:
+            # If the library could not be found, give access to the safe methods.
+            if request.method in SAFE_METHODS:
+                return True
+        else:
+            role = request.user.get_role(library.association)
+
+            if role and role.library:
+                # Library administrator.
+                return True
+            else:
+                if library.enabled:
+                    return True
+                else:
+                    return request.method in SAFE_METHODS
+
+        return False
 
 
 class IfLibraryAdminThenCRUDElseR(BasePermission):

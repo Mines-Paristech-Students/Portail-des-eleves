@@ -72,8 +72,8 @@ def get_role_in_marketplace(request):
 
 class MarketplacePermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRUD    | CRUD     |
+               | Enabled | Disabled |\n
+        Admin  | CRUD    | CRUD     |\n
         Simple | R       |          |
     """
 
@@ -99,9 +99,9 @@ class MarketplacePermission(BasePermission):
 
 class ProductPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRUD    | CRUD     |
-        Simple | CRUD    |          |
+               | Enabled | Disabled |\n
+        Admin  | CRUD    | CRUD     |\n
+        Simple | CRUD    |          |\n\n
 
         Same as Marketplace.
     """
@@ -112,22 +112,19 @@ class ProductPermission(BasePermission):
 
 class TransactionPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRU     | CRU      |
+               | Enabled | Disabled |\n
+        Admin  | CRU     | CRU      |\n
         Simple | CRU     | R        |
-
-        Same as Marketplace.
     """
 
     message = 'You are not allowed to edit this transaction.'
 
     def has_permission(self, request, view):
-        role = get_role_in_marketplace(request)
-
         if request.method in ('DELETE', ):
             self.message = 'Transactions cannot be deleted.'
             return False
 
+        role = get_role_in_marketplace(request)
         if role and role.marketplace:
             # Marketplace administrator.
             return True
@@ -147,8 +144,8 @@ class TransactionPermission(BasePermission):
 
 class FundingPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRU     | RU       |
+               | Enabled | Disabled |\n
+        Admin  | CRU     | RU       |\n
         Simple | R       | R        |
     """
 

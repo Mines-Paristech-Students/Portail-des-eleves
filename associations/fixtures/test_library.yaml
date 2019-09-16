@@ -78,7 +78,7 @@
     first_name: BD-Tek
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 0
@@ -97,7 +97,7 @@
     first_name: BD-Tek
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 1
@@ -116,7 +116,7 @@
     first_name: BD-Tek
     last_name: Member
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 2
@@ -135,7 +135,7 @@
     first_name: Biero
     last_name: Manager
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 3
@@ -154,7 +154,7 @@
     first_name: Biéro
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 4
@@ -173,7 +173,7 @@
     first_name: BDE
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 5
@@ -192,7 +192,7 @@
     first_name: BDE
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 6

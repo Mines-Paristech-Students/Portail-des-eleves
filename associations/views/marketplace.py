@@ -189,24 +189,3 @@ class BalanceView(APIView):
                         return HttpResponseForbidden('You are not allowed to view the balance of this user.')
 
                 return JsonResponse(self.get_balance_in_json(user, marketplace))
-
-
-"""
-    def put(self, request, marketplace_id, user_id, format=None):
-        role = request.user.get_role(marketplace_id)
-        if role is None or (not role.marketplace and not role.is_admin):
-            return HttpResponseForbidden()
-
-        body = request.data
-        user = User.objects.get(pk=user_id)
-
-        try:
-            amount = float(body["amount"])
-            if amount != 0.0:
-                Funding.objects.create(user=user, value=amount, marketplace_id=marketplace_id)
-
-        except ValueError as err:
-            return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")
-
-        return JsonResponse({"status": "ok"})
-"""

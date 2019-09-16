@@ -5,7 +5,6 @@ from django.db.models import Q
 from associations.models.library import Loanable, Loan
 from associations.tests.library.base_test_library import *
 
-# TODO: forbid the deletes.
 
 class LoanTestCase(BaseLibraryTestCase):
     # Please see the diagram in associations.models.library.Loan.
@@ -467,36 +466,13 @@ class LoanTestCase(BaseLibraryTestCase):
     # DELETE #
     ##########
 
-    def test_if_not_library_administrator_then_cannot_delete_loan(self):
-        for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
+    def test_cannot_delete_loan(self):
+        for user in ALL_USERS:
             self.login(user)
 
             for loan in Loan.objects.all():
                 res = self.delete(f'loans/{loan.id}/')
-                # Depends on whether the user can see the loan.
-                self.assertIn(res.status_code, [403, 404], msg=f'User {user} did manage to delete Loan id {loan.id}.')
+
+                self.assertEqual(res.status_code, 403, msg=res)
                 self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                                 msg=f'User {user} did manage to delete Loan id {loan.id}.')
-
-    def test_if_library_administrator_then_can_delete_loan_from_own_library(self):
-        user = '17library_bd-tek'
-        self.login(user)
-
-        for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            res = self.delete(f'loans/{loan.id}/')
-            self.assertStatusCode(res, 204, user_msg=f'{loan.id}')
-            self.assertFalse(Loan.objects.filter(id=loan.id).exists(),
-                             msg=f'User {user} did not manage to delete Loan id {loan.id}.')
-
-    def test_if_library_administrator_then_cannot_delete_loan_from_other_library(self):
-        user = '17library_bd-tek'
-        self.login(user)
-
-        loans = Loan.objects.exclude(loanable__library='bd-tek')
-        self.assertNotEqual(len(loans), 0, msg='The test needs a Loan not belonging to bd-tek to run.')
-
-        for loan in loans:
-            res = self.delete(f'loans/{loan.id}/')
-            self.assertIn(res.status_code, (403, 404))  # Depends on whether the user can see the loan (own loan).
-            self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
-                            msg=f'User {user} did manage to delete Loan id {loan.id}.')
