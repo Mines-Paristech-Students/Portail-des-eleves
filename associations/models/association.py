@@ -3,7 +3,6 @@ from django.utils.text import slugify
 
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
-from associations.models.publication import Publication
 from authentication.models import User
 
 
@@ -15,7 +14,6 @@ class Association(models.Model):
 
     marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name="association")
     library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name="association")
-    publication = models.OneToOneField(Publication, on_delete=models.SET_NULL, null=True, related_name="association")
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
@@ -65,17 +63,18 @@ class Role(models.Model):
     )
 
     is_admin = models.BooleanField(default=False)
-    is_archived = models.BooleanField(
-        default=False)  # archived permissions are not operating anymore but they allow to remember who was in the association
-    # Permissions:
+    is_archived = models.BooleanField(default=False,
+                                      help_text='Archived roles are not operating anymore but they allow to remember'
+                                                'who was in the association.')
 
-    static_page = models.BooleanField(default=False)
-    news = models.BooleanField(default=False)
-    marketplace = models.BooleanField(default=False)
-    library = models.BooleanField(default=False)
-    vote = models.BooleanField(default=False)
+    # Permissions:
     events = models.BooleanField(default=False)
-    files = models.BooleanField(default=False)
+    filesystem = models.BooleanField(default=False)
+    library = models.BooleanField(default=False)
+    marketplace = models.BooleanField(default=False)
+    news = models.BooleanField(default=False)
+    page = models.BooleanField(default=False)
+    vote = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("user", "association")
