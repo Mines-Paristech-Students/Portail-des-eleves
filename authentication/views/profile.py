@@ -47,9 +47,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         """
             Can X update Y? \n
-            X / Y       | Herself  | Another user | \n
-            Simple user | Yes      | No           | \n
-            Admin       | Yes      | Yes          | \n
+            X / Y       | Themselves  | Another user | \n
+            Simple user | Yes         | No           | \n
+            Admin       | Yes         | Yes          | \n\n
+
             NB: not all the fields can be updated, this logic is implemented in UserSerializer.
         """
 

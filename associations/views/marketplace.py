@@ -188,4 +188,4 @@ class BalanceView(APIView):
                     if role is None or not role.marketplace:
                         return HttpResponseForbidden('You are not allowed to view the balance of this user.')
 
-                return JsonResponse(self.get_balance_in_json(user, marketplace))
+                return JsonResponse([self.get_balance_in_json(user, marketplace)], safe=False)
