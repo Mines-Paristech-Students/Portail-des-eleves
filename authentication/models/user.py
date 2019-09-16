@@ -96,16 +96,13 @@ class User(AbstractBaseUser):
 
     @property
     def is_in_first_year(self):
-        # TODO: fix this.
-        """Return True iff the User is in their first year at the school, depending on their promotion."""
-        today = date.today()
+        """Return True iff the User is in their first year at the school, depending on their year of entry."""
+        return self.years_since_entry <= 0
 
-        if today.month >= 8:
-            # Between August and December, the new students have the same school year as the current year.
-            return self.promo == today.year % 100
-        else:
-            # Between January and July, the school year of the new students is the current year minus one.
-            return self.promo == (today.year % 100) - 1
+    @property
+    def promotion(self):
+        """The last two digits of the User's entrance year at school."""
+        return self.year_of_entry % 100
 
     @property
     def show(self):
@@ -116,9 +113,26 @@ class User(AbstractBaseUser):
             return not self.is_in_first_year
 
     @property
-    def promotion(self):
-        """The last two digits of the User's entrance year at school."""
-        return self.year_of_entry % 100
+    def years_since_entry(self):
+        """
+            Return the number of years completed since the student's arrival at school.\n
+            A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
+            of elapsed 30th June NOT including the one of the arrival year.
+        """
+        today = date.today()
+
+        if today >= date(today.year, 6, 30):
+            # |                 YEAR N-1                 |                  YEAR N                |
+            # |-------- 30 June -------- Arrival --------|-------- 30 June -------- TODAY --------|
+            # N - (N - 1) = 1 = number of passed 30 June.
+
+            return today.year - self.year_of_entry
+        else:
+            # |                 YEAR N-1                 |                  YEAR N                |
+            # |-------- 30 June -------- Arrival --------|-------- TODAY -------- 30 June --------|
+            # Remove one for the 30 June of year N which has not passed yet.
+
+            return today.year - self.year_of_entry - 1
 
     def get_role(self, association):
         for role in self.roles.all():
