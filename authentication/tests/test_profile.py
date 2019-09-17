@@ -1,5 +1,3 @@
-from datetime import date
-
 from authentication.models import User
 from authentication.serializers import UserSerializer
 from backend.tests_utils import BackendTestCase
@@ -107,20 +105,19 @@ class ProfileTestCase(BackendTestCase):
         user = User.objects.get(pk='17simple')
         for field in self.allowed_edits:
             if field in ['roommate', 'minesparent']:
-                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.allowed_edits[field])
+                self.assertEqual([u.id for u in getattr(user, field).all()], self.allowed_edits[field])
             else:
-                self.assertEqual(user.__getattribute__(field), self.allowed_edits[field])
+                self.assertEqual(getattr(user, field), self.allowed_edits[field])
 
     def test_if_not_admin_then_cannot_edit_own_profile_with_disallowed_edits(self):
         self.login('17simple')
 
-        user_before = User.objects.get(pk='17simple')
-        res = self.patch('users/17simple/', data=self.not_allowed_edits)
-        self.assertStatusCode(res, 200)
-        user_after = User.objects.get(pk='17simple')
-
-        for field in self.not_allowed_edits:
-            self.assertEqual(user_before.__getattribute__(field), user_after.__getattribute__(field))
+        for field, content in self.not_allowed_edits.items():
+            user_before = User.objects.get(pk='17simple')
+            res = self.patch('users/17simple/', data={field: content})
+            self.assertStatusCode(res, 200)
+            user_after = User.objects.get(pk='17simple')
+            self.assertEqual(getattr(user_before, field), getattr(user_after, field))
 
     def test_if_not_admin_then_cannot_edit_other_user_profile(self):
         self.login('17simple')
@@ -135,19 +132,19 @@ class ProfileTestCase(BackendTestCase):
         user = User.objects.get(pk='17simple')
         for field in self.allowed_edits:
             if field in ('roommate', 'minesparent'):
-                self.assertEqual([u.id for u in user.__getattribute__(field).all()], self.allowed_edits[field])
+                self.assertEqual([u.id for u in getattr(user, field).all()], self.allowed_edits[field])
             else:
-                self.assertEqual(user.__getattribute__(field), self.allowed_edits[field])
+                self.assertEqual(getattr(user, field), self.allowed_edits[field])
 
     def test_if_admin_then_cannot_edit_other_user_profile_with_disallowed_edits(self):
         self.login('17admin')
-        user_before = User.objects.get(pk='17simple')
-        res = self.patch('users/17simple/', data=self.not_allowed_edits)
-        self.assertStatusCode(res, 200)
-        user_after = User.objects.get(pk='17simple')
 
-        for field in self.not_allowed_edits:
-            self.assertEqual(user_before.__getattribute__(field), user_after.__getattribute__(field))
+        for field, content in self.not_allowed_edits.items():
+            user_before = User.objects.get(pk='17simple')
+            res = self.patch('users/17simple/', data={field: content})
+            self.assertStatusCode(res, 200)
+            user_after = User.objects.get(pk='17simple')
+            self.assertEqual(getattr(user_before, field), getattr(user_after, field))
 
     ##########
     # DELETE #
