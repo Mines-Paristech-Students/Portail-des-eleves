@@ -12,9 +12,9 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
 
-    participants = models.ForeignKey(User, on_delete=models.CASCADE)
+    participants = models.ManyToManyField(User, related_name='events')
 
-    starts_at = models.DateTimeField(auto_now_add=True)
-    ends_at = models.DateTimeField(auto_now_add=True)
+    starts_at = models.DateTimeField()
+    ends_at = models.DateTimeField()
 
     place = models.TextField()

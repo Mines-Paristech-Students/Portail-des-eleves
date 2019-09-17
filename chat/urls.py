@@ -1,7 +1,8 @@
-from django.urls import path
+from rest_framework_bulk.routes import BulkRouter
 
 from chat.views import ChatMessageViewSet
 
-urlpatterns = [
-    path('', ChatMessageViewSet.as_view()),
-]
+router = BulkRouter()
+router.register('', ChatMessageViewSet)
+
+urlpatterns = router.urls

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 from associations.models.library import Library
@@ -68,13 +69,41 @@ class Role(models.Model):
                                                 'who was in the association.')
 
     # Permissions:
-    events = models.BooleanField(default=False)
-    filesystem = models.BooleanField(default=False)
-    library = models.BooleanField(default=False)
-    marketplace = models.BooleanField(default=False)
-    news = models.BooleanField(default=False)
-    page = models.BooleanField(default=False)
-    vote = models.BooleanField(default=False)
+    events_permission = models.BooleanField(default=False)
+    filesystem_permission = models.BooleanField(default=False)
+    library_permission = models.BooleanField(default=False)
+    marketplace_permission = models.BooleanField(default=False)
+    news_permission = models.BooleanField(default=False)
+    page_permission = models.BooleanField(default=False)
+    vote_permission = models.BooleanField(default=False)
+
+    @cached_property
+    def events(self):
+        return self.events_permission and not self.is_archived
+
+    @cached_property
+    def filesystem(self):
+        return self.filesystem_permission and not self.is_archived
+
+    @cached_property
+    def library(self):
+        return self.library_permission and not self.is_archived
+
+    @cached_property
+    def marketplace(self):
+        return self.marketplace_permission and not self.is_archived
+
+    @cached_property
+    def news(self):
+        return self.news_permission and not self.is_archived
+
+    @cached_property
+    def page(self):
+        return self.page_permission and not self.is_archived
+
+    @cached_property
+    def vote(self):
+        return self.vote_permission and not self.is_archived
 
     class Meta:
         unique_together = ("user", "association")
