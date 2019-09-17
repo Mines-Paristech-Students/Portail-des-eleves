@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 
 from associations.models.association import Association

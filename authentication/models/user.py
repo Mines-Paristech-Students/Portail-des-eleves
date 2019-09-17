@@ -2,8 +2,9 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.utils.functional import cached_property
 
 
 class UserManager(BaseUserManager):
@@ -90,21 +91,21 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.id
 
-    @property
+    @cached_property
     def is_staff(self):
         return self.is_admin
 
-    @property
+    @cached_property
     def is_in_first_year(self):
         """Return True iff the User is in their first year at the school, depending on their year of entry."""
         return self.years_since_entry <= 0
 
-    @property
+    @cached_property
     def promotion(self):
         """The last two digits of the User's entrance year at school."""
         return self.year_of_entry % 100
 
-    @property
+    @cached_property
     def show(self):
         """Return True iff the User can be shown."""
         if settings.SHOW_TO_FIRST_YEAR_STUDENTS:
@@ -112,7 +113,7 @@ class User(AbstractBaseUser):
         else:
             return not self.is_in_first_year
 
-    @property
+    @cached_property
     def years_since_entry(self):
         """
             Return the number of years completed since the student's arrival at school.\n

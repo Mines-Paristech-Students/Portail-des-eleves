@@ -1,9 +1,9 @@
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
-from associations.models.publication import Publication
 from authentication.models import User
 
 
@@ -15,7 +15,6 @@ class Association(models.Model):
 
     marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name="association")
     library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name="association")
-    publication = models.OneToOneField(Publication, on_delete=models.SET_NULL, null=True, related_name="association")
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
     rank = models.IntegerField(default=0,
@@ -65,17 +64,46 @@ class Role(models.Model):
     )
 
     is_admin = models.BooleanField(default=False)
-    is_archived = models.BooleanField(
-        default=False)  # archived permissions are not operating anymore but they allow to remember who was in the association
-    # Permissions:
+    is_archived = models.BooleanField(default=False,
+                                      help_text='Archived roles are not operating anymore but they allow to remember'
+                                                'who was in the association.')
 
-    static_page = models.BooleanField(default=False)
-    news = models.BooleanField(default=False)
-    marketplace = models.BooleanField(default=False)
-    library = models.BooleanField(default=False)
-    vote = models.BooleanField(default=False)
-    events = models.BooleanField(default=False)
-    files = models.BooleanField(default=False)
+    # Permissions:
+    events_permission = models.BooleanField(default=False)
+    filesystem_permission = models.BooleanField(default=False)
+    library_permission = models.BooleanField(default=False)
+    marketplace_permission = models.BooleanField(default=False)
+    news_permission = models.BooleanField(default=False)
+    page_permission = models.BooleanField(default=False)
+    vote_permission = models.BooleanField(default=False)
+
+    @cached_property
+    def events(self):
+        return self.events_permission and not self.is_archived
+
+    @cached_property
+    def filesystem(self):
+        return self.filesystem_permission and not self.is_archived
+
+    @cached_property
+    def library(self):
+        return self.library_permission and not self.is_archived
+
+    @cached_property
+    def marketplace(self):
+        return self.marketplace_permission and not self.is_archived
+
+    @cached_property
+    def news(self):
+        return self.news_permission and not self.is_archived
+
+    @cached_property
+    def page(self):
+        return self.page_permission and not self.is_archived
+
+    @cached_property
+    def vote(self):
+        return self.vote_permission and not self.is_archived
 
     class Meta:
         unique_together = ("user", "association")

@@ -1,3 +1,5 @@
+from django.http.response import Http404
+
 from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework_bulk.generics import BulkModelViewSet
@@ -54,3 +56,29 @@ class AssociationViewSet(viewsets.ModelViewSet):
                 return self.action_serializers[self.action]
 
         return super(AssociationViewSet, self).get_serializer_class()
+
+
+def association_exists_or_404(func):
+    def wrapper(self, *args, **kwargs):
+        if not Association.objects.filter(pk=self.kwargs['association_pk']).exists():
+            raise Http404()
+
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
+class AssociationNestedViewSet(viewsets.ModelViewSet):
+    """
+        All the ViewSets having a base URL like /associations/association_pk/events/… should inherit from this class,
+        which ensures that providing a non-existing association_id will raise a 404.\n
+        Moreover, these ViewSets should be provided a kwargs argument with a key 'association_pk' (a convenient way to
+        have it is by using rest_framework_nested.routers.NestedSimpleRouter).
+    """
+
+    create = association_exists_or_404(viewsets.ModelViewSet.create)
+    retrieve = association_exists_or_404(viewsets.ModelViewSet.retrieve)
+    list = association_exists_or_404(viewsets.ModelViewSet.list)
+    update = association_exists_or_404(viewsets.ModelViewSet.update)
+    partial_update = association_exists_or_404(viewsets.ModelViewSet.partial_update)
+    destroy = association_exists_or_404(viewsets.ModelViewSet.destroy)

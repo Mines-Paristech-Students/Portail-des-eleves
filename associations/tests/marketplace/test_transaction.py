@@ -121,7 +121,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             self.login(user)
 
             for transaction in Transaction.objects.all():
-                if transaction.buyer.id == user and transaction.product.marketplace.enabled:
+                if transaction.buyer_id == user and transaction.product.marketplace.enabled:
                     self.assertAccessToTransaction(transaction.id, code=200, user=user)
                 else:
                     # Either the transaction is in a disabled market, or it does not exist.
@@ -132,7 +132,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         self.login(user)
 
         for transaction in Transaction.objects.all():
-            if (transaction.buyer.id == user or transaction.product.marketplace.id == 'biero') and \
+            if (transaction.buyer_id == user or transaction.product_marketplace_id == 'biero') and \
                     transaction.product.marketplace.enabled:
                 self.assertAccessToTransaction(transaction.id, 200, user=user)
             else:

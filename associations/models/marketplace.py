@@ -1,5 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.functional import cached_property
+
 from authentication.models import User
 
 
@@ -74,7 +76,7 @@ class Transaction(models.Model):
     )
     status = models.CharField(choices=STATUS, max_length=200)
 
-    @property
+    @cached_property
     def value_in_balance(self):
         """
             :return True iff the value of the transaction must be removed from their balance.
@@ -103,7 +105,7 @@ class Funding(models.Model):
     )
     status = models.CharField(choices=STATUS, max_length=200, default='FUNDED')
 
-    @property
+    @cached_property
     def value_in_balance(self):
         """
             :return True iff the value of the funding must be added to their balance.
