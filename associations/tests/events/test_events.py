@@ -63,11 +63,13 @@ class EventsTestCase(BaseEventsTestCase):
         self.login('17events_biero')  # Event administrator.
         res = self.create(association_id='biero', data=self.event)
         self.assertStatusCode(res, 201)
+
         self.assertTrue(Event.objects.filter(name=self.event['name']).exists())
-        self.assertEqual(Event.objects.get(name=self.event['name']).description, self.event['description'])
-        self.assertEqual(Event.objects.get(name=self.event['name']).place, self.event['place'])
-        self.assertEqual(Event.objects.get(name=self.event['name']).starts_at, self.event['starts_at'])
-        self.assertEqual(Event.objects.get(name=self.event['name']).ends_at, self.event['ends_at'])
+        event = Event.objects.get(name=self.event['name'])
+        self.assertEqual(event.description, self.event['description'])
+        self.assertEqual(event.place, self.event['place'])
+        self.assertEqual(event.starts_at, self.event['starts_at'])
+        self.assertEqual(event.ends_at, self.event['ends_at'])
 
     ##########
     # UPDATE #
@@ -86,8 +88,10 @@ class EventsTestCase(BaseEventsTestCase):
         data = {'pk': 1, 'name': 'Biéroloose', 'description': 'Personne'}
         res = self.update(data['pk'], data=data, association_id='biero')
         self.assertStatusCode(res, 200)
-        self.assertEqual(Event.objects.get(pk=data['pk']).name, data['name'])
-        self.assertEqual(Event.objects.get(pk=data['pk']).description, data['description'])
+
+        event = Event.objects.get(pk=data['pk'])
+        self.assertEqual(event.name, data['name'])
+        self.assertEqual(event.description, data['description'])
 
     # TODO: update with strange dates or association.
     # TODO: join / leave other users.
