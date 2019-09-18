@@ -1,18 +1,19 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
-from associations.models import Page
+from associations.models import Association, Page
 from associations.serializers import PageSerializer
-from associations.permissions import CanEditStaticPage
+from associations.permissions import PagePermission
+from associations.views import AssociationNestedViewSet
 
-class PageViewSet(viewsets.ModelViewSet):
+
+class PageViewSet(AssociationNestedViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
-    permission_classes = (IsAdminUser|(IsAuthenticated & CanEditStaticPage),)
+    permission_classes = (PagePermission,)
 
     def get_queryset(self):
-        queryset = Page.objects.all()
-        association_name = self.request.query_params.get('association', None)
-        if association_name is not None:
-            queryset = queryset.filter(association=association_name)
-        return queryset
+        return Page.objects.filter(association=self.kwargs['association_pk'])
+
+    def perform_update(self, serializer):
+        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+
+    def perform_create(self, serializer):
+        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))

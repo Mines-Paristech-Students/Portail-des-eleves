@@ -11,7 +11,6 @@ from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystem
 router = BulkRouter()
 
 router.register(r'associations', AssociationViewSet)
-router.register(r'pages', PageViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
@@ -26,6 +25,7 @@ router.register(r'folder', FolderViewSet)
 associations_router = routers.NestedSimpleRouter(router, r'associations', lookup='association')
 associations_router.register(r'events', EventViewSet)
 associations_router.register(r'news', NewsAssociationViewSet)
+associations_router.register(r'pages', PageViewSet)
 
 urlpatterns = [
     path('news/', NewsSubscriptionsView.as_view()),
