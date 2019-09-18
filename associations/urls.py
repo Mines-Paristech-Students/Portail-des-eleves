@@ -5,7 +5,7 @@ from rest_framework_nested import routers
 
 from associations.views import AssociationViewSet, EventViewSet, PageViewSet, MarketplaceViewSet, \
     ProductViewSet, TransactionViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
-    LoanableViewSet, RoleViewSet, NewsAssociationViewSet, NewsSubscriptionsViewSet, ElectionViewSet
+    LoanableViewSet, RoleViewSet, NewsAssociationViewSet, NewsSubscriptionsView
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 
 router = BulkRouter()
@@ -29,7 +29,7 @@ associations_router.register(r'news', NewsAssociationViewSet)
 associations_router.register(r'pages', PageViewSet)
 
 urlpatterns = [
-    path('news/', NewsSubscriptionsViewSet.as_view()),
+    path('news/', NewsSubscriptionsView.as_view()),
     path('associations/<slug:association_id>/filesystem/root/', FileSystemView.as_view(), name='file-system'),
     path('marketplace/balance/', BalanceView.as_view(), name='balance-list'),
     path('marketplace/<slug:marketplace_id>/balance/', BalanceView.as_view(), name='balance-list-marketplace'),
