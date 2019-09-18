@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -52,6 +52,15 @@ class EventsTestCase(BaseEventsTestCase):
         'place': 'Octo',
     }
 
+    inconsistent_event = {
+        'name': 'Biéro pas loose',
+        'description': 'On y croit',
+        'participants': ['17events_biero', '17admin_pdm'],
+        'starts_at': datetime(2019, 5, 1, 22, 00, 00, tzinfo=timezone.utc),
+        'ends_at': datetime(2019, 3, 2, 2, 00, 00, tzinfo=timezone.utc),
+        'place': 'Octo',
+    }
+
     def test_if_not_event_admin_then_cannot_create_event(self):
         for user in ALL_USERS_EXCEPT_EVENTS_BIERO:
             self.login(user)
@@ -71,6 +80,11 @@ class EventsTestCase(BaseEventsTestCase):
         self.assertEqual(event.starts_at, self.event['starts_at'])
         self.assertEqual(event.ends_at, self.event['ends_at'])
 
+    def test_cannot_create_event_with_inconsistent_dates(self):
+        self.login('17events_biero')
+        res = self.create(association_id='biero', data=self.inconsistent_event)
+        self.assertStatusCode(res, 400)
+
     ##########
     # UPDATE #
     ##########
@@ -83,7 +97,7 @@ class EventsTestCase(BaseEventsTestCase):
             self.assertStatusCode(res, 403)
             self.assertEqual(Event.objects.get(pk=data['pk']).name, 'Biéro')
 
-    def test_if_event_admin_then_can_update_event(self):
+    def test_if_event_admin_then_can_update_event_with_allowed_data(self):
         self.login('17events_biero')
         data = {'pk': 1, 'name': 'Biéroloose', 'description': 'Personne'}
         res = self.update(data['pk'], data=data, association_id='biero')
@@ -93,8 +107,26 @@ class EventsTestCase(BaseEventsTestCase):
         self.assertEqual(event.name, data['name'])
         self.assertEqual(event.description, data['description'])
 
-    # TODO: update with strange dates or association.
-    # TODO: join / leave other users.
+    def test_if_event_admin_then_cannot_update_event_with_inconsistent_dates(self):
+        self.login('17events_biero')
+        event_before = Event.objects.get(pk=0)
+        data = {'pk': 0,
+                'starts_at': event_before.ends_at + timedelta(1),
+                'name': 'Changement de date'}
+
+        res = self.update(data['pk'], data=data, association_id='biero')
+        self.assertStatusCode(res, 400)
+        event_after = Event.objects.get(pk=0)
+        self.assertEqual(event_before, event_after)
+
+    def test_if_event_admin_then_can_update_participants(self):
+        self.login('17events_biero')
+        data = {'pk': 0,
+                'participants': ['17events_biero', '17member_biero']}
+        res = self.update(data['pk'], 'biero', data=data)
+        self.assertStatusCode(res, 200)
+        self.assertSetEqual(set([x['participants'] for x in Event.objects.filter(pk=0).values('participants')]),
+                            set(data['participants']))
 
     ###########
     # DESTROY #
