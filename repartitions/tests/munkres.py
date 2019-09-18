@@ -1,4 +1,5 @@
 import json
+from math import ceil
 
 import numpy as np
 
@@ -13,37 +14,37 @@ class MunkresTestCase(BaseTestCase):
     fixtures = ['authentication.yaml', 'test_repartition_api.yaml']
 
     def test_get_project_index(self):
-        self.assertEqual(4, get_project_index(5, {1, 1, 1, 1, 1}))
-        self.assertEqual(1, get_project_index(5, {3, 3, 3}))
-        self.assertEqual(0, get_project_index(0, {1, 3, 3}))
-        self.assertEqual(1, get_project_index(1, {1, 3, 3}))
-        self.assertEqual(2, get_project_index(0, {0, 0, 3}))
-        self.assertEqual(5, get_project_index(1, {0, 0, 1, 0, 0, 1}))
+        self.assertEqual(4, get_project_index(5, [1, 1, 1, 1, 1]))
+        self.assertEqual(1, get_project_index(5, [3, 3, 3]))
+        self.assertEqual(0, get_project_index(0, [1, 3, 3]))
+        self.assertEqual(1, get_project_index(1, [1, 3, 3]))
+        self.assertEqual(2, get_project_index(0, [0, 0, 3]))
+        self.assertEqual(5, get_project_index(1, [0, 0, 1, 0, 0, 1]))
 
-    def generate_batch_wishes(self):
+    def generate_batch_wishes(self, n_groups=10, n_students=168):
         np.random.seed(0)
 
         campaign = Campaign(name="Batch campaign", manager_id="17bocquet")
         campaign.save()
 
         propositions = []
-        for i in range(10):
+        for i in range(n_groups):
             proposition = Proposition(
                 campaign_id=campaign.id,
                 name="proposition_{}".format(i),
-                number_of_places=10
+                number_of_places=int(ceil(n_students / n_groups))
             )
             proposition.save()
             propositions.append(proposition)
 
         categories = []
         for name in ["category_{}".format(i) for i in range(4)]:
-            category = Category(name=name)
+            category = Category(name=name, campaign=campaign)
             category.save()
             categories.append(category)
 
         user_campaigns = []
-        for i in range(168):
+        for i in range(n_students):
             user = User(
                 id="19user{}".format(i),
                 first_name="firstname {}".format(i),
@@ -65,7 +66,7 @@ class MunkresTestCase(BaseTestCase):
             if i < 157:  # simulate that a few users didn't answer the form
                 for (rank, proposition) in enumerate(np.random.permutation(propositions)):
                     wish = Wish(
-                        user=user,
+                        user_campaign=uc,
                         proposition=proposition,
                         rank=rank
                     )
@@ -76,16 +77,19 @@ class MunkresTestCase(BaseTestCase):
     def test_reparition_is_even(self):
         campaign, _, categories, _ = self.generate_batch_wishes()
         self.login("17bocquet")
-        res = self.get("/repartition/{}/results/".format(campaign.id))
+        self.patch("/repartitions/campaigns/{}/".format(campaign.id), data={"status": "RESULTS"})
+
+        res = self.get("/repartitions/{}/results/".format(campaign.id))
+        print(res.content)
         self.assertEqual(res.status_code, 200)
-        groups = json.loads(res.content)["groups"]
+        groups = json.loads(res.content)
 
         # Checks that categories are evenly shared
         counts = {category.id: [] for category in categories}
         for group in groups:
             count = {category.id: 0 for category in categories}
             for user in group["users"]:
-                count[user["category"]] += 1
+                count[user["category"]["id"]] = count.get(user["category"]["id"], 0) + 1
 
             for k in counts.keys():
                 counts[k].append(count[k])
@@ -101,6 +105,8 @@ class MunkresTestCase(BaseTestCase):
 
     def test_respects_fixity(self):
         campaign, propositions, _, user_campaigns = self.generate_batch_wishes()
+        campaign.manager = User.objects.get(pk="17bocquet")
+        campaign.save()
 
         users_to_fix = 9
         uc_to_fix = np.random.choice(user_campaigns, users_to_fix, replace=False)
@@ -116,7 +122,8 @@ class MunkresTestCase(BaseTestCase):
             uc.save()
 
         self.login("17bocquet")
-        res = self.get("/repartition/{}/results/".format(campaign.id))
+        res = self.get("/repartitions/{}/results/".format(campaign.id))
+        print(res.content)
         self.assertEqual(res.status_code, 200)
         groups = json.loads(res.content)["groups"]
 

@@ -7,13 +7,15 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.serializers import BaseSerializer
 from rest_framework.views import APIView
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from repartitions.algorithm import make_reparition
 from repartitions.models import Campaign, UserCampaign, Wish, Proposition
 from repartitions.permissions import CanManageCampaign, user_in_campaign, UserCampaignPermission
-from repartitions.serializers import CampaignSerializer, UserCampaignSerializer, UserCampaignAdminSerializer, \
-    WishSerializer
+from repartitions.serializers import CampaignSerializer, UserCampaignAdminSerializer, \
+    WishSerializer, GroupAdminSerializer, GroupPublicSerializer
 
 
 class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -41,7 +43,6 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = UserCampaign.objects.all()
-    serializer_class = UserCampaignSerializer
     permission_classes = (UserCampaignPermission,)
 
     def perform_create(self, serializer):
@@ -137,9 +138,15 @@ class WishesView(APIView):
 @api_view(['GET'])
 def get_campaign_results(request, *args, **kwargs):
     campaign = Campaign.objects.get(pk=kwargs["campaign_id"])
-    if request.user != campaign.manager or campaign.status != "RESULTS":
+    if request.user != campaign.manager or campaign.status == "OPEN":
         raise PermissionDenied()
-    return JsonResponse({"todo": "implement"})
+
+    groups = campaign.groups.all()
+    if len(groups) == 0:
+        groups = make_reparition(campaign)
+    serializer = GroupAdminSerializer(instance=groups, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['GET'])
@@ -147,4 +154,10 @@ def get_my_campaign_results(request, *args, **kwargs):
     campaign = Campaign.objects.get(pk=kwargs["campaign_id"])
     if campaign.status != "RESULTS":
         raise PermissionDenied()
-    return JsonResponse({"todo": "implement"})
+
+    groups = campaign.groups.all()
+    if len(groups) == 0:
+        groups = make_reparition(campaign)
+    serializer = GroupPublicSerializer(instance=groups, many=True)
+
+    return JsonResponse(serializer.data, safe=False)

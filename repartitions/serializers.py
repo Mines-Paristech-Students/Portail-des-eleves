@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework_jwt.serializers import User
 
-from repartitions.models import Campaign, UserCampaign, Category, Wish
+from repartitions.models import Campaign, UserCampaign, Category, Wish, Group
 
 
 class CampaignSerializer(serializers.ModelSerializer):
@@ -27,30 +27,44 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class UserCampaignSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserCampaign
-        fields = ("user",)
-
-
 class WishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wish
         fields = ("proposition", "rank")
 
 
-class UserCampaignAdminSerializer(UserCampaignSerializer):
+class UserCampaignPublicSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserCampaign
+        fields = ("user",)
+
+
+class UserCampaignAdminSerializer(serializers.ModelSerializer):
     wishes = serializers.SerializerMethodField()
 
     def get_wishes(self, obj):
         return WishSerializer(many=True).to_representation(getattr(obj, 'wishes', []))
 
-    class Meta:
-        model = UserCampaign
-        fields = ("user", "category", "fixed_to", "wishes")
-
     def to_representation(self, instance: UserCampaign):
+        # we make category serialized in read but primary key in write
         res = super(UserCampaignAdminSerializer, self).to_representation(instance)
         res["category"] = CategorySerializer().to_representation(instance.category)
 
         return res
+
+    class Meta:
+        model = UserCampaign
+        fields = ("user", "category", "fixed_to", "wishes")
+
+
+class GroupAdminSerializer(serializers.ModelSerializer):
+    users = UserCampaignAdminSerializer(many=True)
+
+    class Meta:
+        model = Group
+        fields = ("users", "proposition")
+
+
+class GroupPublicSerializer(GroupAdminSerializer):
+    users = UserCampaignPublicSerializer
