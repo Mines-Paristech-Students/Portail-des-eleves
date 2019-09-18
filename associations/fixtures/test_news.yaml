@@ -1,0 +1,164 @@
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17news_xxx is an news admin of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx.
+
+#########
+# BIERO #
+#########
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 1
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Admin
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin
+    is_admin: true
+    news_permission: false
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Member
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17member_biero
+    association: biero
+    role: Simple member
+    is_admin: false
+    news_permission: false
+
+- model: authentication.user
+  pk: 17news_biero
+  fields:
+    email: 17news_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: news
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17news_biero
+    association: biero
+    role: news admin
+    is_admin: false
+    news_permission: true
+
+- model: associations.news
+  pk: 0
+  fields:
+    title: 'Biéro x Karaocto'
+    date: '2019-06-01T20:00:00+00:00'
+    author: 17news_biero
+    association: biero
+    text: 'Biéro et Karaocto, demain soir'
+
+- model: associations.news
+  pk: 1
+  fields:
+    title: 'Biéro x Vendôme'
+    date: '2019-06-03T20:00:00+00:00'
+    author: 17news_biero
+    association: biero
+    text: 'Biéro et Vendôme, récit d’une soirée mouvementée.'
+
+#######
+# PDM #
+#######
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Admin
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin
+    is_admin: true
+    news_permission: false
+
+- model: authentication.user
+  pk: 17member_pdm
+  fields:
+    email: 17member_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Member
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17member_pdm
+    association: pdm
+    role: Simple member
+    is_admin: false
+    news_permission: false
+
+- model: authentication.user
+  pk: 17news_pdm
+  fields:
+    email: 17news_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: news
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17news_pdm
+    association: pdm
+    role: news admin
+    is_admin: false
+    news_permission: true
+
+- model: associations.news
+  pk: 2
+  fields:
+    title: 'Comment Pain de Mine s’engage contre le réchauffement climatique'
+    date: '2019-06-01T20:00:00+00:00'
+    author: 17news_pdm
+    association: pdm
+    text: 'En collectant et recyclant les miettes de pain qui se trouvent place du village après une livraison, Pain de Mine s’engage pour l’environnement.'

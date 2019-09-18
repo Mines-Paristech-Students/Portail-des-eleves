@@ -3,16 +3,15 @@ from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 from rest_framework_nested import routers
 
-from associations.views import AssociationViewSet, EventViewSet, PageViewSet, NewsViewSet, MarketplaceViewSet, \
+from associations.views import AssociationViewSet, EventViewSet, PageViewSet, MarketplaceViewSet, \
     ProductViewSet, TransactionViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
-    LoanableViewSet, RoleViewSet
+    LoanableViewSet, RoleViewSet, NewsAssociationViewSet, NewsSubscriptionsViewSet
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 
 router = BulkRouter()
 
 router.register(r'associations', AssociationViewSet)
 router.register(r'pages', PageViewSet)
-router.register(r'news', NewsViewSet)
 router.register(r'roles', RoleViewSet)
 router.register(r'marketplace', MarketplaceViewSet)
 router.register(r'products', ProductViewSet)
@@ -26,9 +25,10 @@ router.register(r'folder', FolderViewSet)
 
 associations_router = routers.NestedSimpleRouter(router, r'associations', lookup='association')
 associations_router.register(r'events', EventViewSet)
-#router.register(r'associations/(?P<association_id>[a-zA-Z0-9-_]+)/events', EventViewSet)
+associations_router.register(r'news', NewsAssociationViewSet)
 
 urlpatterns = [
+    path('news/', NewsSubscriptionsViewSet.as_view()),
     path('associations/<slug:association_id>/filesystem/root/', FileSystemView.as_view(), name='file-system'),
     path('marketplace/balance/', BalanceView.as_view(), name='balance-list'),
     path('marketplace/<slug:marketplace_id>/balance/', BalanceView.as_view(), name='balance-list-marketplace'),
