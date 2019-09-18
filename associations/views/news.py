@@ -34,7 +34,7 @@ class NewsAssociationViewSet(AssociationNestedViewSet):
                         author=self.request.user)
 
 
-class NewsSubscriptionsViewSet(generics.ListAPIView):
+class NewsSubscriptionsView(generics.ListAPIView):
     """This view deals with the news filtered by subscriptions."""
 
     queryset = News.objects.all()

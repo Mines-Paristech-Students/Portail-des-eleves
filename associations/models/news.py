@@ -12,8 +12,8 @@ class News(models.Model):
 
     date = models.DateTimeField(auto_now=True)
 
-    title = models.CharField(max_length=200, blank=True, null=True, default=None)
-    text = models.TextField(blank=True, null=True, default=None)
+    title = models.CharField(max_length=200)
+    text = models.TextField(blank=True, default='')
 
     class Meta:
         ordering = ['-date']
