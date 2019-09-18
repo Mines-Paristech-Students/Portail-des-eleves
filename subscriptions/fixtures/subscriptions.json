@@ -19,8 +19,7 @@
     "pk": 1,
     "fields": {
         "user": "15veaux",
-        "association": "bde",
-        "subscribed": true
+        "association": "bde"
     }
 },
 {
@@ -28,8 +27,7 @@
     "pk": 2,
     "fields": {
         "user": "15veaux",
-        "association": "biero",
-        "subscribed": true
+        "association": "biero"
     }
 }
 ]
