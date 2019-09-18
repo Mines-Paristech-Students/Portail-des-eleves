@@ -7,16 +7,17 @@ from authentication.models import User
 class News(models.Model):
     id = models.AutoField(primary_key=True)
 
-    title = models.CharField(max_length=200, blank=True, null=True, default=None)
-
-    date = models.DateTimeField(auto_now=True)
+    association = models.ForeignKey(Association, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    association = models.ForeignKey(Association, on_delete=models.CASCADE)
-    text = models.TextField(blank=True, null=True, default=None)
+    date = models.DateTimeField(auto_now=True)
+
+    title = models.CharField(max_length=200)
+    text = models.TextField(blank=True, default='')
 
     class Meta:
         ordering = ['-date']
+
 
 class NewsPhoto(models.Model):
     id = models.AutoField(primary_key=True)

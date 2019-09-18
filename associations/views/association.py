@@ -71,7 +71,7 @@ def association_exists_or_404(func):
 class AssociationNestedViewSet(viewsets.ModelViewSet):
     """
         All the ViewSets having a base URL like /associations/association_pk/events/… should inherit from this class,
-        which ensures that providing a non-existing association_id will raise a 404.\n
+        which ensures that providing a non-existing association_pk will raise a 404.\n
         Moreover, these ViewSets should be provided a kwargs argument with a key 'association_pk' (a convenient way to
         have it is by using rest_framework_nested.routers.NestedSimpleRouter).
     """

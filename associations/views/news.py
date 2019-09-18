@@ -1,10 +1,11 @@
-from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from associations.models import News
+from associations.models import Association, News
+from associations.permissions import NewsPermission
 from associations.serializers import NewsSerializer
-from associations.permissions import CanEditNews
+from associations.views import AssociationNestedViewSet
+
 from subscriptions.models import AssociationSubscription
 
 
@@ -14,19 +15,32 @@ class TimelinePagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
-class NewsViewSet(viewsets.ModelViewSet):
+class NewsAssociationViewSet(AssociationNestedViewSet):
+    """This view deals with the news linked to a specific association."""
+
     queryset = News.objects.all()
     serializer_class = NewsSerializer
     pagination_class = TimelinePagination
-    permission_classes = (IsAdminUser | (IsAuthenticated & CanEditNews),)
+    permission_classes = (NewsPermission,)
 
     def get_queryset(self):
-        queryset = News.objects.all()
-        association_name = self.request.query_params.get('association', None)
-        if association_name is not None:
-            queryset = queryset.filter(association=association_name)
-        else:
-            ass_sub = AssociationSubscription.objects.filter(user=self.request.user, subscribed=True).values_list(
-                'association')
-            queryset = queryset.filter(association__in=ass_sub)
-        return queryset
+        return News.objects.filter(association=self.kwargs['association_pk'])
+
+    def perform_update(self, serializer):
+        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+
+    def perform_create(self, serializer):
+        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']),
+                        author=self.request.user)
+
+
+class NewsSubscriptionsView(generics.ListAPIView):
+    """This view deals with the news filtered by subscriptions."""
+
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    pagination_class = TimelinePagination
+
+    def get_queryset(self):
+        subscriptions = AssociationSubscription.objects.filter(user=self.request.user).values_list('association')
+        return News.objects.all().filter(association__in=subscriptions)
