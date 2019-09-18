@@ -5,7 +5,7 @@ from rest_framework_nested import routers
 
 from associations.views import AssociationViewSet, EventViewSet, PageViewSet, MarketplaceViewSet, \
     ProductViewSet, TransactionViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
-    LoanableViewSet, RoleViewSet, NewsAssociationViewSet, NewsSubscriptionsViewSet
+    LoanableViewSet, RoleViewSet, NewsAssociationViewSet, NewsSubscriptionsViewSet, ElectionViewSet
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 
 router = BulkRouter()
@@ -23,6 +23,7 @@ router.register(r'file', FileViewSet)
 router.register(r'folder', FolderViewSet)
 
 associations_router = routers.NestedSimpleRouter(router, r'associations', lookup='association')
+associations_router.register(r'elections', ElectionViewSet)
 associations_router.register(r'events', EventViewSet)
 associations_router.register(r'news', NewsAssociationViewSet)
 associations_router.register(r'pages', PageViewSet)
@@ -34,3 +35,14 @@ urlpatterns = [
     path('marketplace/<slug:marketplace_id>/balance/', BalanceView.as_view(), name='balance-list-marketplace'),
     path('marketplace/<slug:marketplace_id>/balance/<slug:user_id>/', BalanceView.as_view(), name='balance-detail'),
 ] + router.urls + associations_router.urls
+
+"""
+    Endpoints:
+        * List:     GET     /associations/bde/elections/
+        * Retrieve: GET     /associations/bde/elections/1/
+        * Create:   POST    /associations/bde/elections/1/
+        * Update:   PATCH   /associations/bde/elections/1/
+        * Destroy:  DELETE  /associations/bde/elections/1/
+        * Vote:     POST    /associations/bde/elections/1/vote/
+        * Results:  GET     /associations/bde/elections/1/results/
+"""

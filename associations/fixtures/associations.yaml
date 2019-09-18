@@ -55,6 +55,7 @@
     role: President
     is_admin: true
     association: bde
+
 - model: associations.role
   pk: '2'
   fields:
@@ -62,6 +63,8 @@
     role: CTO
     is_admin: true
     association: bde
+    election_permission: True
+
 - model: associations.page
   pk: '4'
   fields:
@@ -224,13 +227,6 @@
     uploaded_on: '2017-08-24T17:41:28+00:00'
     uploaded_by: 17bocquet
     association: bde
-- model: associations.role
-  pk: 2
-  fields:
-    user: 17bocquet
-    association: biero
-    role: Programmeur / Brasseur
-    is_admin: true
 
 - model: associations.election
   pk: 1
@@ -253,3 +249,27 @@
   fields:
     election: 1
     name: Adrénapiche
+
+- model: associations.vote
+  pk: 1
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.vote
+  pk: 2
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.vote
+  pk: 3
+  fields:
+    election: 1
+    choices: [2]
+
+- model: associations.vote
+  pk: 4
+  fields:
+    election: 1
+    choices: [2]

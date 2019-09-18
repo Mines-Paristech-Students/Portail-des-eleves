@@ -1,3 +1,5 @@
+from collections import Counter
+
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -14,6 +16,8 @@ class Election(models.Model):
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE, related_name='elections')
 
+    name = models.CharField(max_length=200)
+
     registered_voters = models.ManyToManyField(User,
                                                related_name='allowed_elections',
                                                help_text='User who are allowed to vote to this election.')
@@ -27,10 +31,17 @@ class Election(models.Model):
     max_choices_per_vote = models.PositiveIntegerField(default=1,
                                                        help_text='The number of choices allowed per vote.')
 
+    @property
+    def results(self):
+        # First, we fetch all the votes, but by replacing them by the associated choice name.
+        # We then wrap all of these choices into a Counter, which is a nice built-in object which will…
+        # count the votes for us.
+        return Counter([vote[0] for vote in self.votes.values_list('choices__name')])
 
-class VoteChoice(models.Model):
+
+class Choice(models.Model):
     """
-        Represents a choice of an election.
+        Represents a choice in an election.
     """
 
     id = models.AutoField(primary_key=True)
@@ -43,7 +54,7 @@ class Vote(models.Model):
     id = models.AutoField(primary_key=True)
 
     election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='votes')
-    choices = models.ManyToManyField(VoteChoice, related_name='votes')
+    choices = models.ManyToManyField(Choice, related_name='votes')
 
     @cached_property
     def is_valid(self):  # Should always be true

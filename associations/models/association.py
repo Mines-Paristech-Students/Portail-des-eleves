@@ -65,17 +65,21 @@ class Role(models.Model):
 
     is_admin = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False,
-                                      help_text='Archived roles are not operating anymore but they allow to remember'
+                                      help_text='Archived roles are not operating anymore but they allow to remember '
                                                 'who was in the association.')
 
     # Permissions:
+    election_permission = models.BooleanField(default=False)
     events_permission = models.BooleanField(default=False)
     filesystem_permission = models.BooleanField(default=False)
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
     news_permission = models.BooleanField(default=False)
     page_permission = models.BooleanField(default=False)
-    vote_permission = models.BooleanField(default=False)
+
+    @cached_property
+    def election(self):
+        return self.election_permission and not self.is_archived
 
     @cached_property
     def events(self):
@@ -100,10 +104,6 @@ class Role(models.Model):
     @cached_property
     def page(self):
         return self.page_permission and not self.is_archived
-
-    @cached_property
-    def vote(self):
-        return self.vote_permission and not self.is_archived
 
     class Meta:
         unique_together = ("user", "association")

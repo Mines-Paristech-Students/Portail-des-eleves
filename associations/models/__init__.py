@@ -5,4 +5,4 @@ from associations.models.library import *
 from associations.models.marketplace import *
 from associations.models.news import *
 from associations.models.page import *
-from associations.models.vote import *
+from associations.models.election import *
