@@ -8,7 +8,7 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_ADMIN_BD_TEK:
             self.login(user)
             self.assertFalse(Role.objects.get(pk=2).library)
-            res = self.patch('roles/2/', data={'library': True})
+            res = self.patch('/roles/2/', data={'library_permission': True})
             self.assertEqual(res.status_code, 403, msg=f'{user} did not get a 403.')
             self.assertFalse(Role.objects.get(pk=2).library)
 
@@ -18,20 +18,20 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
         self.assertTrue(User.objects.get(pk=user).get_role(Association.objects.get(pk='bd-tek')).is_admin)
 
         self.assertFalse(Role.objects.get(pk=2).library)
-        res = self.patch('roles/2/', data={'library': True})
+        res = self.patch('/roles/2/', data={'library_permission': True})
         self.assertStatusCode(res, 200)
         self.assertTrue(Role.objects.get(pk=2).library)
 
     def test_if_not_association_admin_then_cannot_remove_library_role(self):
         for user in ALL_USERS_EXCEPT_ADMIN_BD_TEK:
             self.login(user)
-            res = self.patch('roles/1/', data={'library': False})
+            res = self.patch('/roles/1/', data={'library_permission': False})
             self.assertEqual(res.status_code, 403, msg=f'{user} did not get a 403.')
             self.assertTrue(Role.objects.get(pk=1).library)
 
     def test_if_association_admin_then_can_remove_library_role(self):
         self.login('17admin_bd-tek')
         self.assertTrue(Role.objects.get(pk=1).library)
-        res = self.patch('roles/1/', data={'library': False})
+        res = self.patch('/roles/1/', data={'library_permission': False})
         self.assertStatusCode(res, 200)
         self.assertFalse(Role.objects.get(pk=1).library)
