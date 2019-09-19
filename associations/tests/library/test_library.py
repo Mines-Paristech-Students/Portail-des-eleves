@@ -66,6 +66,14 @@ class LibraryTestCase(BaseLibraryTestCase):
         self.assertTrue(Library.objects.filter(pk='bde').exists())
         self.assertEqual(Association.objects.get(pk='bde').library, Library.objects.get(pk='bde'))
 
+    def test_cannot_create_library_for_not_existing_association(self):
+        for user in ALL_USERS:
+            self.login(user)
+            res = self.post('/library/',
+                            data={'id': 'piche', 'enabled': 'true', 'association': 'piche', 'loanables': []})
+            self.assertStatusCode(res, 400)
+            self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='piche')
+
     ##########
     # UPDATE #
     ##########

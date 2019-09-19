@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
-from associations.permissions import IfLibraryAdminThenCRUDElseR, LoansPermission, \
+from associations.permissions import LibraryPermission, IfLibraryAdminThenCRUDElseR, LoansPermission, \
     IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD
 from associations.serializers import LibrarySerializer, CreateLoanSerializer, UpdateLoanSerializer, LoanSerializer, \
     LoanableSerializer
@@ -16,7 +16,7 @@ from associations.serializers import LibrarySerializer, CreateLoanSerializer, Up
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
-    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+    permission_classes = (LibraryPermission,)
 
 
 class LoanableViewSet(viewsets.ModelViewSet):

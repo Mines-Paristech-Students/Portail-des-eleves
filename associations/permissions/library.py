@@ -145,3 +145,34 @@ class IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD(BasePermission):
             if request.method in SAFE_METHODS:
                 return True
         return False
+
+
+class LibraryPermission(BasePermission):
+    """
+                      | Enabled | Disabled |
+        Library admin | CRUD    | CRUD     |
+        User          | R       |          |
+    """
+
+    def has_permission(self, request, view):
+        # The only case to be treated is when has_object_permission is not able to get a library object to work with,
+        # that is when the method is POST.
+        # We then inspect the POSTed data to find a reference to an association. If the association does not exist,
+        # return True so the view can handle the error.
+
+        if request.method in ('POST', ):
+            association_pk = request.data.get('association', None)
+            association_query = Association.objects.filter(pk=association_pk)
+
+            if association_query.exists():
+                role = request.user.get_role(association_query[0])
+                return role and role.library
+        return True
+
+    def has_object_permission(self, request, view, library):
+        role = request.user.get_role(library.association)
+
+        if role and role.library:
+            return True
+        else:
+            return library.enabled and request.method in SAFE_METHODS

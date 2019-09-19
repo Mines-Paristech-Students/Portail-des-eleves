@@ -64,6 +64,7 @@
     is_admin: true
     association: bde
     election_permission: True
+    library_permission: true
 
 - model: associations.page
   pk: '4'
