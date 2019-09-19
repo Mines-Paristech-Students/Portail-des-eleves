@@ -1,10 +1,22 @@
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from associations.models import Election
+from associations.models import Association, Election
 from associations.permissions import ElectionPermission, VotePermission, ResultsPermission
-from associations.serializers import ElectionSerializer, ElectionAdminSerializer
+from associations.serializers import ElectionSerializer, ElectionAdminSerializer, VoteSerializer
 from associations.views import AssociationNestedViewSet
+
+"""
+    Endpoints:
+        * List:     GET     /associations/bde/elections/
+        * Retrieve: GET     /associations/bde/elections/1/
+        * Create:   POST    /associations/bde/elections/1/
+        * Update:   PATCH   /associations/bde/elections/1/
+        * Destroy:  DELETE  /associations/bde/elections/1/
+        * Vote:     POST    /associations/bde/elections/1/vote/
+        * Results:  GET     /associations/bde/elections/1/results/
+"""
 
 
 class ElectionViewSet(AssociationNestedViewSet):
@@ -16,7 +28,10 @@ class ElectionViewSet(AssociationNestedViewSet):
         return Election.objects.filter(association=self.kwargs['association_pk'])
 
     def get_serializer_class(self):
-        role = self.request.user.get_role(self.kwargs['association_pk'])
+        if self.action in ('vote',):
+            return VoteSerializer
+
+        role = self.request.user.get_role(association_pk=self.kwargs['association_pk'])
 
         if role and role.election:
             return ElectionAdminSerializer
@@ -33,15 +48,22 @@ class ElectionViewSet(AssociationNestedViewSet):
 
     @action(detail=True, methods=('post',))
     def vote(self, request, pk, association_pk):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         election = self.get_object()
 
-        # TODO: validate posted data, then for each choice create a vote…
+        # Save the new Vote object in the database.
+        serializer.save(election=election)
+        headers = self.get_success_headers(serializer.data)
+
+        # Add the voter to the Election object.
         election.voters.add(request.user)
-        return Response(data={'election': election.id, 'user': request.user.id})
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @action(detail=True, methods=('get',))
     def results(self, request, pk, association_pk):
         election = self.get_object()
-        data = {'election': election.id}
-        data.update(election.results)
-        return Response(data=data)
+        data = {'election': election.id, 'results': election.results}
+        return Response(data=data, status=status.HTTP_200_OK)

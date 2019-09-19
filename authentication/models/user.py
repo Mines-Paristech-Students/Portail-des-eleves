@@ -135,8 +135,15 @@ class User(AbstractBaseUser):
 
             return today.year - self.year_of_entry - 1
 
-    def get_role(self, association):
-        for role in self.roles.all():
-            if role.association == association:
-                return role
+    def get_role(self, association=None, association_pk=None):
+        q = None
+
+        if association_pk is not None:
+            q = self.roles.filter(association_id=association_pk)
+        elif association is not None:
+            q = self.roles.filter(association=association)
+
+        if q and q.exists():
+            return q[0]
+
         return None

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 
-from associations.models import Association
+from associations.models import Association, Election
 
 
 class ElectionPermission(permissions.BasePermission):
@@ -46,7 +46,12 @@ class VotePermission(permissions.BasePermission):
         return request.method in ('POST',)
 
     def has_object_permission(self, request, view, election):
-        return request.user.id in election.registered_voters.values_list('id')
+        # if request.user.id in [voter[0] for voter in election.voters.values_list('id')]:
+        if request.user.id in election.voters.values_list('id'):
+            self.message = 'You have already voted to this election.'
+            return False
+
+        return request.user.id in [voter[0] for voter in election.registered_voters.values_list('id')]
 
 
 class ResultsPermission(permissions.BasePermission):
