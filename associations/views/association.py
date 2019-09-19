@@ -1,7 +1,7 @@
-from django.http.response import Http404
 
 from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.exceptions import NotFound
 from rest_framework_bulk.generics import BulkModelViewSet
 
 from associations.models import Role
@@ -61,7 +61,7 @@ class AssociationViewSet(viewsets.ModelViewSet):
 def association_exists_or_404(func):
     def wrapper(self, *args, **kwargs):
         if not Association.objects.filter(pk=self.kwargs['association_pk']).exists():
-            raise Http404()
+            raise NotFound('Association not found.')
 
         return func(self, *args, **kwargs)
 

@@ -7,7 +7,7 @@ from associations.models import User, Election, Choice, Vote
 class ChoiceShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        read_only_fields = ('name',)
+        read_only_fields = ('id', 'name',)
         fields = read_only_fields
 
 
@@ -16,17 +16,19 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Choice
-        read_only_fields = ('id', 'election',)  # 'election' will be provided by the view.
+        read_only_fields = ('id', 'election',)  # 'election' will be provided by the user of the serializer.
         fields = read_only_fields + ('name',)
 
 
 class VoteSerializer(serializers.ModelSerializer):
     election = serializers.PrimaryKeyRelatedField(read_only=True)
-    choices = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), many=True, read_only=False)
+    choices = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(),
+                                                 many=True,
+                                                 read_only=False)
 
     class Meta:
         model = Vote
-        read_only_fields = ('id', 'election',)  # 'election' will be provided by the view.
+        read_only_fields = ('id', 'election',)  # 'election' will be provided by the user of the serializer.
         fields = read_only_fields + ('choices',)
 
 
@@ -44,15 +46,21 @@ class ElectionSerializer(serializers.ModelSerializer):
     """Read-only, restricted serializer for simple users."""
 
     association = serializers.PrimaryKeyRelatedField(read_only=True)
+    choices = ChoiceShortSerializer(many=True, read_only=True)
 
     class Meta:
         model = Election
-        read_only_fields = ('id', 'association', 'name', 'starts_at', 'ends_at', 'max_choices_per_vote',)
+        read_only_fields = ('id', 'association', 'name', 'starts_at', 'ends_at', 'max_choices_per_vote', 'choices')
         fields = read_only_fields
 
 
 class ElectionAdminSerializer(serializers.ModelSerializer):
-    """Full serializer which can also edit the choices — hopefully not the votes."""
+    """This serializer gives access to the registered_voters and choices fields.
+
+    When updating two nested fields registered_voters and choices, the old content will be REPLACED by the new content.
+      * registered_voters must be a list of User pk.
+      * choices must be a list of dictionaries {'name': 'My Choice'}.
+    """
 
     association = serializers.PrimaryKeyRelatedField(read_only=True)
     registered_voters = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, read_only=False)
@@ -64,7 +72,7 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
         # The 'voters' and 'votes' fields are on purpose not included.
         read_only_fields = ('id', 'association',)
         fields = read_only_fields + ('name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
-                                     'max_choices_per_vote', 'choices')
+                                     'max_choices_per_vote')
 
     def is_valid(self, raise_exception=False):
         """Check if the dates are consistent."""
@@ -91,7 +99,42 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
             if starts_at >= ends_at:
                 raise ValidationError('field starts_at is not consistent with field ends_at.')
 
-    def update(self, instance, validated_data):
-        self.validate_against_instance(instance, validated_data)
+    def update(self, election, validated_data):
+        self.validate_against_instance(election, validated_data)
 
-        return super(ElectionAdminSerializer, self).update(instance, validated_data)
+        if 'registered_voters' in validated_data:
+            # Replace the registered voters if provided.
+            registered_voters = validated_data.pop('registered_voters')
+            election.registered_voters.set(registered_voters)
+
+        if 'choices' in validated_data:
+            new_choices_names = set([c['name'] for c in validated_data.pop('choices')])
+
+            # Get all the old choices.
+            old_choices_names = set([c[0] for c in election.choices.values_list('name')])
+
+            # Remove the old choices not in the new choices.
+            Choice.objects.filter(election=election, name__in=old_choices_names - new_choices_names).delete()
+
+            # Add the new choices not yet in the Choice table.
+            Choice.objects.bulk_create(
+                [Choice(election=election, name=choice_name) for choice_name in new_choices_names - old_choices_names])
+
+        for field, value in validated_data.items():
+            setattr(election, field, value)
+        election.save()
+
+        return election
+
+    def create(self, validated_data):
+        registered_voters = validated_data.pop('registered_voters')
+        choices = validated_data.pop('choices')
+
+        election = Election.objects.create(**validated_data)
+
+        election.registered_voters.set(registered_voters)
+
+        for choice in choices:
+            Choice.objects.create(election=election, **choice)
+
+        return election

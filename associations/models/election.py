@@ -1,4 +1,5 @@
 from collections import Counter
+from datetime import datetime, timezone
 
 from django.db import models
 from django.utils.functional import cached_property
@@ -31,12 +32,16 @@ class Election(models.Model):
     max_choices_per_vote = models.PositiveIntegerField(default=1,
                                                        help_text='The number of choices allowed per vote.')
 
-    @property
+    @cached_property
     def results(self):
         # First, we fetch all the votes, but by replacing them by the associated choice name.
         # We then wrap all of these choices into a Counter, which is a nice built-in object which will…
         # count the votes for us.
         return Counter([vote[0] for vote in self.votes.values_list('choices__name')])
+
+    @cached_property
+    def is_active(self):
+        return self.starts_at < datetime.now(tz=timezone.utc) < self.ends_at
 
 
 class Choice(models.Model):

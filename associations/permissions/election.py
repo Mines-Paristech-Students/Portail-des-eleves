@@ -33,27 +33,6 @@ class ElectionPermission(permissions.BasePermission):
             return request.method in permissions.SAFE_METHODS
 
 
-class VotePermission(permissions.BasePermission):
-    """
-                       | Permissions |
-        Allowed voters | C           |
-        Others         |             |
-    """
-
-    message = 'You are not allowed to vote to this election.'
-
-    def has_permission(self, request, view):
-        return request.method in ('POST',)
-
-    def has_object_permission(self, request, view, election):
-        # if request.user.id in [voter[0] for voter in election.voters.values_list('id')]:
-        if request.user.id in election.voters.values_list('id'):
-            self.message = 'You have already voted to this election.'
-            return False
-
-        return request.user.id in [voter[0] for voter in election.registered_voters.values_list('id')]
-
-
 class ResultsPermission(permissions.BasePermission):
     """
                        | Before ends_at | After ends_at |
@@ -73,3 +52,16 @@ class ResultsPermission(permissions.BasePermission):
             return True
 
         return datetime.now(tz=timezone.utc) > election.ends_at
+
+
+class VotePermission(permissions.BasePermission):
+    """
+                       | Permissions |
+        Allowed voters | C           |
+        Others         |             |
+    """
+
+    message = 'You are not allowed to vote to this election.'
+
+    def has_permission(self, request, view):
+        return request.method in ('POST',)
