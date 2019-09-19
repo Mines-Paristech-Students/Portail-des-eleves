@@ -1,7 +1,11 @@
+from datetime import date
+
+from django.conf import settings
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.core.validators import MinValueValidator
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
-)
+from django.utils.functional import cached_property
+
 
 class UserManager(BaseUserManager):
     def create_user(self, id, first_name, last_name, email, password, birthday, promo):
@@ -37,47 +41,44 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    id = models.CharField(primary_key=True, max_length=30, verbose_name="User id")
-    first_name = models.CharField(max_length=50, verbose_name="User first name")
-    last_name = models.CharField(max_length=50, verbose_name="User last name")
-    promo = models.IntegerField(verbose_name="Promotion")
+    STUDENT_TYPES = (('AST', 'AST'),
+                     ('ISUPFERE', 'ISUPFERE'),
+                     ('EV', 'EV'),
+                     ('IC', 'IC'))
 
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=160,
-        unique=True,
-    )
+    ACADEMIC_YEARS = (('1A', '1A'),
+                      ('2A', '2A'),
+                      ('GAP YEAR', 'CÉSURE'),
+                      ('3A', '3A'),)
 
+    id = models.CharField(primary_key=True, max_length=30)
+
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     nickname = models.CharField(max_length=128, blank=True, default="")
-    birthday = models.DateField(null=True, verbose_name="date de naissance")
+    birthday = models.DateField(null=True)
+    email = models.EmailField(max_length=160, unique=True)
+    year_of_entry = models.IntegerField(validators=(MinValueValidator(1783),))  # The year MINES ParisTech was created.
 
-    # Contact the person
-    phone = models.CharField(max_length=15, blank=True, verbose_name="numéro de téléphone")
-
-    room = models.CharField(max_length=128, blank=True, verbose_name="numéro de chambre")  # null if the person is PAM
+    phone = models.CharField(max_length=15, blank=True)
+    room = models.CharField(max_length=128, blank=True, help_text="Blank if the User is PAM.")
     address = models.CharField(max_length=512, blank=True,
-                               help_text="adresse en dehors de la Meuh")  # null if the person is not PAM
-    city_of_origin = models.CharField(max_length=128, blank=True, help_text="ville d'origine")
+                               help_text="Address outside the Meuh. Blank if the User is not PAM.")
+    city_of_origin = models.CharField(max_length=128, blank=True)
 
-    # Cursus
+    # Education.
     option = models.CharField(max_length=128, blank=True)
-    is_ast = models.BooleanField(default=False)
-    is_isupfere = models.BooleanField(default=False)
-    is_in_gapyear = models.BooleanField(default=False)
+    student_type = models.CharField(max_length=10, choices=STUDENT_TYPES)
+    current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
 
-    # Life in Mines
+    # Life at school.
     sports = models.CharField(max_length=512, blank=True)
-    roommate = models.ManyToManyField('self', symmetrical=True, blank=True)
-    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False,
-                                         blank=True)  # the Mines godparent
+    roommate = models.ManyToManyField('self', symmetrical=True, default=None)
+    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, default=None)
 
-    # Life on portail
-
+    # Life on portail.
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
-    # To be improved
-    is_1A = models.BooleanField(default=True)
 
     objects = UserManager()
 
@@ -85,26 +86,54 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'birthday']
 
     class Meta:
-        ordering = ['-promo', 'last_name', 'first_name']
+        ordering = ['-year_of_entry', 'last_name', 'first_name']
 
     def __str__(self):
         return self.id
 
-    def has_perm(self, perm, obj=None):
-        """Does the user have a specific permission?"""
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        """Does the user have permissions to view the app `app_label`?"""
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
+    @cached_property
     def is_staff(self):
-        """Is the user a member of staff?"""
-        # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    @cached_property
+    def is_in_first_year(self):
+        """Return True iff the User is in their first year at the school, depending on their year of entry."""
+        return self.years_since_entry <= 0
+
+    @cached_property
+    def promotion(self):
+        """The last two digits of the User's entrance year at school."""
+        return self.year_of_entry % 100
+
+    @cached_property
+    def show(self):
+        """Return True iff the User can be shown."""
+        if settings.SHOW_TO_FIRST_YEAR_STUDENTS:
+            return True
+        else:
+            return not self.is_in_first_year
+
+    @cached_property
+    def years_since_entry(self):
+        """
+            Return the number of years completed since the student's arrival at school.\n
+            A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
+            of elapsed 30th June NOT including the one of the arrival year.
+        """
+        today = date.today()
+
+        if today >= date(today.year, 6, 30):
+            # |                 YEAR N-1                 |                  YEAR N                |
+            # |-------- 30 June -------- Arrival --------|-------- 30 June -------- TODAY --------|
+            # N - (N - 1) = 1 = number of passed 30 June.
+
+            return today.year - self.year_of_entry
+        else:
+            # |                 YEAR N-1                 |                  YEAR N                |
+            # |-------- 30 June -------- Arrival --------|-------- TODAY -------- 30 June --------|
+            # Remove one for the 30 June of year N which has not passed yet.
+
+            return today.year - self.year_of_entry - 1
 
     def get_role(self, association):
         for role in self.roles.all():

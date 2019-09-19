@@ -57,7 +57,7 @@ class UpdateLoanSerializer(serializers.ModelSerializer):
                 self._errors = {}
 
             if self._errors and raise_exception:
-                raise ValidationError(self.errors)
+                raise ValidationError(self._errors)
 
         return is_valid_super and not bool(self._errors)
 

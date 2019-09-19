@@ -33,7 +33,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
-        marketplace she is a library administrator of."""
+        marketplace they are a library administrator of."""
 
         # The library for which the user is library administrator.
         marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
@@ -50,7 +50,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     filter_fields = ('product', 'status', 'buyer', 'date')
 
     def get_queryset(self):
-        """The user has access to all of her transactions and to the transactions of every marketplace she is an
+        """The user has access to all of their transactions and to the transactions of every marketplace they are an
         administrator of."""
 
         # The marketplaces for which the user is administrator.
@@ -101,7 +101,8 @@ class FundingViewSet(viewsets.ModelViewSet):
     filter_fields = ('status', 'user', 'date')
 
     def get_queryset(self):
-        """The user has access to all her funding and to the funding of every marketplace she is an administrator of."""
+        """The user has access to all their funding and to the funding of every marketplace they are an administrator
+        of."""
         # The marketplaces for which the user is administrator.
         marketplaces = [role.association.marketplace for role in self.request.user.roles.all() if role.marketplace]
 
@@ -187,25 +188,4 @@ class BalanceView(APIView):
                     if role is None or not role.marketplace:
                         return HttpResponseForbidden('You are not allowed to view the balance of this user.')
 
-                return JsonResponse(self.get_balance_in_json(user, marketplace))
-
-
-"""
-    def put(self, request, marketplace_id, user_id, format=None):
-        role = request.user.get_role(marketplace_id)
-        if role is None or (not role.marketplace and not role.is_admin):
-            return HttpResponseForbidden()
-
-        body = request.data
-        user = User.objects.get(pk=user_id)
-
-        try:
-            amount = float(body["amount"])
-            if amount != 0.0:
-                Funding.objects.create(user=user, value=amount, marketplace_id=marketplace_id)
-
-        except ValueError as err:
-            return JsonResponse({"status": "error", "message": "NaN given as value argument"}, status="400")
-
-        return JsonResponse({"status": "ok"})
-"""
+                return JsonResponse([self.get_balance_in_json(user, marketplace)], safe=False)

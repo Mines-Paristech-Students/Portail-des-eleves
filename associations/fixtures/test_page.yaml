@@ -1,0 +1,158 @@
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17page_xxx is an page admin of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx.
+
+#########
+# BIERO #
+#########
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 1
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Admin
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin
+    is_admin: true
+    page_permission: false
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Member
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17member_biero
+    association: biero
+    role: Simple member
+    is_admin: false
+    page_permission: false
+
+- model: authentication.user
+  pk: 17page_biero
+  fields:
+    email: 17page_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: page
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17page_biero
+    association: biero
+    role: page admin
+    is_admin: false
+    page_permission: true
+
+- model: associations.page
+  pk: 0
+  fields:
+    association: biero
+    title: 'L’équipe'
+    text: 'Un président psychopathe qui écrit des mails hilarants.'
+
+- model: associations.page
+  pk: 1
+  fields:
+    association: biero
+    title: 'Le concept'
+    text: 'Se bourrer la gueule. Pour 5 €.'
+
+#######
+# PDM #
+#######
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Admin
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin
+    is_admin: true
+    page_permission: false
+
+- model: authentication.user
+  pk: 17member_pdm
+  fields:
+    email: 17member_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Member
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17member_pdm
+    association: pdm
+    role: Simple member
+    is_admin: false
+    page_permission: false
+
+- model: authentication.user
+  pk: 17page_pdm
+  fields:
+    email: 17page_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: page
+    is_admin: false
+    year_of_entry: 2017
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17page_pdm
+    association: pdm
+    role: page admin
+    is_admin: false
+    page_permission: true
+
+- model: associations.page
+  pk: 2
+  fields:
+    association: pdm
+    title: 'Le concept'
+    text: 'Soit tu payes. Soit tu voles.'

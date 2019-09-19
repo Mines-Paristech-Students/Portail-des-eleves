@@ -5,7 +5,6 @@ from django.db.models import Q
 from associations.models.library import Loanable, Loan
 from associations.tests.library.base_test_library import *
 
-# TODO: forbid the deletes.
 
 class LoanTestCase(BaseLibraryTestCase):
     # Please see the diagram in associations.models.library.Loan.
@@ -48,7 +47,7 @@ class LoanTestCase(BaseLibraryTestCase):
     def assertCanListTheseLoans(self, loans, code=200, user=''):
         """Fail if the loans listed at "loans/" do not contain the loans passed as a parameter."""
         self.login(user)
-        res = self.get('loans/')
+        res = self.get('/loans/')
         self.assertEqual(res.status_code, code)
 
         res_ids = set([loan['id'] for loan in res.data])
@@ -59,7 +58,7 @@ class LoanTestCase(BaseLibraryTestCase):
         """Fail if the loans listed at "loans/" are not exactly the loans passed as a parameter."""
 
         self.login(user)
-        res = self.get('loans/')
+        res = self.get('/loans/')
         self.assertEqual(res.status_code, code)
 
         res_ids = set([loan['id'] for loan in res.data])
@@ -67,7 +66,7 @@ class LoanTestCase(BaseLibraryTestCase):
         self.assertEqual(res_ids, expected_ids, msg=f'User {user}: expected list {expected_ids}, got list {res_ids}.')
 
     def test_if_not_logged_in_then_no_access_to_loans(self):
-        res = self.get('loans/')
+        res = self.get('/loans/')
         self.assertStatusCode(res, 401)
 
     def test_if_user_then_access_to_own_loans_in_enabled_libraries(self):
@@ -93,13 +92,13 @@ class LoanTestCase(BaseLibraryTestCase):
     def assertAccessToLoan(self, loan_id, code=200, user=''):
         """Fail if access is not given to loan loan_id."""
 
-        res = self.get(f'loans/{loan_id}/')
+        res = self.get(f'/loans/{loan_id}/')
         self.assertEqual(res.status_code, code, msg=f'User {user} cannot access loan {loan_id}.')
 
     def assertNoAccessToLoan(self, loan_id, code=403, codes=None, user=''):
         """Fail if access is given to loan loan_id."""
 
-        res = self.get(f'loans/{loan_id}/')
+        res = self.get(f'/loans/{loan_id}/')
 
         if codes is not None:
             self.assertIn(res.status_code, codes, msg=f'User {user} can access loan {loan_id}.')
@@ -149,14 +148,14 @@ class LoanTestCase(BaseLibraryTestCase):
     def assertCanCreateLoan(self, user, data, code=201):
         self.login(user)
         length_before = len(Loan.objects.all())
-        res = self.post('loans/', data=data)
+        res = self.post('/loans/', data=data)
         self.assertStatusCode(res, code)
         self.assertEqual(length_before + 1, len(Loan.objects.all()), f'User {user} did not manage to insert {data}.')
 
     def assertCannotCreateLoan(self, user, data, code=403):
         self.login(user)
         length_before = len(Loan.objects.all())
-        res = self.post('loans/', data=data)
+        res = self.post('/loans/', data=data)
         self.assertStatusCode(res, code)
         self.assertEqual(length_before, len(Loan.objects.all()), f'User {user} managed to insert {data}.')
 
@@ -182,7 +181,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
             self.login(user)
-            res = self.post('loans/', data={'user': user, 'loanable': loanable_id})
+            res = self.post('/loans/', data={'user': user, 'loanable': loanable_id})
 
             self.assertStatusCode(res, 201)
             last_loan = Loan.objects.order_by('-id')[0]
@@ -229,7 +228,7 @@ class LoanTestCase(BaseLibraryTestCase):
         run = False
 
         for loan in [x for x in loans if x.status == old_status]:
-            res = self.patch(f'loans/{loan.id}/', {'status': new_status})
+            res = self.patch(f'/loans/{loan.id}/', {'status': new_status})
             self.assertStatusCode(res, 200)
 
             loan = Loan.objects.get(id=loan.id)
@@ -255,7 +254,7 @@ class LoanTestCase(BaseLibraryTestCase):
         run = False
 
         for loan in [x for x in loans if x.status == old_status]:
-            res = self.patch(f'loans/{loan.id}/', {'status': new_status})
+            res = self.patch(f'/loans/{loan.id}/', {'status': new_status})
             self.assertStatusCode(res, 403)
             self.assertEqual(Loan.objects.get(id=loan.id).status, old_status,
                              msg=f'User {user} did manage to update the status of loan {loan.id}'
@@ -287,7 +286,7 @@ class LoanTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
             for loan in Loan.objects.filter(user__id=user):
                 self.login(user)
-                res = self.patch(f'loans/{loan.id}/',
+                res = self.patch(f'/loans/{loan.id}/',
                                  data={'status': 'PENDING',
                                        'loan_date': datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc),
                                        'expected_return_date': datetime(2018, 1, 3, 15, 00, 00, tzinfo=timezone.utc),
@@ -334,7 +333,7 @@ class LoanTestCase(BaseLibraryTestCase):
             # Real return date before the loan date.
             real_return_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
 
-            res = self.patch(f'loans/{loan.id}/',
+            res = self.patch(f'/loans/{loan.id}/',
                              {'loan_date': loan_date, 'expected_return_date': expected_return_date})
             self.assertStatusCode(res, 400)
             self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
@@ -342,7 +341,7 @@ class LoanTestCase(BaseLibraryTestCase):
             self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, loan.expected_return_date,
                              msg=f'User {user} did manage to update loan id {loan.id}.')
 
-            res = self.patch(f'loans/{loan.id}/',
+            res = self.patch(f'/loans/{loan.id}/',
                              {'loan_date': loan_date, 'real_return_date': real_return_date})
             self.assertStatusCode(res, 400)
             self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
@@ -356,7 +355,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in Loan.objects.filter(loanable__library='bd-tek'):
             loan_date = datetime(2018, 1, 1, 12, 00, 00, tzinfo=timezone.utc)
-            res = self.patch(f'loans/{loan.id}/', {'loan_date': loan_date})
+            res = self.patch(f'/loans/{loan.id}/', {'loan_date': loan_date})
             self.assertStatusCode(res, 200)
             self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan_date,
                              msg=f'User {user} did not manage to update loan_date of loan id {loan.id}.')
@@ -374,7 +373,7 @@ class LoanTestCase(BaseLibraryTestCase):
                 loan_date = loan.expected_return_date + timedelta(10)
             else:
                 loan_date = loan.real_return_date + timedelta(10)
-            res = self.patch(f'loans/{loan.id}/', {'loan_date': loan_date})
+            res = self.patch(f'/loans/{loan.id}/', {'loan_date': loan_date})
             self.assertStatusCode(res, 400)
             self.assertEqual(Loan.objects.get(id=loan.id).loan_date, loan.loan_date,
                              msg=f'User {user} did manage to update loan_date of loan id {loan.id}.')
@@ -389,7 +388,7 @@ class LoanTestCase(BaseLibraryTestCase):
             else:
                 expected_return_date = loan.loan_date + timedelta(days=7)
 
-            res = self.patch(f'loans/{loan.id}/', {'expected_return_date': expected_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'expected_return_date': expected_return_date})
             self.assertStatusCode(res, 200)
             self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, expected_return_date,
                              msg=f'User {user} did not manage to update expected_return_date of loan id {loan.id}.')
@@ -403,7 +402,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in loans:
             expected_return_date = loan.loan_date - timedelta(10)
-            res = self.patch(f'loans/{loan.id}/', {'expected_return_date': expected_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'expected_return_date': expected_return_date})
             self.assertStatusCode(res, 400)
             self.assertEqual(Loan.objects.get(id=loan.id).expected_return_date, loan.expected_return_date,
                              msg=f'User {user} did manage to update expected_return_date of loan id {loan.id}.')
@@ -421,7 +420,7 @@ class LoanTestCase(BaseLibraryTestCase):
             else:
                 real_return_date = loan.loan_date + (loan.expected_return_date - loan.loan_date) / 2
 
-            res = self.patch(f'loans/{loan.id}/', {'real_return_date': real_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'real_return_date': real_return_date})
             self.assertStatusCode(res, 200)
             self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, real_return_date,
                              msg=f'User {user} did not manage to update real_return_date of loan id {loan.id}.')
@@ -435,7 +434,7 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in loans:
             real_return_date = loan.loan_date - timedelta(10)
-            res = self.patch(f'loans/{loan.id}/', {'real_return_date': real_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'real_return_date': real_return_date})
             self.assertStatusCode(res, 400)
             self.assertEqual(Loan.objects.get(id=loan.id).real_return_date, loan.real_return_date,
                              msg=f'User {user} did manage to update real_return_date of loan id {loan.id}.')
@@ -446,19 +445,19 @@ class LoanTestCase(BaseLibraryTestCase):
 
         for loan in Loan.objects.exclude(loanable__library='bd-tek'):
             loan_date = datetime(2018, 1, 1, 12, 00, 00)
-            res = self.patch(f'loans/{loan.id}/', {'loan_date': loan_date})
+            res = self.patch(f'/loans/{loan.id}/', {'loan_date': loan_date})
             self.assertStatusCode(res, 403)
             self.assertNotEqual(Loan.objects.get(id=loan.id).loan_date, loan_date,
                                 msg=f'User {user} did manage to update loan_date of loan id {loan.id}.')
 
             expected_return_date = loan_date + timedelta(days=7)
-            res = self.patch(f'loans/{loan.id}/', {'expected_return_date': expected_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'expected_return_date': expected_return_date})
             self.assertStatusCode(res, 403)
             self.assertNotEqual(Loan.objects.get(id=loan.id).expected_return_date, expected_return_date,
                                 msg=f'User {user} did manage to update expected_return_date of loan id {loan.id}.')
 
             real_return_date = loan_date + timedelta(days=4)
-            res = self.patch(f'loans/{loan.id}/', {'real_return_date': real_return_date})
+            res = self.patch(f'/loans/{loan.id}/', {'real_return_date': real_return_date})
             self.assertStatusCode(res, 403)
             self.assertNotEqual(Loan.objects.get(id=loan.id).real_return_date, real_return_date,
                                 msg=f'User {user} did manage to update real_return_date of loan id {loan.id}.')
@@ -467,36 +466,13 @@ class LoanTestCase(BaseLibraryTestCase):
     # DELETE #
     ##########
 
-    def test_if_not_library_administrator_then_cannot_delete_loan(self):
-        for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
+    def test_cannot_delete_loan(self):
+        for user in ALL_USERS:
             self.login(user)
 
             for loan in Loan.objects.all():
-                res = self.delete(f'loans/{loan.id}/')
-                # Depends on whether the user can see the loan.
-                self.assertIn(res.status_code, [403, 404], msg=f'User {user} did manage to delete Loan id {loan.id}.')
+                res = self.delete(f'/loans/{loan.id}/')
+
+                self.assertEqual(res.status_code, 403, msg=res)
                 self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
                                 msg=f'User {user} did manage to delete Loan id {loan.id}.')
-
-    def test_if_library_administrator_then_can_delete_loan_from_own_library(self):
-        user = '17library_bd-tek'
-        self.login(user)
-
-        for loan in Loan.objects.filter(loanable__library='bd-tek'):
-            res = self.delete(f'loans/{loan.id}/')
-            self.assertStatusCode(res, 204, user_msg=f'{loan.id}')
-            self.assertFalse(Loan.objects.filter(id=loan.id).exists(),
-                             msg=f'User {user} did not manage to delete Loan id {loan.id}.')
-
-    def test_if_library_administrator_then_cannot_delete_loan_from_other_library(self):
-        user = '17library_bd-tek'
-        self.login(user)
-
-        loans = Loan.objects.exclude(loanable__library='bd-tek')
-        self.assertNotEqual(len(loans), 0, msg='The test needs a Loan not belonging to bd-tek to run.')
-
-        for loan in loans:
-            res = self.delete(f'loans/{loan.id}/')
-            self.assertIn(res.status_code, (403, 404))  # Depends on whether the user can see the loan (own loan).
-            self.assertTrue(Loan.objects.filter(id=loan.id).exists(),
-                            msg=f'User {user} did manage to delete Loan id {loan.id}.')

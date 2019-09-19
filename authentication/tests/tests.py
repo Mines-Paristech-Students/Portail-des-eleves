@@ -7,6 +7,7 @@ from django.urls import reverse
 from authentication.models import User
 from backend.tests_utils import BackendTestCase
 
+
 class AuthenticationTestCase(TestCase):
     """
     Test the authentication logic.
@@ -22,6 +23,7 @@ class AuthenticationTestCase(TestCase):
     def test_user(self):
         self.assertEqual(User.objects.count(), 1)
 
+
 class BirthdaysTestCase(BackendTestCase):
     """Test the birthdays endpoint logic
     """
@@ -33,7 +35,7 @@ class BirthdaysTestCase(BackendTestCase):
 
     def test_birthdays(self):
         number_of_days = 20
-        url = reverse('get_birthdays', kwargs={'days':number_of_days})
+        url = reverse('get_birthdays', kwargs={'days': number_of_days})
         bd = json.loads(self.client.get(url).content)['birthdays']
         dates = [bd[i]['date'] for i in range(len(bd))]
 
@@ -47,7 +49,7 @@ class BirthdaysTestCase(BackendTestCase):
         )
         self.assertTrue(
             all(
-                datetime.strptime(dates[i], "%Y-%m-%d").date() < datetime.strptime(dates[i+1], "%Y-%m-%d").date()
+                datetime.strptime(dates[i], "%Y-%m-%d").date() < datetime.strptime(dates[i + 1], "%Y-%m-%d").date()
                 for i in range(number_of_days - 1)
             ),
             "Birthdays are not sorted correctly"

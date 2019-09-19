@@ -4,7 +4,7 @@
 # * biero is a disabled library with some loanables.
 # * bde's library does not exist and thus has no loanables.
 #
-# An user called 17simple_xxx is a simple member of the association xxx.
+# An user called 17member_xxx is a simple member of the association xxx.
 # An user called 17library_xxx is a library administrator of the association xxx.
 # An user called 17admin_xxx is an admin of the association xxx but NOT a library manager of this association.
 
@@ -78,7 +78,7 @@
     first_name: BD-Tek
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 0
@@ -87,7 +87,7 @@
     association: bd-tek
     role: Admin no library
     is_admin: true
-    library: false
+    library_permission: false
 
 - model: authentication.user
   pk: 17library_bd-tek
@@ -97,7 +97,7 @@
     first_name: BD-Tek
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 1
@@ -106,7 +106,7 @@
     association: bd-tek
     role: Library administrator
     is_admin: false
-    library: true
+    library_permission: true
 
 - model: authentication.user
   pk: 17member_bd-tek
@@ -116,7 +116,7 @@
     first_name: BD-Tek
     last_name: Member
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 2
@@ -125,7 +125,7 @@
     association: bd-tek
     role: Simple member
     is_admin: false
-    library: false
+    library_permission: false
 
 - model: authentication.user
   pk: 17admin_biero
@@ -135,7 +135,7 @@
     first_name: Biero
     last_name: Manager
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 3
@@ -144,7 +144,7 @@
     association: biero
     role: Admin no library
     is_admin: true
-    library: false
+    library_permission: false
 
 - model: authentication.user
   pk: 17library_biero
@@ -154,7 +154,7 @@
     first_name: Biéro
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 4
@@ -163,7 +163,7 @@
     association: biero
     role: Library administrator
     is_admin: false
-    library: true
+    library_permission: true
 
 - model: authentication.user
   pk: 17library_bde
@@ -173,7 +173,7 @@
     first_name: BDE
     last_name: Library administrator
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 5
@@ -182,7 +182,7 @@
     association: bde
     role: Library administrator
     is_admin: false
-    library: true
+    library_permission: true
 
 - model: authentication.user
   pk: 17admin_bde
@@ -192,7 +192,7 @@
     first_name: BDE
     last_name: Admin
     is_admin: false
-    promo: 17
+    year_of_entry: 2017
 
 - model: associations.role
   pk: 6
@@ -201,7 +201,7 @@
     association: bde
     role: Admin no library
     is_admin: true
-    library: false
+    library_permission: false
 
 - model: associations.loan
   pk: 0
