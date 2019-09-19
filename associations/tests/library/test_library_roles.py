@@ -15,7 +15,7 @@ class LibraryRolesTestCase(BaseLibraryTestCase):
     def test_if_association_admin_then_can_add_library_role(self):
         user = '17admin_bd-tek'
         self.login(user)
-        self.assertTrue(User.objects.get(pk=user).get_role(Association.objects.get(pk='bd-tek')).is_admin)
+        self.assertTrue(User.objects.get(pk=user).get_role('bd-tek').is_admin)
 
         self.assertFalse(Role.objects.get(pk=2).library)
         res = self.patch('/roles/2/', data={'library_permission': True})

@@ -60,7 +60,7 @@ def get_role_in_marketplace(request):
     # We have to use an association parameter to check the roles.
     if 'marketplace' in request.path and request.method == 'POST':
         if 'association' in request.data:
-            role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+            role = request.user.get_role(request.data['association'])
     else:
         marketplace = get_marketplace(request)
 

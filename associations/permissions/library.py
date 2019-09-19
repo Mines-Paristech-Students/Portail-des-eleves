@@ -102,7 +102,7 @@ class IfLibraryAdminThenCRUDElseR(BasePermission):
         # use an association parameter to check the roles.
         if 'library' in request.path and request.method == 'POST':
             if 'association' in request.data:
-                role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+                role = request.user.get_role(request.data['association'])
         else:
             library = get_library(request)
 
@@ -130,14 +130,14 @@ class IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD(BasePermission):
             if library_in_path.enabled:
                 return True
             else:
-                role = request.user.get_role(Association.objects.get(pk=library_in_path.association.id))
+                role = request.user.get_role(pk=library_in_path.association.id)
                 if role is not None:
                     return role.library
         else:
             # There was no library ID in the path. We have to look somewhere else.
             if 'library' in request.path and request.method == 'POST':
                 if 'association' in request.data:
-                    role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+                    role = request.user.get_role(request.data['association'])
                     if role is not None:
                         return role.library
 

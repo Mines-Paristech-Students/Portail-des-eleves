@@ -29,7 +29,7 @@ class ElectionViewSet(AssociationNestedViewSet):
         return Election.objects.filter(association=self.kwargs['association_pk'])
 
     def get_serializer_class(self):
-        role = self.request.user.get_role(association_pk=self.kwargs['association_pk'])
+        role = self.request.user.get_role(self.kwargs['association_pk'])
 
         if role and role.election:
             return ElectionAdminSerializer
