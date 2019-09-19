@@ -15,7 +15,7 @@ class MarketplaceRolesTestCase(BaseMarketPlaceTestCase):
     def test_if_association_admin_then_can_add_marketplace_role(self):
         user = '17admin_biero'
         self.login(user)
-        self.assertTrue(User.objects.get(pk=user).get_role(Association.objects.get(pk='biero')).is_admin)
+        self.assertTrue(User.objects.get(pk=user).get_role(pk='biero').is_admin)
 
         self.assertFalse(Role.objects.get(pk=2).marketplace)
         res = self.patch('/roles/2/', data={'marketplace_permission': True})

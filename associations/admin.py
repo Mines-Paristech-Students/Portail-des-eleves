@@ -4,7 +4,8 @@ from associations.models import Association, Role
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ("user", "association", "role", "rank", "page", "news", "marketplace", "library", "vote", "events")
+    list_display = ("user", "association", "role", "rank", "page", "news", "marketplace", "library", "election",
+                    "events")
     fieldsets = (
         (None, {
             'fields': ('user', 'association', 'role', 'rank')
