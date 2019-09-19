@@ -54,7 +54,7 @@ class ResultsPermission(permissions.BasePermission):
         return datetime.now(tz=timezone.utc) > election.ends_at
 
 
-class VotePermission(permissions.BasePermission):
+class BallotPermission(permissions.BasePermission):
     """
                        | Permissions |
         Allowed voters | C           |

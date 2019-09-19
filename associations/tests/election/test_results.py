@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 
-from associations.models import Election, Choice, Vote
+from associations.models import Election, Choice, Ballot
 from associations.tests.election.base_test_election import ALL_USERS, ALL_USERS_EXCEPT_ELECTION_BIERO, \
     BaseElectionTestCase
 
@@ -57,7 +57,7 @@ class ResultsTestCase(BaseElectionTestCase):
 
     def test_results_are_correctly_computed(self):
         def vote(vote_ids):
-            res = self.vote(pk, 'pdm', data={'choices': vote_ids})
+            self.vote(pk, 'pdm', data={'choices': vote_ids})
 
         def assertResults(expected_croissants, expected_raisins, expected_pommes):
             self.login('17election_pdm')
@@ -78,7 +78,7 @@ class ResultsTestCase(BaseElectionTestCase):
             'registered_voters': ALL_USERS,
             'starts_at': datetime(2019, 1, 1, tzinfo=timezone.utc),
             'ends_at': datetime.now(tz=timezone.utc) + timedelta(1),
-            'max_choices_per_vote': 2,
+            'max_choices_per_ballot': 2,
         }
 
         self.login('17election_pdm')

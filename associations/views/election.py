@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.response import Response
 
-from associations.models import Association, Election, Choice, Vote
-from associations.permissions import ElectionPermission, VotePermission, ResultsPermission
-from associations.serializers import ElectionSerializer, ElectionAdminSerializer, VoteSerializer
+from associations.models import Association, Election, Choice, Ballot
+from associations.permissions import ElectionPermission, BallotPermission, ResultsPermission
+from associations.serializers import ElectionSerializer, ElectionAdminSerializer, BallotSerializer
 from associations.views import AssociationNestedViewSet
 
 """
@@ -55,12 +55,12 @@ class ElectionViewSet(AssociationNestedViewSet):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class CreateVoteView(generics.CreateAPIView):
+class CreateBallotView(generics.CreateAPIView):
     """This view deals with the news filtered by subscriptions."""
 
-    queryset = Vote.objects.all()
-    serializer_class = VoteSerializer
-    permission_classes = (VotePermission,)
+    queryset = Ballot.objects.all()
+    serializer_class = BallotSerializer
+    permission_classes = (BallotPermission,)
 
     def get_election_or_404(self, **kwargs):
         request_association = Association.objects.filter(pk=kwargs.get('association_pk', None))
@@ -81,13 +81,13 @@ class CreateVoteView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Check if the new Vote object is valid.
+        # Check if the new Ballot object is valid.
         choice_names = [c[0] for c in Choice.objects.filter(election=election).values_list('name')]
         for choice in serializer.validated_data['choices']:
             if choice.name not in choice_names:
                 raise ValidationError('Invalid choices provided.')
 
-        if len(serializer.validated_data['choices']) > election.max_choices_per_vote:
+        if len(serializer.validated_data['choices']) > election.max_choices_per_ballot:
             raise ValidationError('Too many choices.')
 
         # Check if the election is active.

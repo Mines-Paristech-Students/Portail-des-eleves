@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from associations.models import User, Election, Choice, Vote
+from associations.models import User, Election, Choice, Ballot
 
 
 class ChoiceShortSerializer(serializers.ModelSerializer):
@@ -20,24 +20,24 @@ class ChoiceSerializer(serializers.ModelSerializer):
         fields = read_only_fields + ('name',)
 
 
-class VoteSerializer(serializers.ModelSerializer):
+class BallotSerializer(serializers.ModelSerializer):
     election = serializers.PrimaryKeyRelatedField(read_only=True)
     choices = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(),
                                                  many=True,
                                                  read_only=False)
 
     class Meta:
-        model = Vote
+        model = Ballot
         read_only_fields = ('id', 'election',)  # 'election' will be provided by the user of the serializer.
         fields = read_only_fields + ('choices',)
 
 
-class VoteShortSerializer(serializers.ModelSerializer):
+class BallotShortSerializer(serializers.ModelSerializer):
     election = serializers.PrimaryKeyRelatedField(read_only=True)
     choices = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
-        model = Vote
+        model = Ballot
         read_only_fields = ('id', 'election', 'choices',)
         fields = read_only_fields
 
@@ -50,7 +50,7 @@ class ElectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Election
-        read_only_fields = ('id', 'association', 'name', 'starts_at', 'ends_at', 'max_choices_per_vote', 'choices')
+        read_only_fields = ('id', 'association', 'name', 'starts_at', 'ends_at', 'max_choices_per_ballot', 'choices')
         fields = read_only_fields
 
 
@@ -69,10 +69,10 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Election
 
-        # The 'voters' and 'votes' fields are on purpose not included.
+        # The 'voters' and 'ballots' fields are on purpose not included.
         read_only_fields = ('id', 'association',)
         fields = read_only_fields + ('name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
-                                     'max_choices_per_vote')
+                                     'max_choices_per_ballot')
 
     def is_valid(self, raise_exception=False):
         """Check if the dates are consistent."""

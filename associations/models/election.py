@@ -10,7 +10,7 @@ from authentication.models import User
 
 class Election(models.Model):
     """
-        The Election class allows to carry a vote. It should always guarantee the anonymity of the voter.
+        The Election class allows to carry a ballot. It should always guarantee the anonymity of the voter.
     """
 
     id = models.AutoField(primary_key=True)
@@ -29,15 +29,15 @@ class Election(models.Model):
     starts_at = models.DateTimeField(null=False)
     ends_at = models.DateTimeField(null=False)
 
-    max_choices_per_vote = models.PositiveIntegerField(default=1,
-                                                       help_text='The number of choices allowed per vote.')
+    max_choices_per_ballot = models.PositiveIntegerField(default=1,
+                                                         help_text='The number of choices allowed per ballot.')
 
     @cached_property
     def results(self):
-        # First, we fetch all the votes, but by replacing them by the associated choice name.
+        # First, we fetch all the ballots, but by replacing them by the associated choice name.
         # We then wrap all of these choices into a Counter, which is a nice built-in object which will…
-        # count the votes for us.
-        return Counter([vote[0] for vote in self.votes.values_list('choices__name')])
+        # count the ballots for us.
+        return Counter([ballot[0] for ballot in self.ballots.values_list('choices__name')])
 
     @cached_property
     def is_active(self):
@@ -55,12 +55,12 @@ class Choice(models.Model):
     name = models.CharField(max_length=200)
 
 
-class Vote(models.Model):
+class Ballot(models.Model):
     id = models.AutoField(primary_key=True)
 
-    election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='votes')
-    choices = models.ManyToManyField(Choice, related_name='votes')
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='ballots')
+    choices = models.ManyToManyField(Choice, related_name='ballots')
 
     @cached_property
     def is_valid(self):  # Should always be true
-        return len(self.choices.count()) <= self.election.max_choices_per_vote
+        return len(self.choices.count()) <= self.election.max_choices_per_ballot

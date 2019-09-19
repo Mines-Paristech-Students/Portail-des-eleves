@@ -42,7 +42,7 @@ class ElectionTestCase(BaseElectionTestCase):
 
     def test_retrieved_data(self):
         all_fields = {'id', 'association', 'name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
-                      'max_choices_per_vote', 'voters', 'votes'}
+                      'max_choices_per_ballot', 'voters', 'votes'}
         fields_forbidden_to_simple = {'registered_voters', 'voters', 'votes'}
         fields_forbidden_to_election_admin = {'voters', 'votes'}
 
@@ -66,7 +66,7 @@ class ElectionTestCase(BaseElectionTestCase):
         'registered_voters': ['17bocquet', '17wan-fat'],
         'starts_at': datetime(2019, 5, 1, 00, 00, tzinfo=timezone.utc),
         'ends_at': datetime(2019, 5, 2, 00, 00, tzinfo=timezone.utc),
-        'max_choices_per_vote': 1,
+        'max_choices_per_ballot': 1,
     }
 
     inconsistent_election_data = {
@@ -75,14 +75,14 @@ class ElectionTestCase(BaseElectionTestCase):
         'registered_voters': ['17bocquet', '17wan-fat'],
         'starts_at': datetime(2020, 5, 1, 00, 00, tzinfo=timezone.utc),
         'ends_at': datetime(2019, 5, 2, 00, 00, tzinfo=timezone.utc),
-        'max_choices_per_vote': 1,
+        'max_choices_per_ballot': 1,
     }
 
     def assertInstanceEqualData(self, election, data):
         self.assertEqual(election.name, data['name'])
         self.assertEqual(election.starts_at, data['starts_at'])
         self.assertEqual(election.ends_at, data['ends_at'])
-        self.assertEqual(election.max_choices_per_vote, data['max_choices_per_vote'])
+        self.assertEqual(election.max_choices_per_ballot, data['max_choices_per_ballot'])
         self.assertEqual(set([v[0] for v in election.registered_voters.values_list('id')]),
                          set(data['registered_voters']))
         self.assertEqual(set([c[0] for c in election.choices.values_list('name')]),
@@ -124,7 +124,7 @@ class ElectionTestCase(BaseElectionTestCase):
         'registered_voters': ['17member_pdm', '17election_biero'],
         'starts_at': datetime(2019, 5, 1, 00, 00, tzinfo=timezone.utc),
         'ends_at': datetime(2019, 5, 2, 00, 00, tzinfo=timezone.utc),
-        'max_choices_per_vote': 1,
+        'max_choices_per_ballot': 1,
     }
 
     def test_if_not_election_admin_then_cannot_update_election(self):
