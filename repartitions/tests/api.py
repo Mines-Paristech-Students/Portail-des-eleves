@@ -1,5 +1,10 @@
 import json
+import threading
+import time
+from unittest.mock import patch
+
 from associations.tests.base_test import BaseTestCase
+from repartitions.models import Campaign, Group, Proposition
 
 
 class APITestCase(BaseTestCase):
@@ -238,3 +243,28 @@ class APITestCase(BaseTestCase):
 
             res = self.get("/repartitions/1/results/me")
             self.assertEqual(res.status_code, code)
+
+    @patch("repartitions.views.make_reparition")
+    def test_erases_groups_on_status_change(self, mocked_make_repartition):
+        campaign = Campaign.objects.get(pk=1)
+        proposition = Proposition.objects.get(pk=1)
+
+        def create_group(_):
+            group = Group(proposition=proposition, campaign=campaign)
+            group.save()
+
+        mocked_make_repartition.side_effect = create_group
+
+        for status in ("CLOSED", "OPEN"):
+            self.login("17bocquet")
+
+            self.patch("/repartitions/campaigns/1/", data={"status": "RESULTS"})
+
+            res = self.get("/repartitions/1/results/")
+            self.assertEqual(res.status_code, 200)
+            self.assertJSONEqual(res.content, [{"proposition": 1, "users": []}])
+
+            # Erase the group
+
+            self.patch("/repartitions/campaigns/1/", data={"status": status})
+            self.assertEqual(Group.objects.filter(campaign=campaign).count(), 0)

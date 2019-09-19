@@ -1,5 +1,4 @@
 from django.urls import path
-from rest_framework.routers import DefaultRouter
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
 from repartitions.views import CampaignView, UserCampaignView, WishesView, get_campaign_results, get_my_campaign_results

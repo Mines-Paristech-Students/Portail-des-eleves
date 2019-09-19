@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from repartitions.algorithm import make_reparition
-from repartitions.models import Campaign, UserCampaign, Wish, Proposition
+from repartitions.models import Campaign, UserCampaign, Wish, Proposition, Group
 from repartitions.permissions import CanManageCampaign, user_in_campaign, UserCampaignPermission
 from repartitions.serializers import CampaignSerializer, UserCampaignAdminSerializer, \
     WishSerializer, GroupAdminSerializer, GroupPublicSerializer, UserCampaignPublicSerializer
@@ -20,8 +20,6 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
     permission_classes = (CanManageCampaign,)
-
-    # todo : erase groups when setting the status to OPEN (and test it)
 
     def create(self, request, *args, **kwargs):
         request.data["manager"] = request.user.id
@@ -39,6 +37,18 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+        campaign = serializer.instance
+
+        if campaign.status != "RESULTS":
+            Group.objects.filter(campaign=campaign).delete()
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        else:
+            make_reparition(campaign)
 
 
 class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -141,10 +151,7 @@ def get_campaign_results(request, *args, **kwargs):
     if request.user != campaign.manager or campaign.status == "OPEN":
         raise PermissionDenied()
 
-    groups = campaign.groups.all()
-    if len(groups) == 0:
-        groups = make_reparition(campaign)
-    serializer = GroupAdminSerializer(instance=groups, many=True)
+    serializer = GroupAdminSerializer(instance=campaign.groups.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)
 
@@ -155,9 +162,5 @@ def get_my_campaign_results(request, *args, **kwargs):
     if campaign.status != "RESULTS":
         raise PermissionDenied()
 
-    groups = campaign.groups.all()
-    if len(groups) == 0:
-        groups = make_reparition(campaign) # todo : put a lock somehow to make sure two people won't trigger the repartition
-    serializer = GroupPublicSerializer(instance=groups, many=True)
-
+    serializer = GroupPublicSerializer(instance=campaign.groups.all(), many=True)
     return JsonResponse(serializer.data, safe=False)
