@@ -68,13 +68,13 @@ class LoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ("id", "user", "status", "loanable",
-                  "expected_return_date", "loan_date", "real_return_date")
+        fields = ('id', 'user', 'status', 'loanable',
+                  'expected_return_date', 'loan_date', 'real_return_date')
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
-        res["library"] = instance.loanable.library.id
-        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
+        res['library'] = instance.loanable.library.id
+        res['loanable'] = LoanableSerializer().to_representation(instance.loanable)
         return res
 
 
@@ -91,7 +91,7 @@ class LoanableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loanable
-        fields = ("id", "name", "description", "image", "comment", "library")
+        fields = ('id', 'name', 'description', 'image', 'comment', 'library')
 
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
@@ -101,11 +101,16 @@ class LoanableSerializer(serializers.ModelSerializer):
 
         return res
 
+    def update(self, instance, validated_data):
+        if 'library' in validated_data:
+            validated_data.pop('library')
+        return super(LoanableSerializer, self).update(instance, validated_data)
+
 
 class LibraryShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Library
-        fields = ('id', 'enabled', "association")
+        fields = ('id', 'enabled', 'association')
 
 
 class LibrarySerializer(serializers.ModelSerializer):
@@ -113,7 +118,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Library
-        fields = ("id", "enabled", "association", "loanables")
+        fields = ('id', 'enabled', 'association', 'loanables')
 
     def create(self, validated_data):
         """Create a new instance of Library based upon validated_data."""

@@ -115,6 +115,14 @@ class LoanableTestCase(BaseLibraryTestCase):
         self.assertEqual(Loanable.objects.get(pk=2).name, data['name'])
         self.assertEqual(Loanable.objects.get(pk=2).description, data['description'])
 
+    def test_cannot_update_association_field(self):
+        self.login('17library_biero')
+        loanable_before = Loanable.objects.get(pk=2)
+        data = {'pk': 2, 'association': 'pdm'}
+        res = self.patch('/associations/loanables/2/', data)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(loanable_before.association.pk, 'biero')
+
     ##########
     # DELETE #
     ##########

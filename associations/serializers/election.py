@@ -90,6 +90,9 @@ class ElectionSerializer(serializers.ModelSerializer):
     def update(self, election, validated_data):
         self.validate_against_instance(election, validated_data)
 
+        if 'association' in validated_data:
+            validated_data.pop('association')
+
         if 'registered_voters' in validated_data:
             # Replace the registered voters if provided.
             registered_voters = validated_data.pop('registered_voters')

@@ -29,6 +29,9 @@ class EventSerializer(serializers.ModelSerializer):
         return super(EventSerializer, self).is_valid(raise_exception)
 
     def update(self, instance, validated_data):
+        if 'association' in validated_data:
+            validated_data.pop('association')
+
         # If the data is in validated_data, return it; otherwise, if the field is in instance, return it; otherwise,
         # return None.
         starts_at = validated_data.get('starts_at', getattr(instance, 'starts_at', None))

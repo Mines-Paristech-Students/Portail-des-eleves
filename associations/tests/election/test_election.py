@@ -164,6 +164,14 @@ class ElectionTestCase(BaseElectionTestCase):
             set(data['registered_voters'])
         )
 
+    def test_cannot_update_association_field(self):
+        self.login('17election_biero')
+        election_before = Election.objects.get(pk=0)
+        data = {'pk': 0, 'association': 'pdm'}
+        res = self.update(data['pk'], 'biero', data=data)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(election_before.association.pk, 'biero')
+
     ###########
     # DESTROY #
     ###########

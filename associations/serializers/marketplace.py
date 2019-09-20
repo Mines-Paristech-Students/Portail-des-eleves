@@ -62,6 +62,12 @@ class ProductSerializer(ModelSerializer):
         model = Product
         fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
 
+    def update(self, instance, validated_data):
+        if 'marketplace' in validated_data:
+            validated_data.pop('marketplace')
+
+        return super(ProductSerializer, self).update(instance, validated_data)
+
 
 class CreateFundingSerializer(ModelSerializer):
     user = PrimaryKeyRelatedField(queryset=User.objects.all())

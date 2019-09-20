@@ -116,6 +116,14 @@ class ProductTestCase(BaseMarketPlaceTestCase):
         self.assertEqual(Product.objects.get(pk=5).name, data['name'])
         self.assertEqual(Product.objects.get(pk=5).description, data['description'])
 
+    def test_cannot_update_association_field(self):
+        self.login('17market_pdm')
+        product_before = Product.objects.get(pk=5)
+        data = {'pk': 5, 'association': 'pdm'}
+        res = self.patch('/associations/products/5/', data)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(product_before.association.pk, 'biero')
+
     ##########
     # DELETE #
     ##########
