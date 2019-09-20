@@ -5,143 +5,106 @@ from associations.models import Association, Library, Loan, Loanable
 from associations.permissions.base_permissions import extract_id
 
 
-def get_library(request):
+class LibraryPermission(BasePermission):
     """
-        Parse the URL and the POST data to get the library related to the request.\n
-        For instance, when GETting loanables/5/, the method will return the library of the loanable which ID is 5.\n
-        Or, if POSTing data to library/ (to create a new library), the method will return the content of the id field
-        of the posted data.
+                      | Enabled | Disabled |
+        Library admin | CRUD    | CRUD     |
+        User          | R       |          |
     """
-    if request.user is not None:
-        library_id = None
 
-        try:
-            if 'library' in request.data:
-                library_id = request.data['library']
+    message = 'You are not allowed to edit this library.'
 
-            if 'loanable' in request.data:
-                library_id = Loanable.objects.get(id=request.data['loanable']).library.id
+    def has_permission(self, request, view):
+        # Only check the POST method, where we have to go through the POSTed data to find a reference to an association.
+        # If the association does not exist, return True so the view can handle the error.
 
-            if 'loans' in request.path:
-                loan_id = extract_id('loans', request.path)
-                if loan_id:
-                    library_id = Loan.objects.get(id=loan_id).loanable.library.id
+        if request.method in ('POST',):
+            association_pk = request.data.get('association', None)
+            association_query = Association.objects.filter(pk=association_pk)
 
-            if 'loanables' in request.path:
-                loanable_id = extract_id('loanables', request.path)
-                if loanable_id:
-                    library_id = Loanable.objects.get(id=loanable_id).library.id
+            if association_query.exists():
+                role = request.user.get_role(association_query[0])
+                return role and role.library
 
-            if 'library' in request.path:
-                library_id = extract_id('library', request.path)
-        except ObjectDoesNotExist:
-            pass
+        return True
 
-        if library_id is not None:
-            library = None
+    def has_object_permission(self, request, view, library):
+        role = request.user.get_role(library.association)
 
-            try:
-                library = Library.objects.get(id=library_id)
-            except ObjectDoesNotExist:
-                pass
+        if role and role.library:  # Library administrator.
+            return True
+        else:
+            return library.enabled and request.method in SAFE_METHODS
 
-            return library
 
-    return None
+class LoanablePermission(BasePermission):
+    """
+                      | Enabled | Disabled |
+        Library admin | CRUD    | CRUD     |
+        User          | R       |          |
+    """
+
+    message = 'You are not allowed to edit this loanable.'
+
+    def has_permission(self, request, view):
+        # Only check the POST method, where we have to go through the POSTed data to find a reference to a Library.
+        # If the library does not exist, return True so the view can handle the error.
+
+        if request.method in ('POST',):
+            library_pk = request.data.get('library', None)
+            library_query = Library.objects.filter(pk=library_pk)
+
+            if library_query.exists():
+                role = request.user.get_role(library_query[0].association)
+                return role and role.library
+
+        return True
+
+    def has_object_permission(self, request, view, loanable):
+        role = request.user.get_role(loanable.library.association)
+
+        if role and role.library:  # Library administrator.
+            return True
+        else:
+            return loanable.library.enabled and request.method in SAFE_METHODS
 
 
 class LoansPermission(BasePermission):
     """
-               | Enabled | Disabled | Not found |\n
-        Admin  | CRU     | CRU      | R         |\n
-        Simple | CRU     | R        | R         |
+               | Library enabled | Library disabled |
+        Admin  | CRU             | CRU              |
+        Simple | CRU             | R                |
+
+        An user can only read and update their own loans in enabled libraries.
     """
 
     message = 'You are not allowed to edit this loan.'
 
     def has_permission(self, request, view):
+        # Forbid the DELETE method and check the POST method, where we have to go through the POSTed data to find a
+        # reference to a Loanable.
+        # If the loanable does not exist, return True so the view can handle the error.
+
         if request.method in ('DELETE',):
             self.message = 'Loans cannot be deleted.'
             return False
+        elif request.method in ('POST',):
+            loanable_pk = request.data.get('loanable', None)
+            loanable_query = Loanable.objects.filter(pk=loanable_pk)
 
-        library = get_library(request)
-        if not library:
-            # If the library could not be found, give access to the safe methods.
-            if request.method in SAFE_METHODS:
-                return True
-        else:
-            role = request.user.get_role(library.association)
-
-            if role and role.library:
-                # Library administrator.
-                return True
-            else:
-                if library.enabled:
-                    return True
-                else:
-                    return request.method in SAFE_METHODS
-
-        return False
-
-
-class IfLibraryAdminThenCRUDElseR(BasePermission):
-    """
-        Every user has the read permission.\n
-        An user has the CRUD permissions iff the user is a library administrator of the edited library.
-    """
-
-    message = 'You are not allowed to edit this library because you are not an administrator of this library.'
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        role = None
-
-        # Tricky case: when one creates a new library. In that case, the library object does not exist yet. We have to
-        # use an association parameter to check the roles.
-        if 'library' in request.path and request.method == 'POST':
-            if 'association' in request.data:
-                role = request.user.get_role(request.data['association'])
-        else:
-            library = get_library(request)
-
-            if library:
+            if loanable_query.exists():
+                library = loanable_query[0].library
                 role = request.user.get_role(library.association)
 
-        if role is not None:
-            return role.library
+                # Either the library is enabled or the user is a library administrator.
+                return library.enabled or (role and role.library)
 
-        return False
+        return True
 
+    def has_object_permission(self, request, view, loan):
+        role = request.user.get_role(loan.loanable.library.association)
 
-class IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD(BasePermission):
-    """
-        If the library is enabled, every user has every permission.\n
-        If the library is disabled, an user has the write permission iff the user is a library administrator of the
-        edited library.
-    """
-    message = 'You are not allowed to view this library because it is disabled.'
-
-    def has_permission(self, request, view):
-        library_in_path = get_library(request)  # Refactor: what we really want is the role.
-
-        if library_in_path:
-            if library_in_path.enabled:
-                return True
-            else:
-                role = request.user.get_role(pk=library_in_path.association.id)
-                if role is not None:
-                    return role.library
+        if role and role.library:  # Library administrator.
+            return True
         else:
-            # There was no library ID in the path. We have to look somewhere else.
-            if 'library' in request.path and request.method == 'POST':
-                if 'association' in request.data:
-                    role = request.user.get_role(request.data['association'])
-                    if role is not None:
-                        return role.library
-
-            # The library could not be found. Thus, if the method is safe, give the permission.
-            if request.method in SAFE_METHODS:
-                return True
-        return False
+            return loan.loanable.library.enabled and loan.user == request.user

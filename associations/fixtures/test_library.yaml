@@ -381,7 +381,7 @@
 - model: associations.loan
   pk: 29
   fields:
-    loanable: 1
+    loanable: 2
     user: 17wan-fat
     loan_date: '2018-03-04T00:00:00+00:00'
     expected_return_date: '2018-03-11T00:00:00+00:00'

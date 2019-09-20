@@ -44,6 +44,7 @@ class EventsTestCase(BaseEventsTestCase):
     ##########
 
     event = {
+        'association': 'biero',
         'name': 'Biéro pas loose',
         'description': 'On y croit',
         'participants': ['17events_biero', '17admin_pdm'],
@@ -53,6 +54,7 @@ class EventsTestCase(BaseEventsTestCase):
     }
 
     inconsistent_event = {
+        'association': 'biero',
         'name': 'Biéro pas loose',
         'description': 'On y croit',
         'participants': ['17events_biero', '17admin_pdm'],
@@ -127,6 +129,14 @@ class EventsTestCase(BaseEventsTestCase):
         self.assertStatusCode(res, 200)
         self.assertSetEqual(set([x['participants'] for x in Event.objects.filter(pk=0).values('participants')]),
                             set(data['participants']))
+
+    def test_cannot_update_association_field(self):
+        self.login('17events_biero')
+        events_before = Event.objects.get(pk=0)
+        data = {'pk': 0, 'association': 'pdm'}
+        res = self.update(data['pk'], 'biero', data=data)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(events_before.association.pk, 'biero')
 
     ###########
     # DESTROY #

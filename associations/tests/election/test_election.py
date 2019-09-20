@@ -43,24 +43,20 @@ class ElectionTestCase(BaseElectionTestCase):
     def test_retrieved_data(self):
         all_fields = {'id', 'association', 'name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
                       'max_choices_per_ballot', 'voters', 'votes'}
-        fields_forbidden_to_simple = {'registered_voters', 'voters', 'votes'}
-        fields_forbidden_to_election_admin = {'voters', 'votes'}
+        forbidden_fields = {'voters', 'votes'}
 
         for user in ALL_USERS:
             self.login(user)
             res = self.retrieve(association_id='biero', pk=0)
             self.assertStatusCode(res, 200)
-
-            if user == '17election_biero':
-                self.assertSetEqual(set(res.data.keys()), all_fields - fields_forbidden_to_election_admin)
-            else:
-                self.assertSetEqual(set(res.data.keys()), all_fields - fields_forbidden_to_simple)
+            self.assertSetEqual(set(res.data.keys()), all_fields - forbidden_fields)
 
     ##########
     # CREATE #
     ##########
 
     election_data = {
+        'association': 'biero',
         'name': 'La meilleure bière',
         'choices': [{'name': 'La Kro'}, {'name': 'La Despe'}],
         'registered_voters': ['17bocquet', '17wan-fat'],
@@ -70,6 +66,7 @@ class ElectionTestCase(BaseElectionTestCase):
     }
 
     inconsistent_election_data = {
+        'association': 'biero',
         'name': 'La meilleure bière',
         'choices': [{'name': 'La Kro'}, {'name': 'La Despe'}],
         'registered_voters': ['17bocquet', '17wan-fat'],
@@ -131,7 +128,7 @@ class ElectionTestCase(BaseElectionTestCase):
         for user in ALL_USERS_EXCEPT_ELECTION_BIERO:
             self.login(user)
             res = self.update(self.update_election_data['pk'], data=self.update_election_data, association_id='biero')
-            self.assertStatusCode(res, 403)
+            self.assertStatusCodeIn(res, [403, 404])
             self.assertNotEqual(Election.objects.get(pk=self.update_election_data['pk']).name,
                                 self.update_election_data['name'])
 
@@ -167,6 +164,14 @@ class ElectionTestCase(BaseElectionTestCase):
             set(data['registered_voters'])
         )
 
+    def test_cannot_update_association_field(self):
+        self.login('17election_biero')
+        election_before = Election.objects.get(pk=0)
+        data = {'pk': 0, 'association': 'pdm'}
+        res = self.update(data['pk'], 'biero', data=data)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(election_before.association.pk, 'biero')
+
     ###########
     # DESTROY #
     ###########
@@ -175,7 +180,7 @@ class ElectionTestCase(BaseElectionTestCase):
         for user in ALL_USERS_EXCEPT_ELECTION_BIERO:
             self.login(user)
             res = self.destroy(0, association_id='biero')
-            self.assertStatusCode(res, 403)
+            self.assertStatusCodeIn(res, [403, 404])
             self.assertTrue(Election.objects.filter(pk=0).exists())
 
     def test_if_election_admin_then_can_destroy_election(self):

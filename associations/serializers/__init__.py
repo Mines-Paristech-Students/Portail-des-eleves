@@ -1,5 +1,5 @@
 from associations.serializers.association import *
-from associations.serializers.election import ElectionSerializer, ElectionAdminSerializer, BallotSerializer
+from associations.serializers.election import ElectionSerializer, BallotSerializer
 from associations.serializers.events import EventSerializer
 from associations.serializers.library import *
 from associations.serializers.marketplace import *

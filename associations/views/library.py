@@ -7,8 +7,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
-from associations.permissions import IfLibraryAdminThenCRUDElseR, LoansPermission, \
-    IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD
+from associations.permissions import LibraryPermission, LoanablePermission, LoansPermission
 from associations.serializers import LibrarySerializer, CreateLoanSerializer, UpdateLoanSerializer, LoanSerializer, \
     LoanableSerializer
 
@@ -16,13 +15,21 @@ from associations.serializers import LibrarySerializer, CreateLoanSerializer, Up
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
-    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+    permission_classes = (LibraryPermission,)
+
+    def get_queryset(self):
+        """The user has access to the enabled libraries and to every library they are a library administrator of."""
+
+        # The libraries for which the user is library administrator.
+        libraries_id = [role.association.library.id for role in self.request.user.roles.all() if role.library]
+
+        return Library.objects.filter(Q(enabled=True) | Q(id__in=libraries_id))
 
 
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
     serializer_class = LoanableSerializer
-    permission_classes = (IfLibraryAdminThenCRUDElseR, IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD)
+    permission_classes = (LoanablePermission,)
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ("library__id",)
@@ -31,7 +38,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
         library they are a library administrator of."""
 
-        # The library for which the user is library administrator.
+        # The libraries for which the user is library administrator.
         libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
 
         return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))

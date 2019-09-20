@@ -1,16 +1,18 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from associations.models import User, Event
+from associations.models import Association, User, Event
 
 
 class EventSerializer(serializers.ModelSerializer):
+    association = serializers.PrimaryKeyRelatedField(queryset=Association.objects.all(), read_only=False)
     participants = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, read_only=False)
 
     class Meta:
         model = Event
-        read_only_fields = ('id', 'association')
-        fields = read_only_fields + ('name', 'description', 'participants', 'starts_at', 'ends_at', 'place')
+        read_only_fields = ('id',)
+        fields = read_only_fields + ('association', 'name', 'description', 'participants', 'starts_at', 'ends_at',
+                                     'place')
 
     def is_valid(self, raise_exception=False):
         """Check if the dates are consistent."""
@@ -27,6 +29,9 @@ class EventSerializer(serializers.ModelSerializer):
         return super(EventSerializer, self).is_valid(raise_exception)
 
     def update(self, instance, validated_data):
+        if 'association' in validated_data:
+            validated_data.pop('association')
+
         # If the data is in validated_data, return it; otherwise, if the field is in instance, return it; otherwise,
         # return None.
         starts_at = validated_data.get('starts_at', getattr(instance, 'starts_at', None))

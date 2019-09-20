@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from associations.models import User, Election, Choice, Ballot
+from associations.models import Association, User, Election, Choice, Ballot
 
 
 class ChoiceShortSerializer(serializers.ModelSerializer):
@@ -43,18 +43,6 @@ class BallotShortSerializer(serializers.ModelSerializer):
 
 
 class ElectionSerializer(serializers.ModelSerializer):
-    """Read-only, restricted serializer for simple users."""
-
-    association = serializers.PrimaryKeyRelatedField(read_only=True)
-    choices = ChoiceShortSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Election
-        read_only_fields = ('id', 'association', 'name', 'starts_at', 'ends_at', 'max_choices_per_ballot', 'choices')
-        fields = read_only_fields
-
-
-class ElectionAdminSerializer(serializers.ModelSerializer):
     """This serializer gives access to the registered_voters and choices fields.
 
     When updating two nested fields registered_voters and choices, the old content will be REPLACED by the new content.
@@ -62,7 +50,7 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
       * choices must be a list of dictionaries {'name': 'My Choice'}.
     """
 
-    association = serializers.PrimaryKeyRelatedField(read_only=True)
+    association = serializers.PrimaryKeyRelatedField(queryset=Association.objects.all(), read_only=False)
     registered_voters = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True, read_only=False)
     choices = ChoiceSerializer(many=True, read_only=False)
 
@@ -70,8 +58,8 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
         model = Election
 
         # The 'voters' and 'ballots' fields are on purpose not included.
-        read_only_fields = ('id', 'association',)
-        fields = read_only_fields + ('name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
+        read_only_fields = ('id',)
+        fields = read_only_fields + ('association', 'name', 'choices', 'registered_voters', 'starts_at', 'ends_at',
                                      'max_choices_per_ballot')
 
     def is_valid(self, raise_exception=False):
@@ -86,7 +74,7 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
         if self._errors and raise_exception:
             raise ValidationError(self._errors)
 
-        return super(ElectionAdminSerializer, self).is_valid(raise_exception)
+        return super(ElectionSerializer, self).is_valid(raise_exception)
 
     @classmethod
     def validate_against_instance(cls, instance, validated_data):
@@ -101,6 +89,9 @@ class ElectionAdminSerializer(serializers.ModelSerializer):
 
     def update(self, election, validated_data):
         self.validate_against_instance(election, validated_data)
+
+        if 'association' in validated_data:
+            validated_data.pop('association')
 
         if 'registered_voters' in validated_data:
             # Replace the registered voters if provided.

@@ -52,7 +52,7 @@ class BallotTestCase(BaseElectionTestCase):
 
                 length_before = Ballot.objects.count()
                 res = self.vote(0, 'biero', data=self.invalid_ballot_data_for_0)
-                self.assertStatusCode(res, 400)
+                self.assertStatusCode(res, 400, user_msg=user)
                 self.assertEqual(Ballot.objects.count(), length_before)
 
     def test_if_logged_in_and_not_registered_then_cannot_vote(self):
@@ -62,7 +62,7 @@ class BallotTestCase(BaseElectionTestCase):
 
                 length_before = Ballot.objects.count()
                 res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
-                self.assertStatusCode(res, 403)
+                self.assertStatusCodeIn(res, [403, 404])
                 self.assertEqual(Ballot.objects.count(), length_before)
 
     def test_if_logged_in_and_registered_then_cannot_vote_twice(self):
@@ -86,7 +86,7 @@ class BallotTestCase(BaseElectionTestCase):
 
                 length_before = Ballot.objects.count()
                 res = self.vote(1, 'pdm', data=self.valid_ballot_data_for_1)
-                self.assertStatusCode(res, 400)
+                self.assertStatusCode(res, 400, user_msg=user)
                 self.assertEqual(Ballot.objects.count(), length_before)
 
     def test_if_election_inactive_then_cannot_vote(self):
@@ -99,5 +99,5 @@ class BallotTestCase(BaseElectionTestCase):
 
                 length_before = Ballot.objects.count()
                 res = self.vote(10, 'biero', data={'choices': [10]})
-                self.assertStatusCode(res, 403)
+                self.assertStatusCodeIn(res, [403, 404])
                 self.assertEqual(Ballot.objects.count(), length_before)

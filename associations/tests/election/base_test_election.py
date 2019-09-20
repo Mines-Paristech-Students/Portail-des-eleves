@@ -22,49 +22,49 @@ class BaseElectionTestCase(BaseTestCase):
 
     def endpoint_results(self, pk, association_id):
         """Return the endpoint associated to the results action."""
-        return f'/associations/{association_id}/elections/{pk}/results/'
+        return f'/associations/elections/{pk}/results/'
 
     def results(self, pk, association_id):
         return self.get(self.endpoint_results(pk, association_id))
 
     def endpoint_vote(self, pk, association_id):
         """Return the endpoint associated to the vote action."""
-        return f'/associations/{association_id}/elections/{pk}/vote/'
+        return f'/associations/elections/{pk}/vote/'
 
     def vote(self, pk, association_id, data=None, format='json', content_type='application/json'):
         return self.post(self.endpoint_vote(pk, association_id), data, format, content_type)
 
     def endpoint_list(self, association_id):
         """Return the endpoint associated to the list election action."""
-        return f'/associations/{association_id}/elections/'
+        return f'/associations/elections/'
 
     def list(self, association_id):
         return self.get(self.endpoint_list(association_id))
 
     def endpoint_retrieve(self, pk, association_id):
         """Return the endpoint associated to the retrieve action."""
-        return f'/associations/{association_id}/elections/{pk}/'
+        return f'/associations/elections/{pk}/'
 
     def retrieve(self, pk, association_id):
         return self.get(self.endpoint_retrieve(pk, association_id))
 
     def endpoint_create(self, association_id):
         """Return the endpoint associated to the create action."""
-        return f'/associations/{association_id}/elections/'
+        return f'/associations/elections/'
 
     def create(self, association_id, data=None, format='json', content_type='application/json'):
         return self.post(self.endpoint_create(association_id), data, format, content_type)
 
     def endpoint_update(self, pk, association_id):
         """Return the endpoint associated to the update action."""
-        return f'/associations/{association_id}/elections/{pk}/'
+        return f'/associations/elections/{pk}/'
 
     def update(self, pk, association_id, data=None, format='json', content_type='application/json'):
         return self.patch(self.endpoint_update(pk, association_id), data, format, content_type)
 
     def endpoint_destroy(self, pk, association_id):
         """Return the endpoint associated to the destroy action."""
-        return f'/associations/{association_id}/elections/{pk}/'
+        return f'/associations/elections/{pk}/'
 
     def destroy(self, pk, association_id, data='', format=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk, association_id), data, format, content_type)
