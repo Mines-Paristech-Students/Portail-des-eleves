@@ -74,7 +74,6 @@ class Role(models.Model):
     filesystem_permission = models.BooleanField(default=False)
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
-    news_permission = models.BooleanField(default=False)
     page_permission = models.BooleanField(default=False)
 
     @cached_property
@@ -96,10 +95,6 @@ class Role(models.Model):
     @cached_property
     def marketplace(self):
         return self.marketplace_permission and not self.is_archived
-
-    @cached_property
-    def news(self):
-        return self.news_permission and not self.is_archived
 
     @cached_property
     def page(self):

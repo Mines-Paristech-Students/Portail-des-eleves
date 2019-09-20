@@ -1,4 +1,4 @@
-from associations.models import Association, Page
+from associations.models import Page
 from associations.serializers import PageSerializer
 from associations.permissions import PagePermission
 from associations.views import AssociationNestedViewSet
@@ -9,11 +9,10 @@ class PageViewSet(AssociationNestedViewSet):
     serializer_class = PageSerializer
     permission_classes = (PagePermission,)
 
-    def get_queryset(self):
-        return Page.objects.filter(association=self.kwargs['association_pk'])
+    def perform_create(self, serializer):
+        # Send the current user to the serializer so they can be added to the authors.
+        serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
-
-    def perform_create(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        # Send the current user to the serializer so they can be added to the authors.
+        serializer.save(author=self.request.user)
