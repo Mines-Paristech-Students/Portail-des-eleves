@@ -11,7 +11,7 @@ import rer.urls
 import subscriptions.urls
 
 urlpatterns = [
-    path('', include(associations.urls)),
+    path('associations/', include(associations.urls)),
     path('', include(authentication.urls)),
     path('chat/', include(chat.urls)),
     path('forum/', include(forum.urls)),
