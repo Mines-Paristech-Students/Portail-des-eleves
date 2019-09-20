@@ -44,6 +44,7 @@ class EventsTestCase(BaseEventsTestCase):
     ##########
 
     event = {
+        'association': 'biero',
         'name': 'Biéro pas loose',
         'description': 'On y croit',
         'participants': ['17events_biero', '17admin_pdm'],
@@ -53,6 +54,7 @@ class EventsTestCase(BaseEventsTestCase):
     }
 
     inconsistent_event = {
+        'association': 'biero',
         'name': 'Biéro pas loose',
         'description': 'On y croit',
         'participants': ['17events_biero', '17admin_pdm'],
