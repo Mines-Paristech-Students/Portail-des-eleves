@@ -1,33 +1,43 @@
 from datetime import datetime, timezone
 
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 
-from associations.models import Association, Election
+from associations.models import Association
 
 
 class ElectionPermission(permissions.BasePermission):
     """
-                       | Permissions |
-        Election admin | CRUD        |
-        Simple         | R           |
+                        | Permissions |
+        Election admin  | CRUD        |
+        User            | R           |
 
-        This permission SHOULD NOT handle the endpoints /vote/ and /results/.
+        From our point of view, no election should be hidden to any user of the site. So, even if some users are not %
+        allowed to vote, they are still allowed to see the elections, including the choices, the allowed voters, and
+        the results when the election is over.
+
+        This permission DOES NOT handle the endpoints /vote/ and /results/.
     """
 
     message = 'You are not allowed to edit this election.'
 
     def has_permission(self, request, view):
-        try:
-            association = Association.objects.get(pk=view.kwargs['association_pk'])
-        except ObjectDoesNotExist:
-            # The association does not exist, return True so the view can raise a 404.
-            return True
+        # Only check the POST method, where we have to go through the POSTed data to find a reference to an association.
+        # If the association does not exist, return True so the view can handle the error.
 
-        role = request.user.get_role(association)
+        if request.method in ('POST',):
+            association_pk = request.data.get('association', None)
+            association_query = Association.objects.filter(pk=association_pk)
 
-        if role and role.election:
-            # Election administrator.
+            if association_query.exists():
+                role = request.user.get_role(association_query[0])
+                return role and role.election
+
+        return True
+
+    def has_object_permission(self, request, view, election):
+        role = request.user.get_role(election.association)
+
+        if role and role.election:  # Election administrator.
             return True
         else:
             return request.method in permissions.SAFE_METHODS
@@ -64,4 +74,13 @@ class BallotPermission(permissions.BasePermission):
     message = 'You are not allowed to vote to this election.'
 
     def has_permission(self, request, view):
-        return request.method in ('POST',)
+        if request.method not in ('POST',):
+            return False
+
+        election_pk = view.kwargs.get('election_pk', None)
+        election_query = Association.objects.filter(pk=election_pk)
+
+        if election_query.exists():
+            return request.user.allowed_elections.filter(id=election_query[0].id).exists()
+
+        return True

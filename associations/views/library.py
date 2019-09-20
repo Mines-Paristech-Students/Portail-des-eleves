@@ -17,6 +17,14 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = LibrarySerializer
     permission_classes = (LibraryPermission,)
 
+    def get_queryset(self):
+        """The user has access to the enabled libraries and to every library they are a library administrator of."""
+
+        # The libraries for which the user is library administrator.
+        libraries_id = [role.association.library.id for role in self.request.user.roles.all() if role.library]
+
+        return Library.objects.filter(Q(enabled=True) | Q(id__in=libraries_id))
+
 
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
@@ -30,7 +38,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
         library they are a library administrator of."""
 
-        # The library for which the user is library administrator.
+        # The libraries for which the user is library administrator.
         libraries = [role.association.library for role in self.request.user.roles.all() if role.library]
 
         return Loanable.objects.filter(Q(library__enabled=True) | Q(library__in=libraries))

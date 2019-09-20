@@ -73,6 +73,7 @@ class ResultsTestCase(BaseElectionTestCase):
             self.assertEqual(pommes, expected_pommes)
 
         election_data = {
+            'association': 'pdm',
             'name': 'Vos viennoiseries préférées',
             'choices': [{'name': 'Croissant'}, {'name': 'Pain aux raisins'}, {'name': 'Chausson aux pommes'}],
             'registered_voters': ALL_USERS,
@@ -82,7 +83,7 @@ class ResultsTestCase(BaseElectionTestCase):
         }
 
         self.login('17election_pdm')
-        self.create('pdm', election_data)
+        self.assertStatusCode(self.create('pdm', election_data), 201)
 
         pk = Election.objects.last().id
         croissant_id = Choice.objects.get(name='Croissant').id

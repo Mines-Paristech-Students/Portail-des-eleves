@@ -1,55 +1,33 @@
-from rest_framework import generics, status
+from django.db.models import Q
+
+from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.response import Response
 
-from associations.models import Association, Election, Choice, Ballot
+from associations.models import Election, Choice, Ballot
 from associations.permissions import ElectionPermission, BallotPermission, ResultsPermission
-from associations.serializers import ElectionSerializer, ElectionAdminSerializer, BallotSerializer
-from associations.views import AssociationNestedViewSet
+from associations.serializers import ElectionSerializer, BallotSerializer
 
 """
     Endpoints:
-        * List:     GET     /associations/bde/elections/
-        * Retrieve: GET     /associations/bde/elections/1/
-        * Create:   POST    /associations/bde/elections/1/
-        * Update:   PATCH   /associations/bde/elections/1/
-        * Destroy:  DELETE  /associations/bde/elections/1/
-        * Vote:     POST    /associations/bde/elections/1/vote/
-        * Results:  GET     /associations/bde/elections/1/results/
+        * List elections:               GET     /associations/elections/
+        * Retrieve an election:         GET     /associations/elections/1/
+        * Create an election:           POST    /associations/elections/1/
+        * Update an election:           PATCH   /associations/elections/1/
+        * Destroy an election:          DELETE  /associations/elections/1/
+        * Vote to an election:          POST    /associations/elections/1/vote/
+        * Results of an election:       GET     /associations/elections/1/results/
 """
 
 
-class ElectionViewSet(AssociationNestedViewSet):
+class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
     serializer_class = ElectionSerializer
     permission_classes = (ElectionPermission,)
 
-    def get_queryset(self):
-        return Election.objects.filter(association=self.kwargs['association_pk'])
-
-    def get_serializer_class(self):
-        role = self.request.user.get_role(self.kwargs['association_pk'])
-
-        if role and role.election:
-            return ElectionAdminSerializer
-        else:
-            return ElectionSerializer
-
-    def get_permissions(self):
-        if self.action in ('results',):
-            return ResultsPermission(),
-        else:
-            return ElectionPermission(),
-
-    def perform_create(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
-
-    def perform_update(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
-
-    @action(detail=True, methods=('get',))
-    def results(self, request, pk, association_pk):
+    @action(detail=True, methods=('get',), permission_classes=(ResultsPermission,))
+    def results(self, *args, **kwargs):
         election = self.get_object()
         data = {'election': election.id, 'results': election.results}
         return Response(data=data, status=status.HTTP_200_OK)
@@ -63,12 +41,8 @@ class CreateBallotView(generics.CreateAPIView):
     permission_classes = (BallotPermission,)
 
     def get_election_or_404(self, **kwargs):
-        request_association = Association.objects.filter(pk=kwargs.get('association_pk', None))
-        if not request_association.exists():
-            raise NotFound('Association not found.')
+        request_election = Election.objects.filter(pk=kwargs.get('election_pk', None))
 
-        request_election = Election.objects.filter(pk=kwargs.get('election_pk', None),
-                                                   association=kwargs.get('association_pk', None))
         if not request_election.exists():
             raise NotFound('Election not found.')
 
