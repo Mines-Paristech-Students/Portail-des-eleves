@@ -86,3 +86,61 @@ class TagNamespaceTestCase(BaseTestCase):
             'name': 'test_y'
         })
         self.assertStatusCode(res, 403)
+
+    def test_edit_namespace(self):
+        ###########################
+        # Create needed namespaces
+        self.login("17admin")
+        res = self.post('/tags/namespaces/', {
+            'scope': "global",
+            'name': 'users'
+        })
+        self.assertStatusCode(res, 201)
+
+        self.login("17admin_pdm")
+        res = self.post('/tags/namespaces/', {
+            'scope': "association",
+            'scoped_to': 'pdm',
+            'name': 'farine'
+        })
+        self.assertStatusCode(res, 201)
+
+        ###########################
+        # Basic namespace edition
+
+        self.login('17admin_biero')
+        # Global namespace
+        res = self.patch('/tags/namespaces/1/', {'name': 'coucou'})
+        self.assertStatusCode(res, 403)
+
+        res = self.delete('/tags/namespaces/1/')
+        self.assertStatusCode(res, 403)
+
+        # Specific namespace that doesn't belong to us
+        res = self.patch('/tags/namespaces/2/', {'name': 'coucou'})
+        self.assertStatusCode(res, 403)
+
+        res = self.delete('/tags/namespaces/2/')
+        self.assertStatusCode(res, 403)
+
+        self.login("17admin")
+        res = self.patch('/tags/namespaces/1/', {'name': 'coucou'})
+        self.assertStatusCode(res, 200)
+
+        self.login("17admin_pdm")
+        res = self.patch('/tags/namespaces/2/', {'name': 'coucou'})
+        self.assertStatusCode(res, 200)
+
+        ############################
+        # Try to move the namespace
+        self.login("17admin_pdm")
+        res = self.patch('/tags/namespaces/1/', {
+            'scope': 'global'
+        })
+        self.assertStatusCode(res, 400)
+
+        res = self.patch('/tags/namespaces/1/', {
+            'scope': 'association',
+            'scoped_to': 'biero'
+        })
+        self.assertStatusCode(res, 400)

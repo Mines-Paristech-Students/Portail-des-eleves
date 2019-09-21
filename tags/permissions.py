@@ -37,5 +37,5 @@ class NamespacePermission(permissions.BasePermission):
 
         return True
 
-    def has_object_permission(self, request, view, election):
-        return True
+    def has_object_permission(self, request, view, namespace):
+        return _check_can_access_scope(request.user, namespace.scope, namespace.scoped_to)

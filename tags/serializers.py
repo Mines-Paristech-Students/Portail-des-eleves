@@ -22,7 +22,7 @@ class NamespaceSerializer(serializers.ModelSerializer):
                 data.get("scoped_to", False)):  # logical XOR
             raise serializers.ValidationError("Must define scope and scoped_to together")
 
-        if Namespace.SCOPES[data.get("scope")] and not Namespace.SCOPES[data.get("scope")].objects.get(
+        if Namespace.SCOPES.get(data.get("scope")) and not Namespace.SCOPES.get(data.get("scope")).objects.get(
                 pk=data.get("scoped_to")):
             raise serializers.ValidationError("Not scoped_to and existing object")
 

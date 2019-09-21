@@ -1,4 +1,5 @@
 import django_filters
+from django.http import HttpResponseBadRequest
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 
@@ -29,6 +30,11 @@ class NamespaceViewSet(viewsets.ModelViewSet):
             
         return super(NamespaceViewSet, self).create(request, *args, **kwargs)
 
+    def update(self, request, *args, **kwargs):
+        if "scope" in request.data or "scoped_to" in request.data:
+            return HttpResponseBadRequest("Cannot change scope of a namespace")
+        
+        return super(NamespaceViewSet, self).update(request, *args, **kwargs)
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
