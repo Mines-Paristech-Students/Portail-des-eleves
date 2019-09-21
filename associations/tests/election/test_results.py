@@ -1,8 +1,7 @@
 from datetime import datetime, timezone, timedelta
 
-from associations.models import Election, Choice, Ballot
-from associations.tests.election.base_test_election import ALL_USERS, ALL_USERS_EXCEPT_ELECTION_BIERO, \
-    BaseElectionTestCase
+from associations.models import Election, Choice
+from associations.tests.election.base_test_election import ALL_USERS, BaseElectionTestCase
 
 
 class ResultsTestCase(BaseElectionTestCase):

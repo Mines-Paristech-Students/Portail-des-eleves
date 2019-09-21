@@ -1,4 +1,4 @@
-from associations.models import Association, Role
+from associations.models import Role
 from associations.tests.marketplace import *
 from authentication.models import User
 

@@ -1,8 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Loan, Loanable
-from associations.permissions.association import extract_id
+from associations.models import Association, Library, Loanable
 
 
 class LibraryPermission(BasePermission):

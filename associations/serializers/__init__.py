@@ -1,4 +1,4 @@
-from associations.serializers.association import AssociationsShortSerializer, AssociationSerializer, RoleSerializer, \
+from associations.serializers.association import AssociationShortSerializer, AssociationSerializer, RoleSerializer, \
     RoleShortSerializer
 from associations.serializers.election import ElectionSerializer, BallotSerializer
 from associations.serializers.events import EventSerializer

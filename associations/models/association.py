@@ -11,12 +11,14 @@ class Association(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=200)
 
-    logo = models.ImageField(upload_to='associations/logos/', null=True)
+    logo = models.ImageField(upload_to='associations/logos/', null=True, default=None)
 
-    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name='association')
-    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name='association')
+    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, default=None,
+                                       related_name='association')
+    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, default=None,
+                                   related_name='association')
 
-    is_hidden_1A = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
     rank = models.IntegerField(default=0, help_text='Order of appearance in the association list (lowest first).')
 
     def _get_unique_slug(self):
@@ -99,7 +101,7 @@ class Role(models.Model):
 
     class Meta:
         unique_together = ('user', 'association')
-        ordering = ('rank', 'name')
+        ordering = ('rank', 'user__last_name')
 
     def __str__(self):
         return self.user.id + '-' + self.association.id + '-' + self.role

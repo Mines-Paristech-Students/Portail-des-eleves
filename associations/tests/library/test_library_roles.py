@@ -1,4 +1,4 @@
-from associations.models.association import Association, Role
+from associations.models.association import Role
 from associations.tests.library.base_test_library import *
 from authentication.models.user import User
 

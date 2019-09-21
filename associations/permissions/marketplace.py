@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Marketplace, Funding, Transaction, Product
+from associations.models import Marketplace, Funding, Transaction, Product
 from associations.permissions.association import extract_id
 
 

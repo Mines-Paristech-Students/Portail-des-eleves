@@ -1,10 +1,10 @@
-from decimal import Decimal
 import json
+from decimal import Decimal
 
-from authentication.models import User
 from associations.models import Transaction, Marketplace, Funding
 from associations.tests.marketplace import *
 from associations.views.marketplace import compute_balance
+from authentication.models import User
 
 
 class BalanceTestCase(BaseMarketPlaceTestCase):

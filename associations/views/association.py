@@ -1,13 +1,13 @@
-from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework_bulk.generics import BulkModelViewSet
+from url_filter.integrations.drf import DjangoFilterBackend
 
-from associations.models import Role
 from associations.models import Association
-from associations.serializers import AssociationsShortSerializer, AssociationSerializer, RoleSerializer, \
-    RoleShortSerializer
+from associations.models import Role
 from associations.permissions import AssociationPermission, RolePermission
+from associations.serializers import AssociationShortSerializer, AssociationSerializer, RoleSerializer, \
+    RoleShortSerializer
 
 
 class RoleViewSet(BulkModelViewSet):
@@ -32,7 +32,7 @@ class AssociationViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ('list',):
-            return AssociationsShortSerializer
+            return AssociationShortSerializer
         else:
             return AssociationSerializer
 

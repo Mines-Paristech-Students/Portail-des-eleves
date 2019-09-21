@@ -1,6 +1,6 @@
 from associations.models import Page
-from associations.serializers import PageSerializer
 from associations.permissions import PagePermission
+from associations.serializers import PageSerializer
 from associations.views import AssociationNestedViewSet
 
 

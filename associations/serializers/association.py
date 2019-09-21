@@ -82,27 +82,26 @@ class RoleShortSerializer(serializers.ModelSerializer):
         return response
 
 
+class AssociationShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        read_only_fields = ('id', 'name', 'logo')
+
+
 from associations.serializers.marketplace import MarketplaceShortSerializer
 from associations.serializers.library import LibraryShortSerializer
 
 
-class AssociationsShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Association
-        read_only_fields = ('id', 'name', 'logo')
-        fields = read_only_fields
-
-
 class AssociationSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
-    marketplace = MarketplaceShortSerializer()
-    library = LibraryShortSerializer()
+    marketplace = MarketplaceShortSerializer(read_only=True)
+    library = LibraryShortSerializer(read_only=True)
     my_role = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Association
-        read_only_fields = ('id', 'pages', 'marketplace', 'library', 'my_role')
-        fields = read_only_fields + ('name', 'logo')
+        read_only_fields = ('pages', 'marketplace', 'library', 'my_role')
+        fields = read_only_fields + ('id', 'name', 'logo', 'is_hidden', 'rank')
 
     def get_my_role(self, obj):
         role = self.context['request'].user.get_role(obj)

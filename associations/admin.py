@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from associations.models import Association, Role
 
+
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     list_display = ("user", "association", "role", "rank", "page", "marketplace", "library", "election",
@@ -17,4 +18,4 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(Association)
 class AssociationAdmin(admin.ModelAdmin):
-    list_display = ("name", "logo", "marketplace", "library", "is_hidden_1A", "rank")
+    list_display = ("name", "logo", "marketplace", "library", "is_hidden", "rank")

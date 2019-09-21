@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
-from associations.serializers.association import AssociationsShortSerializer
+from associations.serializers.association import AssociationShortSerializer
 from authentication.models import User
 
 
@@ -148,6 +148,6 @@ class MarketplaceSerializer(ModelSerializer):
     def to_representation(self, instance):
         res = super(ModelSerializer, self).to_representation(instance)
 
-        res['association'] = AssociationsShortSerializer().to_representation(
+        res['association'] = AssociationShortSerializer().to_representation(
             Association.objects.get(pk=res['association']))
         return res

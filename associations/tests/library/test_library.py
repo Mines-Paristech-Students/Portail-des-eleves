@@ -2,7 +2,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from associations.models.association import Association
 from associations.models.library import Library
-
 from associations.tests.library.base_test_library import *
 
 

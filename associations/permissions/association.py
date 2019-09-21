@@ -37,3 +37,6 @@ class RolePermission(BasePermission):
 
         role = request.user.get_role(association)
         return role and role.is_admin
+
+def extract_id(*args, **kwargs):
+    pass

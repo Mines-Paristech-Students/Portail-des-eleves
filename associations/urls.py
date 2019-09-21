@@ -1,5 +1,4 @@
 from django.urls import path
-
 from rest_framework_bulk.routes import BulkRouter
 
 from associations.views import AssociationViewSet, EventViewSet, PageViewSet, MarketplaceViewSet, \
