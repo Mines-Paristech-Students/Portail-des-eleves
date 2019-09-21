@@ -8,12 +8,6 @@ from associations.serializers.page import PageShortSerializer
 from authentication.serializers.user import UserShortSerializer
 
 
-class AssociationsShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Association
-        fields = ('id', 'name', 'logo')
-
-
 class AdaptedBulkListSerializerMixin(object):
     def to_internal_value(self, data):
         """
@@ -66,7 +60,8 @@ class AdaptedBulkListSerializer(AdaptedBulkListSerializerMixin, BulkListSerializ
 class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = "__all__"
+        read_only_fields = ('id', 'user', 'association')
+        fields = '__all__'
         list_serializer_class = AdaptedBulkListSerializer
 
     def to_representation(self, instance):
@@ -78,7 +73,8 @@ class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 class RoleShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ('id', 'user', 'association', 'role', 'rank')
+        read_only_fields = ('id', 'user', 'association', 'role', 'rank')
+        fields = read_only_fields
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -90,21 +86,24 @@ from associations.serializers.marketplace import MarketplaceShortSerializer
 from associations.serializers.library import LibraryShortSerializer
 
 
-class AssociationsSerializer(serializers.ModelSerializer):
+class AssociationsShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        read_only_fields = ('id', 'name', 'logo')
+        fields = read_only_fields
+
+
+class AssociationSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
-    my_role = serializers.SerializerMethodField(read_only=True)
     marketplace = MarketplaceShortSerializer()
     library = LibraryShortSerializer()
+    my_role = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Association
-        fields = ('id', 'name', 'logo', 'pages', 'marketplace', 'library', 'my_role')
+        read_only_fields = ('id', 'pages', 'marketplace', 'library', 'my_role')
+        fields = read_only_fields + ('name', 'logo')
 
     def get_my_role(self, obj):
-        qs = Role.objects.filter(user=self.context['request'].user, association=obj)
-        if qs.exists():
-            serializer = RoleSerializer(qs[0])
-            return serializer.data
-        else:
-            return {}
-
+        role = self.context['request'].user.get_role(obj)
+        return RoleSerializer(role).data if role else {}

@@ -1,4 +1,3 @@
-
 from url_filter.integrations.drf import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
@@ -6,58 +5,39 @@ from rest_framework_bulk.generics import BulkModelViewSet
 
 from associations.models import Role
 from associations.models import Association
-from associations.serializers import AssociationsShortSerializer, AssociationsSerializer, \
-    RoleSerializer, RoleShortSerializer
-from associations.permissions import IsAssociationMember, IsAssociationAdminOrReadOnly
+from associations.serializers import AssociationsShortSerializer, AssociationSerializer, RoleSerializer, \
+    RoleShortSerializer
+from associations.permissions import AssociationPermission, RolePermission
 
 
 class RoleViewSet(BulkModelViewSet):
     queryset = Role.objects.all()
     model = Role
-    permission_classes = (IsAssociationAdminOrReadOnly,)
+    permission_classes = (RolePermission,)
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('user', 'association')
 
-    def get_queryset(self):
-        queryset = Role.objects.all()
-        association_name = self.request.query_params.get('association', None)
-        if association_name is not None:
-            queryset = queryset.filter(association=association_name)
-        return queryset
-
     def get_serializer_class(self):
-        if self.action == 'list' and self.request.query_params.get('association') is None:
+        if self.action in ('list',):
             return RoleShortSerializer
         else:
             return RoleSerializer
 
-    def allow_bulk_destroy(self, qs, filtered):
-        return False
-
 
 class AssociationViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows association to be viewed or edited.
-    """
     queryset = Association.objects.all()
-    serializer_class = AssociationsSerializer
-    permission_classes = (IsAssociationMember,)
-
-    action_serializers = {
-        'retrieve': AssociationsSerializer,
-        'list': AssociationsShortSerializer,
-    }
+    serializer_class = AssociationSerializer
+    permission_classes = (AssociationPermission,)
 
     def get_serializer_class(self):
-
-        if hasattr(self, 'action_serializers'):
-            if self.action in self.action_serializers:
-                return self.action_serializers[self.action]
-
-        return super(AssociationViewSet, self).get_serializer_class()
+        if self.action in ('list',):
+            return AssociationsShortSerializer
+        else:
+            return AssociationSerializer
 
 
+# TODO: remove this after the merge with 17wf/rewriteAssociationsUrls.
 def association_exists_or_404(func):
     def wrapper(self, *args, **kwargs):
         if not Association.objects.filter(pk=self.kwargs['association_pk']).exists():
@@ -68,6 +48,7 @@ def association_exists_or_404(func):
     return wrapper
 
 
+# TODO: remove this after the merge with 17wf/rewriteAssociationsUrls.
 class AssociationNestedViewSet(viewsets.ModelViewSet):
     """
         All the ViewSets having a base URL like /associations/association_pk/events/… should inherit from this class,

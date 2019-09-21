@@ -1,4 +1,5 @@
-from associations.serializers.association import *
+from associations.serializers.association import AssociationsShortSerializer, AssociationSerializer, RoleSerializer, \
+    RoleShortSerializer
 from associations.serializers.election import ElectionSerializer, BallotSerializer
 from associations.serializers.events import EventSerializer
 from associations.serializers.library import CreateLoanSerializer, UpdateLoanSerializer, LoanSerializer, \

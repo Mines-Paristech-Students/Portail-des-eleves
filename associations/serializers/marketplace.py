@@ -96,7 +96,8 @@ class FundingSerializer(ModelSerializer):
 class MarketplaceShortSerializer(ModelSerializer):
     class Meta:
         model = Marketplace
-        fields = ('id', 'enabled', 'association')
+        read_only_fields = ('id', 'enabled', 'association')
+        fields = read_only_fields
 
 
 class MarketplaceSerializer(ModelSerializer):

@@ -11,25 +11,20 @@ class Association(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=200)
 
-    logo = models.ImageField(upload_to="associations/logos/", null=True)
+    logo = models.ImageField(upload_to='associations/logos/', null=True)
 
-    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name="association")
-    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name="association")
+    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name='association')
+    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name='association')
 
-    is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
-    rank = models.IntegerField(default=0,
-                               help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour"
-                                         "les valeurs égales)")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    is_hidden_1A = models.BooleanField(default=False)
+    rank = models.IntegerField(default=0, help_text='Order of appearance in the association list (lowest first).')
 
     def _get_unique_slug(self):
         slug = slugify(self.name)
         unique_slug = slug
         num = 1
         while Association.objects.filter(id=unique_slug).exists():
-            unique_slug = "{}-{}".format(slug, num)
+            unique_slug = '{}-{}'.format(slug, num)
             num += 1
         return unique_slug
 
@@ -41,27 +36,29 @@ class Association(models.Model):
     def __str__(self):
         return str(self.id)
 
+    class Meta:
+        ordering = ['rank', 'name']
+
 
 class Role(models.Model):
+    PERMISSION_NAMES = ('election', 'events', 'filesystem', 'library', 'marketplace', 'news', 'page')
+
     id = models.AutoField(primary_key=True)
 
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         null=False,
-        related_name="roles"
+        related_name='roles'
     )
     association = models.ForeignKey(
         Association,
         on_delete=models.CASCADE,
         null=False,
-        related_name="roles"
+        related_name='roles'
     )
     role = models.CharField(max_length=200, null=False)
-    rank = models.IntegerField(
-        default=0,
-        help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
-    )
+    rank = models.IntegerField(default=0, help_text='Order of appearance in the members list (lowest first).')
 
     is_admin = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False,
@@ -101,8 +98,8 @@ class Role(models.Model):
         return self.page_permission and not self.is_archived
 
     class Meta:
-        unique_together = ("user", "association")
-        ordering = ("rank",)
+        unique_together = ('user', 'association')
+        ordering = ('rank', 'name')
 
     def __str__(self):
-        return self.user.id + "-" + self.association.id + "-" + self.role
+        return self.user.id + '-' + self.association.id + '-' + self.role
