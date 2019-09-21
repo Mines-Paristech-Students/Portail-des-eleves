@@ -47,7 +47,7 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
             Group.objects.filter(campaign=campaign).delete()
             serializer.is_valid(raise_exception=True)
             serializer.save()
-        else:
+        elif campaign.groups.count() == 0:
             make_reparition(campaign)
 
 
@@ -152,7 +152,6 @@ def get_campaign_results(request, *args, **kwargs):
         raise PermissionDenied()
 
     serializer = GroupAdminSerializer(instance=campaign.groups.all(), many=True)
-
     return JsonResponse(serializer.data, safe=False)
 
 

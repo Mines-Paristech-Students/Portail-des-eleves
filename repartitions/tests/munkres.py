@@ -49,7 +49,7 @@ class MunkresTestCase(BaseTestCase):
                 id="19user{}".format(i),
                 first_name="firstname {}".format(i),
                 last_name="lastname {}".format(i),
-                promo=19,
+                year_of_entry=2019,
                 email="email{}@mpt.fr".format(i),
             )
             user.save()
@@ -80,7 +80,6 @@ class MunkresTestCase(BaseTestCase):
         self.patch("/repartitions/campaigns/{}/".format(campaign.id), data={"status": "RESULTS"})
 
         res = self.get("/repartitions/{}/results/".format(campaign.id))
-        print(res.content)
         self.assertEqual(res.status_code, 200)
         groups = json.loads(res.content)
 
@@ -122,13 +121,15 @@ class MunkresTestCase(BaseTestCase):
             uc.save()
 
         self.login("17bocquet")
+        self.patch("/repartitions/campaigns/{}/".format(campaign.id), data={"status": "RESULTS"})
+
+        self.login("17bocquet")
         res = self.get("/repartitions/{}/results/".format(campaign.id))
-        print(res.content)
         self.assertEqual(res.status_code, 200)
-        groups = json.loads(res.content)["groups"]
+        groups = json.loads(res.content)
 
         for group in groups:
-            to_find = expectations[group["proposition"]["id"]]
+            to_find = expectations[group["proposition"]]
             for user in group["users"]:
                 if user["id"] in to_find:
                     to_find.remove(user["id"])

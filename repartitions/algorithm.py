@@ -20,6 +20,9 @@ def get_project_index(index, places):
 
 
 def generate_line(uc: UserCampaign, propositions: List[Proposition], places: List[int]) -> List[float]:
+    if any(map(lambda x: x < 0, places)):
+        raise Exception("places {} is not valid", places)
+
     wishes = Wish.objects.filter(user_campaign=uc).all()
     map_wishes = {w.proposition.id: w for w in wishes}
 
@@ -70,12 +73,16 @@ def make_repartition_for_category(category: Category, propositions: List[Proposi
                 s += 1
                 places[i] += 1
 
+        print("places=", places, end=" ")
+
         cost_matrix = []
         for uc in user_campaigns:
             cost_matrix.append(generate_line(uc, propositions, places))
 
         while len(cost_matrix) < len(cost_matrix[0]):
             cost_matrix.append([0] * len(cost_matrix[0]))
+
+        print(np.array(cost_matrix))
 
         links = linear_sum_assignment(cost_matrix)
 
@@ -84,7 +91,6 @@ def make_repartition_for_category(category: Category, propositions: List[Proposi
                 break
 
             project_index = get_project_index(place_index, places)
-
             if project_index not in propositions or propositions[project_index].id not in groups:
                 groups[propositions[project_index].id] = []
 
@@ -114,30 +120,34 @@ def make_reparitition_proxy(category: Category, campaign: Campaign, propositions
     penalty = [0] * len(already_used)
 
     while group_cardinal_diff > 1:
-        tmp = [0] * len(already_used)
+        used_places = [0] * len(already_used)
         for i in range(len(already_used)):
-            tmp[i] = already_used[i] + penalty[i]
+            used_places[i] = already_used[i] + penalty[i]
+        print("penalty=", penalty, end=" ")
+        print("used_places=", np.array(used_places), end=" ")
 
-        groups = make_repartition_for_category(category, propositions, tmp)
+        groups = make_repartition_for_category(category, propositions, used_places)
 
-        rep = [0] * len(tmp)
+        rep = [0] * len(used_places)
         for i in range(len(propositions)):
             rep[i] = len(groups[i])
 
-        penalty[np.argmax(rep)] += 1
-        group_cardinal = np.array(rep) + np.array(tmp)
+        group_cardinal = np.array(rep) + np.array(already_used)
+        penalty[np.argmax(group_cardinal)] += 1
+        print("cardinal=", group_cardinal, "rep=", rep)
         group_cardinal_diff = max(group_cardinal) - min(group_cardinal)
 
+    print("endproxy")
     return groups
 
 
 def make_reparition(campaign: Campaign) -> List[Group]:
-    propositions = Proposition.objects.all()
+    propositions = Proposition.objects.filter(campaign=campaign).all()
 
     already_used = [0] * len(propositions)
     store = {}
 
-    categories = Category.objects.all()
+    categories = Category.objects.filter(campaign=campaign).all()
 
     for category in categories:
         if category.users_campaign.count() == 0:
@@ -149,8 +159,9 @@ def make_reparition(campaign: Campaign) -> List[Group]:
             already_used[i] += len(groups[i])
 
     groups = []
-    for project_id, users in store.items():
-        proposition = Proposition.objects.get(pk=project_id)
+    for proposition_id, users in store.items():
+
+        proposition = Proposition.objects.get(pk=proposition_id)
         group = Group(
             proposition=proposition,
             campaign=campaign

@@ -63,7 +63,7 @@ class GroupAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ("users", "proposition")
+        fields = ("users", "proposition", "campaign")
 
 
 class GroupPublicSerializer(GroupAdminSerializer):
