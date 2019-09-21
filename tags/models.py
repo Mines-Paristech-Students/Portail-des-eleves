@@ -1,12 +1,32 @@
 from django.db import models
 
-from associations.models import File, Product, Loanable, Event, Page, Choice, Role, Folder, Loan
+from associations.models import File, Product, Loanable, Event, Page, Choice, Role, Folder, Loan, Association
 from forum.models import Theme, Topic, MessageForum
+
+
+class Namespace(models.Model):
+    class Meta:
+        unique_together = (("name", "scope", 'scoped_to'),)
+
+    SCOPES = {
+        "association": Association,
+        "forum_theme": Theme,
+        "global": None
+    }
+
+    name = models.CharField(max_length=50)
+
+    scope = models.CharField(max_length=50)  # The application it targets
+    scoped_to = models.CharField(max_length=50, blank=True, null=True)  # The id of the mother instance in the application
+
+    def __str__(self):
+        return "Namespace name={} scope={} scoped_to={}".format(self.name, self.scope, self.scoped_to)
 
 
 class Tag(models.Model):
     LINKS = (
         # Association
+        ("association", Association),
         ("choice", Choice),
         ("event", Event),
         ("file", File),
@@ -23,9 +43,11 @@ class Tag(models.Model):
         ("message_forum", MessageForum),
     )
 
-    key = models.CharField(max_length=50)
+    namespace = models.ForeignKey(Namespace, related_name="tags", on_delete=models.CASCADE)
+
     value = models.CharField(max_length=50)
     url = models.CharField(max_length=255)
+    scope = models.TextField()
 
 
 # Dynamically adds the needed fiields to the tag

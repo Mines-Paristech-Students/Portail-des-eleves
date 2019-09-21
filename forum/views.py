@@ -16,11 +16,11 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
         if user is None or user.is_1A:
-            queryset = queryset.filter(is_hidden_1A = False)
+            queryset = queryset.filter(is_hidden_1A=False)
 
         themeId = self.request.query_params.get('theme', None)
         if themeId is not None:
-            queryset = queryset.filter(theme = themeId)
+            queryset = queryset.filter(theme=themeId)
         return queryset
 
 
@@ -34,10 +34,10 @@ class TopicViewSet(viewsets.ModelViewSet):
         user = self.request.user
         themeId = self.request.query_params.get('theme', None)
         if user is None or user.is_1A:
-            queryset = queryset.filter(is_hidden_1A = False, theme__is_hidden_1A = False)
+            queryset = queryset.filter(is_hidden_1A=False, theme__is_hidden_1A=False)
 
         if themeId is not None:
-            queryset = queryset.filter(theme = themeId)
+            queryset = queryset.filter(theme=themeId)
         return queryset
 
     def create(self, request, **kwargs):
@@ -50,7 +50,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         theme_id = body["theme"] if "theme" in body else None
 
         theme = Theme.objects.get(pk=theme_id)
-        if theme is not None :
+        if theme is not None:
             user = request.user
 
             topic = Topic(
@@ -67,6 +67,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         else:
             return JsonResponse("No theme")
 
+
 class MessageForumViewSet(viewsets.ModelViewSet):
     queryset = MessageForum.objects.all()
     serializer_class = MessageForumSerializer
@@ -79,7 +80,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
         if user is None or user.is_1A:
             queryset = queryset.filter(topic__is_hidden_1A=False, topic__theme__is_hidden_1A=False)
         if topicId is not None:
-            queryset = queryset.filter(topic = topicId)
+            queryset = queryset.filter(topic=topicId)
         return queryset
 
     def create(self, request, **kwargs):
@@ -105,8 +106,9 @@ class MessageForumViewSet(viewsets.ModelViewSet):
 
             return JsonResponse(MessageForumSerializer(message).data, safe=False)
 
-        else :
+        else:
             return JsonResponse("No topic")
+
 
 class NewVoteMessageView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -128,9 +130,9 @@ class NewVoteMessageView(APIView):
             if message.down_vote.filter(id=user.id).count() != 0:
                 message.down_vote.remove(user)
 
-            if new_vote == 1 :
+            if new_vote == 1:
                 message.up_vote.add(user)
-            elif new_vote == -1 :
+            elif new_vote == -1:
                 message.down_vote.add(user)
 
         except ValueError as err:
