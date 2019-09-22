@@ -3,5 +3,4 @@ from associations.permissions.election import ElectionPermission, ResultsPermiss
 from associations.permissions.events import EventsPermission
 from associations.permissions.library import LibraryPermission, LoanablePermission, LoansPermission
 from associations.permissions.marketplace import *
-from associations.permissions.news import NewsPermission
 from associations.permissions.page import PagePermission
