@@ -4,7 +4,6 @@ from tags.models import Tag, Namespace
 
 
 class NamespaceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Namespace
         fields = ("id", "name", "scope", 'scoped_to')
@@ -34,13 +33,14 @@ class NamespaceSerializer(serializers.ModelSerializer):
             del response["scoped_to"]
 
         return response
-            
+
 
 class TagSerializer(serializers.ModelSerializer):
+    namespace = NamespaceSerializer()
+    
     class Meta:
         model = Tag
-        fields = ("id", "value", "scope",) + tuple([link_name for (link_name, _) in Tag.LINKS])
-
+        fields = ("id", "value", "scope", "namespace")
 
     def update(self, instance, validated_data):
         raise NotImplementedError("Cannot update a tag from the REST API")

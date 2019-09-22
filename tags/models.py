@@ -46,9 +46,7 @@ class Tag(models.Model):
     namespace = models.ForeignKey(Namespace, related_name="tags", on_delete=models.CASCADE)
 
     value = models.CharField(max_length=50)
-    url = models.CharField(max_length=255)
-    scope = models.TextField()
-
+    url = models.CharField(max_length=255, null=True, blank=True)
 
 # Dynamically adds the needed fiields to the tag
 for (link_name, link_class) in Tag.LINKS:
