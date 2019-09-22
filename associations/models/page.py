@@ -27,4 +27,4 @@ class Page(models.Model):
         (STATIC, 'Static page')
     )
 
-    page_type = models.CharField(choices=PAGE_TYPES, blank=False, default=STATIC)
+    page_type = models.CharField(choices=PAGE_TYPES, blank=False, default=STATIC, max_length=6)

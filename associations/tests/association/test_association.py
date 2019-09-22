@@ -61,7 +61,7 @@ class AssociationTestCase(BaseAssociationTestCase):
         self.assertTrue(Association.objects.filter(pk=self.create_association_data['id']).exists())
         association = Association.objects.get(pk=self.create_association_data['id'])
         self.assertEqual(association.name, self.create_association_data['name'])
-        self.assertEqual(association.logo, self.create_association_data['logo'])
+        self.assertFalse(association.logo)
         self.assertEqual(association.is_hidden, self.create_association_data['is_hidden'])
         self.assertEqual(association.rank, self.create_association_data['rank'])
 
@@ -81,7 +81,7 @@ class AssociationTestCase(BaseAssociationTestCase):
             self.login(user)
             res = self.update('pdm', self.update_association_data)
             self.assertStatusCode(res, 403)
-            self.assertTrue(Association.objects.filter(pk=self.update_association_data['pdm']).exists())
+            self.assertTrue(Association.objects.filter(pk='pdm').exists())
 
     def test_if_global_admin_then_can_update(self):
         self.login('17admin')
@@ -91,7 +91,7 @@ class AssociationTestCase(BaseAssociationTestCase):
         self.assertTrue(Association.objects.filter(pk=self.update_association_data['id']).exists())
         association = Association.objects.get(pk=self.update_association_data['id'])
         self.assertEqual(association.name, self.update_association_data['name'])
-        self.assertEqual(association.logo, self.update_association_data['logo'])
+        self.assertFalse(association.logo)
         self.assertEqual(association.is_hidden, self.update_association_data['is_hidden'])
         self.assertEqual(association.rank, self.update_association_data['rank'])
 
@@ -104,10 +104,10 @@ class AssociationTestCase(BaseAssociationTestCase):
             self.login(user)
             res = self.destroy('pdm')
             self.assertStatusCode(res, 403)
-            self.assertTrue(Association.objects.filter(pk=self.update_association_data['id']).exists())
+            self.assertTrue(Association.objects.filter(pk='pdm').exists())
 
     def test_if_global_admin_then_can_destroy(self):
         self.login('17admin')
         res = self.destroy('pdm')
         self.assertStatusCode(res, 204)
-        self.assertFalse(Association.objects.filter(pk=self.update_association_data['id']).exists())
+        self.assertFalse(Association.objects.filter(pk='pdm').exists())

@@ -10,33 +10,43 @@ class AssociationPermission(BasePermission):
         User                 | R           |
     """
 
+    message = 'You do not have the permission to edit this association.'
+
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS or request.user.is_staff
 
 
 class RolePermission(BasePermission):
     """
-                                  | Role |
-        Association administrator | CRUD |
-        Association member        | R    |
-        User                      | R    |
+                                  | Own association role | Other association role |
+        Global administrator      | CRU                  | CRU                    |
+        Association administrator | CRUD                 | R                      |
+        Association member        | R                    | R
+        User                      | R                    | R
     """
+
+    message = 'You do not have the permission to edit this role.'
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
         if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'is_admin')
+            return check_permission_from_post_data(request, 'administration', allow_staff=True)
 
         return True
 
-    def has_object_permission(self, request, view, association):
+    def has_object_permission(self, request, view, role):
+        # `role` is the retrieved / updated / deleted role.
+        # `user_role` is the role of the user making the request.
+
+        user_role = request.user.get_role(role.association)
+
         if request.method in SAFE_METHODS:
             return True
+        elif request.method in ('DELETE',):
+            return user_role and user_role.administration
+        elif request.method in ('PATCH',):
+            return (user_role and user_role.administration) or request.user.is_staff
 
-        role = request.user.get_role(association)
-        return role and role.is_admin
-
-def extract_id(*args, **kwargs):
-    pass
+        return False

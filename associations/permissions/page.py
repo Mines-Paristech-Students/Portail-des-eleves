@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association
+from associations.permissions.utils import check_permission_from_post_data
 
 
 class PagePermission(BasePermission):
@@ -14,11 +14,7 @@ class PagePermission(BasePermission):
 
     def has_permission(self, request, view):
         if request.method in ('POST',):
-            association_request = Association.objects.filter(pk=request.data['association'])
-
-            if association_request.exists():
-                role = request.user.get_role(association_request[0])
-                return role and role.page
+            return check_permission_from_post_data(request, 'library')
 
         return True
 

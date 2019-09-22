@@ -53,7 +53,7 @@
   fields:
     user: 15veaux
     role: President
-    is_admin: true
+    administration_permission: true
     association: bde
 
 - model: associations.role
@@ -61,7 +61,7 @@
   fields:
     user: 17bocquet
     role: CTO
-    is_admin: true
+    administration_permission: true
     association: bde
     election_permission: True
     library_permission: true
@@ -77,26 +77,8 @@
       sequi ut voluptatum? Cupiditate deserunt error hic illum impedit iusto molestiae
       placeat quasi quidem quis quod recusandae repellat sint, veniam voluptates.
     association: bde
-- model: associations.news
-  pk: '1'
-  fields:
-    title: Amphi La Calchemise
-    association: bde
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
-- model: associations.news
-  pk: '2'
-  fields:
-    title: Enorme BALM
-    association: bde
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
+    creation_date: '2018-08-18T13:19:37+00:00'
+    last_update_date: '2018-08-18T13:19:37+00:00'
 - model: associations.association
   pk: biero
   fields:
@@ -139,16 +121,6 @@
   pk: biero
   fields:
     enabled: false
-- model: associations.news
-  pk: '3'
-  fields:
-    title: Biérexecption
-    association: biero
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
 - model: associations.folder
   pk: 1
   fields:

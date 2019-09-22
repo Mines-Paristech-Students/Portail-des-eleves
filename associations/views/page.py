@@ -1,10 +1,11 @@
+from rest_framework import viewsets
+
 from associations.models import Page
 from associations.permissions import PagePermission
 from associations.serializers import PageSerializer
-from associations.views import AssociationNestedViewSet
 
 
-class PageViewSet(AssociationNestedViewSet):
+class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = (PagePermission,)

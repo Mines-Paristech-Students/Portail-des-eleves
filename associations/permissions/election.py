@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from rest_framework import permissions
 
 from associations.models import Association
+from associations.permissions.utils import check_permission_from_post_data
 
 
 class ElectionPermission(permissions.BasePermission):
@@ -11,33 +12,25 @@ class ElectionPermission(permissions.BasePermission):
         Election admin  | CRUD        |
         User            | R           |
 
-        From our point of view, no election should be hidden to any user of the site. So, even if some users are not %
+        From our point of view, no election should be hidden to any user of the site. So, even if some users are not
         allowed to vote, they are still allowed to see the elections, including the choices, the allowed voters, and
         the results when the election is over.
 
-        This permission DOES NOT handle the endpoints /vote/ and /results/.
+        This permission MUST NOT handle the endpoints /vote/ and /results/.
     """
 
     message = 'You are not allowed to edit this election.'
 
     def has_permission(self, request, view):
-        # Only check the POST method, where we have to go through the POSTed data to find a reference to an association.
-        # If the association does not exist, return True so the view can handle the error.
-
         if request.method in ('POST',):
-            association_pk = request.data.get('association', None)
-            association_query = Association.objects.filter(pk=association_pk)
-
-            if association_query.exists():
-                role = request.user.get_role(association_query[0])
-                return role and role.election
+            return check_permission_from_post_data(request, 'election')
 
         return True
 
     def has_object_permission(self, request, view, election):
         role = request.user.get_role(election.association)
 
-        if role and role.election:  # Election administrator.
+        if role and role.election:  # Elections administrator.
             return True
         else:
             return request.method in permissions.SAFE_METHODS
