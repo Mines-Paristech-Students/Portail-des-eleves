@@ -67,6 +67,8 @@ class TransactionPermission(BasePermission):
                | Enabled | Disabled |
         Admin  | CRU     | CRU      |
         Simple | CRU     | R        |
+
+        A simple user may only see or update their own loan.
     """
 
     message = 'You are not allowed to edit this transaction.'
@@ -91,13 +93,13 @@ class TransactionPermission(BasePermission):
         return True
 
     def has_object_permission(self, request, view, transaction):
-        # We have to put it a second time here, because when retrieving, both has_permission and has_object_permission
-        # will be called.
-        if request.method in SAFE_METHODS:
-            return True
-
         role = request.user.get_role(transaction.product.marketplace.association)
-        return transaction.product.marketplace.enabled or (role and role.marketplace)
+
+        if role and role.marketplace:
+            return True  # Marketplace administrator
+        else:
+            return transaction.buyer == request.user and \
+                   (transaction.product.marketplace.enabled or request.method in SAFE_METHODS)
 
 
 class FundingPermission(BasePermission):
@@ -131,10 +133,9 @@ class FundingPermission(BasePermission):
         return True
 
     def has_object_permission(self, request, view, funding):
-        # We have to put it a second time here, because when retrieving, both has_permission and has_object_permission
-        # will be called.
-        if request.method in SAFE_METHODS:
-            return True
-
         role = request.user.get_role(funding.marketplace.association)
-        return role and role.marketplace
+
+        if role and role.marketplace:
+            return True  # Marketplace administrator
+        else:
+            return funding.user == request.user and request.method in SAFE_METHODS

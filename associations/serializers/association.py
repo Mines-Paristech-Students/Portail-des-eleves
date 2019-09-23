@@ -69,7 +69,12 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        fields = '__all__'
+        read_only_fields = (('id', 'association', 'user', 'role', 'rank', 'is_archived') +
+                            tuple(f'{permission_name}_permission' for permission_name in Role.PERMISSION_NAMES))
+        fields = read_only_fields
+
+    def save(self, **kwargs):
+        raise RuntimeError('The serializer `RoleSerializer` should not be used for writing operations.')
 
 
 class RoleShortSerializer(serializers.ModelSerializer):

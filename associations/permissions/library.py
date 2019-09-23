@@ -95,4 +95,4 @@ class LoansPermission(BasePermission):
         if role and role.library:  # Library administrator.
             return True
         else:
-            return loan.loanable.library.enabled and loan.user == request.user
+            return loan.user == request.user and (loan.loanable.library.enabled or request.method in SAFE_METHODS)
