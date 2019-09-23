@@ -7,7 +7,7 @@ from forum.models import Theme, MessageForum, Topic
 from tags.models import Namespace, Tag
 
 
-def _get_parent_object(obj):
+def get_parent_object(obj):
     """ returns the 'parent' object ie the one on which the scope is applied """
 
     mappers = {
@@ -20,7 +20,7 @@ def _get_parent_object(obj):
         Loan: lambda x: x.loanable.library.association,
         Loanable: lambda x: x.library.association,
         Page: lambda x: x.association,
-        Product: lambda x: x.library.association,
+        Product: lambda x: x.marketplace.association,
         Role: lambda x: x.association,
 
         # Forum
@@ -33,11 +33,23 @@ def _get_parent_object(obj):
     if mapper:
         return mapper(obj)
     else:
-        return None
+        raise Exception("No context associated to {}".format(obj))
 
 
-def _check_can_access_scoped(user, instance):
-    parent = _get_parent_object(instance)
+def can_manage_tags_for(user, instance):
+    parent = get_parent_object(instance)
+
+    if isinstance(parent, Association):
+        role = _get_role_for_user(user, parent)
+        return role and role.is_admin
+    elif isinstance(parent, Theme):
+        return user.is_admin
+    else:
+        raise NotImplementedError("Model {} is not supported".format(instance))
+
+
+def can_manage_links_for(user, instance):
+    parent = get_parent_object(instance)
 
     if isinstance(parent, Association):
         role = _get_role_for_user(user, parent)
@@ -45,25 +57,9 @@ def _check_can_access_scoped(user, instance):
     elif isinstance(parent, Theme):
         return user.is_admin
     elif parent is None:
-        return user.is_admin
+        return True
     else:
         raise NotImplementedError("Model {} is not supported".format(instance))
-
-
-def _check_can_access_scope(user, scope, scoped_object_pk):
-    if scope not in Namespace.SCOPES:
-        return True  # let return 404 later
-
-    model = Namespace.SCOPES.get(scope)
-    if model is None:
-        return user.is_admin
-
-    try:
-        instance = model.objects.get(pk=scoped_object_pk)
-    except ObjectDoesNotExist:
-        return True  # let return 404 later
-
-    return _check_can_access_scoped(user, instance)
 
 
 class NamespacePermission(permissions.BasePermission):
@@ -72,9 +68,29 @@ class NamespacePermission(permissions.BasePermission):
         if request.method == "POST":
             scope = request.data.get("scope")
             scoped_to = request.data.get("scoped_to")
-            return _check_can_access_scope(request.user, scope, scoped_to)
+            instance = Tag.LINKS[scope].get(pk=scoped_to)
+            return can_manage_tags_for(request.user, instance)
 
         return True
 
     def has_object_permission(self, request, view, namespace):
-        return _check_can_access_scope(request.user, namespace.scope, namespace.scoped_to)
+        instance = Namespace.SCOPES[namespace.scope].objects.get(namespace.scoped_to)
+        return can_manage_tags_for(request.user, instance)
+
+
+class ManageTagPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method == "POST":
+            namespace = Namespace.objects.get(pk=request.data.get('namespace'))
+            scope = Namespace.SCOPES[namespace.scope]
+            if scope:
+                instance = scope.objects.get(namespace.scoped_to)
+                return can_manage_tags_for(request.user, instance)
+            else:
+                return request.user.is_admin
+        return True
+
+    def has_object_permission(self, request, view, tag):
+        namespace = tag.namespace
+        instance = Namespace.SCOPES[namespace.scope].objects.get(namespace.scoped_to)
+        return can_manage_tags_for(request.user, instance)

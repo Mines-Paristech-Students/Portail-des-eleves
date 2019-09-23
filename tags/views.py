@@ -1,12 +1,14 @@
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse, Http404, HttpResponse
-from django.views.decorators.http import require_GET, require_POST, require_http_methods
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseForbidden
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins, status
 from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 from tags.models import Namespace, Tag
-from tags.permissions import NamespacePermission, _get_parent_object, _check_can_access_scope, _check_can_access_scoped
+from tags.permissions import NamespacePermission, can_manage_links_for, ManageTagPermission
 from tags.serializers import NamespaceSerializer, TagSerializer
 
 """
@@ -39,11 +41,33 @@ class NamespaceViewSet(viewsets.ModelViewSet):
         return super(NamespaceViewSet, self).update(request, *args, **kwargs)
 
 
-class TagView(APIView):
-    queryset = Tag.objects.all()
+class TagViewSet(mixins.CreateModelMixin,
+                 mixins.DestroyModelMixin,
+                 GenericViewSet):
     serializer_class = TagSerializer
+    permission_classes = (ManageTagPermission,)
+    queryset = Tag.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        already_created = None
+        try:
+            already_created = Tag.objects.get(
+                namespace=serializer.validated_data["namespace"],
+                value=serializer.validated_data["value"],
+            )
+        except ObjectDoesNotExist:
+            pass
 
+        if already_created:
+            return Response(self.serializer_class().to_representation(already_created), status=status.HTTP_201_CREATED)
+        else:
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#
+"""
     def _get_target_instance(self, model, model_pk):
         if model not in Tag.LINKS.keys():
             raise Http404({"status": "not found"})
@@ -59,7 +83,6 @@ class TagView(APIView):
         instance = self._get_target_instance(model, model_pk)
         return JsonResponse({"tags": TagSerializer(many=True).to_representation(instance.tags)})
 
-
     def post(self, request, model, model_pk):
         instance = self._get_target_instance(model, model_pk)
 
@@ -69,6 +92,9 @@ class TagView(APIView):
                 tag = Tag.objects.get(pk=tag_pk)
             except ObjectDoesNotExist:
                 return HttpResponseNotFound({"status": "not found", "message": "no tag with id {}".format(tag_pk)})
+
+            if not ScopePermission.can_edit_scope(request.user, instance, ScopePermission.ACTION_LINK):
+                raise PermissionDenied("You cannot edit this tag scope")
 
             instance.tags.add(tag)
             instance.save()
@@ -89,7 +115,7 @@ class TagView(APIView):
                 pass
 
             if not tag:
-                if not _check_can_access_scoped(request.user, instance):
+                if not ScopePermission.can_edit_scope(request.user, instance, ScopePermission.ACTION_EDIT):
                     raise PermissionDenied("You cannot edit this tag scope")
 
                 tag = Tag.objects.create(serializer.validated_data)
@@ -99,11 +125,10 @@ class TagView(APIView):
 
             return JsonResponse({"status": "ok"})
 
-
     def delete(self, request, model, model_pk):
         instance = self._get_target_instance(model, model_pk)
 
-        if not _check_can_access_scoped(request.user, instance):
+        if not ScopePermission.can_edit_scope(request.user, instance, ):
             raise PermissionDenied("You cannot edit this tag scope")
 
         tag_pk = request.data.get("tag")
@@ -118,4 +143,34 @@ class TagView(APIView):
         if not flag:
             tag.delete()
 
+        return HttpResponse(code=204)
+"""
+
+
+class TagLinkView(APIView):
+
+    def get_tag(self, request):
+        if "tag" not in request.data:
+            return HttpResponseBadRequest("No tag id provided")
+
+        model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
+        tag = Tag.objects.get(pk=request.data["tag"])
+
+        if not can_manage_links_for(request.user, Tag.LINKS[model].get(pk=instance_pk)):
+            return HttpResponseForbidden("Cannot edit link for {} with id {}".format(model, tag))
+
+        return tag
+
+    def post(self, request):
+        tag = self.get_tag(request)
+        model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
+        getattr(tag, model).add(instance_pk)
+        tag.save()
+        return HttpResponse(code=201)
+
+    def delete(self, request):
+        tag = self.get_tag(request)
+        model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
+        getattr(tag, model).delete(instance_pk)
+        tag.save()
         return HttpResponse(code=204)

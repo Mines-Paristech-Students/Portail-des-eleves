@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from tags.models import Tag, Namespace
 
@@ -36,14 +37,15 @@ class NamespaceSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    namespace = NamespaceSerializer()
+    namespace = PrimaryKeyRelatedField(queryset=Namespace.objects.all())
     
     class Meta:
         model = Tag
-        fields = ("id", "value", "scope", "namespace")
+        fields = ("id", "value", "url", "namespace")
+
+    def to_representation(self, instance):
+        response = super(TagSerializer, self).to_representation(instance)
+        response["namespace"] = NamespaceSerializer().to_representation(instance.namespace)
 
     def update(self, instance, validated_data):
         raise NotImplementedError("Cannot update a tag from the REST API")
-
-    def delete(self, instance, validated_data):
-        raise NotImplementedError("Cannot delete a tag from the REST API")

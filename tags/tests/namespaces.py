@@ -1,5 +1,4 @@
 from associations.tests.base_test import BaseTestCase
-from tags.models import Namespace
 
 
 class TagNamespaceTestCase(BaseTestCase):
