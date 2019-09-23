@@ -27,7 +27,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
-    is_admin: true
+    administration_permission: true
 
 - model: authentication.user
   pk: 17member_biero
@@ -45,7 +45,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
-    is_admin: false
+    administration_permission: false
 
 #######
 # PDM #
@@ -73,7 +73,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
-    is_admin: true
+    administration_permission: true
     election_permission: false
 
 - model: authentication.user
@@ -92,5 +92,5 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
-    is_admin: false
+    administration_permission: false
     election_permission: false

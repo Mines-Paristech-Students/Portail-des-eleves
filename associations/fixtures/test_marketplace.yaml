@@ -99,7 +99,7 @@
     user: 17admin_biero
     association: biero
     role: Admin no marketplace
-    is_admin: true
+    administration_permission: true
     marketplace_permission: false
 
 - model: authentication.user
@@ -118,7 +118,7 @@
     user: 17market_biero
     association: biero
     role: Marketplace administrator
-    is_admin: false
+    administration_permission: false
     marketplace_permission: true
 
 - model: authentication.user
@@ -137,7 +137,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
-    is_admin: false
+    administration_permission: false
     marketplace_permission: false
 
 - model: authentication.user
@@ -156,7 +156,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin no marketplace
-    is_admin: true
+    administration_permission: true
     marketplace_permission: false
 
 - model: authentication.user
@@ -175,7 +175,7 @@
     user: 17market_pdm
     association: pdm
     role: Marketplace administrator
-    is_admin: false
+    administration_permission: false
     marketplace_permission: true
 
 - model: authentication.user
@@ -194,7 +194,7 @@
     user: 17market_bde
     association: bde
     role: Marketplace administrator
-    is_admin: false
+    administration_permission: false
     marketplace_permission: true
 
 - model: authentication.user
@@ -213,7 +213,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no marketplace
-    is_admin: true
+    administration_permission: true
     marketplace_permission: false
 
 - model: authentication.user
