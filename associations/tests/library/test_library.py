@@ -36,7 +36,7 @@ class LibraryTestCase(BaseLibraryTestCase):
         self.login('17simple')
         res = self.get('/associations/library/biero/')
         self.assertFalse(Library.objects.get(pk='biero').enabled)
-        self.assertStatusCode(res, 403)
+        self.assertStatusCode(res, 404)
 
     def test_if_library_does_not_exist_then_404(self):
         self.login('17simple')
@@ -70,7 +70,7 @@ class LibraryTestCase(BaseLibraryTestCase):
             self.login(user)
             res = self.post('/associations/library/',
                             data={'id': 'piche', 'enabled': 'true', 'association': 'piche', 'loanables': []})
-            self.assertStatusCode(res, 400)
+            self.assertStatusCode(res, 404)
             self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='piche')
 
     ##########

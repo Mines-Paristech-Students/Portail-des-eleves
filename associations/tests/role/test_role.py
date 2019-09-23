@@ -1,4 +1,4 @@
-from associations.models import Role
+from associations.models import User, Role
 from associations.tests.role.base_test_role import BaseRoleTestCase, ALL_USERS, ALL_USERS_EXCEPT_ADMIN_BIERO
 
 
@@ -219,3 +219,64 @@ class RoleTestCase(BaseRoleTestCase):
         res = self.destroy(0)
         self.assertStatusCode(res, 204)
         self.assertFalse(Role.objects.filter(pk=0).exists())
+
+    ##################
+    # BUSINESS LOGIC #
+    ##################
+
+    def test_logic(self):
+        # Grant 17member_biero with many permissions.
+        self.login('17admin_biero')
+
+        res = self.update(1, {
+            'role': 'Nouveau dictateur',
+            'rank': 0,
+            'administration_permission': True,
+            'election_permission': True,
+            'events_permission': True,
+            'filesystem_permission': True,
+            'library_permission': True,
+            'marketplace_permission': True,
+            'page_permission': True,
+        })
+        self.assertStatusCode(res, 200)
+
+        simple = User.objects.get(pk='17member_biero')
+        role = simple.get_role('biero')
+        for permission_name in Role.PERMISSION_NAMES:
+            self.assertTrue(getattr(role, permission_name))
+
+        # Check if 17member_biero can use its new administration permission.
+        self.login('17member_biero')
+
+        res = self.update(0, {
+            'role': 'Dictateur déchu',
+            'administration_permission': False
+        })
+        self.assertStatusCode(res, 200)
+        self.assertFalse(User.objects.get(pk='17admin_biero').get_role('biero').administration)
+
+        # 17admin saves 17admin_biero.
+        self.login('17admin')
+        res = self.update(0, {
+            'administration_permission': True
+        })
+        self.assertStatusCode(res, 200)
+        self.assertTrue(User.objects.get(pk='17admin_biero').get_role('biero').administration)
+
+        # 17admin_biero revenges.
+        self.login('17admin_biero')
+
+        res = self.update(1, {
+            'role': 'TRAÎTRE',
+            'rank': 0,
+            'administration_permission': False,
+            'is_archived': True,
+        })
+        self.assertStatusCode(res, 200)
+
+        simple = User.objects.get(pk='17member_biero')
+        role = simple.get_role('biero')
+        for permission_name in Role.PERMISSION_NAMES:
+            self.assertFalse(getattr(role, permission_name))
+

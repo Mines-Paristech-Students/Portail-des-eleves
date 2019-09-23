@@ -1,5 +1,7 @@
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+from associations.models import Marketplace, Product
 from associations.permissions.utils import check_permission_from_post_data
 
 
@@ -31,14 +33,33 @@ class ProductPermission(BasePermission):
     """
                | Enabled | Disabled |
         Admin  | CRUD    | CRUD     |
-        Simple | CRUD    |          |
-
-        Same as Marketplace.
+        Simple | R       |          |
     """
 
     message = 'You are not allowed to edit this product.'
-    has_permission = MarketplacePermission.has_permission
-    has_object_permission = MarketplacePermission.has_object_permission
+
+    def has_permission(self, request, view):
+        if request.method in ('POST',):
+            market_pk = request.data.get('marketplace', None)
+            market_query = Marketplace.objects.filter(pk=market_pk)
+
+            if market_query.exists():
+                market = market_query[0]
+                role = request.user.get_role(market.association)
+
+                return role and role.marketplace  # Marketplace administrator only.
+            else:
+                raise NotFound('The requested marketplace does not exist.')
+
+        return True
+
+    def has_object_permission(self, request, view, product):
+        role = request.user.get_role(product.marketplace.association)
+
+        if role and role.marketplace:
+            return True  # Marketplace administrator: all the rights.
+        else:
+            return request.method in SAFE_METHODS and product.marketplace.enabled
 
 
 class TransactionPermission(BasePermission):
@@ -59,18 +80,24 @@ class TransactionPermission(BasePermission):
             return False
 
         if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'marketplace')
+            product_pk = request.data.get('product', None)
+            product_query = Product.objects.filter(pk=product_pk)
+
+            if product_query.exists():
+                return product_query[0].marketplace.enabled
+            else:
+                raise NotFound('The requested product does not exist.')
 
         return True
 
-    def has_object_permission(self, request, view, marketplace):
+    def has_object_permission(self, request, view, transaction):
         # We have to put it a second time here, because when retrieving, both has_permission and has_object_permission
         # will be called.
         if request.method in SAFE_METHODS:
             return True
 
-        role = request.user.get_role(marketplace.association)
-        return role and role.marketplace
+        role = request.user.get_role(transaction.product.marketplace.association)
+        return transaction.product.marketplace.enabled or (role and role.marketplace)
 
 
 class FundingPermission(BasePermission):
@@ -91,7 +118,17 @@ class FundingPermission(BasePermission):
             return False
 
         if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'marketplace')
+            market_pk = request.data.get('marketplace', None)
+            market_query = Marketplace.objects.filter(pk=market_pk)
+
+            if market_query.exists():
+                market = market_query[0]
+                role = request.user.get_role(market.association)
+                return market.enabled and role and role.marketplace
+            else:
+                raise NotFound('The requested marketplace does not exist.')
+
+        return True
 
     def has_object_permission(self, request, view, funding):
         # We have to put it a second time here, because when retrieving, both has_permission and has_object_permission
@@ -99,9 +136,5 @@ class FundingPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method in ('POST',):
-            if not funding.marketplace.enabled:
-                return False
-
-        role = request.user.get_role(funding.association)
+        role = request.user.get_role(funding.marketplace.association)
         return role and role.marketplace

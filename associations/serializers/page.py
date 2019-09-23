@@ -20,6 +20,13 @@ class PageSerializer(serializers.ModelSerializer):
         instance.authors.add(author)
         return instance
 
+    def update(self, instance, validated_data):
+        # Prevent the changes to the association field when updating.
+        if 'association' in validated_data:
+            validated_data.pop('association')
+
+        return super(PageSerializer, self).update(instance, validated_data)
+
 
 class PageShortSerializer(serializers.ModelSerializer):
     class Meta:

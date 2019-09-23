@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Loanable
+from associations.models import Loanable, Library
 from associations.permissions.utils import check_permission_from_post_data
 
 
@@ -39,7 +39,12 @@ class LoanablePermission(BasePermission):
 
     def has_permission(self, request, view):
         if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'library')
+            library_pk = request.data.get('library', None)
+            library_query = Library.objects.filter(pk=library_pk)
+
+            if library_query.exists():
+                role = request.user.get_role(library_query[0].association)
+                return role and role.library
 
         return True
 

@@ -74,7 +74,7 @@ class PageAssociationTestCase(BasePageTestCase):
 
             now = datetime.now(tz=timezone.utc)
             page = Page.objects.get(title=page_data['title'])
-            self.assertEqual(page.association, page_data['association'])
+            self.assertEqual(page.association.pk, page_data['association'])
             self.assertEqual(page.text, page_data['text'])
             self.assertEqual(page.page_type, page_data['page_type'])
             self.assertTupleEqual((now.day, now.month, now.year, now.hour, now.minute),
@@ -116,9 +116,6 @@ class PageAssociationTestCase(BasePageTestCase):
         now = datetime.now(tz=timezone.utc)
         page = Page.objects.get(title=self.valid_update_page_data['title'])
         self.assertEqual(page.text, self.valid_update_page_data['text'])
-        self.assertTupleEqual((now.day, now.month, now.year, now.hour, now.minute),
-                              (page.creation_date.day, page.creation_date.month, page.creation_date.year,
-                               page.creation_date.hour, page.creation_date.minute))
         self.assertTupleEqual((now.day, now.month, now.year, now.hour, now.minute),
                               (page.last_update_date.day, page.last_update_date.month, page.last_update_date.year,
                                page.last_update_date.hour, page.last_update_date.minute))

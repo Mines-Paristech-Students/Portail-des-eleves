@@ -75,6 +75,8 @@
     association: biero
     title: 'L’équipe'
     text: 'Un président psychopathe qui écrit des mails hilarants.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
 
 - model: associations.page
   pk: 1
@@ -82,6 +84,8 @@
     association: biero
     title: 'Le concept'
     text: 'Se bourrer la gueule. Pour 5 €.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
 
 #######
 # PDM #
@@ -156,3 +160,5 @@
     association: pdm
     title: 'Le concept'
     text: 'Soit tu payes. Soit tu voles.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'

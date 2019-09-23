@@ -85,6 +85,7 @@ class AssociationShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
         read_only_fields = ('id', 'name', 'logo')
+        fields = read_only_fields
 
 
 from associations.serializers.marketplace import MarketplaceShortSerializer

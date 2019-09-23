@@ -52,7 +52,7 @@ class ProductTestCase(BaseMarketPlaceTestCase):
         self.login('17simple')
         res = self.get('/associations/products/4/')
         self.assertFalse(Marketplace.objects.get(pk='pdm').enabled)
-        self.assertStatusCode(res, 403)
+        self.assertStatusCode(res, 404)
 
     def test_if_product_does_not_exist_then_404(self):
         self.login('17simple')
@@ -116,13 +116,13 @@ class ProductTestCase(BaseMarketPlaceTestCase):
         self.assertEqual(Product.objects.get(pk=5).name, data['name'])
         self.assertEqual(Product.objects.get(pk=5).description, data['description'])
 
-    def test_cannot_update_association_field(self):
+    def test_cannot_update_marketplace_field(self):
         self.login('17market_pdm')
-        product_before = Product.objects.get(pk=5)
-        data = {'pk': 5, 'association': 'pdm'}
+
+        data = {'pk': 5, 'marketplace': 'biero'}
         res = self.patch('/associations/products/5/', data)
         self.assertStatusCode(res, 200)
-        self.assertEqual(product_before.association.pk, 'biero')
+        self.assertEqual(Product.objects.get(pk=5).marketplace.pk, 'pdm')
 
     ##########
     # DELETE #

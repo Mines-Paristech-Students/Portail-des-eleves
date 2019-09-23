@@ -136,7 +136,8 @@ class EventsTestCase(BaseEventsTestCase):
         data = {'pk': 0, 'association': 'pdm'}
         res = self.update(data['pk'], 'biero', data=data)
         self.assertStatusCode(res, 200)
-        self.assertEqual(events_before.association.pk, 'biero')
+        self.assertEqual(events_before.association.pk,
+                         Event.objects.get(pk=0).association.pk)
 
     ###########
     # DESTROY #

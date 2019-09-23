@@ -39,7 +39,7 @@ class CreateBallotView(generics.CreateAPIView):
     permission_classes = (BallotPermission,)
 
     def get_election_or_404(self, **kwargs):
-        request_election = Election.objects.filter(pk=kwargs.get('election_pk', None))
+        request_election = Election.objects.filter(pk=kwargs.get('election_pk'))
 
         if not request_election.exists():
             raise NotFound('Election not found.')

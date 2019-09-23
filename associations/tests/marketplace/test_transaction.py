@@ -262,7 +262,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
 
         for transaction in [x for x in transactions if x.status == old_status]:
             res = self.patch(f'/associations/transactions/{transaction.id}/', {'status': new_status})
-            self.assertStatusCode(res, 403)
+            self.assertStatusCodeIn(res, [404, 403])
             self.assertEqual(Transaction.objects.get(id=transaction.id).status, old_status,
                              msg=f'User {user} did manage to update the status of transaction {transaction.id}'
                                  f'from {old_status}to {new_status}.')

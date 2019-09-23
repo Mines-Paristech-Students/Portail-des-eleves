@@ -14,7 +14,7 @@ class PagePermission(BasePermission):
 
     def has_permission(self, request, view):
         if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'library')
+            return check_permission_from_post_data(request, 'page')
 
         return True
 
