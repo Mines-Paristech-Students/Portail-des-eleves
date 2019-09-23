@@ -86,7 +86,7 @@
     user: 17admin_bd-tek
     association: bd-tek
     role: Admin no library
-    is_admin: true
+    administration_permission: true
     library_permission: false
 
 - model: authentication.user
@@ -105,7 +105,7 @@
     user: 17library_bd-tek
     association: bd-tek
     role: Library administrator
-    is_admin: false
+    administration_permission: false
     library_permission: true
 
 - model: authentication.user
@@ -124,7 +124,7 @@
     user: 17member_bd-tek
     association: bd-tek
     role: Simple member
-    is_admin: false
+    administration_permission: false
     library_permission: false
 
 - model: authentication.user
@@ -143,7 +143,7 @@
     user: 17admin_biero
     association: biero
     role: Admin no library
-    is_admin: true
+    administration_permission: true
     library_permission: false
 
 - model: authentication.user
@@ -162,7 +162,7 @@
     user: 17library_biero
     association: biero
     role: Library administrator
-    is_admin: false
+    administration_permission: false
     library_permission: true
 
 - model: authentication.user
@@ -181,7 +181,7 @@
     user: 17library_bde
     association: bde
     role: Library administrator
-    is_admin: false
+    administration_permission: false
     library_permission: true
 
 - model: authentication.user
@@ -200,7 +200,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no library
-    is_admin: true
+    administration_permission: true
     library_permission: false
 
 - model: associations.loan

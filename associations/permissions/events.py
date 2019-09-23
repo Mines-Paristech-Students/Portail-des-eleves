@@ -1,13 +1,13 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association
+from associations.permissions.utils import check_permission_from_post_data
 
 
 class EventsPermission(BasePermission):
     """
-                     | Event |
-        Events admin | CRUD  |
-        Simple       | R     |
+                     | Permissions |
+        Events admin | CRUD        |
+        Simple       | R           |
 
         The customized actions 'join' and 'leave' rely on a GET (R).
     """
@@ -15,23 +15,15 @@ class EventsPermission(BasePermission):
     message = 'You are not allowed to edit this event.'
 
     def has_permission(self, request, view):
-        # Only check the POST method, where we have to go through the POSTed data to find a reference to an association.
-        # If the association does not exist, return True so the view can handle the error.
-
         if request.method in ('POST',):
-            association_pk = request.data.get('association', None)
-            association_query = Association.objects.filter(pk=association_pk)
-
-            if association_query.exists():
-                role = request.user.get_role(association_query[0])
-                return role and role.events
+            return check_permission_from_post_data(request, 'events')
 
         return True
 
-    def has_object_permission(self, request, view, event):
-        role = request.user.get_role(event.association)
+    def has_object_permission(self, request, view, election):
+        role = request.user.get_role(election.association)
 
-        if role and role.events:  # Event administrator.
+        if role and role.events:  # Events administrator.
             return True
         else:
             return request.method in SAFE_METHODS

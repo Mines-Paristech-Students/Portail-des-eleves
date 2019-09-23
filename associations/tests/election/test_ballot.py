@@ -23,16 +23,10 @@ class BallotTestCase(BaseElectionTestCase):
         for user in ALL_USERS:
             self.login(user)
 
-            res = self.vote(0, 'piche', data=self.valid_ballot_data_for_0)
-            self.assertStatusCode(res, 404)
-
             res = self.vote(42, 'piche', data=self.valid_ballot_data_for_0)
             self.assertStatusCode(res, 404)
 
             res = self.vote(42, 'biero', data=self.valid_ballot_data_for_0)
-            self.assertStatusCode(res, 404)
-
-            res = self.vote(1, 'biero', data=self.valid_ballot_data_for_0)
             self.assertStatusCode(res, 404)
 
     def test_if_logged_in_and_registered_then_can_vote(self):

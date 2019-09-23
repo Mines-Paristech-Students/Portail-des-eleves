@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from rest_framework import relations
+from rest_framework import serializers
 
 from associations.models import Association, Page, User
 
@@ -19,6 +19,13 @@ class PageSerializer(serializers.ModelSerializer):
         instance = super(PageSerializer, self).save(**kwargs)
         instance.authors.add(author)
         return instance
+
+    def update(self, instance, validated_data):
+        # Prevent the changes to the association field when updating.
+        if 'association' in validated_data:
+            validated_data.pop('association')
+
+        return super(PageSerializer, self).update(instance, validated_data)
 
 
 class PageShortSerializer(serializers.ModelSerializer):

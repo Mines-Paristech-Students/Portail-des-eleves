@@ -121,7 +121,8 @@ class LoanableTestCase(BaseLibraryTestCase):
         data = {'pk': 2, 'association': 'pdm'}
         res = self.patch('/associations/loanables/2/', data)
         self.assertStatusCode(res, 200)
-        self.assertEqual(loanable_before.association.pk, 'biero')
+        self.assertEqual(loanable_before.library.association.pk,
+                         Loanable.objects.get(pk=2).library.association.pk)
 
     ##########
     # DELETE #
