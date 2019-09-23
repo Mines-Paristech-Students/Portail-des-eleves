@@ -84,7 +84,7 @@ class ManageTagPermission(permissions.BasePermission):
             namespace = Namespace.objects.get(pk=request.data.get('namespace'))
             scope = Namespace.SCOPES[namespace.scope]
             if scope:
-                instance = scope.objects.get(namespace.scoped_to)
+                instance = scope.objects.get(pk=namespace.scoped_to)
                 return can_manage_tags_for(request.user, instance)
             else:
                 return request.user.is_admin
@@ -92,5 +92,8 @@ class ManageTagPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, tag):
         namespace = tag.namespace
-        instance = Namespace.SCOPES[namespace.scope].objects.get(namespace.scoped_to)
-        return can_manage_tags_for(request.user, instance)
+        if Namespace.SCOPES[namespace.scope] is None:
+            return request.user.is_admin
+        else:
+            instance = Namespace.SCOPES[namespace.scope].objects.get(namespace.scoped_to)
+            return can_manage_tags_for(request.user, instance)

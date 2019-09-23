@@ -38,7 +38,7 @@ class NamespaceSerializer(serializers.ModelSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
     namespace = PrimaryKeyRelatedField(queryset=Namespace.objects.all())
-    
+
     class Meta:
         model = Tag
         fields = ("id", "value", "url", "namespace")
@@ -46,6 +46,7 @@ class TagSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super(TagSerializer, self).to_representation(instance)
         response["namespace"] = NamespaceSerializer().to_representation(instance.namespace)
+        return response
 
     def update(self, instance, validated_data):
         raise NotImplementedError("Cannot update a tag from the REST API")

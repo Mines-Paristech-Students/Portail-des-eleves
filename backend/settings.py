@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'forum',
     'polls',
     'subscriptions',
-    'repartitions',
     'tags'
 ]
 

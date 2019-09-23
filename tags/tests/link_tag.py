@@ -2,7 +2,7 @@ from associations.tests.base_test import BaseTestCase
 
 
 class TagNamespaceTestCase(BaseTestCase):
-    fixtures = ['test_authentication.yaml', 'test_marketplace.yaml', 'test_tags.yaml']
+    fixtures = ["test_authentication.yaml", "test_marketplace.yaml", "test_tags.yaml"]
 
     def test_add_global_tag(self):
         self.login("17simple")
@@ -11,20 +11,19 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/tags/link/product/2/")
         self.assertStatusCode(res, 200)
-        self.assertJSONEqual(res.content, {
-            "tags": [
-                {
-                    "id": 1,
-                    "value": "17bocquet",
-                    "url": None,
-                    "namespace": {
+        self.assertJSONEqual(
+            res.content,
+            {
+                "tags": [
+                    {
                         "id": 1,
-                        "scope": "global",
-                        "name": "user"
+                        "value": "17bocquet",
+                        "url": None,
+                        "namespace": {"id": 1, "scope": "global", "name": "user"},
                     }
-                }
-            ]
-        })
+                ]
+            },
+        )
 
         res = self.delete("/tags/link/product/2/", {"tag": 1})
         self.assertStatusCode(res, 200)
@@ -47,20 +46,23 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/tags/link/product/2/")
         self.assertStatusCode(res, 200)
-        self.assertJSONEqual(res, {
-            "tags": [
-                {
-                    "id": "1",
-                    "value": "17bocquet",
-                    "url": "",
-                    "namespace": {
-                        "id": 2,
-                        "scope": "association",
-                        "scoped_to": "pdm"
+        self.assertJSONEqual(
+            res,
+            {
+                "tags": [
+                    {
+                        "id": "1",
+                        "value": "17bocquet",
+                        "url": "",
+                        "namespace": {
+                            "id": 2,
+                            "scope": "association",
+                            "scoped_to": "pdm",
+                        },
                     }
-                }
-            ]
-        })
+                ]
+            },
+        )
 
     def test_remove_scoped_tag(self):
         # add the tag
