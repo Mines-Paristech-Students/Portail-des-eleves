@@ -1,14 +1,11 @@
-from django.http.response import HttpResponseForbidden
-
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
 
 from authentication.models import User
 from authentication.permissions import ProfilePermission
-from authentication.serializers.user import UserSerializer, UserShortSerializer
+from authentication.serializers.user import UserSerializer
 
 
 class ProfileViewSetPagination(PageNumberPagination):

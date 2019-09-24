@@ -8,10 +8,9 @@ class BirthdaysTestCase(BackendTestCase):
 
     fixtures = ('birthdays_test.json',)
 
-    def setUp(self):
-        self.user = self.create_and_login_user('15veaux', admin=True)
-
     def test_birthdays(self):
+        self.create_and_login_user('17simple')
+
         number_of_days = 20
         res = self.get(f'birthdays/{number_of_days}/')
         self.assertStatusCode(res, 200)
