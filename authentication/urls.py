@@ -15,7 +15,7 @@ urlpatterns = [
     path('auth/', JWTSetCookiesView.as_view(), name='token_obtain_pair'),
     path('auth/check/', CheckCredentials.as_view(), name='check'),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
-    path('birthdays/', get_birthdays, name="get_birthdays"),
+    path('birthdays/<int:number_of_days>/', get_birthdays, name="get_birthdays"),
     path('promotions/', get_promotions, name="get_promotions"),
     path('profile/questions/<user_pk>', get_profile_questions),
 ] + router.urls
