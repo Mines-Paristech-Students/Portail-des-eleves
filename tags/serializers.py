@@ -7,7 +7,7 @@ from tags.models import Tag, Namespace
 class NamespaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Namespace
-        fields = ("id", "name", "scope", 'scoped_to')
+        fields = ("id", "name", "scope", "scoped_to")
 
     def validate_scope(self, value):
         if value not in Namespace.SCOPES.keys():
@@ -19,11 +19,15 @@ class NamespaceSerializer(serializers.ModelSerializer):
             return data
 
         if bool(Namespace.SCOPES.get(data.get("scope", None), False)) != bool(
-                data.get("scoped_to", False)):  # logical XOR
-            raise serializers.ValidationError("Must define scope and scoped_to together")
+            data.get("scoped_to", False)
+        ):  # logical XOR
+            raise serializers.ValidationError(
+                "Must define scope and scoped_to together"
+            )
 
-        if Namespace.SCOPES.get(data.get("scope")) and not Namespace.SCOPES.get(data.get("scope")).objects.get(
-                pk=data.get("scoped_to")):
+        if Namespace.SCOPES.get(data.get("scope")) and not Namespace.SCOPES.get(
+            data.get("scope")
+        ).objects.get(pk=data.get("scoped_to")):
             raise serializers.ValidationError("Not scoped_to and existing object")
 
         return data
@@ -45,8 +49,22 @@ class TagSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super(TagSerializer, self).to_representation(instance)
-        response["namespace"] = NamespaceSerializer().to_representation(instance.namespace)
+        response["namespace"] = NamespaceSerializer().to_representation(
+            instance.namespace
+        )
         return response
 
     def update(self, instance, validated_data):
         raise NotImplementedError("Cannot update a tag from the REST API")
+
+
+class TagShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        read_only_fields = ("id", "value")
+        fields = read_only_fields
+
+    def to_representation(self, instance):
+        response = super(TagShortSerializer, self).to_representation(instance)
+        response["namespace"] = instance.namespace.name
+        return response

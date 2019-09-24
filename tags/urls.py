@@ -5,7 +5,7 @@ from tags.views import NamespaceViewSet, TagViewSet, TagLinkView, get_tags_for_s
 
 urlpatterns = [
     path(
-        'link/<model>/<instance_pk>/',
+        'link/<model>/<instance_pk>/tag/<tag_pk>/',
         TagLinkView.as_view(),
         name="tag_link_view"
     ),

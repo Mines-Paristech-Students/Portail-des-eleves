@@ -1,5 +1,5 @@
 import django_filters
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, SuspiciousOperation
 from django.http import (
     HttpResponseBadRequest,
     HttpResponse,
@@ -9,6 +9,7 @@ from django.http import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, status
 from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
@@ -89,33 +90,30 @@ class TagViewSet(
 
 
 class TagLinkView(APIView):
-    def get_tag(self, request):
-        if "tag" not in request.data:
-            return HttpResponseBadRequest("No tag id provided")
-
+    def get_tag(self, request, tag_pk):
         model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
-        tag = Tag.objects.get(pk=request.data["tag"])
+        tag = Tag.objects.get(pk=tag_pk)
 
-        if not can_manage_links_for(request.user, Tag.LINKS[model].get(pk=instance_pk)):
-            return HttpResponseForbidden(
+        if tag.namespace.scope != "global" and not can_manage_links_for(
+            request.user, Tag.LINKS[model].objects.get(pk=instance_pk)
+        ):
+            raise PermissionDenied(
                 "Cannot edit link for {} with id {}".format(model, tag)
             )
 
         return tag
 
-    def post(self, request):
-        tag = self.get_tag(request)
-        model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
+    def post(self, request, model, instance_pk, tag_pk):
+        tag = self.get_tag(request, tag_pk)
         getattr(tag, model).add(instance_pk)
         tag.save()
-        return HttpResponse(code=201)
+        return HttpResponse(status=201)
 
-    def delete(self, request):
-        tag = self.get_tag(request)
-        model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
-        getattr(tag, model).delete(instance_pk)
+    def delete(self, request, model, instance_pk, tag_pk):
+        tag = self.get_tag(request, tag_pk)
+        getattr(tag, model).remove(instance_pk)
         tag.save()
-        return HttpResponse(code=204)
+        return HttpResponse(status=204)
 
 
 def get_tags_for_scope(request, model, instance_pk):

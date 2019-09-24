@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 from associations.models import Association, Marketplace, Product, Transaction, Funding
 from associations.serializers.association import AssociationsShortSerializer
 from authentication.models import User
+from tags.serializers import TagSerializer
 
 
 class CreateTransactionSerializer(ModelSerializer):
@@ -57,10 +58,11 @@ class ProductShortSerializer(ModelSerializer):
 
 class ProductSerializer(ModelSerializer):
     marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
+        fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left', 'tags')
 
     def update(self, instance, validated_data):
         if 'marketplace' in validated_data:

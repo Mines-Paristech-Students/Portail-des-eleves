@@ -60,10 +60,12 @@ def can_manage_tags_for(user, instance):
 
 def can_manage_links_for(user, instance):
     parent = get_parent_object(instance)
-
+    print(parent)
     if isinstance(parent, Association):
         role = _get_role_for_user(user, parent)
-        return role and role.is_admin
+        print(user, parent)
+        print(role)
+        return bool(role) and role.is_admin
     elif isinstance(parent, Theme):
         return user.is_admin
     elif parent is None:
@@ -114,7 +116,6 @@ class ManageTagPermission(permissions.BasePermission):
         if Namespace.SCOPES[namespace.scope] is None:
             return request.user.is_admin
         else:
-            print(namespace)
             instance = Namespace.SCOPES[namespace.scope].objects.get(
                 pk=namespace.scoped_to
             )
