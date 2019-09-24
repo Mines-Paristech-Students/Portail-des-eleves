@@ -6,5 +6,8 @@ from authentication.models import User
 
 @api_view(["GET"])
 def list_promotions(request):
-    promotions = set(user.promotion for user in User.objects.all())
+    # Technically speaking, we are not sure at 100 % to have every promotion.
+    # In practice, it will always be OK.
+
+    promotions = [x[0] % 100 for x in User.objects.distinct('year_of_entry').values_list('year_of_entry')]
     return Response({"promotions": sorted(list(promotions), reverse=True)})

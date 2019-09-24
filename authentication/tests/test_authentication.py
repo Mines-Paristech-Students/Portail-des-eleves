@@ -4,10 +4,8 @@ from authentication.models import User
 
 
 class AuthenticationTestCase(TestCase):
-    """
-    Test the authentication logic.
-    TODO(Florian) More to come
-    """
+    """Test the authentication logic."""
+    # TODO: finish this lol
 
     def setUp(self):
         User.objects.create_user(
