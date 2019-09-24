@@ -1,5 +1,5 @@
 from associations.models import Role
-from associations.tests.base_test import BaseTestCase
+from backend.tests_utils import BaseTestCase
 
 # Please see the comments on test_role.yaml to get a better understanding of the test fixtures.
 

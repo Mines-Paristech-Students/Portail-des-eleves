@@ -1,18 +1,11 @@
-import json
 from datetime import date, timedelta
 
 
 class Birthday:
-    """Utils class to represent, sort, index and compare birthdays
-    """
+    """Utils class to represent, sort, index and compare birthdays."""
 
     def __init__(self, day, month, year=1900):
-        if not isinstance(day, int) or day <= 0:
-            raise ValueError("day parameter must be a positive int")
-        if not isinstance(month, int) or month <= 0:
-            raise ValueError("month parameter must be a positive int")
-        if not isinstance(year, int) or year <= 0:
-            raise ValueError("year parameter must be a positive int")
+        # The date constructor raises exceptions if the parameters are not consistent.
         self._date = date(day=day, month=month, year=year)
 
     @property
@@ -80,20 +73,3 @@ class Birthday:
 
     def isoformat(self):
         return self._date.isoformat()
-
-
-class BirthdaysEncoder(json.JSONEncoder):
-    def _encode(self, obj):
-        # obj must be of type dict
-        returned_json = {"birthdays": []}
-        for k, v in obj.items():
-            # k must be of type Birthday
-            dic = {
-                "date": date(day=k.day, month=k.month, year=2000).isoformat(),
-                "users": v
-            }
-            returned_json["birthdays"].append(dic)
-        return returned_json
-
-    def encode(self, obj):
-        return super(BirthdaysEncoder, self).encode(self._encode(obj))
