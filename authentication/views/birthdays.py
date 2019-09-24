@@ -12,19 +12,16 @@ from authentication.utils import Birthday
 def get_birthdays(request, number_of_days):
     """API endpoint to get birthdays information in the next X days."""
 
-    days = number_of_days
-    days = int(days)
-
     # Any request with more than 365 days basically mean to fetch all incoming birthdays over the year
-    if days > 365:
-        days = 365
+    if number_of_days > 365:
+        number_of_days = 365
 
     # Creating a month_idx list with all the month indexes (from 1 to 12) where we look for birthdays If today is
     # Sept. 25 and we want the next 7 days, month_idx will be [09, 10] If today is in Sept. 25 and we want 364 days,
     # month_idx will be [09, 10, 11, 12, 01, 02, 03, 04, 05, 06, 07, 08, 09] 09 is twice in the array,
     # this is important to look have birthdays from 25 Sept at the beginning and birthdays from 1 to 25 Sept at the end
     start = Birthday.from_date(date.today())
-    end = Birthday.from_date(date.today() + timedelta(days=days - 1))
+    end = Birthday.from_date(date.today() + timedelta(days=number_of_days - 1))
     if start.month > end.month:
         month_idx = [i % 12 if i != 12 else 12 for i in range(start.month, end.month + 12 + 1)]
     elif start.month == end.month and start.day > end.day:

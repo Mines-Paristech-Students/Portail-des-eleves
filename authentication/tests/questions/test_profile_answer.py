@@ -103,18 +103,18 @@ class TestProfileAnswer(BaseTestCase):
                            ('17admin', self.profile_answer_17simple_create_data)):
             self.login(user)
 
-            length_before = len(ProfileAnswer.objects.all())
+            length_before = ProfileAnswer.objects.count()
             res = self.create(data=data)
             self.assertStatusCode(res, 403)
-            self.assertEqual(len(ProfileAnswer.objects.all()), length_before)
+            self.assertEqual(ProfileAnswer.objects.count(), length_before)
 
     def test_cannot_answer_twice(self):
         self.login('17admin')
 
-        length_before = len(ProfileAnswer.objects.all())
+        length_before = ProfileAnswer.objects.count()
         res = self.create(data=self.profile_answer_17admin_invalid_create_data)
         self.assertStatusCode(res, 400)
-        self.assertEqual(len(ProfileAnswer.objects.all()), length_before)
+        self.assertEqual(ProfileAnswer.objects.count(), length_before)
 
     ##########
     # UPDATE #
@@ -174,23 +174,23 @@ class TestProfileAnswer(BaseTestCase):
     def test_can_delete_own_answer(self):
         for user, pk in (('17simple', 1), ('17admin', 2)):
             self.login(user)
-            length_before = len(ProfileAnswer.objects.all())
+            length_before = ProfileAnswer.objects.count()
             res = self.destroy(pk)
             self.assertStatusCode(res, 204)
-            self.assertEqual(length_before - 1, len(ProfileAnswer.objects.all()))
+            self.assertEqual(length_before - 1, ProfileAnswer.objects.count())
 
     def test_if_not_global_admin_then_cannot_delete_other_profile_answer(self):
         self.login('17simple')
 
-        length_before = len(ProfileAnswer.objects.all())
+        length_before = ProfileAnswer.objects.count()
         res = self.destroy(2)
         self.assertStatusCode(res, 403)
-        self.assertEqual(length_before, len(ProfileAnswer.objects.all()))
+        self.assertEqual(length_before, ProfileAnswer.objects.count())
 
     def test_if_global_admin_then_can_delete_other_profile_answer(self):
         self.login('17admin')
 
-        length_before = len(ProfileAnswer.objects.all())
+        length_before = ProfileAnswer.objects.count()
         res = self.destroy(1)
         self.assertStatusCode(res, 204)
-        self.assertEqual(length_before - 1, len(ProfileAnswer.objects.all()))
+        self.assertEqual(length_before - 1, ProfileAnswer.objects.count())

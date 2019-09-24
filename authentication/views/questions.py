@@ -27,6 +27,12 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
         request.data['user'] = request.user.id
         return super(ProfileAnswerViewSet, self).create(request)
 
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 @api_view(['GET'])
 def list_profile_questions(request, user_pk):

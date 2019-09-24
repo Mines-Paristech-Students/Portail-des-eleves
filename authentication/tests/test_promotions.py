@@ -19,7 +19,7 @@ class PromotionsTestCase(BaseTestCase):
 
         promotions = json.loads(res.content)['promotions']
 
-        self.assertTrue(all(promotions[i] > promotions[i + 1] for i in range(len(promotions) - 1)),
-                        msg='Promotions are not sorted from the newest to the oldest.')
+        self.assertEqual(sorted(promotions, reverse=True), promotions,
+                         msg='Promotions are not sorted from the newest to the oldest.')
 
         self.assertSetEqual(set(promotions), set(user.promotion for user in User.objects.all()))
