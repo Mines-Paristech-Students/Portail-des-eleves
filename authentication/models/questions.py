@@ -25,4 +25,5 @@ class ProfileAnswer(models.Model):
         null=False,
     )
 
-
+    class Meta:
+        unique_together = ('user', 'question')

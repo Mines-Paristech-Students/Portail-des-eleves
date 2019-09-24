@@ -3,7 +3,7 @@ from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
 from authentication.views import CheckCredentials, JWTSetCookiesView, ProfileViewSet, LogoutView, get_birthdays, \
-    ProfileAnswerViewSet, ProfileQuestionViewSet, get_profile_questions, list_promotions
+    ProfileAnswerViewSet, ProfileQuestionViewSet, list_profile_questions, list_promotions
 
 router = BulkRouter()
 
@@ -17,5 +17,5 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('birthdays/<int:number_of_days>/', get_birthdays, name="get_birthdays"),
     path('promotions/', list_promotions, name="list_promotions"),
-    path('profile/questions/<user_pk>', get_profile_questions),
+    path('users/questions/<slug:user_pk>/', list_profile_questions),
 ] + router.urls
