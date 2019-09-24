@@ -6,12 +6,12 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import NotAuthenticated
 
-from backend.tests_utils import BackendTestCase
+from backend.tests_utils import BaseTestCase
 from authentication.models import User
 from polls.models import Poll, Choice
 
 
-class PollTestCase(BackendTestCase):
+class PollTestCase(BaseTestCase):
     """Defines some helpful functions for testing the poll application."""
 
     DUMMY_QUESTION = 'A question?'

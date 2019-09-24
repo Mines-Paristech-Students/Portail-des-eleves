@@ -1,18 +1,22 @@
 import json
 
-from backend.tests_utils import BackendTestCase
+from backend.tests_utils import BaseTestCase
 
 
-class BirthdaysTestCase(BackendTestCase):
+class BirthdaysTestCase(BaseTestCase):
     """Test the birthdays endpoint logic."""
 
     fixtures = ('birthdays_test.json',)
+
+    def test_if_not_logged_in_then_401(self):
+        res = self.get('/birthdays/2/')
+        self.assertStatusCode(res, 401)
 
     def test_birthdays(self):
         self.create_and_login_user('17simple')
 
         number_of_days = 20
-        res = self.get(f'birthdays/{number_of_days}/')
+        res = self.get(f'/birthdays/{number_of_days}/')
         self.assertStatusCode(res, 200)
 
         birthdays = json.loads(res.content)['birthdays']
