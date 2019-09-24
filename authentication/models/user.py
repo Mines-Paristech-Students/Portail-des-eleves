@@ -8,29 +8,31 @@ from django.utils.functional import cached_property
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, id, first_name, last_name, email, password, birthday, promo):
+    def create_user(self, username, first_name, last_name, email, password, birthday, year_of_entry):
         """
-        Creates and saves a User
+        Create and save a User.
         """
-        return self._create_user(id, first_name, last_name, email, password, birthday, promo, is_admin=False)
+        return self._create_user(username, first_name, last_name, email, password, birthday, year_of_entry,
+                                 is_admin=False)
 
-    def create_superuser(self, id, first_name, last_name, email, password, birthday, promo):
+    def create_superuser(self, username, first_name, last_name, email, password, birthday, year_of_entry):
         """
-        Creates and saves a superuser with the given email, birthday and password.
+        Create and save a superuser with the given email, birthday and password.
         """
-        return self._create_user(id, first_name, last_name, email, password, birthday, promo, is_admin=True)
+        return self._create_user(username, first_name, last_name, email, password, birthday, year_of_entry,
+                                 is_admin=True)
 
-    def _create_user(self, id, first_name, last_name, email, password, birthday, promo, is_admin):
+    def _create_user(self, username, first_name, last_name, email, password, birthday, year_of_entry, is_admin):
         """
-        Creates and saves a User
+        Create and save a User.
         """
         user = self.model(
-            id=id,
+            id=username,
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
             birthday=birthday,
-            promo=promo
+            year_of_entry=year_of_entry
         )
 
         user.set_password(password)
