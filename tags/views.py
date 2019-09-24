@@ -1,3 +1,4 @@
+import django_filters
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import (
     HttpResponseBadRequest,
@@ -50,31 +51,41 @@ class NamespaceViewSet(viewsets.ModelViewSet):
         return super(NamespaceViewSet, self).update(request, *args, **kwargs)
 
 
-class TagViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, GenericViewSet):
+class TagViewSet(
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
     serializer_class = TagSerializer
     permission_classes = (ManageTagPermission,)
     queryset = Tag.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        already_created = None
-        try:
-            already_created = Tag.objects.get(
-                namespace=serializer.validated_data["namespace"],
-                value=serializer.validated_data["value"],
-            )
-        except ObjectDoesNotExist:
-            pass
+    def get_queryset(self):
+        queryset = self.queryset
 
-        if already_created:
-            return Response(
-                self.serializer_class().to_representation(already_created),
-                status=status.HTTP_201_CREATED,
+        scope = self.request.query_params.get("scope", None)
+        scope_id = self.request.query_params.get("scope_id", None)
+
+        if scope is not None and scope_id is not None:
+            queryset = queryset.filter(
+                namespace__scope=scope, namespace__scoped_to=scope_id
             )
-        else:
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        if "namespace" in request.data and "value" in request.data:
+            try:
+                tag = Tag.objects.get(
+                    namespace=request.data.get("namespace"),
+                    value=request.data.get("value"),
+                )
+                return JsonResponse(TagSerializer().to_representation(tag), status=201)
+            except Tag.DoesNotExist:
+                pass
+
+        return super(TagViewSet, self).create(request, *args, **kwargs)
 
 
 class TagLinkView(APIView):
@@ -108,5 +119,7 @@ class TagLinkView(APIView):
 
 
 def get_tags_for_scope(request, model, instance_pk):
-    tags = Tag.objects.filter(namespace__scope=model, namespace__scoped_to=instance_pk).all()
+    tags = Tag.objects.filter(
+        namespace__scope=model, namespace__scoped_to=instance_pk
+    ).all()
     return JsonResponse({"tags": TagSerializer(many=True).to_representation(tags)})

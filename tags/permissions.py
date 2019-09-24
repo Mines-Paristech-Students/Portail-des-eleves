@@ -95,5 +95,5 @@ class ManageTagPermission(permissions.BasePermission):
         if Namespace.SCOPES[namespace.scope] is None:
             return request.user.is_admin
         else:
-            instance = Namespace.SCOPES[namespace.scope].objects.get(namespace.scoped_to)
+            instance = Namespace.SCOPES[namespace.scope].objects.get(pk=namespace.scoped_to)
             return can_manage_tags_for(request.user, instance)
