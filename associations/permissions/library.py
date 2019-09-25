@@ -1,8 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Loan, Loanable
-from associations.permissions.base_permissions import extract_id
+from associations.models import Loanable, Library
+from associations.permissions.utils import check_permission_from_post_data
 
 
 class LibraryPermission(BasePermission):
@@ -15,16 +14,8 @@ class LibraryPermission(BasePermission):
     message = 'You are not allowed to edit this library.'
 
     def has_permission(self, request, view):
-        # Only check the POST method, where we have to go through the POSTed data to find a reference to an association.
-        # If the association does not exist, return True so the view can handle the error.
-
         if request.method in ('POST',):
-            association_pk = request.data.get('association', None)
-            association_query = Association.objects.filter(pk=association_pk)
-
-            if association_query.exists():
-                role = request.user.get_role(association_query[0])
-                return role and role.library
+            return check_permission_from_post_data(request, 'library')
 
         return True
 
@@ -47,9 +38,6 @@ class LoanablePermission(BasePermission):
     message = 'You are not allowed to edit this loanable.'
 
     def has_permission(self, request, view):
-        # Only check the POST method, where we have to go through the POSTed data to find a reference to a Library.
-        # If the library does not exist, return True so the view can handle the error.
-
         if request.method in ('POST',):
             library_pk = request.data.get('library', None)
             library_query = Library.objects.filter(pk=library_pk)
@@ -107,4 +95,4 @@ class LoansPermission(BasePermission):
         if role and role.library:  # Library administrator.
             return True
         else:
-            return loan.loanable.library.enabled and loan.user == request.user
+            return loan.user == request.user and (loan.loanable.library.enabled or request.method in SAFE_METHODS)

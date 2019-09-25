@@ -5,4 +5,4 @@ from tags.models import Tag
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    fields = ('key', "value", "url")
+    fields = ("key", "value", "url")

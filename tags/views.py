@@ -1,8 +1,4 @@
-from django.http import (
-    HttpResponseBadRequest,
-    HttpResponse,
-    JsonResponse,
-)
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework import viewsets

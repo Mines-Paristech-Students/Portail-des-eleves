@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from django.core.exceptions import ObjectDoesNotExist
 
 from associations.models import Choice, Election
-from associations.tests.election.base_test_election import ALL_USERS, ALL_USERS_EXCEPT_ELECTION_BIERO,\
+from associations.tests.election.base_test_election import ALL_USERS, ALL_USERS_EXCEPT_ELECTION_BIERO, \
     BaseElectionTestCase
 
 
@@ -166,11 +166,10 @@ class ElectionTestCase(BaseElectionTestCase):
 
     def test_cannot_update_association_field(self):
         self.login('17election_biero')
-        election_before = Election.objects.get(pk=0)
         data = {'pk': 0, 'association': 'pdm'}
         res = self.update(data['pk'], 'biero', data=data)
         self.assertStatusCode(res, 200)
-        self.assertEqual(election_before.association.pk, 'biero')
+        self.assertEqual(Election.objects.get(pk=0).association.pk, 'biero')
 
     ###########
     # DESTROY #

@@ -105,7 +105,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                              {'status': 'REFUNDED'},
                              {'date': datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)}]:
                     res = self.patch(f'/associations/funding/{funding.id}/', data=data)
-                    self.assertStatusCode(res, 403)
+                    self.assertStatusCodeIn(res, [403, 404])
 
                     for key in data:
                         self.assertEqual(getattr(funding, key),
@@ -131,7 +131,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
         user = '17market_biero'
         self.login(user)
 
-        for funding in Funding.objects.all():
+        for funding in Funding.objects.filter(marketplace__id='biero'):
             for data in [{'user': '17simple'},
                          {'value': 42},
                          {'marketplace': 'pdm'},
@@ -155,7 +155,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                          {'status': 'REFUNDED'},
                          {'date': datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)}]:
                 res = self.patch(f'/associations/funding/{funding.id}/', data=data)
-                self.assertStatusCode(res, 403)
+                self.assertStatusCode(res, 404)
 
                 for key in data:
                     self.assertEqual(getattr(funding, key),

@@ -6,12 +6,12 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import NotAuthenticated
 
-from backend.tests_utils import BackendTestCase
+from backend.tests_utils import BaseTestCase
 from authentication.models import User
 from polls.models import Poll, Choice
 
 
-class PollTestCase(BackendTestCase):
+class PollTestCase(BaseTestCase):
     """Defines some helpful functions for testing the poll application."""
 
     DUMMY_QUESTION = 'A question?'
@@ -141,11 +141,11 @@ class ListSubmittedPollsTest(PollTestCase):
 
     def test_with_two_users(self):
         """Each user is returned 200 and only its full, submitted poll."""
-        self.create_and_login_user(id='user_1', admin=False)
+        self.create_and_login_user(username='user_1', admin=False)
         self.submit_poll('user_1\'s poll', choices=['Choice'])
         self.logout()
 
-        self.create_and_login_user(id='user_2', admin=False)
+        self.create_and_login_user(username='user_2', admin=False)
         self.submit_poll('user_2\'s poll', choices=['Choice'])
         self.logout()
 
@@ -203,11 +203,11 @@ class ListAllPollsTest(PollTestCase):
 
     def test_with_simple_users_submission(self):
         """Return 200 and the submission of the users."""
-        self.create_and_login_user(id='user_1', admin=False)
+        self.create_and_login_user(username='user_1', admin=False)
         self.submit_poll('user_1\'s poll', choices=['Choice'])
         self.logout()
 
-        self.create_and_login_user(id='user_2', admin=False)
+        self.create_and_login_user(username='user_2', admin=False)
         self.submit_poll('user_2\'s poll', choices=['Choice'])
         self.logout()
 
@@ -273,12 +273,12 @@ class RetrievePollTest(PollTestCase):
     def test_simple_user_published_poll(self):
         """Return 200 and the restricted version of a poll submitted by another user."""
         # A first user create the poll. Directly set its state as ACCEPTED.
-        self.create_user(id='author', admin=False)
+        self.create_user(username='author', admin=False)
         self.create_poll(self.DUMMY_QUESTION, 'author', self.DUMMY_CHOICES, 'ACCEPTED', start_date_offset=-10)
         self.logout()
 
         # Login as a different user and retrieve the poll.
-        self.create_and_login_user(id='user', admin=False)
+        self.create_and_login_user(username='user', admin=False)
 
         poll_id = Poll.objects.latest('creation_date_time').id
         response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
@@ -299,12 +299,12 @@ class RetrievePollTest(PollTestCase):
     def test_simple_user_not_published_poll(self):
         """Return 404."""
         # A first user create the poll.
-        self.create_and_login_user(id='author', admin=False)
+        self.create_and_login_user(username='author', admin=False)
         self.submit_dummy_poll()
         self.logout()
 
         # Login as a different user and try to retrieve the poll.
-        self.create_and_login_user(id='user', admin=False)
+        self.create_and_login_user(username='user', admin=False)
 
         poll_id = Poll.objects.latest('creation_date_time').id
         response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
@@ -314,7 +314,7 @@ class RetrievePollTest(PollTestCase):
     def test_admin(self):
         """Return 200 and the full version of the poll."""
         # A first user create the poll.
-        self.create_and_login_user(id='author', admin=False)
+        self.create_and_login_user(username='author', admin=False)
         self.submit_dummy_poll()
         self.logout()
 
@@ -378,7 +378,7 @@ class SubmitPollTest(PollTestCase):
 
     def test_extra_fields(self):
         """Return 201 and only add the question field and the choices field to the database."""
-        self.create_and_login_user(id='hacker', admin=False)
+        self.create_and_login_user(username='hacker', admin=False)
 
         url = reverse('polls-submit')
         data = {

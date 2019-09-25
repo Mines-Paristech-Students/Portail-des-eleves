@@ -1,6 +1,6 @@
 import json
 
-from associations.tests.base_test import BaseTestCase
+from tags.tests.base_test import BaseTestCase
 
 
 class TagNamespaceTestCase(BaseTestCase):

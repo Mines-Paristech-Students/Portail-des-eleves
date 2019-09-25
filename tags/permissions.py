@@ -61,7 +61,10 @@ def can_manage_tags_for(user, instance):
 
 def user_can_link_tag_to(user: User, tag: Tag, instance):
     parent = get_parent_object(instance)
-    if not isinstance(parent, Namespace.SCOPES[tag.namespace.scope]) or parent.id != tag.namespace.scoped_to:
+    if (
+        not isinstance(parent, Namespace.SCOPES[tag.namespace.scope])
+        or parent.id != tag.namespace.scoped_to
+    ):
         return False
 
     if isinstance(parent, Association):

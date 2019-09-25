@@ -1,6 +1,7 @@
 import json
 
-from associations.tests.base_test import BaseTestCase
+from tags.tests.base_test import BaseTestCase
+
 
 class TagNamespaceTestCase(BaseTestCase):
     fixtures = ["test_authentication.yaml", "test_marketplace.yaml", "test_tags.yaml"]
