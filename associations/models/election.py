@@ -35,7 +35,7 @@ class Election(models.Model):
     @cached_property
     def results(self):
         # First, we fetch all the ballots, but by replacing them by the associated choice name.
-        # We then wrap all of these choices into a Counter, which is a nice built-in object which will…
+        # We then wrap all of these choices into a Counter, which is a nice built-in object which will
         # count the ballots for us.
         return Counter([ballot[0] for ballot in self.ballots.values_list('choices__name')])
 
