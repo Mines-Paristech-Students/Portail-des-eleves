@@ -1,5 +1,5 @@
 from associations.models.association import Association, Role
-from associations.models.events import Event
+from associations.models.event import Event
 from associations.models.filesystem import *
 from associations.models.library import Library, Loanable, Loan
 from associations.models.marketplace import Marketplace, Product, Transaction, Funding
