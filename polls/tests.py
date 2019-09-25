@@ -1,508 +1,474 @@
-from datetime import timedelta, date
-
-from django.utils import timezone
-from django.urls import reverse
-
-from rest_framework import status
-from rest_framework.exceptions import NotAuthenticated
+from datetime import date, datetime, timezone
 
 from backend.tests_utils import BaseTestCase
-from authentication.models import User
-from polls.models import Poll, Choice
+from polls.models import Poll
 
 
 class PollTestCase(BaseTestCase):
-    """Defines some helpful functions for testing the poll application."""
+    fixtures = ['test_authentication.yaml', 'test_polls.yaml']
 
-    DUMMY_QUESTION = 'A question?'
-    DUMMY_CHOICES = ['Choice 1', 'Choice 2']
+    ALL_USERS = ['17admin', '17simple']
+    """A list of user ids covering all the spectrum of roles and permissions."""
 
-    def submit_poll(self, question, choices, silent=False):
-        """
-        Submit a poll to polls-submit.
+    def endpoint_list(self):
+        return '/polls/'
 
-        :param str question: the question.
-        :param list choices: a list of str.
-        :param bool silent: if True, a NotAuthenticated exception will be raised if the POST return 403 (sometimes,
-        this could be a wanted behaviour).
-        :returns: the response from polls-submit.
-        """
+    def list(self):
+        return self.get(self.endpoint_list())
 
-        url = reverse('polls-submit')
-        data = {
-            'question': question,
-            'choices': [{'text': choice} for choice in choices]
-        }
+    def endpoint_retrieve(self, pk):
+        return f'/polls/{pk}/'
 
-        response = self.client.post(url, data, format='json')
+    def retrieve(self, pk):
+        return self.get(self.endpoint_retrieve(pk))
 
-        if not silent and response.status_code == status.HTTP_401_UNAUTHORIZED:
-            raise NotAuthenticated()
+    def endpoint_create(self):
+        return '/polls/'
 
-        return response
+    def create(self, data=None, format='json', content_type='application/json'):
+        return self.post(self.endpoint_create(), data, format, content_type)
 
-    def submit_dummy_poll(self, silent=False):
-        """
-        Shortcut to create a dummy poll.
-        :return: the response from polls-submit.
-        """
+    def endpoint_update(self, pk):
+        return f'/polls/{pk}/'
 
-        return self.submit_poll(
-            self.DUMMY_QUESTION,
-            self.DUMMY_CHOICES,
-            silent
-        )
+    def update(self, pk, data=None, format='json', content_type='application/json'):
+        return self.patch(self.endpoint_update(pk), data, format, content_type)
 
-    def create_poll(self, question, user_id, choices=(), state='ACCEPTED', start_date_offset=-10):
-        """
-        Create a poll.
+    def endpoint_destroy(self, pk):
+        return f'/polls/{pk}/'
 
-        :param str question: the question.
-        :param str user_id: the id of the author.
-        :param list choices: a list of texts for the choices.
-        :param str state: choose among ('REVIEWING', 'REJECTED', 'ACCEPTED')
-        :param int start_date_offset: the number of days as publication_date = now() + start_date_offset
-        :return Poll: the created poll object.
-        """
+    def destroy(self, pk, data='', format=None, content_type=None):
+        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
 
-        now = date.today()
+    def endpoint_vote(self, pk):
+        return f'/polls/{pk}/vote/'
 
-        poll = Poll.objects.create(
-            user=User.objects.get(id=user_id),
-            question=question,
-            state=state,
-            publication_date=now + timedelta(days=start_date_offset),
-        )
+    def vote(self, pk, data=None, format='json', content_type='application/json'):
+        return self.post(self.endpoint_vote(pk), data, format, content_type)
 
-        for choice_text in choices:
-            Choice.objects.create(
-                text=choice_text,
-                poll=poll,
+    def endpoint_results(self, pk):
+        return f'/polls/{pk}/results/'
+
+    def results(self, pk, data='', format=None, content_type=None):
+        return self.get(self.endpoint_results(pk), data)
+
+    ########
+    # LIST #
+    ########
+
+    def test_if_not_logged_in_then_cannot_list(self):
+        res = self.list()
+        self.assertStatusCode(res, 401)
+
+    def test_if_not_admin_then_can_list_published_polls_and_own_polls(self):
+        self.login('17simple')
+        res = self.list()
+        self.assertStatusCode(res, 200)
+
+        # Use a list comprehension here to be sure to be crystal clear on which polls are effectively listed.
+        polls = [poll for poll in Poll.objects.all() if poll.user.id == '17simple' or poll.has_been_published]
+        self.assertEqual(len(polls), len(res.data))
+        self.assertSetEqual(set(poll.id for poll in polls),
+                            set(poll['id'] for poll in res.data))
+
+    def test_if_admin_then_can_list_every_poll(self):
+        self.login('17admin')
+        res = self.list()
+
+        polls = Poll.objects.all()
+        self.assertEqual(polls.count(), len(res.data))
+        self.assertSetEqual(set(poll.id for poll in polls),
+                            set(poll['id'] for poll in res.data))
+
+    ############
+    # RETRIEVE #
+    ############
+
+    def test_if_not_logged_in_then_cannot_retrieve(self):
+        res = self.retrieve(1)
+        self.assertStatusCode(res, 401)
+
+    def test_if_poll_does_not_exist_then_404(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+            res = self.retrieve(42)
+            self.assertStatusCode(res, 404)
+
+    def test_if_logged_in_then_can_retrieve_own_poll(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            poll_id = Poll.objects.filter(user=user)[0].id
+            res = self.retrieve(poll_id)
+            self.assertStatusCode(res, 200)
+
+    def test_if_logged_in_then_can_retrieve_published_poll(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.filter(state='ACCEPTED', publication_date__lte=date.today()):
+                res = self.retrieve(poll.id)
+                self.assertStatusCode(res, 200)
+
+    def test_if_admin_then_can_retrieve_any_poll(self):
+        self.login('17admin')
+
+        for poll in Poll.objects.all():
+            res = self.retrieve(poll.id)
+            self.assertStatusCode(res, 200)
+
+    def test_if_not_admin_then_cannot_retrieve_forbidden_polls(self):
+        self.login('17simple')
+
+        for poll in Poll.objects.exclude(user='17simple').exclude(state='ACCEPTED'):
+            res = self.retrieve(poll.id)
+            self.assertStatusCodeIn(res, [403, 404])
+
+    def test_if_admin_then_can_retrieve_all_fields(self):
+        self.login('17admin')
+
+        for poll in Poll.objects.all():
+            res = self.retrieve(poll.id)
+            self.assertStatusCode(res, 200)
+            self.assertSetEqual(
+                set(res.data.keys()),
+                {'id', 'user', 'creation_date_time', 'state', 'publication_date', 'admin_comment', 'question',
+                 'choices'}
             )
 
-        return poll
-
-
-class PollModelTest(PollTestCase):
-    def test_poll_was_published(self):
-        """has_been_published() returns True for a old poll"""
-        old_time = date.today() - timedelta(days=1)
-        old_poll = Poll(state='ACCEPTED', publication_date=old_time - timedelta(days=1))
-        self.assertTrue(old_poll.has_been_published())
-
-    def test_accepted_poll_is_published(self):
-        """
-        has_been_published() returns True for a poll whose state is ACCEPTED and whose publication_date is <= today
-        """
-        old_time = date.today() - timedelta(days=1)
-        poll = Poll(state='ACCEPTED', publication_date=old_time)
-        self.assertTrue(poll.has_been_published())
-
-    def test_poll_will_be_published(self):
-        """has_been_published() returns False for a poll whose publication_date is set on the future."""
-        future_time = date.today() + timedelta(days=1)
-        future_poll = Poll(publication_date=future_time)
-        self.assertFalse(future_poll.has_been_published())
-
-    def test_poll_rejected_state(self):
-        """has_been_published() returns False for a poll whose state is REJECTED."""
-        old_time = date.today() - timedelta(days=1)
-        poll = Poll(state='REJECTED', publication_date=old_time)
-        self.assertFalse(poll.has_been_published())
-
-    def test_poll_reviewing_state(self):
-        """is_publhas_been_publishedished() returns False for a poll whose state is REVIEWING."""
-        old_time = date.today() - timedelta(days=1)
-        poll = Poll(state='REVIEWING', publication_date=old_time)
-        self.assertFalse(poll.has_been_published())
-
-    def test_poll_no_state(self):
-        """has_been_published() returns False for a poll which has no state."""
-        old_time = date.today() - timedelta(days=1)
-        poll = Poll(publication_date=old_time)
-        self.assertFalse(poll.has_been_published())
-
-
-class ListSubmittedPollsTest(PollTestCase):
-    def test_not_authenticated(self):
-        """Return 403 as the user is not authenticated."""
-        response = self.client.get(reverse('polls-submitted'))
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_no_polls(self):
-        """Return 200 and an empty polls list."""
-        self.create_and_login_user(admin=False)
-
-        response = self.client.get(reverse('polls-submitted'))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [])
-
-    def test_with_two_users(self):
-        """Each user is returned 200 and only its full, submitted poll."""
-        self.create_and_login_user(username='user_1', admin=False)
-        self.submit_poll('user_1\'s poll', choices=['Choice'])
-        self.logout()
-
-        self.create_and_login_user(username='user_2', admin=False)
-        self.submit_poll('user_2\'s poll', choices=['Choice'])
-        self.logout()
-
-        # Test user 1
-        self.login('user_1')
-        response_1 = self.client.get(reverse('polls-submitted'))
-        self.logout()
-
-        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
-        self.assertContains(response_1, 'user_1')
-        self.assertNotContains(response_1, 'user_2')
-        self.assertSetEqual(
-            set(response_1.data[0].keys()),
-            {'id', 'url', 'question', 'user', 'creation_date_time', 'state', 'publication_date',
-             'admin_comment', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response_1.data[0]['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-        # Test user 2
-        self.login('user_2')
-        response_2 = self.client.get(reverse('polls-submitted'))
-        self.logout()
-
-        self.assertEqual(response_2.status_code, status.HTTP_200_OK)
-        self.assertContains(response_2, 'user_2')
-        self.assertNotContains(response_2, 'user_1')
-        self.assertSetEqual(
-            set(response_2.data[0].keys()),
-            {'id', 'url', 'question', 'user', 'creation_date_time', 'state', 'publication_date',
-             'admin_comment', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response_2.data[0]['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-
-class ListAllPollsTest(PollTestCase):
-    def test_not_admin(self):
-        """Return 403 as the user is not an admin user."""
-        self.create_and_login_user(admin=False)
-        response = self.client.get(reverse('polls-all'))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_no_polls(self):
-        """Return 200 and an empty polls list."""
-        self.create_and_login_user(admin=True)
-
-        response = self.client.get(reverse('polls-all'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [])
-
-    def test_with_simple_users_submission(self):
-        """Return 200 and the submission of the users."""
-        self.create_and_login_user(username='user_1', admin=False)
-        self.submit_poll('user_1\'s poll', choices=['Choice'])
-        self.logout()
-
-        self.create_and_login_user(username='user_2', admin=False)
-        self.submit_poll('user_2\'s poll', choices=['Choice'])
-        self.logout()
-
-        self.create_and_login_user(admin=True)
-        response = self.client.get(reverse('polls-all'))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, 'user_1')
-        self.assertContains(response, 'user_2')
-        self.assertSetEqual(
-            set(response.data[0].keys()),
-            {'id', 'url', 'question', 'user', 'creation_date_time', 'state', 'publication_date',
-             'admin_comment', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response.data[0]['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-
-class RetrievePollTest(PollTestCase):
-    def test_not_authenticated(self):
-        """Return 403 as the user is not authenticated."""
-        self.create_and_login_user(admin=False)
-        self.submit_dummy_poll()
-        self.logout()
-
-        poll_id = Poll.objects.latest('creation_date_time').id
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_unknown_poll(self):
-        """Return 404."""
-        self.create_and_login_user(admin=False)
-
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': 42}))
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_simple_user_own_poll(self):
-        """Return 200 and the user's poll, with all the fields."""
-        self.create_and_login_user(admin=False)
-        self.submit_dummy_poll()
-
-        poll_id = Poll.objects.latest('creation_date_time').id
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, self.DUMMY_QUESTION)
-        for choice in self.DUMMY_CHOICES:
-            self.assertContains(response, choice)
-        self.assertSetEqual(
-            set(response.data.keys()),
-            {'id', 'url', 'question', 'user', 'creation_date_time', 'state', 'publication_date',
-             'admin_comment', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response.data['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-    def test_simple_user_published_poll(self):
-        """Return 200 and the restricted version of a poll submitted by another user."""
-        # A first user create the poll. Directly set its state as ACCEPTED.
-        self.create_user(username='author', admin=False)
-        self.create_poll(self.DUMMY_QUESTION, 'author', self.DUMMY_CHOICES, 'ACCEPTED', start_date_offset=-10)
-        self.logout()
-
-        # Login as a different user and retrieve the poll.
-        self.create_and_login_user(username='user', admin=False)
-
-        poll_id = Poll.objects.latest('creation_date_time').id
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, self.DUMMY_QUESTION)
-        for choice in self.DUMMY_CHOICES:
-            self.assertContains(response, choice)
-        self.assertSetEqual(
-            set(response.data.keys()),
-            {'id', 'url', 'question', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response.data['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-    def test_simple_user_not_published_poll(self):
-        """Return 404."""
-        # A first user create the poll.
-        self.create_and_login_user(username='author', admin=False)
-        self.submit_dummy_poll()
-        self.logout()
-
-        # Login as a different user and try to retrieve the poll.
-        self.create_and_login_user(username='user', admin=False)
-
-        poll_id = Poll.objects.latest('creation_date_time').id
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_admin(self):
-        """Return 200 and the full version of the poll."""
-        # A first user create the poll.
-        self.create_and_login_user(username='author', admin=False)
-        self.submit_dummy_poll()
-        self.logout()
-
-        # Login as an admin and retrieve the poll.
-        self.create_and_login_user(admin=True)
-
-        poll_id = Poll.objects.latest('creation_date_time').id
-        response = self.client.get(reverse('polls-retrieve', kwargs={'id': poll_id}))
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, self.DUMMY_QUESTION)
-        for choice in self.DUMMY_CHOICES:
-            self.assertContains(response, choice)
-        self.assertSetEqual(
-            set(response.data.keys()),
-            {'id', 'url', 'question', 'user', 'creation_date_time', 'state', 'publication_date',
-             'admin_comment', 'choices'}
-        )
-        self.assertSetEqual(
-            set(response.data['choices'][0].keys()),
-            {'id', 'text', 'poll'}
-        )
-
-
-class SubmitPollTest(PollTestCase):
-    def test_not_authenticated(self):
-        """
-        Test a submission without authentication.
-        The view should return 403.
-        """
-        response = self.submit_dummy_poll(silent=True)
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(Poll.objects.count(), 0)
-
-    def test_submit_poll(self):
-        """
-        Test the submission of a poll object.
-        The view should return 201 and one object should be created, with the specified properties.
-        """
-        self.create_and_login_user(admin=False)
-
-        # Submit the poll and test the 201 response.
-        response = self.submit_poll(self.DUMMY_QUESTION, self.DUMMY_CHOICES)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Get the poll's id.
-        poll_id = Poll.objects.latest('creation_date_time').id
-
-        # Test the Poll table.
-        self.assertEqual(Poll.objects.count(), 1)
-        self.assertEqual(Poll.objects.get(id=poll_id).question, self.DUMMY_QUESTION)
-
-        # Test the Choice table.
-        choices = Choice.objects.filter(poll=poll_id)
-        # Since we do not know the order of the choices, we use sets.
-        self.assertEqual(
-            set([choice.text for choice in choices]),
-            set(self.DUMMY_CHOICES),
-        )
-
-    def test_extra_fields(self):
-        """Return 201 and only add the question field and the choices field to the database."""
-        self.create_and_login_user(username='hacker', admin=False)
-
-        url = reverse('polls-submit')
-        data = {
-            'question': self.DUMMY_QUESTION,
-            'choices': [{'text': choice} for choice in self.DUMMY_CHOICES],
-            'state': 'ACCEPTED',
-        }
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # Test the Poll table.
-        poll_id = Poll.objects.latest('id').id
-        self.assertEqual(Poll.objects.count(), 1)
-        self.assertEqual(Poll.objects.get(id=poll_id).question, self.DUMMY_QUESTION)
-        self.assertEqual(Poll.objects.get(id=poll_id).state, 'REVIEWING')
-
-        # Test the Choice table.
-        choices = Choice.objects.filter(poll=poll_id)
-        # Since we do not know the order of the choices, we use sets.
-        self.assertEqual(
-            set([choice.text for choice in choices]),
-            set(self.DUMMY_CHOICES),
-        )
-
-
-class UpdatePollTest(PollTestCase):
-    def test_not_authenticated(self):
-        """Return 403 as the user is not authenticated."""
-        self.create_and_login_user(admin=False)
-        self.submit_dummy_poll()
-        self.logout()
-
-        url = reverse('polls-update', kwargs={'id': 4})
-        data = {
-            'question': 'Other question',
-        }
-        response = self.client.patch(
-            url,
-            data,
-            format='json',
-        )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_not_admin(self):
-        """Return 403 as the user is not an admin."""
-        self.create_and_login_user(admin=False)
-        self.submit_dummy_poll()
-
-        url = reverse('polls-update', kwargs={'id': 1})
-        data = {
-            'question': 'Other question',
-        }
-        response = self.client.patch(
-            url,
-            data,
-            format='json',
-        )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_admin_update_question(self):
-        """Return 200 and correctly update the poll's question."""
-        # Create the poll.
-        self.create_and_login_user(admin=True)
-        self.submit_dummy_poll()
-
-        # Update it.
-        poll_id = Poll.objects.latest('creation_date_time').id
-        url = reverse('polls-update', kwargs={'id': poll_id})
-        data = {
-            'question': 'Another question?',
-        }
-        response = self.client.patch(
-            url,
-            data,
-            format='json'
-        )
-
-        # Test.
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Poll.objects.get(id=poll_id).question, data['question'])
-
-    def test_admin_update_state(self):
-        """Return 200 and correctly update the poll's state."""
-        # Create the poll.
-        self.create_and_login_user(admin=True)
-        self.submit_dummy_poll()
-
-        # Update it.
-        poll_id = Poll.objects.latest('creation_date_time').id
-        url = reverse('polls-update', kwargs={'id': poll_id})
-        data = {
-            'state': 'REVIEWING',
-        }
-        response = self.client.patch(
-            url,
-            data,
-            format='json'
-        )
-
-        # Test.
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Poll.objects.get(id=poll_id).state, data['state'])
-
-    def test_admin_update_date(self):
-        """Return 200 and correctly update the poll's date."""
-        # Create the poll.
-        self.create_and_login_user(admin=True)
-        self.submit_dummy_poll()
-
-        # Update it.
-        poll_id = Poll.objects.latest('creation_date_time').id
-        url = reverse('polls-update', kwargs={'id': poll_id})
-        data = {
-            'publication_date': date(day=1, month=1, year=2018)
-        }
-        response = self.client.patch(
-            url,
-            data,
-            format='json'
-        )
-
-        # Test.
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            Poll.objects.get(id=poll_id).publication_date,
-            data['publication_date'],
-        )
+    def test_if_author_then_can_retrieve_all_fields(self):
+        self.login('17simple')
+
+        for poll in Poll.objects.filter(user='17simple'):
+            res = self.retrieve(poll.id)
+            self.assertStatusCode(res, 200)
+            self.assertSetEqual(
+                set(res.data.keys()),
+                {'id', 'creation_date_time', 'state', 'publication_date', 'admin_comment', 'question', 'choices'}
+            )
+
+    def test_if_not_author_then_can_retrieve_limited_fields(self):
+        self.login('17simple')
+
+        polls = Poll.objects.filter(state='ACCEPTED', publication_date__lte=date.today()).exclude(user='17simple')
+
+        self.assertGreater(polls.count(), 0)
+
+        for poll in polls:
+            res = self.retrieve(poll.id)
+            self.assertStatusCode(res, 200),
+            self.assertSetEqual(
+                set(res.data.keys()),
+                {'id', 'question', 'choices'}
+            )
+
+    ##########
+    # CREATE #
+    ##########
+
+    create_data = {
+        'question': 'La nouvelle devise des Mines ?',
+        'choices': [
+            {'text': 'Fake it until you make it.'},
+            {'text': 'Too much is not enough.'}
+        ]
+    }
+
+    create_data_with_extra_fields = dict(create_data)
+    create_data_with_extra_fields.update({
+        'user': '17bocquet',
+        'state': 'ACCEPTED',
+        'publication_date': date(2019, 1, 1),
+        'admin_comment': 'Very good.'
+    })
+
+    def check_last_poll(self, user, data):
+        poll = Poll.objects.last()
+        now = datetime.now(tz=timezone.utc)
+        self.assertEqual(poll.question, data['question'])
+        self.assertEqual(poll.user.id, user)
+        self.assertTupleEqual(
+            (poll.creation_date_time.year, poll.creation_date_time.month, poll.creation_date_time.day,
+             poll.creation_date_time.hour, poll.creation_date_time.minute),
+            (now.year, now.month, now.day, now.hour, now.minute))
+        self.assertEqual(poll.state, 'REVIEWING')
+        self.assertEqual(poll.publication_date, None)
+        self.assertEqual(poll.admin_comment, '')
+        self.assertSetEqual(set(c[0] for c in poll.choices.values_list('text')),
+                            set(c['text'] for c in data['choices']))
+
+    def test_if_logged_in_then_can_create(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+            res = self.create(data=self.create_data)
+            self.assertStatusCode(res, 201)
+            self.check_last_poll(user, self.create_data)
+
+    def test_if_create_with_extra_fields_then_no_effect(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+            res = self.create(data=self.create_data_with_extra_fields)
+            self.assertStatusCode(res, 201)
+            self.check_last_poll(user, self.create_data)
+
+    ##########
+    # UPDATE #
+    ##########
+
+    update_data_simple = {
+        'question': 'La nouvelle devise des Mines ?',
+        'choices': [
+            {'text': 'Fake it until you make it.'},
+            {'text': 'Too much is not enough.'}
+        ]
+    }
+
+    update_data_simple_with_extra_fields = dict(update_data_simple)
+    update_data_simple_with_extra_fields.update({
+        'user': '17bocquet',
+        'state': 'ACCEPTED',
+        'publication_date': date(2019, 1, 1),
+        'admin_comment': 'Very good.'
+    })
+
+    update_data_admin = {
+        'question': 'La nouvelle devise des Mines ?',
+        'choices': [
+            {'text': 'Fake it until you make it.'},
+            {'text': 'Too much is not enough.'}
+        ],
+        'state': 'ACCEPTED',
+        'publication_date': date(2019, 1, 1),
+        'admin_comment': 'Very good.'
+    }
+
+    update_data_admin_with_extra_fields = dict(update_data_admin)
+    update_data_admin_with_extra_fields.update({
+        'user': '17bocquet',
+    })
+
+    def test_if_not_author_not_admin_then_cannot_update(self):
+        self.login('17simple')
+
+        polls = Poll.objects.exclude(user='17simple')
+
+        for poll in polls:
+            res = self.update(poll.id, data=self.update_data_simple)
+            self.assertStatusCodeIn(res, [403, 404])
+
+    def test_if_author_and_reviewing_then_can_update_with_limited_data(self):
+        self.login('17simple')
+
+        polls = Poll.objects.filter(user='17simple', state='REVIEWING')
+
+        for poll in polls:
+            res = self.update(poll.id, data=self.update_data_simple)
+            self.assertStatusCode(res, 200)
+
+            updated_poll = Poll.objects.get(pk=poll.id)
+            self.assertEqual(updated_poll.question, self.update_data_simple['question'])
+            self.assertSetEqual(set(c[0] for c in updated_poll.choices.values_list('text')),
+                                set(c['text'] for c in self.update_data_simple['choices']))
+
+    def test_if_author_and_reviewing_and_update_with_extra_fields_then_no_effect(self):
+        self.login('17simple')
+
+        polls = Poll.objects.filter(user='17simple', state='REVIEWING')
+
+        for poll in polls:
+            res = self.update(poll.id, data=self.update_data_simple_with_extra_fields)
+            self.assertStatusCode(res, 200)
+
+            updated_poll = Poll.objects.get(pk=poll.id)
+            self.assertEqual(updated_poll.question, self.update_data_simple_with_extra_fields['question'])
+            self.assertSetEqual(set(c[0] for c in updated_poll.choices.values_list('text')),
+                                set(c['text'] for c in self.update_data_simple_with_extra_fields['choices']))
+            self.assertTupleEqual(
+                (poll.user, poll.state, poll.publication_date, poll.admin_comment),
+                (updated_poll.user, updated_poll.state, updated_poll.publication_date, updated_poll.admin_comment))
+
+    def test_if_author_and_accepted_then_cannot_update(self):
+        self.login('17simple')
+
+        polls = Poll.objects.filter(user='17simple', state='ACCEPTED')
+
+        for poll in polls:
+            res = self.update(poll.id, data=self.update_data_simple)
+            self.assertStatusCode(res, 403)
+
+    def test_if_admin_then_can_update_with_full_data(self):
+        self.login('17admin')
+
+        for poll in Poll.objects.all():
+            res = self.update(poll.id, data=self.update_data_admin)
+            self.assertStatusCode(res, 200)
+            updated_poll = Poll.objects.get(pk=poll.id)
+            self.assertEqual(updated_poll.question, self.update_data_admin['question'])
+            self.assertSetEqual(set(c[0] for c in updated_poll.choices.values_list('text')),
+                                set(c['text'] for c in self.update_data_admin['choices']))
+            self.assertEqual(updated_poll.state, self.update_data_admin['state'])
+            self.assertEqual(updated_poll.publication_date, self.update_data_admin['publication_date'])
+            self.assertEqual(updated_poll.admin_comment, self.update_data_admin['admin_comment'])
+
+    def test_if_admin_and_update_with_extra_fields_then_no_effect(self):
+        self.login('17admin')
+
+        for poll in Poll.objects.all():
+            res = self.update(poll.id, data=self.update_data_admin_with_extra_fields)
+            self.assertStatusCode(res, 200)
+            updated_poll = Poll.objects.get(id=poll.id)
+
+            self.assertEqual(updated_poll.question, self.update_data_admin['question'])
+            self.assertSetEqual(set(c[0] for c in updated_poll.choices.values_list('text')),
+                                set(c['text'] for c in self.update_data_admin['choices']))
+            self.assertEqual(updated_poll.state, self.update_data_admin['state'])
+            self.assertEqual(updated_poll.publication_date, self.update_data_admin['publication_date'])
+            self.assertEqual(updated_poll.admin_comment, self.update_data_admin['admin_comment'])
+
+            self.assertEqual(poll.user, updated_poll.user)
+
+    ###########
+    # DESTROY #
+    ###########
+
+    def test_if_not_author_then_cannot_destroy(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.exclude(user=user):
+                res = self.destroy(poll.id)
+                self.assertStatusCodeIn(res, [403, 404])
+                self.assertTrue(Poll.objects.filter(id=poll.id).exists())
+
+    def test_if_author_and_not_accepted_then_can_destroy(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.filter(user=user).exclude(state='ACCEPTED'):
+                res = self.destroy(poll.id)
+                self.assertStatusCode(res, 204)
+                self.assertFalse(Poll.objects.filter(id=poll.id).exists())
+
+    def test_if_author_and_accepted_then_cannot_destroy(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.filter(user=user, state='ACCEPTED'):
+                res = self.destroy(poll.id)
+                self.assertStatusCode(res, 403)
+                self.assertTrue(Poll.objects.filter(id=poll.id).exists())
+
+    ###########
+    # RESULTS #
+    ###########
+
+    def test_can_retrieve_results(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.filter(state='ACCEPTED', publication_date__lte=date.today()):
+                res = self.results(poll.id)
+                self.assertStatusCode(res, 200)
+                self.assertSetEqual(set(res.data.keys()),
+                                    {'poll', 'results'})
+
+    def test_if_poll_not_published_then_cannot_retrieve_results(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.exclude(state='ACCEPTED'):
+                res = self.results(poll.id)
+                self.assertStatusCodeIn(res, [404, 403])
+
+            for poll in Poll.objects.exclude(publication_date__lte=date.today()):
+                res = self.results(poll.id)
+                self.assertStatusCodeIn(res, [404, 403])
+
+    ########
+    # VOTE #
+    ########
+
+    def test_if_valid_poll_then_can_vote_but_not_twice(self):
+        # First, create a new poll.
+        self.login('17admin')
+        self.create(data=self.create_data)
+        poll = Poll.objects.last()
+        choice_1 = poll.choices.all()[0]
+        choice_2 = poll.choices.all()[1]
+
+        # Then, publish it.
+        self.update(poll.id,
+                    data={
+                        'state': 'ACCEPTED',
+                        'publication_date': date.today()
+                    })
+
+        # Test if the users can vote.
+        for user in self.ALL_USERS:
+            self.login(user)
+            res = self.vote(poll.id, data={'choice': choice_1.id})
+            self.assertStatusCode(res, 201)
+
+        # Test if the users cannot vote twice.
+        for user in self.ALL_USERS:
+            self.login(user)
+            res = self.vote(poll.id, data={'choice': choice_1.id})
+            self.assertStatusCode(res, 403)
+
+    def test_if_not_valid_poll_then_cannot_vote(self):
+        for user in self.ALL_USERS:
+            self.login(user)
+
+            for poll in Poll.objects.exclude(state='ACCEPTED'):
+                choice = poll.choices.all()[0]
+                res = self.vote(poll.id, data={'choice': choice.id})
+                self.assertStatusCode(res, 403)
+
+            for poll in Poll.objects.filter(publication_date__lt=date.today() - Poll.POLL_LIFETIME):
+                choice = poll.choices.all()[0]
+                res = self.vote(poll.id, data={'choice': choice.id})
+                self.assertStatusCode(res, 403)
+
+    ##################
+    # BUSINESS LOGIC #
+    ##################
+
+    def check_results(self, poll_id, choice_1, choice_2):
+        poll = Poll.objects.get(pk=poll_id)
+        self.assertEqual(poll.results['Fake it until you make it.'], choice_1)
+        self.assertEqual(poll.results['Too much is not enough.'], choice_2)
+
+        self.login('17simple')
+        res = self.results(poll.id)
+        self.assertStatusCode(res, 200)
+        self.assertEqual(res.data['results']['Fake it until you make it.'], choice_1)
+        self.assertEqual(res.data['results']['Too much is not enough.'], choice_2)
+
+    def test_business_logic(self):
+        # First, create a new poll.
+        self.login('17admin')
+        self.create(data=self.create_data)
+        poll = Poll.objects.last()
+        choice_1 = poll.choices.filter(text='Fake it until you make it.')[0]
+        choice_2 = poll.choices.filter(text='Too much is not enough.')[0]
+
+        # Then, publish it.
+        self.update(poll.id,
+                    data={
+                        'state': 'ACCEPTED',
+                        'publication_date': date.today()
+                    })
+
+        self.check_results(poll.id, 0, 0)
+
+        self.login('17simple')
+        self.vote(poll.id, data={'choice': choice_1.id})
+        self.check_results(poll.id, 1, 0)
+
+        self.login('17admin')
+        self.vote(poll.id, data={'choice': choice_2.id})
+        self.check_results(poll.id, 1, 1)
+
+        self.login('17simple')
+        self.vote(poll.id, data={'choice': choice_1.id})
+        self.check_results(poll.id, 1, 1)  # 17simple tried to vote twice, nothing changes.

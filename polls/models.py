@@ -1,12 +1,15 @@
-from datetime import date
+from collections import Counter
+from datetime import date, timedelta
 
 from django.db import models
-from smart_selects.db_fields import ChainedForeignKey
+from django.utils.functional import cached_property
 
 from authentication.models import User
 
 
 class Poll(models.Model):
+    POLL_LIFETIME = timedelta(days=1)
+    
     # The question of the poll.
     question = models.CharField(
         verbose_name='question',
@@ -44,25 +47,37 @@ class Poll(models.Model):
     # The date of publication.
     publication_date = models.DateField(
         verbose_name='date de publication',
-        blank=True,
         null=True,
+        default=None,
     )
 
     # A comment about the poll from the administrator.
     admin_comment = models.TextField(
         verbose_name='commentaire administrateur',
         blank=True,
+        default='',
     )
 
+    @cached_property
     def has_been_published(self):
         """
-        Return True if the poll is has been published in the past, that is publication_date_time <= now(),
-        and its state is ACCEPTED.
+        Return True if the poll is has been published in the past, that is publication_date <= now(), and its state is
+        ACCEPTED.
         """
-        td = date.today()
         if self.publication_date is None or self.state != 'ACCEPTED':
             return False
-        return self.publication_date <= td
+        return self.publication_date <= date.today()
+
+    @cached_property
+    def is_active(self):
+        return self.has_been_published and self.publication_date + self.POLL_LIFETIME > date.today()
+
+    @cached_property
+    def results(self):
+        # First, we fetch all the ballots, but by replacing them by the associated choice name.
+        # We then wrap all of these choices into a Counter, which is a nice built-in object which will
+        # count the ballots for us.
+        return Counter([vote[0] for vote in self.votes.values_list('choice__text')])
 
     def __str__(self):
         return self.question
@@ -86,13 +101,14 @@ class Choice(models.Model):
     def __str__(self):
         return self.text
 
-class Vote(models.Model):
 
+class Vote(models.Model):
     # The related poll
     poll = models.ForeignKey(
         Poll,
         verbose_name='sondage',
         on_delete=models.CASCADE,
+        related_name='votes'
     )
 
     # The user who voted
@@ -103,16 +119,10 @@ class Vote(models.Model):
     )
 
     # The choice
-    # ChainedForeignKey restrict the choice variable to have its 'poll' field equals to the vote 'poll' field
-    choice = ChainedForeignKey(
+    choice = models.ForeignKey(
         Choice,
         verbose_name='choix',
         on_delete=models.CASCADE,
-        chained_field="poll",
-        chained_model_field="poll",
-        show_all=False,
-        auto_choose=False,
-        sort=False
     )
 
     class Meta:
