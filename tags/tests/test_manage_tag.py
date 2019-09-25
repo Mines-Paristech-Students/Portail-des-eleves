@@ -65,7 +65,7 @@ class TagNamespaceTestCase(BaseTestCase):
             res.content,
             {
                 "tags": [
-                    {"id": 6, "value": "orge", "url": None, "namespace": namespace},
+                    {"id": 7, "value": "orge", "url": None, "namespace": namespace},
                     {"id": 3, "value": "blé", "url": None, "namespace": namespace},
                     {"id": 2, "value": "sarrasin", "url": None, "namespace": namespace},
                 ]
@@ -113,7 +113,7 @@ class TagNamespaceTestCase(BaseTestCase):
         self.assertJSONEqual(
             res.content,
             [
-                {"id": 5, "value": "orge", "url": None, "namespace": namespace},
+                {"id": 6, "value": "orge", "url": None, "namespace": namespace},
                 {"id": 3, "value": "blé", "url": None, "namespace": namespace},
                 {"id": 2, "value": "sarrasin", "url": None, "namespace": namespace},
             ],

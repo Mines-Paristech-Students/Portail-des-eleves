@@ -1,23 +1,19 @@
-import django_filters
-from django.core.exceptions import ObjectDoesNotExist, SuspiciousOperation
 from django.http import (
     HttpResponseBadRequest,
     HttpResponse,
-    HttpResponseForbidden,
     JsonResponse,
 )
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, status
+from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from tags.models import Namespace, Tag
 from tags.permissions import (
     NamespacePermission,
-    can_manage_links_for,
+    user_can_link_tag_to,
     ManageTagPermission,
 )
 from tags.serializers import NamespaceSerializer, TagSerializer
@@ -94,8 +90,8 @@ class TagLinkView(APIView):
         model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
         tag = Tag.objects.get(pk=tag_pk)
 
-        if tag.namespace.scope != "global" and not can_manage_links_for(
-            request.user, Tag.LINKS[model].objects.get(pk=instance_pk)
+        if tag.namespace.scope != "global" and not user_can_link_tag_to(
+            request.user, tag, Tag.LINKS[model].objects.get(pk=instance_pk)
         ):
             raise PermissionDenied(
                 "Cannot edit link for {} with id {}".format(model, tag)

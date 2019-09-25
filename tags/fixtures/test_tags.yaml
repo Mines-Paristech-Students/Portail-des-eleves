@@ -36,3 +36,8 @@
     value: "blé"
     namespace: 2
 
+- model: tags.tag
+  pk: 4
+  fields:
+    value: "IPA"
+    namespace: 3

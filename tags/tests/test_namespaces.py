@@ -1,3 +1,5 @@
+import json
+
 from associations.tests.base_test import BaseTestCase
 
 
@@ -79,6 +81,7 @@ class TagNamespaceTestCase(BaseTestCase):
         self.login("17admin")
         res = self.post("/tags/namespaces/", {"scope": "global", "name": "users"})
         self.assertStatusCode(res, 201)
+        namespace_user = json.loads(res.content)
 
         self.login("17admin_pdm")
         res = self.post(
@@ -86,40 +89,52 @@ class TagNamespaceTestCase(BaseTestCase):
             {"scope": "association", "scoped_to": "pdm", "name": "farine"},
         )
         self.assertStatusCode(res, 201)
+        namespace_farine = json.loads(res.content)
 
         ###########################
         # Basic namespace edition
 
         self.login("17admin_biero")
         # Global namespace
-        res = self.patch("/tags/namespaces/1/", {"name": "coucou"})
+        res = self.patch(
+            "/tags/namespaces/{}/".format(namespace_user["id"]), {"name": "coucou"}
+        )
         self.assertStatusCode(res, 403)
 
-        res = self.delete("/tags/namespaces/1/")
+        res = self.delete("/tags/namespaces/{}/".format(namespace_user["id"]))
         self.assertStatusCode(res, 403)
 
         # Specific namespace that doesn't belong to us
-        res = self.patch("/tags/namespaces/2/", {"name": "coucou"})
+        res = self.patch(
+            "/tags/namespaces/{}/".format(namespace_farine["id"]), {"name": "coucou"}
+        )
         self.assertStatusCode(res, 403)
 
-        res = self.delete("/tags/namespaces/2/")
+        res = self.delete("/tags/namespaces/{}/".format(namespace_farine["id"]))
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.patch("/tags/namespaces/1/", {"name": "coucou"})
+        res = self.patch(
+            "/tags/namespaces/{}/".format(namespace_user["id"]), {"name": "coucou"}
+        )
         self.assertStatusCode(res, 200)
 
         self.login("17admin_pdm")
-        res = self.patch("/tags/namespaces/2/", {"name": "coucou"})
+        res = self.patch(
+            "/tags/namespaces/{}/".format(namespace_farine["id"]), {"name": "coucou"}
+        )
         self.assertStatusCode(res, 200)
 
         ############################
         # Try to move the namespace
         self.login("17admin_pdm")
-        res = self.patch("/tags/namespaces/1/", {"scope": "global"})
+        res = self.patch(
+            "/tags/namespaces/{}/".format(namespace_user["id"]), {"scope": "global"}
+        )
         self.assertStatusCode(res, 400)
 
         res = self.patch(
-            "/tags/namespaces/1/", {"scope": "association", "scoped_to": "biero"}
+            "/tags/namespaces/{}/".format(namespace_user["id"]),
+            {"scope": "association", "scoped_to": "biero"},
         )
         self.assertStatusCode(res, 400)

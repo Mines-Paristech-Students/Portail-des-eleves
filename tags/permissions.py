@@ -12,6 +12,7 @@ from associations.models import (
     File,
     Event,
     Choice,
+    User,
 )
 from associations.permissions.base_permissions import _get_role_for_user
 from forum.models import Theme, MessageForum, Topic
@@ -58,14 +59,14 @@ def can_manage_tags_for(user, instance):
         raise NotImplementedError("Model {} is not supported".format(instance))
 
 
-def can_manage_links_for(user, instance):
+def user_can_link_tag_to(user: User, tag: Tag, instance):
     parent = get_parent_object(instance)
-    print(parent)
+    if not isinstance(parent, Namespace.SCOPES[tag.namespace.scope]) or parent.id != tag.namespace.scoped_to:
+        return False
+
     if isinstance(parent, Association):
         role = _get_role_for_user(user, parent)
-        print(user, parent)
-        print(role)
-        return bool(role) and role.is_admin
+        return bool(role)
     elif isinstance(parent, Theme):
         return user.is_admin
     elif parent is None:
