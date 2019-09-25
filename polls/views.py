@@ -5,7 +5,7 @@ from rest_framework import exceptions, generics, response, status, viewsets
 from rest_framework.decorators import action
 
 from polls.serializers import ReadOnlyPollSerializer, AuthorPollSerializer, AdminPollSerializer, VoteSerializer
-from polls.models import Poll, Choice, Vote
+from polls.models import Poll, Vote
 from polls.permissions import PollPermission, ResultsPermission, VotePermission
 
 
@@ -24,16 +24,22 @@ class PollViewSet(viewsets.ModelViewSet):
                                        (Q(state='ACCEPTED') & Q(publication_date__lte=date.today())))
 
     def get_serializer_class(self):
-        if self.action in ('create',):
-            return AuthorPollSerializer
-
         if self.action in ('list',):
             return ReadOnlyPollSerializer
-
-        if self.request.user.is_staff:
-            return AdminPollSerializer
-        elif self.action in ('update', 'partial_update'):
+        elif self.action in ('retrieve',):
+            if self.request.user.is_staff:
+                return AdminPollSerializer
+            elif self.request.user == self.get_object().user:
+                return AuthorPollSerializer
+            else:
+                return ReadOnlyPollSerializer
+        elif self.action in ('create',):
             return AuthorPollSerializer
+        elif self.action in ('update', 'partial_update'):
+            if self.request.user.is_staff:
+                return AdminPollSerializer
+            else:
+                return AuthorPollSerializer
         else:
             return ReadOnlyPollSerializer
 
@@ -65,7 +71,7 @@ class CreateVoteView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         # Check if the given choice is valid.
-        if serializer.validated_data['choice'] not in poll.choices:
+        if serializer.validated_data['choice'] not in poll.choices.all():
             raise exceptions.ValidationError('Invalid choice provided.')
 
         # Check if the poll is active.

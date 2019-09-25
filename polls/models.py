@@ -80,7 +80,6 @@ class Poll(models.Model):
         # count the ballots for us.
         return Counter([vote[0] for vote in self.votes.values_list('choice__text')])
 
-
     def __str__(self):
         return self.question
 

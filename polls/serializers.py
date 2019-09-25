@@ -16,12 +16,11 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 class VoteSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), default=serializers.CurrentUserDefault())
-    poll = serializers.PrimaryKeyRelatedField(queryset=Poll.objects.all(), read_only=False)
     choice = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), read_only=False)
 
     class Meta:
         model = Vote
-        read_only_fields = ('user', 'poll')  # Will be provided by the view.
+        read_only_fields = ('user',)
         fields = read_only_fields + ('choice',)
 
 

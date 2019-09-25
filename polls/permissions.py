@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class PollPermission(permissions.BasePermission):
     """
-        Status ->     | POST                        | Not published        | Published          |
+        Status ->     | POST                        | Not accepted         | Accepted          |
                       | For them | For another user | Own | Other user's   | Own | Other user's |
         Administrator | C        |                  | RUD | RU             | RU  | RU           |
         Simple        | C        |                  | RUD |                | R   | R            |
@@ -29,11 +29,11 @@ class PollPermission(permissions.BasePermission):
 
             return (request.user.is_staff or  # Administrators can always update.
                     (request.user == poll.user and
-                     not poll.has_been_published))  # Authors can only update if the poll is not public.
+                     not poll.state == 'ACCEPTED'))  # Authors can only update if the poll is not accepted.
         elif request.method in ('DELETE',):
             self.message = 'You are not allowed to delete this poll.'
 
-            return request.user == poll.user and not poll.has_been_published
+            return request.user == poll.user and poll.state != 'ACCEPTED'
         elif request.method in ('POST',):
             return True
 
