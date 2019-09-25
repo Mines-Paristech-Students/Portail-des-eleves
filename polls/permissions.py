@@ -3,10 +3,10 @@ from rest_framework import permissions
 
 class PollPermission(permissions.BasePermission):
     """
-        Status ->     | POST                        | Not accepted         | Accepted          |
-                      | For them | For another user | Own | Other user's   | Own | Other user's |
-        Administrator | C        |                  | RUD | RU             | RU  | RU           |
-        Simple        | C        |                  | RUD |                | R   | R            |
+        Status ->     | POST                        | REVIEWING          | REJECTED           | ACCEPTED           |
+                      | For them | For another user | Own | Other user's | Own | Other user's | Own | Other user's |
+        Administrator | C        |                  | RUD | RU           | RUD | RU           | RU  | RU           |
+        Simple        | C        |                  | RUD |              | R D |              | R   | R            |
 
         This permission MUST NOT handle the endpoints /vote/ and /results/.
         The POST restriction is handled in the serializer.
@@ -29,7 +29,7 @@ class PollPermission(permissions.BasePermission):
 
             return (request.user.is_staff or  # Administrators can always update.
                     (request.user == poll.user and
-                     not poll.state == 'ACCEPTED'))  # Authors can only update if the poll is not accepted.
+                     poll.state == 'REVIEWING'))  # Authors can only update if the poll has not been reviewed yet.
         elif request.method in ('DELETE',):
             self.message = 'You are not allowed to delete this poll.'
 

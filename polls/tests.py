@@ -256,10 +256,10 @@ class PollTestCase(BaseTestCase):
             res = self.update(poll.id, data=self.update_data_simple)
             self.assertStatusCodeIn(res, [403, 404])
 
-    def test_if_author_and_not_accepted_then_can_update_with_limited_data(self):
+    def test_if_author_and_reviewing_then_can_update_with_limited_data(self):
         self.login('17simple')
 
-        polls = Poll.objects.filter(user='17simple').exclude(state='ACCEPTED')
+        polls = Poll.objects.filter(user='17simple', state='REVIEWING')
 
         for poll in polls:
             res = self.update(poll.id, data=self.update_data_simple)
@@ -270,10 +270,10 @@ class PollTestCase(BaseTestCase):
             self.assertSetEqual(set(c[0] for c in updated_poll.choices.values_list('text')),
                                 set(c['text'] for c in self.update_data_simple['choices']))
 
-    def test_if_author_and_not_accepted_and_update_with_extra_fields_then_no_effect(self):
+    def test_if_author_and_reviewing_and_update_with_extra_fields_then_no_effect(self):
         self.login('17simple')
 
-        polls = Poll.objects.filter(user='17simple').exclude(state='ACCEPTED')
+        polls = Poll.objects.filter(user='17simple', state='REVIEWING')
 
         for poll in polls:
             res = self.update(poll.id, data=self.update_data_simple_with_extra_fields)

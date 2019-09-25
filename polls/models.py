@@ -64,10 +64,9 @@ class Poll(models.Model):
         Return True if the poll is has been published in the past, that is publication_date <= now(), and its state is
         ACCEPTED.
         """
-        td = date.today()
         if self.publication_date is None or self.state != 'ACCEPTED':
             return False
-        return self.publication_date <= td
+        return self.publication_date <= date.today()
 
     @cached_property
     def is_active(self):
