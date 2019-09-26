@@ -1,5 +1,3 @@
-import json
-
 from tags.tests.base_test import BaseTestCase
 
 
@@ -25,7 +23,7 @@ class TagNamespaceTestCase(BaseTestCase):
         self.login("17admin")
         res = self.post("/tags/tag/", {"namespace": 1, "value": "17wan-fat"})
         self.assertStatusCode(res, 201)
-        tag = json.loads(res.content)
+        tag = res.json()
 
         # Test: try to remove it
         self.login("17simple")
@@ -77,7 +75,7 @@ class TagNamespaceTestCase(BaseTestCase):
         self.login("17admin_pdm")
         res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
-        tag = json.loads(res.content)
+        tag = res.json()
 
         ##################################
         # Make the test

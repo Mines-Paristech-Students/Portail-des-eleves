@@ -48,7 +48,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ("id", "value", "url", "namespace")
+        fields = ("id", "value", "namespace")
 
     def to_representation(self, instance):
         response = super(TagSerializer, self).to_representation(instance)

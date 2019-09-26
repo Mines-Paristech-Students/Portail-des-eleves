@@ -14,7 +14,6 @@ from associations.models import (
     Choice,
     User,
 )
-from associations.permissions.base_permissions import _get_role_for_user
 from forum.models import Theme, MessageForum, Topic
 from tags.models import Namespace, Tag
 
@@ -51,8 +50,8 @@ def can_manage_tags_for(user, instance):
     parent = get_parent_object(instance)
 
     if isinstance(parent, Association):
-        role = _get_role_for_user(user, parent)
-        return role and role.is_admin
+        role = user.get_role(parent)
+        return role and role.administration_permission
     elif isinstance(parent, Theme):
         return user.is_admin
     else:
@@ -68,7 +67,7 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
         return False
 
     if isinstance(parent, Association):
-        role = _get_role_for_user(user, parent)
+        role = user.get_role(parent)
         return bool(role)
     elif isinstance(parent, Theme):
         return user.is_admin

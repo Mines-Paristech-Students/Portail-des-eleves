@@ -1,5 +1,3 @@
-import json
-
 from tags.tests.base_test import BaseTestCase
 
 
@@ -14,12 +12,11 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            res.data.get("tags"),
+            res.json().get("tags"),
             [
                 {
                     "id": 1,
                     "value": "17bocquet",
-                    "url": None,
                     "namespace": {"id": 1, "scope": "global", "name": "user"},
                 }
             ],
@@ -36,7 +33,7 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(res.data["tags"], [])
+        self.assertEqual(res.json()["tags"], [])
 
     def test_add_scoped_tag(self):
         self.login("17simple")
@@ -47,15 +44,15 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.post("/tags/link/product/2/tag/4/")
         self.assertStatusCode(res, 201)
 
+        self.maxDiff = None
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            res.data["tags"],
+            res.json()["tags"],
             [
                 {
                     "id": 4,
                     "value": "IPA",
-                    "url": None,
                     "namespace": {
                         "id": 3,
                         "scope": "association",

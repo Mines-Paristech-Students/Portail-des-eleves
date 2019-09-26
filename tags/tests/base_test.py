@@ -47,8 +47,8 @@ class BaseTestCase(TestCase):
         data = {"id": username, "password": password}
         return self.client.post(url, data, format="json")
 
-    def get(self, url, data=None):
-        return self.client.get(self.api_base + url, data)
+    def get(self, url, data=None, format="json"):
+        return self.client.get(self.api_base + url, data, format=format)
 
     def post(self, url, data=None, format="json", content_type="application/json"):
         return self.client.post(

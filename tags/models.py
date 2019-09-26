@@ -26,7 +26,7 @@ class Namespace(models.Model):
     name = models.CharField(max_length=50)
 
     scope = models.CharField(
-        max_length=50, choices=SCOPES.keys()
+        max_length=50, choices=SCOPES.items()
     )  # The application it targets
     scoped_to = models.CharField(
         max_length=50, blank=True, null=True
@@ -38,6 +38,9 @@ class Namespace(models.Model):
         )
 
     def get_scope_instance(self):
+        if Namespace.SCOPES[self.scope] is None:
+            return None
+
         try:
             scope = Namespace.SCOPES[self.scope].objects.get(pk=self.scoped_to)
             return scope
