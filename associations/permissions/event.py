@@ -12,11 +12,11 @@ class EventsPermission(BasePermission):
         The customized actions 'join' and 'leave' rely on a GET (R).
     """
 
-    message = 'You are not allowed to edit this event.'
+    message = "You are not allowed to edit this event."
 
     def has_permission(self, request, view):
-        if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'events')
+        if request.method in ("POST",):
+            return check_permission_from_post_data(request, "events")
 
         return True
 

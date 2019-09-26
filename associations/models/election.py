@@ -15,29 +15,38 @@ class Election(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    association = models.ForeignKey(Association, on_delete=models.CASCADE, related_name='elections')
+    association = models.ForeignKey(
+        Association, on_delete=models.CASCADE, related_name="elections"
+    )
 
     name = models.CharField(max_length=200)
 
-    registered_voters = models.ManyToManyField(User,
-                                               related_name='allowed_elections',
-                                               help_text='User who are allowed to vote to this election.')
-    voters = models.ManyToManyField(User,
-                                    related_name='voted_elections',
-                                    help_text='People who have already voted to this election.')
+    registered_voters = models.ManyToManyField(
+        User,
+        related_name="allowed_elections",
+        help_text="User who are allowed to vote to this election.",
+    )
+    voters = models.ManyToManyField(
+        User,
+        related_name="voted_elections",
+        help_text="People who have already voted to this election.",
+    )
 
     starts_at = models.DateTimeField(null=False)
     ends_at = models.DateTimeField(null=False)
 
-    max_choices_per_ballot = models.PositiveIntegerField(default=1,
-                                                         help_text='The number of choices allowed per ballot.')
+    max_choices_per_ballot = models.PositiveIntegerField(
+        default=1, help_text="The number of choices allowed per ballot."
+    )
 
     @cached_property
     def results(self):
         # First, we fetch all the ballots, but by replacing them by the associated choice name.
-        # We then wrap all of these choices into a Counter, which is a nice built-in object which will…
+        # We then wrap all of these choices into a Counter, which is a nice built-in object which will
         # count the ballots for us.
-        return Counter([ballot[0] for ballot in self.ballots.values_list('choices__name')])
+        return Counter(
+            [ballot[0] for ballot in self.ballots.values_list("choices__name")]
+        )
 
     @cached_property
     def is_active(self):
@@ -51,15 +60,19 @@ class Choice(models.Model):
 
     id = models.AutoField(primary_key=True)
 
-    election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='choices')
+    election = models.ForeignKey(
+        Election, on_delete=models.CASCADE, related_name="choices"
+    )
     name = models.CharField(max_length=200)
 
 
 class Ballot(models.Model):
     id = models.AutoField(primary_key=True)
 
-    election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='ballots')
-    choices = models.ManyToManyField(Choice, related_name='ballots')
+    election = models.ForeignKey(
+        Election, on_delete=models.CASCADE, related_name="ballots"
+    )
+    choices = models.ManyToManyField(Choice, related_name="ballots")
 
     @cached_property
     def is_valid(self):  # Should always be true

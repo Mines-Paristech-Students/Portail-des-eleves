@@ -10,11 +10,11 @@ class PagePermission(BasePermission):
         Simple     | R    |
     """
 
-    message = 'You are not allowed to edit this page.'
+    message = "You are not allowed to edit this page."
 
     def has_permission(self, request, view):
-        if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'page')
+        if request.method in ("POST",):
+            return check_permission_from_post_data(request, "page")
 
         return True
 

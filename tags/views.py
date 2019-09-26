@@ -1,5 +1,6 @@
-from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
+from django.http import HttpResponseBadRequest
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
@@ -74,7 +75,7 @@ class TagViewSet(
                     namespace=request.data.get("namespace"),
                     value=request.data.get("value"),
                 )
-                return JsonResponse(TagSerializer().to_representation(tag), status=201)
+                return Response(TagSerializer().to_representation(tag), status=201)
             except Tag.DoesNotExist:
                 pass
 
@@ -87,7 +88,7 @@ class TagLinkView(APIView):
         tag = Tag.objects.get(pk=tag_pk)
 
         if tag.namespace.scope != "global" and not user_can_link_tag_to(
-            request.user, tag, Tag.LINKS[model].objects.get(pk=instance_pk)
+            request.user, tag, Tag.get_linked_instance(model, instance_pk)
         ):
             raise PermissionDenied(
                 "Cannot edit link for {} with id {}".format(model, tag)
@@ -99,17 +100,17 @@ class TagLinkView(APIView):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).add(instance_pk)
         tag.save()
-        return HttpResponse(status=201)
+        return Response(status=201)
 
     def delete(self, request, model, instance_pk, tag_pk):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).remove(instance_pk)
         tag.save()
-        return HttpResponse(status=204)
+        return Response(status=204)
 
 
 def get_tags_for_scope(request, model, instance_pk):
     tags = Tag.objects.filter(
         namespace__scope=model, namespace__scoped_to=instance_pk
     ).all()
-    return JsonResponse({"tags": TagSerializer(many=True).to_representation(tags)})
+    return Response({"tags": TagSerializer(many=True).to_representation(tags)})

@@ -8,7 +8,7 @@ from authentication.models import User
 from authentication.utils import Birthday
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_birthdays(request, number_of_days):
     """API endpoint to get birthdays information in the next X days."""
 
@@ -23,9 +23,13 @@ def get_birthdays(request, number_of_days):
     start = Birthday.from_date(date.today())
     end = Birthday.from_date(date.today() + timedelta(days=number_of_days - 1))
     if start.month > end.month:
-        month_idx = [i % 12 if i != 12 else 12 for i in range(start.month, end.month + 12 + 1)]
+        month_idx = [
+            i % 12 if i != 12 else 12 for i in range(start.month, end.month + 12 + 1)
+        ]
     elif start.month == end.month and start.day > end.day:
-        month_idx = [i % 12 if i != 12 else 12 for i in range(start.month, end.month + 12 + 1)]
+        month_idx = [
+            i % 12 if i != 12 else 12 for i in range(start.month, end.month + 12 + 1)
+        ]
     else:
         month_idx = [i for i in range(start.month, end.month + 1)]
 
@@ -33,32 +37,53 @@ def get_birthdays(request, number_of_days):
     users = []
     if len(month_idx) == 1:
         # Only one month, fetch birthdays between start and end
-        users.extend(User.objects.all().filter(
-            birthday__month=month_idx[0],
-            birthday__day__gte=start.day,
-            birthday__day__lte=end.day
-        ).order_by('birthday__day').all())
+        users.extend(
+            User.objects.all()
+            .filter(
+                birthday__month=month_idx[0],
+                birthday__day__gte=start.day,
+                birthday__day__lte=end.day,
+            )
+            .order_by("birthday__day")
+            .all()
+        )
     elif len(month_idx) == 2:
         # Only two months, fetch birthdays from start in month 1 and from 1 to end in month 2
-        users.extend(User.objects.all().filter(
-            birthday__month=month_idx[0],
-            birthday__day__gte=start.day
-        ).order_by('birthday__day').all())
-        users.extend(User.objects.all().filter(
-            birthday__month=month_idx[1],
-            birthday__day__lte=end.day
-        ).order_by('birthday__day').all())
+        users.extend(
+            User.objects.all()
+            .filter(birthday__month=month_idx[0], birthday__day__gte=start.day)
+            .order_by("birthday__day")
+            .all()
+        )
+        users.extend(
+            User.objects.all()
+            .filter(birthday__month=month_idx[1], birthday__day__lte=end.day)
+            .order_by("birthday__day")
+            .all()
+        )
 
     else:  # len(month_idx) > 2
         # More than two months, fetch birthdays from start in month 1, all birthdays from 1 to end in last month,
         # and all birthdays in between
-        users.extend(User.objects.all().filter(
-            birthday__month=month_idx[0], birthday__day__gte=start.day).order_by('birthday__day').all())
+        users.extend(
+            User.objects.all()
+            .filter(birthday__month=month_idx[0], birthday__day__gte=start.day)
+            .order_by("birthday__day")
+            .all()
+        )
         for i in range(1, len(month_idx) - 1):
-            users.extend(User.objects.all().filter(
-                birthday__month=month_idx[i]).order_by('birthday__day').all())
-        users.extend(User.objects.all().filter(
-            birthday__month=month_idx[-1], birthday__day__lte=end.day).order_by('birthday__day').all())
+            users.extend(
+                User.objects.all()
+                .filter(birthday__month=month_idx[i])
+                .order_by("birthday__day")
+                .all()
+            )
+        users.extend(
+            User.objects.all()
+            .filter(birthday__month=month_idx[-1], birthday__day__lte=end.day)
+            .order_by("birthday__day")
+            .all()
+        )
 
     # No more sql request from here
     # Here we just format the answer as a dict
@@ -69,12 +94,10 @@ def get_birthdays(request, number_of_days):
         bd = Birthday.from_date(user.birthday)
 
         if bd not in birthdays:
-            birthdays[bd] = {'day': bd.day, 'month': bd.month, 'users': []}
+            birthdays[bd] = {"day": bd.day, "month": bd.month, "users": []}
 
-        birthdays[bd]['users'].append({
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name
-        })
+        birthdays[bd]["users"].append(
+            {"id": user.id, "first_name": user.first_name, "last_name": user.last_name}
+        )
 
-    return Response({'birthdays': list(birthdays.values())}, status=status.HTTP_200_OK)
+    return Response({"birthdays": list(birthdays.values())}, status=status.HTTP_200_OK)

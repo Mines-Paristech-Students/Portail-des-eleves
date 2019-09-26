@@ -11,11 +11,11 @@ class LibraryPermission(BasePermission):
         User          | R       |          |
     """
 
-    message = 'You are not allowed to edit this library.'
+    message = "You are not allowed to edit this library."
 
     def has_permission(self, request, view):
-        if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'library')
+        if request.method in ("POST",):
+            return check_permission_from_post_data(request, "library")
 
         return True
 
@@ -35,11 +35,11 @@ class LoanablePermission(BasePermission):
         User          | R       |          |
     """
 
-    message = 'You are not allowed to edit this loanable.'
+    message = "You are not allowed to edit this loanable."
 
     def has_permission(self, request, view):
-        if request.method in ('POST',):
-            library_pk = request.data.get('library', None)
+        if request.method in ("POST",):
+            library_pk = request.data.get("library", None)
             library_query = Library.objects.filter(pk=library_pk)
 
             if library_query.exists():
@@ -66,18 +66,18 @@ class LoansPermission(BasePermission):
         An user can only read and update their own loans in enabled libraries.
     """
 
-    message = 'You are not allowed to edit this loan.'
+    message = "You are not allowed to edit this loan."
 
     def has_permission(self, request, view):
         # Forbid the DELETE method and check the POST method, where we have to go through the POSTed data to find a
         # reference to a Loanable.
         # If the loanable does not exist, return True so the view can handle the error.
 
-        if request.method in ('DELETE',):
-            self.message = 'Loans cannot be deleted.'
+        if request.method in ("DELETE",):
+            self.message = "Loans cannot be deleted."
             return False
-        elif request.method in ('POST',):
-            loanable_pk = request.data.get('loanable', None)
+        elif request.method in ("POST",):
+            loanable_pk = request.data.get("loanable", None)
             loanable_query = Loanable.objects.filter(pk=loanable_pk)
 
             if loanable_query.exists():
@@ -95,4 +95,6 @@ class LoansPermission(BasePermission):
         if role and role.library:  # Library administrator.
             return True
         else:
-            return loan.user == request.user and (loan.loanable.library.enabled or request.method in SAFE_METHODS)
+            return loan.user == request.user and (
+                loan.loanable.library.enabled or request.method in SAFE_METHODS
+            )

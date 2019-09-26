@@ -8,21 +8,51 @@ from django.utils.functional import cached_property
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, first_name, last_name, email, password, birthday, year_of_entry):
+    def create_user(
+        self, username, first_name, last_name, email, password, birthday, year_of_entry
+    ):
         """
         Create and save a User.
         """
-        return self._create_user(username, first_name, last_name, email, password, birthday, year_of_entry,
-                                 is_admin=False)
+        return self._create_user(
+            username,
+            first_name,
+            last_name,
+            email,
+            password,
+            birthday,
+            year_of_entry,
+            is_admin=False,
+        )
 
-    def create_superuser(self, username, first_name, last_name, email, password, birthday, year_of_entry):
+    def create_superuser(
+        self, username, first_name, last_name, email, password, birthday, year_of_entry
+    ):
         """
         Create and save a superuser with the given email, birthday and password.
         """
-        return self._create_user(username, first_name, last_name, email, password, birthday, year_of_entry,
-                                 is_admin=True)
+        return self._create_user(
+            username,
+            first_name,
+            last_name,
+            email,
+            password,
+            birthday,
+            year_of_entry,
+            is_admin=True,
+        )
 
-    def _create_user(self, username, first_name, last_name, email, password, birthday, year_of_entry, is_admin):
+    def _create_user(
+        self,
+        username,
+        first_name,
+        last_name,
+        email,
+        password,
+        birthday,
+        year_of_entry,
+        is_admin,
+    ):
         """
         Create and save a User.
         """
@@ -32,7 +62,7 @@ class UserManager(BaseUserManager):
             last_name=last_name,
             email=self.normalize_email(email),
             birthday=birthday,
-            year_of_entry=year_of_entry
+            year_of_entry=year_of_entry,
         )
 
         user.set_password(password)
@@ -43,15 +73,14 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    STUDENT_TYPES = (('AST', 'AST'),
-                     ('ISUPFERE', 'ISUPFERE'),
-                     ('EV', 'EV'),
-                     ('IC', 'IC'))
+    STUDENT_TYPES = (
+        ("AST", "AST"),
+        ("ISUPFERE", "ISUPFERE"),
+        ("EV", "EV"),
+        ("IC", "IC"),
+    )
 
-    ACADEMIC_YEARS = (('1A', '1A'),
-                      ('2A', '2A'),
-                      ('GAP YEAR', 'CÉSURE'),
-                      ('3A', '3A'),)
+    ACADEMIC_YEARS = (("1A", "1A"), ("2A", "2A"), ("GAP YEAR", "CÉSURE"), ("3A", "3A"))
 
     id = models.CharField(primary_key=True, max_length=30)
 
@@ -60,12 +89,19 @@ class User(AbstractBaseUser):
     nickname = models.CharField(max_length=128, blank=True, default="")
     birthday = models.DateField(null=True)
     email = models.EmailField(max_length=160, unique=True)
-    year_of_entry = models.IntegerField(validators=(MinValueValidator(1783),))  # The year MINES ParisTech was created.
+    year_of_entry = models.IntegerField(
+        validators=(MinValueValidator(1783),)
+    )  # The year MINES ParisTech was created.
 
     phone = models.CharField(max_length=15, blank=True)
-    room = models.CharField(max_length=128, blank=True, help_text="Blank if the User is PAM.")
-    address = models.CharField(max_length=512, blank=True,
-                               help_text="Address outside the Meuh. Blank if the User is not PAM.")
+    room = models.CharField(
+        max_length=128, blank=True, help_text="Blank if the User is PAM."
+    )
+    address = models.CharField(
+        max_length=512,
+        blank=True,
+        help_text="Address outside the Meuh. Blank if the User is not PAM.",
+    )
     city_of_origin = models.CharField(max_length=128, blank=True)
 
     # Education.
@@ -75,8 +111,10 @@ class User(AbstractBaseUser):
 
     # Life at school.
     sports = models.CharField(max_length=512, blank=True)
-    roommate = models.ManyToManyField('self', symmetrical=True, default=None)
-    minesparent = models.ManyToManyField('self', related_name='fillots', symmetrical=False, default=None)
+    roommate = models.ManyToManyField("self", symmetrical=True, default=None)
+    minesparent = models.ManyToManyField(
+        "self", related_name="fillots", symmetrical=False, default=None
+    )
 
     # Life on portail.
     is_active = models.BooleanField(default=True)
@@ -84,11 +122,11 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'id'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'birthday']
+    USERNAME_FIELD = "id"
+    REQUIRED_FIELDS = ["first_name", "last_name", "email", "birthday"]
 
     class Meta:
-        ordering = ['-year_of_entry', 'last_name', 'first_name']
+        ordering = ["-year_of_entry", "last_name", "first_name"]
 
     def __str__(self):
         return self.id

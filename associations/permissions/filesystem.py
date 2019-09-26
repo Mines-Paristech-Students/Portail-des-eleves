@@ -11,15 +11,15 @@ def _get_role_for_user(user, association):
 
 
 class CanEditFiles(BasePermission):
-    message = 'Editing files is not allowed.'
+    message = "Editing files is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'CREATE':
-            if 'association' in request.data:
-                association = request.data['association']
+        if request.method == "CREATE":
+            if "association" in request.data:
+                association = request.data["association"]
             else:
                 return False
 
