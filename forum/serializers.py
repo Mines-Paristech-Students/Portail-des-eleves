@@ -45,9 +45,9 @@ class MessageForumSerializer(serializers.ModelSerializer):
         return obj.up_vote.count() - obj.down_vote.count()
 
     def get_my_vote(self, obj):
-        if 'request' not in self.context:
+        if "request" not in self.context:
             return 0
-        user = self.context['request'].user
+        user = self.context["request"].user
         if obj.up_vote.filter(id=user.id).count() == 1:
             return 1
         elif obj.down_vote.filter(id=user.id).count() == 1:

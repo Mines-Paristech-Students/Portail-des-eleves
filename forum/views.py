@@ -18,7 +18,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
         if user is None or user.is_1A:
             queryset = queryset.filter(is_hidden_1A=False)
 
-        themeId = self.request.query_params.get('theme', None)
+        themeId = self.request.query_params.get("theme", None)
         if themeId is not None:
             queryset = queryset.filter(theme=themeId)
         return queryset
@@ -32,7 +32,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         queryset = Topic.objects.all()
 
         user = self.request.user
-        themeId = self.request.query_params.get('theme', None)
+        themeId = self.request.query_params.get("theme", None)
         if user is None or user.is_1A:
             queryset = queryset.filter(is_hidden_1A=False, theme__is_hidden_1A=False)
 
@@ -54,10 +54,7 @@ class TopicViewSet(viewsets.ModelViewSet):
             user = request.user
 
             topic = Topic(
-                name=name,
-                creator=user,
-                theme=theme,
-                is_hidden_1A=is_hidden_1A
+                name=name, creator=user, theme=theme, is_hidden_1A=is_hidden_1A
             )
 
             topic.save()
@@ -75,10 +72,12 @@ class MessageForumViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = MessageForum.objects.all()
 
-        topicId = self.request.query_params.get('topic', None)
+        topicId = self.request.query_params.get("topic", None)
         user = self.request.user
         if user is None or user.is_1A:
-            queryset = queryset.filter(topic__is_hidden_1A=False, topic__theme__is_hidden_1A=False)
+            queryset = queryset.filter(
+                topic__is_hidden_1A=False, topic__theme__is_hidden_1A=False
+            )
         if topicId is not None:
             queryset = queryset.filter(topic=topicId)
         return queryset
@@ -96,11 +95,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
         if topic is not None:
             user = request.user
 
-            message = MessageForum(
-                author=user,
-                text=text_message,
-                topic=topic
-            )
+            message = MessageForum(author=user, text=text_message, topic=topic)
 
             message.save()
 
@@ -114,7 +109,9 @@ class NewVoteMessageView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
-        return JsonResponse({"status": "error", "message": "Can not see vote"}, status="405")
+        return JsonResponse(
+            {"status": "error", "message": "Can not see vote"}, status="405"
+        )
 
     def put(self, request, format=None):
         body = json.loads(request.body)
@@ -136,6 +133,8 @@ class NewVoteMessageView(APIView):
                 message.down_vote.add(user)
 
         except ValueError as err:
-            return JsonResponse({"status": "error", "message": "Missing argument"}, status="400")
+            return JsonResponse(
+                {"status": "error", "message": "Missing argument"}, status="400"
+            )
 
         return JsonResponse({"status": "ok"})
