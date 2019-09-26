@@ -106,8 +106,8 @@ class ManageTagPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             namespace = Namespace.objects.get(pk=request.data.get("namespace"))
-            if namespace.scope in Namespace.SCOPES:
-                instance = namespace.get_scope_instance()
+            instance = namespace.get_scope_instance()
+            if instance:
                 return can_manage_tags_for(request.user, instance)
             else:
                 return request.user.is_admin

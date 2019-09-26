@@ -22,8 +22,8 @@ class NamespaceSerializer(serializers.ModelSerializer):
 
         data_scope = data.get("scope")
         if data_scope:
-            namespace_scope = Namespace.SCOPES.get(data_scope)
-            if not namespace_scope or not namespace_scope.objects.get(
+            namespace_scope = Namespace.SCOPES.get(data_scope, "no_scope") # None is already the value for global scope
+            if namespace_scope is not None and not namespace_scope.objects.get(
                 pk=data.get("scoped_to")
             ):
                 raise serializers.ValidationError("Not scoped_to an existing object")
