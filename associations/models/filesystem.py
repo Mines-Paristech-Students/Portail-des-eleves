@@ -32,7 +32,7 @@ class File(models.Model):
     description = models.TextField(null=True)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
-    file = models.FileField(Association, storage=fs)
+    file = models.FileField(storage=fs)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files", null=True)
 
     uploaded_on = models.DateTimeField(auto_now=True)

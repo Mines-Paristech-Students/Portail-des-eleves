@@ -3,7 +3,7 @@ from rest_framework_bulk.routes import BulkRouter
 
 from associations.views import AssociationViewSet, EventViewSet, PageViewSet, MarketplaceViewSet, \
     ProductViewSet, TransactionViewSet, LibraryViewSet, FundingViewSet, BalanceView, LoansViewSet, \
-    LoanableViewSet, RoleViewSet, ElectionViewSet, CreateBallotView
+    LoanableViewSet, RoleViewSet, ElectionViewSet, CreateBallotView, set_association_image
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 
 urlpatterns = []
@@ -36,6 +36,7 @@ router.register(r'products', ProductViewSet)
 router.register(r'transactions', TransactionViewSet)
 router.register(r'funding', FundingViewSet)
 urlpatterns += [
+    path("associations/<association_pk>/image", set_association_image),
     path('marketplace/balance/', BalanceView.as_view(), name='balance-list'),
     path('marketplace/<slug:marketplace_id>/balance/', BalanceView.as_view(), name='balance-list-marketplace'),
     path('marketplace/<slug:marketplace_id>/balance/<slug:user_id>/', BalanceView.as_view(), name='balance-detail'),

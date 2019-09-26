@@ -6,7 +6,9 @@ from authentication.serializers.user import UserShortSerializer
 
 
 class WriteRoleSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), read_only=False)
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), read_only=False
+    )
 
     def __init__(self, used_by_association_admin=False, *args, **kwargs):
         """
@@ -20,9 +22,11 @@ class WriteRoleSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         """If the user is not an association admin, only give them access to the administration_permission field."""
         if not self.used_by_association_admin:
-            forbidden_fields = (tuple(f'{permission_name}_permission' for permission_name in Role.PERMISSION_NAMES
-                                      if permission_name != 'administration') +
-                                ('is_archived', 'role', 'rank'))
+            forbidden_fields = tuple(
+                f"{permission_name}_permission"
+                for permission_name in Role.PERMISSION_NAMES
+                if permission_name != "administration"
+            ) + ("is_archived", "role", "rank")
 
             for field in forbidden_fields:
                 if field in self.validated_data:
@@ -32,11 +36,11 @@ class WriteRoleSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Prevent the changes to association and user fields when updating.
-        if 'association' in validated_data:
-            validated_data.pop('association')
+        if "association" in validated_data:
+            validated_data.pop("association")
 
-        if 'user' in validated_data:
-            validated_data.pop('user')
+        if "user" in validated_data:
+            validated_data.pop("user")
 
         return super(WriteRoleSerializer, self).update(instance, validated_data)
 
@@ -50,10 +54,15 @@ class WriteRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        read_only_fields = ('id',)
-        fields = (read_only_fields +
-                  ('association', 'user', 'role', 'rank', 'is_archived') +
-                  tuple(f'{permission_name}_permission' for permission_name in Role.PERMISSION_NAMES))
+        read_only_fields = ("id",)
+        fields = (
+            read_only_fields
+            + ("association", "user", "role", "rank", "is_archived")
+            + tuple(
+                f"{permission_name}_permission"
+                for permission_name in Role.PERMISSION_NAMES
+            )
+        )
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -69,12 +78,22 @@ class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        read_only_fields = (('id', 'association', 'user', 'role', 'rank', 'is_archived') +
-                            tuple(f'{permission_name}_permission' for permission_name in Role.PERMISSION_NAMES))
+        read_only_fields = (
+            "id",
+            "association",
+            "user",
+            "role",
+            "rank",
+            "is_archived",
+        ) + tuple(
+            f"{permission_name}_permission" for permission_name in Role.PERMISSION_NAMES
+        )
         fields = read_only_fields
 
     def save(self, **kwargs):
-        raise RuntimeError('The serializer `RoleSerializer` should not be used for writing operations.')
+        raise RuntimeError(
+            "The serializer `RoleSerializer` should not be used for writing operations."
+        )
 
 
 class RoleShortSerializer(serializers.ModelSerializer):
@@ -82,14 +101,14 @@ class RoleShortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Role
-        read_only_fields = ('id', 'user', 'association', 'role', 'rank')
+        read_only_fields = ("id", "user", "association", "role", "rank")
         fields = read_only_fields
 
 
 class AssociationShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
-        read_only_fields = ('id', 'name', 'logo')
+        read_only_fields = ("id", "name", "logo")
         fields = read_only_fields
 
 
@@ -105,9 +124,15 @@ class AssociationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Association
-        read_only_fields = ('pages', 'marketplace', 'library', 'my_role')
-        fields = read_only_fields + ('id', 'name', 'logo', 'is_hidden', 'rank')
+        read_only_fields = ("pages", "marketplace", "library", "my_role")
+        fields = read_only_fields + ("id", "name", "logo", "is_hidden", "rank")
 
     def get_my_role(self, obj):
-        role = self.context['request'].user.get_role(obj)
+        role = self.context["request"].user.get_role(obj)
         return RoleSerializer(role).data if role else {}
+
+
+class AssociationImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        fields = ("image",)
