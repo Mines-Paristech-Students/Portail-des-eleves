@@ -36,8 +36,6 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
 
 class CreateBallotView(generics.CreateAPIView):
-    """This view deals with the news filtered by subscriptions."""
-
     queryset = Ballot.objects.all()
     serializer_class = BallotSerializer
     permission_classes = (BallotPermission,)
