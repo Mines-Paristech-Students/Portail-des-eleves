@@ -60,3 +60,13 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationShortSerializer
         else:
             return AssociationSerializer
+
+def upload_association_logo(request, association_pk):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'core/simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })

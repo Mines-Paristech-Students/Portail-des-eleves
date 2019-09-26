@@ -9,11 +9,6 @@ class NamespaceSerializer(serializers.ModelSerializer):
         model = Namespace
         fields = ("id", "name", "scope", "scoped_to")
 
-    def validate_scope(self, value):
-        if value not in Namespace.SCOPES.keys():
-            raise serializers.ValidationError("The scope isn't valid")
-        return value
-
     def validate(self, data):
         if len(data) == 0:
             return data
