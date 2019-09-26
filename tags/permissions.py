@@ -90,7 +90,7 @@ class NamespacePermission(permissions.BasePermission):
             if scope == "global":
                 return request.user.is_admin
 
-            instance = Tag.LINKS[scope].objects.get(pk=scoped_to)
+            instance = Tag.get_linked_instance(scope, scoped_to)
             return can_manage_tags_for(request.user, instance)
 
         return True
@@ -99,7 +99,7 @@ class NamespacePermission(permissions.BasePermission):
         if namespace.scope == "global":
             return request.user.is_admin
 
-        instance = Namespace.SCOPES[namespace.scope].objects.get(pk=namespace.scoped_to)
+        instance = namespace.get_scope_instance()
         return can_manage_tags_for(request.user, instance)
 
 
@@ -107,9 +107,8 @@ class ManageTagPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             namespace = Namespace.objects.get(pk=request.data.get("namespace"))
-            scope = Namespace.SCOPES[namespace.scope]
-            if scope:
-                instance = scope.objects.get(pk=namespace.scoped_to)
+            if namespace.scope in Namespace.SCOPES:
+                instance = namespace.get_scope_instance()
                 return can_manage_tags_for(request.user, instance)
             else:
                 return request.user.is_admin
@@ -120,7 +119,5 @@ class ManageTagPermission(permissions.BasePermission):
         if Namespace.SCOPES[namespace.scope] is None:
             return request.user.is_admin
         else:
-            instance = Namespace.SCOPES[namespace.scope].objects.get(
-                pk=namespace.scoped_to
-            )
+            instance = namespace.get_scope_instance()
             return can_manage_tags_for(request.user, instance)

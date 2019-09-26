@@ -5,14 +5,16 @@ from associations.models import Association, Page, User
 
 
 class PageSerializer(serializers.ModelSerializer):
-    association = relations.PrimaryKeyRelatedField(queryset=Association.objects.all(), read_only=False)
+    association = relations.PrimaryKeyRelatedField(
+        queryset=Association.objects.all(), read_only=False
+    )
     authors = relations.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Page
         # The dates are automatically set by Django on create or update.
-        read_only_fields = ('id', 'authors', 'creation_date', 'last_update_date',)
-        fields = read_only_fields + ('association', 'title', 'text', 'page_type',)
+        read_only_fields = ("id", "authors", "creation_date", "last_update_date")
+        fields = read_only_fields + ("association", "title", "text", "page_type")
 
     def save(self, author, **kwargs):
         """Override the save method to add `author` to the authors field."""
@@ -22,8 +24,8 @@ class PageSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Prevent the changes to the association field when updating.
-        if 'association' in validated_data:
-            validated_data.pop('association')
+        if "association" in validated_data:
+            validated_data.pop("association")
 
         return super(PageSerializer, self).update(instance, validated_data)
 
@@ -31,5 +33,5 @@ class PageSerializer(serializers.ModelSerializer):
 class PageShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        read_only_fields = ('id',)
-        fields = ('title',)
+        read_only_fields = ("id",)
+        fields = ("title",)

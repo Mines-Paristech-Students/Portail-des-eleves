@@ -94,7 +94,7 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.delete("/tags/tag/{}/".format(tag["id"]))
         self.assertStatusCode(res, 204)
 
-    def test_create_same_tage_twice(self):
+    def test_create_same_tag_twice(self):
         self.login("17admin_pdm")
 
         res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})

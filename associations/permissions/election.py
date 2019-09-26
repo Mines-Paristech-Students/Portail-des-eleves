@@ -19,11 +19,11 @@ class ElectionPermission(permissions.BasePermission):
         This permission MUST NOT handle the endpoints /vote/ and /results/.
     """
 
-    message = 'You are not allowed to edit this election.'
+    message = "You are not allowed to edit this election."
 
     def has_permission(self, request, view):
-        if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'election')
+        if request.method in ("POST",):
+            return check_permission_from_post_data(request, "election")
 
         return True
 
@@ -43,7 +43,7 @@ class ResultsPermission(permissions.BasePermission):
         Others         |                | R             |
     """
 
-    message = 'You are not allowed to view the results of this election.'
+    message = "You are not allowed to view the results of this election."
 
     def has_permission(self, request, view):
         return request.method in permissions.SAFE_METHODS
@@ -64,16 +64,18 @@ class BallotPermission(permissions.BasePermission):
         Others         |             |
     """
 
-    message = 'You are not allowed to vote to this election.'
+    message = "You are not allowed to vote to this election."
 
     def has_permission(self, request, view):
-        if request.method not in ('POST',):
+        if request.method not in ("POST",):
             return False
 
-        election_pk = view.kwargs.get('election_pk', None)
+        election_pk = view.kwargs.get("election_pk", None)
         election_query = Association.objects.filter(pk=election_pk)
 
         if election_query.exists():
-            return request.user.allowed_elections.filter(id=election_query[0].id).exists()
+            return request.user.allowed_elections.filter(
+                id=election_query[0].id
+            ).exists()
 
         return True

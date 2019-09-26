@@ -13,17 +13,10 @@ class ProfileAnswer(models.Model):
     text = models.CharField(max_length=255)
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=False,
-        related_name="profile_answers"
+        User, on_delete=models.CASCADE, null=False, related_name="profile_answers"
     )
 
-    question = models.ForeignKey(
-        ProfileQuestion,
-        on_delete=models.CASCADE,
-        null=False,
-    )
+    question = models.ForeignKey(ProfileQuestion, on_delete=models.CASCADE, null=False)
 
     class Meta:
-        unique_together = ('user', 'question')
+        unique_together = ("user", "question")

@@ -14,15 +14,15 @@ class CreateTransactionSerializer(ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('product', 'buyer', 'quantity')
+        fields = ("product", "buyer", "quantity")
 
     def create(self, validated_data):
         """Create a new instance of Product based upon validated_data."""
 
         # Compute the value of the transaction.
-        product = Product.objects.get(pk=validated_data['product'].id)
-        validated_data['value'] = product.price * validated_data['quantity']
-        validated_data['status'] = 'ORDERED'
+        product = Product.objects.get(pk=validated_data["product"].id)
+        validated_data["value"] = product.price * validated_data["quantity"]
+        validated_data["status"] = "ORDERED"
 
         return Transaction.objects.create(**validated_data)
 
@@ -32,7 +32,7 @@ class UpdateTransactionSerializer(ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('status', 'date')
+        fields = ("status", "date")
 
 
 class TransactionSerializer(ModelSerializer):
@@ -41,19 +41,27 @@ class TransactionSerializer(ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('id', 'product', 'buyer', 'quantity', 'value', 'date', 'status')
+        fields = ("id", "product", "buyer", "quantity", "value", "date", "status")
 
     def to_representation(self, instance):
         res = super(TransactionSerializer, self).to_representation(instance)
-        res['marketplace'] = instance.product.marketplace.id
-        res['product'] = ProductSerializer().to_representation(instance.product)
+        res["marketplace"] = instance.product.marketplace.id
+        res["product"] = ProductSerializer().to_representation(instance.product)
         return res
 
 
 class ProductShortSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left')
+        fields = (
+            "id",
+            "name",
+            "description",
+            "price",
+            "comment",
+            "marketplace",
+            "number_left",
+        )
 
 
 class ProductSerializer(ModelSerializer):
@@ -62,11 +70,20 @@ class ProductSerializer(ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'price', 'comment', 'marketplace', 'number_left', 'tags')
+        fields = (
+            "id",
+            "name",
+            "description",
+            "price",
+            "comment",
+            "marketplace",
+            "number_left",
+            "tags",
+        )
 
     def update(self, instance, validated_data):
-        if 'marketplace' in validated_data:
-            validated_data.pop('marketplace')
+        if "marketplace" in validated_data:
+            validated_data.pop("marketplace")
 
         return super(ProductSerializer, self).update(instance, validated_data)
 
@@ -77,13 +94,13 @@ class CreateFundingSerializer(ModelSerializer):
 
     class Meta:
         model = Funding
-        fields = ('value', 'user', 'marketplace')
+        fields = ("value", "user", "marketplace")
 
 
 class UpdateFundingSerializer(ModelSerializer):
     class Meta:
         model = Funding
-        fields = ('status',)
+        fields = ("status",)
 
 
 class FundingSerializer(ModelSerializer):
@@ -92,13 +109,13 @@ class FundingSerializer(ModelSerializer):
 
     class Meta:
         model = Funding
-        fields = ('id', 'user', 'value', 'date', 'marketplace', 'status')
+        fields = ("id", "user", "value", "date", "marketplace", "status")
 
 
 class MarketplaceShortSerializer(ModelSerializer):
     class Meta:
         model = Marketplace
-        read_only_fields = ('id', 'enabled', 'association')
+        read_only_fields = ("id", "enabled", "association")
         fields = read_only_fields
 
 
@@ -107,17 +124,17 @@ class MarketplaceSerializer(ModelSerializer):
 
     class Meta:
         model = Marketplace
-        fields = ('id', 'enabled', 'association', 'products')
+        fields = ("id", "enabled", "association", "products")
 
     def create(self, validated_data):
         """Create a new instance of Marketplace based upon validated_data."""
 
         # A new Marketplace is linked to an existing association.
-        association_data = validated_data.pop('association')
+        association_data = validated_data.pop("association")
         association = Association.objects.get(pk=association_data)
 
         # A new Marketplace may come with new products.
-        products_data = validated_data.pop('products')
+        products_data = validated_data.pop("products")
 
         # Insert the Marketplace first, then the products, because the newly created Marketplace object is needed to
         # create the products.
@@ -127,13 +144,15 @@ class MarketplaceSerializer(ModelSerializer):
 
         # Insert the products.
         for product_data in products_data:
-            Product.objects.create(name=product_data['name'],
-                                   description=product_data.get('description', None),
-                                   price=product_data.get('price', 0),
-                                   number_left=product_data.get('number_left', -1),
-                                   image=product_data.get('image', None),
-                                   comment=product_data.get('comment', None),
-                                   marketplace=marketplace)
+            Product.objects.create(
+                name=product_data["name"],
+                description=product_data.get("description", None),
+                price=product_data.get("price", 0),
+                number_left=product_data.get("number_left", -1),
+                image=product_data.get("image", None),
+                comment=product_data.get("comment", None),
+                marketplace=marketplace,
+            )
 
         return marketplace
 
@@ -143,13 +162,14 @@ class MarketplaceSerializer(ModelSerializer):
             The nested fields association and products will not be updated.
         """
 
-        instance.enabled = validated_data.get('enabled', instance.enabled)
+        instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
 
     def to_representation(self, instance):
         res = super(ModelSerializer, self).to_representation(instance)
 
-        res['association'] = AssociationShortSerializer().to_representation(
-            Association.objects.get(pk=res['association']))
+        res["association"] = AssociationShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
         return res

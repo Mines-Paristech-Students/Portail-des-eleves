@@ -14,7 +14,7 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            json.loads(res.content).get("tags"),
+            res.data.get("tags"),
             [
                 {
                     "id": 1,
@@ -36,7 +36,7 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(json.loads(res.content)["tags"], [])
+        self.assertEqual(res.data["tags"], [])
 
     def test_add_scoped_tag(self):
         self.login("17simple")
@@ -50,7 +50,7 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            json.loads(res.content)["tags"],
+            res.data["tags"],
             [
                 {
                     "id": 4,
@@ -74,7 +74,7 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(json.loads(res.content)["tags"]), 1)
+        self.assertEqual(len(res.data["tags"]), 1)
 
         # remove the tag
         self.login("17simple")
@@ -87,7 +87,7 @@ class TagNamespaceTestCase(BaseTestCase):
 
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(json.loads(res.content)["tags"], [])
+        self.assertEqual(res.data["tags"], [])
 
     def test_add_tag_from_other_namepace(self):
         self.login("17admin_biero")

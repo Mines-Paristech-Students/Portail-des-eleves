@@ -25,10 +25,13 @@ class NamespaceSerializer(serializers.ModelSerializer):
                 "Must define scope and scoped_to together"
             )
 
-        if Namespace.SCOPES.get(data.get("scope")) and not Namespace.SCOPES.get(
-            data.get("scope")
-        ).objects.get(pk=data.get("scoped_to")):
-            raise serializers.ValidationError("Not scoped_to and existing object")
+        data_scope = data.get("scope")
+        if data_scope:
+            namespace_scope = Namespace.SCOPES.get(data_scope)
+            if not namespace_scope or not namespace_scope.objects.get(
+                pk=data.get("scoped_to")
+            ):
+                raise serializers.ValidationError("Not scoped_to an existing object")
 
         return data
 
@@ -55,6 +58,10 @@ class TagSerializer(serializers.ModelSerializer):
         return response
 
     def update(self, instance, validated_data):
+        """ Tags may be created or delete but never changed because we don't know the extent of the modification
+         - maybe renaming a tag would change values in  places we didn't think of
+         - the namespace cannot be changed because a tag cannot be placed on an object outside its namespace
+        """
         raise NotImplementedError("Cannot update a tag from the REST API")
 
 
