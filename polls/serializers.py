@@ -7,21 +7,25 @@ from polls.models import Choice, Poll, Vote
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        read_only_fields = ('id',)
-        fields = read_only_fields + ('text',)
+        read_only_fields = ("id",)
+        fields = read_only_fields + ("text",)
 
     def save(self, poll, **kwargs):
         super(ChoiceSerializer, self).save(poll=poll, **kwargs)
 
 
 class VoteSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), default=serializers.CurrentUserDefault())
-    choice = serializers.PrimaryKeyRelatedField(queryset=Choice.objects.all(), read_only=False)
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), default=serializers.CurrentUserDefault()
+    )
+    choice = serializers.PrimaryKeyRelatedField(
+        queryset=Choice.objects.all(), read_only=False
+    )
 
     class Meta:
         model = Vote
-        read_only_fields = ('user',)
-        fields = read_only_fields + ('choice',)
+        read_only_fields = ("user",)
+        fields = read_only_fields + ("choice",)
 
 
 class ReadOnlyPollSerializer(serializers.ModelSerializer):
@@ -31,7 +35,7 @@ class ReadOnlyPollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Poll
-        read_only_fields = ('id', 'choices', 'question')
+        read_only_fields = ("id", "choices", "question")
         fields = read_only_fields
 
 
@@ -39,26 +43,26 @@ class WritePollSerializer(serializers.ModelSerializer):
     """This class allow AuthorPollSerializer and AdminPollSerializer to share update and create behaviours."""
 
     def update(self, instance, validated_data):
-        if 'choices' in validated_data:
-            choices_data = validated_data.pop('choices')
+        if "choices" in validated_data:
+            choices_data = validated_data.pop("choices")
 
             # Delete the old choices and create the new ones.
             instance.choices.all().delete()
 
             for choice_data in choices_data:
-                Choice.objects.create(poll=instance, text=choice_data['text'])
+                Choice.objects.create(poll=instance, text=choice_data["text"])
 
         return super(WritePollSerializer, self).update(instance, validated_data)
 
     def create(self, validated_data):
-        choices_data = validated_data.pop('choices')
+        choices_data = validated_data.pop("choices")
 
         # Create the new poll.
         poll = Poll.objects.create(**validated_data)
 
         # Create the new choices.
         for choice_data in choices_data:
-            Choice.objects.create(poll=poll, text=choice_data['text'])
+            Choice.objects.create(poll=poll, text=choice_data["text"])
 
         return poll
 
@@ -74,8 +78,15 @@ class AuthorPollSerializer(WritePollSerializer):
 
     class Meta:
         model = Poll
-        read_only_fields = ('id', 'user', 'creation_date_time', 'state', 'publication_date', 'admin_comment')
-        fields = read_only_fields + ('question', 'choices',)
+        read_only_fields = (
+            "id",
+            "user",
+            "creation_date_time",
+            "state",
+            "publication_date",
+            "admin_comment",
+        )
+        fields = read_only_fields + ("question", "choices")
 
 
 class AdminPollSerializer(WritePollSerializer):
@@ -86,5 +97,11 @@ class AdminPollSerializer(WritePollSerializer):
 
     class Meta:
         model = Poll
-        read_only_fields = ('id', 'user', 'creation_date_time')
-        fields = read_only_fields + ('question', 'state', 'publication_date', 'admin_comment', 'choices')
+        read_only_fields = ("id", "user", "creation_date_time")
+        fields = read_only_fields + (
+            "question",
+            "state",
+            "publication_date",
+            "admin_comment",
+            "choices",
+        )

@@ -4,7 +4,11 @@ from rest_framework.exceptions import NotFound, PermissionDenied, ValidationErro
 from rest_framework.response import Response
 
 from associations.models import Election, Choice, Ballot
-from associations.permissions import ElectionPermission, BallotPermission, ResultsPermission
+from associations.permissions import (
+    ElectionPermission,
+    BallotPermission,
+    ResultsPermission,
+)
 from associations.serializers import ElectionSerializer, BallotSerializer
 
 """
@@ -24,10 +28,10 @@ class ElectionViewSet(viewsets.ModelViewSet):
     serializer_class = ElectionSerializer
     permission_classes = (ElectionPermission,)
 
-    @action(detail=True, methods=('get',), permission_classes=(ResultsPermission,))
+    @action(detail=True, methods=("get",), permission_classes=(ResultsPermission,))
     def results(self, *args, **kwargs):
         election = self.get_object()
-        data = {'election': election.id, 'results': election.results}
+        data = {"election": election.id, "results": election.results}
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -37,10 +41,10 @@ class CreateBallotView(generics.CreateAPIView):
     permission_classes = (BallotPermission,)
 
     def get_election_or_404(self, **kwargs):
-        request_election = Election.objects.filter(pk=kwargs.get('election_pk'))
+        request_election = Election.objects.filter(pk=kwargs.get("election_pk"))
 
         if not request_election.exists():
-            raise NotFound('Election not found.')
+            raise NotFound("Election not found.")
 
         return request_election[0]
 
@@ -52,25 +56,29 @@ class CreateBallotView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         # Check if the new Ballot object is valid.
-        choice_names = [c[0] for c in Choice.objects.filter(election=election).values_list('name')]
-        for choice in serializer.validated_data['choices']:
+        choice_names = [
+            c[0] for c in Choice.objects.filter(election=election).values_list("name")
+        ]
+        for choice in serializer.validated_data["choices"]:
             if choice.name not in choice_names:
-                raise ValidationError('Invalid choices provided.')
+                raise ValidationError("Invalid choices provided.")
 
-        if len(serializer.validated_data['choices']) > election.max_choices_per_ballot:
-            raise ValidationError('Too many choices.')
+        if len(serializer.validated_data["choices"]) > election.max_choices_per_ballot:
+            raise ValidationError("Too many choices.")
 
         # Check if the election is active.
         if not election.is_active:
-            raise PermissionDenied('This election is not active.')
+            raise PermissionDenied("This election is not active.")
 
         # Check if the user is allowed to vote.
-        if request.user.id not in [voter[0] for voter in election.registered_voters.values_list('id')]:
-            raise PermissionDenied('You are not allowed to vote.')
+        if request.user.id not in [
+            voter[0] for voter in election.registered_voters.values_list("id")
+        ]:
+            raise PermissionDenied("You are not allowed to vote.")
 
         # Check if the user has already voted.
-        if request.user.id in [voter[0] for voter in election.voters.values_list('id')]:
-            raise PermissionDenied('You have already voted.')
+        if request.user.id in [voter[0] for voter in election.voters.values_list("id")]:
+            raise PermissionDenied("You have already voted.")
 
         # Save the object.
         serializer.save(election=election)
@@ -79,4 +87,6 @@ class CreateBallotView(generics.CreateAPIView):
         # Add the voter to the Election object.
         election.voters.add(request.user)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )

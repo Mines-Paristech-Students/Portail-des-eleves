@@ -11,12 +11,12 @@ class LibraryTestCase(BaseLibraryTestCase):
     ########
 
     def test_if_not_logged_in_then_no_access_to_libraries(self):
-        res = self.get('/associations/library/')
+        res = self.get("/associations/library/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_libraries(self):
-        self.login('17simple')
-        res = self.get('/associations/library/')
+        self.login("17simple")
+        res = self.get("/associations/library/")
         self.assertStatusCode(res, 200)
 
     ############
@@ -24,24 +24,24 @@ class LibraryTestCase(BaseLibraryTestCase):
     ############
 
     def test_if_not_logged_in_then_no_access_to_library(self):
-        res = self.get('/associations/library/bd-tek/')
+        res = self.get("/associations/library/bd-tek/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_library(self):
-        self.login('17simple')
-        res = self.get('/associations/library/bd-tek/')
+        self.login("17simple")
+        res = self.get("/associations/library/bd-tek/")
         self.assertStatusCode(res, 200)
 
     def test_if_library_disabled_then_no_access_to_library(self):
-        self.login('17simple')
-        res = self.get('/associations/library/biero/')
-        self.assertFalse(Library.objects.get(pk='biero').enabled)
+        self.login("17simple")
+        res = self.get("/associations/library/biero/")
+        self.assertFalse(Library.objects.get(pk="biero").enabled)
         self.assertStatusCode(res, 404)
 
     def test_if_library_does_not_exist_then_404(self):
-        self.login('17simple')
-        res = self.get('/associations/library/bde/')
-        self.assertFalse(Library.objects.filter(pk='bde').exists())
+        self.login("17simple")
+        res = self.get("/associations/library/bde/")
+        self.assertFalse(Library.objects.filter(pk="bde").exists())
         self.assertStatusCode(res, 404)
 
     ##########
@@ -50,28 +50,51 @@ class LibraryTestCase(BaseLibraryTestCase):
 
     def test_if_not_library_admin_then_cannot_create_library(self):
         for user in ALL_USERS:
-            if user != '17library_bde':
+            if user != "17library_bde":
                 self.login(user)
-                res = self.post('/associations/library/',
-                                data={'id': 'bde', 'enabled': 'true', 'association': 'bde', 'loanables': []})
+                res = self.post(
+                    "/associations/library/",
+                    data={
+                        "id": "bde",
+                        "enabled": "true",
+                        "association": "bde",
+                        "loanables": [],
+                    },
+                )
                 self.assertStatusCode(res, 403)
-                self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bde')
+                self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk="bde")
 
     def test_if_library_admin_then_can_create_own_library(self):
-        self.login('17library_bde')  # Library administrator.
-        res = self.post('/associations/library/',
-                        data={'id': 'bde', 'enabled': 'true', 'loanables': [], 'association': 'bde'})
+        self.login("17library_bde")  # Library administrator.
+        res = self.post(
+            "/associations/library/",
+            data={
+                "id": "bde",
+                "enabled": "true",
+                "loanables": [],
+                "association": "bde",
+            },
+        )
         self.assertStatusCode(res, 201)
-        self.assertTrue(Library.objects.filter(pk='bde').exists())
-        self.assertEqual(Association.objects.get(pk='bde').library, Library.objects.get(pk='bde'))
+        self.assertTrue(Library.objects.filter(pk="bde").exists())
+        self.assertEqual(
+            Association.objects.get(pk="bde").library, Library.objects.get(pk="bde")
+        )
 
     def test_cannot_create_library_for_not_existing_association(self):
         for user in ALL_USERS:
             self.login(user)
-            res = self.post('/associations/library/',
-                            data={'id': 'piche', 'enabled': 'true', 'association': 'piche', 'loanables': []})
+            res = self.post(
+                "/associations/library/",
+                data={
+                    "id": "piche",
+                    "enabled": "true",
+                    "association": "piche",
+                    "loanables": [],
+                },
+            )
             self.assertStatusCode(res, 404)
-            self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='piche')
+            self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk="piche")
 
     ##########
     # UPDATE #
@@ -80,15 +103,15 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_update_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.patch('/associations/library/bd-tek/', data={'enabled': 'false'})
+            res = self.patch("/associations/library/bd-tek/", data={"enabled": "false"})
             self.assertStatusCode(res, 403)
-            self.assertTrue(Library.objects.get(pk='bd-tek').enabled)
+            self.assertTrue(Library.objects.get(pk="bd-tek").enabled)
 
     def test_if_library_admin_then_can_update_library(self):
-        self.login('17library_bd-tek')
-        res = self.patch('/associations/library/bd-tek/', data={'enabled': 'false'})
+        self.login("17library_bd-tek")
+        res = self.patch("/associations/library/bd-tek/", data={"enabled": "false"})
         self.assertStatusCode(res, 200)
-        self.assertFalse(Library.objects.get(pk='bd-tek').enabled)
+        self.assertFalse(Library.objects.get(pk="bd-tek").enabled)
 
     ##########
     # DELETE #
@@ -97,12 +120,12 @@ class LibraryTestCase(BaseLibraryTestCase):
     def test_if_not_library_admin_then_cannot_delete_library(self):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.login(user)
-            res = self.delete('/associations/library/bd-tek/')
+            res = self.delete("/associations/library/bd-tek/")
             self.assertStatusCode(res, 403)
-            self.assertTrue(Library.objects.filter(pk='bd-tek').exists())
+            self.assertTrue(Library.objects.filter(pk="bd-tek").exists())
 
     def test_if_library_admin_then_can_delete_own_library(self):
-        self.login('17library_bd-tek')  # Library administrator.
-        res = self.delete('/associations/library/bd-tek/')
+        self.login("17library_bd-tek")  # Library administrator.
+        res = self.delete("/associations/library/bd-tek/")
         self.assertStatusCode(res, 204)
-        self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk='bd-tek')
+        self.assertRaises(ObjectDoesNotExist, Library.objects.get, pk="bd-tek")

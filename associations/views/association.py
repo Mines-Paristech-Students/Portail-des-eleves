@@ -7,8 +7,13 @@ from url_filter.integrations.drf import DjangoFilterBackend
 from associations.models import Association
 from associations.models import Role
 from associations.permissions import AssociationPermission, RolePermission
-from associations.serializers import AssociationShortSerializer, AssociationSerializer, RoleSerializer, \
-    RoleShortSerializer, WriteRoleSerializer
+from associations.serializers import (
+    AssociationShortSerializer,
+    AssociationSerializer,
+    RoleSerializer,
+    RoleShortSerializer,
+    WriteRoleSerializer,
+)
 
 
 class RoleViewSet(BulkModelViewSet):
@@ -17,7 +22,7 @@ class RoleViewSet(BulkModelViewSet):
     permission_classes = (RolePermission,)
 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('user', 'association')
+    filter_fields = ("user", "association")
 
     def get_write_role_serializer(self, association, *args, **kwargs):
         """Given an association, return the good WriteRoleSerializer, depending on the permissions of the user."""
@@ -29,22 +34,22 @@ class RoleViewSet(BulkModelViewSet):
         elif self.request.user.is_staff:
             return WriteRoleSerializer(False, *args, **kwargs)
         else:
-            raise PermissionDenied('You are not allowed to write to this role.')
+            raise PermissionDenied("You are not allowed to write to this role.")
 
     def get_serializer(self, *args, **kwargs):
-        if self.action in ('create',):
-            association_id = self.request.data.get('association', None)
+        if self.action in ("create",):
+            association_id = self.request.data.get("association", None)
 
             try:
                 association = Association.objects.get(pk=association_id)
             except ObjectDoesNotExist:
-                raise NotFound(f'The Association {association_id} does not exist.')
+                raise NotFound(f"The Association {association_id} does not exist.")
 
             return self.get_write_role_serializer(association, *args, **kwargs)
-        elif self.action in ('update', 'partial_update',):
+        elif self.action in ("update", "partial_update"):
             association = self.get_object().association
             return self.get_write_role_serializer(association, *args, **kwargs)
-        elif self.action in ('list',):
+        elif self.action in ("list",):
             return RoleShortSerializer(*args, **kwargs)
         else:
             return RoleSerializer(*args, **kwargs)
@@ -56,7 +61,17 @@ class AssociationViewSet(viewsets.ModelViewSet):
     permission_classes = (AssociationPermission,)
 
     def get_serializer_class(self):
-        if self.action in ('list',):
+        if self.action in ("list",):
             return AssociationShortSerializer
         else:
             return AssociationSerializer
+
+def upload_association_logo(request, association_pk):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'core/simple_upload.html', {
+            'uploaded_file_url': uploaded_file_url
+        })

@@ -4,7 +4,12 @@ from django.db.models import Q
 from rest_framework import exceptions, generics, response, status, viewsets
 from rest_framework.decorators import action
 
-from polls.serializers import ReadOnlyPollSerializer, AuthorPollSerializer, AdminPollSerializer, VoteSerializer
+from polls.serializers import (
+    ReadOnlyPollSerializer,
+    AuthorPollSerializer,
+    AdminPollSerializer,
+    VoteSerializer,
+)
 from polls.models import Poll, Vote
 from polls.permissions import PollPermission, ResultsPermission, VotePermission
 
@@ -20,22 +25,24 @@ class PollViewSet(viewsets.ModelViewSet):
             return Poll.objects.all()
         else:
             # Give access to all the published polls and to their polls.
-            return Poll.objects.filter(Q(user=self.request.user) |
-                                       (Q(state='ACCEPTED') & Q(publication_date__lte=date.today())))
+            return Poll.objects.filter(
+                Q(user=self.request.user)
+                | (Q(state="ACCEPTED") & Q(publication_date__lte=date.today()))
+            )
 
     def get_serializer_class(self):
-        if self.action in ('list',):
+        if self.action in ("list",):
             return ReadOnlyPollSerializer
-        elif self.action in ('retrieve',):
+        elif self.action in ("retrieve",):
             if self.request.user.is_staff:
                 return AdminPollSerializer
             elif self.request.user == self.get_object().user:
                 return AuthorPollSerializer
             else:
                 return ReadOnlyPollSerializer
-        elif self.action in ('create',):
+        elif self.action in ("create",):
             return AuthorPollSerializer
-        elif self.action in ('update', 'partial_update'):
+        elif self.action in ("update", "partial_update"):
             if self.request.user.is_staff:
                 return AdminPollSerializer
             else:
@@ -43,10 +50,10 @@ class PollViewSet(viewsets.ModelViewSet):
         else:
             return ReadOnlyPollSerializer
 
-    @action(detail=True, methods=('get',), permission_classes=(ResultsPermission,))
+    @action(detail=True, methods=("get",), permission_classes=(ResultsPermission,))
     def results(self, *args, **kwargs):
         poll = self.get_object()
-        data = {'poll': poll.id, 'results': poll.results}
+        data = {"poll": poll.id, "results": poll.results}
         return response.Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -56,10 +63,10 @@ class CreateVoteView(generics.CreateAPIView):
     permission_classes = (VotePermission,)
 
     def get_poll_or_404(self, **kwargs):
-        request_poll = Poll.objects.filter(pk=kwargs.get('poll_pk'))
+        request_poll = Poll.objects.filter(pk=kwargs.get("poll_pk"))
 
         if not request_poll.exists():
-            raise exceptions.NotFound('Poll not found.')
+            raise exceptions.NotFound("Poll not found.")
 
         return request_poll[0]
 
@@ -71,19 +78,23 @@ class CreateVoteView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         # Check if the given choice is valid.
-        if serializer.validated_data['choice'] not in poll.choices.all():
-            raise exceptions.ValidationError('Invalid choice provided.')
+        if serializer.validated_data["choice"] not in poll.choices.all():
+            raise exceptions.ValidationError("Invalid choice provided.")
 
         # Check if the poll is active.
         if not poll.is_active:
-            raise exceptions.PermissionDenied('This poll is not active.')
+            raise exceptions.PermissionDenied("This poll is not active.")
 
         # Check if the user has already voted.
-        if request.user.id in [voter[0] for voter in poll.votes.values_list('user__id')]:
-            raise exceptions.PermissionDenied('You have already voted.')
+        if request.user.id in [
+            voter[0] for voter in poll.votes.values_list("user__id")
+        ]:
+            raise exceptions.PermissionDenied("You have already voted.")
 
         # Save the object.
         serializer.save(poll=poll)
         headers = self.get_success_headers(serializer.data)
 
-        return response.Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return response.Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
