@@ -16,7 +16,7 @@ from associations.serializers import (
     RoleShortSerializer,
     WriteRoleSerializer,
 )
-from associations.serializers.association import AssociationImageSerializer
+from associations.serializers.association import AssociationLogoSerializer
 
 
 class RoleViewSet(BulkModelViewSet):
@@ -71,13 +71,13 @@ class AssociationViewSet(viewsets.ModelViewSet):
 
 
 @api_view(["PUT"])
-def set_association_image(request, association_pk):
+def set_association_logo(request, association_pk):
     association = Association.objects.get(pk=association_pk)
     role = request.user.get_role(association)
     if not (role and role.administration):
         raise PermissionDenied()
 
-    serializer = AssociationImageSerializer(data=request)
+    serializer = AssociationLogoSerializer(data=request)
     serializer.is_valid(raise_exception=True)
     serializer.update(association, serializer.validated_data)
 

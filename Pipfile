@@ -17,7 +17,6 @@ Django = "*"
 django-cors-headers = "*"
 django-extensions = "*"
 django-filter = "*"
-django-smart-selects = {git = "https://github.com/digi604/django-smart-selects.git",ref = "js-unlinting-fixes"}
 django-url-filter = "*"
 
 djangorestframework = "*"

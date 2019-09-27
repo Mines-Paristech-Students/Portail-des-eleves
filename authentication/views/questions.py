@@ -5,8 +5,14 @@ from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from authentication.models import ProfileQuestion, ProfileAnswer
-from authentication.permissions import ProfileQuestionPermission, ProfileAnswerPermission
-from authentication.serializers import ProfileQuestionSerializer, ProfileAnswerSerializer
+from authentication.permissions import (
+    ProfileQuestionPermission,
+    ProfileAnswerPermission,
+)
+from authentication.serializers import (
+    ProfileQuestionSerializer,
+    ProfileAnswerSerializer,
+)
 
 
 class ProfileQuestionViewSet(viewsets.ModelViewSet):
@@ -21,10 +27,10 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (ProfileAnswerPermission,)
 
     filter_backends = (SearchFilter, DjangoFilterBackend)
-    search_fields = ('user',)
+    search_fields = ("user",)
 
     def create(self, request, **kwargs):
-        request.data['user'] = request.user.id
+        request.data["user"] = request.user.id
         return super(ProfileAnswerViewSet, self).create(request)
 
     def perform_update(self, serializer):
@@ -34,17 +40,19 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def list_profile_questions(request, user_pk):
-    questions = ProfileQuestionSerializer(many=True).to_representation(ProfileQuestion.objects.all())
+    questions = ProfileQuestionSerializer(many=True).to_representation(
+        ProfileQuestion.objects.all()
+    )
     answers = {a.question.id: a for a in ProfileAnswer.objects.filter(user=user_pk)}
 
     serializer = ProfileAnswerSerializer()
 
     for question in questions:
-        question['answer'] = {}
+        question["answer"] = {}
 
-        if question['id'] in answers:
-            question['answer'] = serializer.to_representation(answers[question['id']])
+        if question["id"] in answers:
+            question["answer"] = serializer.to_representation(answers[question["id"]])
 
-    return Response({'questions': questions})
+    return Response({"questions": questions})

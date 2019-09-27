@@ -10,7 +10,7 @@ class AssociationPermission(BasePermission):
         User                 | R           |
     """
 
-    message = 'You do not have the permission to edit this association.'
+    message = "You do not have the permission to edit this association."
 
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS or request.user.is_staff
@@ -25,14 +25,16 @@ class RolePermission(BasePermission):
         User                      | R                    | R
     """
 
-    message = 'You do not have the permission to edit this role.'
+    message = "You do not have the permission to edit this role."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method in ('POST',):
-            return check_permission_from_post_data(request, 'administration', allow_staff=True)
+        if request.method in ("POST",):
+            return check_permission_from_post_data(
+                request, "administration", allow_staff=True
+            )
 
         return True
 
@@ -44,9 +46,9 @@ class RolePermission(BasePermission):
 
         if request.method in SAFE_METHODS:
             return True
-        elif request.method in ('DELETE',):
+        elif request.method in ("DELETE",):
             return user_role and user_role.administration
-        elif request.method in ('PATCH',):
+        elif request.method in ("PATCH",):
             return (user_role and user_role.administration) or request.user.is_staff
 
         return False

@@ -37,7 +37,6 @@ class Association(models.Model):
         default=0,
         help_text="Order of appearance in the association list (lowest first).",
     )
-    file = models.FileField(storage=fs)
 
     def _get_unique_slug(self):
         slug = slugify(self.name)

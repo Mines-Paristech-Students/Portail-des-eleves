@@ -132,7 +132,7 @@ class AssociationSerializer(serializers.ModelSerializer):
         return RoleSerializer(role).data if role else {}
 
 
-class AssociationImageSerializer(serializers.ModelSerializer):
+class AssociationLogoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
-        fields = ("image",)
+        fields = ("logo",)

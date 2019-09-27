@@ -9,10 +9,10 @@ from authentication.serializers.user import UserSerializer
 
 
 class ProfileViewSetPagination(PageNumberPagination):
-    page_query_param = 'page'
+    page_query_param = "page"
 
     page_size = 10
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 10
 
 
@@ -24,8 +24,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (ProfilePermission,)
 
     filter_backends = (SearchFilter, DjangoFilterBackend)
-    search_fields = ('id', 'first_name', 'last_name')
-    filter_fields = ('year_of_entry',)
+    search_fields = ("id", "first_name", "last_name")
+    filter_fields = ("year_of_entry",)
     pagination_class = ProfileViewSetPagination
 
     def get_object(self):
@@ -35,7 +35,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         If pk is the string "current", return the data for the current authenticated user.
         """
 
-        if self.kwargs['pk'] == 'current':
+        if self.kwargs["pk"] == "current":
             self.check_object_permissions(self.request, self.request.user)
             return self.request.user
 

@@ -1,32 +1,29 @@
 from associations.models import Election, Ballot
-from associations.tests.election.base_test_election import ALL_USERS, BaseElectionTestCase
+from associations.tests.election.base_test_election import (
+    ALL_USERS,
+    BaseElectionTestCase,
+)
 
 
 class BallotTestCase(BaseElectionTestCase):
-    valid_ballot_data_for_0 = {
-        'choices': [0, 1]
-    }
+    valid_ballot_data_for_0 = {"choices": [0, 1]}
 
-    invalid_ballot_data_for_0 = {
-        'choices': [4, 5]
-    }
+    invalid_ballot_data_for_0 = {"choices": [4, 5]}
 
-    valid_ballot_data_for_1 = {
-        'choices': [4, 5]
-    }
+    valid_ballot_data_for_1 = {"choices": [4, 5]}
 
     def test_if_not_logged_in_then_cannot_vote(self):
-        res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
+        res = self.vote(0, "biero", data=self.valid_ballot_data_for_0)
         self.assertStatusCode(res, 401)
 
     def test_if_vote_to_non_existing_association_or_election_then_404(self):
         for user in ALL_USERS:
             self.login(user)
 
-            res = self.vote(42, 'piche', data=self.valid_ballot_data_for_0)
+            res = self.vote(42, "piche", data=self.valid_ballot_data_for_0)
             self.assertStatusCode(res, 404)
 
-            res = self.vote(42, 'biero', data=self.valid_ballot_data_for_0)
+            res = self.vote(42, "biero", data=self.valid_ballot_data_for_0)
             self.assertStatusCode(res, 404)
 
     def test_if_logged_in_and_registered_then_can_vote(self):
@@ -35,7 +32,7 @@ class BallotTestCase(BaseElectionTestCase):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
+                res = self.vote(0, "biero", data=self.valid_ballot_data_for_0)
                 self.assertStatusCode(res, 201)
                 self.assertEqual(Ballot.objects.count(), length_before + 1)
 
@@ -45,7 +42,7 @@ class BallotTestCase(BaseElectionTestCase):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(0, 'biero', data=self.invalid_ballot_data_for_0)
+                res = self.vote(0, "biero", data=self.invalid_ballot_data_for_0)
                 self.assertStatusCode(res, 400, user_msg=user)
                 self.assertEqual(Ballot.objects.count(), length_before)
 
@@ -55,7 +52,7 @@ class BallotTestCase(BaseElectionTestCase):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
+                res = self.vote(0, "biero", data=self.valid_ballot_data_for_0)
                 self.assertStatusCodeIn(res, [403, 404])
                 self.assertEqual(Ballot.objects.count(), length_before)
 
@@ -65,11 +62,11 @@ class BallotTestCase(BaseElectionTestCase):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
+                res = self.vote(0, "biero", data=self.valid_ballot_data_for_0)
                 self.assertStatusCode(res, 201)
                 self.assertEqual(Ballot.objects.count(), length_before + 1)
 
-                res = self.vote(0, 'biero', data=self.valid_ballot_data_for_0)
+                res = self.vote(0, "biero", data=self.valid_ballot_data_for_0)
                 self.assertStatusCode(res, 403)
                 self.assertEqual(Ballot.objects.count(), length_before + 1)
 
@@ -79,19 +76,22 @@ class BallotTestCase(BaseElectionTestCase):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(1, 'pdm', data=self.valid_ballot_data_for_1)
+                res = self.vote(1, "pdm", data=self.valid_ballot_data_for_1)
                 self.assertStatusCode(res, 400, user_msg=user)
                 self.assertEqual(Ballot.objects.count(), length_before)
 
     def test_if_election_inactive_then_cannot_vote(self):
         election = Election.objects.get(pk=10)
-        self.assertFalse(election.is_active, msg='The test needs election 10 end date to be inactive.')
+        self.assertFalse(
+            election.is_active,
+            msg="The test needs election 10 end date to be inactive.",
+        )
 
         for user in ALL_USERS:
             if user in self.get_registered_to_election(10):
                 self.login(user)
 
                 length_before = Ballot.objects.count()
-                res = self.vote(10, 'biero', data={'choices': [10]})
+                res = self.vote(10, "biero", data={"choices": [10]})
                 self.assertStatusCodeIn(res, [403, 404])
                 self.assertEqual(Ballot.objects.count(), length_before)
