@@ -1,6 +1,7 @@
 from django.db.models import QuerySet
 from django.db.models import Q
 
+from authentication.models import User
 from tags.models import Tag
 
 
@@ -18,6 +19,15 @@ class TagFilterMixin:
     Tips :
         - https://stackoverflow.com/questions/769843/how-do-i-use-and-in-a-django-filter
         - https://stackoverflow.com/questions/739776/how-do-i-do-an-or-filter-in-a-django-query
+
+    If you want to redifine the `get_queryset` method of the View, please make sure to call the super method first
+    so the filtering is still enforced.
+    Example:
+        class MyView(TagFilterMixin, viewsets.ModelViewSet):
+            def get_queryset(self):
+                queryset = super(TagFilterMixin, self).get_queryset()
+                [your code]
+                return queryset
     """
 
     hiding_condition = {"tags__is_hidden": False}
@@ -33,7 +43,7 @@ class TagFilterMixin:
         if isinstance(queryset, QuerySet):
             if (
                 queryset.model in Tag.LINKS.values()
-                and self.request.user.is_in_first_year
+                and self.request.user.show()
             ):
                 hiding_condition = (
                     Q(**self.hiding_condition)
