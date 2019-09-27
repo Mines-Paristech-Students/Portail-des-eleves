@@ -53,11 +53,9 @@ class Tag(models.Model):
     LINKS = {
         # Association
         "association": Association,
-        "choice": Choice,
         "event": Event,
         "file": File,
         "folder": Folder,
-        "loan": Loan,
         "loanable": Loanable,
         "page": Page,
         "product": Product,
