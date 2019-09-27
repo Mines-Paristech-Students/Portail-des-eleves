@@ -73,6 +73,7 @@ class Tag(models.Model):
     )
 
     value = models.CharField(max_length=50)
+    is_hidden = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (("value", "namespace"),)
