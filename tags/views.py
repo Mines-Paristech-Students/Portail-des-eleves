@@ -110,7 +110,7 @@ class TagLinkView(APIView):
         return Response(status=204)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_tags_for_scope(request, model, instance_pk):
     tags = Tag.objects.filter(
         namespace__scope=model, namespace__scoped_to=instance_pk

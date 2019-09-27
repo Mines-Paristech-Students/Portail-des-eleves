@@ -26,7 +26,8 @@ class Namespace(models.Model):
     name = models.CharField(max_length=50)
 
     scope = models.CharField(
-        max_length=50, choices=[(scope_name, scope_name) for scope_name in SCOPES.keys()]
+        max_length=50,
+        choices=[(scope_name, scope_name) for scope_name in SCOPES.keys()],
     )  # The application it targets
     scoped_to = models.CharField(
         max_length=50, blank=True, null=True
