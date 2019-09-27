@@ -70,7 +70,7 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationSerializer
 
 
-@api_view(["POST"])
+@api_view(["PUT"])
 def set_association_image(request, association_pk):
     association = Association.objects.get(pk=association_pk)
     role = request.user.get_role(association)
@@ -81,4 +81,4 @@ def set_association_image(request, association_pk):
     serializer.is_valid(raise_exception=True)
     serializer.update(association, serializer.validated_data)
 
-    return Response(status=200)
+    return Response(status=204)
