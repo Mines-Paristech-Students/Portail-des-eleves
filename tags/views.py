@@ -8,6 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
+from associations.models import Folder
 from tags.models import Namespace, Tag
 from tags.permissions import (
     NamespacePermission,
@@ -97,16 +98,44 @@ class TagLinkView(APIView):
 
         return tag
 
+    def apply_recursive(self, folder, function):
+        for file in folder.files.all():
+            function(file)
+
+        for child in folder.children.all():
+            function(child)
+            self.apply_recursive(child, function)
+
     def post(self, request, model, instance_pk, tag_pk):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).add(instance_pk)
         tag.save()
+
+        if model == "folder":
+
+            def add_tag(instance):
+                instance.inherited_tags.add(tag)
+                instance.save()
+
+            folder = Folder.objects.get(pk=instance_pk)
+            self.apply_recursive(folder, add_tag)
+
         return Response(status=201)
 
     def delete(self, request, model, instance_pk, tag_pk):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).remove(instance_pk)
         tag.save()
+
+        if model == "folder":
+
+            def remove_tag(instance):
+                instance.inherited_tags.remove(tag)
+                instance.save()
+
+            folder = Folder.objects.get(pk=instance_pk)
+            self.apply_recursive(folder, remove_tag)
+
         return Response(status=204)
 
 
