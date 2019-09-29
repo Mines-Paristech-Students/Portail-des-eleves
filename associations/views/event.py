@@ -8,7 +8,7 @@ from associations.serializers import EventSerializer
 from tags.filter_mixins import TagFilterMixin
 
 
-class EventViewSet(TagFilterMixin, viewsets.ModelViewSet):
+class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = (EventsPermission,)

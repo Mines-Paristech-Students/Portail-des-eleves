@@ -53,11 +53,9 @@ class Tag(models.Model):
     LINKS = {
         # Association
         "association": Association,
-        "choice": Choice,
         "event": Event,
         "file": File,
         "folder": Folder,
-        "loan": Loan,
         "loanable": Loanable,
         "page": Page,
         "product": Product,
@@ -95,3 +93,6 @@ class Tag(models.Model):
 for (link_name, link_class) in Tag.LINKS.items():
     field = models.ManyToManyField(link_class, related_name="tags")
     field.contribute_to_class(Tag, link_name)
+
+    field = models.ManyToManyField(link_class, related_name="inherited_tags")
+    field.contribute_to_class(Tag, link_name + "_by_inheritance")

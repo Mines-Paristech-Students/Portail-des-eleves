@@ -1,7 +1,6 @@
-from django.db.models import QuerySet
 from django.db.models import Q
+from django.db.models import QuerySet
 
-from authentication.models import User
 from tags.models import Tag
 
 
@@ -41,10 +40,7 @@ class TagFilterMixin:
         queryset = self.queryset
 
         if isinstance(queryset, QuerySet):
-            if (
-                queryset.model in Tag.LINKS.values()
-                and self.request.user.show()
-            ):
+            if queryset.model in Tag.LINKS.values() and self.request.user.show():
                 hiding_condition = (
                     Q(**self.hiding_condition)
                     if not isinstance(self.hiding_condition, Q)

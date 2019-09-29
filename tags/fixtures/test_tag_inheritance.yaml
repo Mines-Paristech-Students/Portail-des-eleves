@@ -1,0 +1,107 @@
+################
+# Associations #
+################
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+
+########
+# Tags #
+########
+
+- model: tags.namespace
+  pk: 1
+  fields:
+    name: secret
+    scope: global
+
+- model: tags.tag
+  pk: 1
+  fields:
+    value: "What does the fox says"
+    is_hidden: true
+    namespace: 1
+
+###########
+# Folders #
+###########
+
+- model: associations.folder
+  pk: 1
+  fields:
+    name: folder_1
+    association: pdm
+
+- model: associations.folder
+  pk: 2
+  fields:
+    parent: 1
+    name: folder_1_1
+    association: pdm
+
+- model: associations.folder
+  pk: 3
+  fields:
+    parent: 1
+    name: folder_1_2
+    association: pdm
+
+- model: associations.folder
+  pk: 4
+  fields:
+    parent: 2
+    name: folder_1_1_1
+    association: pdm
+
+#########
+# Files #
+#########
+
+
+- model: associations.file
+  pk: 1
+  fields:
+    name: folder_1 file_1
+    folder: 1
+    association: pdm
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by: "17admin"
+
+- model: associations.file
+  pk: 2
+  fields:
+    name: folder_1_1 file_1
+    folder: 2
+    association: pdm
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by: "17admin"
+
+- model: associations.file
+  pk: 3
+  fields:
+    name: folder_1_1 file_2
+    folder: 2
+    association: pdm
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by: "17admin"
+
+- model: associations.file
+  pk: 4
+  fields:
+    name: folder_1_2 file_1
+    folder: 3
+    association: pdm
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by: "17admin"
+
+- model: associations.file
+  pk: 5
+  fields:
+    name: folder_1_1_1 file_1
+    folder: 4
+    association: pdm
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by: "17admin"
