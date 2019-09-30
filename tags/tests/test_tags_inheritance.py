@@ -2,7 +2,7 @@ from associations.models import File, Folder
 from tags.tests.base_test import BaseTestCase
 
 
-class TagNamespaceTestCase(BaseTestCase):
+class TagNamespaceInheritanceTestCase(BaseTestCase):
     fixtures = ["test_authentication.yaml", "test_tag_inheritance.yaml"]
 
     def test_deep_inheritance(self):

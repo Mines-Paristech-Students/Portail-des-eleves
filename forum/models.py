@@ -31,6 +31,6 @@ class MessageForum(models.Model):
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     up_vote = models.ManyToManyField(User, related_name="+")
-    down_vote = models.ManyToManyField(User, related_name="-")
+    down_vote = models.ManyToManyField(User, related_name="+")
 
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=False)

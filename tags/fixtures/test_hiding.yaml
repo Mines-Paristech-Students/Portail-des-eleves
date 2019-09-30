@@ -8,12 +8,14 @@
   fields:
     name: Public association
     rank: 1
+    library: public_association
 
 - model: associations.association
   pk: hidden_association
   fields:
     name: Hidden association
     rank: 2
+    library: hidden_association
 
 # library
 - model: associations.library
@@ -96,33 +98,33 @@
 # Folders #
 ###########
 
-- model: association.folder
+- model: associations.folder
   pk: 1
   fields:
     association: public_association
     name: public_association-public_folder
 
 
-- model: association.folder
+- model: associations.folder
   pk: 2
   fields:
     association: hidden_association
     name: hidden_association-public_folder
 
-- model: association.folder
+- model: associations.folder
   pk: 3
   fields:
     association: public_association
     name: public_association-public_folder
 
-- model: association.folder
+- model: associations.folder
   pk: 4
   fields:
     association: public_association
     name: public_association-hidden_folder
     parent: 3
 
-- model: association.folder
+- model: associations.folder
   pk: 5
   fields:
     association: public_association
@@ -134,39 +136,48 @@
 #########
 
 
-- model: association.file
+- model: associations.file
   pk: 1
   fields:
     association: public_association
     name: public_association_public_file
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
 
-
-- model: association.file
+- model: associations.file
   pk: 2
   fields:
     association: hidden_association
     name: hidden_association-public_file
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
 
-- model: association.file
+- model: associations.file
   pk: 3
   fields:
     association: public_association
-    name: public_association-private_file
+    name: public_association-hidden_file
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
     folder: 1
 
-- model: association.file
+- model: associations.file
   pk: 4
   fields:
     association: public_association
     name: public_association-hidden_folder-public_file
-    parent: 2
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
+    folder: 2
 
-- model: association.file
+- model: associations.file
   pk: 5
   fields:
     association: public_association
     name: public_association-hidden_parent_folder-public_folder-public_file
-    parent: 3
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
+    folder: 3
 
 #############
 # Loanables #
@@ -191,7 +202,7 @@
 - model: associations.loanable
   pk: 3
   fields:
-    name: public_association-private_loanable
+    name: public_association-hidden_loanable
     description: this loanable should not be visible
     comment: none
     library: public_association
@@ -207,7 +218,6 @@
   fields:
     title: public_association-public_page
     text: this page should be visible
-    comment: none
     association: public_association
     creation_date: '2019-06-01T20:00:00+00:00'
     last_update_date: '2019-06-01T20:00:00+00:00'
@@ -217,7 +227,6 @@
   fields:
     title: hidden_association-public_page
     text: this page should not be visible
-    comment: none
     association: hidden_association
     creation_date: '2019-06-01T20:00:00+00:00'
     last_update_date: '2019-06-01T20:00:00+00:00'
@@ -225,9 +234,8 @@
 - model: associations.page
   pk: 3
   fields:
-    title: public_association-private_page
+    title: public_association-hidden_page
     text: this page should not be visible
-    comment: none
     association: public_association
     creation_date: '2019-06-01T20:00:00+00:00'
     last_update_date: '2019-06-01T20:00:00+00:00'
@@ -243,6 +251,7 @@
     name: public_association-public_product
     description: this product should be visible
     marketplace: public_association
+    price: 1.0
 
 - model: associations.product
   pk: 2
@@ -250,13 +259,15 @@
     name: hidden_association-public_product
     description: this product should not be visible
     marketplace: hidden_association
+    price: 1.0
 
 - model: associations.product
   pk: 3
   fields:
-    name: public_association-private_product
+    name: public_association-hidden_product
     description: this product should not be visible
     marketplace: public_association
+    price: 1.0
 
 
 ########
@@ -281,9 +292,9 @@
 - model: associations.role
   pk: 3
   fields:
-    role: public_association-private_role
+    role: public_association-hidden_role
     association: public_association
-    user: 17admin
+    user: 17bocquet
 
 
 #########
@@ -312,47 +323,57 @@
   pk: 1
   fields:
     name: public_theme-public_topic
-    description: this topic shoud be visible
+    creator: 17bocquet
+    theme: 1
 
 - model: forum.topic
   pk: 2
   fields:
     name: hidden_theme-public_topic
-    description: this topic should not be visible
-
+    creator: 17bocquet
+    theme: 2
 
 - model: forum.topic
   pk: 3
   fields:
     name: public_theme-hidden_topic
-    description: this topic should not be visible
+    creator: 17bocquet
+    theme: 1
 
 ##################
 # Forum Messages #
 ##################
 
 
-- model: forum.message
+- model: forum.messageforum
   pk: 1
   fields:
-    name: public_theme-public_topic-public_message
-    description: this message shoud be visible
+    author: 17bocquet
+    text: public_theme-public_topic-public_message
+    date: '2019-06-01T20:00:00+00:00'
+    topic: 1
 
-- model: forum.message
+- model: forum.messageforum
   pk: 2
   fields:
-    name: hidden_theme-public_topic-public_message
-    description: this message should not be visible
+    author: 17bocquet
+    text: hidden_theme-public_topic-public_message
+    date: '2019-06-01T20:00:00+00:00'
+    topic: 2
 
 
-- model: forum.message
+- model: forum.messageforum
   pk: 3
   fields:
-    name: public_theme-hidden_topic-public_message
-    description: this message should not be visible
+    author: 17bocquet
+    text: public_theme-hidden_topic-public_message
+    date: '2019-06-01T20:00:00+00:00'
+    topic: 3
 
-- model: forum.message
+- model: forum.messageforum
   pk: 4
   fields:
-    name: public_theme-public_topic-hidden_message
-    description: this message should not be visible
+    author: 17bocquet
+    text: public_theme-public_topic-hidden_message
+    date: '2019-06-01T20:00:00+00:00'
+    topic: 1
