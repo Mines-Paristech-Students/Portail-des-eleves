@@ -1,3 +1,46 @@
+
+################
+# Associations #
+################
+
+- model: associations.association
+  pk: public_association
+  fields:
+    name: Public association
+    rank: 1
+
+- model: associations.association
+  pk: hidden_association
+  fields:
+    name: Hidden association
+    rank: 2
+
+# library
+- model: associations.library
+  pk: public_association
+  fields:
+    enabled: true
+
+- model: associations.library
+  pk: hidden_association
+  fields:
+    enabled: true
+
+# marketplace
+- model: associations.marketplace
+  pk: public_association
+  fields:
+    enabled: true
+
+- model: associations.marketplace
+  pk: hidden_association
+  fields:
+    enabled: true
+
+##################
+# Tag namespaces #
+##################
+
 - model: tags.namespace
   pk: 1
   fields:
@@ -11,12 +54,16 @@
     is_hidden: true
     namespace: 1
 
+##########
+# Events #
+##########
+
 - model: associations.event
   pk: 1
   fields:
-    association: pdm
-    name: Amphi PMD
-    description: PAIN DE MINE !!!
+    association: public_association
+    name: public_association-public_event
+    description: should not be hidden
     participants: [17simple]
     starts_at: '2019-06-01T20:00:00+00:00'
     ends_at: '2019-06-02T02:00:00+00:00'
@@ -25,10 +72,287 @@
 - model: associations.event
   pk: 2
   fields:
-    association: pdm
-    name: Interview avec un 18Renard
-    description: B D E !!!
+    association: public_association
+    name: public_association-hidden_event
+    description: should be hidden
     participants: [17simple]
     starts_at: '2019-06-01T20:00:00+00:00'
     ends_at: '2019-06-02T02:00:00+00:00'
     place: Paris
+
+- model: associations.event
+  pk: 3
+  fields:
+    association: public_association
+    name: hidden_association-public_event
+    description: should be hidden
+    participants: [17simple]
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2019-06-02T02:00:00+00:00'
+    place: Paris
+
+
+###########
+# Folders #
+###########
+
+- model: association.folder
+  pk: 1
+  fields:
+    association: public_association
+    name: public_association-public_folder
+
+
+- model: association.folder
+  pk: 2
+  fields:
+    association: hidden_association
+    name: hidden_association-public_folder
+
+- model: association.folder
+  pk: 3
+  fields:
+    association: public_association
+    name: public_association-public_folder
+
+- model: association.folder
+  pk: 4
+  fields:
+    association: public_association
+    name: public_association-hidden_folder
+    parent: 3
+
+- model: association.folder
+  pk: 5
+  fields:
+    association: public_association
+    name: public_association-public_folder_hidden_parent
+    parent: 3
+
+#########
+# Files #
+#########
+
+
+- model: association.file
+  pk: 1
+  fields:
+    association: public_association
+    name: public_association_public_file
+
+
+- model: association.file
+  pk: 2
+  fields:
+    association: hidden_association
+    name: hidden_association-public_file
+
+- model: association.file
+  pk: 3
+  fields:
+    association: public_association
+    name: public_association-private_file
+    folder: 1
+
+- model: association.file
+  pk: 4
+  fields:
+    association: public_association
+    name: public_association-hidden_folder-public_file
+    parent: 2
+
+- model: association.file
+  pk: 5
+  fields:
+    association: public_association
+    name: public_association-hidden_parent_folder-public_folder-public_file
+    parent: 3
+
+#############
+# Loanables #
+#############
+
+- model: associations.loanable
+  pk: 1
+  fields:
+    name: public_association-public_loanable
+    description: this loanable should be visible
+    comment: none
+    library: public_association
+
+- model: associations.loanable
+  pk: 2
+  fields:
+    name: hidden_association-public_loanable
+    description: this loanable should not be visible
+    comment: none
+    library: hidden_association
+
+- model: associations.loanable
+  pk: 3
+  fields:
+    name: public_association-private_loanable
+    description: this loanable should not be visible
+    comment: none
+    library: public_association
+
+
+#########
+# Pages #
+#########
+
+
+- model: associations.page
+  pk: 1
+  fields:
+    title: public_association-public_page
+    text: this page should be visible
+    comment: none
+    association: public_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+- model: associations.page
+  pk: 2
+  fields:
+    title: hidden_association-public_page
+    text: this page should not be visible
+    comment: none
+    association: hidden_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+- model: associations.page
+  pk: 3
+  fields:
+    title: public_association-private_page
+    text: this page should not be visible
+    comment: none
+    association: public_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+############
+# Products #
+############
+
+
+- model: associations.product
+  pk: 1
+  fields:
+    name: public_association-public_product
+    description: this product should be visible
+    marketplace: public_association
+
+- model: associations.product
+  pk: 2
+  fields:
+    name: hidden_association-public_product
+    description: this product should not be visible
+    marketplace: hidden_association
+
+- model: associations.product
+  pk: 3
+  fields:
+    name: public_association-private_product
+    description: this product should not be visible
+    marketplace: public_association
+
+
+########
+# Role #
+########
+
+
+- model: associations.role
+  pk: 1
+  fields:
+    role: public_association-public_product
+    association: public_association
+    user: 17admin
+
+- model: associations.role
+  pk: 2
+  fields:
+    role: hidden_association-public_product
+    association: hidden_association
+    user: 17admin
+
+- model: associations.role
+  pk: 3
+  fields:
+    role: public_association-private_role
+    association: public_association
+    user: 17admin
+
+
+#########
+# Theme #
+#########
+
+
+- model: forum.theme
+  pk: 1
+  fields:
+    name: public_theme
+    description: this theme shoud be visible
+
+- model: forum.theme
+  pk: 2
+  fields:
+    name: hidden_theme
+    description: this theme should not be visible
+
+
+#########
+# Topic #
+#########
+
+- model: forum.topic
+  pk: 1
+  fields:
+    name: public_theme-public_topic
+    description: this topic shoud be visible
+
+- model: forum.topic
+  pk: 2
+  fields:
+    name: hidden_theme-public_topic
+    description: this topic should not be visible
+
+
+- model: forum.topic
+  pk: 3
+  fields:
+    name: public_theme-hidden_topic
+    description: this topic should not be visible
+
+##################
+# Forum Messages #
+##################
+
+
+- model: forum.message
+  pk: 1
+  fields:
+    name: public_theme-public_topic-public_message
+    description: this message shoud be visible
+
+- model: forum.message
+  pk: 2
+  fields:
+    name: hidden_theme-public_topic-public_message
+    description: this message should not be visible
+
+
+- model: forum.message
+  pk: 3
+  fields:
+    name: public_theme-hidden_topic-public_message
+    description: this message should not be visible
+
+- model: forum.message
+  pk: 4
+  fields:
+    name: public_theme-public_topic-hidden_message
+    description: this message should not be visible
