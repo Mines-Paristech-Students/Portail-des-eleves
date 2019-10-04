@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
 from authentication.serializers.user import UserShortSerializer
 
@@ -7,50 +8,71 @@ from authentication.serializers.user import UserShortSerializer
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Theme
-        fields = ("id", "name", "description", "is_hidden_1A")
-
-
-class ThemeShortSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Theme
-        fields = ("id", "name")
+        read_only_fields = ("id",)
+        fields = read_only_fields + ("name", "description")
 
 
 class TopicSerializer(serializers.ModelSerializer):
-    creator = UserShortSerializer()
-    theme = ThemeShortSerializer()
+    author = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), read_only=False
+    )
+    theme = serializers.PrimaryKeyRelatedField(
+        queryset=Theme.objects.all(), read_only=False
+    )
 
     class Meta:
         model = Topic
-        fields = ("id", "name", "creator", "is_hidden_1A", "theme")
+        read_only_fields = ("id",)
+        fields = read_only_fields + ("name", "author", "theme")
 
+    def to_representation(self, topic):
+        res = super(TopicSerializer, self).to_representation(topic)
+        res["theme"] = ThemeSerializer().to_representation(topic.theme)
+        return res
 
-class TopicShortSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Topic
-        fields = ("id", "name")
+    def update(self, instance, validated_data):
+        # The author field cannot be updated.
+        if "author" in validated_data:
+            validated_data.pop("author")
+
+        super(TopicSerializer, self).update(instance, validated_data)
 
 
 class MessageForumSerializer(serializers.ModelSerializer):
     author = UserShortSerializer()
-    topic = TopicShortSerializer()
-    ratio = serializers.SerializerMethodField(read_only=True)
-    my_vote = serializers.SerializerMethodField(read_only=True)
+    topic = serializers.PrimaryKeyRelatedField(
+        queryset=Topic.objects.all(), read_only=False
+    )
+
+    user_vote = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = MessageForum
-        fields = ("id", "author", "text", "date", "topic", "ratio", "my_vote")
+        read_only_fields = ("id", "date")
+        fields = read_only_fields + ("author", "text", "topic", "user_vote")
 
-    def get_ratio(self, obj):
-        return obj.up_vote.count() - obj.down_vote.count()
+    def to_representation(self, message):
+        res = super(MessageForumSerializer, self).to_representation(message)
+        res["nb_up_votes"] = message.nb_up_votes
+        res["nb_down_votes"] = message.nb_down_votes
+        return res
 
-    def get_my_vote(self, obj):
-        if "request" not in self.context:
-            return 0
+    def update(self, instance, validated_data):
+        # The author and topic fields cannot be updated.
+        if "author" in validated_data:
+            validated_data.pop("author")
+
+        if "topic" in validated_data:
+            validated_data.pop("topic")
+
+        super(MessageForumSerializer, self).update(instance, validated_data)
+
+    def get_user_vote(self, message):
         user = self.context["request"].user
-        if obj.up_vote.filter(id=user.id).count() == 1:
+
+        if message.up_votes.filter(id=user.id).exists():
             return 1
-        elif obj.down_vote.filter(id=user.id).count() == 1:
+        elif message.down_votes.filter(id=user.id).exists():
             return -1
         else:
             return 0
