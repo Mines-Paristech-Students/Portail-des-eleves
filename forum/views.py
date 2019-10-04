@@ -30,7 +30,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(detail=True, methods=("put",))
+    @action(detail=True, methods=("put",), permission_classes=())
     def vote_up(self, *args, **kwargs):
         message = self.get_object()
 
@@ -38,7 +38,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
         message.up_votes.add(self.request.user)
         return Response(status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=("put",))
+    @action(detail=True, methods=("put",), permission_classes=())
     def vote_down(self, *args, **kwargs):
         message = self.get_object()
 

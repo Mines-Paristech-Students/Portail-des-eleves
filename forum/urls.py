@@ -1,5 +1,3 @@
-from django.urls import path
-
 from rest_framework_bulk.routes import BulkRouter
 
 from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet

@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
-from authentication.serializers.user import UserShortSerializer
 
 
 class ThemeSerializer(serializers.ModelSerializer):
@@ -13,17 +11,15 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 
 class TopicSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), read_only=False
-    )
+    author = serializers.CurrentUserDefault()
     theme = serializers.PrimaryKeyRelatedField(
         queryset=Theme.objects.all(), read_only=False
     )
 
     class Meta:
         model = Topic
-        read_only_fields = ("id",)
-        fields = read_only_fields + ("name", "author", "theme")
+        read_only_fields = ("id", "author")
+        fields = read_only_fields + ("name", "theme")
 
     def to_representation(self, topic):
         res = super(TopicSerializer, self).to_representation(topic)
@@ -35,11 +31,11 @@ class TopicSerializer(serializers.ModelSerializer):
         if "author" in validated_data:
             validated_data.pop("author")
 
-        super(TopicSerializer, self).update(instance, validated_data)
+        return super(TopicSerializer, self).update(instance, validated_data)
 
 
 class MessageForumSerializer(serializers.ModelSerializer):
-    author = UserShortSerializer()
+    author = serializers.CurrentUserDefault()
     topic = serializers.PrimaryKeyRelatedField(
         queryset=Topic.objects.all(), read_only=False
     )
@@ -48,8 +44,8 @@ class MessageForumSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MessageForum
-        read_only_fields = ("id", "date")
-        fields = read_only_fields + ("author", "text", "topic", "user_vote")
+        read_only_fields = ("id", "created_at", "author")
+        fields = read_only_fields + ("text", "topic", "user_vote")
 
     def to_representation(self, message):
         res = super(MessageForumSerializer, self).to_representation(message)
@@ -65,7 +61,7 @@ class MessageForumSerializer(serializers.ModelSerializer):
         if "topic" in validated_data:
             validated_data.pop("topic")
 
-        super(MessageForumSerializer, self).update(instance, validated_data)
+        return super(MessageForumSerializer, self).update(instance, validated_data)
 
     def get_user_vote(self, message):
         user = self.context["request"].user

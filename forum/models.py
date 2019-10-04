@@ -29,7 +29,7 @@ class MessageForum(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
 
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     up_votes = models.ManyToManyField(User, related_name="upvoted_messages")
     down_votes = models.ManyToManyField(User, related_name="downvoted_messages")
