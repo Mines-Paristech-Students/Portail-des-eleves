@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from associations.models import Event
 from associations.permissions import EventsPermission
 from associations.serializers import EventSerializer
-from tags.filter_mixins import TagFilterMixin
-
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
