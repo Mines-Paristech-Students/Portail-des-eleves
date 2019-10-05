@@ -1,0 +1,57 @@
+- model: forum.theme
+  pk: 1
+  fields:
+    name: "Forum général"
+    description: "Tout et n'importe quoi"
+
+- model: forum.theme
+  pk: 2
+  fields:
+    name: "La Piche"
+    description: "Piche piche piche"
+
+- model: forum.topic
+  pk: 1
+  fields:
+    author: "17wan-fat"
+    name: "Sujet sérieux"
+    theme: "1"
+
+- model: forum.topic
+  pk: 2
+  fields:
+    author: "17bocquet"
+    name: "Sujet moins sérieux"
+    theme: "2"
+
+- model: forum.messageForum
+  pk: 1
+  fields:
+    author: "17bocquet"
+    text: "Bienvenue sur le sujet sérieux"
+    created_at: "2018-08-18T13:19:37+00:00"
+    topic: "1"
+
+- model: forum.messageForum
+  pk: 2
+  fields:
+    author: "17wan-fat"
+    text: "Tabulations ou espaces ?"
+    created_at: "2019-08-18T13:19:37+00:00"
+    topic: "1"
+
+- model: forum.messageForum
+  pk: 3
+  fields:
+    author: "17wan-fat"
+    text: "PICHE"
+    created_at: "2018-08-18T13:19:37+00:00"
+    topic: "2"
+
+- model: forum.messageForum
+  pk: 4
+  fields:
+    author: "17bocquet"
+    text: "piche piche piche"
+    created_at: "2019-08-18T13:19:37+00:00"
+    topic: "2"
