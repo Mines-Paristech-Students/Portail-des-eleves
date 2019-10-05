@@ -14,7 +14,9 @@ class Folder(models.Model):
     name = models.CharField(max_length=250)
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True)
+    parent = models.ForeignKey(
+        "self", on_delete=models.CASCADE, related_name="children", null=True
+    )
 
     def number_of_elements(self):
         res = self.files.count()
@@ -33,7 +35,9 @@ class File(models.Model):
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
     file = models.FileField(Association, storage=fs)
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files", null=True)
+    folder = models.ForeignKey(
+        Folder, on_delete=models.CASCADE, related_name="files", null=True
+    )
 
     uploaded_on = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)

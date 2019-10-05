@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
+from subscriptions.views.subscription_viewset import WidgetSubscriptionViewSet
 from subscriptions.views.widget_balance import widget_balance_view
 from subscriptions.views.widget_birthday import widget_birthday_view
 from subscriptions.views.widget_library import widget_library_view
@@ -9,7 +10,7 @@ from subscriptions.views.widget_poll import widget_poll_view
 from subscriptions.views.widget_repartition import widget_repartition_view
 from subscriptions.views.widget_timeline import widget_timeline_view
 from subscriptions.views.widget_vote import widget_vote_view
-from subscriptions.views.widgets_list import WidgetSubscriptionViewSet, get_widgets
+from subscriptions.views.widgets_list import get_widgets
 
 """
 Mandatory widgets :
