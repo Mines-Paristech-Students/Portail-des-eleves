@@ -112,8 +112,8 @@ class MessageTestCase(BaseTestCase):
                 ),
                 (now.year, now.month, now.day, now.hour, now.minute),
             )
-            self.assertEqual(last_message.nb_up_votes, 0)
-            self.assertEqual(last_message.nb_down_votes, 0)
+            self.assertEqual(last_message.number_of_up_votes, 0)
+            self.assertEqual(last_message.number_of_down_votes, 0)
             self.assertEqual(
                 last_message.topic.pk, self.create_message_valid_data["topic"]
             )
@@ -160,8 +160,8 @@ class MessageTestCase(BaseTestCase):
                 ),
                 (now.year, now.month, now.day, now.hour, now.minute),
             )
-            self.assertEqual(last_message.nb_up_votes, 0)
-            self.assertEqual(last_message.nb_down_votes, 0)
+            self.assertEqual(last_message.number_of_up_votes, 0)
+            self.assertEqual(last_message.number_of_down_votes, 0)
             self.assertEqual(
                 last_message.topic.pk, self.create_message_valid_data["topic"]
             )
@@ -194,8 +194,8 @@ class MessageTestCase(BaseTestCase):
                 ),
                 (now.year, now.month, now.day, now.hour, now.minute),
             )
-            self.assertEqual(last_message.nb_up_votes, 0)
-            self.assertEqual(last_message.nb_down_votes, 0)
+            self.assertEqual(last_message.number_of_up_votes, 0)
+            self.assertEqual(last_message.number_of_down_votes, 0)
             self.assertEqual(
                 last_message.topic.pk, self.create_message_valid_data["topic"]
             )
@@ -375,13 +375,13 @@ class MessageTestCase(BaseTestCase):
             self.login("17simple")
 
             message = MessageForum.objects.get(pk=pk)
-            self.assertEqual(message.nb_up_votes, nb_up)
-            self.assertEqual(message.nb_down_votes, nb_down)
+            self.assertEqual(message.number_of_up_votes, nb_up)
+            self.assertEqual(message.number_of_down_votes, nb_down)
 
             res = self.retrieve(pk)
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data["nb_up_votes"], nb_up)
-            self.assertEqual(res.data["nb_down_votes"], nb_down)
+            self.assertEqual(res.data["number_of_up_votes"], nb_up)
+            self.assertEqual(res.data["number_of_down_votes"], nb_down)
 
         # Create a message.
         self.login("17simple")

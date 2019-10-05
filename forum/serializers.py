@@ -49,8 +49,8 @@ class MessageForumSerializer(serializers.ModelSerializer):
 
     def to_representation(self, message):
         res = super(MessageForumSerializer, self).to_representation(message)
-        res["nb_up_votes"] = message.nb_up_votes
-        res["nb_down_votes"] = message.nb_down_votes
+        res["number_of_up_votes"] = message.number_of_up_votes
+        res["number_of_down_votes"] = message.number_of_down_votes
         return res
 
     def update(self, instance, validated_data):

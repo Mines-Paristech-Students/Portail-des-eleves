@@ -37,11 +37,11 @@ class MessageForum(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=False)
 
     @cached_property
-    def nb_up_votes(self):
+    def number_of_up_votes(self):
         return self.up_votes.count()
 
     @cached_property
-    def nb_down_votes(self):
+    def number_of_down_votes(self):
         return self.down_votes.count()
 
     @cached_property
