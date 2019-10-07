@@ -1,11 +1,9 @@
 from datetime import datetime
 from django.conf import settings
-
+import jwt
 from rest_framework import status, views
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
-
-import jwt
 
 from authentication.token import decode_token
 

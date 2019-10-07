@@ -39,22 +39,22 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
         """Return the endpoint associated to the create action."""
         return f"/associations/roles/"
 
-    def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+    def create(self, data=None, format="json"):
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
         """Return the endpoint associated to the update action."""
         return f"/associations/roles/{pk}/"
 
-    def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+    def update(self, pk, data=None, format="json"):
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
         """Return the endpoint associated to the destroy action."""
         return f"/associations/roles/{pk}/"
 
-    def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+    def destroy(self, pk):
+        return self.delete(self.endpoint_destroy(pk))
 
     SERIALIZED_FIELDS = (
         ("id", "user", "association", "role", "rank", "is_archived")

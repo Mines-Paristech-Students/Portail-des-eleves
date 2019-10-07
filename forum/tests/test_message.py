@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 from forum.models import MessageForum
@@ -25,32 +25,32 @@ class MessageTestCase(WeakAuthenticationBaseTestCase):
     def endpoint_create(self):
         return "/forum/messages/"
 
-    def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+    def create(self, data=None, format="json"):
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
         return f"/forum/messages/{pk}/"
 
-    def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+    def update(self, pk, data=None, format="json"):
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
         return f"/forum/messages/{pk}/"
 
-    def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+    def destroy(self, pk):
+        return self.delete(self.endpoint_destroy(pk))
 
     def endpoint_vote_up(self, pk):
         return f"/forum/messages/{pk}/vote_up/"
 
-    def vote_up(self, pk, data=None, format="json", content_type="application/json"):
-        return self.put(self.endpoint_vote_up(pk), data, format, content_type)
+    def vote_up(self, pk, data=None, format="json"):
+        return self.put(self.endpoint_vote_up(pk), data, format)
 
     def endpoint_vote_down(self, pk):
         return f"/forum/messages/{pk}/vote_down/"
 
-    def vote_down(self, pk, data=None, format="json", content_type="application/json"):
-        return self.put(self.endpoint_vote_down(pk), data, format, content_type)
+    def vote_down(self, pk, data=None, format="json"):
+        return self.put(self.endpoint_vote_down(pk), data, format)
 
     ########
     # LIST #

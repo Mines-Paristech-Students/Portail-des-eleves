@@ -1,28 +1,15 @@
 from datetime import datetime
 
 from django.conf import settings
-from django.test import TestCase
-from django.urls import reverse
 import jwt
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
 
 from associations.models import User
 from backend.fake_private_key import FAKE_PRIVATE_KEY
 
 
-class WeakAuthenticationBaseTestCase(TestCase):
-    """
-        This test base provides convenient methods to log users in and out.
-        However, it does so by generating fake JWT and disabling the signature verification.
-        Do not use this test base to test the JWT authentication itself.
-    """
-
-    client = APIClient(enforce_csrf_checks=True)
-
+class BaseTestCase(APITestCase):
     api_base = "/api/v1"
-
-    def setUp(self):
-        settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"] = False
 
     def assertStatusCode(self, res, status_code, user_msg=""):
         msg = ""
@@ -46,9 +33,37 @@ class WeakAuthenticationBaseTestCase(TestCase):
 
         self.assertIn(res.status_code, status_codes, msg=msg)
 
-    def logout(self):
-        """Log the current user out."""
-        self.client.logout()
+    def get(self, url, data=None):
+        return self.client.get(self.api_base + url, data)
+
+    def post(self, url, data=None, format="json"):
+        return self.client.post(self.api_base + url, data, format=format)
+
+    def patch(self, url, data=None, format="json"):
+        return self.client.patch(self.api_base + url, data, format=format)
+
+    def put(self, url, data=None, format="json"):
+        return self.client.put(self.api_base + url, data, format=format)
+
+    def delete(self, url):
+        return self.client.delete(self.api_base + url)
+
+    def head(self, url, data=None):
+        return self.client.head(self.api_base + url, data)
+
+    def options(self, url, data=None):
+        return self.client.options(self.api_base + url, data)
+
+
+class WeakAuthenticationBaseTestCase(BaseTestCase):
+    """
+        This test base provides convenient methods to log users in and out.
+        However, it does so by generating fake JWT and disabling the signature verification.
+        Do not use this test base to test the JWT authentication itself.
+    """
+
+    def setUp(self):
+        settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"] = False
 
     def _get_fake_jwt(self, username):
         """
@@ -84,8 +99,12 @@ class WeakAuthenticationBaseTestCase(TestCase):
 
         fake_jwt = self._get_fake_jwt(username)
 
-        url = f"{reverse('login')}?{settings.JWT_AUTH_SETTINGS['GET_PARAMETER']}={fake_jwt}"
-        return self.client.get(url, format="json")
+        url = f"/auth/login/?{settings.JWT_AUTH_SETTINGS['GET_PARAMETER']}={fake_jwt}"
+        return self.get(url)
+
+    def logout(self):
+        """Log the current user out."""
+        self.client.logout()
 
     def create_user(self, username="user", admin=False):
         """
@@ -131,30 +150,3 @@ class WeakAuthenticationBaseTestCase(TestCase):
         user = self.create_user(username, admin)
         self.login(username, "password")
         return user
-
-    def get(self, url, data=None):
-        return self.client.get(self.api_base + url, data)
-
-    def post(self, url, data=None, format="json", content_type="application/json"):
-        return self.client.post(
-            self.api_base + url, data, format=format, content_type=content_type
-        )
-
-    def patch(self, url, data=None, format="json", content_type="application/json"):
-        return self.client.patch(
-            self.api_base + url, data, format=format, content_type=content_type
-        )
-
-    def put(self, url, data=None, format="json", content_type="application/json"):
-        return self.client.put(
-            self.api_base + url, data, format=format, content_type=content_type
-        )
-
-    def delete(self, url, data="", format=None, content_type=None):
-        return self.client.delete(self.api_base + url)
-
-    def head(self, url, data=None):
-        return self.client.head(self.api_base + url, data)
-
-    def options(self, url, data=None):
-        return self.client.options(self.api_base + url, data)
