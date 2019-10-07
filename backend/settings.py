@@ -83,16 +83,6 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
-JWT_AUTH = {
-    "ACCESS_TOKEN_COOKIE_NAME": "jwt_access_token",
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "ACCESS_TOKEN_LONG_LIFETIME": timedelta(days=140),
-    "ALGORITHM": "HS256",
-    "SECRET_KEY": os.environ.get("JWT_PRIVATE_KEY", "SECRET_KEY"),
-    "USER_ID_CLAIM": "user",
-    "USER_ID_FIELD": "id",
-}
-
 ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [

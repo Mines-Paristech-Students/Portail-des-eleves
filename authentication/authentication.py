@@ -1,76 +1,69 @@
-import sys
-
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-
+import jwt
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from authentication.exceptions import TokenError
-from authentication.settings import api_settings
-from authentication.token import Token
+from authentication.settings import API_SETTINGS
+from authentication.token import decode_token
 from backend import settings
 
 
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
     A Django rest authentication class that will:
-    - Check that requests contains the anti-CSRF custom header
-    - Validate the JWT token received
-    - Returns the user
+    - Check that `request` contains the anti-CSRF custom header.
+    - Validate the JWT token received.
+    - Return the user.
     """
 
     User = get_user_model()
 
     def authenticate(self, request):
+        # Validate the CSRF header.
         if not self.validate_csrf_header(request):
-            raise AuthenticationFailed("Custom header against CSRF attacks is not set")
+            raise AuthenticationFailed("Custom header against CSRF attacks is not set.")
 
-        raw_token = request.COOKIES.get(api_settings.ACCESS_TOKEN_COOKIE_NAME)
+        # Get the cookie.
+        raw_token = request.COOKIES.get(API_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"])
         if raw_token is None:
-            raise AuthenticationFailed("Authorization cookie not set")
-        validated_token = self.get_validated_token(raw_token)
-        return self.get_user(validated_token), None
+            raise AuthenticationFailed("Authorization cookie not set.")
 
+        # Decode and verify the token.
+        try:
+            claims = decode_token(raw_token)
+        except jwt.exceptions.InvalidTokenError as e:
+            raise AuthenticationFailed(e)
+
+        # Authenticate the user.
+        return self.get_user(claims), None
 
     def authenticate_header(self, request):
-        """Used by django to populate the WWW-Authentication header
-        Implementing this method is required for returning a 401 status code if
-        authentication is wrong.
-        """
-        return "Custom authentication method"
+        """Implementing this method is required for returning a 401 status code if authentication is wrong."""
+        return "Custom authentication method."
 
     def validate_csrf_header(self, request):
         if not settings.is_prod_mode():
-            return True # Leave it like that in dev so we can check API from the browser
-        header = request.META.get('HTTP_X_REQUESTED_WITH')
-        return header == 'XMLHttpRequest'
-
-    def get_validated_token(self, raw_token):
-        """
-        Validates an encoded JSON web token and returns a validated token
-        wrapper object.
-        """
-        try:
-            return Token(raw_token)
-        except TokenError as e:
-            raise AuthenticationFailed(str(e))
+            # Leave it like that in dev so we can check the API from the browser.
+            return True
+        header = request.META.get("HTTP_X_REQUESTED_WITH")
+        return header == "XMLHttpRequest"
 
     def get_user(self, validated_token):
-        """
-        Attempts to find and return a user using the given validated token.
-        """
-        try:
-            user_id = validated_token[api_settings.USER_ID_CLAIM]
-        except KeyError:
-            raise AuthenticationFailed('Token contained no recognizable user identification')
+        """Attempt to find and return a user using the given validated token."""
 
         try:
-            user = self.User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+            user_id = validated_token[API_SETTINGS["USER_ID_CLAIM_NAME"]]
+        except KeyError:
+            raise AuthenticationFailed(
+                "Token contained no recognizable user identification."
+            )
+
+        try:
+            user = self.User.objects.get(pk=user_id)
         except self.User.DoesNotExist:
-            raise AuthenticationFailed('User not found', code='user_not_found')
+            raise AuthenticationFailed("User not found.", code="user_not_found")
 
         if not user.is_active:
-            raise AuthenticationFailed('User is inactive', code='user_inactive')
+            raise AuthenticationFailed("User is inactive.", code="user_inactive")
 
         return user
