@@ -58,3 +58,16 @@ class LogoutView(views.APIView):
         response.delete_cookie(settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"])
 
         return response
+
+
+class CredentialsView(views.APIView):
+    """This view returns the credentials of the currently logged-in user."""
+
+    def get(self, request, format=None, *args, **kwargs):
+        return Response(
+            {
+                "user_id": request.user.id,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+            }
+        )

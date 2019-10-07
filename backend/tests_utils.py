@@ -4,11 +4,16 @@ from django.conf import settings
 import jwt
 from rest_framework.test import APITestCase
 
-from associations.models import User
 from backend.fake_private_key import FAKE_PRIVATE_KEY
 
 
 class BaseTestCase(APITestCase):
+    """
+        This test base provides convenient `get`, `post`, etc. shortcut methods to the corresponding
+        `self.client.xxx` methods.
+        When using these methods, the URLs must be shortened from `/api/v1/some/endpoint/` to `/some/endpoint/`.
+    """
+
     api_base = "/api/v1"
 
     def assertStatusCode(self, res, status_code, user_msg=""):
@@ -105,48 +110,3 @@ class WeakAuthenticationBaseTestCase(BaseTestCase):
     def logout(self):
         """Log the current user out."""
         self.client.logout()
-
-    def create_user(self, username="user", admin=False):
-        """
-        Create an user, with password='password'
-
-        :param str username: the user's id.
-        :param bool admin: if True, the user will be an admin; otherwise, it will be a simple user.
-        :return: the created User object.
-        """
-
-        password = "password"
-
-        if admin:
-            return User.objects.create_superuser(
-                username,
-                f"Admin_{username}",
-                "User",
-                f"admin_{username}@mines-paristech.fr",
-                password,
-                "2018-06-06",
-                2018,
-            )
-        else:
-            return User.objects.create_user(
-                username,
-                f"Simple_{username}",
-                "User",
-                f"simple_{username}@mines-paristech.fr",
-                password,
-                "2018-06-06",
-                2018,
-            )
-
-    def create_and_login_user(self, username="user", admin=False):
-        """
-        Create a dummy user with the specified rights, log it in and create the JWT token.
-
-        :param str username: the user's id.
-        :param bool admin: if True, the user will be an admin; otherwise, it will be a simple user.
-        :return: the created user
-        """
-
-        user = self.create_user(username, admin)
-        self.login(username, "password")
-        return user

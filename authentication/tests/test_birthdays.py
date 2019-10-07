@@ -6,14 +6,14 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
     """Test the birthdays endpoint logic."""
 
-    fixtures = ("birthdays_test.json",)
+    fixtures = ("test_authentication.yaml", "test_birthdays.json")
 
     def test_if_not_logged_in_then_401(self):
         res = self.get("/users/birthdays/2/")
         self.assertStatusCode(res, 401)
 
     def test_birthdays(self):
-        self.create_and_login_user("17simple")
+        self.login("17simple")
 
         number_of_days = 20
         res = self.get(f"/users/birthdays/{number_of_days}/")

@@ -24,5 +24,9 @@ def decode_token(token: str, verify: bool = True) -> dict:
         )
     except jwt.exceptions.ExpiredSignatureError:
         raise jwt.exceptions.InvalidTokenError("Expired token.")
+    except jwt.exceptions.InvalidAudienceError:
+        raise jwt.exceptions.InvalidTokenError("Invalid audience.")
+    except jwt.exceptions.InvalidIssuerError:
+        raise jwt.exceptions.InvalidTokenError("Invalid issuer.")
     except jwt.exceptions.InvalidTokenError:
         raise jwt.exceptions.InvalidTokenError("Invalid token.")
