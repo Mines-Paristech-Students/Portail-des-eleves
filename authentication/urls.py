@@ -16,13 +16,13 @@ from authentication.views import (
 router = BulkRouter()
 
 router.register(r"users", ProfileViewSet)
-router.register(r"profile_question", ProfileQuestionViewSet)
-router.register(r"profile_answer", ProfileAnswerViewSet)
+router.register(r"users/profile_question", ProfileQuestionViewSet)
+router.register(r"users/profile_answer", ProfileAnswerViewSet)
 
 urlpatterns = [
     path("auth/login/", LoginView.as_view(), name="login"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
-    path("birthdays/<int:number_of_days>/", get_birthdays, name="get_birthdays"),
-    path("promotions/", list_promotions, name="list_promotions"),
+    path("users/birthdays/<int:number_of_days>/", get_birthdays, name="get_birthdays"),
+    path("users/promotions/", list_promotions, name="list_promotions"),
     path("users/questions/<slug:user_pk>/", list_profile_questions),
 ] + router.urls

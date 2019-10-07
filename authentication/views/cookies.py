@@ -22,7 +22,9 @@ class LoginView(views.APIView):
             token = request.GET.get(settings.JWT_AUTH_SETTINGS["GET_PARAMETER"])
 
             try:
-                decode_token(token)
+                decode_token(
+                    token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
+                )
             except jwt.exceptions.InvalidTokenError as e:
                 raise AuthenticationFailed(e)
 

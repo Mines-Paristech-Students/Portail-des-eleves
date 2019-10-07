@@ -3,7 +3,7 @@ import jwt
 from django.conf import settings
 
 
-def decode_token(token: str) -> dict:
+def decode_token(token: str, verify: bool = True) -> dict:
     """
         Verify a token and return its claims.
         Raise a `jwt.exceptions.InvalidTokenError` if the token cannot be verified.
@@ -16,6 +16,7 @@ def decode_token(token: str) -> dict:
             algorithms=[settings.JWT_AUTH_SETTINGS["ALGORITHM"]],
             issuer=settings.JWT_AUTH_SETTINGS["ISSUER"],
             audience=settings.JWT_AUTH_SETTINGS["AUDIENCE"],
+            verify=verify,
         )
     except jwt.exceptions.InvalidSignatureError:
         raise jwt.exceptions.InvalidTokenError(

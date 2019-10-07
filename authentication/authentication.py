@@ -31,8 +31,11 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed("Authorization cookie not set.")
 
         # Decode and verify the token.
+        # In DEBUG, the token is not verified (this allows to run tests more easily).
         try:
-            claims = decode_token(raw_token)
+            claims = decode_token(
+                raw_token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
+            )
         except jwt.exceptions.InvalidTokenError as e:
             raise AuthenticationFailed(e)
 

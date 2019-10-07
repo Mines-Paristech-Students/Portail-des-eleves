@@ -1,14 +1,28 @@
+from datetime import datetime
+
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
+import jwt
 from rest_framework.test import APIClient
 
 from associations.models import User
+from backend.fake_private_key import FAKE_PRIVATE_KEY
 
 
 class BaseTestCase(TestCase):
+    """
+        This test base provides convenient methods to log users in and out.
+        However, it does so by generating fake JWT tokens and disabling the signature verification.
+        Do not use this test base to test the authentication logic.
+    """
+
     client = APIClient(enforce_csrf_checks=True)
 
     api_base = "/api/v1"
+
+    def setUp(self):
+        settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"] = False
 
     def assertStatusCode(self, res, status_code, user_msg=""):
         msg = ""
@@ -36,6 +50,28 @@ class BaseTestCase(TestCase):
         """Log the current user out."""
         self.client.logout()
 
+    def _get_fake_jwt(self, username):
+        """
+            Produce a fake JWT authenticating the given user.
+            Use a random RSA private key.
+        """
+
+        payload = {
+            "exp": int(datetime(2100, 1, 1).timestamp()),
+            "iss": settings.JWT_AUTH_SETTINGS["ISSUER"],
+            "aud": "portail",
+            "jti": "ec1901b49bae43f8b3e90782b0c8b131",
+            settings.JWT_AUTH_SETTINGS["USER_ID_CLAIM_NAME"]: username,
+        }
+
+        return jwt.encode(
+            payload=payload,
+            key=FAKE_PRIVATE_KEY,
+            algorithm=settings.JWT_AUTH_SETTINGS["ALGORITHM"],
+        ).decode(
+            "utf-8"
+        )  # jwt.encode returns a bytes object, it thus has to be decoded to a str.
+
     def login(self, username, password="password"):
         """
         Log an user in.
@@ -46,9 +82,10 @@ class BaseTestCase(TestCase):
 
         self.logout()
 
-        url = reverse("token_obtain_pair")
-        data = {"id": username, "password": password}
-        return self.client.post(url, data, format="json")
+        fake_jwt = self._get_fake_jwt(username)
+
+        url = f"{reverse('login')}?{settings.JWT_AUTH_SETTINGS['GET_PARAMETER']}={fake_jwt}"
+        return self.client.get(url, format="json")
 
     def create_user(self, username="user", admin=False):
         """
