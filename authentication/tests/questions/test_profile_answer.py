@@ -1,9 +1,9 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from authentication.models.questions import ProfileAnswer
 
 
-class TestProfileAnswer(BaseTestCase):
+class TestProfileAnswer(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_questions.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]

@@ -1,4 +1,4 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_association.yaml to get a better understanding of the test fixtures.
 
@@ -21,7 +21,7 @@ ALL_USERS_EXCEPT_ASSOCIATION_ADMIN = [
 """Same as ALL_USERS, but with all the association administrators removed."""
 
 
-class BaseAssociationTestCase(BaseTestCase):
+class BaseAssociationTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_association.yaml"]
 
     def endpoint_list(self):

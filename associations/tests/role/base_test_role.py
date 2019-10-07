@@ -1,5 +1,5 @@
 from associations.models import Role
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_role.yaml to get a better understanding of the test fixtures.
 
@@ -18,7 +18,7 @@ ALL_USERS_EXCEPT_GLOBAL_ADMIN = [user for user in ALL_USERS if user != "17admin"
 ALL_USERS_EXCEPT_ADMIN_BIERO = [user for user in ALL_USERS if user != "17admin_biero"]
 
 
-class BaseRoleTestCase(BaseTestCase):
+class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_role.yaml"]
 
     def endpoint_list(self):

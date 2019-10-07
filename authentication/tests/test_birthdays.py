@@ -1,9 +1,9 @@
 import json
 
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 
-class BirthdaysTestCase(BaseTestCase):
+class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
     """Test the birthdays endpoint logic."""
 
     fixtures = ("birthdays_test.json",)

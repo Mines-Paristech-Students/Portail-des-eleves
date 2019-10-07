@@ -1,10 +1,10 @@
 import json
 
 from associations.models import User
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 
-class PromotionsTestCase(BaseTestCase):
+class PromotionsTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ("birthdays_test.json",)
 
     def test_if_not_logged_in_then_401(self):

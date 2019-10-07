@@ -1,11 +1,11 @@
 from authentication.models import User
 from authentication.serializers import UserSerializer
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from rest_framework.renderers import JSONRenderer
 
 
-class ProfileTestCase(BaseTestCase):
+class ProfileTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml"]
 
     def assertContentIsEqualToUser(self, res, user):

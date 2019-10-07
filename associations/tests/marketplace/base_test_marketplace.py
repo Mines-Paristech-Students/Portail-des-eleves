@@ -1,4 +1,4 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_marketplace.yaml to get a better understanding of the test fixtures.
 
@@ -25,5 +25,5 @@ ALL_USERS_EXCEPT_MARKET_ADMIN = [user for user in ALL_USERS if "market" not in u
 """Same as ALL_USERS, but without all the market administrators."""
 
 
-class BaseMarketPlaceTestCase(BaseTestCase):
+class BaseMarketPlaceTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_marketplace.yaml"]

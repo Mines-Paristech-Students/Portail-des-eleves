@@ -10,11 +10,11 @@ from associations.models import User
 from backend.fake_private_key import FAKE_PRIVATE_KEY
 
 
-class BaseTestCase(TestCase):
+class WeakAuthenticationBaseTestCase(TestCase):
     """
         This test base provides convenient methods to log users in and out.
-        However, it does so by generating fake JWT tokens and disabling the signature verification.
-        Do not use this test base to test the authentication logic.
+        However, it does so by generating fake JWT and disabling the signature verification.
+        Do not use this test base to test the JWT authentication itself.
     """
 
     client = APIClient(enforce_csrf_checks=True)

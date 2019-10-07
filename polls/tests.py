@@ -1,10 +1,10 @@
 from datetime import date, datetime, timezone
 
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from polls.models import Poll
 
 
-class PollTestCase(BaseTestCase):
+class PollTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_polls.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]

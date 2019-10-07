@@ -1,8 +1,8 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from forum.models import Topic
 
 
-class TopicTestCase(BaseTestCase):
+class TopicTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_forum.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]

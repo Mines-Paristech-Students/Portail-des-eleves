@@ -1,10 +1,10 @@
 from datetime import date, datetime, timezone
 
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from forum.models import MessageForum
 
 
-class MessageTestCase(BaseTestCase):
+class MessageTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_forum.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]
