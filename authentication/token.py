@@ -1,6 +1,6 @@
 import jwt
 
-from authentication.settings import API_SETTINGS
+from django.conf import settings
 
 
 def decode_token(token: str) -> dict:
@@ -12,10 +12,10 @@ def decode_token(token: str) -> dict:
     try:
         return jwt.decode(
             jwt=token,
-            key=API_SETTINGS["PUBLIC_KEY"],
-            algorithms=[API_SETTINGS["ALGORITHM"]],
-            issuer=API_SETTINGS["ISSUER"],
-            audience=API_SETTINGS["AUDIENCE"],
+            key=settings.JWT_AUTH_SETTINGS["PUBLIC_KEY"],
+            algorithms=[settings.JWT_AUTH_SETTINGS["ALGORITHM"]],
+            issuer=settings.JWT_AUTH_SETTINGS["ISSUER"],
+            audience=settings.JWT_AUTH_SETTINGS["AUDIENCE"],
         )
     except jwt.exceptions.InvalidSignatureError:
         raise jwt.exceptions.InvalidTokenError(

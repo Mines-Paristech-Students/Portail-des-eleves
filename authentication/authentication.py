@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 import jwt
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from authentication.settings import API_SETTINGS
 from authentication.token import decode_token
 from backend import settings
 
@@ -24,7 +24,9 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed("Custom header against CSRF attacks is not set.")
 
         # Get the cookie.
-        raw_token = request.COOKIES.get(API_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"])
+        raw_token = request.COOKIES.get(
+            settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"]
+        )
         if raw_token is None:
             raise AuthenticationFailed("Authorization cookie not set.")
 
@@ -52,7 +54,7 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         """Attempt to find and return a user using the given validated token."""
 
         try:
-            user_id = validated_token[API_SETTINGS["USER_ID_CLAIM_NAME"]]
+            user_id = validated_token[settings.JWT_AUTH_SETTINGS["USER_ID_CLAIM_NAME"]]
         except KeyError:
             raise AuthenticationFailed(
                 "Token contained no recognizable user identification."
