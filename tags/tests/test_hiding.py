@@ -23,8 +23,6 @@ class HidingTestCase(BaseTestCase):
     maxDiff = None
 
     def setUp(self):
-        self.switch_17simple_to_first_year()
-
         links = [
             (Association, "hidden_association"),
             (Event, 2),
