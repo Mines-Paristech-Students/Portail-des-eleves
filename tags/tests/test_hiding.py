@@ -1,5 +1,7 @@
 import datetime
 
+from django.db.models import Q
+
 from associations.models import (
     Event,
     Association,
@@ -21,6 +23,8 @@ class HidingTestCase(BaseTestCase):
     maxDiff = None
 
     def setUp(self):
+        self.switch_17simple_to_first_year()
+
         links = [
             (Association, "hidden_association"),
             (Event, 2),
@@ -41,6 +45,7 @@ class HidingTestCase(BaseTestCase):
             instance = model.objects.get(pk=pk)
             instance.tags.add(hiding_tag)
             instance.save()
+        hiding_tag.save()
 
     def switch_17simple_to_first_year(self):
         simple17 = User.objects.get(pk="17simple")
@@ -63,7 +68,7 @@ class HidingTestCase(BaseTestCase):
         # Get all associations, but one should be missing
 
         response = self.get("/associations/associations/")
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 1, msg=response.data)
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
