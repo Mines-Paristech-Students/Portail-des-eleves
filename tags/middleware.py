@@ -1,5 +1,4 @@
 from django.contrib.auth.middleware import get_user
-from django.db import models
 from django.db.models import Q
 from rest_framework.request import Request
 
@@ -56,6 +55,7 @@ class InjectTagFilteringMiddleware:
 
     def __call__(self, request):
         user = get_user_jwt(request)
+        print(user)
 
         if user and user.is_authenticated and not user.show:
             for (model_name, model) in Tag.LINKS.items():
@@ -64,8 +64,13 @@ class InjectTagFilteringMiddleware:
                 # model.objects = model.objects.filter(
                 #     ~(Q(tags__is_hidden=True) | hiding_condition)
                 # )
-                model.objects = model.objects.filter(pk=0)
+                # def filtered_get_queryset(self):
+                #     print("bip")
+                #     return super().get_queryset().filter(pk=0)
 
+                model.objects.filter_criterion = Q(pk=0)
+
+                print(model)
                 # Version 2 :
                 # old_get_queryset = model.objects.get_queryset
                 #

@@ -4,7 +4,7 @@ from rest_framework_bulk.generics import BulkModelViewSet
 from rest_framework.exceptions import PermissionDenied, NotFound
 from url_filter.integrations.drf import DjangoFilterBackend
 
-from associations.models import Association
+from associations.models import Association, FileSystemStorage
 from associations.models import Role
 from associations.permissions import AssociationPermission, RolePermission
 from associations.serializers import (
