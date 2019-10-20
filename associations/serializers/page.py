@@ -1,7 +1,7 @@
 from rest_framework import relations
 from rest_framework import serializers
 
-from associations.models import Association, Page, User
+from associations.models import Association, Page
 
 
 class PageSerializer(serializers.ModelSerializer):

@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from associations.models import Association, Role, User
+from associations.models import Association, Role
 from associations.serializers.page import PageShortSerializer
+from authentication.models import User
 from authentication.serializers.user import UserShortSerializer
 
 

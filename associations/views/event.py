@@ -6,6 +6,7 @@ from associations.models import Event
 from associations.permissions import EventsPermission
 from associations.serializers import EventSerializer
 
+
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer

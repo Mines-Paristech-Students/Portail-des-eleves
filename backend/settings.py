@@ -72,7 +72,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "tags.middleware.InjectTagFilteringMiddleware",
 ]
 
 REST_FRAMEWORK = {
@@ -81,7 +80,10 @@ REST_FRAMEWORK = {
         "authentication.authentication.JWTCookieAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "tags.filters.HasHiddenTagFilter",
+    ),
 }
 
 JWT_AUTH = {

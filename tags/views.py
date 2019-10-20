@@ -1,5 +1,4 @@
 from django.http import HttpResponseBadRequest
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import mixins
@@ -29,7 +28,7 @@ To create a namespace :
 class NamespaceViewSet(viewsets.ModelViewSet):
     queryset = Namespace.objects.all()
     serializer_class = NamespaceSerializer
-    filter_backends = (DjangoFilterBackend,)
+
     filterset_fields = ("scope", "scoped_to")
     permission_classes = (NamespacePermission,)
 

@@ -1,9 +1,10 @@
-from associations.models import User, Role
+from associations.models import Role
 from associations.tests.role.base_test_role import (
     BaseRoleTestCase,
     ALL_USERS,
     ALL_USERS_EXCEPT_ADMIN_BIERO,
 )
+from authentication.models import User
 
 
 class RoleTestCase(BaseRoleTestCase):

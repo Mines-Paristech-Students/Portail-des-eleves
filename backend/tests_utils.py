@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from associations.models import User
+from authentication.models import User
 
 
 class BaseTestCase(TestCase):

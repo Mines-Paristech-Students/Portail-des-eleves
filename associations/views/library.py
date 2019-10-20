@@ -43,7 +43,6 @@ class LoanableViewSet(viewsets.ModelViewSet):
     serializer_class = LoanableSerializer
     permission_classes = (LoanablePermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("library__id",)
 
     def get_queryset(self):
@@ -66,7 +65,6 @@ class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (LoansPermission,)
 
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filter_fields = ("status", "user", "loan_date", "loanable__library__id")
     ordering = ("loan_date",)
 

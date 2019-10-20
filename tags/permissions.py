@@ -12,8 +12,8 @@ from associations.models import (
     File,
     Event,
     Choice,
-    User,
 )
+from authentication.models import User
 from forum.models import Theme, MessageForum, Topic
 from tags.models import Namespace, Tag
 

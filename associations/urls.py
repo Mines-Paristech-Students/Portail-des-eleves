@@ -35,8 +35,8 @@ urlpatterns.append(
 router.register(r"events", EventViewSet)
 
 # Filesystem.
-router.register(r"file", FileViewSet)
-router.register(r"folder", FolderViewSet)
+router.register(r"files", FileViewSet)
+router.register(r"folders", FolderViewSet)
 urlpatterns.append(
     path(
         "associations/<slug:association_id>/filesystem/root/",
@@ -54,7 +54,7 @@ router.register(r"loanables", LoanableViewSet)
 router.register(r"marketplace", MarketplaceViewSet)
 router.register(r"products", ProductViewSet)
 router.register(r"transactions", TransactionViewSet)
-router.register(r"funding", FundingViewSet)
+router.register(r"fundings", FundingViewSet)
 urlpatterns += [
     path("marketplace/balance/", BalanceView.as_view(), name="balance-list"),
     path(

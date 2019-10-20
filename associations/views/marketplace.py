@@ -44,9 +44,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = (ProductPermission,)
 
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
-
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
         marketplace they are a library administrator of."""
@@ -68,7 +65,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = (TransactionPermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("product", "status", "buyer", "date")
 
     def get_queryset(self):
@@ -131,7 +127,6 @@ class FundingViewSet(viewsets.ModelViewSet):
     serializer_class = FundingSerializer
     permission_classes = (FundingPermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("status", "user", "date")
 
     def get_queryset(self):

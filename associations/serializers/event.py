@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from associations.models import Association, User, Event
+from associations.models import Association, Event
+from authentication.models import User
 
 
 class EventSerializer(serializers.ModelSerializer):

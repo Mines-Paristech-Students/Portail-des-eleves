@@ -15,7 +15,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
         queryset = Theme.objects.all()
 
         user = self.request.user
-        if user is None or user.is_1A:
+        if user is None or not user.show:
             queryset = queryset.filter(is_hidden_1A=False)
 
         themeId = self.request.query_params.get("theme", None)
@@ -33,7 +33,7 @@ class TopicViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
         themeId = self.request.query_params.get("theme", None)
-        if user is None or user.is_1A:
+        if user is None or not user.show:
             queryset = queryset.filter(is_hidden_1A=False, theme__is_hidden_1A=False)
 
         if themeId is not None:
@@ -74,7 +74,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
 
         topicId = self.request.query_params.get("topic", None)
         user = self.request.user
-        if user is None or user.is_1A:
+        if user is None or not user.show:
             queryset = queryset.filter(
                 topic__is_hidden_1A=False, topic__theme__is_hidden_1A=False
             )
