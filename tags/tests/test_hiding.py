@@ -1,6 +1,8 @@
 import datetime
 
-from associations.models import Association, Event, File, Folder, Page, Role
+from django.db.models import Q
+
+from associations.models import Association, File, Folder, Page, Role
 from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
 from tags.models import Tag
@@ -8,7 +10,12 @@ from tags.tests.base_test import BaseTestCase
 
 
 class HidingTestCase(BaseTestCase):
-    """Test every model which has a ViewSet, even if this model cannot have a Tag."""
+    """
+        * Test every model which has a ViewSet, even if this model cannot have a Tag (test_hiding_***)
+        * Test the nested representations of the models which can have a Tag (test_hiding_nested_***_from_***).
+        * Test if some endpoints have changed and now return tagged models which have not been tested yet.
+          In that case, display a message urging to implement the test.
+    """
 
     fixtures = ["test_authentication.yaml", "test_hiding.yaml"]
     maxDiff = None
@@ -16,7 +23,6 @@ class HidingTestCase(BaseTestCase):
     def setUp(self):
         links = [
             (Association, "hidden_association"),
-            (Event, 2),
             (Folder, 4),
             (File, 3),
             (Page, 3),
@@ -59,6 +65,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/associations/hidden_association/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_elections(self):
         self.login("17simple")
 
@@ -78,6 +88,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/elections/2/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_events(self):
         self.login("17simple")
 
@@ -86,7 +100,7 @@ class HidingTestCase(BaseTestCase):
 
         response = self.get("/associations/events/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
@@ -96,6 +110,10 @@ class HidingTestCase(BaseTestCase):
         self.assertEqual(len(response.data), 1, msg=response.data)
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/events/2/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_files(self):
         self.login("17simple")
@@ -116,6 +134,11 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        for i in range(2, 6):
+            response = self.get(f"/associations/files/{i}/")
+            self.assertStatusCode(response, 404)
+
     def test_hiding_folders(self):
         self.login("17simple")
 
@@ -135,6 +158,11 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        for i in range(2, 6):
+            response = self.get(f"/associations/folders/{i}/")
+            self.assertStatusCode(response, 404)
+
     def test_hiding_fundings(self):
         self.login("17simple")
 
@@ -151,6 +179,10 @@ class HidingTestCase(BaseTestCase):
 
         response = self.get("/associations/fundings/")
         self.assertEqual(len(response.data), 1, msg=response.data)
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/fundings/2/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_library(self):
         self.login("17simple")
@@ -171,6 +203,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["id"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/library/hidden_association/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_loans(self):
         self.login("17simple")
 
@@ -187,6 +223,10 @@ class HidingTestCase(BaseTestCase):
 
         response = self.get("/associations/loans/")
         self.assertEqual(len(response.data), 1, msg=response.data)
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/loans/2/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_loanables(self):
         self.login("17simple")
@@ -207,6 +247,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/loanables/2/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_marketplace(self):
         self.login("17simple")
 
@@ -225,6 +269,10 @@ class HidingTestCase(BaseTestCase):
         self.assertEqual(len(response.data), 1)
         for item in response.data:
             self.assertNotIn("hidden", item["id"])
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/marketplace/hidden_association/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_pages(self):
         self.login("17simple")
@@ -245,6 +293,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["text"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/pages/2/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_product(self):
         self.login("17simple")
 
@@ -263,6 +315,10 @@ class HidingTestCase(BaseTestCase):
         self.assertEqual(len(response.data), 1, msg=response.data)
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/products/2/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_role(self):
         self.login("17simple")
@@ -283,6 +339,12 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["role"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/roles/2/")
+        self.assertStatusCode(response, 404)
+        response = self.get("/associations/roles/3/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_transaction(self):
         self.login("17simple")
 
@@ -299,6 +361,10 @@ class HidingTestCase(BaseTestCase):
 
         response = self.get("/associations/transactions/")
         self.assertEqual(len(response.data), 1, msg=response.data)
+
+        # Cannot directly access a hidden object.
+        response = self.get("/associations/transactions/2/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_theme(self):
         self.login("17simple")
@@ -319,6 +385,10 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 
+        # Cannot directly access a hidden object.
+        response = self.get("/forum/themes/2/")
+        self.assertStatusCode(response, 404)
+
     def test_hiding_topic(self):
         self.login("17simple")
 
@@ -337,6 +407,12 @@ class HidingTestCase(BaseTestCase):
         self.assertEqual(len(response.data), 1)
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
+
+        # Cannot directly access a hidden object.
+        response = self.get("/forum/topics/2/")
+        self.assertStatusCode(response, 404)
+        response = self.get("/forum/topics/3/")
+        self.assertStatusCode(response, 404)
 
     def test_hiding_messages_forum(self):
         self.login("17simple")
@@ -357,6 +433,11 @@ class HidingTestCase(BaseTestCase):
         for item in response.data:
             self.assertNotIn("hidden", item["text"])
 
+        # Cannot directly access a hidden object.
+        for i in range(2, 5):
+            response = self.get(f"/forum/messages/{i}/")
+            self.assertStatusCode(response, 404)
+
     def test_hiding_tag_namespaces(self):
         # self.login("17simple")
         #
@@ -376,3 +457,142 @@ class HidingTestCase(BaseTestCase):
         # for item in response.data:
         #     self.assertNotIn("hidden", item["prop"])
         pass
+
+    def test_hiding_nested_files_from_folder(self):
+        # Can see all the files in the folder.
+        self.login("17simple")
+
+        for folder in Folder.objects.all():
+            response = self.get(f"/associations/folders/{folder.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data["files"]), folder.files.count())
+
+        # Cannot see the hidden files in the folder.
+        self.switch_17simple_to_first_year()
+
+        # Use a folder which is not hidden.
+        for folder in Folder.objects.exclude(
+            Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True)
+        ):
+            response = self.get(f"/associations/folders/{folder.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                len(response.data["files"]),
+                folder.files.exclude(tags__is_hidden=True).count(),
+            )
+
+            for file in response.data["files"]:
+                self.assertNotIn("hidden_file", file["name"])
+
+    def test_no_files_in_association(self):
+        self.login("17simple")
+
+        response = self.get("/associations/associations/public_association/")
+        self.assertEqual(response.status_code, 200)
+
+        msg = (
+            "It seems that `associations/public_association` now returns a list of files.\n"
+            "Please make sure to test accordingly."
+        )
+        self.assertNotIn("file", response.data, msg=msg)
+        self.assertNotIn("files", response.data, msg=msg)
+
+    def test_hiding_nested_folders_from_folder(self):
+        # Can see all the folders in the folder.
+        self.login("17simple")
+
+        for folder in Folder.objects.all():
+            response = self.get(f"/associations/folders/{folder.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data["children"]), folder.children.count())
+
+        # Cannot see the hidden files in the folder.
+        self.switch_17simple_to_first_year()
+
+        # Use a folder which is not hidden.
+        for folder in Folder.objects.exclude(
+            Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True)
+        ):
+            response = self.get(f"/associations/folders/{folder.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                len(response.data["children"]),
+                folder.children.exclude(tags__is_hidden=True).count(),
+            )
+
+            for child in response.data["children"]:
+                self.assertNotIn("hidden_folder", child["name"])
+
+    def test_no_folders_in_association(self):
+        self.login("17simple")
+
+        response = self.get("/associations/associations/public_association/")
+        self.assertEqual(response.status_code, 200)
+
+        msg = (
+            "It seems that `associations/public_association` now returns a list of folders.\n"
+            "Please make sure to test accordingly."
+        )
+        self.assertNotIn("folder", response.data, msg=msg)
+        self.assertNotIn("folders", response.data, msg=msg)
+
+    def test_hiding_nested_pages_from_association(self):
+        # Can see all the pages in the association.
+        self.login("17simple")
+
+        for association in Association.objects.all():
+            response = self.get(f"/associations/associations/{association.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data["pages"]), association.pages.count())
+
+        # Cannot see the hidden pages in the association.
+        self.switch_17simple_to_first_year()
+
+        # Use an association which is not hidden.
+        for association in Association.objects.exclude(tags__is_hidden=True):
+            response = self.get(f"/associations/associations/{association.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                len(response.data["pages"]),
+                association.pages.exclude(tags__is_hidden=True).count(),
+            )
+
+            for page in response.data["pages"]:
+                self.assertNotIn("hidden", page["title"])
+
+    def test_no_roles_in_association(self):
+        self.login("17simple")
+
+        response = self.get("/associations/associations/public_association/")
+        self.assertEqual(response.status_code, 200)
+
+        msg = (
+            "It seems that `associations/public_association` now returns a list of roles.\n"
+            "Please make sure to test accordingly."
+        )
+        self.assertNotIn("role", response.data, msg=msg)
+        self.assertNotIn("roles", response.data, msg=msg)
+
+    def test_hiding_nested_topics_from_theme(self):
+        # Can see all the topics in the theme.
+        self.login("17simple")
+
+        for theme in Theme.objects.all():
+            response = self.get(f"/forum/themes/{theme.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.data["topics"]), theme.topics.count())
+
+        # Cannot see the hidden topics in the theme.
+        self.switch_17simple_to_first_year()
+
+        # Use a theme which is not hidden.
+        for theme in Theme.objects.exclude(tags__is_hidden=True):
+            response = self.get(f"/forum/themes/{theme.id}/")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                len(response.data["topics"]),
+                theme.topics.exclude(tags__is_hidden=True).count(),
+            )
+
+            for topic in response.data["topics"]:
+                self.assertNotIn("hidden", topic["name"])

@@ -5,9 +5,27 @@ from authentication.serializers.user import UserShortSerializer
 
 
 class ThemeSerializer(serializers.ModelSerializer):
+    topics = serializers.SerializerMethodField()
+
     class Meta:
         model = Theme
-        fields = ("id", "name", "description", "is_hidden_1A")
+        fields = ("id", "name", "description", "topics")
+
+    def get_topics(self, obj):
+        # Get the current user.
+        user = None
+        request = self.context.get("request")
+
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        # Return the serialized representation of the topics.
+        if user and user.is_authenticated and not user.show:
+            return TopicSerializer(
+                obj.topics.exclude(tags__is_hidden=True), many=True
+            ).data
+
+        return TopicSerializer(obj.topics.all(), many=True).data
 
 
 class ThemeShortSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,7 +40,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ("id", "name", "creator", "is_hidden_1A", "theme")
+        fields = ("id", "name", "creator", "theme")
 
 
 class TopicShortSerializer(serializers.HyperlinkedModelSerializer):

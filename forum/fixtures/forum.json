@@ -4,8 +4,7 @@
     "pk": "1",
     "fields": {
       "name": "Forum général",
-      "description": "Tout et n'importe quoi",
-      "is_hidden_1A": false
+      "description": "Tout et n'importe quoi"
     }
   },
   {
@@ -13,8 +12,7 @@
     "pk": "2",
     "fields": {
       "name": "Forum caché",
-      "description": "Chut, pas visible aux 1A",
-      "is_hidden_1A": true
+      "description": "Chut, pas visible aux 1A"
     }
   },
   {
@@ -23,7 +21,6 @@
     "fields": {
       "creator": "15veaux",
       "name": "Sujet sérieux caché",
-      "is_hidden_1A": true,
       "theme": "1"
     }
   },
@@ -33,7 +30,6 @@
     "fields": {
       "creator": "17bocquet",
       "name": "Sujet piche",
-      "is_hidden_1A": false,
       "theme": "1"
     }
   },

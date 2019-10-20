@@ -24,7 +24,7 @@ from tags.models import Tag
 class HasHiddenTagFilter(filters.BaseFilterBackend):
     """
         Filter the query sets by excluding any object which has a `hidden` tag.
-        Please note that this filter has no effect on which nested objects are fetched in a Serializer.
+        Please note that this filter has no effect on the nested objects which are fetched in a Serializer.
     """
 
     def filter_queryset(self, request, queryset, view):
@@ -32,7 +32,7 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             # Associations.
             Association: Q(tags__is_hidden=True),
             Election: Q(association__tags__is_hidden=True),
-            Event: Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True),
+            Event: Q(association__tags__is_hidden=True),
             File: Q(tags__is_hidden=True)
             | Q(inherited_tags__is_hidden=True)
             | Q(association__tags__is_hidden=True),
@@ -59,7 +59,6 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
         }
 
         if request.user and request.user.is_authenticated and not request.user.show:
-            print(queryset.model)
             if queryset.model and queryset.model in exclude_conditions:
                 return queryset.exclude(exclude_conditions[queryset.model])
 

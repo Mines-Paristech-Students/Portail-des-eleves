@@ -14,10 +14,6 @@ class ThemeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Theme.objects.all()
 
-        user = self.request.user
-        if user is None or not user.show:
-            queryset = queryset.filter(is_hidden_1A=False)
-
         themeId = self.request.query_params.get("theme", None)
         if themeId is not None:
             queryset = queryset.filter(theme=themeId)
@@ -31,10 +27,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Topic.objects.all()
 
-        user = self.request.user
         themeId = self.request.query_params.get("theme", None)
-        if user is None or not user.show:
-            queryset = queryset.filter(is_hidden_1A=False, theme__is_hidden_1A=False)
 
         if themeId is not None:
             queryset = queryset.filter(theme=themeId)
@@ -45,7 +38,6 @@ class TopicViewSet(viewsets.ModelViewSet):
         body = json.loads(request.body)
 
         name = body["name"]
-        is_hidden_1A = body["is_hidden_1A"]
 
         theme_id = body["theme"] if "theme" in body else None
 
@@ -53,9 +45,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         if theme is not None:
             user = request.user
 
-            topic = Topic(
-                name=name, creator=user, theme=theme, is_hidden_1A=is_hidden_1A
-            )
+            topic = Topic(name=name, creator=user, theme=theme)
 
             topic.save()
 
@@ -73,11 +63,7 @@ class MessageForumViewSet(viewsets.ModelViewSet):
         queryset = MessageForum.objects.all()
 
         topicId = self.request.query_params.get("topic", None)
-        user = self.request.user
-        if user is None or not user.show:
-            queryset = queryset.filter(
-                topic__is_hidden_1A=False, topic__theme__is_hidden_1A=False
-            )
+
         if topicId is not None:
             queryset = queryset.filter(topic=topicId)
         return queryset
