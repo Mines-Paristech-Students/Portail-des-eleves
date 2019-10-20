@@ -11,4 +11,3 @@ class TagFilterableManager(models.Manager):
             return super().get_queryset().filter(self.filter_criterion)
         else:
             return super().get_queryset()
-
