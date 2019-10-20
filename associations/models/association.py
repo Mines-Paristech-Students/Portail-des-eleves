@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
 from authentication.models import User
+from tags.manager import TagFilterableManager
 
 
 class Association(models.Model):
@@ -33,6 +34,8 @@ class Association(models.Model):
         default=0,
         help_text="Order of appearance in the association list (lowest first).",
     )
+
+    objects = TagFilterableManager()
 
     def _get_unique_slug(self):
         slug = slugify(self.name)

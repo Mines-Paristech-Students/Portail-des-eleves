@@ -2,7 +2,7 @@ import datetime
 
 from django.db.models import Q
 
-from associations.models import Association, File, Folder, Page, Role
+from associations.models import Association, Folder, File, Page, Role
 from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
 from tags.models import Tag
@@ -38,6 +38,7 @@ class HidingTestCase(BaseTestCase):
             instance = model.objects.get(pk=pk)
             instance.tags.add(hiding_tag)
             instance.save()
+        hiding_tag.save()
 
     def switch_17simple_to_first_year(self):
         simple17 = User.objects.get(pk="17simple")
@@ -61,7 +62,7 @@ class HidingTestCase(BaseTestCase):
         # Get all associations, but one should be missing
 
         response = self.get("/associations/associations/")
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 1, msg=response.data)
         for item in response.data:
             self.assertNotIn("hidden", item["name"])
 

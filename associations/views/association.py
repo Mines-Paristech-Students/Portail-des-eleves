@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied, NotFound
 
-from associations.models import Association
+from associations.models import Association, FileSystemStorage
 from associations.models import Role
 from associations.permissions import AssociationPermission, RolePermission
 from associations.serializers import (
