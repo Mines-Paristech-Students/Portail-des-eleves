@@ -22,7 +22,7 @@ class CanManageCampaign(BasePermission):
 
     def has_object_permission(self, request, view, obj):
 
-        if request.method in ('HEAD', 'OPTIONS'):
+        if request.method in ("HEAD", "OPTIONS"):
             return True
         if isinstance(obj, Campaign) and user_in_campaign(request.user, obj):
             return True
@@ -43,12 +43,16 @@ class CanManageCampaign(BasePermission):
 
         return False
 
-class UserCampaignPermission(BasePermission):
 
+class UserCampaignPermission(BasePermission):
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
         return request.user.is_admin
 
     def has_object_permission(self, request, view, obj: UserCampaign):
-        return request.method in SAFE_METHODS or request.user.is_admin or request.user == obj.user
+        return (
+            request.method in SAFE_METHODS
+            or request.user.is_admin
+            or request.user == obj.user
+        )

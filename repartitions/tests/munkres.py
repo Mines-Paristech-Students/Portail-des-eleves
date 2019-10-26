@@ -11,7 +11,7 @@ from repartitions.models import Proposition, Campaign, UserCampaign, Category, W
 
 class MunkresTestCase(BaseTestCase):
 
-    fixtures = ['authentication.yaml', 'test_repartition_api.yaml']
+    fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
 
     def test_get_project_index(self):
         self.assertEqual(4, get_project_index(5, [1, 1, 1, 1, 1]))
@@ -32,7 +32,7 @@ class MunkresTestCase(BaseTestCase):
             proposition = Proposition(
                 campaign_id=campaign.id,
                 name="proposition_{}".format(i),
-                number_of_places=int(ceil(n_students / n_groups))
+                number_of_places=int(ceil(n_students / n_groups)),
             )
             proposition.save()
             propositions.append(proposition)
@@ -55,21 +55,15 @@ class MunkresTestCase(BaseTestCase):
             user.save()
 
             category = np.random.choice(categories, 1, p=[0.8, 0.1, 0.06, 0.04])[0]
-            uc = UserCampaign(
-                user=user,
-                campaign=campaign,
-                category=category
-            )
+            uc = UserCampaign(user=user, campaign=campaign, category=category)
             uc.save()
             user_campaigns.append(uc)
 
             if i < 157:  # simulate that a few users didn't answer the form
-                for (rank, proposition) in enumerate(np.random.permutation(propositions)):
-                    wish = Wish(
-                        user_campaign=uc,
-                        proposition=proposition,
-                        rank=rank
-                    )
+                for (rank, proposition) in enumerate(
+                    np.random.permutation(propositions)
+                ):
+                    wish = Wish(user_campaign=uc, proposition=proposition, rank=rank)
                     wish.save()
 
         return campaign, propositions, categories, user_campaigns
@@ -77,7 +71,10 @@ class MunkresTestCase(BaseTestCase):
     def test_reparition_is_even(self):
         campaign, _, categories, _ = self.generate_batch_wishes()
         self.login("17bocquet")
-        self.patch("/repartitions/campaigns/{}/".format(campaign.id), data={"status": "RESULTS"})
+        self.patch(
+            "/repartitions/campaigns/{}/".format(campaign.id),
+            data={"status": "RESULTS"},
+        )
 
         res = self.get("/repartitions/{}/results/".format(campaign.id))
         self.assertEqual(res.status_code, 200)
@@ -121,7 +118,10 @@ class MunkresTestCase(BaseTestCase):
             uc.save()
 
         self.login("17bocquet")
-        self.patch("/repartitions/campaigns/{}/".format(campaign.id), data={"status": "RESULTS"})
+        self.patch(
+            "/repartitions/campaigns/{}/".format(campaign.id),
+            data={"status": "RESULTS"},
+        )
 
         self.login("17bocquet")
         res = self.get("/repartitions/{}/results/".format(campaign.id))

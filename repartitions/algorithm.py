@@ -3,9 +3,18 @@ from typing import List
 from scipy.optimize import linear_sum_assignment
 
 from authentication.models import User
-from repartitions.models import Proposition, Wish, Category, Group, Campaign, UserCampaign
+from repartitions.models import (
+    Proposition,
+    Wish,
+    Category,
+    Group,
+    Campaign,
+    UserCampaign,
+)
 
 import numpy as np
+
+
 def get_project_index(index, places):
     s = 0
     for i in range(len(places)):
@@ -19,7 +28,9 @@ def get_project_index(index, places):
     raise Exception("should not happend")
 
 
-def generate_line(uc: UserCampaign, propositions: List[Proposition], places: List[int]) -> List[float]:
+def generate_line(
+    uc: UserCampaign, propositions: List[Proposition], places: List[int]
+) -> List[float]:
     if any(map(lambda x: x < 0, places)):
         raise Exception("places {} is not valid", places)
 
@@ -43,9 +54,9 @@ def generate_line(uc: UserCampaign, propositions: List[Proposition], places: Lis
     return res
 
 
-def make_repartition_for_category(category: Category, propositions: List[Proposition],
-                                  already_used: List[int]) -> \
-        List[List[UserCampaign]]:
+def make_repartition_for_category(
+    category: Category, propositions: List[Proposition], already_used: List[int]
+) -> List[List[UserCampaign]]:
     raw_users_campaign = category.users_campaign.all()
 
     if len(raw_users_campaign) == 0:
@@ -91,7 +102,10 @@ def make_repartition_for_category(category: Category, propositions: List[Proposi
                 break
 
             project_index = get_project_index(place_index, places)
-            if project_index not in propositions or propositions[project_index].id not in groups:
+            if (
+                project_index not in propositions
+                or propositions[project_index].id not in groups
+            ):
                 groups[propositions[project_index].id] = []
 
             uc = user_campaigns[user_index]
@@ -112,8 +126,12 @@ def make_repartition_for_category(category: Category, propositions: List[Proposi
 
 
 # Checks the repartition is always even
-def make_reparitition_proxy(category: Category, campaign: Campaign, propositions: List[Proposition],
-                            already_used: List[int]) -> List[List[User]]:
+def make_reparitition_proxy(
+    category: Category,
+    campaign: Campaign,
+    propositions: List[Proposition],
+    already_used: List[int],
+) -> List[List[User]]:
     group_cardinal_diff = 2
     groups = []
 
@@ -162,10 +180,7 @@ def make_reparition(campaign: Campaign) -> List[Group]:
     for proposition_id, users in store.items():
 
         proposition = Proposition.objects.get(pk=proposition_id)
-        group = Group(
-            proposition=proposition,
-            campaign=campaign
-        )
+        group = Group(proposition=proposition, campaign=campaign)
         group.save()
         group.users.set(users)
         groups.append(group)

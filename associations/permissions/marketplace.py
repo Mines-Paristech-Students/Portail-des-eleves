@@ -16,24 +16,28 @@ def get_marketplace(request):
         marketplace_id = None
 
         try:
-            if 'marketplace' in request.data:
-                marketplace_id = request.data['marketplace']
-            elif 'product' in request.data:
-                marketplace_id = Product.objects.get(id=request.data['product']).marketplace.id
-            elif 'transactions' in request.path:
-                transaction_id = extract_id('transactions', request.path)
+            if "marketplace" in request.data:
+                marketplace_id = request.data["marketplace"]
+            elif "product" in request.data:
+                marketplace_id = Product.objects.get(
+                    id=request.data["product"]
+                ).marketplace.id
+            elif "transactions" in request.path:
+                transaction_id = extract_id("transactions", request.path)
                 if transaction_id:
-                    marketplace_id = Transaction.objects.get(id=transaction_id).product.marketplace.id
-            elif 'products' in request.path:
-                product_id = extract_id('products', request.path)
+                    marketplace_id = Transaction.objects.get(
+                        id=transaction_id
+                    ).product.marketplace.id
+            elif "products" in request.path:
+                product_id = extract_id("products", request.path)
                 if product_id:
                     marketplace_id = Product.objects.get(id=product_id).marketplace.id
-            elif 'funding' in request.path:
-                product_id = extract_id('funding', request.path)
+            elif "funding" in request.path:
+                product_id = extract_id("funding", request.path)
                 if product_id:
                     marketplace_id = Funding.objects.get(id=product_id).marketplace.id
-            elif 'marketplace' in request.path:
-                marketplace_id = extract_id('marketplace', request.path)
+            elif "marketplace" in request.path:
+                marketplace_id = extract_id("marketplace", request.path)
         except ObjectDoesNotExist:
             pass
 
@@ -58,9 +62,11 @@ def get_role_in_marketplace(request):
 
     # Tricky case: when one creates a new marketplace. In that case, the marketplace object does not exist yet.
     # We have to use an association parameter to check the roles.
-    if 'marketplace' in request.path and request.method == 'POST':
-        if 'association' in request.data:
-            role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+    if "marketplace" in request.path and request.method == "POST":
+        if "association" in request.data:
+            role = request.user.get_role(
+                Association.objects.get(pk=request.data["association"])
+            )
     else:
         marketplace = get_marketplace(request)
 
@@ -77,7 +83,7 @@ class MarketplacePermission(BasePermission):
         Simple | R       |          |
     """
 
-    message = 'You are not allowed to edit this marketplace.'
+    message = "You are not allowed to edit this marketplace."
 
     def has_permission(self, request, view):
         role = get_role_in_marketplace(request)
@@ -106,7 +112,7 @@ class ProductPermission(BasePermission):
         Same as Marketplace.
     """
 
-    message = 'You are not allowed to edit this product.'
+    message = "You are not allowed to edit this product."
     has_permission = MarketplacePermission.has_permission
 
 
@@ -117,11 +123,11 @@ class TransactionPermission(BasePermission):
         Simple | CRU     | R        |
     """
 
-    message = 'You are not allowed to edit this transaction.'
+    message = "You are not allowed to edit this transaction."
 
     def has_permission(self, request, view):
-        if request.method in ('DELETE', ):
-            self.message = 'Transactions cannot be deleted.'
+        if request.method in ("DELETE",):
+            self.message = "Transactions cannot be deleted."
             return False
 
         role = get_role_in_marketplace(request)
@@ -149,14 +155,14 @@ class FundingPermission(BasePermission):
         Simple | R       | R        |
     """
 
-    message = 'You are not allowed to access this funding.'
+    message = "You are not allowed to access this funding."
 
     def has_permission(self, request, view):
         role = get_role_in_marketplace(request)
 
         if not role or not role.marketplace:
             # Simple user: read permission only.
-            self.message = 'You are not allowed to edit this funding because you are not a marketplace administrator.'
+            self.message = "You are not allowed to edit this funding because you are not a marketplace administrator."
             return request.method in SAFE_METHODS
         else:
             # Marketplace administrator.
@@ -164,9 +170,14 @@ class FundingPermission(BasePermission):
 
             if marketplace:
                 if marketplace.enabled:
-                    return request.method in SAFE_METHODS or request.method in ('POST', 'PATCH')
+                    return request.method in SAFE_METHODS or request.method in (
+                        "POST",
+                        "PATCH",
+                    )
                 else:
-                    return request.method in SAFE_METHODS or request.method in ('PATCH',)
+                    return request.method in SAFE_METHODS or request.method in (
+                        "PATCH",
+                    )
             # If the marketplace could not be found, give access to the safe methods.
             elif request.method in SAFE_METHODS:
                 return True

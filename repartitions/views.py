@@ -11,9 +11,19 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from repartitions.algorithm import make_reparition
 from repartitions.models import Campaign, UserCampaign, Wish, Proposition, Group
-from repartitions.permissions import CanManageCampaign, user_in_campaign, UserCampaignPermission
-from repartitions.serializers import CampaignSerializer, UserCampaignAdminSerializer, \
-    WishSerializer, GroupAdminSerializer, GroupPublicSerializer, UserCampaignPublicSerializer
+from repartitions.permissions import (
+    CanManageCampaign,
+    user_in_campaign,
+    UserCampaignPermission,
+)
+from repartitions.serializers import (
+    CampaignSerializer,
+    UserCampaignAdminSerializer,
+    WishSerializer,
+    GroupAdminSerializer,
+    GroupPublicSerializer,
+    UserCampaignPublicSerializer,
+)
 
 
 class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -33,7 +43,11 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        queryset = [c for c in queryset if user_in_campaign(request.user, c) or c.manager == request.user]
+        queryset = [
+            c
+            for c in queryset
+            if user_in_campaign(request.user, c) or c.manager == request.user
+        ]
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
@@ -73,13 +87,16 @@ class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
-                'Expected view %s to be called with a URL keyword argument '
-                'named "%s". Fix your URL conf, or set the `.lookup_field` '
-                'attribute on the view correctly.' %
-                (self.__class__.__name__, lookup_url_kwarg)
+            "Expected view %s to be called with a URL keyword argument "
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            "attribute on the view correctly."
+            % (self.__class__.__name__, lookup_url_kwarg)
         )
 
-        filter_kwargs = {"user": self.kwargs["pk"], "campaign": self.kwargs["parent_lookup_campaign"]}
+        filter_kwargs = {
+            "user": self.kwargs["pk"],
+            "campaign": self.kwargs["parent_lookup_campaign"],
+        }
         obj = get_object_or_404(queryset, **filter_kwargs)
 
         # May raise a permission denied
@@ -95,10 +112,11 @@ class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
 
 
 class WishesView(APIView):
-
     def get(self, request, *args, **kwargs):
-        wishes = Wish.objects.filter(user_campaign__user=request.user,
-                                     user_campaign__campaign=kwargs["campaign_id"]).all()
+        wishes = Wish.objects.filter(
+            user_campaign__user=request.user,
+            user_campaign__campaign=kwargs["campaign_id"],
+        ).all()
         serializer = WishSerializer(many=True, instance=wishes)
         return JsonResponse(serializer.data, safe=False)
 
@@ -125,27 +143,40 @@ class WishesView(APIView):
                 propositions_used[wish["proposition"]] += 1
 
         if not all(map(lambda x: x == 1, rank_used.values())):
-            return HttpResponseBadRequest({
-                "status": "error",
-                "message": "not all ranks were used",
-                'debug': rank_used
-            })
+            return HttpResponseBadRequest(
+                {
+                    "status": "error",
+                    "message": "not all ranks were used",
+                    "debug": rank_used,
+                }
+            )
 
         if not all(map(lambda x: x == 1, propositions_used.values())):
-            return HttpResponseBadRequest(json.dumps({
-                "status": "error",
-                "message": "not all propositions were used",
-                "debug": propositions_used
-            }))
+            return HttpResponseBadRequest(
+                json.dumps(
+                    {
+                        "status": "error",
+                        "message": "not all propositions were used",
+                        "debug": propositions_used,
+                    }
+                )
+            )
 
-        Wish.objects.filter(user_campaign__campaign=campaign, user_campaign__user=request.user).delete()
+        Wish.objects.filter(
+            user_campaign__campaign=campaign, user_campaign__user=request.user
+        ).delete()
 
         serializer.save(
-            user_campaign_id=UserCampaign.objects.filter(user=request.user, campaign_id=campaign).first().id)
+            user_campaign_id=UserCampaign.objects.filter(
+                user=request.user, campaign_id=campaign
+            )
+            .first()
+            .id
+        )
         return Response({"status": "ok"}, status=status.HTTP_202_ACCEPTED)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_campaign_results(request, *args, **kwargs):
     campaign = Campaign.objects.get(pk=kwargs["campaign_id"])
     if request.user != campaign.manager or campaign.status == "OPEN":
@@ -155,7 +186,7 @@ def get_campaign_results(request, *args, **kwargs):
     return JsonResponse(serializer.data, safe=False)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_my_campaign_results(request, *args, **kwargs):
     campaign = Campaign.objects.get(pk=kwargs["campaign_id"])
     if campaign.status != "RESULTS":

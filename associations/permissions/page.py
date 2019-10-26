@@ -11,11 +11,11 @@ class PagePermission(BasePermission):
         Simple     | R    |
     """
 
-    message = 'You are not allowed to edit this page.'
+    message = "You are not allowed to edit this page."
 
     def has_permission(self, request, view):
         try:
-            association = Association.objects.get(pk=view.kwargs['association_pk'])
+            association = Association.objects.get(pk=view.kwargs["association_pk"])
         except ObjectDoesNotExist:
             # The association does not exist, return True so the view can raise a 404.
             return True

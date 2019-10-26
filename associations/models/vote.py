@@ -13,12 +13,15 @@ class Election(models.Model):
 
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
 
-    registered_voters = models.ManyToManyField(User, related_name="allow_to_vote")  # People who are allowed to vote
-    voters = models.ManyToManyField(User, related_name="has_voted")  # People who have voted already
+    registered_voters = models.ManyToManyField(
+        User, related_name="allow_to_vote"
+    )  # People who are allowed to vote
+    voters = models.ManyToManyField(
+        User, related_name="has_voted"
+    )  # People who have voted already
 
     starts_at = models.DateTimeField(auto_now_add=True)
     ends_at = models.DateTimeField(auto_now_add=True)
-
 
     max_choice_number = models.PositiveIntegerField(default=1)
 

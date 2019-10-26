@@ -16,8 +16,13 @@ class AuthenticationTestCase(TestCase):
 
     def setUp(self):
         User.objects.create_user(
-            '15veaux', 'Florian', 'Veaux', 'florian.veaux@mines-paristech.fr',
-            'password', '1996-08-28', 15
+            "15veaux",
+            "Florian",
+            "Veaux",
+            "florian.veaux@mines-paristech.fr",
+            "password",
+            "1996-08-28",
+            15,
         )
 
     def test_user(self):
@@ -28,29 +33,26 @@ class BirthdaysTestCase(BackendTestCase):
     """Test the birthdays endpoint logic
     """
 
-    fixtures = ['birthdays_test.json']
+    fixtures = ["birthdays_test.json"]
 
     def setUp(self):
-        self.user = self.create_and_login_user('15veaux', admin=True)
+        self.user = self.create_and_login_user("15veaux", admin=True)
 
     def test_birthdays(self):
         number_of_days = 20
-        url = reverse('get_birthdays', kwargs={'days': number_of_days})
-        bd = json.loads(self.client.get(url).content)['birthdays']
-        dates = [bd[i]['date'] for i in range(len(bd))]
+        url = reverse("get_birthdays", kwargs={"days": number_of_days})
+        bd = json.loads(self.client.get(url).content)["birthdays"]
+        dates = [bd[i]["date"] for i in range(len(bd))]
 
-        self.assertEqual(
-            len(dates),
-            number_of_days,
-        )
+        self.assertEqual(len(dates), number_of_days)
         self.assertListEqual(
-            [len(bd[i]['users']) for i in range(number_of_days)],
-            [5] * number_of_days,
+            [len(bd[i]["users"]) for i in range(number_of_days)], [5] * number_of_days
         )
         self.assertTrue(
             all(
-                datetime.strptime(dates[i], "%Y-%m-%d").date() < datetime.strptime(dates[i + 1], "%Y-%m-%d").date()
+                datetime.strptime(dates[i], "%Y-%m-%d").date()
+                < datetime.strptime(dates[i + 1], "%Y-%m-%d").date()
                 for i in range(number_of_days - 1)
             ),
-            "Birthdays are not sorted correctly"
+            "Birthdays are not sorted correctly",
         )

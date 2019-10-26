@@ -11,7 +11,7 @@ class NewsSubscribedTestCase(BaseNewsTestCase):
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_access_to_news(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.list_subscribed()
         self.assertStatusCode(res, 200)
 
@@ -19,10 +19,7 @@ class NewsSubscribedTestCase(BaseNewsTestCase):
     # CREATE #
     ##########
 
-    news = {
-        'title': 'Une biéro pas loose !',
-        'text': 'On y croyait pas !',
-    }
+    news = {"title": "Une biéro pas loose !", "text": "On y croyait pas !"}
 
     def test_cannot_create(self):
         for user in ALL_USERS:
@@ -47,5 +44,5 @@ class NewsSubscribedTestCase(BaseNewsTestCase):
     def test_cannot_delete(self):
         for user in ALL_USERS:
             self.login(user)
-            res = self.delete(f'{self.endpoint_list_subscribed()}0')
+            res = self.delete(f"{self.endpoint_list_subscribed()}0")
             self.assertStatusCode(res, 404)

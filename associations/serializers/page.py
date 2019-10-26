@@ -9,12 +9,12 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
-        read_only_fields = ('id', 'association',)
-        fields = read_only_fields + ('title', 'text',)
+        read_only_fields = ("id", "association")
+        fields = read_only_fields + ("title", "text")
 
 
 class PageShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        read_only_fields = ('id',)
-        fields = ('title',)
+        read_only_fields = ("id",)
+        fields = ("title",)

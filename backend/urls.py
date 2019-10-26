@@ -22,9 +22,13 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from backend import settings
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/v1/', include(api_urls)),
-    # Uses the smart_selects library for Chained fields but enforces authentication
-    url(r'^chaining/', include('smart_selects_auth.urls')),
-] + staticfiles_urlpatterns() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path("api/v1/", include(api_urls)),
+        # Uses the smart_selects library for Chained fields but enforces authentication
+        url(r"^chaining/", include("smart_selects_auth.urls")),
+    ]
+    + staticfiles_urlpatterns()
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)

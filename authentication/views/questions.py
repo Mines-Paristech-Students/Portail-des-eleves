@@ -5,7 +5,10 @@ from rest_framework.decorators import api_view
 from rest_framework.filters import SearchFilter
 
 from authentication.models import ProfileQuestion, ProfileAnswer
-from authentication.serializers import ProfileQuestionSerializer, ProfileAnswerSerializer
+from authentication.serializers import (
+    ProfileQuestionSerializer,
+    ProfileAnswerSerializer,
+)
 
 
 class ProfileQuestionViewSet(viewsets.ModelViewSet):
@@ -17,18 +20,19 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows user to be viewed or edited.
     """
+
     queryset = ProfileAnswer.objects.all()
     serializer_class = ProfileAnswerSerializer
 
     filter_backends = (SearchFilter, DjangoFilterBackend)
-    search_fields = ('user',)
+    search_fields = ("user",)
 
     def create(self, request, **kwargs):
         request.data["user"] = request.user.id
         return super(ProfileAnswerViewSet, self).create(request)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_profile_questions(request, user_pk):
     questions = ProfileQuestion.objects.all()
     questions = ProfileQuestionSerializer(many=True).to_representation(questions)

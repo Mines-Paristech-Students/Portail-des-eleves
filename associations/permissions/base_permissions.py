@@ -3,7 +3,18 @@ import re
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Association, Library, Marketplace, News, Page, Role, Transaction, Product, Folder, File
+from associations.models import (
+    Association,
+    Library,
+    Marketplace,
+    News,
+    Page,
+    Role,
+    Transaction,
+    Product,
+    Folder,
+    File,
+)
 
 
 def _get_role_for_user(user, association):
@@ -19,7 +30,7 @@ def extract_id(base, string):
         :return the id if found, None otherwise.
     """
     # +* is not greedy.
-    match = re.search(f'{base}/(.+?)/', string)
+    match = re.search(f"{base}/(.+?)/", string)
 
     if match:
         return match.group(1)
@@ -28,14 +39,14 @@ def extract_id(base, string):
 
 
 class CanEditStaticPage(BasePermission):
-    message = 'Editing static page is not allowed.'
+    message = "Editing static page is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'DELETE':
-            page_id = view.kwargs.get('pk', -1)
+        if request.method == "DELETE":
+            page_id = view.kwargs.get("pk", -1)
             try:
                 page = Page.objects.get(pk=page_id)
             except Page.DoesNotExist:
@@ -45,7 +56,7 @@ class CanEditStaticPage(BasePermission):
             asso = page.association
         else:
             try:
-                asso = request.data['association']
+                asso = request.data["association"]
             except KeyError:
                 return False
 
@@ -56,14 +67,14 @@ class CanEditStaticPage(BasePermission):
 
 
 class CanEditNews(BasePermission):
-    message = 'Editing news is not allowed.'
+    message = "Editing news is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'DELETE':
-            news_id = view.kwargs.get('pk', -1)
+        if request.method == "DELETE":
+            news_id = view.kwargs.get("pk", -1)
             try:
                 news = News.objects.get(pk=news_id)
             except News.DoesNotExist:
@@ -73,7 +84,7 @@ class CanEditNews(BasePermission):
             asso = news.association
         else:
             try:
-                asso = request.data['association']
+                asso = request.data["association"]
             except KeyError:
                 return False
 
@@ -84,15 +95,15 @@ class CanEditNews(BasePermission):
 
 
 class CanEditFiles(BasePermission):
-    message = 'Editing files is not allowed.'
+    message = "Editing files is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == 'CREATE':
-            if 'association' in request.data:
-                association = request.data['association']
+        if request.method == "CREATE":
+            if "association" in request.data:
+                association = request.data["association"]
             else:
                 return False
 
@@ -132,15 +143,19 @@ class IsAssociationMember(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        user_id = getattr(request.user, 'id')
-        association_id = request.data.get('association', None)
+        user_id = getattr(request.user, "id")
+        association_id = request.data.get("association", None)
 
         if association_id is not None:
             role = _get_role_for_user(user_id, association_id)
             return role is not None
 
-        return bool(request.user) and bool(request.user.is_authenticated) and bool(request.user.is_admin) and bool(
-            request.user.is_staff)
+        return (
+            bool(request.user)
+            and bool(request.user.is_authenticated)
+            and bool(request.user.is_admin)
+            and bool(request.user.is_staff)
+        )
 
     def has_object_permission(self, request, view, obj):
 
@@ -180,7 +195,7 @@ class IsAssociationAdminOrReadOnly(BasePermission):
     is inferred from either an 'association' field in request.data or the content of request.path.
     """
 
-    message = 'You are not allowed to edit this association because you are not an administrator of this association.'
+    message = "You are not allowed to edit this association because you are not an administrator of this association."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
@@ -190,14 +205,14 @@ class IsAssociationAdminOrReadOnly(BasePermission):
             association_id = None
 
             # The case of 'roles/' is an exception.
-            if 'roles' in request.path:
-                role_id = extract_id('roles', request.path)
+            if "roles" in request.path:
+                role_id = extract_id("roles", request.path)
                 if role_id:
                     association_id = Role.objects.get(id=role_id).association
-            elif 'associations' in request.path:
-                association_id = extract_id('associations', request.path)
-            elif 'association' in request.data:
-                association_id = request.data['association']
+            elif "associations" in request.path:
+                association_id = extract_id("associations", request.path)
+            elif "association" in request.data:
+                association_id = request.data["association"]
 
             if association_id is not None:
                 try:

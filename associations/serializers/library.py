@@ -15,7 +15,7 @@ class CreateLoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ('loanable', 'user')
+        fields = ("loanable", "user")
 
 
 class UpdateLoanSerializer(serializers.ModelSerializer):
@@ -23,29 +23,35 @@ class UpdateLoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ('status', 'loan_date', 'real_return_date', 'expected_return_date')
+        fields = ("status", "loan_date", "real_return_date", "expected_return_date")
 
     @classmethod
     def validate_date_order(cls, data, before_date_field_name, after_date_field_name):
         if data[before_date_field_name] >= data[after_date_field_name]:
-            raise ValidationError({'field_errors': f'field {before_date_field_name} is not consistent with '
-                                                   f'field {after_date_field_name}.'})
+            raise ValidationError(
+                {
+                    "field_errors": f"field {before_date_field_name} is not consistent with "
+                    f"field {after_date_field_name}."
+                }
+            )
 
     @classmethod
     def validate_dates(cls, data):
-        loan_date = data.get('loan_date', None)
-        real_return_date = data.get('real_return_date', None)
-        expected_return_date = data.get('expected_return_date', None)
+        loan_date = data.get("loan_date", None)
+        real_return_date = data.get("real_return_date", None)
+        expected_return_date = data.get("expected_return_date", None)
 
         if loan_date and expected_return_date:
-            cls.validate_date_order(data, 'loan_date', 'expected_return_date')
+            cls.validate_date_order(data, "loan_date", "expected_return_date")
         if loan_date and real_return_date:
-            cls.validate_date_order(data, 'loan_date', 'real_return_date')
+            cls.validate_date_order(data, "loan_date", "real_return_date")
 
     def is_valid(self, raise_exception=False):
         """Check the consistency of the provided dates against themselves, NOT against the updated object."""
 
-        is_valid_super = super(UpdateLoanSerializer, self).is_valid(raise_exception=True)
+        is_valid_super = super(UpdateLoanSerializer, self).is_valid(
+            raise_exception=True
+        )
 
         if is_valid_super:
             try:
@@ -68,8 +74,15 @@ class LoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ("id", "user", "status", "loanable",
-                  "expected_return_date", "loan_date", "real_return_date")
+        fields = (
+            "id",
+            "user",
+            "status",
+            "loanable",
+            "expected_return_date",
+            "loan_date",
+            "real_return_date",
+        )
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
@@ -83,11 +96,13 @@ class LoanableShortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loanable
-        fields = ('name', 'description', 'image', 'comment')
+        fields = ("name", "description", "image", "comment")
 
 
 class LoanableSerializer(serializers.ModelSerializer):
-    library = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=Library.objects)
+    library = serializers.PrimaryKeyRelatedField(
+        many=False, read_only=False, queryset=Library.objects
+    )
 
     class Meta:
         model = Loanable
@@ -96,8 +111,8 @@ class LoanableSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
 
-        res['status'] = 'AVAILABLE' if instance.is_available() else 'BORROWED'
-        res['expected_return_date'] = instance.get_expected_return_date()
+        res["status"] = "AVAILABLE" if instance.is_available() else "BORROWED"
+        res["expected_return_date"] = instance.get_expected_return_date()
 
         return res
 
@@ -105,7 +120,7 @@ class LoanableSerializer(serializers.ModelSerializer):
 class LibraryShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Library
-        fields = ('id', 'enabled', "association")
+        fields = ("id", "enabled", "association")
 
 
 class LibrarySerializer(serializers.ModelSerializer):
@@ -119,11 +134,11 @@ class LibrarySerializer(serializers.ModelSerializer):
         """Create a new instance of Library based upon validated_data."""
 
         # A new Library is linked to an existing association.
-        association_data = validated_data.pop('association')
+        association_data = validated_data.pop("association")
         association = Association.objects.get(pk=association_data)
 
         # A new Library may come with new loanables.
-        loanables_data = validated_data.pop('loanables')
+        loanables_data = validated_data.pop("loanables")
 
         # Insert the Library first, then the loanables, because the newly created Library object is needed to create
         # the loanables.
@@ -133,11 +148,13 @@ class LibrarySerializer(serializers.ModelSerializer):
 
         # Insert the loanables.
         for loanable_data in loanables_data:
-            Loanable.objects.create(name=loanable_data['name'],
-                                    description=loanable_data.get('description', None),
-                                    image=loanable_data.get('image', None),
-                                    comment=loanable_data.get('comment', None),
-                                    library=library)
+            Loanable.objects.create(
+                name=loanable_data["name"],
+                description=loanable_data.get("description", None),
+                image=loanable_data.get("image", None),
+                comment=loanable_data.get("comment", None),
+                library=library,
+            )
 
         return library
 
@@ -147,13 +164,14 @@ class LibrarySerializer(serializers.ModelSerializer):
             The nested fields association and loanables will not be updated.
         """
 
-        instance.enabled = validated_data.get('enabled', instance.enabled)
+        instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
 
-        res['association'] = AssociationsShortSerializer().to_representation(
-            Association.objects.get(pk=res['association']))
+        res["association"] = AssociationsShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
         return res

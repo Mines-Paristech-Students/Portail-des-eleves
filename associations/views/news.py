@@ -12,7 +12,7 @@ from subscriptions.models import AssociationSubscription
 class TimelinePagination(PageNumberPagination):
     page_size = 2
     max_page_size = 10
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
 
 
 class NewsAssociationViewSet(AssociationNestedViewSet):
@@ -24,14 +24,18 @@ class NewsAssociationViewSet(AssociationNestedViewSet):
     permission_classes = (NewsPermission,)
 
     def get_queryset(self):
-        return News.objects.filter(association=self.kwargs['association_pk'])
+        return News.objects.filter(association=self.kwargs["association_pk"])
 
     def perform_update(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"])
+        )
 
     def perform_create(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']),
-                        author=self.request.user)
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"]),
+            author=self.request.user,
+        )
 
 
 class NewsSubscriptionsView(generics.ListAPIView):
@@ -42,5 +46,7 @@ class NewsSubscriptionsView(generics.ListAPIView):
     pagination_class = TimelinePagination
 
     def get_queryset(self):
-        subscriptions = AssociationSubscription.objects.filter(user=self.request.user).values_list('association')
+        subscriptions = AssociationSubscription.objects.filter(
+            user=self.request.user
+        ).values_list("association")
         return News.objects.all().filter(association__in=subscriptions)

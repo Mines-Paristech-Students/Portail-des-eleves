@@ -11,12 +11,12 @@ import rer.urls
 import subscriptions.urls
 
 urlpatterns = [
-    path('', include(associations.urls)),
-    path('', include(authentication.urls)),
-    path('chat/', include(chat.urls)),
-    path('forum/', include(forum.urls)),
-    path('polls/', include(polls.urls)),
-    path('repartitions/', include(repartitions.urls)),
-    path('rer/', include(rer.urls)),
-    path('subscriptions/', include(subscriptions.urls)),
+    path("", include(associations.urls)),
+    path("", include(authentication.urls)),
+    path("chat/", include(chat.urls)),
+    path("forum/", include(forum.urls)),
+    path("polls/", include(polls.urls)),
+    path("repartitions/", include(repartitions.urls)),
+    path("rer/", include(rer.urls)),
+    path("subscriptions/", include(subscriptions.urls)),
 ]

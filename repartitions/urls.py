@@ -1,7 +1,13 @@
 from django.urls import path
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from repartitions.views import CampaignView, UserCampaignView, WishesView, get_campaign_results, get_my_campaign_results
+from repartitions.views import (
+    CampaignView,
+    UserCampaignView,
+    WishesView,
+    get_campaign_results,
+    get_my_campaign_results,
+)
 
 """
 Routes (all nested under /api/v1):
@@ -48,12 +54,12 @@ Routes (all nested under /api/v1):
 """
 
 router = ExtendedSimpleRouter()
-router \
-    .register(r'campaigns', CampaignView, basename='campaigns') \
-    .register(r'users', UserCampaignView, basename='users', parents_query_lookups=['campaign'])
+router.register(r"campaigns", CampaignView, basename="campaigns").register(
+    r"users", UserCampaignView, basename="users", parents_query_lookups=["campaign"]
+)
 
 urlpatterns = [
-  path('<int:campaign_id>/wishes/', WishesView.as_view()),
-  path('<int:campaign_id>/results/', get_campaign_results),
-  path('<int:campaign_id>/results/me', get_my_campaign_results)
+    path("<int:campaign_id>/wishes/", WishesView.as_view()),
+    path("<int:campaign_id>/results/", get_campaign_results),
+    path("<int:campaign_id>/results/me", get_my_campaign_results),
 ] + router.urls

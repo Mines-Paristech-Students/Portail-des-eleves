@@ -16,24 +16,26 @@ def get_library(request):
         library_id = None
 
         try:
-            if 'library' in request.data:
-                library_id = request.data['library']
+            if "library" in request.data:
+                library_id = request.data["library"]
 
-            if 'loanable' in request.data:
-                library_id = Loanable.objects.get(id=request.data['loanable']).library.id
+            if "loanable" in request.data:
+                library_id = Loanable.objects.get(
+                    id=request.data["loanable"]
+                ).library.id
 
-            if 'loans' in request.path:
-                loan_id = extract_id('loans', request.path)
+            if "loans" in request.path:
+                loan_id = extract_id("loans", request.path)
                 if loan_id:
                     library_id = Loan.objects.get(id=loan_id).loanable.library.id
 
-            if 'loanables' in request.path:
-                loanable_id = extract_id('loanables', request.path)
+            if "loanables" in request.path:
+                loanable_id = extract_id("loanables", request.path)
                 if loanable_id:
                     library_id = Loanable.objects.get(id=loanable_id).library.id
 
-            if 'library' in request.path:
-                library_id = extract_id('library', request.path)
+            if "library" in request.path:
+                library_id = extract_id("library", request.path)
         except ObjectDoesNotExist:
             pass
 
@@ -57,11 +59,11 @@ class LoansPermission(BasePermission):
         Simple | CRU     | R        | R         |
     """
 
-    message = 'You are not allowed to edit this loan.'
+    message = "You are not allowed to edit this loan."
 
     def has_permission(self, request, view):
-        if request.method in ('DELETE',):
-            self.message = 'Loans cannot be deleted.'
+        if request.method in ("DELETE",):
+            self.message = "Loans cannot be deleted."
             return False
 
         library = get_library(request)
@@ -90,7 +92,7 @@ class IfLibraryAdminThenCRUDElseR(BasePermission):
         An user has the CRUD permissions iff the user is a library administrator of the edited library.
     """
 
-    message = 'You are not allowed to edit this library because you are not an administrator of this library.'
+    message = "You are not allowed to edit this library because you are not an administrator of this library."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
@@ -100,9 +102,11 @@ class IfLibraryAdminThenCRUDElseR(BasePermission):
 
         # Tricky case: when one creates a new library. In that case, the library object does not exist yet. We have to
         # use an association parameter to check the roles.
-        if 'library' in request.path and request.method == 'POST':
-            if 'association' in request.data:
-                role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+        if "library" in request.path and request.method == "POST":
+            if "association" in request.data:
+                role = request.user.get_role(
+                    Association.objects.get(pk=request.data["association"])
+                )
         else:
             library = get_library(request)
 
@@ -121,23 +125,30 @@ class IfLibraryEnabledThenCRUDElseLibraryAdminOnlyCRUD(BasePermission):
         If the library is disabled, an user has the write permission iff the user is a library administrator of the
         edited library.
     """
-    message = 'You are not allowed to view this library because it is disabled.'
+
+    message = "You are not allowed to view this library because it is disabled."
 
     def has_permission(self, request, view):
-        library_in_path = get_library(request)  # Refactor: what we really want is the role.
+        library_in_path = get_library(
+            request
+        )  # Refactor: what we really want is the role.
 
         if library_in_path:
             if library_in_path.enabled:
                 return True
             else:
-                role = request.user.get_role(Association.objects.get(pk=library_in_path.association.id))
+                role = request.user.get_role(
+                    Association.objects.get(pk=library_in_path.association.id)
+                )
                 if role is not None:
                     return role.library
         else:
             # There was no library ID in the path. We have to look somewhere else.
-            if 'library' in request.path and request.method == 'POST':
-                if 'association' in request.data:
-                    role = request.user.get_role(Association.objects.get(pk=request.data['association']))
+            if "library" in request.path and request.method == "POST":
+                if "association" in request.data:
+                    role = request.user.get_role(
+                        Association.objects.get(pk=request.data["association"])
+                    )
                     if role is not None:
                         return role.library
 

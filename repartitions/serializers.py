@@ -34,7 +34,6 @@ class WishSerializer(serializers.ModelSerializer):
 
 
 class UserCampaignPublicSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserCampaign
         fields = ("user",)
@@ -44,7 +43,7 @@ class UserCampaignAdminSerializer(serializers.ModelSerializer):
     wishes = serializers.SerializerMethodField()
 
     def get_wishes(self, obj):
-        return WishSerializer(many=True).to_representation(getattr(obj, 'wishes', []))
+        return WishSerializer(many=True).to_representation(getattr(obj, "wishes", []))
 
     def to_representation(self, instance: UserCampaign):
         # we make category serialized in read but primary key in write

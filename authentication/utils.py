@@ -32,7 +32,11 @@ class Birthday:
         return Birthday.from_date(d)
 
     def __eq__(self, other):
-        return isinstance(other, Birthday) and self.day == other.day and self.month == other.month
+        return (
+            isinstance(other, Birthday)
+            and self.day == other.day
+            and self.month == other.month
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -90,7 +94,7 @@ class BirthdaysEncoder(json.JSONEncoder):
             # k must be of type Birthday
             dic = {
                 "date": date(day=k.day, month=k.month, year=2000).isoformat(),
-                "users": v
+                "users": v,
             }
             returned_json["birthdays"].append(dic)
         return returned_json

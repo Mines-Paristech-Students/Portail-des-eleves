@@ -5,7 +5,7 @@ from authentication.models import ProfileAnswer, ProfileQuestion, User
 class ProfileQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileQuestion
-        fields = ('id', 'text')
+        fields = ("id", "text")
         read_only_fields = ("id", "text")
 
 
@@ -14,4 +14,4 @@ class ProfileAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProfileAnswer
-        fields = ('id', 'text', 'question', 'user')
+        fields = ("id", "text", "question", "user")

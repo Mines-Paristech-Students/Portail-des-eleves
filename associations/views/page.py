@@ -10,10 +10,14 @@ class PageViewSet(AssociationNestedViewSet):
     permission_classes = (PagePermission,)
 
     def get_queryset(self):
-        return Page.objects.filter(association=self.kwargs['association_pk'])
+        return Page.objects.filter(association=self.kwargs["association_pk"])
 
     def perform_update(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"])
+        )
 
     def perform_create(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"])
+        )

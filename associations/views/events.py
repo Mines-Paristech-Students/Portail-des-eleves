@@ -13,22 +13,26 @@ class EventViewSet(AssociationNestedViewSet):
     permission_classes = (EventsPermission,)
 
     def get_queryset(self):
-        return Event.objects.filter(association=self.kwargs['association_pk'])
+        return Event.objects.filter(association=self.kwargs["association_pk"])
 
     def perform_update(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"])
+        )
 
     def perform_create(self, serializer):
-        serializer.save(association=Association.objects.get(pk=self.kwargs['association_pk']))
+        serializer.save(
+            association=Association.objects.get(pk=self.kwargs["association_pk"])
+        )
 
-    @action(detail=True, methods=('get',))
+    @action(detail=True, methods=("get",))
     def join(self, request, pk, association_pk):
         event = self.get_object()
         event.participants.add(request.user)
-        return Response(data={'event': event.id, 'user': request.user.id})
+        return Response(data={"event": event.id, "user": request.user.id})
 
-    @action(detail=True, methods=('get',))
+    @action(detail=True, methods=("get",))
     def leave(self, request, pk, association_pk):
         event = self.get_object()
         event.participants.remove(request.user)
-        return Response(data={'event': event.id, 'user': request.user.id})
+        return Response(data={"event": event.id, "user": request.user.id})

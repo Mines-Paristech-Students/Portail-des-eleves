@@ -11,7 +11,7 @@ from authentication.serializers.user import UserShortSerializer
 class AssociationsShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Association
-        fields = ('id', 'name', 'logo')
+        fields = ("id", "name", "logo")
 
 
 class AdaptedBulkListSerializerMixin(object):
@@ -21,21 +21,17 @@ class AdaptedBulkListSerializerMixin(object):
         """
 
         if not isinstance(data, list):
-            message = self.error_messages['not_a_list'].format(
+            message = self.error_messages["not_a_list"].format(
                 input_type=type(data).__name__
             )
-            raise ValidationError({
-                'test': [message]
-            }, code='not_a_list')
+            raise ValidationError({"test": [message]}, code="not_a_list")
 
         if not self.allow_empty and len(data) == 0:
             if self.parent and self.partial:
                 raise ValidationError()
 
-            message = self.error_messages['empty']
-            raise ValidationError({
-                'test': [message]
-            }, code='empty')
+            message = self.error_messages["empty"]
+            raise ValidationError({"test": [message]}, code="empty")
 
         ret = []
         errors = []
@@ -43,7 +39,9 @@ class AdaptedBulkListSerializerMixin(object):
         for item in data:
             try:
                 # Code that was inserted
-                self.child.instance = self.instance.get(id=item['id']) if self.instance else None
+                self.child.instance = (
+                    self.instance.get(id=item["id"]) if self.instance else None
+                )
                 self.child.initial_data = item
                 # Until here
                 validated = self.child.run_validation(item)
@@ -71,18 +69,18 @@ class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['user'] = UserShortSerializer(instance.user).data
+        response["user"] = UserShortSerializer(instance.user).data
         return response
 
 
 class RoleShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ('id', 'user', 'association', 'role', 'rank')
+        fields = ("id", "user", "association", "role", "rank")
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['user'] = UserShortSerializer(instance.user).data
+        response["user"] = UserShortSerializer(instance.user).data
         return response
 
 
@@ -98,13 +96,12 @@ class AssociationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Association
-        fields = ('id', 'name', 'logo', 'pages', 'marketplace', 'library', 'my_role')
+        fields = ("id", "name", "logo", "pages", "marketplace", "library", "my_role")
 
     def get_my_role(self, obj):
-        qs = Role.objects.filter(user=self.context['request'].user, association=obj)
+        qs = Role.objects.filter(user=self.context["request"].user, association=obj)
         if qs.exists():
             serializer = RoleSerializer(qs[0])
             return serializer.data
         else:
             return {}
-

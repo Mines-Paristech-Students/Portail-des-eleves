@@ -13,13 +13,19 @@ class Association(models.Model):
 
     logo = models.ImageField(upload_to="associations/logos/", null=True)
 
-    marketplace = models.OneToOneField(Marketplace, on_delete=models.SET_NULL, null=True, related_name="association")
-    library = models.OneToOneField(Library, on_delete=models.SET_NULL, null=True, related_name="association")
+    marketplace = models.OneToOneField(
+        Marketplace, on_delete=models.SET_NULL, null=True, related_name="association"
+    )
+    library = models.OneToOneField(
+        Library, on_delete=models.SET_NULL, null=True, related_name="association"
+    )
 
     is_hidden_1A = models.BooleanField(default=False, verbose_name="Cachée aux 1A")
-    rank = models.IntegerField(default=0,
-                               help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour"
-                                         "les valeurs égales)")
+    rank = models.IntegerField(
+        default=0,
+        help_text="Ordre d'apparition dans la liste des associations (ordre alphabétique pour"
+        "les valeurs égales)",
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,27 +52,23 @@ class Role(models.Model):
     id = models.AutoField(primary_key=True)
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=False,
-        related_name="roles"
+        User, on_delete=models.CASCADE, null=False, related_name="roles"
     )
     association = models.ForeignKey(
-        Association,
-        on_delete=models.CASCADE,
-        null=False,
-        related_name="roles"
+        Association, on_delete=models.CASCADE, null=False, related_name="roles"
     )
     role = models.CharField(max_length=200, null=False)
     rank = models.IntegerField(
         default=0,
-        help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)"
+        help_text="Ordre d'apparition dans la liste des membres de l'asso (ordre alphabétique pour les valeurs égales)",
     )
 
     is_admin = models.BooleanField(default=False)
-    is_archived = models.BooleanField(default=False,
-                                      help_text='Archived roles are not operating anymore but they allow to remember'
-                                                'who was in the association.')
+    is_archived = models.BooleanField(
+        default=False,
+        help_text="Archived roles are not operating anymore but they allow to remember"
+        "who was in the association.",
+    )
 
     # Permissions:
     events_permission = models.BooleanField(default=False)
