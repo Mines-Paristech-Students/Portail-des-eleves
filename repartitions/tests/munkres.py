@@ -2,6 +2,7 @@ import json
 from math import ceil
 
 import numpy as np
+from nose.tools import raises
 
 from associations.tests.base_test import BaseTestCase
 from authentication.models import User
@@ -134,3 +135,30 @@ class MunkresTestCase(BaseTestCase):
                 if user["id"] in to_find:
                     to_find.remove(user["id"])
             self.assertEqual(len(to_find), 0)
+
+    @raises(Exception)
+    def test_impossible_fixity(self):
+        """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
+        per group """
+        campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
+            2, 5
+        )
+
+        campaign.manager = User.objects.get(pk="17bocquet")
+        campaign.save()
+
+        categories_uc = {}
+
+        for uc in user_campaigns:
+            categories_uc[uc.category.id] = categories_uc.get(uc.category.id, []) + [uc]
+
+        for i in range(3):
+            uc = categories_uc[2][i]
+            uc.fixed_to = propositions[0]
+            uc.save()
+
+        self.login("17bocquet")
+        self.patch(
+            "/repartitions/campaigns/{}/".format(campaign.id),
+            data={"status": "RESULTS"},
+        )

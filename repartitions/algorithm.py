@@ -160,16 +160,32 @@ def make_reparitition_proxy(
 
 
 def make_reparition(campaign: Campaign) -> List[Group]:
-    propositions = Proposition.objects.filter(campaign=campaign).all()
+    propositions = campaign.proposition_set.all()
+    categories = campaign.categories.all()
 
     already_used = [0] * len(propositions)
     store = {}
 
-    categories = Category.objects.filter(campaign=campaign).all()
-
     for category in categories:
         if category.users_campaign.count() == 0:
             continue
+
+        # Check the repartition is feasible
+        fixed_users = category.users_campaign.all()
+        fixed_to = {}
+        for uc in fixed_users:
+            fixed_to[uc.fixed_to] = fixed_to.get(uc.fixed_to, 0) + 1
+        del fixed_to[None]
+        if len(fixed_to) > 0 and max(fixed_to.values()) - min(fixed_to.values()) > 1:
+            raise Exception(
+                "Impossible to find an even repartition, {} out of {} users fixed to {}".format(
+                    max(fixed_to.values()),
+                    category.users_campaign.count(),
+                    np.argmax(fixed_to),
+                )
+            )
+
+        # dispatch users
         groups = make_reparitition_proxy(category, campaign, propositions, already_used)
 
         for i, proposition in enumerate(propositions):
