@@ -69,99 +69,94 @@ def make_repartition_for_category(
         else:
             fixed_user_campaigns.append(uc)
 
-    groups = {}
+    repartition_cardinal_diff = 2
+    penalty = [0] * len(already_used)
+    while repartition_cardinal_diff > 1:
+        repartition = [[] for _ in propositions]
+        proposition_id_to_index = {
+            proposition.id: i for i, proposition in enumerate(propositions)
+        }
 
-    if len(user_campaigns) > 0:
-        places = []
-        s = 0  # Nombre de places allouées pour le groupe
-        for i in range(len(propositions)):
-            n = -already_used[i]
-            s += n
-            places.append(n)
+        if len(fixed_user_campaigns) > 0:
+            for uc in fixed_user_campaigns:
+                repartition[proposition_id_to_index[uc.fixed_to.id]].append(uc)
 
-        while s < len(user_campaigns):
-            for i in range(len(places)):
-                s += 1
-                places[i] += 1
+        if len(user_campaigns) > 0:
+            places = []
+            s = 0  # Nombre de places allouées pour le groupe
+            for i, proposition in enumerate(propositions):
+                n = -already_used[i]
+                n -= len(repartition)
+                n -= penalty[i]
+                s += n
+                places.append(n)
 
-        print("places=", places, end=" ")
+            while s < len(user_campaigns):
+                for i in range(len(places)):
+                    s += 1
+                    places[i] += 1
 
-        cost_matrix = []
-        for uc in user_campaigns:
-            cost_matrix.append(generate_line(uc, propositions, places))
+            print("      places : {}".format(places))
 
-        while len(cost_matrix) < len(cost_matrix[0]):
-            cost_matrix.append([0] * len(cost_matrix[0]))
+            cost_matrix = []
+            for uc in user_campaigns:
+                cost_matrix.append(generate_line(uc, propositions, places))
 
-        print(np.array(cost_matrix))
+            # make the matrix square
+            while len(cost_matrix) < len(cost_matrix[0]):
+                cost_matrix.append([0] * len(cost_matrix[0]))
 
-        links = linear_sum_assignment(cost_matrix)
+            links = linear_sum_assignment(cost_matrix)
 
-        for user_index, place_index in zip(links[0], links[1]):
-            if user_index >= len(user_campaigns):
-                break
+            for user_index, place_index in zip(links[0], links[1]):
+                if user_index >= len(user_campaigns):
+                    break
 
-            project_index = get_project_index(place_index, places)
-            if (
-                project_index not in propositions
-                or propositions[project_index].id not in groups
-            ):
-                groups[propositions[project_index].id] = []
+                project_index = get_project_index(place_index, places)
+                uc = user_campaigns[user_index]
+                repartition[project_index].append(uc)
 
-            uc = user_campaigns[user_index]
-            groups[propositions[project_index].id].append(uc)
+            repartition_size = list(map(len, repartition))
+            repartition_cardinal_diff = max(repartition_size) - min(repartition_size)
 
-    if len(fixed_user_campaigns) > 0:
-        for uc in fixed_user_campaigns:
-            if uc.fixed_to.id not in groups:
-                groups[uc.fixed_to.id] = []
+            penalty[np.argmax(repartition_size)] += 1
 
-            groups[uc.fixed_to.id].append(uc)
+    print_repartition = []
+    for i in repartition:
+        print_repartition.append(len(i))
+    print(" repartition : {}".format(print_repartition))
 
-    res = []
-    for proposition in propositions:
-        res.append(groups.get(proposition.id, []))
-
-    return res
+    return repartition
 
 
 # Checks the repartition is always even
 def make_reparitition_proxy(
-    category: Category,
-    campaign: Campaign,
-    propositions: List[Proposition],
-    already_used: List[int],
+    category: Category, propositions: List[Proposition], already_used: List[int]
 ) -> List[List[User]]:
     group_cardinal_diff = 2
     groups = []
 
-    penalty = [0] * len(already_used)
+    already_used = np.array(already_used)
+    penalty = np.array([0] * len(already_used))
 
     while group_cardinal_diff > 1:
-        used_places = [0] * len(already_used)
-        for i in range(len(already_used)):
-            used_places[i] = already_used[i] + penalty[i]
-        print("penalty=", penalty, end=" ")
-        print("used_places=", np.array(used_places), end=" ")
-
+        used_places = already_used + penalty
         groups = make_repartition_for_category(category, propositions, used_places)
 
         rep = [0] * len(used_places)
         for i in range(len(propositions)):
             rep[i] = len(groups[i])
 
-        group_cardinal = np.array(rep) + np.array(already_used)
+        group_cardinal = np.array(rep) + already_used
         penalty[np.argmax(group_cardinal)] += 1
-        print("cardinal=", group_cardinal, "rep=", rep)
         group_cardinal_diff = max(group_cardinal) - min(group_cardinal)
 
-    print("endproxy")
     return groups
 
 
 def make_reparition(campaign: Campaign) -> List[Group]:
-    propositions = campaign.proposition_set.all()
-    categories = campaign.categories.all()
+    propositions = list(campaign.propositions.all())
+    categories = list(campaign.categories.all())
 
     already_used = [0] * len(propositions)
     store = {}
@@ -171,12 +166,17 @@ def make_reparition(campaign: Campaign) -> List[Group]:
             continue
 
         # Check the repartition is feasible
-        fixed_users = category.users_campaign.all()
+        user_campaigns = category.users_campaign.all()
         fixed_to = {}
-        for uc in fixed_users:
-            fixed_to[uc.fixed_to] = fixed_to.get(uc.fixed_to, 0) + 1
-        del fixed_to[None]
-        if len(fixed_to) > 0 and max(fixed_to.values()) - min(fixed_to.values()) > 1:
+        for uc in user_campaigns:
+            if uc.fixed_to is not None:
+                fixed_to[uc.fixed_to.id] = fixed_to.get(uc.fixed_to.id, 0) + 1
+
+        # if it's not possible for the repartition to compensate the inequalities created by fixity
+        if len(fixed_to) > 0 and (max(fixed_to.values()) - 1) * len(propositions) > len(
+            user_campaigns
+        ):
+            print(fixed_to)
             raise Exception(
                 "Impossible to find an even repartition, {} out of {} users fixed to {}".format(
                     max(fixed_to.values()),
@@ -186,12 +186,13 @@ def make_reparition(campaign: Campaign) -> List[Group]:
             )
 
         # dispatch users
-        groups = make_reparitition_proxy(category, campaign, propositions, already_used)
+        groups = make_reparitition_proxy(category, propositions, already_used)
 
         for i, proposition in enumerate(propositions):
             store[proposition.id] = store.get(proposition.id, []) + groups[i]
             already_used[i] += len(groups[i])
-
+        print("already used : {}".format(already_used))
+        print("")
     groups = []
     for proposition_id, users in store.items():
 

@@ -91,6 +91,9 @@ class MunkresTestCase(BaseTestCase):
             for k in counts.keys():
                 counts[k].append(count[k])
 
+        for k, v in counts.items():
+            print(k, " -> ", v)
+
         for c in counts.values():
             m, M = min(c), max(c)
             self.assertLessEqual(M - m, 1)
@@ -130,10 +133,14 @@ class MunkresTestCase(BaseTestCase):
         groups = json.loads(res.content)
 
         for group in groups:
+            if group["proposition"] not in expectations:
+                self.assertIn(group["proposition"], map(lambda p: p.id, propositions))
+                continue
+
             to_find = expectations[group["proposition"]]
-            for user in group["users"]:
-                if user["id"] in to_find:
-                    to_find.remove(user["id"])
+            for uc in group["users"]:
+                if uc["user"] in to_find:
+                    to_find.remove(uc["user"])
             self.assertEqual(len(to_find), 0)
 
     @raises(Exception)
@@ -162,3 +169,14 @@ class MunkresTestCase(BaseTestCase):
             "/repartitions/campaigns/{}/".format(campaign.id),
             data={"status": "RESULTS"},
         )
+
+    # todo : check repartition is fiseable globally
+    # ex :
+    #   category 1 - 3 users :
+    #       group 1: fix 2
+    #       group 2: fix 1
+    #   category 2 - 3 users :
+    #       group 1: fix 2
+    #       group 2: fix 1
+    #
+    # cannot be evenly dispatched

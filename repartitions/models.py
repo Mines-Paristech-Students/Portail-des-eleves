@@ -27,7 +27,9 @@ class Category(models.Model):
 class Proposition(models.Model):
     id = models.AutoField(primary_key=True)
 
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(
+        Campaign, on_delete=models.CASCADE, related_name="propositions"
+    )
     name = models.CharField(max_length=200, blank=True, null=True, default=None)
     number_of_places = models.IntegerField()
 
