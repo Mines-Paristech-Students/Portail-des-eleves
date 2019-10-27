@@ -160,23 +160,6 @@ def make_reparition(campaign: Campaign) -> List[Group]:
     for i in range(len(categories)):
         category = categories[i]
 
-        # todo: remove ?
-        # anticipation_penalty = [0] * len(propositions)
-        # if i < len(categories) - 1:
-        #     next_category = categories[i + 1]
-        #     max_users_per_project = np.ceil(
-        #         next_category.users_campaign.count() / len(propositions)
-        #     )
-        #
-        #     fixations = {}
-        #     for uc in next_category.users_campaign.all():
-        #         if uc.fixed_to:
-        #             fixations[uc.fixed_to.id] = fixations.get(uc.fixed_to.id, 0) + 1
-        #
-        #     for i, proposition in enumerate(propositions):
-        #         if fixations.get(proposition.id, 0) == max_users_per_project:
-        #             anticipation_penalty[i] += 1
-
         if category.users_campaign.count() == 0:
             continue
 
