@@ -9,7 +9,11 @@ from rest_framework.views import APIView
 
 from associations.models import Folder, File
 from associations.permissions import CanEditFiles
-from associations.serializers.filesystem import FolderSerializer, FileSerializer, SubmitFileSerializer
+from associations.serializers.filesystem import (
+    FolderSerializer,
+    FileSerializer,
+    SubmitFileSerializer,
+)
 
 
 class FileSystemView(APIView):
@@ -19,11 +23,13 @@ class FileSystemView(APIView):
         folders = Folder.objects.filter(association__id=association_id, parent=None)
         files = File.objects.filter(association__id=association_id, folder=None)
 
-        return JsonResponse({
-            "name": association_id,
-            "children": FolderSerializer(many=True).to_representation(folders),
-            "files": FileSerializer(many=True).to_representation(files)
-        })
+        return JsonResponse(
+            {
+                "name": association_id,
+                "children": FolderSerializer(many=True).to_representation(folders),
+                "files": FileSerializer(many=True).to_representation(files),
+            }
+        )
 
 
 class FolderViewSet(viewsets.ModelViewSet):
@@ -69,9 +75,13 @@ class FileViewSet(viewsets.ModelViewSet):
     permission_classes = (CanEditFiles,)
 
     def create(self, request, *args, **kwargs):
-        serializer = SubmitFileSerializer(data=request.data, context={'request': request})
+        serializer = SubmitFileSerializer(
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )

@@ -20,10 +20,21 @@ class FolderShortSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ("id", "name", "description", "association", "file", "folder", "uploaded_on", "uploaded_by")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "association",
+            "file",
+            "folder",
+            "uploaded_on",
+            "uploaded_by",
+        )
         read_only_fields = ("uploaded_on", "uploaded_by", "file")
 
-    folder = serializers.PrimaryKeyRelatedField(allow_null=True, queryset=Folder.objects.all())
+    folder = serializers.PrimaryKeyRelatedField(
+        allow_null=True, queryset=Folder.objects.all()
+    )
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
@@ -45,18 +56,11 @@ class SubmitFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = (
-            'id',
-            'name',
-            'description',
-            'association',
-            'file',
-            'folder'
-        )
+        fields = ("id", "name", "description", "association", "file", "folder")
 
     def create(self, validated_data):
         file_data = validated_data
-        file_data['uploaded_by'] = self.context['request'].user
+        file_data["uploaded_by"] = self.context["request"].user
 
         # Create the new file
         file = File.objects.create(**file_data)
@@ -81,10 +85,7 @@ class FolderSerializer(serializers.ModelSerializer):
 
         folder = instance.parent
         while folder is not None:
-            res["filiation"].append({
-                "id": folder.id,
-                "name": folder.name
-            })
+            res["filiation"].append({"id": folder.id, "name": folder.name})
             folder = folder.parent
 
         return res

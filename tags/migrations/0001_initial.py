@@ -10,46 +10,128 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('forum', '0001_initial'),
-        ('associations', '0001_initial'),
-    ]
+    dependencies = [("forum", "0001_initial"), ("associations", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
-            name='Namespace',
+            name="Namespace",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('scope', models.CharField(choices=[('association', associations.models.association.Association), ('forum_theme', forum.models.Theme), ('global', None)], max_length=50)),
-                ('scoped_to', models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                (
+                    "scope",
+                    models.CharField(
+                        choices=[
+                            (
+                                "association",
+                                associations.models.association.Association,
+                            ),
+                            ("forum_theme", forum.models.Theme),
+                            ("global", None),
+                        ],
+                        max_length=50,
+                    ),
+                ),
+                ("scoped_to", models.CharField(blank=True, max_length=50, null=True)),
             ],
-            options={
-                'unique_together': {('name', 'scope', 'scoped_to')},
-            },
+            options={"unique_together": {("name", "scope", "scoped_to")}},
         ),
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value', models.CharField(max_length=50)),
-                ('association', models.ManyToManyField(related_name='tags', to='associations.Association')),
-                ('choice', models.ManyToManyField(related_name='tags', to='associations.Choice')),
-                ('event', models.ManyToManyField(related_name='tags', to='associations.Event')),
-                ('file', models.ManyToManyField(related_name='tags', to='associations.File')),
-                ('folder', models.ManyToManyField(related_name='tags', to='associations.Folder')),
-                ('loan', models.ManyToManyField(related_name='tags', to='associations.Loan')),
-                ('loanable', models.ManyToManyField(related_name='tags', to='associations.Loanable')),
-                ('message_forum', models.ManyToManyField(related_name='tags', to='forum.MessageForum')),
-                ('namespace', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tags', to='tags.Namespace')),
-                ('page', models.ManyToManyField(related_name='tags', to='associations.Page')),
-                ('product', models.ManyToManyField(related_name='tags', to='associations.Product')),
-                ('role', models.ManyToManyField(related_name='tags', to='associations.Role')),
-                ('theme', models.ManyToManyField(related_name='tags', to='forum.Theme')),
-                ('topic', models.ManyToManyField(related_name='tags', to='forum.Topic')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("value", models.CharField(max_length=50)),
+                (
+                    "association",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Association"
+                    ),
+                ),
+                (
+                    "choice",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Choice"
+                    ),
+                ),
+                (
+                    "event",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Event"
+                    ),
+                ),
+                (
+                    "file",
+                    models.ManyToManyField(related_name="tags", to="associations.File"),
+                ),
+                (
+                    "folder",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Folder"
+                    ),
+                ),
+                (
+                    "loan",
+                    models.ManyToManyField(related_name="tags", to="associations.Loan"),
+                ),
+                (
+                    "loanable",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Loanable"
+                    ),
+                ),
+                (
+                    "message_forum",
+                    models.ManyToManyField(
+                        related_name="tags", to="forum.MessageForum"
+                    ),
+                ),
+                (
+                    "namespace",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tags",
+                        to="tags.Namespace",
+                    ),
+                ),
+                (
+                    "page",
+                    models.ManyToManyField(related_name="tags", to="associations.Page"),
+                ),
+                (
+                    "product",
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Product"
+                    ),
+                ),
+                (
+                    "role",
+                    models.ManyToManyField(related_name="tags", to="associations.Role"),
+                ),
+                (
+                    "theme",
+                    models.ManyToManyField(related_name="tags", to="forum.Theme"),
+                ),
+                (
+                    "topic",
+                    models.ManyToManyField(related_name="tags", to="forum.Topic"),
+                ),
             ],
-            options={
-                'unique_together': {('value', 'namespace')},
-            },
+            options={"unique_together": {("value", "namespace")}},
         ),
     ]

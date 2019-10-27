@@ -14,6 +14,7 @@ class JWTSetCookiesView(generics.GenericAPIView):
     """
     This class gets creates a JWT token and sets it as a cookie
     """
+
     is_prod_mode = settings.is_prod_mode()
     serializer_class = TokenSerializer
     permission_classes = ()
@@ -25,8 +26,10 @@ class JWTSetCookiesView(generics.GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
-        access_token = data['access']
-        access_token_expiration = (datetime.now() + api_settings.ACCESS_TOKEN_LONG_LIFETIME)
+        access_token = data["access"]
+        access_token_expiration = (
+            datetime.now() + api_settings.ACCESS_TOKEN_LONG_LIFETIME
+        )
         response = HttpResponse(status=status.HTTP_200_OK)
         response.set_cookie(
             api_settings.ACCESS_TOKEN_COOKIE_NAME,
@@ -42,6 +45,7 @@ class LogoutView(generics.GenericAPIView):
     """
     This class removes the JWT token saved on the client browser
     """
+
     is_prod_mode = settings.is_prod_mode()
 
     def post(self, request, *args, **kwargs):
@@ -65,11 +69,16 @@ class CheckCredentials(generics.GenericAPIView):
     """
     This class gets both JWT tokens and sets them as secure cookies.
     """
+
     is_prod_mode = settings.is_prod_mode()
     authentication_classes = (JWTCookieAuthentication,)
 
     def post(self, request, *args, **kwargs):
         return Response(
-            {"id": request.user.id, "first_name": request.user.first_name, "last_name": request.user.last_name},
-            status=status.HTTP_200_OK)
-
+            {
+                "id": request.user.id,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+            },
+            status=status.HTTP_200_OK,
+        )

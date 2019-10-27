@@ -29,7 +29,7 @@ class Token(object):
             try:
                 self.payload = self.token_backend.decode(token)
             except TokenError:
-                raise TokenError('Token is invalid or expired')
+                raise TokenError("Token is invalid or expired")
 
             if verify:
                 self.verify()
@@ -38,11 +38,17 @@ class Token(object):
             self.payload = {}
 
             # Set "exp" claim with default value
-            access_token_lifetime = api_settings.ACCESS_TOKEN_LONG_LIFETIME if longAuth else api_settings.ACCESS_TOKEN_LIFETIME
-            self.payload['exp'] = int((datetime.utcnow() + access_token_lifetime).timestamp())
+            access_token_lifetime = (
+                api_settings.ACCESS_TOKEN_LONG_LIFETIME
+                if longAuth
+                else api_settings.ACCESS_TOKEN_LIFETIME
+            )
+            self.payload["exp"] = int(
+                (datetime.utcnow() + access_token_lifetime).timestamp()
+            )
 
             # Set "jti" claim
-            self.payload['jti'] = uuid4().hex
+            self.payload["jti"] = uuid4().hex
 
     def __repr__(self):
         return repr(self.payload)
@@ -75,14 +81,14 @@ class Token(object):
         token was decoded.  This method is part of the "public" API to indicate
         the intention that it may be overridden in subclasses.
         """
-        if 'jti' not in self.payload:
-            raise TokenError('Token has no jti claim')
-        if 'jti' not in self.payload:
-            raise TokenError('Token has no exp claim')
+        if "jti" not in self.payload:
+            raise TokenError("Token has no jti claim")
+        if "jti" not in self.payload:
+            raise TokenError("Token has no exp claim")
 
-        claim_time = datetime.fromtimestamp(self.payload['exp'])
+        claim_time = datetime.fromtimestamp(self.payload["exp"])
         if claim_time <= datetime.now():
-            raise TokenError('Token has expired')
+            raise TokenError("Token has expired")
 
     @classmethod
     def for_user(cls, user, longAuth=False):
