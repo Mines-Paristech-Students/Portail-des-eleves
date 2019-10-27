@@ -130,3 +130,9 @@ class AssociationSerializer(serializers.ModelSerializer):
     def get_my_role(self, obj):
         role = self.context["request"].user.get_role(obj)
         return RoleSerializer(role).data if role else {}
+
+
+class AssociationLogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        fields = ("logo",)

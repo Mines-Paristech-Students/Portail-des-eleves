@@ -1,3 +1,4 @@
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.text import slugify
@@ -5,6 +6,9 @@ from django.utils.text import slugify
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
 from authentication.models import User
+from backend.settings import MEDIA_ROOT
+
+fs = FileSystemStorage(location=MEDIA_ROOT)
 
 
 class Association(models.Model):
