@@ -1,4 +1,4 @@
-from associations.models import File, Folder
+from associations.models import Media, Folder
 from tags.tests.base_test import BaseTestCase
 
 
@@ -12,7 +12,7 @@ class TagNamespaceInheritanceTestCase(BaseTestCase):
         res = self.post("/tags/link/folder/1/tag/1/")
         self.assertStatusCode(res, 201)
 
-        for file in File.objects.all():
+        for file in Media.objects.all():
             tags = file.inherited_tags.all()
             self.assertEqual(len(tags), 1)
             self.assertEqual(tags[0].id, 1)
@@ -31,7 +31,7 @@ class TagNamespaceInheritanceTestCase(BaseTestCase):
         res = self.delete("/tags/link/folder/1/tag/1/")
         self.assertStatusCode(res, 204)
 
-        for file in File.objects.all():
+        for file in Media.objects.all():
             self.assertEqual(len(file.inherited_tags.all()), 0)
             self.assertEqual(len(file.tags.all()), 0)
 

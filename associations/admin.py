@@ -27,7 +27,7 @@ class RoleAdmin(admin.ModelAdmin):
                     "library",
                     "vote",
                     "events",
-                    "files",
+                    "medias",
                 )
             },
         ),

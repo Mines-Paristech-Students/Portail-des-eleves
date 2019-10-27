@@ -5,7 +5,7 @@ from associations.models import (
     Association,
     Election,
     Event,
-    File,
+    Media,
     Folder,
     Funding,
     Library,
@@ -33,7 +33,7 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             Association: Q(tags__is_hidden=True),
             Election: Q(association__tags__is_hidden=True),
             Event: Q(association__tags__is_hidden=True),
-            File: Q(tags__is_hidden=True)
+            Media: Q(tags__is_hidden=True)
             | Q(inherited_tags__is_hidden=True)
             | Q(association__tags__is_hidden=True),
             Folder: Q(tags__is_hidden=True)

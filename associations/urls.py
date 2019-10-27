@@ -17,7 +17,7 @@ from associations.views import (
     ElectionViewSet,
     CreateBallotView,
 )
-from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
+from associations.views.media import MediaViewSet
 
 urlpatterns = []
 router = BulkRouter()
@@ -34,16 +34,8 @@ urlpatterns.append(
 # Events.
 router.register(r"events", EventViewSet)
 
-# Filesystem.
-router.register(r"files", FileViewSet)
-router.register(r"folders", FolderViewSet)
-urlpatterns.append(
-    path(
-        "associations/<slug:association_id>/filesystem/root/",
-        FileSystemView.as_view(),
-        name="file-system",
-    )
-)
+# Medias.
+router.register(r"medias", MediaViewSet)
 
 # Library.
 router.register(r"library", LibraryViewSet)

@@ -13,7 +13,7 @@ class NamespaceSerializer(serializers.ModelSerializer):
         if len(data) == 0:
             return data
 
-        if bool(Namespace.SCOPES.get(data.get("scope", None), False)) != bool(
+        if bool(Namespace.SCOPED_TO_MODELS.get(data.get("scope", None), False)) != bool(
             data.get("scoped_to", False)
         ):  # logical XOR
             raise serializers.ValidationError(
@@ -22,7 +22,7 @@ class NamespaceSerializer(serializers.ModelSerializer):
 
         data_scope = data.get("scope")
         if data_scope:
-            namespace_scope = Namespace.SCOPES.get(
+            namespace_scope = Namespace.SCOPED_TO_MODELS.get(
                 data_scope, "no_scope"
             )  # None is already the value for global scope
             if namespace_scope is not None and not namespace_scope.objects.get(

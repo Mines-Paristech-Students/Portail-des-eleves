@@ -79,12 +79,14 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "file",
-                    models.ManyToManyField(related_name="tags", to="associations.File"),
+                    models.ManyToManyField(
+                        related_name="tags", to="associations.Media"
+                    ),
                 ),
                 (
                     "file_by_inheritance",
                     models.ManyToManyField(
-                        related_name="inherited_tags", to="associations.File"
+                        related_name="inherited_tags", to="associations.Media"
                     ),
                 ),
                 (

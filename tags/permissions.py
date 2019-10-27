@@ -9,7 +9,7 @@ from associations.models import (
     Loanable,
     Loan,
     Folder,
-    File,
+    Media,
     Event,
     Choice,
 )
@@ -26,7 +26,7 @@ def get_parent_object(obj):
         Association: lambda x: x,
         Choice: lambda x: x.election.association,
         Event: lambda x: x.association,
-        File: lambda x: x.association,
+        Media: lambda x: x.association,
         Folder: lambda x: x.association,
         Loan: lambda x: x.loanable.library.association,
         Loanable: lambda x: x.library.association,
@@ -61,8 +61,10 @@ def can_manage_tags_for(user, instance):
 def user_can_link_tag_to(user: User, tag: Tag, instance):
     parent = get_parent_object(instance)
     if (
-        not isinstance(parent, Namespace.SCOPES[tag.namespace.scope])
-        or parent.id != tag.namespace.scoped_to
+        not isinstance(
+            parent, Namespace.SCOPED_TO_MODELS[tag.namespace.scoped_to_model]
+        )
+        or parent.id != tag.namespace.scoped_to_pk
     ):
         return False
 
@@ -115,7 +117,7 @@ class ManageTagPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, tag):
         namespace = tag.namespace
-        if Namespace.SCOPES[namespace.scope] is None:
+        if Namespace.SCOPED_TO_MODELS[namespace.scope] is None:
             return request.user.is_admin
         else:
             instance = namespace.get_scope_instance()

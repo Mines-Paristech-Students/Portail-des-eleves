@@ -2,7 +2,7 @@ import datetime
 
 from django.db.models import Q
 
-from associations.models import Association, Folder, File, Page, Role
+from associations.models import Association, Media, Page, Role
 from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
 from tags.models import Tag
@@ -24,7 +24,7 @@ class HidingTestCase(BaseTestCase):
         links = [
             (Association, "hidden_association"),
             (Folder, 4),
-            (File, 3),
+            (Media, 3),
             (Page, 3),
             (Role, 3),
             (Theme, 2),

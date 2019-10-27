@@ -23,7 +23,7 @@ class EventsPermission(BasePermission):
     def has_object_permission(self, request, view, election):
         role = request.user.get_role(election.association)
 
-        if role and role.events:  # Events administrator.
+        if role and role.event:  # Events administrator.
             return True
         else:
             return request.method in SAFE_METHODS

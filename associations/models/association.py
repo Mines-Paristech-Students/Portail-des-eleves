@@ -71,8 +71,8 @@ class Role(models.Model):
     PERMISSION_NAMES = (
         "administration",
         "election",
-        "events",
-        "filesystem",
+        "event",
+        "media",
         "library",
         "marketplace",
         "page",
@@ -101,7 +101,7 @@ class Role(models.Model):
     administration_permission = models.BooleanField(default=False)
     election_permission = models.BooleanField(default=False)
     events_permission = models.BooleanField(default=False)
-    filesystem_permission = models.BooleanField(default=False)
+    media_permission = models.BooleanField(default=False)
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
     page_permission = models.BooleanField(default=False)
@@ -115,12 +115,12 @@ class Role(models.Model):
         return self.election_permission and not self.is_archived
 
     @cached_property
-    def events(self):
+    def event(self):
         return self.events_permission and not self.is_archived
 
     @cached_property
-    def filesystem(self):
-        return self.filesystem_permission and not self.is_archived
+    def media(self):
+        return self.media_permission and not self.is_archived
 
     @cached_property
     def library(self):
