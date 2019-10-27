@@ -7,26 +7,29 @@ from tags.models import Tag, Namespace
 class NamespaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Namespace
-        fields = ("id", "name", "scope", "scoped_to")
+        read_only_fields = ("id",)
+        fields = read_only_fields + ("name", "scoped_to_pk", "scoped_to_model")
 
     def validate(self, data):
         if len(data) == 0:
             return data
 
-        if bool(Namespace.SCOPED_TO_MODELS.get(data.get("scope", None), False)) != bool(
-            data.get("scoped_to", False)
+        if bool(
+            Namespace.SCOPED_TO_MODELS.get(data.get("scoped_to_model", None), False)
+        ) != bool(
+            data.get("scoped_to_pk", False)
         ):  # logical XOR
             raise serializers.ValidationError(
-                "Must define scope and scoped_to together"
+                "Must define scoped_to_pk and scoped_to_model together"
             )
 
-        data_scope = data.get("scope")
+        data_scope = data.get("scoped_to_model")
         if data_scope:
             namespace_scope = Namespace.SCOPED_TO_MODELS.get(
                 data_scope, "no_scope"
             )  # None is already the value for global scope
             if namespace_scope is not None and not namespace_scope.objects.get(
-                pk=data.get("scoped_to")
+                pk=data.get("scoped_to_pk")
             ):
                 raise serializers.ValidationError("Not scoped_to an existing object")
 
@@ -34,8 +37,8 @@ class NamespaceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super(NamespaceSerializer, self).to_representation(instance)
-        if not instance.scoped_to:
-            del response["scoped_to"]
+        if not instance.scoped_to_model:
+            del response["scoped_to_model"]
 
         return response
 

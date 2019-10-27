@@ -80,8 +80,7 @@ class Tag(models.Model):
     LINKED_TO_MODEL = {
         # Association
         "association": Association,
-        "event": Event,
-        "file": Media,
+        "media": Media,
         "loanable": Loanable,
         "page": Page,
         "product": Product,

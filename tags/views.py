@@ -28,18 +28,18 @@ class NamespaceViewSet(viewsets.ModelViewSet):
     queryset = Namespace.objects.all()
     serializer_class = NamespaceSerializer
 
-    filterset_fields = ("scope", "scoped_to")
+    filterset_fields = ("scoped_to_model", "scoped_to_pk")
     permission_classes = (NamespacePermission,)
 
     def create(self, request, *args, **kwargs):
         # Required since we use "unique_together"
-        if "scoped_to" not in request.data:
-            request.data["scoped_to"] = ""
+        if "scoped_to_pk" not in request.data:
+            request.data["scoped_to_pk"] = ""
 
         return super(NamespaceViewSet, self).create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        if "scope" in request.data or "scoped_to" in request.data:
+        if "scoped_to_model" in request.data or "scoped_to_pk" in request.data:
             return HttpResponseBadRequest("Cannot change scope of a namespace")
 
         return super(NamespaceViewSet, self).update(request, *args, **kwargs)
@@ -58,12 +58,12 @@ class TagViewSet(
     def get_queryset(self):
         queryset = self.queryset
 
-        scope = self.request.query_params.get("scope", None)
+        scope_model = self.request.query_params.get("scoped_to_model", None)
         scope_id = self.request.query_params.get("scope_id", None)
 
-        if scope is not None and scope_id is not None:
+        if scope_model is not None and scope_id is not None:
             queryset = queryset.filter(
-                namespace__scope=scope, namespace__scoped_to=scope_id
+                namespace__scoped_to_model=scope_model, namespace__scoped_to_pk=scope_id
             )
 
         return queryset
@@ -87,7 +87,7 @@ class TagLinkView(APIView):
         model, instance_pk = self.kwargs["model"], self.kwargs["instance_pk"]
         tag = Tag.objects.get(pk=tag_pk)
 
-        if tag.namespace.scope != "global" and not user_can_link_tag_to(
+        if tag.namespace.scoped_to_model != "global" and not user_can_link_tag_to(
             request.user, tag, Tag.get_linked_instance(model, instance_pk)
         ):
             raise PermissionDenied(
@@ -122,6 +122,6 @@ class TagLinkView(APIView):
 @api_view(["GET"])
 def get_tags_for_scope(request, model, instance_pk):
     tags = Tag.objects.filter(
-        namespace__scope=model, namespace__scoped_to=instance_pk
+        namespace__scoped_to_model=model, namespace__scoped_to_pk=instance_pk
     ).all()
     return Response({"tags": TagSerializer(many=True).to_representation(tags)})

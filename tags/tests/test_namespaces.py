@@ -11,11 +11,15 @@ class TagNamespaceTestCase(BaseTestCase):
         # Creation of global namespace
 
         self.login("17admin")
-        res = self.post("/tags/namespaces/", {"scope": "global", "name": "users"})
+        res = self.post(
+            "/tags/namespaces/", {"scoped_to_model": "global", "name": "users"}
+        )
         self.assertStatusCode(res, 201)
 
         # Check cannot create two global namespaces with the same name
-        res = self.post("/tags/namespaces/", {"scope": "global", "name": "users"})
+        res = self.post(
+            "/tags/namespaces/", {"scoped_to_model": "global", "name": "users"}
+        )
 
         self.assertStatusCode(res, 400)
 
@@ -25,7 +29,7 @@ class TagNamespaceTestCase(BaseTestCase):
         self.login("17admin_pdm")
         res = self.post(
             "/tags/namespaces/",
-            {"scope": "association", "scoped_to": "pdm", "name": "farine"},
+            {"scoped_to_model": "association", "scoped_to_pk": "pdm", "name": "farine"},
         )
         self.assertStatusCode(res, 201)
 
@@ -35,8 +39,13 @@ class TagNamespaceTestCase(BaseTestCase):
         self.assertJSONEqual(
             res.content,
             [
-                {"id": 1, "name": "users", "scope": "global"},
-                {"id": 2, "name": "farine", "scope": "association", "scoped_to": "pdm"},
+                {"id": 1, "name": "users", "scoped_to_model": "global"},
+                {
+                    "id": 2,
+                    "name": "farine",
+                    "scoped_to_model": "association",
+                    "scoped_to_pk": "pdm",
+                },
             ],
         )
 
@@ -45,21 +54,30 @@ class TagNamespaceTestCase(BaseTestCase):
         self.assertStatusCode(res, 200)
         self.assertJSONEqual(
             res.content,
-            [{"id": 2, "name": "farine", "scope": "association", "scoped_to": "pdm"}],
+            [
+                {
+                    "id": 2,
+                    "name": "farine",
+                    "scoped_to_model": "association",
+                    "scoped_to_pk": "pdm",
+                }
+            ],
         )
 
         # Try to get namespace forgetting the scope
-        res = self.post("/tags/namespaces/", {"scope": "association", "name": "test_v"})
+        res = self.post(
+            "/tags/namespaces/", {"scoped_to_model": "association", "name": "test_v"}
+        )
         self.assertStatusCode(res, 400)
 
-        res = self.post("/tags/namespaces/", {"scoped_to": "pdm", "name": "test_w"})
+        res = self.post("/tags/namespaces/", {"scoped_to_pk": "pdm", "name": "test_w"})
         self.assertStatusCode(res, 400)
 
         # Try to get global namespace
         res = self.get("/tags/namespaces/?scope=global")
         self.assertStatusCode(res, 200)
         self.assertJSONEqual(
-            res.content, [{"id": 1, "name": "users", "scope": "global"}]
+            res.content, [{"id": 1, "name": "users", "scoped_to_model": "global"}]
         )
 
         #######################################
@@ -67,26 +85,30 @@ class TagNamespaceTestCase(BaseTestCase):
         self.login("17admin_biero")
         res = self.post(
             "/tags/namespaces/",
-            {"scope": "association", "scoped_to": "pdm", "name": "test_x"},
+            {"scoped_to_model": "association", "scoped_to_pk": "pdm", "name": "test_x"},
         )
         self.assertStatusCode(res, 403)
 
         self.login("17admin_biero")
-        res = self.post("/tags/namespaces/", {"scope": "global", "name": "test_y"})
+        res = self.post(
+            "/tags/namespaces/", {"scoped_to_model": "global", "name": "test_y"}
+        )
         self.assertStatusCode(res, 403)
 
     def test_edit_namespace(self):
         ###########################
         # Create needed namespaces
         self.login("17admin")
-        res = self.post("/tags/namespaces/", {"scope": "global", "name": "users"})
-        self.assertStatusCode(res, 201)
+        res = self.post(
+            "/tags/namespaces/", {"scoped_to_model": "global", "name": "users"}
+        )
+        self.assertStatusCode(res, 201, user_msg=res.data)
         namespace_user = json.loads(res.content)
 
         self.login("17admin_pdm")
         res = self.post(
             "/tags/namespaces/",
-            {"scope": "association", "scoped_to": "pdm", "name": "farine"},
+            {"scoped_to_model": "association", "scoped_to_pk": "pdm", "name": "farine"},
         )
         self.assertStatusCode(res, 201)
         namespace_farine = json.loads(res.content)
@@ -129,12 +151,13 @@ class TagNamespaceTestCase(BaseTestCase):
         # Try to move the namespace
         self.login("17admin_pdm")
         res = self.patch(
-            "/tags/namespaces/{}/".format(namespace_user["id"]), {"scope": "global"}
+            "/tags/namespaces/{}/".format(namespace_user["id"]),
+            {"scoped_to_model": "global"},
         )
         self.assertStatusCode(res, 400)
 
         res = self.patch(
             "/tags/namespaces/{}/".format(namespace_user["id"]),
-            {"scope": "association", "scoped_to": "biero"},
+            {"scoped_to_model": "association", "scoped_to_pk": "biero"},
         )
         self.assertStatusCode(res, 400)

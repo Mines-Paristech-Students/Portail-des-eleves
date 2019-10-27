@@ -32,9 +32,7 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             Association: Q(tags__is_hidden=True),
             Election: Q(association__tags__is_hidden=True),
             Event: Q(association__tags__is_hidden=True),
-            Media: Q(tags__is_hidden=True)
-            | Q(inherited_tags__is_hidden=True)
-            | Q(association__tags__is_hidden=True),
+            Media: Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True),
             Funding: Q(marketplace__association__tags__is_hidden=True),
             Library: Q(association__tags__is_hidden=True),
             Loanable: Q(library__association__tags__is_hidden=True),

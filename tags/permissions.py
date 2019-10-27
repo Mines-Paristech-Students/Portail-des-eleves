@@ -80,25 +80,27 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
 class NamespacePermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
-            scope = request.data.get("scope")
-            scoped_to = request.data.get("scoped_to")
+            scoped_to_model = request.data.get("scoped_to_model")
+            scoped_to_pk = request.data.get("scoped_to_pk")
 
-            if scope != "global" and (scope is None or scoped_to is None):
+            if scoped_to_model != "global" and (
+                scoped_to_model is None or scoped_to_pk is None
+            ):
                 raise SuspiciousOperation()
 
-            if scope == "global":
+            if scoped_to_model == "global":
                 return request.user.is_admin
 
-            instance = Tag.get_linked_instance(scope, scoped_to)
+            instance = Tag.get_linked_instance(scoped_to_model, scoped_to_pk)
             return can_manage_tags_for(request.user, instance)
 
         return True
 
     def has_object_permission(self, request, view, namespace):
-        if namespace.scope == "global":
+        if namespace.scoped_to_model == "global":
             return request.user.is_admin
 
-        instance = namespace.get_scope_instance()
+        instance = namespace.scoped_to
         return can_manage_tags_for(request.user, instance)
 
 
@@ -106,7 +108,7 @@ class ManageTagPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             namespace = Namespace.objects.get(pk=request.data.get("namespace"))
-            instance = namespace.get_scope_instance()
+            instance = namespace.scoped_to
             if instance:
                 return can_manage_tags_for(request.user, instance)
             else:
@@ -115,8 +117,8 @@ class ManageTagPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, tag):
         namespace = tag.namespace
-        if Namespace.SCOPED_TO_MODELS[namespace.scope] is None:
+        if Namespace.SCOPED_TO_MODELS[namespace.scoped_to_model] is None:
             return request.user.is_admin
         else:
-            instance = namespace.get_scope_instance()
+            instance = namespace.scoped_to
             return can_manage_tags_for(request.user, instance)

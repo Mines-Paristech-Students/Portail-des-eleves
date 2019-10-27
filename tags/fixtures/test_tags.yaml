@@ -2,21 +2,21 @@
   pk: 1
   fields:
     name: user
-    scope: global
+    scoped_to_model: global
 
 - model: tags.namespace
   pk: 2
   fields:
     name: farine
-    scope: association
-    scoped_to: pdm
+    scoped_to_model: association
+    scoped_to_pk: pdm
 
 - model: tags.namespace
   pk: 3
   fields:
     name: houblon
-    scope: association
-    scoped_to: biero
+    scoped_to_model: association
+    scoped_to_pk: biero
 
 - model: tags.tag
   pk: 1

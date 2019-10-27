@@ -1,8 +1,6 @@
 import datetime
 
-from django.db.models import Q
-
-from associations.models import Association, Media, Page, Role
+from associations.models import Association, Loanable, Media, Page, Product, Role
 from authentication.models import User
 from forum.models import Theme, Topic, MessageForum
 from tags.models import Tag
@@ -23,8 +21,10 @@ class HidingTestCase(BaseTestCase):
     def setUp(self):
         links = [
             (Association, "hidden_association"),
+            # (Loanable, 3),  # TODO.
             (Media, 3),
             (Page, 3),
+            # (Product, 3),  # TODO.
             (Role, 3),
             (Theme, 2),
             (Topic, 3),
@@ -114,54 +114,6 @@ class HidingTestCase(BaseTestCase):
         # Cannot directly access a hidden object.
         response = self.get("/associations/events/2/")
         self.assertStatusCode(response, 404)
-
-    def test_hiding_files(self):
-        self.login("17simple")
-
-        #########################################
-        # Get all files
-
-        response = self.get("/associations/files/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 5)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all files, but one should be missing
-
-        response = self.get("/associations/files/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
-            self.assertNotIn("hidden", item["name"])
-
-        # Cannot directly access a hidden object.
-        for i in range(2, 6):
-            response = self.get(f"/associations/files/{i}/")
-            self.assertStatusCode(response, 404)
-
-    def test_hiding_folders(self):
-        self.login("17simple")
-
-        #########################################
-        # Get all folders
-
-        response = self.get("/associations/folders/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 5)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all folders, but one should be missing
-
-        response = self.get("/associations/folders/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
-            self.assertNotIn("hidden", item["name"])
-
-        # Cannot directly access a hidden object.
-        for i in range(2, 6):
-            response = self.get(f"/associations/folders/{i}/")
-            self.assertStatusCode(response, 404)
 
     def test_hiding_fundings(self):
         self.login("17simple")
@@ -273,6 +225,30 @@ class HidingTestCase(BaseTestCase):
         # Cannot directly access a hidden object.
         response = self.get("/associations/marketplace/hidden_association/")
         self.assertStatusCode(response, 404)
+
+    def test_hiding_media(self):
+        self.login("17simple")
+
+        #########################################
+        # Get all media
+
+        response = self.get("/associations/media/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 3)
+
+        self.switch_17simple_to_first_year()
+        ###########################################
+        # Get all media, but one should be missing
+
+        response = self.get("/associations/media/")
+        self.assertEqual(len(response.data), 1, msg=response.data)
+        for item in response.data:
+            self.assertNotIn("hidden", item["name"])
+
+        # Cannot directly access a hidden object.
+        for i in range(2, 6):
+            response = self.get(f"/associations/media/{i}/")
+            self.assertStatusCode(response, 404)
 
     def test_hiding_pages(self):
         self.login("17simple")
@@ -438,37 +414,31 @@ class HidingTestCase(BaseTestCase):
             response = self.get(f"/forum/messages/{i}/")
             self.assertStatusCode(response, 404)
 
-    def test_hiding_tag_namespaces(self):
+    def test_no_tags_in_namespaces(self):
         self.login("17simple")
 
-        ##########################################
-        # Get all namespaces
-
-        response = self.get("/namespaces/")
+        response = self.get("/tags/namespaces/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all namespaces, but one should be missing
-
-        response = self.get("/namespaces/")
         self.assertEqual(len(response.data), 1)
-        for item in response.data:
-            self.assertNotIn("hidden", item["prop"])
 
-    def test_no_files_in_association(self):
+        self.assertNotIn(
+            "tags",
+            response.data,
+            msg="It seems that /tags/namespaces/ now returns the tags. Please ensure this behavior is tested.",
+        )
+
+    def test_no_media_in_association(self):
         self.login("17simple")
 
         response = self.get("/associations/associations/public_association/")
         self.assertEqual(response.status_code, 200)
 
         msg = (
-            "It seems that `associations/public_association` now returns a list of files.\n"
+            "It seems that `associations/public_association` now returns a list of medias.\n"
             "Please make sure to test accordingly."
         )
-        self.assertNotIn("file", response.data, msg=msg)
-        self.assertNotIn("files", response.data, msg=msg)
+        self.assertNotIn("media", response.data, msg=msg)
+        self.assertNotIn("medias", response.data, msg=msg)
 
     def test_hiding_nested_pages_from_association(self):
         # Can see all the pages in the association.

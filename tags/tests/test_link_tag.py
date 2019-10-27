@@ -17,7 +17,7 @@ class TagNamespaceTestCase(BaseTestCase):
                 {
                     "id": 1,
                     "value": "17bocquet",
-                    "namespace": {"id": 1, "scope": "global", "name": "user"},
+                    "namespace": {"id": 1, "scoped_to_model": "global", "name": "user"},
                 }
             ],
         )
@@ -55,8 +55,8 @@ class TagNamespaceTestCase(BaseTestCase):
                     "value": "IPA",
                     "namespace": {
                         "id": 3,
-                        "scope": "association",
-                        "scoped_to": "biero",
+                        "scoped_to_model": "association",
+                        "scoped_to_pk": "biero",
                         "name": "houblon",
                     },
                 }

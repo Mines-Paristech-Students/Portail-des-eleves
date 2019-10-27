@@ -35,7 +35,7 @@ urlpatterns.append(
 router.register(r"events", EventViewSet)
 
 # Medias.
-router.register(r"medias", MediaViewSet)
+router.register(r"media", MediaViewSet)
 
 # Library.
 router.register(r"library", LibraryViewSet)
