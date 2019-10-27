@@ -23,7 +23,6 @@ class HidingTestCase(BaseTestCase):
     def setUp(self):
         links = [
             (Association, "hidden_association"),
-            (Folder, 4),
             (Media, 3),
             (Page, 3),
             (Role, 3),
@@ -440,50 +439,23 @@ class HidingTestCase(BaseTestCase):
             self.assertStatusCode(response, 404)
 
     def test_hiding_tag_namespaces(self):
-        # self.login("17simple")
-        #
+        self.login("17simple")
+
         ##########################################
         # Get all namespaces
-        #
-        # response = self.get("/namespaces/")
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(len(response.data), 2)
-        #
-        # self.switch_17simple_to_first_year()
+
+        response = self.get("/namespaces/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+        self.switch_17simple_to_first_year()
         ###########################################
         # Get all namespaces, but one should be missing
 
-        # response = self.get("/namespaces/")
-        # self.assertEqual(len(response.data), 1)
-        # for item in response.data:
-        #     self.assertNotIn("hidden", item["prop"])
-        pass
-
-    def test_hiding_nested_files_from_folder(self):
-        # Can see all the files in the folder.
-        self.login("17simple")
-
-        for folder in Folder.objects.all():
-            response = self.get(f"/associations/folders/{folder.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.data["files"]), folder.files.count())
-
-        # Cannot see the hidden files in the folder.
-        self.switch_17simple_to_first_year()
-
-        # Use a folder which is not hidden.
-        for folder in Folder.objects.exclude(
-            Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True)
-        ):
-            response = self.get(f"/associations/folders/{folder.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(
-                len(response.data["files"]),
-                folder.files.exclude(tags__is_hidden=True).count(),
-            )
-
-            for file in response.data["files"]:
-                self.assertNotIn("hidden_file", file["name"])
+        response = self.get("/namespaces/")
+        self.assertEqual(len(response.data), 1)
+        for item in response.data:
+            self.assertNotIn("hidden", item["prop"])
 
     def test_no_files_in_association(self):
         self.login("17simple")
@@ -497,45 +469,6 @@ class HidingTestCase(BaseTestCase):
         )
         self.assertNotIn("file", response.data, msg=msg)
         self.assertNotIn("files", response.data, msg=msg)
-
-    def test_hiding_nested_folders_from_folder(self):
-        # Can see all the folders in the folder.
-        self.login("17simple")
-
-        for folder in Folder.objects.all():
-            response = self.get(f"/associations/folders/{folder.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.data["children"]), folder.children.count())
-
-        # Cannot see the hidden files in the folder.
-        self.switch_17simple_to_first_year()
-
-        # Use a folder which is not hidden.
-        for folder in Folder.objects.exclude(
-            Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True)
-        ):
-            response = self.get(f"/associations/folders/{folder.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(
-                len(response.data["children"]),
-                folder.children.exclude(tags__is_hidden=True).count(),
-            )
-
-            for child in response.data["children"]:
-                self.assertNotIn("hidden_folder", child["name"])
-
-    def test_no_folders_in_association(self):
-        self.login("17simple")
-
-        response = self.get("/associations/associations/public_association/")
-        self.assertEqual(response.status_code, 200)
-
-        msg = (
-            "It seems that `associations/public_association` now returns a list of folders.\n"
-            "Please make sure to test accordingly."
-        )
-        self.assertNotIn("folder", response.data, msg=msg)
-        self.assertNotIn("folders", response.data, msg=msg)
 
     def test_hiding_nested_pages_from_association(self):
         # Can see all the pages in the association.

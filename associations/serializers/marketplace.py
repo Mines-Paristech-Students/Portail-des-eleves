@@ -66,7 +66,6 @@ class ProductShortSerializer(ModelSerializer):
 
 class ProductSerializer(ModelSerializer):
     marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
-    tags = TagSerializer(many=True)
 
     class Meta:
         model = Product
@@ -78,7 +77,6 @@ class ProductSerializer(ModelSerializer):
             "comment",
             "marketplace",
             "number_left",
-            "tags",
         )
 
     def update(self, instance, validated_data):

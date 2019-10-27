@@ -6,7 +6,6 @@ from associations.models import (
     Election,
     Event,
     Media,
-    Folder,
     Funding,
     Library,
     Loanable,
@@ -34,9 +33,6 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             Election: Q(association__tags__is_hidden=True),
             Event: Q(association__tags__is_hidden=True),
             Media: Q(tags__is_hidden=True)
-            | Q(inherited_tags__is_hidden=True)
-            | Q(association__tags__is_hidden=True),
-            Folder: Q(tags__is_hidden=True)
             | Q(inherited_tags__is_hidden=True)
             | Q(association__tags__is_hidden=True),
             Funding: Q(marketplace__association__tags__is_hidden=True),

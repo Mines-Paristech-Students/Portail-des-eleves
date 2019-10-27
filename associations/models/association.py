@@ -100,7 +100,7 @@ class Role(models.Model):
     # Permissions:
     administration_permission = models.BooleanField(default=False)
     election_permission = models.BooleanField(default=False)
-    events_permission = models.BooleanField(default=False)
+    event_permission = models.BooleanField(default=False)
     media_permission = models.BooleanField(default=False)
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
@@ -116,7 +116,7 @@ class Role(models.Model):
 
     @cached_property
     def event(self):
-        return self.events_permission and not self.is_archived
+        return self.event_permission and not self.is_archived
 
     @cached_property
     def media(self):

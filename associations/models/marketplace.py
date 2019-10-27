@@ -23,15 +23,21 @@ class Product(models.Model):
 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
+    price = models.DecimalField(
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)]
+    )
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)
 
-    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name='products')
+    marketplace = models.ForeignKey(
+        Marketplace, models.CASCADE, related_name="products"
+    )
 
-    number_left = models.IntegerField(default=-1,
-                                      help_text='The number of products left.'
-                                                'By convention, -1 means unlimited products left.')
+    number_left = models.IntegerField(
+        default=-1,
+        help_text="The number of products left."
+        "By convention, -1 means unlimited products left.",
+    )
     still_in_the_catalogue = models.BooleanField(default=True)
 
     # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for BDA
@@ -67,12 +73,18 @@ class Transaction(models.Model):
     #           --- REJECTED
 
     STATUS = (
-        ('ORDERED', 'Commandé'),  # The buyer passed the purchase order.
-        ('CANCELLED', 'Annulé'),  # The buyer cancels the order.
-        ('REJECTED', 'Refusé'),  # The seller cannot honor the request.
-        ('VALIDATED', 'Validé'),  # The seller confirms it can honor the request.
-        ('DELIVERED', 'Transmis'),  # The product has been given. The order cannot be CANCELLED then.
-        ('REFUNDED', 'Remboursé'),  # The order has been delivered but it was faulty (or else), so it has been refunded.
+        ("ORDERED", "Commandé"),  # The buyer passed the purchase order.
+        ("CANCELLED", "Annulé"),  # The buyer cancels the order.
+        ("REJECTED", "Refusé"),  # The seller cannot honor the request.
+        ("VALIDATED", "Validé"),  # The seller confirms it can honor the request.
+        (
+            "DELIVERED",
+            "Transmis",
+        ),  # The product has been given. The order cannot be CANCELLED then.
+        (
+            "REFUNDED",
+            "Remboursé",
+        ),  # The order has been delivered but it was faulty (or else), so it has been refunded.
     )
     status = models.CharField(choices=STATUS, max_length=200)
 
@@ -81,7 +93,7 @@ class Transaction(models.Model):
         """
             :return True iff the value of the transaction must be removed from their balance.
         """
-        return self.status in ('ORDERED', 'VALIDATED', 'DELIVERED')
+        return self.status in ("ORDERED", "VALIDATED", "DELIVERED")
 
 
 class Funding(models.Model):
@@ -94,20 +106,21 @@ class Funding(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    value = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
+    value = models.DecimalField(
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)]
+    )
     date = models.DateTimeField(auto_now=True)
 
-    marketplace = models.ForeignKey(Marketplace, models.CASCADE, related_name='fundings')
-
-    STATUS = (
-        ('FUNDED', 'Versé'),
-        ('REFUNDED', 'Remboursé')
+    marketplace = models.ForeignKey(
+        Marketplace, models.CASCADE, related_name="fundings"
     )
-    status = models.CharField(choices=STATUS, max_length=200, default='FUNDED')
+
+    STATUS = (("FUNDED", "Versé"), ("REFUNDED", "Remboursé"))
+    status = models.CharField(choices=STATUS, max_length=200, default="FUNDED")
 
     @cached_property
     def value_in_balance(self):
         """
             :return True iff the value of the funding must be added to their balance.
         """
-        return self.status in ('FUNDED')
+        return self.status in ("FUNDED")
