@@ -17,6 +17,7 @@ from associations.views import (
     ElectionViewSet,
     CreateBallotView,
 )
+from associations.views import set_association_logo
 from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
 
 urlpatterns = []
@@ -56,6 +57,7 @@ router.register(r"products", ProductViewSet)
 router.register(r"transactions", TransactionViewSet)
 router.register(r"funding", FundingViewSet)
 urlpatterns += [
+    path("associations/<association_pk>/image", set_association_logo),
     path("marketplace/balance/", BalanceView.as_view(), name="balance-list"),
     path(
         "marketplace/<slug:marketplace_id>/balance/",
