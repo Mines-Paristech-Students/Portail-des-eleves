@@ -1,6 +1,4 @@
 import json
-import threading
-import time
 from unittest.mock import patch
 
 from associations.tests.base_test import BaseTestCase
@@ -341,21 +339,25 @@ class APITestCase(BaseTestCase):
             self.assertEqual(res.status_code, code)
 
     def test_get_repartition(self):
-        tests = [("CLOSED", 403), ("OPEN", 403), ("RESULTS", 200)]
+        tests = [("CLOSED", 200, 403), ("OPEN", 403, 403), ("RESULTS", 200, 200)]
 
-        for (status, code) in tests:
+        for (status, code_admin, code_user) in tests:
             self.login("17bocquet")
             self.patch("/repartitions/campaigns/1/", data={"status": status})
 
             res = self.get("/repartitions/1/results/")
-            self.assertEqual(res.status_code, code)
+            self.assertEqual(
+                res.status_code,
+                code_admin,
+                msg="expected code {} got {}".format(code_admin, res.status_code),
+            )
 
             self.login("15menou")
             res = self.get("/repartitions/1/results/")
             self.assertEqual(res.status_code, 403)
 
             res = self.get("/repartitions/1/results/me")
-            self.assertEqual(res.status_code, code)
+            self.assertEqual(res.status_code, code_user)
 
     @patch("repartitions.views.make_reparition")
     def test_erases_groups_on_status_change(self, mocked_make_repartition):
@@ -368,16 +370,17 @@ class APITestCase(BaseTestCase):
 
         mocked_make_repartition.side_effect = create_group
 
-        for status in ("CLOSED", "OPEN"):
-            self.login("17bocquet")
+        status = "OPEN"
+        self.login("17bocquet")
 
-            self.patch("/repartitions/campaigns/1/", data={"status": "RESULTS"})
+        self.patch("/repartitions/campaigns/1/", data={"status": "RESULTS"})
 
-            res = self.get("/repartitions/1/results/")
-            self.assertEqual(res.status_code, 200)
-            self.assertJSONEqual(res.content, [{"proposition": 1, "users": []}])
+        res = self.get("/repartitions/1/results/")
+        self.assertEqual(res.status_code, 200)
+        self.assertJSONEqual(
+            res.content, [{"campaign": 1, "proposition": 1, "users": []}]
+        )
 
-            # Erase the group
-
-            self.patch("/repartitions/campaigns/1/", data={"status": status})
-            self.assertEqual(Group.objects.filter(campaign=campaign).count(), 0)
+        # Erase the group
+        self.patch("/repartitions/campaigns/1/", data={"status": status})
+        self.assertEqual(Group.objects.filter(campaign=campaign).count(), 0)

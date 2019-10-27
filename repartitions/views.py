@@ -57,7 +57,7 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
 
         campaign = serializer.instance
 
-        if campaign.status != "RESULTS":
+        if campaign.status == "OPEN":
             Group.objects.filter(campaign=campaign).delete()
             serializer.is_valid(raise_exception=True)
             serializer.save()
