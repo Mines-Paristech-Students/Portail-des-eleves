@@ -2,9 +2,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
 
-from authentication.models import User
 from associations.models import Association, Library, Loanable, Loan
-from associations.serializers.association import AssociationsShortSerializer
+from associations.serializers.association import AssociationShortSerializer
+from authentication.models import User
 
 
 class CreateLoanSerializer(serializers.ModelSerializer):
@@ -116,6 +116,11 @@ class LoanableSerializer(serializers.ModelSerializer):
 
         return res
 
+    def update(self, instance, validated_data):
+        if "library" in validated_data:
+            validated_data.pop("library")
+        return super(LoanableSerializer, self).update(instance, validated_data)
+
 
 class LibraryShortSerializer(serializers.ModelSerializer):
     class Meta:
@@ -171,7 +176,7 @@ class LibrarySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
 
-        res["association"] = AssociationsShortSerializer().to_representation(
+        res["association"] = AssociationShortSerializer().to_representation(
             Association.objects.get(pk=res["association"])
         )
         return res

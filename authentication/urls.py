@@ -10,8 +10,8 @@ from authentication.views import (
     get_birthdays,
     ProfileAnswerViewSet,
     ProfileQuestionViewSet,
-    get_profile_questions,
-    get_promotions,
+    list_profile_questions,
+    list_promotions,
 )
 
 router = BulkRouter()
@@ -24,7 +24,7 @@ urlpatterns = [
     path("auth/", JWTSetCookiesView.as_view(), name="token_obtain_pair"),
     path("auth/check/", CheckCredentials.as_view(), name="check"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
-    path("birthdays/", get_birthdays, name="get_birthdays"),
-    path("promotions/", get_promotions, name="get_promotions"),
-    path("profile/questions/<user_pk>", get_profile_questions),
+    path("birthdays/<int:number_of_days>/", get_birthdays, name="get_birthdays"),
+    path("promotions/", list_promotions, name="list_promotions"),
+    path("users/questions/<slug:user_pk>/", list_profile_questions),
 ] + router.urls

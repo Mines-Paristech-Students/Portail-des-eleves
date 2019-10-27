@@ -28,7 +28,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
-    is_admin: true
+    administration_permission: true
     page_permission: false
 
 - model: authentication.user
@@ -47,7 +47,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
-    is_admin: false
+    administration_permission: false
     page_permission: false
 
 - model: authentication.user
@@ -66,7 +66,7 @@
     user: 17page_biero
     association: biero
     role: page admin
-    is_admin: false
+    administration_permission: false
     page_permission: true
 
 - model: associations.page
@@ -75,6 +75,8 @@
     association: biero
     title: 'L’équipe'
     text: 'Un président psychopathe qui écrit des mails hilarants.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
 
 - model: associations.page
   pk: 1
@@ -82,6 +84,8 @@
     association: biero
     title: 'Le concept'
     text: 'Se bourrer la gueule. Pour 5 €.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
 
 #######
 # PDM #
@@ -109,7 +113,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
-    is_admin: true
+    administration_permission: true
     page_permission: false
 
 - model: authentication.user
@@ -128,7 +132,7 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
-    is_admin: false
+    administration_permission: false
     page_permission: false
 
 - model: authentication.user
@@ -147,7 +151,7 @@
     user: 17page_pdm
     association: pdm
     role: page admin
-    is_admin: false
+    administration_permission: false
     page_permission: true
 
 - model: associations.page
@@ -156,3 +160,5 @@
     association: pdm
     title: 'Le concept'
     text: 'Soit tu payes. Soit tu voles.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'

@@ -1,0 +1,145 @@
+- model: polls.Poll
+  pk: 1
+  fields:
+    question: "Ton plat préféré ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 1
+  fields:
+    text: "Pâtes et fromage"
+    poll: 1
+
+- model: polls.Choice
+  pk: 2
+  fields:
+    text: "Baguette et pâté"
+    poll: 1
+
+- model: polls.Poll
+  pk: 2
+  fields:
+    question: "Ton cours préféré ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est nul."
+
+- model: polls.Choice
+  pk: 3
+  fields:
+    text: "Maths 1"
+    poll: 2
+
+- model: polls.Choice
+  pk: 4
+  fields:
+    text: "Maths 2"
+    poll: 2
+
+- model: polls.Poll
+  pk: 3
+  fields:
+    question: "Le plus beauf ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 5
+  fields:
+    text: "17payre"
+    poll: 3
+
+- model: polls.Choice
+  pk: 6
+  fields:
+    text: "17chabert"
+    poll: 3
+
+- model: polls.Poll
+  pk: 4
+  fields:
+    question: "Il n’y a pas de sondage…"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 7
+  fields:
+    text: "Parce que tu te claques"
+    poll: 4
+
+- model: polls.Choice
+  pk: 8
+  fields:
+    text: "Parce que je me claque"
+    poll: 4
+
+- model: polls.Poll
+  pk: 5
+  fields:
+    question: "Les plus fragiles ?"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est vraiment d’la merde."
+
+- model: polls.Choice
+  pk: 9
+  fields:
+    text: "Les P18"
+    poll: 5
+
+- model: polls.Choice
+  pk: 10
+  fields:
+    text: "Les P19"
+    poll: 5
+
+- model: polls.Poll
+  pk: 6
+  fields:
+    question: "Pendant ton stage de césure, tu préfères…"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 11
+  fields:
+    text: "Faire le portail des élèves"
+    poll: 6
+
+- model: polls.Choice
+  pk: 12
+  fields:
+    text: "Faire du machine learning pour le CSI"
+    poll: 6
+
+
+- model: polls.Poll
+  pk: 7
+  fields:
+    question: "Is this the future?"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2119-08-01"
+
+- model: polls.Choice
+  pk: 13
+  fields:
+    text: "Oui"
+    poll: 7
+
+- model: polls.Choice
+  pk: 14
+  fields:
+    text: "Non"
+    poll: 7

@@ -1,4 +1,4 @@
-from associations.tests.base_test import BaseTestCase
+from backend.tests_utils import BaseTestCase
 
 # Please see the comments on test_page.yaml to get a better understanding of the test fixtures.
 
@@ -27,21 +27,21 @@ class BasePageTestCase(BaseTestCase):
 
     def endpoint_list(self, association_id):
         """Return the endpoint associated to the list association page action."""
-        return f"/associations/{association_id}/pages/"
+        return f"/associations/pages/"
 
     def list(self, association_id):
         return self.get(self.endpoint_list(association_id))
 
     def endpoint_retrieve(self, pk, association_id):
         """Return the endpoint associated to the retrieve action."""
-        return f"/associations/{association_id}/pages/{pk}/"
+        return f"/associations/pages/{pk}/"
 
     def retrieve(self, pk, association_id):
         return self.get(self.endpoint_retrieve(pk, association_id))
 
     def endpoint_create(self, association_id):
         """Return the endpoint associated to the create action."""
-        return f"/associations/{association_id}/pages/"
+        return f"/associations/pages/"
 
     def create(
         self, association_id, data=None, format="json", content_type="application/json"
@@ -52,7 +52,7 @@ class BasePageTestCase(BaseTestCase):
 
     def endpoint_update(self, pk, association_id):
         """Return the endpoint associated to the update action."""
-        return f"/associations/{association_id}/pages/{pk}/"
+        return f"/associations/pages/{pk}/"
 
     def update(
         self,
@@ -68,7 +68,7 @@ class BasePageTestCase(BaseTestCase):
 
     def endpoint_destroy(self, pk, association_id):
         """Return the endpoint associated to the destroy action."""
-        return f"/associations/{association_id}/pages/{pk}/"
+        return f"/associations/pages/{pk}/"
 
     def destroy(self, pk, association_id, data="", format=None, content_type=None):
         return self.delete(

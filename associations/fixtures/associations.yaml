@@ -53,15 +53,19 @@
   fields:
     user: 15veaux
     role: President
-    is_admin: true
+    administration_permission: true
     association: bde
+
 - model: associations.role
   pk: '2'
   fields:
     user: 17bocquet
     role: CTO
-    is_admin: true
+    administration_permission: true
     association: bde
+    election_permission: True
+    library_permission: true
+
 - model: associations.page
   pk: '4'
   fields:
@@ -73,26 +77,8 @@
       sequi ut voluptatum? Cupiditate deserunt error hic illum impedit iusto molestiae
       placeat quasi quidem quis quod recusandae repellat sint, veniam voluptates.
     association: bde
-- model: associations.news
-  pk: '1'
-  fields:
-    title: Amphi La Calchemise
-    association: bde
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
-- model: associations.news
-  pk: '2'
-  fields:
-    title: Enorme BALM
-    association: bde
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
+    creation_date: '2018-08-18T13:19:37+00:00'
+    last_update_date: '2018-08-18T13:19:37+00:00'
 - model: associations.association
   pk: biero
   fields:
@@ -135,16 +121,6 @@
   pk: biero
   fields:
     enabled: false
-- model: associations.news
-  pk: '3'
-  fields:
-    title: Biérexecption
-    association: biero
-    text: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aperiam
-      cumque facilis, harum hic molestiae nesciunt nisi optio, provident sapiente
-      suscipit ut. Aut consectetur eum excepturi sint totam. Assumenda, id.
-    date: '2018-08-18T13:19:37+00:00'
-    author: 17bocquet
 - model: associations.folder
   pk: 1
   fields:
@@ -224,10 +200,49 @@
     uploaded_on: '2017-08-24T17:41:28+00:00'
     uploaded_by: 17bocquet
     association: bde
-- model: associations.role
+
+- model: associations.election
+  pk: 1
+  fields:
+    association: bde
+    name: 'Élections BDE'
+    registered_voters: [17bocquet, 17wan-fat]
+    starts_at: '2019-09-10T17:41:28+00:00'
+    ends_at: '2020-09-10T17:41:28+00:00'
+    max_choices_per_ballot: 1
+
+- model: associations.choice
+  pk: 1
+  fields:
+    election: 1
+    name: Pichalaya
+
+- model: associations.choice
   pk: 2
   fields:
-    user: 17bocquet
-    association: biero
-    role: Programmeur / Brasseur
-    is_admin: true
+    election: 1
+    name: Adrénapiche
+
+- model: associations.ballot
+  pk: 1
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.ballot
+  pk: 2
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.ballot
+  pk: 3
+  fields:
+    election: 1
+    choices: [2]
+
+- model: associations.ballot
+  pk: 4
+  fields:
+    election: 1
+    choices: [2]

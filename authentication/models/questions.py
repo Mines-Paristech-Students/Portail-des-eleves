@@ -17,3 +17,6 @@ class ProfileAnswer(models.Model):
     )
 
     question = models.ForeignKey(ProfileQuestion, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        unique_together = ("user", "question")

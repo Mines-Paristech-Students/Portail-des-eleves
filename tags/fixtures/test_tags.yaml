@@ -1,0 +1,43 @@
+- model: tags.namespace
+  pk: 1
+  fields:
+    name: user
+    scope: global
+
+- model: tags.namespace
+  pk: 2
+  fields:
+    name: farine
+    scope: association
+    scoped_to: pdm
+
+- model: tags.namespace
+  pk: 3
+  fields:
+    name: houblon
+    scope: association
+    scoped_to: biero
+
+- model: tags.tag
+  pk: 1
+  fields:
+    value: "17bocquet"
+    namespace: 1
+
+- model: tags.tag
+  pk: 2
+  fields:
+    value: "sarrasin"
+    namespace: 2
+
+- model: tags.tag
+  pk: 3
+  fields:
+    value: "blé"
+    namespace: 2
+
+- model: tags.tag
+  pk: 4
+  fields:
+    value: "IPA"
+    namespace: 3

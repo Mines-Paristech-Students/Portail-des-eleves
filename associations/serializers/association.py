@@ -1,107 +1,132 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
-from rest_framework_bulk.drf3.serializers import BulkSerializerMixin
-from rest_framework_bulk.serializers import BulkListSerializer
 
-from associations.models import Association, Role
+from associations.models import Association, Role, User
 from associations.serializers.page import PageShortSerializer
 from authentication.serializers.user import UserShortSerializer
 
 
-class AssociationsShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Association
-        fields = ("id", "name", "logo")
+class WriteRoleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), read_only=False
+    )
 
-
-class AdaptedBulkListSerializerMixin(object):
-    def to_internal_value(self, data):
+    def __init__(self, used_by_association_admin=False, *args, **kwargs):
         """
-        List of dicts of native values <- List of dicts of primitive datatypes.
+        :param used_by_association_admin: set to True if the serializer is used by an administrator of the edited
+        association.
         """
 
-        if not isinstance(data, list):
-            message = self.error_messages["not_a_list"].format(
-                input_type=type(data).__name__
-            )
-            raise ValidationError({"test": [message]}, code="not_a_list")
+        super(WriteRoleSerializer, self).__init__(*args, **kwargs)
+        self.used_by_association_admin = used_by_association_admin
 
-        if not self.allow_empty and len(data) == 0:
-            if self.parent and self.partial:
-                raise ValidationError()
+    def save(self, **kwargs):
+        """If the user is not an association admin, only give them access to the administration_permission field."""
+        if not self.used_by_association_admin:
+            forbidden_fields = tuple(
+                f"{permission_name}_permission"
+                for permission_name in Role.PERMISSION_NAMES
+                if permission_name != "administration"
+            ) + ("is_archived", "role", "rank")
 
-            message = self.error_messages["empty"]
-            raise ValidationError({"test": [message]}, code="empty")
+            for field in forbidden_fields:
+                if field in self.validated_data:
+                    self.validated_data.pop(field)
 
-        ret = []
-        errors = []
+        return super(WriteRoleSerializer, self).save(**kwargs)
 
-        for item in data:
-            try:
-                # Code that was inserted
-                self.child.instance = (
-                    self.instance.get(id=item["id"]) if self.instance else None
-                )
-                self.child.initial_data = item
-                # Until here
-                validated = self.child.run_validation(item)
-            except ValidationError as exc:
-                errors.append(exc.detail)
-            else:
-                ret.append(validated)
-                errors.append({})
+    def update(self, instance, validated_data):
+        # Prevent the changes to association and user fields when updating.
+        if "association" in validated_data:
+            validated_data.pop("association")
 
-        if any(errors):
-            raise ValidationError(errors)
+        if "user" in validated_data:
+            validated_data.pop("user")
 
-        return ret
-
-
-class AdaptedBulkListSerializer(AdaptedBulkListSerializerMixin, BulkListSerializer):
-    pass
-
-
-class RoleSerializer(BulkSerializerMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Role
-        fields = "__all__"
-        list_serializer_class = AdaptedBulkListSerializer
+        return super(WriteRoleSerializer, self).update(instance, validated_data)
 
     def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response["user"] = UserShortSerializer(instance.user).data
-        return response
+        res = super(WriteRoleSerializer, self).to_representation(instance)
+
+        for permission_name in Role.PERMISSION_NAMES:
+            res[permission_name] = getattr(instance, permission_name)
+
+        return res
+
+    class Meta:
+        model = Role
+        read_only_fields = ("id",)
+        fields = (
+            read_only_fields
+            + ("association", "user", "role", "rank", "is_archived")
+            + tuple(
+                f"{permission_name}_permission"
+                for permission_name in Role.PERMISSION_NAMES
+            )
+        )
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        res = super(RoleSerializer, self).to_representation(instance)
+
+        for permission_name in Role.PERMISSION_NAMES:
+            res[permission_name] = getattr(instance, permission_name)
+
+        return res
+
+    class Meta:
+        model = Role
+        read_only_fields = (
+            "id",
+            "association",
+            "user",
+            "role",
+            "rank",
+            "is_archived",
+        ) + tuple(
+            f"{permission_name}_permission" for permission_name in Role.PERMISSION_NAMES
+        )
+        fields = read_only_fields
+
+    def save(self, **kwargs):
+        raise RuntimeError(
+            "The serializer `RoleSerializer` should not be used for writing operations."
+        )
 
 
 class RoleShortSerializer(serializers.ModelSerializer):
+    user = UserShortSerializer(read_only=True)
+
     class Meta:
         model = Role
-        fields = ("id", "user", "association", "role", "rank")
+        read_only_fields = ("id", "user", "association", "role", "rank")
+        fields = read_only_fields
 
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response["user"] = UserShortSerializer(instance.user).data
-        return response
+
+class AssociationShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        read_only_fields = ("id", "name", "logo")
+        fields = read_only_fields
 
 
 from associations.serializers.marketplace import MarketplaceShortSerializer
 from associations.serializers.library import LibraryShortSerializer
 
 
-class AssociationsSerializer(serializers.ModelSerializer):
+class AssociationSerializer(serializers.ModelSerializer):
     pages = PageShortSerializer(many=True, read_only=True)
+    marketplace = MarketplaceShortSerializer(read_only=True)
+    library = LibraryShortSerializer(read_only=True)
     my_role = serializers.SerializerMethodField(read_only=True)
-    marketplace = MarketplaceShortSerializer()
-    library = LibraryShortSerializer()
 
     class Meta:
         model = Association
-        fields = ("id", "name", "logo", "pages", "marketplace", "library", "my_role")
+        read_only_fields = ("pages", "marketplace", "library", "my_role")
+        fields = read_only_fields + ("id", "name", "logo", "is_hidden", "rank")
 
     def get_my_role(self, obj):
-        qs = Role.objects.filter(user=self.context["request"].user, association=obj)
-        if qs.exists():
-            serializer = RoleSerializer(qs[0])
-            return serializer.data
-        else:
-            return {}
+        role = self.context["request"].user.get_role(obj)
+        return RoleSerializer(role).data if role else {}

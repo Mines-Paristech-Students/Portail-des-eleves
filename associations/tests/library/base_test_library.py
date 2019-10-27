@@ -1,4 +1,4 @@
-from associations.tests.base_test import BaseTestCase
+from backend.tests_utils import BaseTestCase
 
 # Please see the comments on test_library.yaml to get a better understanding of the test fixtures.
 # TODO: test which fields are serialized.

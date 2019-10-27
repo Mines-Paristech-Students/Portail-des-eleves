@@ -46,7 +46,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
     def assertCanListTheseTransactions(self, transactions, code=200, user=""):
         """Fail if the transactions listed at "transactions/" do not contain the transactions passed as a parameter."""
         self.login(user)
-        res = self.get("/transactions/")
+        res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
         res_ids = set([transaction["id"] for transaction in res.data])
@@ -61,7 +61,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         """Fail if the transactions listed at "transactions/" are not exactly the transactions passed as a parameter."""
 
         self.login(user)
-        res = self.get("/transactions/")
+        res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
         res_ids = set([transaction["id"] for transaction in res.data])
@@ -73,7 +73,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         )
 
     def test_if_not_logged_in_then_no_access_to_transactions(self):
-        res = self.get("/transactions/")
+        res = self.get("/associations/transactions/")
         self.assertStatusCode(res, 401)
 
     def test_if_user_then_access_to_own_transactions_in_enabled_markets(self):
@@ -114,7 +114,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
     def assertAccessToTransaction(self, transaction_id, code=200, user=""):
         """Fail if access is not given to transaction transaction_id."""
 
-        res = self.get(f"/transactions/{transaction_id}/")
+        res = self.get(f"/associations/transactions/{transaction_id}/")
         self.assertEqual(
             res.status_code,
             code,
@@ -126,7 +126,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
     ):
         """Fail if access is given to transaction transaction_id."""
 
-        res = self.get(f"/transactions/{transaction_id}/")
+        res = self.get(f"/associations/transactions/{transaction_id}/")
 
         if codes is not None:
             self.assertIn(
@@ -200,7 +200,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
     def assertCanCreateTransaction(self, user, data, code=201):
         self.login(user)
         length_before = len(Transaction.objects.all())
-        res = self.post("/transactions/", data=data)
+        res = self.post("/associations/transactions/", data=data)
         self.assertStatusCode(res, code)
         self.assertEqual(
             length_before + 1,
@@ -211,7 +211,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
     def assertCannotCreateTransaction(self, user, data, code=403):
         self.login(user)
         length_before = len(Transaction.objects.all())
-        res = self.post("/transactions/", data=data)
+        res = self.post("/associations/transactions/", data=data)
         self.assertStatusCode(res, code)
         self.assertEqual(
             length_before,
@@ -249,7 +249,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         for user in ALL_USERS_EXCEPT_MARKET_ADMIN:
             self.login(user)
             res = self.post(
-                "/transactions/",
+                "/associations/transactions/",
                 data={"buyer": user, "product": product_id, "quantity": 1},
             )
 
@@ -320,7 +320,9 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         run = False
 
         for transaction in [x for x in transactions if x.status == old_status]:
-            res = self.patch(f"/transactions/{transaction.id}/", {"status": new_status})
+            res = self.patch(
+                f"/associations/transactions/{transaction.id}/", {"status": new_status}
+            )
             self.assertStatusCode(res, 200)
 
             transaction = Transaction.objects.get(id=transaction.id)
@@ -349,8 +351,10 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         run = False
 
         for transaction in [x for x in transactions if x.status == old_status]:
-            res = self.patch(f"/transactions/{transaction.id}/", {"status": new_status})
-            self.assertStatusCode(res, 403)
+            res = self.patch(
+                f"/associations/transactions/{transaction.id}/", {"status": new_status}
+            )
+            self.assertStatusCodeIn(res, [404, 403])
             self.assertEqual(
                 Transaction.objects.get(id=transaction.id).status,
                 old_status,
@@ -440,7 +444,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             self.login(user)
 
             for transaction in Transaction.objects.all():
-                res = self.delete(f"/transactions/{transaction.id}/")
+                res = self.delete(f"/associations/transactions/{transaction.id}/")
 
                 self.assertEqual(res.status_code, 403, msg=res)
                 self.assertTrue(

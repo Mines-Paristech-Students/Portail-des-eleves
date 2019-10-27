@@ -8,6 +8,7 @@ rm -Rf forum/migrations/*
 rm -Rf polls/migrations/*
 rm -Rf repartitions/migrations/*
 rm -Rf subscriptions/migrations/*
+rm -Rf tags/migrations/*
 
 
 python manage.py reset_db --noinput
@@ -19,6 +20,7 @@ python manage.py makemigrations forum
 python manage.py makemigrations polls
 python manage.py makemigrations repartitions
 python manage.py makemigrations subscriptions
+python manage.py makemigrations tags
 
 python manage.py migrate
 
@@ -27,6 +29,7 @@ python manage.py loaddata associations
 python manage.py loaddata messages
 python manage.py loaddata forum
 python manage.py loaddata polls
+python manage.py loaddata profile
 python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
-python manage.py loaddata profile
+python manage.py loaddata tags

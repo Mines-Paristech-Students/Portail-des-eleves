@@ -13,12 +13,12 @@ class FundingTestCase(BaseMarketPlaceTestCase):
     ########
 
     def test_if_not_logged_in_then_cannot_list_funding(self):
-        res = self.get("/funding/")
+        res = self.get("/associations/funding/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_list_funding(self):
         self.login("17simple")
-        res = self.get("/funding/")
+        res = self.get("/associations/funding/")
         self.assertStatusCode(res, 200)
 
     def test_can_list_all_funding_even_from_disabled_marketplace(self):
@@ -35,7 +35,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
             msg=f"To run, this test needs {user} to have a funding in a disabled market.",
         )
 
-        res = self.get("/funding/")
+        res = self.get("/associations/funding/")
         self.assertStatusCode(res, 200)
         self.assertSetEqual(set([x["marketplace"] for x in res.data]), marketplaces_id)
 
@@ -44,7 +44,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
     ############
 
     def test_if_not_logged_in_then_cannot_retrieve_funding(self):
-        res = self.get("/funding/1/")
+        res = self.get("/associations/funding/1/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_retrieve_funding(self):
@@ -52,12 +52,12 @@ class FundingTestCase(BaseMarketPlaceTestCase):
         self.login(user)
 
         for funding in Funding.objects.filter(user=user):
-            res = self.get(f"/funding/{funding.id}/")
+            res = self.get(f"/associations/funding/{funding.id}/")
             self.assertStatusCode(res, 200)
 
     def test_if_funding_does_not_exist_then_404(self):
         self.login("17simple")
-        res = self.get("/funding/42/")
+        res = self.get("/associations/funding/42/")
         self.assertFalse(Funding.objects.filter(pk="42").exists())
         self.assertStatusCode(res, 404)
 
@@ -70,13 +70,13 @@ class FundingTestCase(BaseMarketPlaceTestCase):
             self.login(user)
 
             l = len(Funding.objects.all())
-            res = self.post("/funding/", data=self.funding)
+            res = self.post("/associations/funding/", data=self.funding)
             self.assertStatusCode(res, 403, user_msg=user)
             self.assertEqual(l, len(Funding.objects.all()))
 
     def test_if_marketplace_admin_then_can_create_funding(self):
         self.login("17market_biero")  # Marketplace administrator.
-        res = self.post("/funding/", data=self.funding)
+        res = self.post("/associations/funding/", data=self.funding)
         self.assertStatusCode(res, 201)
 
         last_funding = Funding.objects.last()
@@ -89,7 +89,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
         self.login("17market_biero")  # Marketplace administrator.
 
         l = len(Funding.objects.all())
-        res = self.post("/funding/", data=self.negative_funding)
+        res = self.post("/associations/funding/", data=self.negative_funding)
         self.assertStatusCode(res, 400)
         self.assertEqual(l, len(Funding.objects.all()))
 
@@ -109,8 +109,8 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                     {"status": "REFUNDED"},
                     {"date": datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)},
                 ]:
-                    res = self.patch(f"/funding/{funding.id}/", data=data)
-                    self.assertStatusCode(res, 403)
+                    res = self.patch(f"/associations/funding/{funding.id}/", data=data)
+                    self.assertStatusCodeIn(res, [403, 404])
 
                     for key in data:
                         self.assertEqual(
@@ -124,11 +124,15 @@ class FundingTestCase(BaseMarketPlaceTestCase):
         self.login(user)
 
         for funding in Funding.objects.filter(marketplace="biero"):
-            res = self.patch(f"/funding/{funding.id}/", data={"status": "FUNDED"})
+            res = self.patch(
+                f"/associations/funding/{funding.id}/", data={"status": "FUNDED"}
+            )
             self.assertStatusCode(res, 200)
             self.assertEqual("FUNDED", Funding.objects.get(id=funding.id).status)
 
-            res = self.patch(f"/funding/{funding.id}/", data={"status": "REFUNDED"})
+            res = self.patch(
+                f"/associations/funding/{funding.id}/", data={"status": "REFUNDED"}
+            )
             self.assertStatusCode(res, 200)
             self.assertEqual("REFUNDED", Funding.objects.get(id=funding.id).status)
 
@@ -136,14 +140,14 @@ class FundingTestCase(BaseMarketPlaceTestCase):
         user = "17market_biero"
         self.login(user)
 
-        for funding in Funding.objects.all():
+        for funding in Funding.objects.filter(marketplace__id="biero"):
             for data in [
                 {"user": "17simple"},
                 {"value": 42},
                 {"marketplace": "pdm"},
                 {"date": datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)},
             ]:
-                res = self.patch(f"/funding/{funding.id}/", data=data)
+                res = self.patch(f"/associations/funding/{funding.id}/", data=data)
                 self.assertStatusCode(res, 403, user_msg=data)
 
                 for key in data:
@@ -165,8 +169,8 @@ class FundingTestCase(BaseMarketPlaceTestCase):
                 {"status": "REFUNDED"},
                 {"date": datetime(2018, 1, 3, 12, 00, 00, tzinfo=timezone.utc)},
             ]:
-                res = self.patch(f"/funding/{funding.id}/", data=data)
-                self.assertStatusCode(res, 403)
+                res = self.patch(f"/associations/funding/{funding.id}/", data=data)
+                self.assertStatusCode(res, 404)
 
                 for key in data:
                     self.assertEqual(
@@ -184,7 +188,7 @@ class FundingTestCase(BaseMarketPlaceTestCase):
             self.login(user)
 
             for funding in Funding.objects.all():
-                res = self.delete(f"/funding/{funding.id}/")
+                res = self.delete(f"/associations/funding/{funding.id}/")
 
                 self.assertEqual(res.status_code, 403, msg=res)
                 self.assertTrue(

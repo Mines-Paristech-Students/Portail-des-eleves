@@ -11,10 +11,9 @@ class RoleAdmin(admin.ModelAdmin):
         "role",
         "rank",
         "page",
-        "news",
         "marketplace",
         "library",
-        "vote",
+        "election",
         "events",
     )
     fieldsets = (
@@ -24,7 +23,6 @@ class RoleAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "static_page",
-                    "news",
                     "marketplace",
                     "library",
                     "vote",
@@ -38,4 +36,4 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(Association)
 class AssociationAdmin(admin.ModelAdmin):
-    list_display = ("name", "logo", "marketplace", "library", "is_hidden_1A", "rank")
+    list_display = ("name", "logo", "marketplace", "library", "is_hidden", "rank")

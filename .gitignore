@@ -124,3 +124,4 @@ forum/migrations/*.py
 polls/migrations/*.py
 repartitions/migrations/*.py
 subscriptions/migrations/*.py
+tags/migrations/*.py
