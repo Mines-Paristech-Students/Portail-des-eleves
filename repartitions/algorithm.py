@@ -61,7 +61,6 @@ def make_repartition_for_category(
 
     if len(raw_users_campaign) == 0:
         raise Exception("No users in given group")
-
     user_campaigns, fixed_user_campaigns = [], []
     for uc in raw_users_campaign:
         if not uc.fixed_to:
@@ -96,8 +95,6 @@ def make_repartition_for_category(
                     s += 1
                     places[i] += 1
 
-            print("      places : {}".format(places))
-
             cost_matrix = []
             for uc in user_campaigns:
                 cost_matrix.append(generate_line(uc, propositions, places))
@@ -120,11 +117,12 @@ def make_repartition_for_category(
             repartition_cardinal_diff = max(repartition_size) - min(repartition_size)
 
             penalty[np.argmax(repartition_size)] += 1
+        else:
+            repartition_cardinal_diff = 0  # avoid being stuck in an infinite loop
 
     print_repartition = []
     for i in repartition:
         print_repartition.append(len(i))
-    print(" repartition : {}".format(print_repartition))
 
     return repartition
 
@@ -138,7 +136,6 @@ def make_reparitition_proxy(
 
     already_used = np.array(already_used)
     penalty = np.array([0] * len(already_used))
-
     while group_cardinal_diff > 1:
         used_places = already_used + penalty
         groups = make_repartition_for_category(category, propositions, used_places)
@@ -146,7 +143,6 @@ def make_reparitition_proxy(
         rep = [0] * len(used_places)
         for i in range(len(propositions)):
             rep[i] = len(groups[i])
-
         group_cardinal = np.array(rep) + already_used
         penalty[np.argmax(group_cardinal)] += 1
         group_cardinal_diff = max(group_cardinal) - min(group_cardinal)
@@ -161,7 +157,26 @@ def make_reparition(campaign: Campaign) -> List[Group]:
     already_used = [0] * len(propositions)
     store = {}
 
-    for category in categories:
+    for i in range(len(categories)):
+        category = categories[i]
+
+        # todo: remove ?
+        # anticipation_penalty = [0] * len(propositions)
+        # if i < len(categories) - 1:
+        #     next_category = categories[i + 1]
+        #     max_users_per_project = np.ceil(
+        #         next_category.users_campaign.count() / len(propositions)
+        #     )
+        #
+        #     fixations = {}
+        #     for uc in next_category.users_campaign.all():
+        #         if uc.fixed_to:
+        #             fixations[uc.fixed_to.id] = fixations.get(uc.fixed_to.id, 0) + 1
+        #
+        #     for i, proposition in enumerate(propositions):
+        #         if fixations.get(proposition.id, 0) == max_users_per_project:
+        #             anticipation_penalty[i] += 1
+
         if category.users_campaign.count() == 0:
             continue
 
@@ -176,7 +191,6 @@ def make_reparition(campaign: Campaign) -> List[Group]:
         if len(fixed_to) > 0 and (max(fixed_to.values()) - 1) * len(propositions) > len(
             user_campaigns
         ):
-            print(fixed_to)
             raise Exception(
                 "Impossible to find an even repartition, {} out of {} users fixed to {}".format(
                     max(fixed_to.values()),
@@ -191,8 +205,6 @@ def make_reparition(campaign: Campaign) -> List[Group]:
         for i, proposition in enumerate(propositions):
             store[proposition.id] = store.get(proposition.id, []) + groups[i]
             already_used[i] += len(groups[i])
-        print("already used : {}".format(already_used))
-        print("")
     groups = []
     for proposition_id, users in store.items():
 
