@@ -11,9 +11,7 @@ class Widget(models.Model):
     widgets subscriptions in the database"""
 
     name = models.CharField(
-        primary_key=True,
-        verbose_name='Nom du widget',
-        max_length=30,
+        primary_key=True, verbose_name="Nom du widget", max_length=30
     )
 
     def __str__(self):
@@ -23,25 +21,20 @@ class Widget(models.Model):
 class WidgetSubscription(models.Model):
     user = models.ForeignKey(
         User,
-        verbose_name='Utilisateur',
+        verbose_name="Utilisateur",
         on_delete=models.CASCADE,
         null=False,
-        related_name='widget_subscriptions'
+        related_name="widget_subscriptions",
     )
 
     widget = models.ForeignKey(
-        Widget,
-        verbose_name='Widget',
-        on_delete=models.CASCADE,
-        null=False
+        Widget, verbose_name="Widget", on_delete=models.CASCADE, null=False
     )
 
-    displayed = models.BooleanField(
-        verbose_name="Affiché"
-    )
+    displayed = models.BooleanField(verbose_name="Affiché")
 
     class Meta:
-        unique_together = ('user', 'widget')
+        unique_together = ("user", "widget")
 
     def __str__(self):
         return str(self.user) + ":" + str(self.widget)
@@ -52,17 +45,13 @@ class AssociationSubscription(models.Model):
         User,
         on_delete=models.CASCADE,
         null=False,
-        related_name='association_subscription'
+        related_name="association_subscription",
     )
 
-    association = models.ForeignKey(
-        Association,
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+    association = models.ForeignKey(Association, on_delete=models.SET_NULL, null=True)
 
     class Meta:
-        unique_together = ('user', 'association')
+        unique_together = ("user", "association")
 
     def __str__(self):
-        return f'User {self.user} has subscribed to {self.association}.'
+        return f"User {self.user} has subscribed to {self.association}."
