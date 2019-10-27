@@ -12,12 +12,14 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = (EventsPermission,)
 
+    # TODO: not safe, use a PUT here (and change the tests).
     @action(detail=True, methods=("get",))
     def join(self, request, *args, **kwargs):
         event = self.get_object()
         event.participants.add(request.user)
         return Response(data={"event": event.id, "user": request.user.id})
 
+    # TODO: not safe, use a PUT here (and change the tests).
     @action(detail=True, methods=("get",))
     def leave(self, request, *args, **kwargs):
         event = self.get_object()
