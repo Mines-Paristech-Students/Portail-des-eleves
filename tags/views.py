@@ -96,14 +96,6 @@ class TagLinkView(APIView):
 
         return tag
 
-    def apply_recursive(self, folder, function):
-        for file in folder.files.all():
-            function(file)
-
-        for child in folder.children.all():
-            function(child)
-            self.apply_recursive(child, function)
-
     def post(self, request, model, instance_pk, tag_pk):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).add(instance_pk)

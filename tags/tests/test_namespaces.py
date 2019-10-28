@@ -1,9 +1,9 @@
 import json
 
-from tags.tests.base_test import BaseTestCase
+from tags.tests.base_test import TagsBaseTestCase
 
 
-class TagNamespaceTestCase(BaseTestCase):
+class TagNamespaceTestCase(TagsBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_marketplace.yaml"]
 
     def test_create_scoped_namespace(self):

@@ -3,21 +3,19 @@ import mimetypes
 from rest_framework import serializers
 
 from associations.models import Media
+from tags.serializers import filter_tags
 
 
 class MediaSerializer(serializers.ModelSerializer):
+    tags = serializers.SerializerMethodField()
+
     class Meta:
         model = Media
-        fields = (
-            "id",
-            "name",
-            "description",
-            "association",
-            "file",
-            "uploaded_on",
-            "uploaded_by",
-        )
-        read_only_fields = ("uploaded_on", "uploaded_by", "file")
+        read_only_fields = ("id", "uploaded_on", "uploaded_by", "file", "tags")
+        fields = read_only_fields + ("name", "description", "association")
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
 
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)

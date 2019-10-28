@@ -1,51 +1,19 @@
 from rest_framework import serializers
 
-from forum.models import Theme, Topic, MessageForum
 from authentication.serializers.user import UserShortSerializer
-
-
-class ThemeSerializer(serializers.ModelSerializer):
-    topics = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Theme
-        fields = ("id", "name", "description", "topics")
-
-    def get_topics(self, obj):
-        # Get the current user.
-        user = None
-        request = self.context.get("request")
-
-        if request and hasattr(request, "user"):
-            user = request.user
-
-        # Return the serialized representation of the topics.
-        if user and user.is_authenticated and not user.show:
-            return TopicSerializer(
-                obj.topics.exclude(tags__is_hidden=True), many=True
-            ).data
-
-        return TopicSerializer(obj.topics.all(), many=True).data
-
-
-class ThemeShortSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Theme
-        fields = ("id", "name")
-
-
-class TopicSerializer(serializers.ModelSerializer):
-    creator = UserShortSerializer()
-    theme = ThemeShortSerializer()
-
-    class Meta:
-        model = Topic
-        fields = ("id", "name", "creator", "theme")
+from forum.models import Theme, Topic, MessageForum
+from tags.serializers import filter_tags
 
 
 class TopicShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Topic
+        fields = ("id", "name")
+
+
+class ThemeShortSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Theme
         fields = ("id", "name")
 
 
@@ -72,3 +40,25 @@ class MessageForumSerializer(serializers.ModelSerializer):
             return -1
         else:
             return 0
+
+
+class TopicSerializer(serializers.ModelSerializer):
+    creator = UserShortSerializer()
+    theme = ThemeShortSerializer()
+
+    class Meta:
+        model = Topic
+        fields = ("id", "name", "creator", "theme")
+
+
+class ThemeSerializer(serializers.ModelSerializer):
+    topics = TopicShortSerializer(many=True)
+    tags = serializers.SerializerMethodField()
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
+
+    class Meta:
+        model = Theme
+        read_only_fields = ("id", "topics", "tags")
+        fields = read_only_fields + ("name", "description")

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -5,6 +6,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from associations.models import Association, Library, Loanable, Loan
 from associations.serializers.association import AssociationShortSerializer
 from authentication.models import User
+from tags.serializers import filter_tags, filter_nested_attribute
 
 
 class CreateLoanSerializer(serializers.ModelSerializer):
@@ -103,10 +105,21 @@ class LoanableSerializer(serializers.ModelSerializer):
     library = serializers.PrimaryKeyRelatedField(
         many=False, read_only=False, queryset=Library.objects
     )
+    tags = serializers.SerializerMethodField
 
     class Meta:
         model = Loanable
-        fields = ("id", "name", "description", "image", "comment", "library")
+        read_only_fields = ("id", "tags")
+        fields = read_only_fields + (
+            "name",
+            "description",
+            "image",
+            "comment",
+            "library",
+        )
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
 
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
@@ -129,11 +142,20 @@ class LibraryShortSerializer(serializers.ModelSerializer):
 
 
 class LibrarySerializer(serializers.ModelSerializer):
-    loanables = LoanableShortSerializer(many=True)
+    loanables = serializers.SerializerMethodField()
 
     class Meta:
         model = Library
         fields = ("id", "enabled", "association", "loanables")
+
+    def get_loanables(self, obj):
+        return filter_nested_attribute(
+            self.context,
+            obj,
+            LoanableShortSerializer,
+            "loanables",
+            Q(tags__is_hidden=True),
+        )
 
     def create(self, validated_data):
         """Create a new instance of Library based upon validated_data."""

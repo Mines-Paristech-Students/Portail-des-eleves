@@ -80,15 +80,13 @@ class Tag(models.Model):
     LINKED_TO_MODEL = {
         # Association
         "association": Association,
-        "media": Media,
         "loanable": Loanable,
+        "media": Media,
         "page": Page,
         "product": Product,
         "role": Role,
         # Forum
         "theme": Theme,
-        "topic": Topic,
-        "message_forum": MessageForum,
     }
 
     namespace = models.ForeignKey(

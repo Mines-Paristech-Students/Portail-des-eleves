@@ -1,14 +1,79 @@
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from tags.models import Tag, Namespace
 
 
+def filter_nested_attribute(
+    context, main_object, serializer_class, nested_attribute, exclude_condition
+):
+    """
+        This function is a helper function for the Serializers which have to return nested objects but want to filter
+        them if the user is not `show`.
+
+        For instance, to filter out the `topics` of a `Theme` object, one could do like this:
+            topics = serializersSerializerMethodField()
+
+            def get_topics(self, obj):
+                return filter_nested_attribute(
+                    self.context, obj, TopicSerializer, "topics", Q(tags__is_hidden=True)
+                )
+
+        Don't forget to add `topics` to `read_only_fields` or `fields`. ;)
+    """
+
+    # Get the current user.
+    user = None
+    request = context.get("request")
+
+    if request and hasattr(request, "user"):
+        user = request.user
+
+    # Return the serialized representation of the nested attribute.
+    if user and user.is_authenticated and not user.show:
+        return serializer_class(
+            getattr(main_object, nested_attribute).exclude(exclude_condition), many=True
+        ).data
+
+    return serializer_class(
+        getattr(main_object, nested_attribute).all(), many=True
+    ).data
+
+
+def filter_tags(context, main_object, short=False):
+    """
+        Shortcut to use `TagShortSerializer` or `TagSerializer` with `filter_nested_attributes`.
+        Use it like this:
+            tags = serializers.SerializerMethodField()
+
+            def get_tags(self, obj):
+                return filter_tags(self.context, obj, short=True)
+
+        :param context should be `self.context` in the context of a `get_tags` `Serializer` method.
+        :param main_object should be `obj`, the second parameter of a `get_tags` `Serializer` method.
+        :param short use `TagShortSerializer` if set to True, `TagSerializer` otherwise.r.
+    """
+
+    return filter_nested_attribute(
+        context,
+        main_object,
+        TagShortSerializer if short else TagSerializer,
+        "tags",
+        Q(is_hidden=True),
+    )
+
+
 class NamespaceSerializer(serializers.ModelSerializer):
+    tags = serializers.SerializerMethodField()
+
     class Meta:
         model = Namespace
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "tags")
         fields = read_only_fields + ("name", "scoped_to_pk", "scoped_to_model")
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=True)
 
     def validate(self, data):
         if len(data) == 0:

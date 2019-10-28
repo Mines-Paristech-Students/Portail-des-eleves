@@ -188,7 +188,7 @@
 - model: associations.loanable
   pk: 1
   fields:
-    name: public_loanable
+    name: public_association-public_loanable
     description: ...
     comment: ...
     library: public_association
@@ -196,10 +196,18 @@
 - model: associations.loanable
   pk: 2
   fields:
-    name: hidden_loanable
+    name: hidden_association-hidden_loanable
     description: ...
     comment: ...
     library: hidden_association
+
+- model: associations.loanable
+  pk: 3
+  fields:
+    name: public_association-hidden_loanable
+    description: ...
+    comment: ...
+    library: public_association
 
 ########
 # Page #
@@ -239,7 +247,7 @@
 - model: associations.product
   pk: 1
   fields:
-    name: public_product
+    name: public_association_public_product
     description: ...
     price: 3.5
     marketplace: public_association
@@ -247,10 +255,19 @@
 - model: associations.product
   pk: 2
   fields:
-    name: hidden_product
+    name: hidden_association_public_product
     description: ...
     price: 1.5
     marketplace: hidden_association
+
+- model: associations.product
+  pk: 3
+  fields:
+    name: public_association_hidden_product
+    description: ...
+    price: 3.5
+    marketplace: public_association
+
 
 ########
 # Role #
@@ -336,13 +353,6 @@
     creator: 17bocquet
     theme: 2
 
-- model: forum.topic
-  pk: 3
-  fields:
-    name: public_theme-hidden_topic
-    creator: 17bocquet
-    theme: 1
-
 ##################
 # Forum Messages #
 ##################
@@ -352,7 +362,7 @@
   pk: 1
   fields:
     author: 17bocquet
-    text: public_theme-public_topic-public_message
+    text: public_theme-public_message
     date: '2019-06-01T20:00:00+00:00'
     topic: 1
 
@@ -360,23 +370,6 @@
   pk: 2
   fields:
     author: 17bocquet
-    text: hidden_theme-public_topic-public_message
+    text: hidden_theme-public_message
     date: '2019-06-01T20:00:00+00:00'
     topic: 2
-
-
-- model: forum.messageforum
-  pk: 3
-  fields:
-    author: 17bocquet
-    text: public_theme-hidden_topic-public_message
-    date: '2019-06-01T20:00:00+00:00'
-    topic: 3
-
-- model: forum.messageforum
-  pk: 4
-  fields:
-    author: 17bocquet
-    text: public_theme-public_topic-hidden_message
-    date: '2019-06-01T20:00:00+00:00'
-    topic: 1
