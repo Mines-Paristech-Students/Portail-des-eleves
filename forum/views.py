@@ -1,126 +1,47 @@
-import json
-from rest_framework import permissions, viewsets
-from rest_framework.views import APIView
-from django.http import JsonResponse
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from forum.models import Theme, Topic, MessageForum
+from forum.permissions import ThemePermission, TopicPermission, MessagePermission
 from forum.serializers import ThemeSerializer, TopicSerializer, MessageForumSerializer
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
-
-    def get_queryset(self):
-        queryset = Theme.objects.all()
-
-        themeId = self.request.query_params.get("theme", None)
-        if themeId is not None:
-            queryset = queryset.filter(theme=themeId)
-        return queryset
+    permission_classes = (ThemePermission,)
 
 
 class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
+    permission_classes = (TopicPermission,)
 
-    def get_queryset(self):
-        queryset = Topic.objects.all()
-
-        themeId = self.request.query_params.get("theme", None)
-
-        if themeId is not None:
-            queryset = queryset.filter(theme=themeId)
-        return queryset
-
-    def create(self, request, **kwargs):
-
-        body = json.loads(request.body)
-
-        name = body["name"]
-
-        theme_id = body["theme"] if "theme" in body else None
-
-        theme = Theme.objects.get(pk=theme_id)
-        if theme is not None:
-            user = request.user
-
-            topic = Topic(name=name, creator=user, theme=theme)
-
-            topic.save()
-
-            return JsonResponse(TopicSerializer(topic).data, safe=False)
-
-        else:
-            return JsonResponse("No theme")
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class MessageForumViewSet(viewsets.ModelViewSet):
     queryset = MessageForum.objects.all()
     serializer_class = MessageForumSerializer
+    permission_classes = (MessagePermission,)
 
-    def get_queryset(self):
-        queryset = MessageForum.objects.all()
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
-        topicId = self.request.query_params.get("topic", None)
+    @action(detail=True, methods=("put",), permission_classes=())
+    def vote_up(self, *args, **kwargs):
+        message = self.get_object()
 
-        if topicId is not None:
-            queryset = queryset.filter(topic=topicId)
-        return queryset
+        message.down_votes.remove(self.request.user)
+        message.up_votes.add(self.request.user)
+        return Response(status=status.HTTP_201_CREATED)
 
-    def create(self, request, **kwargs):
+    @action(detail=True, methods=("put",), permission_classes=())
+    def vote_down(self, *args, **kwargs):
+        message = self.get_object()
 
-        body = json.loads(request.body)
-
-        text_message = body["message"]
-
-        topic_id = body["topic"] if "topic" in body else None
-
-        topic = Topic.objects.get(pk=topic_id)
-
-        if topic is not None:
-            user = request.user
-
-            message = MessageForum(author=user, text=text_message, topic=topic)
-
-            message.save()
-
-            return JsonResponse(MessageForumSerializer(message).data, safe=False)
-
-        else:
-            return JsonResponse("No topic")
-
-
-class NewVoteMessageView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request, format=None):
-        return JsonResponse(
-            {"status": "error", "message": "Can not see vote"}, status="405"
-        )
-
-    def put(self, request, format=None):
-        body = json.loads(request.body)
-        user = request.user
-
-        try:
-            new_vote = int(body["new_vote"])
-            message_id = int(body["message_id"])
-            message = MessageForum.objects.get(pk=message_id)
-
-            if message.up_vote.filter(id=user.id).count() != 0:
-                message.up_vote.remove(user)
-            if message.down_vote.filter(id=user.id).count() != 0:
-                message.down_vote.remove(user)
-
-            if new_vote == 1:
-                message.up_vote.add(user)
-            elif new_vote == -1:
-                message.down_vote.add(user)
-
-        except ValueError as err:
-            return JsonResponse(
-                {"status": "error", "message": "Missing argument"}, status="400"
-            )
-
-        return JsonResponse({"status": "ok"})
+        message.up_votes.remove(self.request.user)
+        message.down_votes.add(self.request.user)
+        return Response(status=status.HTTP_201_CREATED)

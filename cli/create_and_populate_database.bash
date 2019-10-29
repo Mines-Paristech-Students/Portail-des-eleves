@@ -29,6 +29,7 @@ python manage.py loaddata associations
 python manage.py loaddata messages
 python manage.py loaddata forum
 python manage.py loaddata polls
+python manage.py loaddata profile
 python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
-python manage.py loaddata profile
+python manage.py loaddata tags

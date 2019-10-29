@@ -18,6 +18,8 @@ from associations.views import (
     CreateBallotView,
 )
 from associations.views.media import MediaViewSet
+from associations.views import set_association_logo
+
 
 urlpatterns = []
 router = BulkRouter()
@@ -48,6 +50,7 @@ router.register(r"products", ProductViewSet)
 router.register(r"transactions", TransactionViewSet)
 router.register(r"fundings", FundingViewSet)
 urlpatterns += [
+    path("associations/<association_pk>/image", set_association_logo),
     path("marketplace/balance/", BalanceView.as_view(), name="balance-list"),
     path(
         "marketplace/<slug:marketplace_id>/balance/",

@@ -108,6 +108,11 @@ class BaseTestCase(TestCase):
             self.api_base + url, data, format=format, content_type=content_type
         )
 
+    def put(self, url, data=None, format="json", content_type="application/json"):
+        return self.client.put(
+            self.api_base + url, data, format=format, content_type=content_type
+        )
+
     def delete(self, url, data="", format=None, content_type=None):
         return self.client.delete(self.api_base + url)
 

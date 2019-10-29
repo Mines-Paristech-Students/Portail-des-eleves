@@ -147,3 +147,9 @@ class AssociationSerializer(serializers.ModelSerializer):
             ).data
 
         return PageShortSerializer(obj.pages.all(), many=True).data
+
+
+class AssociationLogoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Association
+        fields = ("logo",)
