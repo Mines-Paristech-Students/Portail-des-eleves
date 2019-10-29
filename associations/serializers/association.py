@@ -134,11 +134,8 @@ class AssociationSerializer(serializers.ModelSerializer):
 
     def get_pages(self, obj):
         # Get the current user.
-        user = None
-        request = self.context.get("request")
-
-        if request and hasattr(request, "user"):
-            user = request.user
+        request = self.context.get("request", None)
+        user = getattr(request, "user", None)
 
         # Return the serialized representation of the pages.
         if user and user.is_authenticated and not user.show:
