@@ -1,10 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework_bulk.generics import BulkModelViewSet
 from rest_framework.exceptions import PermissionDenied, NotFound
-from url_filter.integrations.drf import DjangoFilterBackend
+from rest_framework.response import Response
 
 from associations.models import Association
 from associations.models import Role
@@ -19,12 +17,10 @@ from associations.serializers import (
 from associations.serializers.association import AssociationLogoSerializer
 
 
-class RoleViewSet(BulkModelViewSet):
+class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
-    model = Role
     permission_classes = (RolePermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("user", "association")
 
     def get_write_role_serializer(self, association, *args, **kwargs):

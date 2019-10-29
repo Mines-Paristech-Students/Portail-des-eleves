@@ -26,7 +26,6 @@ class ProfileAnswerViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileAnswerSerializer
     permission_classes = (ProfileAnswerPermission,)
 
-    filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ("user",)
 
     def create(self, request, **kwargs):

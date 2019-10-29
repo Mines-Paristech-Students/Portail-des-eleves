@@ -39,8 +39,8 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
     def validate_csrf_header(self, request):
         if not settings.is_prod_mode():
             return (
-                True
-            )  # Leave it like that in dev so we can check API from the browser
+                True  # Leave it like that in dev so we can check API from the browser
+            )
         header = request.META.get("HTTP_X_REQUESTED_WITH")
         return header == "XMLHttpRequest"
 

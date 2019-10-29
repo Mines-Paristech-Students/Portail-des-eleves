@@ -14,6 +14,6 @@ urlpatterns = [
 router = BulkRouter()
 
 router.register(r"namespaces", NamespaceViewSet)
-router.register(r"tag", TagViewSet)
+router.register(r"tags", TagViewSet)
 
 urlpatterns += router.urls

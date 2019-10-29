@@ -1,9 +1,10 @@
-from associations.models import User, Role
+from associations.models import Role
 from associations.tests.role.base_test_role import (
     BaseRoleTestCase,
     ALL_USERS,
     ALL_USERS_EXCEPT_ADMIN_BIERO,
 )
+from authentication.models import User
 
 
 class RoleTestCase(BaseRoleTestCase):
@@ -180,8 +181,8 @@ class RoleTestCase(BaseRoleTestCase):
         "is_archived": True,
         "administration_permission": False,
         "election_permission": True,
-        "events_permission": True,
-        "filesystem_permission": True,
+        "event_permission": True,
+        "media_permission": True,
         "library_permission": True,
         "marketplace_permission": True,
         "page_permission": True,
@@ -282,8 +283,8 @@ class RoleTestCase(BaseRoleTestCase):
                 "rank": 0,
                 "administration_permission": True,
                 "election_permission": True,
-                "events_permission": True,
-                "filesystem_permission": True,
+                "event_permission": True,
+                "media_permission": True,
                 "library_permission": True,
                 "marketplace_permission": True,
                 "page_permission": True,

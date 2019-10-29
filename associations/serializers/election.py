@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from associations.models import Association, User, Election, Choice, Ballot
+from associations.models import Association, Election, Choice, Ballot
+from authentication.models import User
 
 
 class ChoiceShortSerializer(serializers.ModelSerializer):
