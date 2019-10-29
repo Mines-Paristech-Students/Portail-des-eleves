@@ -138,6 +138,33 @@ class MarketplaceSerializer(serializers.ModelSerializer):
             Q(tags__is_hidden=True),
         )
 
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+
+        res["association"] = AssociationShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
+        return res
+
+    def create(self, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.marketplace.MarketplaceWriteSerializer`."
+        )
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.marketplace.MarketplaceWriteSerializer`."
+        )
+
+
+class MarketplaceWriteSerializer(serializers.ModelSerializer):
+    """We have to use two serializers, one for writing and the other for reading only, because a `SerializerMethodField`
+    is a read-only field."""
+
+    class Meta:
+        model = Marketplace
+        fields = ("id", "enabled", "association", "products")
+
     def create(self, validated_data):
         """Create a new instance of Marketplace based upon validated_data."""
 
@@ -177,11 +204,3 @@ class MarketplaceSerializer(serializers.ModelSerializer):
         instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-
-        res["association"] = AssociationShortSerializer().to_representation(
-            Association.objects.get(pk=res["association"])
-        )
-        return res

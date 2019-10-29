@@ -83,7 +83,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class ThemeSerializer(serializers.ModelSerializer):
-    topics = TopicShortSerializer(many=True)
+    topics = TopicShortSerializer(many=True, read_only=True)
     tags = serializers.SerializerMethodField()
 
     def get_tags(self, obj):

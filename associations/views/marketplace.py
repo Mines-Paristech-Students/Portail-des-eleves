@@ -8,10 +8,9 @@ from django.http import (
     HttpResponseBadRequest,
     Http404,
 )
-from rest_framework import viewsets, filters, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Product, Transaction, Funding
 from associations.permissions import (
@@ -22,6 +21,7 @@ from associations.permissions import (
 )
 from associations.serializers import (
     MarketplaceSerializer,
+    MarketplaceWriteSerializer,
     ProductSerializer,
     TransactionSerializer,
     CreateTransactionSerializer,
@@ -37,6 +37,12 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
     queryset = Marketplace.objects.all()
     serializer_class = MarketplaceSerializer
     permission_classes = (MarketplacePermission,)
+
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return MarketplaceWriteSerializer
+
+        return MarketplaceSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):

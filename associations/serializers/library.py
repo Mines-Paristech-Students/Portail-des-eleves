@@ -157,6 +157,33 @@ class LibrarySerializer(serializers.ModelSerializer):
             Q(tags__is_hidden=True),
         )
 
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+
+        res["association"] = AssociationShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
+        return res
+
+    def create(self, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.library.LibraryWriteSerializer`."
+        )
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.library.LibraryWriteSerializer`."
+        )
+
+
+class LibraryWriteSerializer(serializers.ModelSerializer):
+    """We have to use two serializers, one for writing and the other for reading only, because a `SerializerMethodField`
+    is a read-only field."""
+
+    class Meta:
+        model = Library
+        fields = ("id", "enabled", "association", "loanables")
+
     def create(self, validated_data):
         """Create a new instance of Library based upon validated_data."""
 
@@ -194,11 +221,3 @@ class LibrarySerializer(serializers.ModelSerializer):
         instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-
-        res["association"] = AssociationShortSerializer().to_representation(
-            Association.objects.get(pk=res["association"])
-        )
-        return res
