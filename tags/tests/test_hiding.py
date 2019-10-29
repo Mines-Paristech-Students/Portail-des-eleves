@@ -2,6 +2,7 @@ import datetime
 
 from associations.models import (
     Association,
+    Election,
     Library,
     Loanable,
     Marketplace,
@@ -81,7 +82,7 @@ class HidingTestCase(TagsBaseTestCase):
         self.login("17simple")
 
         #########################################
-        # Get all associations
+        # Get all elections
 
         response = self.get("/associations/elections/")
         self.assertEqual(response.status_code, 200)
@@ -89,7 +90,7 @@ class HidingTestCase(TagsBaseTestCase):
 
         self.switch_17simple_to_first_year()
         ###########################################
-        # Get all associations, but one should be missing
+        # Get all elections, but one should be missing
 
         response = self.get("/associations/elections/")
         self.assertEqual(len(response.data), 1)
@@ -99,6 +100,20 @@ class HidingTestCase(TagsBaseTestCase):
         # Cannot directly access a hidden object.
         response = self.get("/associations/elections/2/")
         self.assertStatusCode(response, 404)
+
+    def test_hiding_election_results(self):
+        pk = 2
+        election = Election.objects.get(pk=2)
+        # Use a completed election or we cannot access the results no matter what.
+        self.assertFalse(election.is_active)
+
+        self.login("17simple")
+        response = self.get(f"/associations/elections/{pk}/results/")
+        self.assertEqual(response.status_code, 200)
+
+        self.switch_17simple_to_first_year()
+        response = self.get(f"/associations/elections/{pk}/results/")
+        self.assertEqual(response.status_code, 404)
 
     def test_hiding_events(self):
         self.login("17simple")
@@ -457,6 +472,9 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/associations/public_association/")
         self.assertEqual(response.status_code, 200)
 
+        # Check if `response.data` is what we think it is.
+        self.assertEqual(response.data["name"], "Public association")
+
         msg = (
             "It seems that `associations/public_association` now returns a list of medias.\n"
             "Please make sure to test accordingly."
@@ -522,6 +540,9 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/associations/public_association/")
         self.assertEqual(response.status_code, 200)
 
+        # Check if `response.data` is what we think it is.
+        self.assertEqual(response.data["name"], "Public association")
+
         msg = (
             "It seems that `associations/public_association` now returns a list of roles.\n"
             "Please make sure to test accordingly."
@@ -529,21 +550,17 @@ class HidingTestCase(TagsBaseTestCase):
         self.assertNotIn("role", response.data, msg=msg)
         self.assertNotIn("roles", response.data, msg=msg)
 
-    def test_no_tags_in_namespaces(self):
+    def test_if_not_tag_manager_then_no_access_to_namespaces(self):
         self.login("17simple")
 
+        response = self.get("/tags/namespaces/1/")
+        self.assertEqual(response.status_code, 403)
+
+    def test_hiding_tags_in_namespaces(self):
+        self.login("17simple")
         response = self.get("/tags/namespaces/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data[0]["tags"]), 1)
 
-        # TODO: THIS IS BROKEN. Check the others too. Add something like self.assertIn("name", response.data).
-        print(response.data)
-
-        self.assertNotIn(
-            "tags",
-            response.data,
-            msg="It seems that /tags/namespaces/ now returns the tags. Please ensure this behavior is tested.",
-        )
-
-
-# TODO: check if the returned nested tags are filtered well.
+        self.switch_17simple_to_first_year()
+        response = self.get("/tags/namespaces/")
+        self.assertEqual(len(response.data[0]["tags"]), 0)

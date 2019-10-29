@@ -64,6 +64,13 @@ def filter_tags(context, main_object, short=False):
     )
 
 
+class NamespaceShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Namespace
+        read_only_fields = ("id", "name", "scoped_to_pk", "scoped_to_model")
+        fields = read_only_fields
+
+
 class NamespaceSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
 
@@ -117,7 +124,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super(TagSerializer, self).to_representation(instance)
-        response["namespace"] = NamespaceSerializer().to_representation(
+        response["namespace"] = NamespaceShortSerializer().to_representation(
             instance.namespace
         )
         return response

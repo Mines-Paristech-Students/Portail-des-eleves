@@ -3,14 +3,19 @@ from rest_framework import permissions
 
 from associations.models import (
     Association,
-    Role,
-    Product,
-    Page,
+    Choice,
+    Election,
+    Event,
+    Media,
+    Funding,
+    Library,
     Loanable,
     Loan,
-    Media,
-    Event,
-    Choice,
+    Marketplace,
+    Page,
+    Product,
+    Transaction,
+    Role,
 )
 from authentication.models import User
 from forum.models import Theme, MessageForum, Topic
@@ -18,18 +23,23 @@ from tags.models import Namespace, Tag
 
 
 def get_parent_object(obj):
-    """ returns the 'parent' object ie the one on which the scope is applied """
+    """Return the 'parent' object ie the one to which the scope is applied."""
 
     mappers = {
         # Associations
         Association: lambda x: x,
         Choice: lambda x: x.election.association,
+        Election: lambda x: x.association,
         Event: lambda x: x.association,
-        Media: lambda x: x.association,
-        Loan: lambda x: x.loanable.library.association,
+        Funding: lambda x: x.marketplace.association,
+        Library: lambda x: x.association,
         Loanable: lambda x: x.library.association,
+        Loan: lambda x: x.loanable.library.association,
+        Marketplace: lambda x: x.association,
+        Media: lambda x: x.association,
         Page: lambda x: x.association,
         Product: lambda x: x.marketplace.association,
+        Transaction: lambda x: x.product.marketplace.association,
         Role: lambda x: x.association,
         # Forum
         Theme: lambda x: x,
@@ -41,7 +51,7 @@ def get_parent_object(obj):
     if mapper:
         return mapper(obj)
     else:
-        raise Exception("No context associated to {}".format(obj))
+        raise ValueError(f"No context associated to {obj}")
 
 
 def can_manage_tags_for(user, instance):
@@ -58,6 +68,8 @@ def can_manage_tags_for(user, instance):
 
 def user_can_link_tag_to(user: User, tag: Tag, instance):
     parent = get_parent_object(instance)
+
+    # Check if the instance can be tagged with this namespace.
     if (
         not isinstance(
             parent, Namespace.SCOPED_TO_MODELS[tag.namespace.scoped_to_model]
@@ -66,6 +78,7 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
     ):
         return False
 
+    # Check if the user has the permission.
     if isinstance(parent, Association):
         role = user.get_role(parent)
         return bool(role)
@@ -79,17 +92,21 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
 
 class NamespacePermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method == "POST":
+        # `request.data != []` has to be here because, for some reason, DRF makes a POST request when the user just
+        # asked for a GET request (it has to do with the form displayed in the viewsets).
+        # Without this, a `SuspiciousOperation` would be raised (because `scoped_to_model` and `scoped_to_pk` would be
+        # None.
+        if request.method == "POST" and request.data != []:
             scoped_to_model = request.data.get("scoped_to_model")
             scoped_to_pk = request.data.get("scoped_to_pk")
 
-            if scoped_to_model != "global" and (
-                scoped_to_model is None or scoped_to_pk is None
-            ):
-                raise SuspiciousOperation()
-
+            # Only the admins can edit a global namespace.
             if scoped_to_model == "global":
                 return request.user.is_admin
+            # Or, both parameters have to be provided.
+            else:
+                if scoped_to_model is None or scoped_to_pk is None:
+                    raise SuspiciousOperation()
 
             instance = Tag.get_linked_instance(scoped_to_model, scoped_to_pk)
             return can_manage_tags_for(request.user, instance)
@@ -106,9 +123,11 @@ class NamespacePermission(permissions.BasePermission):
 
 class ManageTagPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method == "POST":
+        # Same as above for `request.data != []`.
+        if request.method == "POST" and request.data != []:
             namespace = Namespace.objects.get(pk=request.data.get("namespace"))
             instance = namespace.scoped_to
+
             if instance:
                 return can_manage_tags_for(request.user, instance)
             else:

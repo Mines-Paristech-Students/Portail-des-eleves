@@ -1,3 +1,4 @@
+from tags.models import Tag
 from tags.tests.base_test import TagsBaseTestCase
 
 
@@ -95,27 +96,15 @@ class TagNamespaceTestCase(TagsBaseTestCase):
     def test_create_same_tag_twice(self):
         self.login("17admin_pdm")
 
-        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
-        self.assertStatusCode(res, 201)
+        length_before = Tag.objects.all().count()
 
         res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
+        self.assertEqual(length_before + 1, Tag.objects.all().count())
 
-        res = self.get("/tags/tags/", {"scope": "association", "scope_id": "pdm"})
-        namespace = {
-            "id": 2,
-            "name": "farine",
-            "scoped_to_model": "association",
-            "scoped_to_pk": "pdm",
-        }
-        self.assertJSONEqual(
-            res.content,
-            [
-                {"id": 2, "value": "sarrasin", "namespace": namespace},
-                {"id": 3, "value": "blé", "namespace": namespace},
-                {"id": 6, "value": "orge", "namespace": namespace},
-            ],
-        )
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
+        self.assertStatusCode(res, 201)
+        self.assertEqual(length_before + 1, Tag.objects.all().count())
 
     def test_create_tag_in_non_owned_namepace(self):
         self.login("17admin_pdm")

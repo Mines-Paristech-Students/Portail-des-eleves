@@ -12,14 +12,20 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            res.json().get("tags"),
+            res.data["tags"],
             [
                 {
                     "id": 1,
                     "value": "17bocquet",
-                    "namespace": {"id": 1, "scoped_to_model": "global", "name": "user"},
+                    "namespace": {
+                        "id": 1,
+                        "scoped_to_pk": None,
+                        "scoped_to_model": "global",
+                        "name": "user",
+                    },
                 }
             ],
+            msg=res.data["tags"],
         )
 
     def test_remove_global_tag(self):
