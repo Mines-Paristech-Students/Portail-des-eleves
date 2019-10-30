@@ -1,7 +1,6 @@
 from django import http
 from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -13,6 +12,7 @@ from associations.permissions import (
 )
 from associations.serializers import (
     LibrarySerializer,
+    LibraryWriteSerializer,
     CreateLoanSerializer,
     UpdateLoanSerializer,
     LoanSerializer,
@@ -37,13 +37,18 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         return Library.objects.filter(Q(enabled=True) | Q(id__in=libraries_id))
 
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return LibraryWriteSerializer
+
+        return LibrarySerializer
+
 
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
     serializer_class = LoanableSerializer
     permission_classes = (LoanablePermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("library__id",)
 
     def get_queryset(self):
@@ -66,7 +71,6 @@ class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (LoansPermission,)
 
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filter_fields = ("status", "user", "loan_date", "loanable__library__id")
     ordering = ("loan_date",)
 

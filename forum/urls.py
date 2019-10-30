@@ -5,8 +5,8 @@ from forum.views import ThemeViewSet, TopicViewSet, MessageForumViewSet
 
 router = BulkRouter()
 
-router.register(r"themes", ThemeViewSet)
-router.register(r"topics", TopicViewSet)
-router.register(r"messages", MessageForumViewSet)
+router.register("themes", ThemeViewSet)
+router.register("topics", TopicViewSet)
+router.register("messages", MessageForumViewSet)
 
 urlpatterns = router.urls

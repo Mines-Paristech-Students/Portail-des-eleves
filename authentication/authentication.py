@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 import jwt
+
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -59,9 +60,7 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[settings.JWT_AUTH_SETTINGS["USER_ID_CLAIM_NAME"]]
         except KeyError:
-            raise AuthenticationFailed(
-                "Token contained no recognizable user identification."
-            )
+            raise AuthenticationFailed("Token contained no recognizable user identification.")
 
         try:
             user = self.User.objects.get(pk=user_id)

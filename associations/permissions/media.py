@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import Role, File, Folder
+from associations.models import Role, Media
 
 
 def _get_role_for_user(user, association):
@@ -10,7 +10,7 @@ def _get_role_for_user(user, association):
     return None
 
 
-class CanEditFiles(BasePermission):
+class CanEditMedia(BasePermission):
     message = "Editing files is not allowed."
 
     def has_permission(self, request, view):
@@ -33,13 +33,10 @@ class CanEditFiles(BasePermission):
         return True
 
     def has_object_permission(self, request, view, obj):
-
         if request.method in SAFE_METHODS:
             return True
 
-        if isinstance(obj, File):
-            association = obj.association
-        elif isinstance(obj, Folder):
+        if isinstance(obj, Media):
             association = obj.association
         else:
             return True

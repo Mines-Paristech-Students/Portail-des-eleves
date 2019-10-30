@@ -23,7 +23,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (ProfilePermission,)
 
-    filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ("id", "first_name", "last_name")
     filter_fields = ("year_of_entry",)
     pagination_class = ProfileViewSetPagination

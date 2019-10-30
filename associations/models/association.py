@@ -1,3 +1,4 @@
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.functional import cached_property
 from django.utils.text import slugify
@@ -5,6 +6,9 @@ from django.utils.text import slugify
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
 from authentication.models import User
+from backend.settings import MEDIA_ROOT
+
+fs = FileSystemStorage(location=MEDIA_ROOT)
 
 
 class Association(models.Model):
@@ -68,8 +72,8 @@ class Role(models.Model):
     PERMISSION_NAMES = (
         "administration",
         "election",
-        "events",
-        "filesystem",
+        "event",
+        "media",
         "library",
         "marketplace",
         "page",
@@ -97,8 +101,8 @@ class Role(models.Model):
     # Permissions:
     administration_permission = models.BooleanField(default=False)
     election_permission = models.BooleanField(default=False)
-    events_permission = models.BooleanField(default=False)
-    filesystem_permission = models.BooleanField(default=False)
+    event_permission = models.BooleanField(default=False)
+    media_permission = models.BooleanField(default=False)
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
     page_permission = models.BooleanField(default=False)
@@ -112,12 +116,12 @@ class Role(models.Model):
         return self.election_permission and not self.is_archived
 
     @cached_property
-    def events(self):
-        return self.events_permission and not self.is_archived
+    def event(self):
+        return self.event_permission and not self.is_archived
 
     @cached_property
-    def filesystem(self):
-        return self.filesystem_permission and not self.is_archived
+    def media(self):
+        return self.media_permission and not self.is_archived
 
     @cached_property
     def library(self):

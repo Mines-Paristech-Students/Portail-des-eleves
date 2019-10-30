@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -5,6 +6,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from associations.models import Association, Library, Loanable, Loan
 from associations.serializers.association import AssociationShortSerializer
 from authentication.models import User
+from tags.serializers import filter_tags, filter_nested_attribute
 
 
 class CreateLoanSerializer(serializers.ModelSerializer):
@@ -103,10 +105,21 @@ class LoanableSerializer(serializers.ModelSerializer):
     library = serializers.PrimaryKeyRelatedField(
         many=False, read_only=False, queryset=Library.objects
     )
+    tags = serializers.SerializerMethodField
 
     class Meta:
         model = Loanable
-        fields = ("id", "name", "description", "image", "comment", "library")
+        read_only_fields = ("id", "tags")
+        fields = read_only_fields + (
+            "name",
+            "description",
+            "image",
+            "comment",
+            "library",
+        )
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
 
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
@@ -129,7 +142,43 @@ class LibraryShortSerializer(serializers.ModelSerializer):
 
 
 class LibrarySerializer(serializers.ModelSerializer):
-    loanables = LoanableShortSerializer(many=True)
+    loanables = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Library
+        fields = ("id", "enabled", "association", "loanables")
+
+    def get_loanables(self, obj):
+        return filter_nested_attribute(
+            self.context,
+            obj,
+            LoanableShortSerializer,
+            "loanables",
+            Q(tags__is_hidden=True),
+        )
+
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+
+        res["association"] = AssociationShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
+        return res
+
+    def create(self, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.library.LibraryWriteSerializer`."
+        )
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.library.LibraryWriteSerializer`."
+        )
+
+
+class LibraryWriteSerializer(serializers.ModelSerializer):
+    """We have to use two serializers, one for writing and the other for reading only, because a `SerializerMethodField`
+    is a read-only field."""
 
     class Meta:
         model = Library
@@ -172,11 +221,3 @@ class LibrarySerializer(serializers.ModelSerializer):
         instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        res = super(serializers.ModelSerializer, self).to_representation(instance)
-
-        res["association"] = AssociationShortSerializer().to_representation(
-            Association.objects.get(pk=res["association"])
-        )
-        return res

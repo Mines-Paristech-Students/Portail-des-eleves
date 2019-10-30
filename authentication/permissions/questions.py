@@ -1,7 +1,7 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from associations.models import User
+from authentication.models import User
 
 
 class ProfileQuestionPermission(BasePermission):

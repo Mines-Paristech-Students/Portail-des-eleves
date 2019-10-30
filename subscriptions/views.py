@@ -78,7 +78,6 @@ def set_subscriptions(request):
             a.save()
 
     for widg in widgets:
-        print(widg)
         w, created = WidgetSubscription.objects.get_or_create(
             user=request.user,
             widget=Widget(name=widg["name"]),

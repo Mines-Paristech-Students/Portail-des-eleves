@@ -1,60 +1,61 @@
-from tags.tests.base_test import BaseTestCase
+from tags.models import Tag
+from tags.tests.base_test import TagsBaseTestCase
 
 
-class TagNamespaceTestCase(BaseTestCase):
+class TagNamespaceTestCase(TagsBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_marketplace.yaml", "test_tags.yaml"]
     maxDiff = None
 
     def test_create_global_tag(self):
         self.login("17simple")
-        res = self.post("/tags/tag/", {"namespace": 1, "value": "17wan-fat"})
+        res = self.post("/tags/tags/", {"namespace": 1, "value": "17wan-fat"})
         self.assertStatusCode(res, 403)
 
         self.login("17admin_pdm")
-        res = self.post("/tags/tag/", {"namespace": 1, "value": "17wan-fat"})
+        res = self.post("/tags/tags/", {"namespace": 1, "value": "17wan-fat"})
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.post("/tags/tag/", {"namespace": 1, "value": "17wan-fat"})
+        res = self.post("/tags/tags/", {"namespace": 1, "value": "17wan-fat"})
         self.assertStatusCode(res, 201)
 
     def test_delete_global_tag(self):
         # Add the tag
         self.login("17admin")
-        res = self.post("/tags/tag/", {"namespace": 1, "value": "17wan-fat"})
+        res = self.post("/tags/tags/", {"namespace": 1, "value": "17wan-fat"})
         self.assertStatusCode(res, 201)
         tag = res.json()
 
         # Test: try to remove it
         self.login("17simple")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 403)
 
         self.login("17admin_pdm")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 204)
 
     def test_create_scoped_tag(self):
         self.login("17simple")
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 403)
 
         self.login("17admin_pdm")
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
 
         namespace = {
             "id": 2,
-            "scope": "association",
-            "scoped_to": "pdm",
+            "scoped_to_model": "association",
+            "scoped_to_pk": "pdm",
             "name": "farine",
         }
         res = self.get("/tags/scope/association/pdm/")
@@ -73,7 +74,7 @@ class TagNamespaceTestCase(BaseTestCase):
     def test_delete_scoped_tag(self):
         # Create the tag
         self.login("17admin_pdm")
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
         tag = res.json()
 
@@ -81,44 +82,32 @@ class TagNamespaceTestCase(BaseTestCase):
         # Make the test
 
         self.login("17simple")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 403)
 
         self.login("17admin_pdm")
-        res = self.delete("/tags/tag/{}/".format(tag["id"]))
+        res = self.delete("/tags/tags/{}/".format(tag["id"]))
         self.assertStatusCode(res, 204)
 
     def test_create_same_tag_twice(self):
         self.login("17admin_pdm")
 
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
-        self.assertStatusCode(res, 201)
+        length_before = Tag.objects.all().count()
 
-        res = self.post("/tags/tag/", {"namespace": 2, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
+        self.assertEqual(length_before + 1, Tag.objects.all().count())
 
-        res = self.get("/tags/tag/", {"scope": "association", "scope_id": "pdm"})
-        namespace = {
-            "id": 2,
-            "name": "farine",
-            "scope": "association",
-            "scoped_to": "pdm",
-        }
-        self.assertJSONEqual(
-            res.content,
-            [
-                {"id": 2, "value": "sarrasin", "namespace": namespace},
-                {"id": 3, "value": "blé", "namespace": namespace},
-                {"id": 6, "value": "orge", "namespace": namespace},
-            ],
-        )
+        res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
+        self.assertStatusCode(res, 201)
+        self.assertEqual(length_before + 1, Tag.objects.all().count())
 
     def test_create_tag_in_non_owned_namepace(self):
         self.login("17admin_pdm")
 
-        res = self.post("/tags/tag/", {"namespace": 3, "value": "orge"})
+        res = self.post("/tags/tags/", {"namespace": 3, "value": "orge"})
         self.assertStatusCode(res, 403)

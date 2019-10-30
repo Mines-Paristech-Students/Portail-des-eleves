@@ -1,16 +1,17 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
+from django.db.models import Q
+from rest_framework import serializers
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
 from associations.serializers.association import AssociationShortSerializer
 from authentication.models import User
-from tags.serializers import TagSerializer
+from tags.serializers import filter_tags, filter_nested_attribute
 
 
-class CreateTransactionSerializer(ModelSerializer):
+class CreateTransactionSerializer(serializers.ModelSerializer):
     """Only serialize the product, the user and the quantity."""
 
-    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
-    buyer = PrimaryKeyRelatedField(queryset=User.objects.all())
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+    buyer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Transaction
@@ -27,7 +28,7 @@ class CreateTransactionSerializer(ModelSerializer):
         return Transaction.objects.create(**validated_data)
 
 
-class UpdateTransactionSerializer(ModelSerializer):
+class UpdateTransactionSerializer(serializers.ModelSerializer):
     """Only the status or the date can be updated."""
 
     class Meta:
@@ -35,9 +36,9 @@ class UpdateTransactionSerializer(ModelSerializer):
         fields = ("status", "date")
 
 
-class TransactionSerializer(ModelSerializer):
-    product = PrimaryKeyRelatedField(queryset=Product.objects.all())
-    buyer = PrimaryKeyRelatedField(queryset=User.objects.all())
+class TransactionSerializer(serializers.ModelSerializer):
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+    buyer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Transaction
@@ -50,7 +51,7 @@ class TransactionSerializer(ModelSerializer):
         return res
 
 
-class ProductShortSerializer(ModelSerializer):
+class ProductShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
@@ -64,22 +65,24 @@ class ProductShortSerializer(ModelSerializer):
         )
 
 
-class ProductSerializer(ModelSerializer):
-    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
-    tags = TagSerializer(many=True)
+class ProductSerializer(serializers.ModelSerializer):
+    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = (
-            "id",
+        read_only_fields = ("id", "tags")
+        fields = read_only_fields + (
             "name",
             "description",
             "price",
             "comment",
             "marketplace",
             "number_left",
-            "tags",
         )
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
 
     def update(self, instance, validated_data):
         if "marketplace" in validated_data:
@@ -88,39 +91,75 @@ class ProductSerializer(ModelSerializer):
         return super(ProductSerializer, self).update(instance, validated_data)
 
 
-class CreateFundingSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=User.objects.all())
-    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+class CreateFundingSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
 
     class Meta:
         model = Funding
         fields = ("value", "user", "marketplace")
 
 
-class UpdateFundingSerializer(ModelSerializer):
+class UpdateFundingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Funding
         fields = ("status",)
 
 
-class FundingSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=User.objects.all())
-    marketplace = PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+class FundingSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
 
     class Meta:
         model = Funding
         fields = ("id", "user", "value", "date", "marketplace", "status")
 
 
-class MarketplaceShortSerializer(ModelSerializer):
+class MarketplaceShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marketplace
         read_only_fields = ("id", "enabled", "association")
         fields = read_only_fields
 
 
-class MarketplaceSerializer(ModelSerializer):
-    products = ProductShortSerializer(many=True)
+class MarketplaceSerializer(serializers.ModelSerializer):
+    products = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Marketplace
+        fields = ("id", "enabled", "association", "products")
+
+    def get_products(self, obj):
+        return filter_nested_attribute(
+            self.context,
+            obj,
+            ProductShortSerializer,
+            "products",
+            Q(tags__is_hidden=True),
+        )
+
+    def to_representation(self, instance):
+        res = super(serializers.ModelSerializer, self).to_representation(instance)
+
+        res["association"] = AssociationShortSerializer().to_representation(
+            Association.objects.get(pk=res["association"])
+        )
+        return res
+
+    def create(self, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.marketplace.MarketplaceWriteSerializer`."
+        )
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError(
+            "Please use `associations.serializers.marketplace.MarketplaceWriteSerializer`."
+        )
+
+
+class MarketplaceWriteSerializer(serializers.ModelSerializer):
+    """We have to use two serializers, one for writing and the other for reading only, because a `SerializerMethodField`
+    is a read-only field."""
 
     class Meta:
         model = Marketplace
@@ -165,11 +204,3 @@ class MarketplaceSerializer(ModelSerializer):
         instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
-
-    def to_representation(self, instance):
-        res = super(ModelSerializer, self).to_representation(instance)
-
-        res["association"] = AssociationShortSerializer().to_representation(
-            Association.objects.get(pk=res["association"])
-        )
-        return res

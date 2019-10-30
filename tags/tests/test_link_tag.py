@@ -1,7 +1,7 @@
-from tags.tests.base_test import BaseTestCase
+from tags.tests.base_test import TagsBaseTestCase
 
 
-class TagNamespaceTestCase(BaseTestCase):
+class TagNamespaceTestCase(TagsBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_marketplace.yaml", "test_tags.yaml"]
 
     def test_add_global_tag(self):
@@ -12,14 +12,20 @@ class TagNamespaceTestCase(BaseTestCase):
         res = self.get("/associations/products/2/")
         self.assertStatusCode(res, 200)
         self.assertEqual(
-            res.json().get("tags"),
+            res.data["tags"],
             [
                 {
                     "id": 1,
                     "value": "17bocquet",
-                    "namespace": {"id": 1, "scope": "global", "name": "user"},
+                    "namespace": {
+                        "id": 1,
+                        "scoped_to_pk": None,
+                        "scoped_to_model": "global",
+                        "name": "user",
+                    },
                 }
             ],
+            msg=res.data["tags"],
         )
 
     def test_remove_global_tag(self):
@@ -55,8 +61,8 @@ class TagNamespaceTestCase(BaseTestCase):
                     "value": "IPA",
                     "namespace": {
                         "id": 3,
-                        "scope": "association",
-                        "scoped_to": "biero",
+                        "scoped_to_model": "association",
+                        "scoped_to_pk": "biero",
                         "name": "houblon",
                     },
                 }

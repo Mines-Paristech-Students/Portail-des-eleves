@@ -17,7 +17,9 @@ from associations.views import (
     ElectionViewSet,
     CreateBallotView,
 )
-from associations.views.filesystem import FileViewSet, FolderViewSet, FileSystemView
+from associations.views.media import MediaViewSet
+from associations.views import set_association_logo
+
 
 urlpatterns = []
 router = BulkRouter()
@@ -34,16 +36,8 @@ urlpatterns.append(
 # Events.
 router.register(r"events", EventViewSet)
 
-# Filesystem.
-router.register(r"file", FileViewSet)
-router.register(r"folder", FolderViewSet)
-urlpatterns.append(
-    path(
-        "associations/<slug:association_id>/filesystem/root/",
-        FileSystemView.as_view(),
-        name="file-system",
-    )
-)
+# Medias.
+router.register(r"media", MediaViewSet)
 
 # Library.
 router.register(r"library", LibraryViewSet)
@@ -54,8 +48,9 @@ router.register(r"loanables", LoanableViewSet)
 router.register(r"marketplace", MarketplaceViewSet)
 router.register(r"products", ProductViewSet)
 router.register(r"transactions", TransactionViewSet)
-router.register(r"funding", FundingViewSet)
+router.register(r"fundings", FundingViewSet)
 urlpatterns += [
+    path("associations/<association_pk>/image", set_association_logo),
     path("marketplace/balance/", BalanceView.as_view(), name="balance-list"),
     path(
         "marketplace/<slug:marketplace_id>/balance/",

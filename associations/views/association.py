@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
-from rest_framework_bulk.generics import BulkModelViewSet
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
-from url_filter.integrations.drf import DjangoFilterBackend
+from rest_framework.response import Response
 
 from associations.models import Association
 from associations.models import Role
@@ -14,14 +14,13 @@ from associations.serializers import (
     RoleShortSerializer,
     WriteRoleSerializer,
 )
+from associations.serializers.association import AssociationLogoSerializer
 
 
-class RoleViewSet(BulkModelViewSet):
+class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
-    model = Role
     permission_classes = (RolePermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("user", "association")
 
     def get_write_role_serializer(self, association, *args, **kwargs):
@@ -67,12 +66,15 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationSerializer
 
 
-def upload_association_logo(request, association_pk):
-    if request.method == "POST" and request.FILES["myfile"]:
-        myfile = request.FILES["myfile"]
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        return render(
-            request, "core/simple_upload.html", {"uploaded_file_url": uploaded_file_url}
-        )
+@api_view(["PUT"])
+def set_association_logo(request, association_pk):
+    association = Association.objects.get(pk=association_pk)
+    role = request.user.get_role(association)
+    if not (role and role.administration):
+        raise PermissionDenied()
+
+    serializer = AssociationLogoSerializer(data=request)
+    serializer.is_valid(raise_exception=True)
+    serializer.update(association, serializer.validated_data)
+
+    return Response(status=204)
