@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class BrokenTagLink(ObjectDoesNotExist):
-    """ A tag is linked to an object that does not exist """
-
-    pass
+    def __init__(self):
+        super(BrokenTagLink, self).__init__(
+            "A tag was linked to an object which does not exist."
+        )

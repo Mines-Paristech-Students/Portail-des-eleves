@@ -16,14 +16,14 @@ class EventsPermission(BasePermission):
 
     def has_permission(self, request, view):
         if request.method in ("POST",):
-            return check_permission_from_post_data(request, "events")
+            return check_permission_from_post_data(request, "event")
 
         return True
 
     def has_object_permission(self, request, view, election):
         role = request.user.get_role(election.association)
 
-        if role and role.events:  # Events administrator.
+        if role and role.event:  # Events administrator.
             return True
         else:
             return request.method in SAFE_METHODS
