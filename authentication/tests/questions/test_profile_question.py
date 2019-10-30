@@ -25,19 +25,19 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
         return "/users/profile_question/"
 
     def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
         return f"/users/profile_question/{pk}/"
 
     def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
         return f"/users/profile_question/{pk}/"
 
     def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+        return self.delete(self.endpoint_destroy(pk))
 
     ############
     # RETRIEVE #
@@ -64,6 +64,7 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_list(self):
+        print(ProfileQuestion.objects.all().count())
         for user in self.ALL_USERS:
             self.login(user)
             res = self.list()

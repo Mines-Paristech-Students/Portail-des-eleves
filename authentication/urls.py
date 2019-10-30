@@ -16,7 +16,7 @@ from authentication.views import (
 
 router = BulkRouter()
 
-router.register(r"users", ProfileViewSet)
+router.register(r"users/users", ProfileViewSet)
 router.register(r"users/profile_question", ProfileQuestionViewSet)
 router.register(r"users/profile_answer", ProfileAnswerViewSet)
 

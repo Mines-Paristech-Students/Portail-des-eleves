@@ -25,19 +25,19 @@ class TestProfileAnswer(WeakAuthenticationBaseTestCase):
         return "/users/profile_answer/"
 
     def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
         return f"/users/profile_answer/{pk}/"
 
     def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
         return f"/users/profile_answer/{pk}/"
 
     def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+        return self.delete(self.endpoint_destroy(pk))
 
     ############
     # RETRIEVE #
@@ -114,7 +114,7 @@ class TestProfileAnswer(WeakAuthenticationBaseTestCase):
         ):
             self.login(user)
             res = self.create(data=data)
-            self.assertStatusCode(res, 201)
+            self.assertStatusCode(res, 201, user_msg=user)
 
             last_profile_answer = ProfileAnswer.objects.last()
             self.assertEqual(last_profile_answer.text, data["text"])

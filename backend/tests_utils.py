@@ -16,6 +16,9 @@ class BaseTestCase(APITestCase):
 
     api_base = "/api/v1"
 
+    def setUp(self):
+        settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"] = True
+
     def assertStatusCode(self, res, status_code, user_msg=""):
         msg = ""
         if hasattr(res, "url"):
