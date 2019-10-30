@@ -1,8 +1,6 @@
 import json
-from math import ceil
 
 import numpy as np
-from nose.tools import raises
 
 from authentication.models import User
 from backend.tests_utils import BaseTestCase
@@ -37,7 +35,7 @@ class MunkresTestCase(BaseTestCase):
             proposition = Proposition(
                 campaign_id=campaign.id,
                 name="proposition_{}".format(i),
-                number_of_places=int(ceil(n_students / n_propositions)),
+                # number_of_places=int(ceil(n_students / n_propositions)), TODO: remove this or restore it in the model.
             )
             proposition.save()
             propositions.append(proposition)
@@ -148,9 +146,8 @@ class MunkresTestCase(BaseTestCase):
                     to_find.remove(uc["user"])
             self.assertEqual(len(to_find), 0)
 
-    @raises(Exception)
     def test_crash_on_impossible_fixity(self):
-        """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
+        """ Fixes too many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
         per group """
         campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
             2, 5
@@ -169,13 +166,15 @@ class MunkresTestCase(BaseTestCase):
             uc.fixed_to = propositions[0]
             uc.save()
 
-        self.login("17bocquet")
-        self.patch(
-            "/repartitions/campaigns/{}/".format(campaign.id),
-            data={"status": "RESULTS"},
-        )
+        def crash(self):
+            self.login("17bocquet")
+            self.patch(
+                "/repartitions/campaigns/{}/".format(campaign.id),
+                data={"status": "RESULTS"},
+            )
 
-    @raises(Exception)
+        self.assertRaises(IndexError, crash, self)
+
     def test_crash_on_subtle_impossible_fixity(self):
         """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
         per group """
@@ -210,13 +209,15 @@ class MunkresTestCase(BaseTestCase):
             uc.fixed_to = propositions[0]
             uc.save()
 
-        self.login("17bocquet")
-        self.patch(
-            "/repartitions/campaigns/{}/".format(campaign.id),
-            data={"status": "RESULTS"},
-        )
+        def crash(self):
+            self.login("17bocquet")
+            self.patch(
+                "/repartitions/campaigns/{}/".format(campaign.id),
+                data={"status": "RESULTS"},
+            )
 
-    @raises(Exception)
+        self.assertRaises(IndexError, crash, self)
+
     def test_subtle_impossible_fixity(self):
         """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
         per group """
@@ -251,11 +252,14 @@ class MunkresTestCase(BaseTestCase):
             uc.fixed_to = propositions[0]
             uc.save()
 
-        self.login("17bocquet")
-        self.patch(
-            "/repartitions/campaigns/{}/".format(campaign.id),
-            data={"status": "RESULTS"},
-        )
+        def crash(self):
+            self.login("17bocquet")
+            self.patch(
+                "/repartitions/campaigns/{}/".format(campaign.id),
+                data={"status": "RESULTS"},
+            )
+
+        self.assertRaises(IndexError, crash, self)
 
     def test_can_forcast_over_allocation(self):
         """

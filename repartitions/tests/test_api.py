@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch
 
 from backend.tests_utils import BaseTestCase
