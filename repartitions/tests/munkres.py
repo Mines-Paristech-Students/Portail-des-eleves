@@ -4,13 +4,14 @@ from math import ceil
 import numpy as np
 from nose.tools import raises
 
-from associations.tests.base_test import BaseTestCase
 from authentication.models import User
+from backend.tests_utils import BaseTestCase
 from repartitions.algorithm import get_project_index
 from repartitions.models import Proposition, Campaign, UserCampaign, Category, Wish
 
 
 class MunkresTestCase(BaseTestCase):
+    """ The repartition algorithm is named 'Munkres algorithm' or 'Hungarian algorithm' """
 
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
 
@@ -22,18 +23,21 @@ class MunkresTestCase(BaseTestCase):
         self.assertEqual(2, get_project_index(0, [0, 0, 3]))
         self.assertEqual(5, get_project_index(1, [0, 0, 1, 0, 0, 1]))
 
-    def generate_batch_wishes(self, n_groups=10, n_students=168):
+    def generate_batch_wishes(self, n_propositions=10, n_students=168):
+        """ Creates a campaign with propositions, users, and 4 categories in which the students are distributed with
+        the probabilities 0.8, 0.1, 0.06, 0.04 """
+
         np.random.seed(0)
 
         campaign = Campaign(name="Batch campaign", manager_id="17bocquet")
         campaign.save()
 
         propositions = []
-        for i in range(n_groups):
+        for i in range(n_propositions):
             proposition = Proposition(
                 campaign_id=campaign.id,
                 name="proposition_{}".format(i),
-                number_of_places=int(ceil(n_students / n_groups)),
+                number_of_places=int(ceil(n_students / n_propositions)),
             )
             proposition.save()
             propositions.append(proposition)

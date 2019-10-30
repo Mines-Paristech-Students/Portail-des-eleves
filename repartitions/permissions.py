@@ -13,7 +13,7 @@ def user_in_campaign(user: User, campaign: Campaign) -> bool:
 
 
 class CanManageCampaign(BasePermission):
-    message = "Editing association is not allowed."
+    message = "Editing campaign is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
@@ -21,9 +21,9 @@ class CanManageCampaign(BasePermission):
         return request.user.is_admin
 
     def has_object_permission(self, request, view, obj):
-
         if request.method in ("HEAD", "OPTIONS"):
             return True
+
         if isinstance(obj, Campaign) and user_in_campaign(request.user, obj):
             return True
 
@@ -46,9 +46,7 @@ class CanManageCampaign(BasePermission):
 
 class UserCampaignPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-        return request.user.is_admin
+        return request.method in SAFE_METHODS or request.user.is_admin
 
     def has_object_permission(self, request, view, obj: UserCampaign):
         return (

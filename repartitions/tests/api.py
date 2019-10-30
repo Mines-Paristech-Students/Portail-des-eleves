@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch
 
-from associations.tests.base_test import BaseTestCase
+from backend.tests_utils import BaseTestCase
 from repartitions.models import Campaign, Group, Proposition
 
 
@@ -17,13 +17,13 @@ class APITestCase(BaseTestCase):
         self.assertEqual(res.status_code, 201)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(json.loads(res.content)), 2)  # we created the campaign
+        self.assertEqual(len(res.data), 2)  # we created the campaign
 
         res = self.delete("/repartitions/campaigns/2/")
         self.assertEqual(res.status_code, 204)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(json.loads(res.content)), 1)  # we created the campaign
+        self.assertEqual(len(res.data), 1)  # we created the campaign
 
         # For a non admin
 
@@ -35,7 +35,7 @@ class APITestCase(BaseTestCase):
         self.login("15menou")
         res = self.get("/repartitions/campaigns/")
         self.assertEqual(
-            len(json.loads(res.content)), 1
+            len(res.data), 1
         )  # this user is not linked to the new campaign
 
         res = self.post("/repartitions/campaigns/", {"name": "MIGs groups 2"})
@@ -69,7 +69,7 @@ class APITestCase(BaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {
                     "user": "17bocquet",
@@ -101,7 +101,7 @@ class APITestCase(BaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {
                     "user": "17bocquet",
@@ -139,7 +139,7 @@ class APITestCase(BaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was removed
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {
                     "user": "17bocquet",
@@ -168,8 +168,7 @@ class APITestCase(BaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            json.loads(res.content),
-            [{"user": "17bocquet"}, {"user": "15menou"}, {"user": "18chlieh"}],
+            res.data, [{"user": "17bocquet"}, {"user": "15menou"}, {"user": "18chlieh"}]
         )
 
         res = self.post(
@@ -190,7 +189,7 @@ class APITestCase(BaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {
                     "user": "17bocquet",
@@ -219,7 +218,7 @@ class APITestCase(BaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {
                     "user": "17bocquet",
@@ -265,7 +264,7 @@ class APITestCase(BaseTestCase):
 
         res = self.get("/repartitions/1/wishes/")  # Check that the user was added
         self.assertEqual(
-            json.loads(res.content),
+            res.data,
             [
                 {"proposition": 1, "rank": 1},
                 {"proposition": 2, "rank": 2},

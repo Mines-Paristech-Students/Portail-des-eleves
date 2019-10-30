@@ -7,23 +7,21 @@ name = "pypi"
 numpy = "*"
 scipy = "*"
 Markdown = "*"
-
 "psycopg2-binary" = "*"
 pillow = "*"
 pyjwt = "*"
 pyyaml = "*"
-
 Django = "*"
 django-cors-headers = "*"
 django-extensions = "*"
 django-filter = "*"
 django-url-filter = "*"
-
 djangorestframework = "*"
 djangorestframework-bulk = "*"
 drf-extensions = "*"
 djangorestframework-jwt = "*"
 drf-nested-routers = "*"
+nose = "*"
 
 [dev-packages]
 pylint = "*"

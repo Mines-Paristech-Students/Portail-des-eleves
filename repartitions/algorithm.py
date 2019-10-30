@@ -14,25 +14,58 @@ from repartitions.models import (
 
 import numpy as np
 
+"""
+The repartition algorithm is based on Munkres algorithm, or "Hungarian" algorithm, which, given a cost matrix, 
+returns a pairing between lines and columns that minimises the cost.
 
-def get_project_index(index, places):
-    s = 0
-    for i in range(len(places)):
-        if s <= index < s + places[i]:
-            return i
-        s += places[i]
+The implementation we use here is scipy's
+https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
+(note : some C/C++ based implementation with  python binding exist and are way faster than this one, but maybe a bit
+more difficult to use. Perhaps it could be interesting to use one of them)
 
-    if index == s:
-        return len(places) - 1
+However it does more than simply calling Munkres algorithm because we have two additional constraints : 
+- we have  "categories" of users ie subsets that have to be mixed inside of each group. For instance if we have 10 users
+"A" and 10 users "B" to split into two groups we want to have twice "5 A  + 5 B" instead of one group of all As and one
+group of all Bs
+- we want groups to be "even" ie we don't want to be more than 1 person of difference between two groups (ex : one group
+of 15 people and another of 5 people) nor inside of a group between categories (ex: 2A and 8B in one group and 8A and 2B
+ in the other)
 
-    raise Exception("should not happend")
+To abide by theses constraints, the algorithm is split in 2 stages:
+(1) make an even repartition for a category
+    determine the number of place necessary for each group
+        - if there are n people and m groups, we'll have k places in each group were (k-1) * m < n <= k * m
+    
+    create the cost matrix
+        - one line by user
+        - one column per place in group, each column corresponding to one group is identical
+        - example : 3 users, and 2 groups => k = 4
+            (1, 1) (1, 1) (1, 2) (1, 2) 
+            (2, 1) (2, 1) (2, 2) (2, 2)
+            (3, 1) (3, 1) (3, 2) (3, 2)
+    
+    run hungarian algorithm
+    
+    if there are too many people in one or several group, add a "penalty" to the group which has the most people. This
+    is as if one place was removed in this group so on the next iteration it'll have one less person
+    
+    rerun the algorithm as long as the repartition isn't even
+    
+(2)  make the repartition even among categories
+    repeat step (1) for each category but adding a penalty on each run corresponding to how many people each group has
+    more in cumulated (either 0 or 1)
+
+"""
 
 
 def generate_line(
     uc: UserCampaign, propositions: List[Proposition], places: List[int]
 ) -> List[float]:
+    """ given a user's choices, a list of proposition and the number of places for each proposition, returns the
+    corresponding line of the cost matrix """
+
     if any(map(lambda x: x < 0, places)):
-        raise Exception("places {} is not valid", places)
+        raise ValueError("places {} is not valid", places)
 
     wishes = Wish.objects.filter(user_campaign=uc).all()
     map_wishes = {w.proposition.id: w for w in wishes}
@@ -54,13 +87,29 @@ def generate_line(
     return res
 
 
+def get_project_index(index, places):
+    """ Given an index and the number of places in each proposition, returns the index of the proposition in the
+    array given to `generate_line` """
+    s = 0
+    for i in range(len(places)):
+        if s <= index < s + places[i]:
+            return i
+        s += places[i]
+
+    if index == s:
+        return len(places) - 1
+
+    raise ValueError("index is too big considering the number of places")
+
+
+# noinspection PyTypeChecker
 def make_repartition_for_category(
     category: Category, propositions: List[Proposition], already_used: List[int]
 ) -> List[List[UserCampaign]]:
     raw_users_campaign = category.users_campaign.all()
 
     if len(raw_users_campaign) == 0:
-        raise Exception("No users in given group")
+        raise ValueError("No users in given group")
     user_campaigns, fixed_user_campaigns = [], []
     for uc in raw_users_campaign:
         if not uc.fixed_to:
@@ -118,20 +167,18 @@ def make_repartition_for_category(
 
             penalty[np.argmax(repartition_size)] += 1
         else:
-            repartition_cardinal_diff = 0  # avoid being stuck in an infinite loop
-
-    print_repartition = []
-    for i in repartition:
-        print_repartition.append(len(i))
+            repartition_cardinal_diff = (
+                0
+            )  # there is nothing to do, avoid being stuck in an infinite loop
 
     return repartition
 
 
-# Checks the repartition is always even
 def make_reparitition_proxy(
     category: Category, propositions: List[Proposition], already_used: List[int]
 ) -> List[List[User]]:
-    group_cardinal_diff = 2
+    """makes repartition for one category and make sure it's even"""
+    group_cardinal_diff = 1
     groups = []
 
     already_used = np.array(already_used)
@@ -185,9 +232,10 @@ def make_reparition(campaign: Campaign) -> List[Group]:
         # dispatch users
         groups = make_reparitition_proxy(category, propositions, already_used)
 
-        for i, proposition in enumerate(propositions):
-            store[proposition.id] = store.get(proposition.id, []) + groups[i]
-            already_used[i] += len(groups[i])
+        for j, proposition in enumerate(propositions):
+            store[proposition.id] = store.get(proposition.id, []) + groups[j]
+            already_used[j] += len(groups[j])
+
     groups = []
     for proposition_id, users in store.items():
 

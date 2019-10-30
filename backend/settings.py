@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "polls",
     "subscriptions",
     "tags",
+    "repartitions",
 ]
 
 MIDDLEWARE = [

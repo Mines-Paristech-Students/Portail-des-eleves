@@ -1,6 +1,6 @@
 import json
 
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied
@@ -74,13 +74,7 @@ class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
         serializer.save(campaign=campaign)
 
     def get_object(self):
-        """
-        Returns the object the view is displaying.
-
-        You may want to override this if you need to provide non-standard
-        queryset lookups.  Eg if objects are referenced using multiple
-        keyword arguments in the url conf.
-        """
+        """ Override of parent `get_object` method but filters by default the user's repartitions """
         queryset = self.filter_queryset(self.get_queryset())
 
         # Perform the lookup filtering.
@@ -118,7 +112,7 @@ class WishesView(APIView):
             user_campaign__campaign=kwargs["campaign_id"],
         ).all()
         serializer = WishSerializer(many=True, instance=wishes)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         campaign = Campaign.objects.get(pk=kwargs["campaign_id"])
@@ -183,7 +177,7 @@ def get_campaign_results(request, *args, **kwargs):
         raise PermissionDenied()
 
     serializer = GroupAdminSerializer(instance=campaign.groups.all(), many=True)
-    return JsonResponse(serializer.data, safe=False)
+    return Response(serializer.data)
 
 
 @api_view(["GET"])
@@ -193,4 +187,4 @@ def get_my_campaign_results(request, *args, **kwargs):
         raise PermissionDenied()
 
     serializer = GroupPublicSerializer(instance=campaign.groups.all(), many=True)
-    return JsonResponse(serializer.data, safe=False)
+    return Response(serializer.data)
