@@ -15,6 +15,7 @@ from associations.serializers.library import (
     LoanableSerializer,
     LibraryShortSerializer,
     LibrarySerializer,
+    LibraryWriteSerializer,
 )
 from associations.serializers.marketplace import (
     CreateTransactionSerializer,
@@ -27,5 +28,6 @@ from associations.serializers.marketplace import (
     FundingSerializer,
     MarketplaceShortSerializer,
     MarketplaceSerializer,
+    MarketplaceWriteSerializer,
 )
 from associations.serializers.page import PageSerializer, PageShortSerializer

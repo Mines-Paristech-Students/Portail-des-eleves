@@ -2,8 +2,9 @@ from datetime import datetime, timezone, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from associations.models import User, Event
+from associations.models import Event
 from associations.tests.event.base_test_event import *
+from authentication.models import User
 
 
 class EventsTestCase(BaseEventsTestCase):

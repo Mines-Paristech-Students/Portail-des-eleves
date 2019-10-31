@@ -1,7 +1,4 @@
-import sys
-
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
 
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -32,7 +29,6 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         validated_token = self.get_validated_token(raw_token)
         return self.get_user(validated_token), None
 
-
     def authenticate_header(self, request):
         """Used by django to populate the WWW-Authentication header
         Implementing this method is required for returning a 401 status code if
@@ -42,9 +38,11 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
 
     def validate_csrf_header(self, request):
         if not settings.is_prod_mode():
-            return True # Leave it like that in dev so we can check API from the browser
-        header = request.META.get('HTTP_X_REQUESTED_WITH')
-        return header == 'XMLHttpRequest'
+            return (
+                True  # Leave it like that in dev so we can check API from the browser
+            )
+        header = request.META.get("HTTP_X_REQUESTED_WITH")
+        return header == "XMLHttpRequest"
 
     def get_validated_token(self, raw_token):
         """
@@ -63,14 +61,16 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[api_settings.USER_ID_CLAIM]
         except KeyError:
-            raise AuthenticationFailed('Token contained no recognizable user identification')
+            raise AuthenticationFailed(
+                "Token contained no recognizable user identification"
+            )
 
         try:
             user = self.User.objects.get(**{api_settings.USER_ID_FIELD: user_id})
         except self.User.DoesNotExist:
-            raise AuthenticationFailed('User not found', code='user_not_found')
+            raise AuthenticationFailed("User not found", code="user_not_found")
 
         if not user.is_active:
-            raise AuthenticationFailed('User is inactive', code='user_inactive')
+            raise AuthenticationFailed("User is inactive", code="user_inactive")
 
         return user

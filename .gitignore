@@ -114,9 +114,6 @@ venv.bak/
 # macOS
 .DS_Store
 
-# vscode
-.vscode/
-
 associations/migrations/*.py
 authentication/migrations/*.py
 chat/migrations/*.py

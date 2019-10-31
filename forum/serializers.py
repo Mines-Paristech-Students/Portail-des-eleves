@@ -1,41 +1,25 @@
-from rest_framework import serializers
+from rest_framework import serializers, fields
 
 from forum.models import Theme, Topic, MessageForum
+from tags.serializers import filter_tags
 
 
-class ThemeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Theme
-        read_only_fields = ("id",)
-        fields = read_only_fields + ("name", "description")
-
-
-class TopicSerializer(serializers.ModelSerializer):
-    author = serializers.CurrentUserDefault()
-    theme = serializers.PrimaryKeyRelatedField(
-        queryset=Theme.objects.all(), read_only=False
-    )
-
+class TopicShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Topic
-        read_only_fields = ("id", "author")
-        fields = read_only_fields + ("name", "theme")
+        read_only_fields = ("id", "name")
+        fields = read_only_fields
 
-    def to_representation(self, topic):
-        res = super(TopicSerializer, self).to_representation(topic)
-        res["theme"] = ThemeSerializer().to_representation(topic.theme)
-        return res
 
-    def update(self, instance, validated_data):
-        # The author field cannot be updated.
-        if "author" in validated_data:
-            validated_data.pop("author")
-
-        return super(TopicSerializer, self).update(instance, validated_data)
+class ThemeShortSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Theme
+        read_only_fields = ("id", "name", "description")
+        fields = read_only_fields
 
 
 class MessageForumSerializer(serializers.ModelSerializer):
-    author = serializers.CurrentUserDefault()
+    author = fields.CurrentUserDefault()
     topic = serializers.PrimaryKeyRelatedField(
         queryset=Topic.objects.all(), read_only=False
     )
@@ -72,3 +56,40 @@ class MessageForumSerializer(serializers.ModelSerializer):
             return -1
         else:
             return 0
+
+
+class TopicSerializer(serializers.ModelSerializer):
+    author = serializers.CurrentUserDefault()
+    theme = serializers.PrimaryKeyRelatedField(
+        queryset=Theme.objects.all(), read_only=False
+    )
+
+    class Meta:
+        model = Topic
+        read_only_fields = ("id", "author")
+        fields = read_only_fields + ("name", "theme")
+
+    def to_representation(self, topic):
+        res = super(TopicSerializer, self).to_representation(topic)
+        res["theme"] = ThemeSerializer().to_representation(topic.theme)
+        return res
+
+    def update(self, instance, validated_data):
+        # The author field cannot be updated.
+        if "author" in validated_data:
+            validated_data.pop("author")
+
+        return super(TopicSerializer, self).update(instance, validated_data)
+
+
+class ThemeSerializer(serializers.ModelSerializer):
+    topics = TopicShortSerializer(many=True, read_only=True)
+    tags = serializers.SerializerMethodField()
+
+    def get_tags(self, obj):
+        return filter_tags(self.context, obj, short=False)
+
+    class Meta:
+        model = Theme
+        read_only_fields = ("id", "topics", "tags")
+        fields = read_only_fields + ("name", "description")

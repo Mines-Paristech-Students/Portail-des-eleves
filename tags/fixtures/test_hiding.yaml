@@ -1,0 +1,375 @@
+################
+# Associations #
+################
+
+- model: associations.association
+  pk: public_association
+  fields:
+    name: Public association
+    rank: 1
+    library: public_association
+    marketplace: public_association
+
+- model: associations.association
+  pk: hidden_association
+  fields:
+    name: Hidden association
+    rank: 2
+    library: hidden_association
+    marketplace: hidden_association
+
+# library
+- model: associations.library
+  pk: public_association
+  fields:
+    enabled: true
+
+- model: associations.library
+  pk: hidden_association
+  fields:
+    enabled: true
+
+# marketplace
+- model: associations.marketplace
+  pk: public_association
+  fields:
+    enabled: true
+
+- model: associations.marketplace
+  pk: hidden_association
+  fields:
+    enabled: true
+
+##################
+# Tag namespaces #
+##################
+
+- model: tags.namespace
+  pk: 1
+  fields:
+    name: secret
+    scoped_to_model: global
+
+- model: tags.tag
+  pk: 1
+  fields:
+    value: "What does the fox says"
+    is_hidden: true
+    namespace: 1
+
+############
+# Election #
+############
+
+- model: associations.election
+  pk: 1
+  fields:
+    association: public_association
+    name: public_association_election
+    registered_voters: ['17simple']
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2019-06-02T02:00:00+00:00'
+    max_choices_per_ballot: 1
+
+- model: associations.election
+  pk: 2
+  fields:
+    association: hidden_association
+    name: hidden_association_election
+    registered_voters: ['17simple']
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2019-06-02T02:00:00+00:00'
+    max_choices_per_ballot: 1
+
+##########
+# Events #
+##########
+
+- model: associations.event
+  pk: 1
+  fields:
+    association: public_association
+    name: public_association
+    description: should not be hidden
+    participants: [17simple]
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2019-06-02T02:00:00+00:00'
+    place: Paris
+
+- model: associations.event
+  pk: 2
+  fields:
+    association: hidden_association
+    name: hidden_association
+    description: should be hidden
+    participants: [17simple]
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2019-06-02T02:00:00+00:00'
+    place: Paris
+
+#########
+# Media #
+#########
+
+- model: associations.media
+  pk: 1
+  fields:
+    association: public_association
+    name: public_association_public_media
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
+
+- model: associations.media
+  pk: 2
+  fields:
+    association: hidden_association
+    name: hidden_association-public_media
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
+
+- model: associations.media
+  pk: 3
+  fields:
+    association: public_association
+    name: public_association-hidden_media
+    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_by_id: "17admin"
+
+###########
+# Funding #
+###########
+
+- model: associations.funding
+  pk: 1
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: public_association
+    status: FUNDED
+
+- model: associations.funding
+  pk: 2
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: hidden_association
+    status: FUNDED
+
+########
+# Loan #
+########
+
+- model: associations.loan
+  pk: 1
+  fields:
+    loanable: 1
+    user: 17simple
+    loan_date: '2019-01-01T00:00:00+00:00'
+    expected_return_date: '2019-01-07T00:00:00+00:00'
+    real_return_date: '2019-01-02T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 2
+  fields:
+    loanable: 2
+    user: 17simple
+    loan_date: '2019-01-03T00:00:00+00:00'
+    expected_return_date: '2019-01-09T00:00:00+00:00'
+    real_return_date: '2019-01-04T00:00:00+00:00'
+    status: RETURNED
+
+############
+# Loanable #
+############
+
+- model: associations.loanable
+  pk: 1
+  fields:
+    name: public_association-public_loanable
+    description: ...
+    comment: ...
+    library: public_association
+
+- model: associations.loanable
+  pk: 2
+  fields:
+    name: hidden_association-hidden_loanable
+    description: ...
+    comment: ...
+    library: hidden_association
+
+- model: associations.loanable
+  pk: 3
+  fields:
+    name: public_association-hidden_loanable
+    description: ...
+    comment: ...
+    library: public_association
+
+########
+# Page #
+########
+
+- model: associations.page
+  pk: 1
+  fields:
+    title: public_association-public_page
+    text: this page should be visible
+    association: public_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+- model: associations.page
+  pk: 2
+  fields:
+    title: hidden_association-public_page
+    text: this page should not be visible
+    association: hidden_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+- model: associations.page
+  pk: 3
+  fields:
+    title: public_association-hidden_page
+    text: this page should not be visible
+    association: public_association
+    creation_date: '2019-06-01T20:00:00+00:00'
+    last_update_date: '2019-06-01T20:00:00+00:00'
+
+###########
+# Product #
+###########
+
+- model: associations.product
+  pk: 1
+  fields:
+    name: public_association_public_product
+    description: ...
+    price: 3.5
+    marketplace: public_association
+
+- model: associations.product
+  pk: 2
+  fields:
+    name: hidden_association_public_product
+    description: ...
+    price: 1.5
+    marketplace: hidden_association
+
+- model: associations.product
+  pk: 3
+  fields:
+    name: public_association_hidden_product
+    description: ...
+    price: 3.5
+    marketplace: public_association
+
+
+########
+# Role #
+########
+
+- model: associations.role
+  pk: 1
+  fields:
+    role: public_association-public_role
+    association: public_association
+    user: 17admin
+
+- model: associations.role
+  pk: 2
+  fields:
+    role: hidden_association-public_role
+    association: hidden_association
+    user: 17admin
+
+- model: associations.role
+  pk: 3
+  fields:
+    role: public_association-hidden_role
+    association: public_association
+    user: 17bocquet
+
+###############
+# Transaction #
+###############
+
+- model: associations.transaction
+  pk: 1
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 2
+  fields:
+    product: 2
+    buyer: 17simple
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+#########
+# Theme #
+#########
+
+- model: forum.theme
+  pk: 1
+  fields:
+    name: public_theme
+    description: this theme shoud be visible
+
+- model: forum.theme
+  pk: 2
+  fields:
+    name: hidden_theme
+    description: this theme should not be visible
+
+
+#########
+# Topic #
+#########
+
+- model: forum.topic
+  pk: 1
+  fields:
+    name: public_theme-public_topic
+    author: 17bocquet
+    theme: 1
+
+- model: forum.topic
+  pk: 2
+  fields:
+    name: hidden_theme-public_topic
+    author: 17bocquet
+    theme: 2
+
+##################
+# Forum Messages #
+##################
+
+
+- model: forum.messageforum
+  pk: 1
+  fields:
+    author: 17bocquet
+    text: public_theme-public_message
+    created_at: '2019-06-01T20:00:00+00:00'
+    topic: 1
+
+- model: forum.messageforum
+  pk: 2
+  fields:
+    author: 17bocquet
+    text: hidden_theme-public_message
+    created_at: '2019-06-01T20:00:00+00:00'
+    topic: 2

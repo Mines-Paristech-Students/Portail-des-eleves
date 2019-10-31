@@ -118,11 +118,11 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         # Add some funding.
         self.login(market_biero.id)
         self.post(
-            "/associations/funding/",
+            "/associations/fundings/",
             data={"user": consumer.id, "value": 10, "marketplace": "biero"},
         )
         self.post(
-            "/associations/funding/",
+            "/associations/fundings/",
             data={"user": consumer.id, "value": 10, "marketplace": "biero"},
         )
         check_funding(20)
@@ -130,7 +130,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         # Refund the last biero funding.
         self.login(market_biero.id)
         funding_id = Funding.objects.filter(marketplace="biero").last().id
-        self.patch(f"/associations/funding/{funding_id}/", data={"status": "REFUNDED"})
+        self.patch(f"/associations/fundings/{funding_id}/", data={"status": "REFUNDED"})
         check_funding(10)
 
         # Buy things.

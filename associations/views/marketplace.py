@@ -8,10 +8,9 @@ from django.http import (
     HttpResponseBadRequest,
     Http404,
 )
-from rest_framework import viewsets, filters, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from url_filter.integrations.drf import DjangoFilterBackend
 
 from associations.models import Marketplace, Product, Transaction, Funding
 from associations.permissions import (
@@ -22,6 +21,7 @@ from associations.permissions import (
 )
 from associations.serializers import (
     MarketplaceSerializer,
+    MarketplaceWriteSerializer,
     ProductSerializer,
     TransactionSerializer,
     CreateTransactionSerializer,
@@ -38,14 +38,17 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
     serializer_class = MarketplaceSerializer
     permission_classes = (MarketplacePermission,)
 
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return MarketplaceWriteSerializer
+
+        return MarketplaceSerializer
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (ProductPermission,)
-
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ("name",)
 
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
@@ -68,7 +71,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     permission_classes = (TransactionPermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("product", "status", "buyer", "date")
 
     def get_queryset(self):
@@ -131,7 +133,6 @@ class FundingViewSet(viewsets.ModelViewSet):
     serializer_class = FundingSerializer
     permission_classes = (FundingPermission,)
 
-    filter_backends = (DjangoFilterBackend,)
     filter_fields = ("status", "user", "date")
 
     def get_queryset(self):

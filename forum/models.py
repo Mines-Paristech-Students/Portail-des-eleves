@@ -18,7 +18,9 @@ class Topic(models.Model):
     name = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=False)
+    theme = models.ForeignKey(
+        Theme, on_delete=models.CASCADE, null=False, related_name="topics"
+    )
 
     def __str__(self):
         return self.name

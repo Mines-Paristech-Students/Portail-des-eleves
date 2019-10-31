@@ -14,7 +14,7 @@ class RoleAdmin(admin.ModelAdmin):
         "marketplace",
         "library",
         "election",
-        "events",
+        "event",
     )
     fieldsets = (
         (None, {"fields": ("user", "association", "role", "rank")}),
@@ -26,8 +26,8 @@ class RoleAdmin(admin.ModelAdmin):
                     "marketplace",
                     "library",
                     "vote",
-                    "events",
-                    "files",
+                    "event",
+                    "media",
                 )
             },
         ),
