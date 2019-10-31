@@ -12,8 +12,8 @@ def widget_timeline_view(request):
     # show the next events
     events = (
         Event.objects.filter(
-            ends_at__gt=datetime.datetime.now(),
-            starts_at=datetime.datetime.now() + datetime.timedelta(hours=6),
+            ends_at__lt=datetime.datetime.now(),
+            starts_at_gt=datetime.datetime.now(),
             participants__in=request.user.id,
         )
         .order_by("-starts_at")
@@ -25,7 +25,7 @@ def widget_timeline_view(request):
         for event in EventSerializer(many=True).to_representation(events)
     ]
 
-    # the the lastest news
+    # the the latest news
     offset = request.data.get("offset", 0)
     limit = request.data.get("limit", 10)
 

@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
@@ -14,12 +14,17 @@ def widget_marketplace_view(request, marketplace_id):
     response = {}
     response["balance"] = BalanceView.get_balance_in_json(marketplace, request.user)
 
-    suggested_products = marketplace.products.filter(~Q(number_left=0)).all()
-    suggested_products = sorted(
-        suggested_products,
-        key=lambda product: product.transactions.filter(buyer=request.user).count(),
-        reverse=True,
+    suggested_products = (
+        marketplace.products.annotate(
+            number_of_purchases=Count(
+                "transaction", filter=Q(buyer=request.user)
+            )
+        )
+        .order_by("-number_of_purchases")
+        .exclude(number_left=0)[0:5]
+        .all()
     )
-    response["suggested_products"] = suggested_products[:5]
+
+    response["suggested_products"] = suggested_products
 
     return JsonResponse(response)
