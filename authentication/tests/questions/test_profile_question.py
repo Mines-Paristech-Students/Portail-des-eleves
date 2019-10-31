@@ -64,7 +64,6 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_list(self):
-        print(ProfileQuestion.objects.all().count())
         for user in self.ALL_USERS:
             self.login(user)
             res = self.list()
