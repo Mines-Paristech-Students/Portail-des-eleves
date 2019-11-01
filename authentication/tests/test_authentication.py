@@ -13,6 +13,7 @@ class AuthenticationTestCase(BaseTestCase):
     # One can use the script in the `sso_server` project to generate those tokens, and https://jwt.io/ to debug them.
     # The audience of these tokens is `portail` (it was of course edited in INVALID_AUDIENCE_TOKEN).
     # Except for `VALID_17UNKNOWN_TOKEN`, the user of these tokens is `17simple`.
+    # These tokens will expire around 2100.
 
     # tokens generated with `sso_server.tests.generate_fake_tokens("portail", "17simple")` in the `sso` project.
     tokens = {
@@ -43,46 +44,46 @@ class AuthenticationTestCase(BaseTestCase):
     # LOGIN #
     #########
 
-    def test_if_no_token_then_cannot_login(self):
+    def test_cannot_login_without_token(self):
         res = self.get("/auth/login/")
-        self.assertStatusCodeIn(res, [401, 403])
+        self.assertStatusCode(res, 403)
         self.assertEqual(
             res.data["detail"],
             "Provide a JWT as the `access` GET parameter.",
             msg=res.data["detail"],
         )
 
-    def test_if_invalid_signature_token_then_cannot_login(self):
+    def test_cannot_login_with_invalid_signature(self):
         res = self.login(self.tokens["INVALID_SIGNATURE_TOKEN"])
-        self.assertStatusCodeIn(res, [401, 403])
+        self.assertStatusCode(res, 403)
         self.assertEqual(
             res.data["detail"],
             "The token signature could not be verified.",
             msg=res.data["detail"],
         )
 
-    def test_if_expired_token_then_cannot_login(self):
+    def test_cannot_login_with_expired_token(self):
         res = self.login(self.tokens["EXPIRED_TOKEN"])
-        self.assertStatusCodeIn(res, [401, 403])
+        self.assertStatusCode(res, 403)
         self.assertEqual(res.data["detail"], "Expired token.", msg=res.data["detail"])
 
-    def test_if_invalid_issuer_token_then_cannot_login(self):
+    def test_cannot_login_with_invalid_issuer(self):
         res = self.login(self.tokens["INVALID_ISSUER_TOKEN"])
-        self.assertStatusCodeIn(res, [401, 403])
+        self.assertStatusCode(res, 403)
         self.assertEqual(res.data["detail"], "Invalid issuer.", msg=res.data["detail"])
 
-    def test_if_invalid_audience_token_then_cannot_login(self):
+    def test_cannot_login_with_invalid_audience(self):
         res = self.login(self.tokens["INVALID_AUDIENCE_TOKEN"])
-        self.assertStatusCodeIn(res, [401, 403])
+        self.assertStatusCode(res, 403)
         self.assertEqual(
             res.data["detail"], "Invalid audience.", msg=res.data["detail"]
         )
 
-    def test_if_invalid_user_token_then_not_authenticated(self):
+    def test_cannot_login_with_invalid_user_token(self):
         self.assertFalse(User.objects.filter(pk="piche").exists())
         res = self.login(self.tokens["VALID_PICHE_TOKEN"])
         self.assertStatusCode(
-            res, 200
+            res, 403
         )  # The user verification is done at the next step, so the cookie is set.
         self.assertIsNotAuthenticated()
 

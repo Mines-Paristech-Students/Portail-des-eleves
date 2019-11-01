@@ -6,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 
 from authentication.token import decode_token
+from authentication.authentication import JWTCookieAuthentication
 
 
 class LoginView(views.APIView):
@@ -17,14 +18,17 @@ class LoginView(views.APIView):
     def get(self, request, format=None, *args, **kwargs):
         if settings.JWT_AUTH_SETTINGS["GET_PARAMETER"] in request.GET:
             # Retrieve the token.
-            token = request.GET.get(settings.JWT_AUTH_SETTINGS["GET_PARAMETER"])
+            token = request.GET[settings.JWT_AUTH_SETTINGS["GET_PARAMETER"]]
 
             try:
-                decode_token(
+                claims = decode_token(
                     token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
                 )
             except jwt.exceptions.InvalidTokenError as e:
-                raise AuthenticationFailed(e)
+                raise AuthenticationFailed(e) from e
+
+            # Verify if the token can authenticate an user.
+            JWTCookieAuthentication().get_user(claims)
 
             # Set it as a cookie.
             response = Response({"token": token}, status=status.HTTP_200_OK)

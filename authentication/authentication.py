@@ -60,7 +60,9 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         try:
             user_id = validated_token[settings.JWT_AUTH_SETTINGS["USER_ID_CLAIM_NAME"]]
         except KeyError:
-            raise AuthenticationFailed("Token contained no recognizable user identification.")
+            raise AuthenticationFailed(
+                "Token contained no recognizable user identification."
+            )
 
         try:
             user = self.User.objects.get(pk=user_id)

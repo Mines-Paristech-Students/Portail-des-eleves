@@ -95,11 +95,10 @@ class WeakAuthenticationBaseTestCase(BaseTestCase):
             "utf-8"
         )  # jwt.encode returns a bytes object, it thus has to be decoded to a str.
 
-    def login(self, username, password="password"):
+    def login(self, username):
         """
         Log an user in.
         :param str username: the user's username.
-        :param str password: the user's password (default: password, should not change)
         :return: the response from token_obtain_pair.
         """
 
