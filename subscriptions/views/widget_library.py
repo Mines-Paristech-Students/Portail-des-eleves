@@ -15,9 +15,7 @@ def widget_library_view(request, library_id):
 
     suggested_loanables = (
         library.loanables.annotate(
-            number_of_borrow=Count(
-                "loans", filter=Q(user=request.user)
-            )
+            number_of_borrow=Count("loans", filter=Q(user=request.user))
         )
         .order_by("-number_of_borrow")
         .filter(loans_real_return_date__is_null=False)[0:5]

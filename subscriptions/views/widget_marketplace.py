@@ -16,9 +16,7 @@ def widget_marketplace_view(request, marketplace_id):
 
     suggested_products = (
         marketplace.products.annotate(
-            number_of_purchases=Count(
-                "transaction", filter=Q(buyer=request.user)
-            )
+            number_of_purchases=Count("transaction", filter=Q(buyer=request.user))
         )
         .order_by("-number_of_purchases")
         .exclude(number_left=0)[0:5]
