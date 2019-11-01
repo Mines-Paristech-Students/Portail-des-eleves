@@ -79,11 +79,10 @@ class MunkresTestCase(BaseTestCase):
             data={"status": "RESULTS"},
         )
 
-        self.check_reparition_is_event(campaign, categories)
+        self.check_reparition_is_even(campaign, categories)
 
-    def check_reparition_is_event(self, campaign, categories):
+    def check_reparition_is_even(self, campaign, categories):
         res = self.get("/repartitions/{}/results/".format(campaign.id))
-        print(res.content)
         self.assertEqual(res.status_code, 200)
         groups = json.loads(res.content)
 
@@ -157,23 +156,20 @@ class MunkresTestCase(BaseTestCase):
         campaign.save()
 
         categories_uc = {}
-
         for uc in user_campaigns:
             categories_uc[uc.category.id] = categories_uc.get(uc.category.id, []) + [uc]
 
         for i in range(3):
-            uc = categories_uc[2][i]
+            uc = categories_uc[categories[0].id][i]
             uc.fixed_to = propositions[0]
             uc.save()
 
-        def crash(self):
+        with self.assertRaises(ValueError):
             self.login("17bocquet")
             self.patch(
                 "/repartitions/campaigns/{}/".format(campaign.id),
                 data={"status": "RESULTS"},
             )
-
-        self.assertRaises(IndexError, crash, self)
 
     def test_crash_on_subtle_impossible_fixity(self):
         """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
@@ -198,68 +194,21 @@ class MunkresTestCase(BaseTestCase):
             i += 1
 
         for i in range(2):
-            uc = categories_uc[2][i]
-            print(uc.user)
+            uc = categories_uc[categories[0].id][i]
             uc.fixed_to = propositions[0]
             uc.save()
 
         for i in range(2):
-            uc = categories_uc[3][i]
-            print(uc.user)
+            uc = categories_uc[categories[1].id][i]
             uc.fixed_to = propositions[0]
             uc.save()
 
-        def crash(self):
+        with self.assertRaises(ValueError):
             self.login("17bocquet")
             self.patch(
                 "/repartitions/campaigns/{}/".format(campaign.id),
                 data={"status": "RESULTS"},
             )
-
-        self.assertRaises(IndexError, crash, self)
-
-    def test_subtle_impossible_fixity(self):
-        """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
-        per group """
-        campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
-            2, 6
-        )
-
-        campaign.manager = User.objects.get(pk="17bocquet")
-        campaign.save()
-
-        categories_uc = {}
-
-        i = 0
-        for uc in user_campaigns:
-            if i < 3:
-                uc.category = categories[0]
-            else:
-                uc.category = categories[1]
-            uc.save()
-            categories_uc[uc.category.id] = categories_uc.get(uc.category.id, []) + [uc]
-            i += 1
-
-        for i in range(2):
-            uc = categories_uc[2][i]
-            print(uc.user)
-            uc.fixed_to = propositions[0]
-            uc.save()
-
-        for i in range(2):
-            uc = categories_uc[3][i]
-            print(uc.user)
-            uc.fixed_to = propositions[0]
-            uc.save()
-
-        def crash(self):
-            self.login("17bocquet")
-            self.patch(
-                "/repartitions/campaigns/{}/".format(campaign.id),
-                data={"status": "RESULTS"},
-            )
-
-        self.assertRaises(IndexError, crash, self)
 
     def test_can_forcast_over_allocation(self):
         """
@@ -293,13 +242,9 @@ class MunkresTestCase(BaseTestCase):
                 wish = Wish(user_campaign=uc, proposition=proposition, rank=j)
                 wish.save()
 
-            print(uc.user, uc.category.id)
-
         uc = categories_uc[categories[1].id][0]
         uc.fixed_to = propositions[0]
         uc.save()
-
-        print(propositions)
 
         self.login("17bocquet")
         self.patch(
@@ -307,4 +252,4 @@ class MunkresTestCase(BaseTestCase):
             data={"status": "RESULTS"},
         )
 
-        self.check_reparition_is_event(campaign, categories)
+        self.check_reparition_is_even(campaign, categories)

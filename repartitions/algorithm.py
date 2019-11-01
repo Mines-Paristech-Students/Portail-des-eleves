@@ -178,7 +178,7 @@ def make_reparitition_proxy(
     category: Category, propositions: List[Proposition], already_used: List[int]
 ) -> List[List[User]]:
     """makes repartition for one category and make sure it's even"""
-    group_cardinal_diff = 1
+    group_cardinal_diff = 2
     groups = []
 
     already_used = np.array(already_used)
