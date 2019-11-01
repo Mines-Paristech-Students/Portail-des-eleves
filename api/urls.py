@@ -6,6 +6,7 @@ import authentication.urls
 import chat.urls
 import forum.urls
 import polls.urls
+import repartitions.urls
 import subscriptions.urls
 import tags.urls
 
@@ -15,6 +16,7 @@ urlpatterns = [
     path("chat/", include(chat.urls)),
     path("forum/", include(forum.urls)),
     path("polls/", include(polls.urls)),
+    path("repartitions/", include(repartitions.urls)),
     path("subscriptions/", include(subscriptions.urls)),
     path("tags/", include(tags.urls)),
 ]
