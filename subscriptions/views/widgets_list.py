@@ -3,8 +3,7 @@ from rest_framework.decorators import api_view
 
 
 @api_view(["GET"])
-def get_widgets():
-
+def get_widgets(*args, **kwargs):
     return {
         "main": reverse("widget_timeline"),
         "mandatory": [

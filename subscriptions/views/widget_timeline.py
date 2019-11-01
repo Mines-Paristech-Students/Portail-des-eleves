@@ -13,7 +13,7 @@ def widget_timeline_view(request):
     events = (
         Event.objects.filter(
             ends_at__lt=datetime.datetime.now(),
-            starts_at_gt=datetime.datetime.now(),
+            starts_at__gt=datetime.datetime.now(),
             participants__in=request.user.id,
         )
         .order_by("-starts_at")

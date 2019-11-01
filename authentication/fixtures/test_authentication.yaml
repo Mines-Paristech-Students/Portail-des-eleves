@@ -19,6 +19,16 @@
     year_of_entry: 2017
 
 - model: authentication.user
+  pk: 18simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Simple
+    last_name: Simple
+    email: 18simple@mpt.fr
+    is_admin: false
+    year_of_entry: 2018
+
+- model: authentication.user
   pk: 17bocquet
   fields:
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=

@@ -30,20 +30,20 @@ The subscription configuration is saved in a simple JSON that the frontend will 
 
 router = BulkRouter()
 
-router.register(r"subsriptions", WidgetSubscriptionViewSet)
+router.register(r"subscriptions", WidgetSubscriptionViewSet)
 
 urlpatterns = [
     path("", get_widgets),
-    path("timeline", widget_timeline_view, name="widget_timeline"),
-    path("birthday", widget_birthday_view, name="widget_birthday"),
-    path("poll", widget_poll_view, name="widget_poll"),
-    path("vote", widget_vote_view, name="widget_vote"),
-    path("repartition", widget_repartition_view, name="widget_repartition"),
-    path("balance", widget_balance_view, name="widget_balance"),
+    path("timeline/", widget_timeline_view, name="widget_timeline"),
+    path("birthday/", widget_birthday_view, name="widget_birthday"),
+    path("poll/", widget_poll_view, name="widget_poll"),
+    path("vote/", widget_vote_view, name="widget_vote"),
+    path("repartition/", widget_repartition_view, name="widget_repartition"),
+    path("balance/", widget_balance_view, name="widget_balance"),
     path(
-        "marketplace/<marketplace_id>",
+        "marketplace/<marketplace_id>/",
         widget_marketplace_view,
         name="widget_marketplace",
     ),
-    path("library/<library_id>", widget_library_view, name="widget_library"),
+    path("library/<library_id>/", widget_library_view, name="widget_library"),
 ] + router.urls
