@@ -1,11 +1,11 @@
 from authentication.models import User
 from authentication.serializers import UserSerializer
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from rest_framework.renderers import JSONRenderer
 
 
-class ProfileTestCase(BaseTestCase):
+class ProfileTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml"]
 
     def assertContentIsEqualToUser(self, res, user):
@@ -16,18 +16,18 @@ class ProfileTestCase(BaseTestCase):
     ############
 
     def test_if_not_logged_in_then_cannot_retrieve_user(self):
-        res = self.get("/users/17bocquet/")
+        res = self.get("/users/users/17bocquet/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_retrieve_user(self):
         self.login("17simple")
-        res = self.get("/users/17bocquet/")
+        res = self.get("/users/users/17bocquet/")
         self.assertStatusCode(res, 200)
         self.assertContentIsEqualToUser(res, User.objects.get(pk="17bocquet"))
 
     def test_if_logged_in_then_can_retrieve_current_user(self):
         self.login("17simple")
-        res = self.get("/users/current/")
+        res = self.get("/users/users/current/")
         self.assertStatusCode(res, 200)
         self.assertContentIsEqualToUser(res, User.objects.get(pk="17simple"))
 
@@ -36,12 +36,12 @@ class ProfileTestCase(BaseTestCase):
     ########
 
     def test_if_not_logged_in_then_cannot_list_user(self):
-        res = self.get("/users/")
+        res = self.get("/users/users/")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_list_user(self):
         self.login("17simple")
-        res = self.get("/users/")
+        res = self.get("/users/users/")
         self.assertStatusCode(res, 200)
 
     ##########
@@ -59,15 +59,15 @@ class ProfileTestCase(BaseTestCase):
     }
 
     def test_cannot_create_user(self):
-        res = self.post("/users/", self.new_user_data)
+        res = self.post("/users/users/", self.new_user_data)
         self.assertStatusCode(res, 401)
 
         self.login("17simple")
-        res = self.post("/users/", self.new_user_data)
+        res = self.post("/users/users/", self.new_user_data)
         self.assertStatusCode(res, 403)
 
         self.login("17admin")
-        res = self.post("/users/", self.new_user_data)
+        res = self.post("/users/users/", self.new_user_data)
         self.assertStatusCode(res, 403)
 
     ##########
@@ -99,7 +99,7 @@ class ProfileTestCase(BaseTestCase):
 
     def test_if_not_admin_then_can_edit_own_profile_with_allowed_edits(self):
         self.login("17simple")
-        res = self.patch("/users/17simple/", data=self.allowed_edits)
+        res = self.patch("/users/users/17simple/", data=self.allowed_edits)
         self.assertStatusCode(res, 200)
 
         user = User.objects.get(pk="17simple")
@@ -117,19 +117,19 @@ class ProfileTestCase(BaseTestCase):
 
         for field, content in self.not_allowed_edits.items():
             user_before = User.objects.get(pk="17simple")
-            res = self.patch("/users/17simple/", data={field: content})
+            res = self.patch("/users/users/17simple/", data={field: content})
             self.assertStatusCode(res, 200)
             user_after = User.objects.get(pk="17simple")
             self.assertEqual(getattr(user_before, field), getattr(user_after, field))
 
     def test_if_not_admin_then_cannot_edit_other_user_profile(self):
         self.login("17simple")
-        res = self.patch("/users/17bocquet/", data=self.allowed_edits)
+        res = self.patch("/users/users/17bocquet/", data=self.allowed_edits)
         self.assertStatusCode(res, 403)
 
     def test_if_admin_then_can_edit_other_user_profile_with_allowed_edits(self):
         self.login("17admin")
-        res = self.patch("/users/17simple/", data=self.allowed_edits)
+        res = self.patch("/users/users/17simple/", data=self.allowed_edits)
         self.assertStatusCode(res, 200)
 
         user = User.objects.get(pk="17simple")
@@ -147,7 +147,7 @@ class ProfileTestCase(BaseTestCase):
 
         for field, content in self.not_allowed_edits.items():
             user_before = User.objects.get(pk="17simple")
-            res = self.patch("/users/17simple/", data={field: content})
+            res = self.patch("/users/users/17simple/", data={field: content})
             self.assertStatusCode(res, 200)
             user_after = User.objects.get(pk="17simple")
             self.assertEqual(getattr(user_before, field), getattr(user_after, field))
@@ -158,11 +158,11 @@ class ProfileTestCase(BaseTestCase):
 
     def test_cannot_delete_user(self):
         self.login("17simple")
-        res = self.delete("/users/17simple/")
+        res = self.delete("/users/users/17simple/")
         self.assertStatusCode(res, 403)
         self.assertTrue(User.objects.filter(pk="17simple").exists())
 
         self.login("17admin")
-        res = self.delete("/users/17simple/")
+        res = self.delete("/users/users/17simple/")
         self.assertStatusCode(res, 403)
         self.assertTrue(User.objects.filter(pk="17simple").exists())

@@ -1,4 +1,3 @@
-
 - model: authentication.ProfileQuestion
   pk: 1
   fields:
@@ -8,8 +7,6 @@
   pk: 2
   fields:
     text: "Combien d'assiettes sur le bateau ?"
-
-
 
 - model: authentication.ProfileAnswer
   pk: 1

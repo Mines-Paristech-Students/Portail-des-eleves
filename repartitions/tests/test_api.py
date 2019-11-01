@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from repartitions.models import Campaign, Group, Proposition
 
 
-class APITestCase(BaseTestCase):
+class APITestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
 
     def test_create_campaign(self):

@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from forum.models import Theme
 
 
-class ThemeTestCase(BaseTestCase):
+class ThemeTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_forum.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]
@@ -25,20 +25,20 @@ class ThemeTestCase(BaseTestCase):
     def endpoint_create(self):
         return "/forum/themes/"
 
-    def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+    def create(self, data=None, format="json"):
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
         return f"/forum/themes/{pk}/"
 
-    def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+    def update(self, pk, data=None, format="json"):
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
         return f"/forum/themes/{pk}/"
 
-    def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+    def destroy(self, pk):
+        return self.delete(self.endpoint_destroy(pk))
 
     ########
     # LIST #

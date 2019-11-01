@@ -1,5 +1,5 @@
 from associations.models import Election
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_election.yaml to get a better understanding of the test fixtures.
 
@@ -27,7 +27,7 @@ ALL_USERS_EXCEPT_ADMIN = [user for user in ALL_USERS if "admin" not in user]
 """Same as ALL_USERS, but with all the association administrators removed."""
 
 
-class BaseElectionTestCase(BaseTestCase):
+class BaseElectionTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_election.yaml"]
 
     def endpoint_results(self, pk, association_id):
@@ -41,17 +41,8 @@ class BaseElectionTestCase(BaseTestCase):
         """Return the endpoint associated to the vote action."""
         return f"/associations/elections/{pk}/vote/"
 
-    def vote(
-        self,
-        pk,
-        association_id,
-        data=None,
-        format="json",
-        content_type="application/json",
-    ):
-        return self.post(
-            self.endpoint_vote(pk, association_id), data, format, content_type
-        )
+    def vote(self, pk, association_id, data=None, format="json"):
+        return self.post(self.endpoint_vote(pk, association_id), data, format)
 
     def endpoint_list(self, association_id):
         """Return the endpoint associated to the list election action."""
@@ -71,37 +62,22 @@ class BaseElectionTestCase(BaseTestCase):
         """Return the endpoint associated to the create action."""
         return f"/associations/elections/"
 
-    def create(
-        self, association_id, data=None, format="json", content_type="application/json"
-    ):
-        return self.post(
-            self.endpoint_create(association_id), data, format, content_type
-        )
+    def create(self, association_id, data=None, format="json"):
+        return self.post(self.endpoint_create(association_id), data, format)
 
     def endpoint_update(self, pk, association_id):
         """Return the endpoint associated to the update action."""
         return f"/associations/elections/{pk}/"
 
-    def update(
-        self,
-        pk,
-        association_id,
-        data=None,
-        format="json",
-        content_type="application/json",
-    ):
-        return self.patch(
-            self.endpoint_update(pk, association_id), data, format, content_type
-        )
+    def update(self, pk, association_id, data=None, format="json"):
+        return self.patch(self.endpoint_update(pk, association_id), data, format)
 
     def endpoint_destroy(self, pk, association_id):
         """Return the endpoint associated to the destroy action."""
         return f"/associations/elections/{pk}/"
 
-    def destroy(self, pk, association_id, data="", format=None, content_type=None):
-        return self.delete(
-            self.endpoint_destroy(pk, association_id), data, format, content_type
-        )
+    def destroy(self, pk, association_id):
+        return self.delete(self.endpoint_destroy(pk, association_id))
 
     def get_registered_to_election(self, pk):
         return [

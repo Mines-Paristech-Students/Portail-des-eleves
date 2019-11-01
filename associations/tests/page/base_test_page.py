@@ -1,4 +1,4 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_page.yaml to get a better understanding of the test fixtures.
 
@@ -22,7 +22,7 @@ ALL_USERS_EXCEPT_ADMIN = [user for user in ALL_USERS if "admin" not in user]
 """Same as ALL_USERS, but with all the association administrators removed."""
 
 
-class BasePageTestCase(BaseTestCase):
+class BasePageTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_page.yaml"]
 
     def endpoint_list(self, association_id):
@@ -43,34 +43,19 @@ class BasePageTestCase(BaseTestCase):
         """Return the endpoint associated to the create action."""
         return f"/associations/pages/"
 
-    def create(
-        self, association_id, data=None, format="json", content_type="application/json"
-    ):
-        return self.post(
-            self.endpoint_create(association_id), data, format, content_type
-        )
+    def create(self, association_id, data=None, format="json"):
+        return self.post(self.endpoint_create(association_id), data, format)
 
     def endpoint_update(self, pk, association_id):
         """Return the endpoint associated to the update action."""
         return f"/associations/pages/{pk}/"
 
-    def update(
-        self,
-        pk,
-        association_id,
-        data=None,
-        format="json",
-        content_type="application/json",
-    ):
-        return self.patch(
-            self.endpoint_update(pk, association_id), data, format, content_type
-        )
+    def update(self, pk, association_id, data=None, format="json"):
+        return self.patch(self.endpoint_update(pk, association_id), data, format)
 
     def endpoint_destroy(self, pk, association_id):
         """Return the endpoint associated to the destroy action."""
         return f"/associations/pages/{pk}/"
 
-    def destroy(self, pk, association_id, data="", format=None, content_type=None):
-        return self.delete(
-            self.endpoint_destroy(pk, association_id), data, format, content_type
-        )
+    def destroy(self, pk, association_id):
+        return self.delete(self.endpoint_destroy(pk, association_id))

@@ -1,43 +1,43 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from authentication.models.questions import ProfileAnswer
 
 
-class TestProfileAnswer(BaseTestCase):
+class TestProfileAnswer(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_questions.yaml"]
 
     ALL_USERS = ["17admin", "17simple"]
     """A list of user ids covering all the spectrum of roles and permissions."""
 
     def endpoint_list(self):
-        return "/profile_answer/"
+        return "/users/profile_answer/"
 
     def list(self):
         return self.get(self.endpoint_list())
 
     def endpoint_retrieve(self, pk):
-        return f"/profile_answer/{pk}/"
+        return f"/users/profile_answer/{pk}/"
 
     def retrieve(self, pk):
         return self.get(self.endpoint_retrieve(pk))
 
     def endpoint_create(self):
-        return "/profile_answer/"
+        return "/users/profile_answer/"
 
     def create(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_create(), data, format, content_type)
+        return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
-        return f"/profile_answer/{pk}/"
+        return f"/users/profile_answer/{pk}/"
 
     def update(self, pk, data=None, format="json", content_type="application/json"):
-        return self.patch(self.endpoint_update(pk), data, format, content_type)
+        return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
-        return f"/profile_answer/{pk}/"
+        return f"/users/profile_answer/{pk}/"
 
     def destroy(self, pk, data="", format=None, content_type=None):
-        return self.delete(self.endpoint_destroy(pk), data, format, content_type)
+        return self.delete(self.endpoint_destroy(pk))
 
     ############
     # RETRIEVE #
@@ -114,7 +114,7 @@ class TestProfileAnswer(BaseTestCase):
         ):
             self.login(user)
             res = self.create(data=data)
-            self.assertStatusCode(res, 201)
+            self.assertStatusCode(res, 201, user_msg=user)
 
             last_profile_answer = ProfileAnswer.objects.last()
             self.assertEqual(last_profile_answer.text, data["text"])

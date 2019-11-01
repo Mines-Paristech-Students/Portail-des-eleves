@@ -1,4 +1,4 @@
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_library.yaml to get a better understanding of the test fixtures.
 # TODO: test which fields are serialized.
@@ -30,5 +30,5 @@ ALL_USERS_EXCEPT_LIBRARY_ADMIN = [user for user in ALL_USERS if "library" not in
 """Same as ALL_USERS, but with all the library administrators removed."""
 
 
-class BaseLibraryTestCase(BaseTestCase):
+class BaseLibraryTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_library.yaml"]

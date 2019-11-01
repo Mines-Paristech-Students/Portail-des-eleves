@@ -3,12 +3,12 @@ import json
 import numpy as np
 
 from authentication.models import User
-from backend.tests_utils import BaseTestCase
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 from repartitions.algorithm import get_project_index
 from repartitions.models import Proposition, Campaign, UserCampaign, Category, Wish
 
 
-class MunkresTestCase(BaseTestCase):
+class MunkresTestCase(WeakAuthenticationBaseTestCase):
     """ The repartition algorithm is named 'Munkres algorithm' or 'Hungarian algorithm' """
 
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
