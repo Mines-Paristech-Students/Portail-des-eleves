@@ -7,12 +7,13 @@ from chat.models import ChatMessage
 from chat.serializers import ChatMessageSerializer
 
 
-class ChatMessageViewSet(mixins.CreateModelMixin,
-                         mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
+class ChatMessageViewSet(
+    mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     """
     API endpoint that allows chat messages to be viewed, inserted or edited.
     """
+
     queryset = ChatMessage.objects.all()
     serializer_class = ChatMessageSerializer
 
@@ -22,7 +23,7 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         """
         serializer.save(user=self.request.user)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def retrieve_up_to(self, serializer):
         """Retrieves multiple chat messages. Url link is "http://......./chat/retrieve_up_to/?quantity=X&to=Y"
 
@@ -35,22 +36,26 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         """
 
         if self.queryset.first() is None:
-            return Response(self.get_serializer(self.queryset.filter(id__lt=0)[:], many=True).data)
+            return Response(
+                self.get_serializer(self.queryset.filter(id__lt=0)[:], many=True).data
+            )
 
         params = self.request.query_params
 
-        number_of_messages = int(params.get('quantity', 10))
+        number_of_messages = int(params.get("quantity", 10))
         if number_of_messages > 200:
             raise ValidationError("Fetching more than 200 messages is not allowed")
-        if 'to' in params:
-            to_id = int(params['to'])
+        if "to" in params:
+            to_id = int(params["to"])
         else:
             to_id = self.queryset.first().id + 1
-        chat_messages = reversed(self.queryset.filter(id__lt=to_id)[:number_of_messages])
+        chat_messages = reversed(
+            self.queryset.filter(id__lt=to_id)[:number_of_messages]
+        )
         serializer = self.get_serializer(chat_messages, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def retrieve_from(self, serializer):
         """Retrieves multiple chat messages. Url link is "http://......./chat/retrieve_from/?from=X"
 
@@ -61,11 +66,13 @@ class ChatMessageViewSet(mixins.CreateModelMixin,
         It returns the list of newer messages (if any), it max out to 10."""
 
         params = self.request.query_params
-        if 'from' not in params:
+        if "from" not in params:
             raise ValidationError("The 'from' parameter is required")
-        from_param = params['from']
+        from_param = params["from"]
         if not from_param.isdigit():
-            raise ValidationError("The 'from' parameter must be an int and not '%s'" % from_param)
+            raise ValidationError(
+                "The 'from' parameter must be an int and not '%s'" % from_param
+            )
         from_param = int(from_param)
 
         latest_message = self.queryset.first()

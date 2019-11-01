@@ -16,4 +16,4 @@ class ChatMessage(models.Model):
         return self.message
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
