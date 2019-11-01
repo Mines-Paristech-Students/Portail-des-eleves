@@ -5,11 +5,7 @@ from repartitions.models import Wish, Campaign, Proposition, UserCampaign
 
 
 def user_in_campaign(user: User, campaign: Campaign) -> bool:
-    for category in campaign.categories.all():
-        if user in [uc.user for uc in category.users_campaign.all()]:
-            return True
-
-    return False
+    return campaign.categories.filter(users_campaign__user=user).exists()
 
 
 class CanManageCampaign(BasePermission):

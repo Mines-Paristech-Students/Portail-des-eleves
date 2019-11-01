@@ -221,7 +221,7 @@ def make_reparition(campaign: Campaign) -> List[Group]:
         if len(fixed_to) > 0 and (max(fixed_to.values()) - 1) * len(propositions) > len(
             user_campaigns
         ):
-            raise Exception(
+            raise RuntimeError(
                 "Impossible to find an even repartition, {} out of {} users fixed to {}".format(
                     max(fixed_to.values()),
                     category.users_campaign.count(),
