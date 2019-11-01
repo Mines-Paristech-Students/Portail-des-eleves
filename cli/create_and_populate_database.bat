@@ -1,3 +1,5 @@
+cd backend
+
 rmdir /S /Q associations\migrations
 rmdir /S /Q authentication\migrations
 rmdir /S /Q chat\migrations

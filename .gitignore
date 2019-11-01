@@ -27,7 +27,7 @@ wheels/
 *.egg
 MANIFEST
 Pipfile.lock
-frontend/package-lock.json
+package-lock.json
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -114,11 +114,12 @@ venv.bak/
 # macOS
 .DS_Store
 
-associations/migrations/*.py
-authentication/migrations/*.py
-chat/migrations/*.py
-forum/migrations/*.py
-polls/migrations/*.py
-repartitions/migrations/*.py
-subscriptions/migrations/*.py
-tags/migrations/*.py
+backend/api/migrations
+backend/associations/migrations
+backend/authentication/migrations
+backend/chat/migrations
+backend/forum/migrations
+backend/polls/migrations
+backend/repartitions/migrations
+backend/subscriptions/migrations
+backend/tags/migrations
