@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # erases the database, creates a new one and loads fixtures in it
 
-cd backend
+cd ../backend
 
 rm -Rf associations/migrations/*
 rm -Rf authentication/migrations/*
