@@ -18,7 +18,6 @@ from associations.models import (
     Role,
 )
 from authentication.models import User
-from forum.models import Theme, MessageForum, Topic
 from tags.models import Namespace, Tag
 
 
@@ -41,10 +40,6 @@ def get_parent_object(obj):
         Product: lambda x: x.marketplace.association,
         Transaction: lambda x: x.product.marketplace.association,
         Role: lambda x: x.association,
-        # Forum
-        Theme: lambda x: x,
-        Topic: lambda x: x.theme,
-        MessageForum: lambda x: x.topic.theme,
     }
 
     mapper = mappers.get(obj.__class__)
@@ -60,8 +55,6 @@ def can_manage_tags_for(user, instance):
     if isinstance(parent, Association):
         role = user.get_role(parent)
         return role and role.administration_permission
-    elif isinstance(parent, Theme):
-        return user.is_admin
     else:
         raise NotImplementedError("Model {} is not supported".format(instance))
 
@@ -82,8 +75,6 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
     if isinstance(parent, Association):
         role = user.get_role(parent)
         return bool(role)
-    elif isinstance(parent, Theme):
-        return user.is_admin
     elif parent is None:
         return True
     else:

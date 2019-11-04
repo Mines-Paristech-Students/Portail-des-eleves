@@ -12,7 +12,6 @@ from associations.models import (
     Role,
 )
 from authentication.models import User
-from forum.models import Theme
 from tags.models import Tag
 from tags.tests.base_test import TagsBaseTestCase
 
@@ -37,7 +36,6 @@ class HidingTestCase(TagsBaseTestCase):
             (Page, 3),
             (Product, 3),
             (Role, 3),
-            (Theme, 2),
         ]
 
         hiding_tag = Tag.objects.get(pk=1)
@@ -367,75 +365,6 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/roles/2/")
         self.assertStatusCode(response, 404)
         response = self.get("/associations/roles/3/")
-        self.assertStatusCode(response, 404)
-
-    def test_hiding_theme(self):
-        self.login("17simple")
-
-        #########################################
-        # Get all themes
-
-        response = self.get("/forum/themes/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all themes, but one should be missing
-
-        response = self.get("/forum/themes/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
-            self.assertNotIn("hidden", item["name"])
-
-        # Cannot directly access a hidden object.
-        response = self.get("/forum/themes/2/")
-        self.assertStatusCode(response, 404)
-
-    def test_hiding_topic(self):
-        self.login("17simple")
-
-        #########################################
-        # Get all topics
-
-        response = self.get("/forum/topics/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all topics, but one should be missing
-
-        response = self.get("/forum/topics/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
-            self.assertNotIn("hidden", item["name"])
-
-        # Cannot directly access a hidden object.
-        response = self.get("/forum/topics/2/")
-        self.assertStatusCode(response, 404)
-
-    def test_hiding_messages_forum(self):
-        self.login("17simple")
-
-        #########################################
-        # Get all forum_messages
-
-        response = self.get("/forum/messages/")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
-
-        self.switch_17simple_to_first_year()
-        ###########################################
-        # Get all forum_messages, but one should be missing
-
-        response = self.get("/forum/messages/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
-            self.assertNotIn("hidden", item["text"])
-
-        # Cannot directly access a hidden object.
-        response = self.get("/forum/messages/2/")
         self.assertStatusCode(response, 404)
 
     ##################

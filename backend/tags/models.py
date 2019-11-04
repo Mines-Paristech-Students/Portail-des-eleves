@@ -2,25 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.functional import cached_property
 
-from associations.models import (
-    Media,
-    Product,
-    Loanable,
-    Event,
-    Page,
-    Choice,
-    Role,
-    Loan,
-    Association,
-)
-from forum.models import Theme, Topic, MessageForum
+from associations.models import Media, Product, Loanable, Page, Role, Association
 from tags.exceptions import BrokenTagLink
 
 
 class Namespace(models.Model):
     """
         Represents a namespace for a `Tag` object. A namespace defines a `scope`, which is a “big” object, for instance
-        a specific `Association` or a specific forum `Theme`. A `Tag` under this `Namespace` will be restricted to this
+        a specific `Association`. A `Tag` under this `Namespace` will be restricted to this
         object and its taggable children (a `Page` or a `File`, for instance).
 
         Namespaces can also have a global scope, meaning a `Tag` under this namespace can be used everywhere.
@@ -35,11 +24,7 @@ class Namespace(models.Model):
     class Meta:
         unique_together = ("name", "scoped_to_model", "scoped_to_pk")
 
-    SCOPED_TO_MODELS = {
-        "association": Association,
-        "forum_theme": Theme,
-        "global": None,
-    }
+    SCOPED_TO_MODELS = {"association": Association, "global": None}
 
     name = models.CharField(max_length=50)
 
@@ -85,8 +70,6 @@ class Tag(models.Model):
         "page": Page,
         "product": Product,
         "role": Role,
-        # Forum
-        "theme": Theme,
     }
 
     namespace = models.ForeignKey(

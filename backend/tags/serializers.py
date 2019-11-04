@@ -12,12 +12,12 @@ def filter_nested_attribute(
         This function is a helper function for the Serializers which have to return nested objects but want to filter
         them if the user is not `show`.
 
-        For instance, to filter out the `topics` of a `Theme` object, one could do like this:
+        For instance, to filter out the `events` of a `Association` object, one could do like this:
             topics = serializersSerializerMethodField()
 
             def get_topics(self, obj):
                 return filter_nested_attribute(
-                    self.context, obj, TopicSerializer, "topics", Q(tags__is_hidden=True)
+                    self.context, obj, EventSerializer, "events", Q(tags__is_hidden=True)
                 )
 
         Don't forget to add `topics` to `read_only_fields` or `fields`. ;)
