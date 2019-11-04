@@ -30,14 +30,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = ["localhost"] + [env.str("PORTAIL_HOSTNAME")] + ["127.0.0.1"]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = ("http://localhost:4200",)
 
-ENV = "DEV"  # Can be 'DEV' or 'PROD'
 AUTH_USER_MODEL = "authentication.User"
 
 # Application definition
@@ -187,4 +186,4 @@ JWT_AUTH_SETTINGS = {
 
 
 def is_prod_mode():
-    return ENV == "PROD"
+    return DEBUG is False
