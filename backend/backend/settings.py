@@ -14,7 +14,7 @@ import os
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from os.path import join, dirname, realpath
+from os.path import join
 
 import environ
 
@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     "authentication",
     "associations",
     "chat",
-    "forum",
     "polls",
     "subscriptions",
     "tags",

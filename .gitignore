@@ -118,7 +118,6 @@ backend/api/migrations
 backend/associations/migrations
 backend/authentication/migrations
 backend/chat/migrations
-backend/forum/migrations
 backend/polls/migrations
 backend/repartitions/migrations
 backend/subscriptions/migrations

@@ -16,7 +16,6 @@ from associations.models import (
     Transaction,
     Role,
 )
-from forum.models import Theme, Topic, MessageForum
 from tags.models import Tag
 
 
@@ -44,10 +43,6 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             | Q(marketplace__association__tags__is_hidden=True),
             Transaction: Q(product__marketplace__association__tags__is_hidden=True),
             Role: Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True),
-            # Forum.
-            Theme: Q(tags__is_hidden=True),
-            Topic: Q(theme__tags__is_hidden=True),
-            MessageForum: Q(topic__theme__tags__is_hidden=True),
             # Tags.
             Tag: Q(is_hidden=True),
         }
