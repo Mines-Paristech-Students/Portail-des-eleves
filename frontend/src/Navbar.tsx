@@ -3,95 +3,71 @@ import Logo from "./logo-mines.png";
 import {Link} from "react-router-dom";
 
 import {
-  Collapse,
-  Navbar as BoostrapNavbar,
   NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem } from 'reactstrap';
 
-// function Navbar() {
-//     let dropdownOpen = false ;
-//
-//     return <div className="header py-4">
-//     <div className="container">
-//         <div className="d-flex">
-//            <Link to="/" className="header-brand">
-//                 <img src={Logo} className="header-brand-img" alt="site logo" />
-//             </Link>
-//             <div className="d-flex order-lg-2 ml-auto">
-//                 <div className="dropdown">
-//                     <div className="nav-link pr-0 leading-none">
-//                         <span className="avatar"/>
-//                         <span className="ml-2 d-lg-block">
-//                             <span className="text-default">User name</span>
-//                             <small className="text-muted d-block mt-1">P17</small>
-//                         </span>
-//                     </div>
-//                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-//                         <a className="dropdown-item">
-//                             <i className="dropdown-icon fe fe-user"/> Profil
-//                         </a>
-//                         <a className="dropdown-item" href="#">
-//                             <i className="dropdown-icon fe fe-settings"/> Paramètres
-//                         </a>
-//                         <div className="dropdown-item">
-//                             <i className="dropdown-icon fe fe-log-out"/> Déconnexion
-//                         </div>
-//                     </NavDropdown>
-//                 </div>
-//             </div>
-//             <a href="#" className="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#headerMenuCollapse">
-//                 <span className="header-toggler-icon"/>
-//             </a>
-//         </div>
-//     </div>
-// </div>;
-// }
+function Navbar() {
+	const [isOpen, setIsOpen] = useState(true);
+	const toggle = () => setIsOpen(!isOpen);
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+	let barClassNames = "header d-lg-flex p-0";
+	if (!isOpen) {
+		barClassNames += " collapse";
+	}
 
-  const toggle = () => setIsOpen(!isOpen);
-
-  return (
-	<BoostrapNavbar color="light" light expand="md">
-		<NavbarBrand href="/">reactstrap</NavbarBrand>
-		<NavbarToggler onClick={toggle} />
-		<Collapse isOpen={isOpen} navbar>
-			<Nav className="ml-auto" navbar>
-				<NavItem>
-					<NavLink href="/components/">Components</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-				</NavItem>
-				<UncontrolledDropdown nav inNavbar>
-					<DropdownToggle nav caret>
-						Options
-					</DropdownToggle>
-					<DropdownMenu right>
-						<DropdownItem>
-							Option 1
-						</DropdownItem>
-						<DropdownItem>
-							Option 2
-						</DropdownItem>
-						<DropdownItem divider />
-						<DropdownItem>
-							Reset
-						</DropdownItem>
-					</DropdownMenu>
-				</UncontrolledDropdown>
-			</Nav>
-		</Collapse>
-	</BoostrapNavbar>
-  );
-}
+	return <>
+		<div className="header py-4">
+			<div className="container">
+				<div className="d-flex">
+					<Link to="/" className="header-brand">
+						<img src={Logo} className="header-brand-img" alt="site logo" />
+					</Link>
+					<div className="d-flex order-lg-2 ml-auto">
+						<UncontrolledDropdown nav inNavbar>
+							<DropdownToggle nav className="text-left">
+								<span className="avatar"/>
+								<span className="ml-2 d-lg-block">
+									 <span className="text-default">Adrien B.</span>
+									 <small className="text-muted d-block mt-0">P17</small>
+								 </span>
+							</DropdownToggle>
+							<DropdownMenu right>
+								<DropdownItem>
+									<i className="dropdown-icon fe fe-user"/> Profil
+								</DropdownItem>
+								<DropdownItem>
+									<i className="dropdown-icon fe fe-settings"/> Paramètres
+								</DropdownItem>
+								<DropdownItem divider />
+								<DropdownItem>
+									<i className="dropdown-icon fe fe-log-out"/> Déconnexion
+								</DropdownItem>
+							</DropdownMenu>
+						</UncontrolledDropdown>
+					</div>
+					<NavbarToggler className="header-toggler d-lg-none ml-3 ml-lg-0" onClick={toggle}>
+						<span className="header-toggler-icon"/>
+					</NavbarToggler>
+				</div>
+			</div>
+		</div>
+		<div className={barClassNames}>
+			<div className="container">
+				<div className="row align-items-center">
+					<div className="col-lg order-lg-first">
+						<ul className="nav nav-tabs border-0 flex-column flex-lg-row">
+							<li className="nav-item">
+								<Link to="/" className="nav-link"><i className="fe fe-home"/>Accueil</Link>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</>;
+ }
 
 export default Navbar;
