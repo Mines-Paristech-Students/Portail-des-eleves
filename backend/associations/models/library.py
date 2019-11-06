@@ -23,28 +23,30 @@ class Loanable(models.Model):
 
     def is_borrowed(self):
         for loan in self.loans.all():
-            if loan.status == 'BORROWED':
+            if loan.status == "BORROWED":
                 return True
 
         return False
 
     def is_available(self):
         for loan in self.loans.all():
-            if loan.status in ['BORROWED', 'ACCEPTED']:
+            if loan.status in ["BORROWED", "ACCEPTED"]:
                 return False
         return True
 
     def get_expected_return_date(self):
-        loans = (Loan.objects
-                 .filter(loanable=self, status__in=['BORROWED', 'ACCEPTED'])
-                 .order_by('-id'))
+        loans = Loan.objects.filter(
+            loanable=self, status__in=["BORROWED", "ACCEPTED"]
+        ).order_by("-id")
         return loans[0].expected_return_date if len(loans) > 0 else None
 
 
 class Loan(models.Model):
     id = models.AutoField(primary_key=True)
 
-    loanable = models.ForeignKey(Loanable, on_delete=models.CASCADE, related_name="loans")
+    loanable = models.ForeignKey(
+        Loanable, on_delete=models.CASCADE, related_name="loans"
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     loan_date = models.DateTimeField(auto_now=False, null=True)
@@ -62,7 +64,10 @@ class Loan(models.Model):
         ("CANCELLED", "Annulé"),  # The user has cancelled the loan.
         ("REJECTED", "Refusé"),  # The library administrator has refused the loan.
         ("ACCEPTED", "Accepté"),  # The library administrator has accepted the loan.
-        ("BORROWED", "Emprunté"),  # The product has been given. The order cannot be CANCELLED anymore.
+        (
+            "BORROWED",
+            "Emprunté",
+        ),  # The product has been given. The order cannot be CANCELLED anymore.
         ("RETURNED", "Rendu"),  # The product has been returned.
     )
     status = models.CharField(choices=STATUS, max_length=200, default="PENDING")
