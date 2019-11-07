@@ -6,20 +6,21 @@ export enum StudentType {
 }
 
 export interface User {
-    first_name: string,
-    last_name: string,
-    birthday: string,
-    email: string,
-    yearOfEntry: number,
-    studentType: StudentType,
-    isActive: boolean,
-    isAdmin: boolean,
-    nickname: string,
-    phone: string,
-    room: string,address: string,
-    cityOfOrigin: string,
-    option: string,
-    sports: string,
-    roommate: User,
-    minesparent: User[]
+    first_name: string;
+    last_name: string;
+    birthday: string;
+    email: string;
+    yearOfEntry: number;
+    studentType: StudentType;
+    isActive: boolean;
+    isAdmin: boolean;
+    nickname: string;
+    phone: string;
+    room: string;
+    address: string;
+    cityOfOrigin: string;
+    option: string;
+    sports: string;
+    roommate: User;
+    minesparent: User[];
 }

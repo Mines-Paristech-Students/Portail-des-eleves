@@ -1,3 +1,1 @@
-export interface Library {
-
-}
+export interface Library {}
