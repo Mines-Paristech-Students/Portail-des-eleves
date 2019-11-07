@@ -2,15 +2,13 @@ import {Marketplace} from "./marketplace";
 import {Library} from "./library";
 import {Page} from "./page";
 
-export class Association {
-    constructor(public id: string,
-                public name: string,
-                public logo: string,
-                public rank: string,
-                public pages: Page[],
-                public marketplace: Marketplace,
-                public library: Library,
-                public myRole: string) {
-
-    }
+export interface Association {
+     id: string;
+     name: string;
+     logo: string;
+     rank: string;
+     pages: Page[];
+     marketplace: Marketplace;
+     library: Library;
+     myRole: string;
 }

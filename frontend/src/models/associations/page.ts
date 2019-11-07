@@ -7,16 +7,14 @@ export enum PageType {
     Static = "STATIC"
 }
 
-export class Page {
-    constructor(public id: string,
-                public authors: User[],
-                public creationDate: Date,
-                public lastUpdateDate: Date,
-                public tags: Tag[],
-                public association: Association,
-                public title: string,
-                public text: string,
-                public pageType: PageType) {
-
-    }
+export interface Page {
+     id: string,
+     authors: User[],
+     creationDate: Date,
+     lastUpdateDate: Date,
+     tags: Tag[],
+     association: Association,
+     title: string,
+     text: string,
+     pageType: PageType
 }

@@ -1,3 +1,3 @@
-export class Library {
+export interface Library {
 
 }
