@@ -1,4 +1,4 @@
-enum StudentType {
+export enum StudentType {
     AST = "AST",
     ISUPFERE = "ISUPFERE",
     EV = "EV",
@@ -6,23 +6,23 @@ enum StudentType {
 }
 
 export class User {
-    first_name: string;
-    last_name: string;
-    birthday: string;
-    email: string;
-    yearOfEntry: number;
-    studentType: StudentType;
-    isActive: boolean;
-    isAdmin: boolean;
+    constructor(public first_name: string,
+                public last_name: string,
+                public birthday: string,
+                public email: string,
+                public yearOfEntry: number,
+                public studentType: StudentType,
+                public isActive: boolean,
+                public isAdmin: boolean,
+                public nickname: string,
+                public phone: string,
+                public room: string,
+                public address: string,
+                public cityOfOrigin: string,
+                public option: string,
+                public sports: string,
+                public roommate: User,
+                public minesparent: User[]) {
 
-    nickname: string;
-    phone: string;
-    room: string;
-    address: string;
-    cityOfOrigin: string;
-    option: string;
-    sports: string;
-    roommate: User;
-    minesparent: [User];
-
+    }
 }

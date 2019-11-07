@@ -2,19 +2,21 @@ import {Tag} from "../tags/tag";
 import {User} from "../authentication/user";
 import {Association} from "./association";
 
-enum PageType {
+export enum PageType {
     News = "NEWS",
     Static = "STATIC"
 }
 
 export class Page {
-    id: string;
-    authors: [User];
-    creation_date: Date;
-    last_update_date: Date;
-    tags: [Tag];
-    association: Association;
-    title: string;
-    text: string;
-    pageType: PageType;
+    constructor(public id: string,
+                public authors: User[],
+                public creationDate: Date,
+                public lastUpdateDate: Date,
+                public tags: Tag[],
+                public association: Association,
+                public title: string,
+                public text: string,
+                public pageType: PageType) {
+
+    }
 }

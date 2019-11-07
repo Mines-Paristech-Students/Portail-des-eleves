@@ -1,6 +1,8 @@
 export class Namespace {
-    id: string;
-    name: string;
-    scopedToPk: string;
-    scopedToModel: string;
+    constructor(public id: string,
+                public name: string,
+                public scopedToPk: string,
+                public scopedToModel: string,) {
+
+    }
 }
