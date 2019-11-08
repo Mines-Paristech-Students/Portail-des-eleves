@@ -1,6 +1,6 @@
 import express from "express";
 import * as socketioJwt from 'socketio-jwt';
-import * as socketIo from 'socket.io';
+import socketIo from 'socket.io';
 import { createServer} from 'http';
 import {add, get} from './db';
 
