@@ -12,8 +12,8 @@ export interface Poll {
     question: string;
     state: PollState;
     creationDateTime: Date;
-    publication_date: Date;
-    admin_comment: string;
+    publicationDate: Date;
+    adminComment: string;
 }
 
 export interface Choice {

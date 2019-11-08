@@ -1,9 +1,9 @@
 import { User } from "./user";
 
 export enum CampaignStatus {
-    CLOSED = "CLOSED",
-    OPEN = "OPEN",
-    RESULTS = "RESULTS"
+    Closed = "CLOSED",
+    Open = "OPEN",
+    Results = "RESULTS"
 }
 
 export interface Campaign {
