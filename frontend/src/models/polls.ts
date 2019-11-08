@@ -1,9 +1,9 @@
 import {User} from "./user";
 
 export enum PollState {
-    ACCEPTED = "ACCEPTED",
-    REJECTED = "REJECTED",
-    REVIEWING = "REVIEWING"
+    Accepted = "ACCEPTED",
+    Rejected = "REJECTED",
+    Reviewing = "REVIEWING"
 }
 
 export interface Poll {

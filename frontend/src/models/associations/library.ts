@@ -2,11 +2,11 @@ import { Association } from "./association";
 import { User } from "../user";
 
 export enum LoanStatus {
-    ACCEPTED = "ACCEPTED",
-    REJECTED = "REJECTED",
-    CANCELLED = "CANCELLED",
-    BORROWED = "BORROWED",
-    RETURNED = "RETURNED"
+    Accepted = "ACCEPTED",
+    Rejected = "REJECTED",
+    Cancelled = "CANCELLED",
+    Borrowed = "BORROWED",
+    Returned = "RETURNED"
 }
 
 export interface Loan {

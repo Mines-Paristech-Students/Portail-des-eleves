@@ -1,8 +1,8 @@
 export enum StudentType {
-    AST = "AST",
-    ISUPFERE = "ISUPFERE",
-    EV = "EV",
-    IC = "IC"
+    Ast = "AST",
+    Isupfere = "ISUPFERE",
+    Ev = "EV",
+    Ic = "IC"
 }
 
 export interface User {
