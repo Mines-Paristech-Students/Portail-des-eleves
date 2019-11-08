@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "authentication",
     "associations",
-    "chat",
     "polls",
     "subscriptions",
     "tags",
