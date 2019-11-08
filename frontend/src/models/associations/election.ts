@@ -1,4 +1,4 @@
-import { User } from "../authentication/user";
+import { User } from "../user";
 
 export interface Choice {
     id: string;

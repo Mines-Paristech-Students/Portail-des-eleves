@@ -1,7 +1,7 @@
-import { Tag } from "../tags/tag";
+import { Tag } from "../tag";
 import { Association } from "./association";
 
-export class Media {
+export interface Media {
     id: string;
     uploaded_on: Date;
     uploaded_by: Date;

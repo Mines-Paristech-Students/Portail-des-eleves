@@ -1,12 +1,12 @@
 import { Association } from "./association";
-import { Tag } from "../tags/tag";
+import { Tag } from "../tag";
 
 export interface Marketplace {
     id: string;
     enabled: boolean;
     association: Association;
     products: Product[];
-};
+}
 
 export interface Product {
     id: string;

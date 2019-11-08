@@ -1,5 +1,5 @@
-import { Tag } from "../tags/tag";
-import { User } from "../authentication/user";
+import { Tag } from "../tag";
+import { User } from "../user";
 import { Association } from "./association";
 
 export enum PageType {
