@@ -32,7 +32,7 @@ export interface Group {
 
 export interface Wish {
     proposition: string;
-    rank: string;
+    rank: number;
 }
 
 export interface UserCampaign {
