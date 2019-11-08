@@ -10,7 +10,7 @@ import {
   DropdownItem } from 'reactstrap';
 
 function Navbar() {
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState<boolean>(true);
 	const toggle = () => setIsOpen(!isOpen);
 
 	let barClassNames = "header d-lg-flex p-0";

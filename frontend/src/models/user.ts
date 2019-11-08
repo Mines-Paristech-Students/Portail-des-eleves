@@ -6,8 +6,8 @@ export enum StudentType {
 }
 
 export interface User {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     birthday: string;
     email: string;
     yearOfEntry: number;

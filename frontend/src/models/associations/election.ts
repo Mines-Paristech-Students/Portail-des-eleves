@@ -1,4 +1,5 @@
 import { User } from "../user";
+import {Association} from "./association";
 
 export interface Choice {
     id: string;
@@ -8,16 +9,16 @@ export interface Choice {
 export interface Ballot {
     id: string;
     election: Election;
-    choices: Choice;
+    choices: Choice[];
 }
 
 export interface Election {
     id: string;
-    association: string;
+    association: Association;
     name: string;
     choices: Choice[];
-    registered_voters: User[];
-    starts_at: Date;
-    ends_at: Date;
-    max_choices_per_ballot: string;
+    registeredVoters: User[];
+    startsAt: Date;
+    endsAt: Date;
+    maxChoicesPerBallot: number;
 }

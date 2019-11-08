@@ -16,5 +16,5 @@ export interface Product {
     price: number;
     comment: string;
     marketplace: Marketplace;
-    number_left: number;
+    numberLeft: number;
 }

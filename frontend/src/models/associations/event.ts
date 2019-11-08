@@ -6,7 +6,7 @@ export interface Event {
     name: string;
     description: string;
     participants: User[];
-    starts_at: Date;
-    ends_at: Date;
+    startsAt: Date;
+    endsAt: Date;
     place: string;
 }

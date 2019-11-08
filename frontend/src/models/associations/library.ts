@@ -14,9 +14,9 @@ export interface Loan {
     user: User;
     status: LoanStatus;
     loanable: Loanable;
-    expected_return_date: Date;
-    loan_date: Date;
-    real_return_date: Date;
+    expectedReturnDate: Date;
+    loanDate: Date;
+    realReturnDate: Date;
 }
 
 export interface Loanable {
