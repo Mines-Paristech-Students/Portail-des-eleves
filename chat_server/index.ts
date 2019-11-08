@@ -26,7 +26,7 @@ io
 }))
 .on("authenticated", (socket: any) => {
 
-	socket.on("message", (request: any) => {
+	socket.on("message", async (request: any) => {
 		if (request.message === undefined ){
 			return
 		}
@@ -36,9 +36,9 @@ io
 		socket.broadcast(model);
 	});
 
-	socket.on("fetch", (request: any) => {
+	socket.on("fetch", async (request: any) => {
 		if (request.from === undefined || request.limit === undefined){
-			return 
+			return
 		}
 
 		let messages = await get(request.from, request.limit);
