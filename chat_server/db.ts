@@ -6,7 +6,6 @@ const client = new Client({
   password: "root",
   database: "portail_message"
 });
-const log = require("log");
 
 let create_schema_query = `
     CREATE TABLE IF NOT EXISTS messages (
@@ -22,10 +21,10 @@ let setup = async () => {
   await client
     .query(create_schema_query)
     .then(res => {
-      log.info("✅ create schema sucessfully");
+      console.info("✅ create schema sucessfully");
     })
     .catch(err => {
-      log.error("❌ failed to create schema, ", err);
+      console.error("❌ failed to create schema, ", err);
     });
 };
 
