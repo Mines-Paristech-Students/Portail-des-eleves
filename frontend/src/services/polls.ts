@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import {APIService, APIServiceStatus, baseEndpoint} from "./api_service";
 import {polls} from "../fixtures/polls";
 
-export const useListPollService = () => {
+export function useListPollsService() {
     const [result, setResult] = useState<APIService<Poll[]>>({
         status: APIServiceStatus.Loading
     });
@@ -19,4 +19,13 @@ export const useListPollService = () => {
 
     return result;*/
     return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
-};
+}
+
+
+export function useListUserPollsService() {
+    return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
+}
+
+export function useListPollsServiceAdmin() {
+    return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
+}

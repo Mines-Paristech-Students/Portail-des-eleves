@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-    Card,
-    CardBody,
-    CardHeader,
-    CardSubtitle,
-    CardTitle,
-    ListGroup,
-    ListGroupItem,
-    Progress
-} from "reactstrap";
 import {Poll} from "../../../models/polls";
 import "./list_published_polls.css";
+import {dateFormatter} from "../../../utils/date";
+import Card from "react-bootstrap/Card";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import ListGroup from "react-bootstrap/ListGroup";
 
 type Props = {
     poll: Poll,
@@ -32,28 +26,29 @@ export function InactivePoll(props: Props) {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>{props.poll.question}</CardTitle>
-            </CardHeader>
-            <CardBody>
-                <CardSubtitle className="poll-date">
-                    <em>{props.poll.publicationDate.getDate()}/{props.poll.publicationDate.getMonth()}/{props.poll.publicationDate.getFullYear()}</em>
-                </CardSubtitle>
+            <Card.Header>
+                <Card.Title>{props.poll.question}</Card.Title>
+            </Card.Header>
+            <Card.Body>
+                <Card.Subtitle className="poll-date">
+                    <em>{dateFormatter(props.poll.publicationDate)}</em>
+                </Card.Subtitle>
 
                 <ListGroup>
                     {props.poll.choices.map(
                         choice => {
                             if (choice.numberOfVotes) {
                                 return (
-                                    <ListGroupItem key={choice.id}>
+                                    <ListGroup.Item key={choice.id}>
                                         <h5>{choice.text}</h5>
-                                        <Progress
-                                            value={choice.numberOfVotes}
+                                        <ProgressBar
+                                            now={choice.numberOfVotes}
+                                            min={0}
                                             max={totalVotes}
                                             color={getColor(choice.numberOfVotes, totalVotes)}>
                                             {choice.numberOfVotes}
-                                        </Progress>
-                                    </ListGroupItem>
+                                        </ProgressBar>
+                                    </ListGroup.Item>
                                 );
                             } else {
                                 return <></>;
@@ -61,7 +56,7 @@ export function InactivePoll(props: Props) {
                         }
                     )}
                 </ListGroup>
-            </CardBody>
+            </Card.Body>
         </Card>
     );
 }

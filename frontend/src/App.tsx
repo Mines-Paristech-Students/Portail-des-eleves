@@ -1,10 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import "tabler-ui/dist/assets/css/dashboard.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Navbar from "./Navbar";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import {ListPublishedPolls} from "./components/polls/ListPublishedPolls";
+import {ListPublishedPolls} from "./components/polls/list_published_polls/ListPublishedPolls";
+import {ListUserPolls} from "./components/polls/ListUserPolls";
+import {ListPollsAdmin} from "./components/polls/ListPollsAdmin";
 
 // This is for connecting to the backend.
 // In the future, we will have to write a page dedicated to settings this cookie.
@@ -22,13 +25,18 @@ const App: React.FC = () => {
     return (
         <Router>
             <div className="App">
+                <Navbar/>
                 <Switch>
+                    <Route path="/sondages/mes-sondages/">
+                        <ListUserPolls/>
+                    </Route>
+                    <Route path="/sondages/administrer/">
+                        <ListPollsAdmin/>
+                    </Route>
                     <Route path="/sondages/">
-                        <Navbar/>
                         <ListPublishedPolls/>
                     </Route>
                     <Route path="/">
-                        <Navbar/>
                     </Route>
                 </Switch>
             </div>

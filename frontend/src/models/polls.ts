@@ -7,6 +7,7 @@ export enum PollState {
 }
 
 export interface Poll {
+    // TODO: a field `author` is missing for the administrative part (but not public!).
     id: string;
     choices: Choice[];
     question: string;

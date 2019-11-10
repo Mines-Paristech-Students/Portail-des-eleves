@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {LinkData} from "../utils/LinkData";
+import {LinkData} from "../utils/link_data";
 import "./action_bar.css";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 /**
  * Display a bar with links rendered as buttons.
  */
+// TODO: make it more customizable (style the buttons for instance). Use a dedicated structure (ActionData instead of LinkData).
 export function ActionBar(props: Props) {
     return (
         <div className="action-bar">

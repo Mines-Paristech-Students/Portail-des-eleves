@@ -1,7 +1,8 @@
 import React from 'react';
-import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
-import {LinkData} from "../utils/LinkData";
+import {LinkData} from "../utils/link_data";
+import BreadcrumbItem from "react-bootstrap/BreadcrumbItem";
+import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 type Props = {
     breadcrumbs: Array<LinkData>

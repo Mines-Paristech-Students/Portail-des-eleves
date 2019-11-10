@@ -71,5 +71,53 @@ export const poll_3: Poll = {
     isActive: false
 };
 
+const choices_4: Choice[] = [
+    {
+        id: "1",
+        text: "Bla bla bla",
+        numberOfVotes: 54,
+    },
+    {
+        id: "2",
+        text: "Bla bla bla",
+        numberOfVotes: 38
+    }
+];
 
-export const polls = [poll_1, poll_2, poll_3];
+export const poll_4: Poll = {
+    id: "3",
+    choices: choices_4,
+    question: "Sondage nul",
+    state: PollState.Rejected,
+    creationDateTime: new Date(2019, 11, 1),
+    publicationDate: new Date(2019, 11, 7),
+    adminComment: "",
+    isActive: false
+};
+
+const choices_5: Choice[] = [
+    {
+        id: "1",
+        text: "Bla bla bla",
+        numberOfVotes: 54,
+    },
+    {
+        id: "2",
+        text: "Bla bla bla",
+        numberOfVotes: 38
+    }
+];
+
+export const poll_5: Poll = {
+    id: "3",
+    choices: choices_5,
+    question: "Sondage en attente",
+    state: PollState.Reviewing,
+    creationDateTime: new Date(2019, 11, 1),
+    publicationDate: new Date(2019, 11, 7),
+    adminComment: "",
+    isActive: false
+};
+
+
+export const polls = [poll_1, poll_2, poll_3, poll_4, poll_5];

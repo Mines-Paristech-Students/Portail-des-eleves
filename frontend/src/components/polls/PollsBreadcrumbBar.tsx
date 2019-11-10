@@ -1,5 +1,5 @@
 import React from 'react';
-import {LinkData} from "../../utils/LinkData";
+import {LinkData} from "../../utils/link_data";
 import {BreadcrumbBar} from "../BreadcrumbBar";
 
 type Props = {
