@@ -16,7 +16,7 @@ export function ActionBar(props: Props) {
             {
                 props.actions &&
                 props.actions.map(
-                    linkData => <Link to={linkData.to} className="btn btn-outline-primary">
+                    linkData => <Link to={linkData.to} className="btn btn-outline-primary" key={linkData.name}>
                         {linkData.name}
                     </Link>
                 )
