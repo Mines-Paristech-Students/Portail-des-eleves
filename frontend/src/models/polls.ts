@@ -14,6 +14,7 @@ export interface Poll {
     creationDateTime: Date;
     publicationDate: Date;
     adminComment: string;
+    isActive: boolean;
 }
 
 export interface Choice {
