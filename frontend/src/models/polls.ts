@@ -20,6 +20,7 @@ export interface Poll {
 export interface Choice {
     id: string;
     text: string;
+    numberOfVotes?: number;
 }
 
 export interface Vote {
