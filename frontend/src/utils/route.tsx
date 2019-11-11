@@ -30,7 +30,9 @@ export const CommonPrivateRoute = ({ component: Component, ...rest }) => (
         component={props => (
             <>
                 <Navbar />
-                <Component {...props} />
+                <div className={"container"}>
+                    <Component {...props} />
+                </div>
             </>
         )}
     />
