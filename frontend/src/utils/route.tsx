@@ -1,12 +1,13 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { authService } from "../App";
+import Navbar from "./navbar";
 
 /**
  * Ensure the user is logged-in before displaying them the route
  */
-export const PrivateRoute = ({ component: Component, ...rest }) => {
-    return <Route
+export const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route
         {...rest}
         render={props =>
             authService.isAuthenticated ? (
@@ -21,4 +22,16 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
             )
         }
     />
-};
+);
+
+export const CommonPrivateRoute = ({ component: Component, ...rest }) => (
+    <PrivateRoute
+        {...rest}
+        component={props => (
+            <>
+                <Navbar />
+                <Component {...props} />
+            </>
+        )}
+    />
+);

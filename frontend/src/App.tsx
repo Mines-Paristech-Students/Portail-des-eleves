@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "tabler-ui/dist/assets/css/dashboard.css";
 import { AuthService } from "./service/authService";
+import { CommonPrivateRoute, PrivateRoute } from "./utils/route";
+import { PageNotFoundError } from "./pages/errorPage";
 import { Login } from "./pages/login";
 import { Homepage } from "./pages/homepage";
-import { PrivateRoute } from "./utils/privateRoute";
-import { PageNotFoundError } from "./pages/errorPage";
 
 export const authService = new AuthService();
 
@@ -27,7 +27,7 @@ const App: React.FC = () => {
                 <Switch>
                     {/* A PrivateRoute is a route that requires to be authenticated to be accessible.
                      If the user is a public one, they'll be redirected to the login page. */}
-                    <PrivateRoute exact path="/" component={Homepage} />
+                    <CommonPrivateRoute exact path="/" component={Homepage} />
                     <Route path="/login" component={Login} />
                     <Route component={PageNotFoundError} />
                 </Switch>
