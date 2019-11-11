@@ -1,7 +1,7 @@
 import React from "react";
 
 /**
- * This files should contain helpers for common components regularly used that
+ * This files should contain helpers for regularly used components that
  * require an important number of nested objects or classes.
  */
 

@@ -3,7 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import { authService } from "../App";
 
 /**
- * Ensures the user is logged-in before displaying them the route
+ * Ensure the user is logged-in before displaying them the route
  */
 export const PrivateRoute = ({ component: Component, ...rest }) => {
     return <Route

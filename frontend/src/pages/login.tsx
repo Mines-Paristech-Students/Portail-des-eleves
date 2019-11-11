@@ -29,7 +29,7 @@ export const Login = () => {
                             <form className="card" action="" method="post">
                                 <div className="card-body p-6">
                                     <div className="card-title">
-                                        Connection au portail des élèves
+                                        Connexion au portail des élèves
                                     </div>
                                     <p>
                                         Vous devez vous connecter pour continuer
