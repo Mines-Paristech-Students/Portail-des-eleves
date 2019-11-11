@@ -35,7 +35,7 @@ DEBUG = env.bool("DEBUG")
 ALLOWED_HOSTS = ["localhost"] + [env.str("PORTAIL_HOSTNAME")] + ["127.0.0.1"]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ("http://localhost:4200",)
+CORS_ORIGIN_WHITELIST = ("http://localhost:3000",)
 
 AUTH_USER_MODEL = "authentication.User"
 
