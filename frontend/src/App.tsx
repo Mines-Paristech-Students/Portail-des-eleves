@@ -7,16 +7,18 @@ import { CommonPrivateRoute } from "./utils/route";
 import { PageNotFoundError } from "./pages/errorPage";
 import { Login } from "./pages/login";
 import { Homepage } from "./pages/homepage";
+import { AssociationMain } from "./pages/associations/main";
 import { AssociationList } from "./pages/associations/list";
 
 export const authService = new AuthService();
 const routes = [
-    { path: "/", component: Homepage },
-    { path: "/associations", component: AssociationList }
+    { path: "/", component: Homepage, exact: true },
+    { path: "/associations", component: AssociationList, exact: true },
+    { path: "/associations/:associationId", component: AssociationMain, exact: false },
 ];
 
-const privateRoutes = routes.map(({ path, component }) => (
-    <CommonPrivateRoute exact path={path} component={component} key={path} />
+const privateRoutes = routes.map(({ path, component, exact }) => (
+    <CommonPrivateRoute exact={exact} path={path} component={component} key={path} />
 ));
 
 const App: React.FC = () => {

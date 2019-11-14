@@ -1,21 +1,11 @@
 import React from "react";
 import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async";
 import { PageTitle } from "../../utils/common";
-import { apiService } from "../../service/apiService";
-import { AxiosResponse } from "axios";
-import { Association } from "../../models/associations/association";
+import { api } from "../../service/apiService";
 import { Card, CardBody, CardTitle } from "reactstrap";
 
-const loadAssociations = async () => {
-    return apiService
-        .get("associations/associations/")
-        .then((response: AxiosResponse<Association[]>) => {
-            return response.data;
-        });
-};
-
 export const AssociationList = () => {
-    const state = useAsync({ promiseFn: loadAssociations });
+    const state = useAsync({ promiseFn: api.associations.list() });
     return (
         <>
             <PageTitle>Associations</PageTitle>
@@ -27,7 +17,10 @@ export const AssociationList = () => {
                 {associations => (
                     <div className={"row"}>
                         {associations.map(association => (
-                            <Card key={association.id} className={"col-md-3 m-4"}>
+                            <Card
+                                key={association.id}
+                                className={"col-md-3 m-4"}
+                            >
                                 <CardBody>
                                     <CardTitle>{association.name}</CardTitle>
                                 </CardBody>
