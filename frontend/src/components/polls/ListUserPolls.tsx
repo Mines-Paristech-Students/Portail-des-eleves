@@ -7,6 +7,7 @@ import {APIServiceStatus} from "../../services/api_service";
 import {PollsTable} from "./polls_table/PollsTable";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
+import Container from 'react-bootstrap/Container';
 
 export function ListUserPolls() {
     const actions: Array<LinkData> = [
@@ -40,14 +41,16 @@ export function ListUserPolls() {
         <>
             <PollsBreadcrumbBar breadcrumbs={breadcrumbs}/>
             <ActionBar actions={actions}/>
-            <Card>
-                <Card.Header>
-                    <Card.Title>Mes sondages</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                    {renderContent()}
-                </Card.Body>
-            </Card>
+
+            <Container>
+                <h1 className="page-title page-header">Mes sondages</h1>
+
+                <Card>
+                    <Card.Body>
+                        {renderContent()}
+                    </Card.Body>
+                </Card>
+            </Container>
         </>
     );
 }

@@ -10,9 +10,9 @@ type Props = {
 };
 
 export function PollsTableRowState(props: Props) {
-    const accepted = <><span className="status-icon bg-success"></span>Accepté</>;
-    const rejected = <><span className="status-icon bg-danger"></span>Refusé</>;
-    const reviewing = <><span className="status-icon bg-warning"></span>En attente</>;
+    const accepted = <><span className="status-icon bg-success"/>Accepté</>;
+    const rejected = <><span className="status-icon bg-danger"/>Refusé</>;
+    const reviewing = <><span className="status-icon bg-warning"/>En attente</>;
 
     if (props.editable && props.setPollState !== undefined) {
         return (

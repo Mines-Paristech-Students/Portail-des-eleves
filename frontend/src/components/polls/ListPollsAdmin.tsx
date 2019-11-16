@@ -6,6 +6,7 @@ import {PollsTable} from "./polls_table/PollsTable";
 import {PollsBreadcrumbBar} from "./PollsBreadcrumbBar";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
+import Container from "react-bootstrap/Container";
 
 export function ListPollsAdmin() {
     const breadcrumbs: Array<LinkData> = [
@@ -31,14 +32,16 @@ export function ListPollsAdmin() {
     return (
         <>
             <PollsBreadcrumbBar breadcrumbs={breadcrumbs}/>
-            <Card>
-                <Card.Header>
-                    <Card.Title>Administration</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                    {renderContent()}
-                </Card.Body>
-            </Card>
+
+            <Container>
+                <h1 className="page-title page-header">Administration</h1>
+
+                <Card>
+                    <Card.Body>
+                        {renderContent()}
+                    </Card.Body>
+                </Card>
+            </Container>
         </>
     );
 }
