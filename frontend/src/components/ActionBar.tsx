@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {LinkData} from "../utils/link_data";
 import "./action_bar.css";
+import Container from 'react-bootstrap/Container';
 
 type Props = {
     actions?: Array<LinkData>
@@ -13,7 +14,7 @@ type Props = {
 // TODO: make it more customizable (style the buttons for instance). Use a dedicated structure (ActionData instead of LinkData).
 export function ActionBar(props: Props) {
     return (
-        <div className="action-bar">
+        <Container className="action-bar">
             {
                 props.actions &&
                 props.actions.map(
@@ -22,6 +23,6 @@ export function ActionBar(props: Props) {
                     </Link>
                 )
             }
-        </div>
+        </Container>
     );
 }

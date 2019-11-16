@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Poll, PollState} from "../../../models/polls";
-import {dateFormatter} from "../../../utils/date";
+import {dateFormatter} from "../../../utils/format";
 import {PollsTableRowAdminComment} from "./PollsTableRowAdminComment";
 import {PollsTableRowState} from "./PollsTableRowState";
 

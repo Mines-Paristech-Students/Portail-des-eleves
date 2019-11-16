@@ -1,7 +1,7 @@
 import React from 'react';
 import {Poll} from "../../../models/polls";
 import "./list_published_polls.css";
-import {dateFormatter} from "../../../utils/date";
+import {dateFormatter} from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -14,7 +14,7 @@ export function InactivePoll(props: Props) {
     let totalVotes = 0;
     props.poll.choices.forEach(choice => totalVotes = choice.numberOfVotes ? totalVotes + choice.numberOfVotes : totalVotes);
 
-    function getColor(numberOfVotes: number, totalVotes: number): string {
+    function getColor(numberOfVotes: number, totalVotes: number): "success" | "warning" | "danger" {
         if (numberOfVotes > totalVotes / 2) {
             return "success";
         } else if (numberOfVotes > totalVotes / 3) {
@@ -35,26 +35,33 @@ export function InactivePoll(props: Props) {
                 </Card.Subtitle>
 
                 <ListGroup>
-                    {props.poll.choices.map(
-                        choice => {
-                            if (choice.numberOfVotes) {
-                                return (
-                                    <ListGroup.Item key={choice.id}>
-                                        <h5>{choice.text}</h5>
-                                        <ProgressBar
-                                            now={choice.numberOfVotes}
-                                            min={0}
-                                            max={totalVotes}
-                                            color={getColor(choice.numberOfVotes, totalVotes)}>
-                                            {choice.numberOfVotes}
-                                        </ProgressBar>
-                                    </ListGroup.Item>
-                                );
-                            } else {
-                                return <></>;
+                    {props.poll.choices
+                    // Sort by descending number of votes.
+                        .sort((a, b) => Number(b.numberOfVotes) - Number(a.numberOfVotes))
+                        .map(choice => {
+                                if (choice.numberOfVotes) {
+                                    return (
+                                        <ListGroup.Item key={choice.id} className="border-0">
+                                            <div className="clearfix">
+                                                <div className="float-left">
+                                                    <strong>{choice.text}</strong>
+                                                </div>
+                                                <div className="float-right text-muted">
+                                                    <small>{choice.numberOfVotes} votes</small>
+                                                </div>
+                                            </div>
+                                            <ProgressBar className="progress-sm"
+                                                         now={choice.numberOfVotes}
+                                                         min={0}
+                                                         max={totalVotes}
+                                                         variant={getColor(choice.numberOfVotes, totalVotes)}/>
+                                        </ListGroup.Item>
+                                    );
+                                } else {
+                                    return <></>;
+                                }
                             }
-                        }
-                    )}
+                        )}
                 </ListGroup>
             </Card.Body>
         </Card>

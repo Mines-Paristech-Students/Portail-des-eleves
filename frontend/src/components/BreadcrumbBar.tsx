@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {LinkData} from "../utils/link_data";
 import BreadcrumbItem from "react-bootstrap/BreadcrumbItem";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Container from 'react-bootstrap/Container';
 
 type Props = {
     breadcrumbs: Array<LinkData>
@@ -33,12 +34,14 @@ export function BreadcrumbBar(props: Props) {
     }
 
     return (
-        <Breadcrumb>
-            {
-                props.breadcrumbs.map(
-                    (breadcrumbData, index) => getBreadcrumbItem(breadcrumbData, index)
-                )
-            }
-        </Breadcrumb>
+        <Container>
+            <Breadcrumb>
+                {
+                    props.breadcrumbs.map(
+                        (breadcrumbData, index) => getBreadcrumbItem(breadcrumbData, index)
+                    )
+                }
+            </Breadcrumb>
+        </Container>
     );
 }

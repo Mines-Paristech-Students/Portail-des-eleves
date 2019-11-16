@@ -1,7 +1,7 @@
 import React from 'react';
 import {Poll} from "../../../models/polls";
 import {ActivePollForm} from "./ActivePollForm";
-import {dateFormatter} from "../../../utils/date";
+import {dateFormatter} from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 
 type Props = {

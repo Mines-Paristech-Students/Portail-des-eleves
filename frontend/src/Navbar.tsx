@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Logo from "./logo-mines.png";
 import {Link} from "react-router-dom";
 import BootstrapNavbar from "react-bootstrap/Navbar";
@@ -8,7 +8,6 @@ import Container from "react-bootstrap/Container";
 import './navbar.css';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Nav from "react-bootstrap/Nav";
 
 function Navbar() {
     return <>

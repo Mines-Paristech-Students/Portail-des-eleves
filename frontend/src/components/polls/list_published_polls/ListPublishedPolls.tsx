@@ -12,6 +12,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {pluralFormatter} from "../../../utils/format";
 
 export function ListPublishedPolls() {
     const actions: Array<LinkData> = [
@@ -50,21 +51,23 @@ export function ListPublishedPolls() {
 
             return (
                 <>
-                    <h2>
-                        {activePollCards.length === 1 ? "Sondage ouvert" : "Sondages ouverts"}
-                    </h2>
+                    <h2>{pluralFormatter(activePollCards.length, "Sondage ouvert", "Sondages ouverts")}</h2>
                     <Container>
                         <Row>
-                            {activePollCards.map(pollCard => <Col xs={{span: 4, offset: 4}}>{pollCard}</Col>)}
+                            {activePollCards.map(
+                                (pollCard, index) => <Col key={"active-poll-card-" + index}
+                                                          xs={{span: 4, offset: 4}}>{pollCard}</Col>
+                            )}
                         </Row>
                     </Container>
 
-                    <h2>
-                        {inactivePollCards.length === 1 ? "Ancien sondage" : "Anciens sondages"}
-                    </h2>
+                    <h2>{pluralFormatter(inactivePollCards.length, "Ancien sondage", "Anciens sondages")}</h2>
                     <Container>
                         <Row>
-                            {inactivePollCards.map(pollCard => <Col xs={{span: 6, offset: 3}}>{pollCard}</Col>)}
+                            {inactivePollCards.map(
+                                (pollCard, index) => <Col key={"inactive-poll-card-" + index}
+                                                          xs={{span: 6, offset: 3}}>{pollCard}</Col>
+                            )}
                         </Row>
                     </Container>
                 </>

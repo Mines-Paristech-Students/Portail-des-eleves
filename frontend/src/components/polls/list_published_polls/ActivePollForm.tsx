@@ -23,18 +23,20 @@ export function ActivePollForm(props: Props) {
     return (
         <Form onSubmit={onSubmit}>
             <Form.Group>
-                <Form.Label className="form-label poll-form-label">Ton choix</Form.Label>
-                <div className="selectgroup selectgroup-vertical">
+                <div className="selectgroup selectgroup-vertical w-100">
                     {
                         props.poll.choices.map(choice =>
-                            <Form.Check type="radio"
-                                        label={choice.text}
-                                        name="choices"
-                                        id="formHorizontalRadios1"
-                                        value={choice.id}
-                                        onChange={() => onChange(choice.id)}
-                                        checked={choice.id === selectedChoiceId}>
-                            </Form.Check>
+                            <label key={"poll-choices-" + choice.id}
+                                   className="selectgroup-item">
+                                <Form.Control className="selectgroup-input"
+                                              type="radio"
+                                              name="poll-choices"
+                                              value={choice.id}
+                                              onChange={() => onChange(choice.id)}
+                                              checked={choice.id === selectedChoiceId}>
+                                </Form.Control>
+                                <span className="selectgroup-button">{choice.text}</span>
+                            </label>
                         )
                     }
                 </div>
