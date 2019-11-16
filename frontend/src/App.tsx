@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import "tabler-ui/dist/assets/css/dashboard.css";
 import './App.css';
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {ListPublishedPolls} from "./components/polls/list_published_polls/ListPublishedPolls";
 import {ListUserPolls} from "./components/polls/ListUserPolls";
