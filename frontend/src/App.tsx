@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import "tabler-ui/dist/assets/css/dashboard.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Navbar from "./Navbar";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
