@@ -1,5 +1,4 @@
 import React from 'react';
-import {PollsBreadcrumbBar} from "../PollsBreadcrumbBar";
 import {LinkData} from "../../../utils/link_data";
 import {ActionBar} from "../../ActionBar";
 import {useListPollsService} from "../../../services/polls";
@@ -79,7 +78,6 @@ export function ListPublishedPolls() {
 
     return (
         <>
-            <PollsBreadcrumbBar/>
             <ActionBar actions={actions}/>
             {renderContent()}
         </>

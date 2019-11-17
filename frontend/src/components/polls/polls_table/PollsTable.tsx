@@ -5,7 +5,6 @@ import "./polls-table.css";
 import Table from "react-bootstrap/Table";
 import {PollsTableRowUser} from "./PollsTableRowUser";
 import {LinkData} from "../../../utils/link_data";
-import {PollsBreadcrumbBar} from "../PollsBreadcrumbBar";
 import {ActionBar} from "../../ActionBar";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
@@ -89,7 +88,6 @@ export function PollsTable(props: Props) {
 
     return (
         <>
-            <PollsBreadcrumbBar breadcrumbs={getBreadcrumbs()}/>
             <ActionBar actions={getActions()}/>
 
             <Container>
