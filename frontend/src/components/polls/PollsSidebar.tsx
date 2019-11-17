@@ -1,5 +1,5 @@
 import React from 'react';
-import {SidebarButton} from "../../utils/sidebar_button";
+import {SidebarButton} from "../Sidebar";
 import {Sidebar} from "../Sidebar";
 
 type Props = {

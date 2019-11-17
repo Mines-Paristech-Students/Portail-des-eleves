@@ -6,8 +6,16 @@ import Card from 'react-bootstrap/Card';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from 'react-bootstrap/Container';
+import {getRandom} from "../../../utils/random";
 
 export function SubmitPoll() {
+    const [questionPlaceholder, choice0Placeholder, choice1Placeholder] = getRandom([
+        ["Le portail…", "C’était mieux avant.", "C’est moins bien maintenant."],
+        ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
+        ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
+        ["Le plus beau ?", "17bocquet", "17cantelobre"],
+    ]);
+
     function SubmitPollForm() {
         return (
             <Card className="text-left">
@@ -17,21 +25,21 @@ export function SubmitPoll() {
                             <Form.Label>Question</Form.Label>
                             <Form.Control name="question"
                                           type="text"
-                                          placeholder="Le portail…"/>
+                                          placeholder={questionPlaceholder}/>
                         </Form.Group>
 
                         <Form.Group controlId="choice-0">
                             <Form.Label>Choix 1</Form.Label>
                             <Form.Control name="choice-0"
                                           type="text"
-                                          placeholder="C’était mieux avant"/>
+                                          placeholder={choice0Placeholder}/>
                         </Form.Group>
 
                         <Form.Group controlId="choice-1">
                             <Form.Label>Choix 2</Form.Label>
                             <Form.Control name="choice-1"
                                           type="text"
-                                          placeholder="C’est moins bien maintenant"/>
+                                          placeholder={choice1Placeholder}/>
                         </Form.Group>
                     </Card.Body>
 
