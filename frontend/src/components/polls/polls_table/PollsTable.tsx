@@ -34,8 +34,6 @@ export function PollsTable(props: Props) {
     function renderContent() {
         return (
             <>
-                <h1 className="page-title page-header">{renderTitle()}</h1>
-
                 <Card>
                     <Card.Body>
                         <Table className="card-table polls-table text-left">
@@ -84,7 +82,7 @@ export function PollsTable(props: Props) {
     }
 
     return (
-        <PollsBase>
+        <PollsBase title={<h1 className="page-title page-header mb-5">{renderTitle()}</h1>}>
             {renderContent()}
         </PollsBase>
     );

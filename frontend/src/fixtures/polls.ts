@@ -91,7 +91,7 @@ export const poll_4: Poll = {
     state: PollState.Rejected,
     creationDateTime: new Date(2019, 11, 1),
     publicationDate: new Date(2019, 11, 7),
-    adminComment: "",
+    adminComment: "C’est vraiment un sondage nul !!!!!",
     isActive: false
 };
 

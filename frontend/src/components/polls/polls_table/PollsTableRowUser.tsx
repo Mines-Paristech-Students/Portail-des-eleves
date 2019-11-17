@@ -53,7 +53,7 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const editAction = (
-        <Button className="btn-icon mr-1"
+        <Button className="btn-icon m-1"
                 variant="outline-primary"
                 size="sm"
                 onClick={handleEdit}>
@@ -67,7 +67,7 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const deleteAction = (
-        <Button className="btn-icon mr-1"
+        <Button className="btn-icon m-1"
                 variant="outline-danger"
                 size="sm"
                 onClick={handleDelete}>

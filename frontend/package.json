@@ -10,6 +10,7 @@
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.11.0",
+    "react-form": "^4.0.1",
     "react-router-dom": "latest",
     "react-scripts": "3.2.0",
     "tabler-ui": "0.0.34"

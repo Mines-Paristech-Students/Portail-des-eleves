@@ -27,7 +27,7 @@ export function InactivePoll(props: Props) {
     return (
         <Card>
             <Card.Header>
-                <Card.Title>{props.poll.question}</Card.Title>
+                <Card.Title as="h3">{props.poll.question}</Card.Title>
             </Card.Header>
             <Card.Body>
                 <Card.Subtitle className="poll-date">
