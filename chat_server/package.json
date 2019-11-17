@@ -5,15 +5,17 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.1",
+    "@types/jest": "^24.0.23",
     "@types/pg": "^7.11.2",
     "@types/socket.io": "^2.1.4",
     "@types/socketio-jwt": "0.0.0",
+    "jest": "^24.9.0",
     "tslint": "^5.20.0",
     "typescript": "^3.6.4"
   },

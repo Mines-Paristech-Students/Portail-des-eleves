@@ -15,8 +15,8 @@ class Message {
 const app = express();
 app.set("port", process.env.PORT || 3000);
 
-let httpServer = createServer(app);
-let io = socketIo(httpServer);
+export let httpServer = createServer(app);
+export let io = socketIo(httpServer);
 
 io
 .on('connection', socketioJwt.authorize({
