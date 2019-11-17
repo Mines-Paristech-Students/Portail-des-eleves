@@ -4,8 +4,7 @@ import "tabler-ui/dist/assets/css/dashboard.css";
 import './App.css';
 import Navbar from "./components/Navbar";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import {ListPublishedPolls} from "./components/polls/list_published_polls/ListPublishedPolls";
-import {PollsTable} from "./components/polls/polls_table/PollsTable";
+import {PollsSwitch} from "./components/polls/PollsSwitch";
 
 // This is for connecting to the backend.
 // In the future, we will have to write a page dedicated to settings this cookie.
@@ -25,16 +24,10 @@ const App: React.FC = () => {
             <div className="App">
                 <Navbar/>
                 <Switch>
-                    <Route path="/sondages/mes-sondages/">
-                        <PollsTable/>
+                    <Route path="/sondages">
+                        <PollsSwitch/>
                     </Route>
-                    <Route path="/sondages/administration/">
-                        <PollsTable adminVersion/>
-                    </Route>
-                    <Route path="/sondages/">
-                        <ListPublishedPolls/>
-                    </Route>
-                    <Route path="/">
+                    <Route path="">
                     </Route>
                 </Switch>
             </div>
