@@ -11,7 +11,7 @@ import Col from "react-bootstrap/Col";
 
 function Navbar() {
     return <>
-        <div className="header">
+        <div className="header p-1">
             <Container>
                 <BootstrapNavbar expand="lg">
                     <BootstrapNavbar.Brand>
@@ -51,7 +51,7 @@ function Navbar() {
                 </BootstrapNavbar>
             </Container>
         </div>
-        <div className="header">
+        <div className="header p-0">
             <Container>
                 <Row className="align-items-center">
                     <Col>

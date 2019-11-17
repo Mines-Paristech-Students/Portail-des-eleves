@@ -4,12 +4,10 @@ import {PollsTableRowAdmin} from "./PollsTableRowAdmin";
 import "./polls-table.css";
 import Table from "react-bootstrap/Table";
 import {PollsTableRowUser} from "./PollsTableRowUser";
-import {LinkData} from "../../../utils/link_data";
-import {ActionBar} from "../../ActionBar";
-import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 
 import * as data from "../../../fixtures/polls"
+import {PollsBase} from "../PollsBase";
 
 type Props = {
     adminVersion?: boolean,
@@ -19,7 +17,6 @@ export function PollsTable(props: Props) {
     const [polls, setPolls] = useState<Poll[]>(data.polls);
 
     function setPoll(id: number, poll: Poll) {
-        console.log(poll);
         setPolls([
             ...polls.slice(0, id),
             poll,
@@ -34,35 +31,35 @@ export function PollsTable(props: Props) {
         ])
     }
 
-    function getActions(): LinkData[] {
-        if (props.adminVersion) {
-            return [];
-        } else {
-            return [
-                {
-                    name: "Proposer",
-                    to: "../proposer/",
-                },
-            ]
-        }
-    }
+    function renderContent() {
+        return (
+            <>
+                <h1 className="page-title page-header">{renderTitle()}</h1>
 
-    function getBreadcrumbs(): LinkData[] {
-        if (props.adminVersion) {
-            return [
-                {
-                    name: "Administration",
-                    to: "#",
-                }
-            ];
-        } else {
-            return [
-                {
-                    name: "Mes sondages",
-                    to: "#",
-                }
-            ];
-        }
+                <Card>
+                    <Card.Body>
+                        <Table className="card-table polls-table text-left">
+                            <thead className="text-center">
+                            <tr>
+                                <th>Question</th>
+                                <th>Réponse 1</th>
+                                <th>Réponse 2</th>
+                                <th>Date</th>
+                                {props.adminVersion && <th>Auteur</th>}
+                                <th>Statut</th>
+                                {!props.adminVersion && <th>Commentaire</th>}
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {renderBody()}
+                            </tbody>
+                        </Table>
+                    </Card.Body>
+                </Card>
+            </>
+        )
     }
 
     function renderTitle() {
@@ -87,35 +84,8 @@ export function PollsTable(props: Props) {
     }
 
     return (
-        <>
-            <ActionBar actions={getActions()}/>
-
-            <Container>
-                <h1 className="page-title page-header">{renderTitle()}</h1>
-
-                <Card>
-                    <Card.Body>
-                        <Table className="card-table polls-table text-left">
-                            <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Réponse 1</th>
-                                <th>Réponse 2</th>
-                                <th>Date</th>
-                                {props.adminVersion && <th>Auteur</th>}
-                                <th>Statut</th>
-                                {!props.adminVersion && <th>Commentaire</th>}
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            {renderBody()}
-                            </tbody>
-                        </Table>
-                    </Card.Body>
-                </Card>
-            </Container>
-        </>
+        <PollsBase>
+            {renderContent()}
+        </PollsBase>
     );
 }

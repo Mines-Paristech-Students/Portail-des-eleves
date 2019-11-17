@@ -1,6 +1,4 @@
 import React from 'react';
-import {LinkData} from "../../../utils/link_data";
-import {ActionBar} from "../../ActionBar";
 import {useListPollsService} from "../../../services/polls";
 import {APIServiceStatus} from "../../../services/api_service";
 
@@ -12,19 +10,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {pluralFormatter} from "../../../utils/format";
+import {PollsBase} from "../PollsBase";
 
 export function ListPublishedPolls() {
-    const actions: Array<LinkData> = [
-        {
-            name: "Mes sondages",
-            to: "mes-sondages/",
-        },
-        {
-            name: "Proposer",
-            to: "proposer/",
-        },
-    ];
-
     const service = useListPollsService();
 
     function renderContent(): React.ReactElement | null {
@@ -50,18 +38,30 @@ export function ListPublishedPolls() {
 
             return (
                 <>
-                    <h2>{pluralFormatter(activePollCards.length, "Sondage ouvert", "Sondages ouverts")}</h2>
                     <Container>
+                        <Row>
+                            <Col>
+                                <h2 className="text-center">
+                                    {pluralFormatter(activePollCards.length, "Sondage ouvert", "Sondages ouverts")}
+                                </h2>
+                            </Col>
+                        </Row>
+
                         <Row>
                             {activePollCards.map(
                                 (pollCard, index) => <Col key={"active-poll-card-" + index}
                                                           xs={{span: 6, offset: 3}}>{pollCard}</Col>
                             )}
                         </Row>
-                    </Container>
 
-                    <h2>{pluralFormatter(inactivePollCards.length, "Ancien sondage", "Anciens sondages")}</h2>
-                    <Container>
+                        <Row>
+                            <Col>
+                                <h2 className="text-center">
+                                    {pluralFormatter(inactivePollCards.length, "Ancien sondage", "Anciens sondages")}
+                                </h2>
+                            </Col>
+                        </Row>
+
                         <Row>
                             {inactivePollCards.map(
                                 (pollCard, index) => <Col key={"inactive-poll-card-" + index}
@@ -77,9 +77,8 @@ export function ListPublishedPolls() {
     }
 
     return (
-        <>
-            <ActionBar actions={actions}/>
+        <PollsBase>
             {renderContent()}
-        </>
+        </PollsBase>
     );
 }

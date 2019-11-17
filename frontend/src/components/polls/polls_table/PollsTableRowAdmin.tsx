@@ -25,8 +25,8 @@ export function PollsTableRowAdmin(props: Props) {
                 <td>{props.poll.choices[1].text}</td>
                 <td>{dateFormatter(props.poll.publicationDate)}</td>
                 <td>17TODO</td>
-                <td>{renderState()}</td>
-                <td>{administrateAction}</td>
+                <td className="text-center">{renderState()}</td>
+                <td className="text-center">{administrateAction}</td>
             </tr>
         )
     }
@@ -52,7 +52,7 @@ export function PollsTableRowAdmin(props: Props) {
     }
 
     const administrateAction = (
-        <Button className="btn-icon"
+        <Button className="btn-icon mr-1"
                 variant="outline-primary"
                 size="sm"
                 onClick={handleAdministrate}>

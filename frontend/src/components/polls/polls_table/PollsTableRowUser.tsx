@@ -25,9 +25,9 @@ export function PollsTableRowUser(props: Props) {
                 <td>{props.poll.choices[0].text}</td>
                 <td>{props.poll.choices[1].text}</td>
                 <td>{dateFormatter(props.poll.publicationDate)}</td>
-                <td>{renderState()}</td>
+                <td className="text-center">{renderState()}</td>
                 <td>{props.poll.adminComment}</td>
-                <td>{renderActions()}</td>
+                <td className="text-center">{renderActions()}</td>
             </tr>
         )
     }
@@ -53,7 +53,7 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const editAction = (
-        <Button className="btn-icon"
+        <Button className="btn-icon mr-1"
                 variant="outline-primary"
                 size="sm"
                 onClick={handleEdit}>
@@ -67,7 +67,7 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const deleteAction = (
-        <Button className="btn-icon"
+        <Button className="btn-icon mr-1"
                 variant="outline-danger"
                 size="sm"
                 onClick={handleDelete}>
