@@ -41,7 +41,7 @@ export function PollEditModal(props: Props) {
                 <Modal.Title>Modifier</Modal.Title>
             </Modal.Header>
 
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Modal.Body>
                     {renderBody()}
                 </Modal.Body>
@@ -54,8 +54,7 @@ export function PollEditModal(props: Props) {
                     </Button>
                     <Button className="btn-icon"
                             variant="outline-success"
-                            type="submit"
-                            onClick={handleSubmit}>
+                            type="submit">
                         Valider
                     </Button>
                 </Modal.Footer>

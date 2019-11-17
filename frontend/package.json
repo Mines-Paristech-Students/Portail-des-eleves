@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@types/react-bootstrap": "^0.32.20",
-    "@types/react-form": "^2.16.2",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",

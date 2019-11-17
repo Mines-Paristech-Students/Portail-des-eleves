@@ -27,7 +27,7 @@ export function PollsTableRowUser(props: Props) {
                 <td>{dateFormatter(props.poll.publicationDate)}</td>
                 <td>{renderState()}</td>
                 <td>{props.poll.adminComment}</td>
-                <td>{[editAction, deleteAction]}</td>
+                <td>{renderActions()}</td>
             </tr>
         )
     }
@@ -74,6 +74,17 @@ export function PollsTableRowUser(props: Props) {
             <i className="fe fe-trash-2"/>
         </Button>
     );
+
+    function renderActions(): React.ReactElement[] {
+        switch (props.poll.state) {
+            case PollState.Reviewing:
+                return [editAction, deleteAction];
+            case PollState.Rejected:
+                return [deleteAction];
+            default:
+                return [];
+        }
+    }
 
     return render();
 }

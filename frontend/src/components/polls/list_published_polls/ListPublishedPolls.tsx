@@ -28,7 +28,7 @@ export function ListPublishedPolls() {
 
     const service = useListPollsService();
 
-    function renderContent(): React.ReactElement {
+    function renderContent(): React.ReactElement | null {
         switch (service.status) {
             case APIServiceStatus.Loading:
                 return <Spinner animation="border" role="status"/>;
@@ -39,7 +39,7 @@ export function ListPublishedPolls() {
         }
     }
 
-    function renderPublishedPolls(): React.ReactElement {
+    function renderPublishedPolls(): React.ReactElement | null {
         if (service.status === APIServiceStatus.Loaded) {
             const activePollCards = service.payload
                 .filter(poll => poll.isActive && poll.state === PollState.Accepted)
@@ -56,7 +56,7 @@ export function ListPublishedPolls() {
                         <Row>
                             {activePollCards.map(
                                 (pollCard, index) => <Col key={"active-poll-card-" + index}
-                                                          xs={{span: 4, offset: 4}}>{pollCard}</Col>
+                                                          xs={{span: 6, offset: 3}}>{pollCard}</Col>
                             )}
                         </Row>
                     </Container>
@@ -66,7 +66,7 @@ export function ListPublishedPolls() {
                         <Row>
                             {inactivePollCards.map(
                                 (pollCard, index) => <Col key={"inactive-poll-card-" + index}
-                                                          xs={{span: 6, offset: 3}}>{pollCard}</Col>
+                                                          xs={4}>{pollCard}</Col>
                             )}
                         </Row>
                     </Container>
@@ -74,7 +74,7 @@ export function ListPublishedPolls() {
             );
         }
 
-        return <></>
+        return null
     }
 
     return (
