@@ -1,46 +1,123 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Poll} from "../../../models/polls";
 import {PollsTableRowAdmin} from "./PollsTableRowAdmin";
 import "./polls-table.css";
 import Table from "react-bootstrap/Table";
-import Container from 'react-bootstrap/Container';
 import {PollsTableRowUser} from "./PollsTableRowUser";
-import Form from 'react-bootstrap/Form';
+import {LinkData} from "../../../utils/link_data";
+import {PollsBreadcrumbBar} from "../PollsBreadcrumbBar";
+import {ActionBar} from "../../ActionBar";
+import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
+
+import * as data from "../../../fixtures/polls"
 
 type Props = {
-    polls: Poll[],
-    adminVersion?: boolean
+    adminVersion?: boolean,
 };
 
 export function PollsTable(props: Props) {
+    const [polls, setPolls] = useState<Poll[]>(data.polls);
+
+    function setPoll(id: number, poll: Poll) {
+        console.log(poll);
+        setPolls([
+            ...polls.slice(0, id),
+            poll,
+            ...polls.slice(id + 1)
+        ])
+    }
+
+    function deletePoll(id: number) {
+        setPolls([
+            ...polls.slice(0, id),
+            ...polls.slice(id + 1)
+        ])
+    }
+
+    function getActions(): LinkData[] {
+        if (props.adminVersion) {
+            return [];
+        } else {
+            return [
+                {
+                    name: "Proposer",
+                    to: "../proposer/",
+                },
+            ]
+        }
+    }
+
+    function getBreadcrumbs(): LinkData[] {
+        if (props.adminVersion) {
+            return [
+                {
+                    name: "Administration",
+                    to: "#",
+                }
+            ];
+        } else {
+            return [
+                {
+                    name: "Mes sondages",
+                    to: "#",
+                }
+            ];
+        }
+    }
+
+    function renderTitle() {
+        if (props.adminVersion) {
+            return "Administration";
+        } else {
+            return "Mes sondages";
+        }
+    }
+
     function renderBody() {
         if (props.adminVersion) {
-            return props.polls.map(poll => <PollsTableRowAdmin key={poll.id}
-                                                               poll={poll}/>)
+            return polls.map((poll, index) => <PollsTableRowAdmin key={"polls-table-row-admin-" + poll.id}
+                                                                  poll={poll}
+                                                                  setPoll={(poll: Poll) => setPoll(index, poll)}/>)
         } else {
-            return props.polls.map(poll => <PollsTableRowUser key={poll.id}
-                                                              poll={poll}/>)
+            return polls.map((poll, index) => <PollsTableRowUser key={"polls-table-row-user-" + poll.id}
+                                                                 poll={poll}
+                                                                 setPoll={(poll: Poll) => setPoll(index, poll)}
+                                                                 deletePoll={() => deletePoll(index)}/>)
         }
     }
 
     return (
-        <Form>
-            <Table className="card-table polls-table">
-                <thead>
-                <tr>
-                    <th>Question</th>
-                    <th>Date</th>
-                    {props.adminVersion && <th>Auteur</th>}
-                    <th>Statut</th>
-                    <th>Commentaire</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
+        <>
+            <PollsBreadcrumbBar breadcrumbs={getBreadcrumbs()}/>
+            <ActionBar actions={getActions()}/>
 
-                <tbody>
-                {renderBody()}
-                </tbody>
-            </Table>
-        </Form>
+            <Container>
+                <h1 className="page-title page-header">{renderTitle()}</h1>
+
+                <Card>
+                    <Card.Body>
+                        <Table className="card-table polls-table text-left">
+                            <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Réponse 1</th>
+                                <th>Réponse 2</th>
+                                <th>Date</th>
+                                {props.adminVersion && <th>Auteur</th>}
+                                <th>Statut</th>
+                                {!props.adminVersion && <th>Commentaire</th>}
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {renderBody()}
+                            </tbody>
+                        </Table>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </>
     );
 }

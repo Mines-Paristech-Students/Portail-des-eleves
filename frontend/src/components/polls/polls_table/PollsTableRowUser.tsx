@@ -2,31 +2,38 @@ import React, {useState} from 'react';
 import {Poll, PollState} from "../../../models/polls";
 import {dateFormatter} from "../../../utils/format";
 import Button from "react-bootstrap/Button";
-import Form from 'react-bootstrap/Form';
+import {PollEditModal} from "./PollEditModal";
 
 type Props = {
     poll: Poll,
-    // TODO setPoll: (poll: Poll) => void
+    setPoll: (poll: Poll) => void,
+    deletePoll: () => void,
 };
 
 export function PollsTableRowUser(props: Props) {
     const [editable, setEditable] = useState<boolean>(false);
 
-    function renderQuestion(): React.ReactElement {
-        if (editable) {
-            return (
-                <Form.Group className="mb-0 w-75"
-                            controlId={"question-" + props.poll.id}>
-                    <Form.Label className="d-none">Question</Form.Label>
-                    <Form.Control
-                        type="text"
-                                  size="sm"
-                                  value={props.poll.question}/>
-                </Form.Group>
-            );
-        } else {
-            return <>{props.poll.question}</>
-        }
+    function render(): React.ReactElement {
+        return (
+            <tr>
+                <PollEditModal show={editable}
+                               onHide={handleHideModal}
+                               poll={props.poll}
+                               setPoll={props.setPoll}
+                               adminVersion={false}/>
+                <td>{props.poll.question}</td>
+                <td>{props.poll.choices[0].text}</td>
+                <td>{props.poll.choices[1].text}</td>
+                <td>{dateFormatter(props.poll.publicationDate)}</td>
+                <td>{renderState()}</td>
+                <td>{props.poll.adminComment}</td>
+                <td>{[editAction, deleteAction]}</td>
+            </tr>
+        )
+    }
+
+    function handleHideModal() {
+        setEditable(false);
     }
 
     function renderState(): React.ReactElement {
@@ -40,45 +47,33 @@ export function PollsTableRowUser(props: Props) {
         }
     }
 
+    function handleEdit(event: React.FormEvent): void {
+        event.preventDefault();
+        setEditable(true);
+    }
+
     const editAction = (
         <Button className="btn-icon"
                 variant="outline-primary"
                 size="sm"
-                onClick={(_: React.FormEvent) => setEditable(true)}>
+                onClick={handleEdit}>
             <i className="fe fe-edit"/>
         </Button>
     );
 
-    const submitAction = (
-        <Button className="btn-icon"
-                type="submit"
-                variant="outline-success"
-                size="sm"
-                onClick={(_: React.FormEvent) => setEditable(false)}>
-            <i className="fe fe-check"/>
-        </Button>
-    );
+    function handleDelete(event: React.FormEvent): void {
+        event.preventDefault();
+        props.deletePoll();
+    }
 
     const deleteAction = (
         <Button className="btn-icon"
                 variant="outline-danger"
                 size="sm"
-                onClick={(_: React.FormEvent) => console.log("todo")}>
+                onClick={handleDelete}>
             <i className="fe fe-trash-2"/>
         </Button>
     );
 
-    function renderActions(): React.ReactElement[] {
-        return editable ? [submitAction] : [editAction, deleteAction];
-    }
-
-    return (
-        <tr>
-            <td>{renderQuestion()}</td>
-            <td>{dateFormatter(props.poll.publicationDate)}</td>
-            <td>{renderState()}</td>
-            <td>{props.poll.adminComment}</td>
-            <td>{renderActions()}</td>
-        </tr>
-    );
+    return render();
 }

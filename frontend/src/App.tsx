@@ -5,8 +5,7 @@ import './App.css';
 import Navbar from "./components/Navbar";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {ListPublishedPolls} from "./components/polls/list_published_polls/ListPublishedPolls";
-import {ListUserPolls} from "./components/polls/ListUserPolls";
-import {ListPollsAdmin} from "./components/polls/ListPollsAdmin";
+import {PollsTable} from "./components/polls/polls_table/PollsTable";
 
 // This is for connecting to the backend.
 // In the future, we will have to write a page dedicated to settings this cookie.
@@ -27,10 +26,10 @@ const App: React.FC = () => {
                 <Navbar/>
                 <Switch>
                     <Route path="/sondages/mes-sondages/">
-                        <ListUserPolls/>
+                        <PollsTable/>
                     </Route>
-                    <Route path="/sondages/administrer/">
-                        <ListPollsAdmin/>
+                    <Route path="/sondages/administration/">
+                        <PollsTable adminVersion/>
                     </Route>
                     <Route path="/sondages/">
                         <ListPublishedPolls/>

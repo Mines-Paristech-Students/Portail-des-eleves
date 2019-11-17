@@ -25,12 +25,12 @@ export const poll_1: Poll = {
 
 const choices_2: Choice[] = [
     {
-        id: "1",
+        id: "3",
         text: "17cantelobre",
         numberOfVotes: 45,
     },
     {
-        id: "2",
+        id: "4",
         text: "17bocquet",
         numberOfVotes: 45,
     }
@@ -49,12 +49,12 @@ export const poll_2: Poll = {
 
 const choices_3: Choice[] = [
     {
-        id: "1",
+        id: "5",
         text: "Zaza",
         numberOfVotes: 54,
     },
     {
-        id: "2",
+        id: "6",
         text: "Mazière",
         numberOfVotes: 38
     }
@@ -73,19 +73,19 @@ export const poll_3: Poll = {
 
 const choices_4: Choice[] = [
     {
-        id: "1",
+        id: "7",
         text: "Bla bla bla",
         numberOfVotes: 54,
     },
     {
-        id: "2",
+        id: "8",
         text: "Bla bla bla",
         numberOfVotes: 38
     }
 ];
 
 export const poll_4: Poll = {
-    id: "3",
+    id: "4",
     choices: choices_4,
     question: "Sondage nul",
     state: PollState.Rejected,
@@ -97,19 +97,19 @@ export const poll_4: Poll = {
 
 const choices_5: Choice[] = [
     {
-        id: "1",
+        id: "9",
         text: "Bla bla bla",
         numberOfVotes: 54,
     },
     {
-        id: "2",
+        id: "10",
         text: "Bla bla bla",
         numberOfVotes: 38
     }
 ];
 
 export const poll_5: Poll = {
-    id: "3",
+    id: "5",
     choices: choices_5,
     question: "Sondage en attente",
     state: PollState.Reviewing,
