@@ -1,34 +1,38 @@
 import React from "react";
-import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async";
 import { PageTitle } from "../../utils/common";
-import { api } from "../../service/apiService";
+import { api } from "../../services/apiService";
 import { Card, CardBody, CardTitle } from "reactstrap";
+import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
 
 export const AssociationList = () => {
-    const state = useAsync({ promiseFn: api.associations.list() });
-    return (
-        <>
-            <PageTitle>Associations</PageTitle>
-            <IfPending state={state}>Loading...</IfPending>
-            <IfRejected state={state}>
-                {error => `Something went wrong: ${error.message}`}
-            </IfRejected>
-            <IfFulfilled state={state}>
-                {associations => (
-                    <div className={"row"}>
-                        {associations.map(association => (
-                            <Card
-                                key={association.id}
-                                className={"col-md-3 m-4"}
-                            >
+    const { data: associations, isLoading, error } = useQuery(
+        "associations.list",
+        api.associations.list
+    );
+
+    if (isLoading) return "Loading...";
+    if (error) {
+        return `Something went wrong: ${error.message}`;
+    }
+    if (associations) {
+        return (
+            <>
+                <PageTitle>Associations</PageTitle>
+                <div className={"row"}>
+                    {associations.map(association => (
+                        <Card key={association.id} className={"col-md-3 m-4"}>
+                            <Link to={`/associations/${association.id}/`}>
                                 <CardBody>
                                     <CardTitle>{association.name}</CardTitle>
                                 </CardBody>
-                            </Card>
-                        ))}
-                    </div>
-                )}
-            </IfFulfilled>
-        </>
-    );
+                            </Link>
+                        </Card>
+                    ))}
+                </div>
+            </>
+        );
+    }
+
+    return null;
 };

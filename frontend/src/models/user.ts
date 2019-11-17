@@ -5,6 +5,23 @@ export enum StudentType {
     Ic = "IC"
 }
 
+export interface Role {
+    id: number;
+    association: string;
+    role: string;
+    rank: number;
+
+    is_archived: boolean;
+
+    administrationPermission: boolean;
+    electionPermission: boolean;
+    eventPermission: boolean;
+    mediaPermission: boolean;
+    libraryPermission: boolean;
+    marketplacePermission: boolean;
+    pagePermission: boolean;
+}
+
 export interface User {
     id: string;
     firstName: string;
@@ -24,4 +41,5 @@ export interface User {
     sports?: string;
     roommate?: User;
     minesparent?: User[];
+    myRole?: Role;
 }

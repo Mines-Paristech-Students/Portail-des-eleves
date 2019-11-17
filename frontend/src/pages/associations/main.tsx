@@ -1,37 +1,62 @@
 import React from "react";
-import { SideBar, SideBarItem } from "../../utils/sidebar";
-import { useParams } from "react-router-dom";
-import { api } from "../../service/apiService";
-import { useAsync, IfPending, IfRejected, IfFulfilled } from "react-async";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    useParams
+} from "react-router-dom";
 
-const AssociationSidebar = ({ association }) => {
-    return (
-        <SideBar title={association.name}>
-            <SideBarItem to={"pages"} icon={"people"}>
-                Pages
-            </SideBarItem>
-        </SideBar>
+import { api } from "../../services/apiService";
+import { PrivateRoute } from "../../utils/route";
+import { AssociationSidebar } from "./sidebar";
+import { routes } from "../../routing/associations";
+import { PageNotFoundError } from "../errorPage";
+import { useQuery } from "react-query";
+
+export const AssociationMain = ({ match }) => {
+    // Load the data
+    const { associationId } = useParams();
+
+    const { data: association, isLoading, error } = useQuery(
+        ["associations.get", { associationId }],
+        api.associations.get
     );
-};
 
-export const AssociationMain = () => {
-    let { associationId } = useParams();
-    const state = useAsync({
-        promiseFn: api.associations.get(associationId)
-    });
-
-    return (
-        <>
-            <p>coucou</p>
-            <IfPending state={state}>Loading...</IfPending>
-            <IfRejected state={state}>
-                {error => `Something went wrong: ${error.message}`}
-            </IfRejected>
-            <IfFulfilled state={state}>
-                {association => (
-                    <AssociationSidebar association={association}/>
-                )}
-            </IfFulfilled>
-        </>
+    // Generate the routes
+    const privateRoutes = routes(association).map(
+        ({ path, component, exact, props }) => (
+            <PrivateRoute
+                exact={exact}
+                path={match.url + path} // Path is the relative path, match.url makes it absolute
+                component={component}
+                key={path}
+                routeProps={props}
+            />
+        )
     );
+
+    // Render
+    if (isLoading) return "Loading association container...";
+    if (error) return `Something went wrong: ${error.message}`;
+    if (association) {
+        return (
+            <div className={"container"}>
+                <div className="row">
+                    <div className="col-md-3">
+                        <AssociationSidebar association={association} />
+                    </div>
+                    <div className="col-md-9">
+                        <Router>
+                            <Switch>
+                                {privateRoutes}
+                                <Route component={PageNotFoundError} />
+                            </Switch>
+                        </Router>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return null;
 };

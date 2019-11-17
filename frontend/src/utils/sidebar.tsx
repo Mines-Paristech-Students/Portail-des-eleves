@@ -19,7 +19,7 @@ export const SideBarItem = ({ icon, to, children }) => {
 export const SideBar = ({ title, children, ...rest }) => {
     return (
         <>
-            <h1 className="page-title mb-5">{title}</h1>
+            <h1 className="page-title mb-5 mt-5">{title}</h1>
             <div className="list-group list-group-transparent mb-0">
                 {children}
             </div>
