@@ -1,12 +1,14 @@
 import React from 'react';
 import {PollsBase} from "../PollsBase";
-import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
 import Card from 'react-bootstrap/Card';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from 'react-bootstrap/Container';
 import {getRandom} from "../../../utils/random";
+import {Form, Formik} from "formik";
+import * as Yup from 'yup';
+import {TextFormGroup} from "../../utils/forms/TextFormGroup";
 
 export function SubmitPoll() {
     const [questionPlaceholder, choice0Placeholder, choice1Placeholder] = getRandom([
@@ -19,37 +21,54 @@ export function SubmitPoll() {
     function SubmitPollForm() {
         return (
             <Card className="text-left">
-                <Form>
-                    <Card.Body>
-                        <Form.Group controlId="question">
-                            <Form.Label>Question</Form.Label>
-                            <Form.Control name="question"
-                                          type="text"
-                                          placeholder={questionPlaceholder}/>
-                        </Form.Group>
+                <Formik
+                    initialValues={{
+                        question: "",
+                        choice0: "",
+                        choice1: "",
+                    }}
+                    validationSchema={Yup.object({
+                        question: Yup.string()
+                            .required('Ce champ est requis.'),
+                        choice0: Yup.string()
+                            .required('Ce champ est requis.'),
+                        choice1: Yup.string()
+                            .required('Ce champ est requis.'),
+                    })}
+                    onSubmit={(values, {setSubmitting}) => {
+                        // TODO.
+                    }}
+                >
+                    <Form>
+                        <Card.Body>
+                            <TextFormGroup
+                                label="Question"
+                                name="question"
+                                type="text"
+                                placeholder={questionPlaceholder}
+                            />
+                            <TextFormGroup
+                                label="Choix 1"
+                                name="choice0"
+                                type="text"
+                                placeholder={choice0Placeholder}
+                            />
+                            <TextFormGroup
+                                label="Choix 2"
+                                name="choice1"
+                                type="text"
+                                placeholder={choice1Placeholder}
+                            />
+                        </Card.Body>
 
-                        <Form.Group controlId="choice-0">
-                            <Form.Label>Choix 1</Form.Label>
-                            <Form.Control name="choice-0"
-                                          type="text"
-                                          placeholder={choice0Placeholder}/>
-                        </Form.Group>
-
-                        <Form.Group controlId="choice-1">
-                            <Form.Label>Choix 2</Form.Label>
-                            <Form.Control name="choice-1"
-                                          type="text"
-                                          placeholder={choice1Placeholder}/>
-                        </Form.Group>
-                    </Card.Body>
-
-                    <Card.Footer className="text-right">
-                        <Button type="submit"
-                                variant="outline-success">
-                            Envoyer
-                        </Button>
-                    </Card.Footer>
-                </Form>
+                        <Card.Footer className="text-right">
+                            <Button type="submit"
+                                    variant="outline-success">
+                                Envoyer
+                            </Button>
+                        </Card.Footer>
+                    </Form>
+                </Formik>
             </Card>
         );
     }
