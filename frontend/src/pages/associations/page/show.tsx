@@ -1,6 +1,6 @@
 import React from "react";
 import { api } from "../../../services/apiService";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { PageTitle } from "../../../utils/common";
 import { useQuery } from "react-query";
 
@@ -17,6 +17,7 @@ export const AssociationShowPage = ({ association }) => {
         return (
             <div>
                 <PageTitle>{data.title}</PageTitle>
+                <p><Link to={`/associations/${association.id}/pages/${pageId}/edit`}>Editer</Link></p>
                 <p>{data.text}</p>
             </div>
         );

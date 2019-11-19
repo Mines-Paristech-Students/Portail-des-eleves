@@ -1,6 +1,6 @@
 import { AssociationHome } from "../pages/associations/home";
 import { AssociationShowPage } from "../pages/associations/page/show";
-import { AssociationCreatePage } from "../pages/associations/page/edit";
+import { AssociationCreatePage, AssociationEditPage } from "../pages/associations/page/edit";
 
 export const routes = association => [
     {
@@ -18,6 +18,12 @@ export const routes = association => [
     {
         path: `/pages/:pageId`,
         component: AssociationShowPage,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/pages/:pageId/edit`,
+        component: AssociationEditPage,
         exact: true,
         props: { association: association }
     }

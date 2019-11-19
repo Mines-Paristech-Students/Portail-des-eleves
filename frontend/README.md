@@ -6,7 +6,8 @@
 - React router
 - Axios : AJAX calls
 - [React async](https://github.com/tannerlinsley/react-query)
-- [React form](https://github.com/tannerlinsley/react-form)
+- [Formik](https://jaredpalmer.com/formik/) : forms
+- [Yup](https://github.com/jquense/yup) : form validation
 
 ## Available Scripts
 
