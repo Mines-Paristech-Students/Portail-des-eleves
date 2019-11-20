@@ -1,10 +1,8 @@
 import React from 'react';
 import {Poll} from "../../../models/polls";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import {PollEditModalAdminBody} from "./PollEditModalAdminBody";
-import {PollEditModalUserBody} from "./PollEditModalUserBody";
+import {PollEditModalAdminForm} from "./PollEditModalAdminForm";
+import {PollEditModalUserForm} from "./PollEditModalUserForm";
 
 type Props = {
     show: boolean,
@@ -15,22 +13,8 @@ type Props = {
 };
 
 export function PollEditModal(props: Props) {
-    function handleClose() {
-        return props.onHide();
-    }
-
-    function handleSubmit() {
-
-    }
-
-    function renderBody() {
-        if (props.adminVersion) {
-            return <PollEditModalAdminBody poll={props.poll}
-                                           setPoll={props.setPoll}/>
-        } else {
-            return <PollEditModalUserBody poll={props.poll}
-                                          setPoll={props.setPoll}/>
-        }
+    function handleClose(): void {
+        props.onHide();
     }
 
     return (
@@ -41,24 +25,15 @@ export function PollEditModal(props: Props) {
                 <Modal.Title>Modifier</Modal.Title>
             </Modal.Header>
 
-            <Form onSubmit={handleSubmit}>
-                <Modal.Body>
-                    {renderBody()}
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button className="btn-icon"
-                            variant="outline-danger"
-                            onClick={handleClose}>
-                        Annuler
-                    </Button>
-                    <Button className="btn-icon"
-                            variant="outline-success"
-                            type="submit">
-                        Valider
-                    </Button>
-                </Modal.Footer>
-            </Form>
+            {
+                props.adminVersion
+                    ? <PollEditModalAdminForm poll={props.poll}
+                                              setPoll={props.setPoll}
+                                              handleClose={handleClose}/>
+                    : <PollEditModalUserForm poll={props.poll}
+                                             setPoll={props.setPoll}
+                                             handleClose={handleClose}/>
+            }
         </Modal>
     );
 }
