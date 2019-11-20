@@ -1,34 +1,27 @@
 import React from 'react';
 import {useField, useFormikContext} from "formik";
-import DatePicker from "react-datepicker";
-import {registerLocale, setDefaultLocale} from "react-datepicker";
-import fr from 'date-fns/locale/fr';
 import Form from "react-bootstrap/Form";
-import "react-datepicker/dist/react-datepicker.css";
+import DayPicker from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+import {MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT} from "../../../utils/format";
 
-
-// TODO: use https://github.com/airbnb/react-dates.
 export function DatePickerField({label, ...props}: any) {
     const {setFieldValue} = useFormikContext();
-    const [field, meta] = useField(props);
-
-    registerLocale('fr', fr);
+    const [field, meta] = useField<Date>(props);
 
     return (
         <Form.Group>
             <Form.Label>{label}</Form.Label>
-            <DatePicker
-                {...field}
-                {...props}
-                className="form-control"
-                showPopperArrow={false}
-                locale="fr"
-                dateFormat="dd/MM/yyyy"
-                selected={(field.value && new Date(field.value)) || null}
-                onChange={val => {
-                    setFieldValue(field.name as never, val);
-                }}
-                todayButton="Aujourd’hui"
+            <DayPicker {...field}
+                       initialMonth={field.value}
+                       selectedDays={field.value}
+                       onDayClick={day => setFieldValue(field.name as never, day)}
+                       locale="fr"
+                       months={MONTHS}
+                       weekdaysLong={WEEKDAYS_LONG}
+                       weekdaysShort={WEEKDAYS_SHORT}
+                       firstDayOfWeek={1}
+                       disabledDays={{before: new Date()}}
             />
             {meta.touched && meta.error ? (
                 <Form.Control.Feedback type="invalid">

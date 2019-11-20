@@ -1,13 +1,15 @@
 import React from 'react';
 import {Poll} from "../../../models/polls";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import BootstrapForm from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Modal from "react-bootstrap/Modal";
 import * as Yup from "yup";
 import {Formik, Form, useFormikContext} from "formik";
 import {TextFormGroup} from "../../utils/forms/TextFormGroup";
 import {SelectGroupPills} from "../../utils/forms/SelectGroupPills";
 import {DatePickerField} from "../../utils/forms/DatePickerField";
+import {dateFormatter} from "../../../utils/format";
 
 type Props = {
     poll: Poll,
@@ -22,14 +24,14 @@ export function PollEditModalAdminForm(props: Props) {
         items.set(
             "ACCEPTED",
             <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-check text-success"/> Accepter
+                <i className="fe fe-check text-success"/> Accepté
             </span>
         );
 
         items.set(
             "REJECTED",
             <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-x text-danger"/> Refuser
+                <i className="fe fe-x text-danger"/> Refusé
             </span>
         );
 
@@ -81,31 +83,33 @@ export function PollEditModalAdminForm(props: Props) {
                 publicationDate: props.poll.publicationDate,
             }}
             validationSchema={Yup.object({
-                        publicationDate: Yup.date()
-                            .min(new Date(Date.now()))
-                            .required('Ce champ est requis.'),
-                    })}
+                publicationDate: Yup.date()
+                    .min(new Date(Date.now()))
+                    .required('Ce champ est requis.'),
+            })}
             onSubmit={(values, {setSubmitting}) => {
                 console.log(values);
             }}
         >
             <Form>
+                <Card className="w-50 mx-auto mt-5 mb-2">
+                    <Card.Header>
+                        <Card.Title as="h3">{props.poll.question}</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                        <Card.Subtitle>
+                            <em>Envoyé par 17TODO le {dateFormatter(props.poll.publicationDate)}.</em>
+                        </Card.Subtitle>
+
+                        <span className="selectgroup-button">
+                            {props.poll.choices[0].text}
+                        </span>
+                        <span className="selectgroup-button">
+                            {props.poll.choices[1].text}
+                        </span>
+                    </Card.Body>
+                </Card>
                 <Modal.Body>
-                    <BootstrapForm.Group>
-                        <BootstrapForm.Label>Question</BootstrapForm.Label>
-                        <p>{props.poll.question}</p>
-                    </BootstrapForm.Group>
-
-                    <BootstrapForm.Group>
-                        <BootstrapForm.Label>Réponse 1</BootstrapForm.Label>
-                        <p>{props.poll.choices[0].text}</p>
-                    </BootstrapForm.Group>
-
-                    <BootstrapForm.Group>
-                        <BootstrapForm.Label>Réponse 2</BootstrapForm.Label>
-                        <p>{props.poll.choices[1].text}</p>
-                    </BootstrapForm.Group>
-
                     <StateField/>
 
                     <AdminCommentField/>

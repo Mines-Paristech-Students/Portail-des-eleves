@@ -13,47 +13,6 @@ type Props = {
 };
 
 export function PollEditModalUserForm(props: Props) {
-    function handleChange(event: any) {
-        const target = event.target as HTMLInputElement;
-        const value = event.target.value;
-
-        console.log(value);
-
-        switch (target.name) {
-            case "question":
-                props.setPoll({
-                    ...props.poll,
-                    question: value,
-                });
-                break;
-            case "choice-0":
-                props.setPoll({
-                    ...props.poll,
-                    choices: [
-                        {
-                            ...props.poll.choices[0],
-                            text: value,
-                        },
-                        ...props.poll.choices.slice(1)
-                    ],
-                });
-                break;
-            case "choice-1":
-                props.setPoll({
-                    ...props.poll,
-                    choices: [
-                        props.poll.choices[0],
-                        {
-                            ...props.poll.choices[1],
-                            text: value,
-                        },
-                        ...props.poll.choices.slice(2)
-                    ],
-                });
-                break;
-        }
-    }
-
     return (
         <Formik
             initialValues={{
