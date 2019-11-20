@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/axios-case-converter": "^0.3.1",
     "@types/react-bootstrap": "^0.32.20",
     "@types/react-datepicker": "^2.9.4",
     "@types/react-day-picker": "^5.3.0",
     "@types/yup": "^0.26.24",
     "axios": "^0.19.0",
+    "axios-case-converter": "latest",
     "bootstrap": "^4.3.1",
     "formik": "^2.0.4",
     "jquery": "^3.4.1",
