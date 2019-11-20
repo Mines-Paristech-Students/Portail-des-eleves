@@ -1,13 +1,12 @@
 import React from 'react';
 import {Poll} from "../../../models/polls";
-import BootstrapForm from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import * as Yup from "yup";
 import {Formik, Form, useFormikContext} from "formik";
 import {TextFormGroup} from "../../utils/forms/TextFormGroup";
-import {SelectGroupPills} from "../../utils/forms/SelectGroupPills";
+import {SelectGroup} from "../../utils/forms/SelectGroup";
 import {DatePickerField} from "../../utils/forms/DatePickerField";
 import {dateFormatter} from "../../../utils/format";
 
@@ -43,9 +42,10 @@ export function PollEditModalAdminForm(props: Props) {
         );
 
         return (
-            <SelectGroupPills label="Statut"
-                              name="state"
-                              items={items}/>
+            <SelectGroup type="pills"
+                         label="Statut"
+                         name="state"
+                         items={items}/>
         );
     }
 
