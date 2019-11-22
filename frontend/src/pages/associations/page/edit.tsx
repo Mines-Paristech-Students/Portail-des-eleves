@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Page, PageType } from "../../../models/associations/page";
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
@@ -37,14 +37,26 @@ export const AssociationEditPage = ({ association }) => {
 };
 
 const EditPage = ({ page }) => {
+
+    let [error, setError] = useState("");
+    let [status, setStatus] = useState("");
+
     const formik = useFormik({
         initialValues: page,
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+            setStatus("Sauvegarde en cours");
+            api.pages.save(values).then(() => {
+                setStatus("Page sauvegardée !")
+            }).catch(err => {
+                setError(err.message);
+                setStatus("");
+            });
         }
     });
     return (
         <form onSubmit={formik.handleSubmit}>
+            <p className="text-danger">{error}</p>
+            <p className="text-info">{status}</p>
             <Form.Group className="mt-6">
                 <Form.Control
                     id="title"

@@ -26,7 +26,14 @@ export const api = {
                 )
             ),
         get: ({ pageId }) =>
-            unwrap<Page>(apiService.get(`/associations/pages/${pageId}`))
+            unwrap<Page>(apiService.get(`/associations/pages/${pageId}`)),
+        save: (page) => {
+            if (page.id) {
+                return unwrap<Page>(apiService.patch(`/associations/pages/${page.id}/`, page))
+            } else {
+                return unwrap<Page>(apiService.post(`/associations/pages/`, page))
+            }
+        }
     },
     news: {
         list: ({ associationId }) =>

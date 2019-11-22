@@ -15,10 +15,7 @@ const ListPagesItem = ({ pages, association }) =>
     ));
 
 const AddPageItem = ({ association }) => {
-    if (
-        association.myRole.pagePermission ||
-        association.myRole.administrationPermission
-    ) {
+    if (association.myRole.pagePermission) {
         return (
             <SideBarItem
                 icon={"plus"}
