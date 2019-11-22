@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { Page, PageType } from "../../../models/associations/page";
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
@@ -7,7 +7,7 @@ import { api } from "../../../services/apiService";
 import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
-export const AssociationCreatePage = ({ association }) => {
+export const AssociationCreatePage = ({ association, ...props }) => {
     const page: Page = {
         title: "",
         text: "",
@@ -19,10 +19,10 @@ export const AssociationCreatePage = ({ association }) => {
         pageType: PageType.Static
     };
 
-    return <EditPage page={page} />;
+    return <EditPage {...props} page={page} association={association} />;
 };
 
-export const AssociationEditPage = ({ association }) => {
+export const AssociationEditPage = ({ association, ...props }) => {
     const { pageId } = useParams();
 
     const { data: page, isLoading, error } = useQuery(
@@ -32,12 +32,13 @@ export const AssociationEditPage = ({ association }) => {
 
     if (isLoading) return "Loading association...";
     if (error) return `Something went wrong: ${error.message}`;
-    if (page) return <EditPage page={page} />;
+    if (page)
+        return <EditPage {...props} page={page} association={association} />;
 
     return null;
 };
 
-const EditPage = ({ page }) => {
+const EditPage = ({ page, association, ...props }) => {
     const newToast = useContext(ToastContext);
 
     const formik = useFormik({
@@ -49,11 +50,14 @@ const EditPage = ({ page }) => {
             });
             api.pages
                 .save(values)
-                .then(() => {
+                .then(res => {
                     newToast({
                         message: "Page sauvegardée !",
-                        level: ToastLevel.Error
+                        level: ToastLevel.Success
                     });
+                    props.history.push(
+                        `/associations/${association.id}/pages/${res.id}`
+                    );
                 })
                 .catch(err => {
                     newToast({
@@ -63,6 +67,24 @@ const EditPage = ({ page }) => {
                 });
         }
     });
+
+    const deletePage = () => {
+        // eslint-disable-next-line no-restricted-globals
+        if (confirm("Supprimer la page ? Cette action est irréversible")) {
+            api.pages
+                .delete(page)
+                .then(res => {
+                    props.history.push(`/associations/${association.id}`);
+                })
+                .catch(err => {
+                    newToast({
+                        message: err.message,
+                        level: ToastLevel.Error
+                    });
+                });
+        }
+    };
+
     return (
         <form onSubmit={formik.handleSubmit}>
             <Form.Group className="mt-6">
@@ -87,6 +109,14 @@ const EditPage = ({ page }) => {
                 />
                 <Button variant="primary" type="submit">
                     Sauvegarder
+                </Button>
+                <Button
+                    variant="danger"
+                    className={"ml-3"}
+                    type="button"
+                    onClick={deletePage}
+                >
+                    Supprimer
                 </Button>
             </Form.Group>
         </form>

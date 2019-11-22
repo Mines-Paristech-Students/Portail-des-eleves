@@ -38,6 +38,11 @@ export const api = {
             return unwrap<Page>(
                 apiService.patch(`/associations/pages/${page.id}/`, page)
             );
+        },
+        delete: page => {
+            return unwrap<Page>(
+                apiService.delete(`/associations/pages/${page.id}/`)
+            );
         }
     },
     news: {

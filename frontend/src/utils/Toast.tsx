@@ -2,8 +2,8 @@ import React, { createContext, useEffect, useState } from "react";
 import BootstrapToast from "react-bootstrap/Toast";
 
 export enum ToastLevel {
-    Success,
-    Error
+    Success = "success",
+    Error = "danger"
 }
 
 export type ToastInfo = {
