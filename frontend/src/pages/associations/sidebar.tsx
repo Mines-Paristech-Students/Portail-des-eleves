@@ -15,18 +15,18 @@ const ListPagesItem = ({ pages, association }) =>
     ));
 
 const AddPageItem = ({ association }) => {
-    if (association.myRole.pagePermission) {
-        return (
-            <SideBarItem
-                icon={"plus"}
-                to={`/associations/${association.id}/pages/new`}
-            >
-                Ajouter une page
-            </SideBarItem>
-        );
-    } else {
+    if (!association.myRole.pagePermission) {
         return null;
     }
+
+    return (
+        <SideBarItem
+            icon={"plus"}
+            to={`/associations/${association.id}/pages/new`}
+        >
+            Ajouter une page
+        </SideBarItem>
+    );
 };
 
 export const AssociationSidebar = ({ association }) => {
@@ -43,14 +43,14 @@ export const AssociationSidebar = ({ association }) => {
         return <p>Error while loading</p>;
     }
 
-    if (pages) {
-        return (
-            <SideBar title={association.name}>
-                <ListPagesItem association={association} pages={pages} />
-                <AddPageItem association={association} />
-            </SideBar>
-        );
+    if (!pages) {
+        return null;
     }
 
-    return null;
+    return (
+        <SideBar title={association.name}>
+            <ListPagesItem association={association} pages={pages} />
+            <AddPageItem association={association} />
+        </SideBar>
+    );
 };

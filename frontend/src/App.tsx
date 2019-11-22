@@ -7,6 +7,7 @@ import { CommonPrivateRoute } from "./utils/route";
 import { PageNotFoundError } from "./pages/errorPage";
 import { Login } from "./pages/login";
 import { routes } from "./routing/global";
+import { ToastProvider } from "./utils/Toast";
 
 export const authService = new AuthService();
 
@@ -30,17 +31,19 @@ const App: React.FC = () => {
 
     if (checkedAuth) {
         return (
-            <Router>
-                {/* Switch imposes that only the first route to match the url will be rendered.
+            <ToastProvider>
+                <Router>
+                    {/* Switch imposes that only the first route to match the url will be rendered.
                 It avoids rendering PageNotFoundError on each page */}
-                <Switch>
-                    {/* A PrivateRoute is a route that requires to be authenticated to be accessible.
+                    <Switch>
+                        {/* A PrivateRoute is a route that requires to be authenticated to be accessible.
                      If the user is a public one, they'll be redirected to the login page. */}
-                    {privateRoutes}
-                    <Route path="/login" component={Login} />
-                    <Route component={PageNotFoundError} />
-                </Switch>
-            </Router>
+                        {privateRoutes}
+                        <Route path="/login" component={Login} />
+                        <Route component={PageNotFoundError} />
+                    </Switch>
+                </Router>
+            </ToastProvider>
         );
     } else {
         return <p>Loading...</p>;

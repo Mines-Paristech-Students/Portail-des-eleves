@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext} from "react";
 import { Page, PageType } from "../../../models/associations/page";
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { api } from "../../../services/apiService";
 import { useParams } from "react-router";
+import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
 export const AssociationCreatePage = ({ association }) => {
     const page: Page = {
@@ -25,7 +26,7 @@ export const AssociationEditPage = ({ association }) => {
     const { pageId } = useParams();
 
     const { data: page, isLoading, error } = useQuery(
-        ["page.get", {pageId}],
+        ["page.get", { pageId }],
         api.pages.get
     );
 
@@ -37,26 +38,33 @@ export const AssociationEditPage = ({ association }) => {
 };
 
 const EditPage = ({ page }) => {
-
-    let [error, setError] = useState("");
-    let [status, setStatus] = useState("");
+    const newToast = useContext(ToastContext);
 
     const formik = useFormik({
         initialValues: page,
         onSubmit: values => {
-            setStatus("Sauvegarde en cours");
-            api.pages.save(values).then(() => {
-                setStatus("Page sauvegardée !")
-            }).catch(err => {
-                setError(err.message);
-                setStatus("");
+            newToast({
+                message: "Sauvegarde en cours",
+                level: ToastLevel.Success
             });
+            api.pages
+                .save(values)
+                .then(() => {
+                    newToast({
+                        message: "Page sauvegardée !",
+                        level: ToastLevel.Error
+                    });
+                })
+                .catch(err => {
+                    newToast({
+                        message: err.message,
+                        level: ToastLevel.Error
+                    });
+                });
         }
     });
     return (
         <form onSubmit={formik.handleSubmit}>
-            <p className="text-danger">{error}</p>
-            <p className="text-info">{status}</p>
             <Form.Group className="mt-6">
                 <Form.Control
                     id="title"
@@ -77,7 +85,9 @@ const EditPage = ({ page }) => {
                     value={formik.values.text}
                     rows={10}
                 />
-                <Button variant="primary" type="submit">Sauvegarder</Button>
+                <Button variant="primary" type="submit">
+                    Sauvegarder
+                </Button>
             </Form.Group>
         </form>
     );
