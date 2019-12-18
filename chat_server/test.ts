@@ -1,40 +1,41 @@
-import io from 'socket.io-client';
-import {io as ioServer} from "./index";
-
 /**
- * Setup WS & HTTP servers
+ * Things that should be checked
+ * 1. Can connect
+ * 2. Can post things
+ * 3. Recup le bon offset
+ * Cannot read/write without the token
  */
-beforeAll(done => {
-  console.log("coucou");
-  done();
-});
 
-/**
- *  Cleanup WS & HTTP servers
- */
-afterAll(done => {
-  console.log("buye");
-  done();
-});
+var io = require('socket.io-client');
 
-/**
- * Run before each test
- */
-beforeEach(done => {
-  io.on("connect", done);
-});
+import { should, assert, expect} from 'chai';
 
-/**
- * Run after each test
- */
-afterEach(done => {
-  io.disconnect();
-  done()
-});
+describe("Testing server", () => {
+  var socketURL = 'http://localhost:3000';
+  
+  var options ={
+    transports: ['websocket'],
+    'force new connection': true
+  };
 
-describe("basic socket.io example", () => {
-  test("should communicate with waiting for socket.io handshakes", done => {
-    io.emit("message", {"coucou"});
+  var server;
+
+  before("Setting the server", function(done) {
+    server = require('./simple_server').server;
     done();
   });
+
+  after("Closing the server", function(done) {
+    server.close();
+    done();
+  });
+
+  it("Should connect", function(done) {
+    var client = io.connect(socketURL, options);
+    client.once("connect", () => {
+      client.disconnect();
+      done();
+    });
+  });
+  
 });
