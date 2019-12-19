@@ -59,6 +59,8 @@ describe("Testing socket.io with authentification", () => {
       });
     });
 
+
+    // TODO : test for the connexion or skip ?
     it("Connecting a client", function (done) {
       const socket = io.connect('http://localhost:3000', {
         forceNew: true,
@@ -66,8 +68,11 @@ describe("Testing socket.io with authentification", () => {
       });
       socket
         .on('connect', () => {
-          socket.close();
-          done();
+          socket.on('broadcast', function(data) {
+            socket.close();
+            done();
+          });
+          socket.emit("message", {message: "licorne"});
         })
         .on('error', done);
     });
