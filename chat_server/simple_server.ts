@@ -8,8 +8,8 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 
 class Message {
-	constructor(public user_id: string, public message: string, public posted_on: Date){
-        this.user_id = user_id;
+	constructor(public username: string, public message: string, public posted_on: Date){
+        this.username = username;
         this.message = message;
         this.posted_on = posted_on;
     }
@@ -37,7 +37,7 @@ app.post('/login', (req, res) => {
     // TODO
     // Use this function to see if the user exists on the database and send the creditentials 
     const profile = {
-        user_id: '17doe',
+        username: '17doe',
         last_name: 'Doe',
         email: 'john@doe.com',
         id: 123
@@ -60,7 +60,7 @@ io.sockets
       }
 
     // FIXME : do we really want the time to be based on the server
-      let message = new Message(socket.decoded_token.user_id, request.message, new Date());
+      let message = new Message(socket.decoded_token.username, request.message, new Date());
       
       // TODO send to the database
       // socket.broadcast.emit (excludes the sender)

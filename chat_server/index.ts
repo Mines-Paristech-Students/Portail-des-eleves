@@ -1,11 +1,18 @@
-import express from "express";
-import * as socketioJwt from 'socketio-jwt';
-import socketIo from 'socket.io';
+const express = require("express");
+const socketio_jwt = require('socketio-jwt');
 import { createServer} from 'http';
-import {add, get} from './db';
+
+const db = require('./db/db');
+
+import jwt_option from './jwt_option';
+
 
 class Message {
-	constructor(public user_id: string, public message: string, posted_on: Date){}
+	constructor(public username: string, public message: string, public posted_on: Date){
+        this.username = username;
+        this.message = message;
+        this.posted_on = posted_on;
+    }
 }
 
 /**
@@ -16,15 +23,13 @@ const app = express();
 app.set("port", process.env.PORT || 3000);
 
 export let httpServer = createServer(app);
-export let io = socketIo(httpServer);
+export let io = require('socket.io')(httpServer);
 
-io
-.on('connection', socketioJwt.authorize({
-	secret: 'your secret or public key',
-	handshake: true,
-	decodedPropertyName: ""
-}))
-.on("authenticated", (socket: any) => {
+// Authentification using handshake
+io.use(socketio_jwt.authorize(jwt_option));
+
+io.sockets
+.on('connection', (socket) => {
 
 	socket.on("message", async (request: any) => {
 		if (request.message === undefined ){
@@ -32,8 +37,10 @@ io
 		}
 
 		let model = new Message(socket.decoded_token.username, request.message, new Date());
-		add(model.user_id, model.message);
-		socket.broadcast(model);
+		await db.add(model.username, model.message);
+
+		// The message is sended to everyone (including sender)
+		io.sockets.emit('broadcast', model);
 	});
 
 	socket.on("fetch", async (request: any) => {
@@ -41,8 +48,8 @@ io
 			return
 		}
 
-		let messages = await get(request.from, request.limit);
-		socket.emit("fetch_response", messages);
+		let messages = await db.get(db.dateToMysql(request.from), request.limit);
+		socket.emit("fetch_response", messages.rows);
 	});
 
 });
@@ -50,3 +57,10 @@ io
 const server = httpServer.listen(3000, () => {
   console.log("listening on *:3000");
 });
+
+
+// This is done for testing purposes
+module.exports = {
+	server: server,
+	app : app
+}

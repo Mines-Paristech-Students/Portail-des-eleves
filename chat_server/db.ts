@@ -1,10 +1,11 @@
 import { Client } from "pg";
 
 const client = new Client({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "portail_message"
+  host: "db",
+  user: "docker",
+  password: "docker",
+  database: "portail_message",
+  port: 5432,
 });
 
 let create_schema_query = `

@@ -1,40 +1,38 @@
-/**
- * Things that should be checked
- * 1. Can connect
- * 2. Can post things
- * 3. Recup le bon offset
- * Cannot read/write without the token
- */
+import { assert } from 'chai';
 
-/**
- * TODO : fix the port to have a right name for it
- */
+const io = require('socket.io-client');
 
-// Just look at the official repo for the loogin
+// The index we are testing
+const index = require('./index'); 
 
-var io = require('socket.io-client');
+// Generating a random-token for testing
+const jwt = require('jsonwebtoken');
+import jwt_option from './jwt_option';
 
-// Load before unless triggers a timeout
-var tested = require('./simple_server')
+const profile = {
+  username: '17doe',
+  email: 'john@doe.com',
+  id: 123
+};
 
-import { should, assert, expect } from 'chai';
-const request = require('request');
+const token = jwt.sign(profile, jwt_option.secret, { expiresIn: 60 * 60 * 5 });
 
-// Yet I'm just creating an agent
-// The rest of the work is already manager by the official repo's tests
-describe("Testing socket.io with authentification", () => {
+// Tests
+describe("Testing the messages service", () => {
 
-  var socketURL = 'http://localhost:3000';
+  // These variables shouldn't be initialize yet, unless they launch a timeout while testing
+  var server, socket_options, socket;
 
-  var options = {
-    transports: ['websocket'],
-    'force new connection': true
-  };
-
-  var server;
-
-  before("Setting the server", function (done) {
-    server = tested.server;
+  // Done before ALL tests
+  before("Launching the server and getting sockets options", function (done) {
+    server = index.server;
+    socket_options = {
+      url: 'http://localhost:'+server.address().port,
+      options: {
+        forceNew: true,
+        query: 'token=' + token
+      }
+    }
     done();
   });
 
@@ -43,38 +41,64 @@ describe("Testing socket.io with authentification", () => {
     done();
   });
 
-
-  // First test
-  describe("When user logged in", function () {
-
-    // Signing the token
-    before("Logging the user", function (done) {
-      request.post({
-        url: 'http://localhost:3000/login',
-        form: { username: 'jose', password: 'Pa123' },
-        json: true
-      }, (err, resp, body) => {
-        this.token = body.token;
-        done();
-      });
-    });
-
-
-    // TODO : test for the connexion or skip ?
-    it("Connecting a client", function (done) {
-      const socket = io.connect('http://localhost:3000', {
-        forceNew: true,
-        query: 'token=' + this.token
-      });
+  // Done before EACH test
+  beforeEach("Creating a client", function(done) {
+    try {
+      socket = io.connect(socket_options.url, socket_options.options); 
       socket
         .on('connect', () => {
-          socket.on('broadcast', function(data) {
-            socket.close();
-            done();
-          });
-          socket.emit("message", {message: "licorne"});
+          done();
         })
-        .on('error', done);
+        .on('error', (err) => {
+          done(err);
+        });
+    } catch (err) {
+      done(err);
+    }
+  });
+
+  afterEach("Destroying the client", function(done) {
+    socket.close();
+    done();
+  });
+
+  // The tests 
+
+  // FIXME : Do I have to surround with try / catch
+
+  it("User can post a message, and the message is correct", function(done) {
+    let message = "licorne";
+
+    // This broadcast checks that the message is correct
+    socket.on('broadcast', function(data) {
+      assert.strictEqual(data.username, profile.username, "Inserted username is correct");
+      assert.strictEqual(data.message, message, "Inserted message is correct");
+      done();
     });
+
+    // Emit the message
+    socket.emit("message", {message: message});
+  });
+
+  it("User can retrieve a message from the database", function(done) {
+    let message = "licorne";
+    let limit = 1;
+    let date = new Date('2100-12-17T03:24:00');
+    
+    // Check that the answer is correct
+    socket.on("fetch_response", function(rows) {
+      assert.strictEqual(rows.length, limit, "Correct number of rows")
+      let row = rows[rows.length-1]
+      assert.strictEqual(row.username, profile.username, "Last message username is correct");
+      assert.strictEqual(row.message, message, "Last message content is correct");
+      done();
+    });
+    
+    socket.on('broadcast', function(data) {
+      socket.emit("fetch", {from: date, limit: 1});
+    });
+
+    // Emit the message and fetch last
+    socket.emit("message", {message: message});
   });
 });

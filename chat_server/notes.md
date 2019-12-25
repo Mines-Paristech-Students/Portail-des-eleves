@@ -1,0 +1,13 @@
+# Server for the chat
+
+Creer un docker
+-> Db postgress
+
+## Tests
+
+Heure + nombre de messages -> SQL
+
+1. Test envoyer base de donnée
+2. Deconnexion et recup les messages
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjQ3MjY2MTk4MjEuMzM5MjU5LCJpc3MiOiJzc29fc2VydmVyIiwiYXVkIjoicG9ydGFpbCIsImp0aSI6ImYzMzAxNzg4YWJhMzQxZjVhODI0OWZhYWFjYTBmZjdmIiwidXNlciI6IjE3Ym9jcXVldCJ9.I_iO8hyZXXTPXanrf2tKpUL7gyhwDGT3Hk1NI73tPUHN7LmO_m_RPRvKUtEMlWbkLNOm3JMRCrdAHH8jmQVPrzOxpg81ZafEdmVfOq_QSIycyEj2bmFVLT3YCOx3fCd8nuLWQyXaP8D2lZWJrqsACQOySkks5Sq_iOwqikCbSM3LedVqa8F1h94UCXCwQmCoiuKBmxVu-pIIHxkUbtbvbtb1_y2GSKDRrHel_qJWUtWXyLJVqAOZlk3OGoSIrJEefm8bf5ZC8RF6tgPg-Nl-y0Ti4FfpWDOVXa6oO4o69fyzDvoTyxbcLXGvLMiIWmC8KFaUhwTnyVAirZqqVEpZsw&fbclid=IwAR0U8J55qaf4G6xhT6cIaBDHA1clbZWywbXgS0JoXITXjwvx-atOVR_aiCY
