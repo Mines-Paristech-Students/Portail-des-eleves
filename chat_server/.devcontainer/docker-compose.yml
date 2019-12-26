@@ -25,6 +25,9 @@ services:
 
     links:
       - db
+    
+    env_file:
+      - ../db/db.env
 
   db:
     image: postgres
