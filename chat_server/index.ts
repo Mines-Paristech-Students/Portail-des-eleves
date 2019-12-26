@@ -48,7 +48,7 @@ io.sockets
 			return
 		}
 
-		let messages = await db.get(db.dateToMysql(request.from), request.limit);
+		let messages = await db.get(request.from, request.limit);
 		socket.emit("fetch_response", messages.rows);
 	});
 

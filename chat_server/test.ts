@@ -23,7 +23,6 @@ describe("Testing the messages service", () => {
   // These variables shouldn't be initialize yet, unless they launch a timeout while testing
   var server, socket_options, socket;
 
-  // Done before ALL tests
   before("Launching the server and getting sockets options", function (done) {
     server = index.server;
     socket_options = {
@@ -41,20 +40,15 @@ describe("Testing the messages service", () => {
     done();
   });
 
-  // Done before EACH test
   beforeEach("Creating a client", function(done) {
-    try {
-      socket = io.connect(socket_options.url, socket_options.options); 
-      socket
-        .on('connect', () => {
-          done();
-        })
-        .on('error', (err) => {
-          done(err);
-        });
-    } catch (err) {
-      done(err);
-    }
+    socket = io.connect(socket_options.url, socket_options.options); 
+    socket
+      .on('connect', () => {
+        done();
+      })
+      .on('error', (err) => {
+        done(err);
+      });
   });
 
   afterEach("Destroying the client", function(done) {
@@ -64,9 +58,7 @@ describe("Testing the messages service", () => {
 
   // The tests 
 
-  // FIXME : Do I have to surround with try / catch
-
-  it("User can post a message, and the message is correct", function(done) {
+  it("User can post a message, socket broadcast is correct", function(done) {
     let message = "licorne";
 
     // This broadcast checks that the message is correct
