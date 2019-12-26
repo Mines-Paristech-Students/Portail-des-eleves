@@ -7,7 +7,9 @@ const index = require('./index');
 
 // Generating a random-token for testing
 const jwt = require('jsonwebtoken');
-import jwt_option from './jwt_option';
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 const profile = {
   username: '17doe',
@@ -15,7 +17,7 @@ const profile = {
   id: 123
 };
 
-const token = jwt.sign(profile, jwt_option.secret, { expiresIn: 60 * 60 * 5 });
+const token = jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 5 });
 
 // Tests
 describe("Testing the messages service", () => {

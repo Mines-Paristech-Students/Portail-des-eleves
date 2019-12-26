@@ -2,9 +2,10 @@ const express = require("express");
 const socketio_jwt = require('socketio-jwt');
 import { createServer} from 'http';
 
-const db = require('./db/db');
+const dotenv = require('dotenv')
+dotenv.config()
 
-import jwt_option from './jwt_option';
+const db = require('./db/db');
 
 
 class Message {
@@ -20,12 +21,18 @@ class Message {
  */
 
 const app = express();
-app.set("port", process.env.PORT || 3000);
+var port = process.env.PORT || 3000
 
 export let httpServer = createServer(app);
 export let io = require('socket.io')(httpServer);
 
 // Authentification using handshake
+var jwt_option = {
+    "secret": process.env.JWT_SECRET,
+    "timeout": 1000,
+    "handshake": true
+};
+
 io.use(socketio_jwt.authorize(jwt_option));
 
 io.sockets
@@ -54,8 +61,8 @@ io.sockets
 
 });
 
-const server = httpServer.listen(3000, () => {
-  console.log("listening on *:3000");
+const server = httpServer.listen(port, () => {
+  console.log("listening on port %s", port);
 });
 
 
