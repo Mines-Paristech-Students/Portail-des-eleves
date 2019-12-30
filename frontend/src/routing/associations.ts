@@ -1,6 +1,6 @@
-import { AssociationHome } from "../pages/associations/home";
-import { AssociationShowPage } from "../pages/associations/page/show";
-import { AssociationCreatePage, AssociationEditPage } from "../pages/associations/page/edit";
+import { AssociationHome } from "../pages/associations/Home";
+import { AssociationShowPage } from "../pages/associations/page/Show";
+import { AssociationCreatePage, AssociationEditPage } from "../pages/associations/page/Edit";
 
 export const routes = association => [
     {

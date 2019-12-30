@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "tabler-ui/dist/assets/css/dashboard.css";
 import { AuthService } from "./services/authService";
 import { CommonPrivateRoute } from "./utils/route";
-import { PageNotFoundError } from "./pages/errorPage";
-import { Login } from "./pages/login";
+import { PageNotFoundError } from "./pages/ErrorPage";
+import { Login } from "./pages/Login";
 import { routes } from "./routing/global";
 import { ToastProvider } from "./utils/Toast";
 

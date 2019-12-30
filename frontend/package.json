@@ -26,7 +26,8 @@
         "@types/reactstrap": "^8.0.6",
         "@types/yup": "^0.26.24",
         "prettier": "^1.18.2",
-        "typescript": "^3.7.2"
+        "typescript": "^3.7.2",
+        "reactstrap": "latest"
     },
     "scripts": {
         "start": "react-scripts start",

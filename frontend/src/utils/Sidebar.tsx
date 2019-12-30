@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const SideBarItem = ({ icon, to, children }) => {
+export const SidebarItem = ({ icon, to, children }) => {
     const iconClassName = "fe fe-" + icon;
     return (
         <Link
@@ -16,7 +16,7 @@ export const SideBarItem = ({ icon, to, children }) => {
     );
 };
 
-export const SideBar = ({ title, children, ...rest }) => {
+export const Sidebar = ({ title, children, ...rest }) => {
     return (
         <>
             <h1 className="page-title mb-5 mt-5">{title}</h1>

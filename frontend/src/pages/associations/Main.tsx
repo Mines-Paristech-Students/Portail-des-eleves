@@ -8,13 +8,13 @@ import {
 
 import { api } from "../../services/apiService";
 import { PrivateRoute } from "../../utils/route";
-import { AssociationSidebar } from "./sidebar";
+import { AssociationSidebar } from "./Sidebar";
 import { routes } from "../../routing/associations";
-import { PageNotFoundError } from "../errorPage";
 import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import { PageNotFoundError } from "../ErrorPage";
 
 export const AssociationMain = ({ match }) => {
     // Load the data

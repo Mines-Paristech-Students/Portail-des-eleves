@@ -1,17 +1,17 @@
 import React from "react";
 import { api } from "../../services/apiService";
-import { SideBar, SideBarItem } from "../../utils/sidebar";
+import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { useQuery } from "react-query";
 
 const ListPagesItem = ({ pages, association }) =>
     pages.map(page => (
-        <SideBarItem
+        <SidebarItem
             icon={"book"}
             to={`/associations/${association.id}/pages/${page.id}`}
             key={page.id}
         >
             {page.title}
-        </SideBarItem>
+        </SidebarItem>
     ));
 
 const AddPageItem = ({ association }) => {
@@ -20,12 +20,12 @@ const AddPageItem = ({ association }) => {
     }
 
     return (
-        <SideBarItem
+        <SidebarItem
             icon={"plus"}
             to={`/associations/${association.id}/pages/new`}
         >
             Ajouter une page
-        </SideBarItem>
+        </SidebarItem>
     );
 };
 
@@ -48,9 +48,9 @@ export const AssociationSidebar = ({ association }) => {
     }
 
     return (
-        <SideBar title={association.name}>
+        <Sidebar title={association.name}>
             <ListPagesItem association={association} pages={pages} />
             <AddPageItem association={association} />
-        </SideBar>
+        </Sidebar>
     );
 };
