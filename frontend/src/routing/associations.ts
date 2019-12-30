@@ -7,7 +7,7 @@ export const routes = association => [
         path: `/`,
         component: AssociationHome,
         exact: true,
-        props: { association: association, myValue: 3 }
+        props: { association: association }
     },
     {
         path: `/pages/new`,

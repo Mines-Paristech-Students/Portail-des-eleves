@@ -11,10 +11,9 @@
         "react-dom": "^16.11.0",
         "react-query": "^0.3.13",
         "react-router-dom": "latest",
-        "react-scripts": "3.2.0",
+        "react-scripts": "^3.3.0",
         "tabler-ui": "0.0.34",
-        "yup": "^0.27.0",
-        "reactstrap": "latest"
+        "yup": "^0.27.0"
     },
     "devDependencies": {
         "@types/jest": "24.0.21",

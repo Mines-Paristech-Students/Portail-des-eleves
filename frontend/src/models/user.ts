@@ -11,7 +11,7 @@ export interface Role {
     role: string;
     rank: number;
 
-    is_archived: boolean;
+    isArchived: boolean;
 
     administrationPermission: boolean;
     electionPermission: boolean;

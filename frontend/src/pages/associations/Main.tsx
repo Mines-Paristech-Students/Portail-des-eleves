@@ -12,6 +12,9 @@ import { AssociationSidebar } from "./sidebar";
 import { routes } from "../../routing/associations";
 import { PageNotFoundError } from "../errorPage";
 import { useQuery } from "react-query";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 
 export const AssociationMain = ({ match }) => {
     // Load the data
@@ -40,21 +43,21 @@ export const AssociationMain = ({ match }) => {
     if (error) return `Something went wrong: ${error.message}`;
     if (association) {
         return (
-            <div className={"container"}>
-                <div className="row">
-                    <div className="col-md-3">
+            <Container>
+                <Row>
+                    <Col md={3}>
                         <AssociationSidebar association={association} />
-                    </div>
-                    <div className="col-md-9">
+                    </Col>
+                    <Col md={9}>
                         <Router>
                             <Switch>
                                 {privateRoutes}
                                 <Route component={PageNotFoundError} />
                             </Switch>
                         </Router>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 
