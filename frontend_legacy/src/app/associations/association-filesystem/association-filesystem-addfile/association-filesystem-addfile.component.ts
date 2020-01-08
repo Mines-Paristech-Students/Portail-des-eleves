@@ -90,7 +90,7 @@ export class AssociationFilesystemAddfileComponent implements OnInit {
     onSubmit() {
         const formModel = this.prepareSave();
         this.loading = true;
-        // In a real-world app you'd have a http request / service call here like
+        // In a real-world app you'd have a http request / services call here like
         this.api.post('file/', formModel).subscribe(
             (res: any) => {
                 this.router.navigate([`associations/${this.association_id}/file/${res.id}`])

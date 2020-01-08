@@ -13,9 +13,9 @@ export class AuthService {
                     if (response.data.userId) {
                         this.isAuthenticated = true;
                         const user: User = {
-                            id: response.data.userId as string,
-                            lastName: response.data.lastName as string,
-                            firstName: response.data.firstName as string
+                            id: response.data.userId,
+                            lastName: response.data.lastName,
+                            firstName: response.data.firstName
                         };
                         resolve(user);
                     } else {

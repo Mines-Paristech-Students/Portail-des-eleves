@@ -14,6 +14,26 @@ import {
 } from "reactstrap";
 import { authService } from "../App";
 
+const links = [
+    { icon: "home", url: "/", label: "Accueil" },
+    { icon: "zap", url: "/associations", label: "Associations" }
+    ];
+
+const linksComponent = links.map(({ icon, url, label }) => {
+    let className = "";
+    if (icon) {
+        className = "fe fe-" + icon;
+    }
+
+    return (
+        <li className="nav-item" key={url}>
+            <Link to={url} className="nav-link">
+                <i className={className} /> {label}
+            </Link>
+        </li>
+    );
+});
+
 function Navbar() {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
@@ -90,12 +110,7 @@ function Navbar() {
                     <div className="row align-items-center">
                         <div className="col-lg order-lg-first">
                             <ul className="nav nav-tabs border-0 flex-column flex-lg-row">
-                                <li className="nav-item">
-                                    <Link to="/" className="nav-link">
-                                        <i className="fe fe-home" />
-                                        Accueil
-                                    </Link>
-                                </li>
+                                {linksComponent}
                             </ul>
                         </div>
                     </div>
