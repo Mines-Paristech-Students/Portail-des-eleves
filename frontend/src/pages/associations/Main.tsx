@@ -39,8 +39,8 @@ export const AssociationMain = ({ match }) => {
     );
 
     // Render
-    if (isLoading) return "Loading association container...";
-    if (error) return `Something went wrong: ${error.message}`;
+    if (isLoading) return "Chargement en cours...";
+    if (error) return `Une erreur est apparue: ${error.message}`;
     if (association) {
         return (
             <Container>

@@ -36,11 +36,11 @@ export const AssociationSidebar = ({ association }) => {
     );
 
     if (isLoading) {
-        return <p>Loading</p>;
+        return <p>Chargement...</p>;
     }
 
     if (error) {
-        return <p>Error while loading</p>;
+        return <p>Erreur lors du chargement</p>;
     }
 
     if (!pages) {

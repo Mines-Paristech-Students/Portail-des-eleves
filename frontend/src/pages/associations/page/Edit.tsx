@@ -30,8 +30,8 @@ export const AssociationEditPage = ({ association, ...props }) => {
         api.pages.get
     );
 
-    if (isLoading) return "Loading association...";
-    if (error) return `Something went wrong: ${error.message}`;
+    if (isLoading) return "Chargement en cours...";
+    if (error) return `Une erreur est apparue: ${error.message}`;
     if (page)
         return <EditPage {...props} page={page} association={association} />;
 
