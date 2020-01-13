@@ -8,7 +8,7 @@ export enum PageType {
 }
 
 export interface Page {
-    id: string;
+    id?: string;
     authors: User[];
     creationDate: Date;
     lastUpdateDate: Date;

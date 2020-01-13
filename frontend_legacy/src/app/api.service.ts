@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-services';
 import { environment } from "../environments/environment";
 import { User } from "./models/user";
 

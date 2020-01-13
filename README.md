@@ -1,5 +1,7 @@
 # Portail des eleves
 
-## Community
+_Mineur, [jette un œil ici](https://github.com/Mines-Paristech-Students/Portail-des-eleves/wiki/Fonctionnalit%C3%A9s-et-avancement) pour l’avancement du projet._
 
-We love to talk about Mines ParisTech and code. Join our [Slack](https://mines-paris.slack.com) to meet the team!
+## Getting started
+
+Please go to [the wiki](https://github.com/Mines-Paristech-Students/Portail-des-eleves/wiki) for all the information about getting started and setting up the project.
