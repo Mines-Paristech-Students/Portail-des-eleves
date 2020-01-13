@@ -38,7 +38,6 @@ var add = async function add(username: string, message: string) {
 var get = async function get(from: Date, limit: number) {
   // Converting date to UTC for mysql
   var sql_from = (new Date(from)).toISOString()
-  console.log(sql_from)
   return await pool.query(get_query, [sql_from, limit])
 };
 

@@ -5,7 +5,7 @@ import { createServer} from 'http';
 const dotenv = require('dotenv')
 dotenv.config()
 
-const db = require('./db/db');
+const db = require('./db');
 
 
 class Message {
@@ -27,19 +27,23 @@ export let httpServer = createServer(app);
 export let io = require('socket.io')(httpServer);
 
 // Authentification using handshake
-var jwt_option = {
+var jwtOption = {
     "secret": process.env.JWT_SECRET,
     "timeout": 1000,
     "handshake": true
 };
 
-io.use(socketio_jwt.authorize(jwt_option));
+io.use(socketio_jwt.authorize(jwtOption));
 
 io.sockets
 .on('connection', (socket) => {
 
 	socket.on("message", async (request: any) => {
 		if (request.message === undefined ){
+			return
+		}
+
+		if (request.message == "") {
 			return
 		}
 
@@ -67,7 +71,7 @@ const server = httpServer.listen(port, () => {
 
 
 // This is done for testing purposes
-module.exports = {
+export var index = {
 	server: server,
 	app : app
 }

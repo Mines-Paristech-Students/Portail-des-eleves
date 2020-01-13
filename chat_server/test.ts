@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 
-const io = require('socket.io-client');
+const io = require("socket.io-client")
 
 // The index we are testing
-const index = require('./index'); 
+import { index } from './index'
 
 // Generating a random-token for testing
 const jwt = require('jsonwebtoken');
@@ -65,8 +65,8 @@ describe("Testing the messages service", () => {
 
     // This broadcast checks that the message is correct
     socket.on('broadcast', function(data) {
-      assert.strictEqual(data.username, profile.username, "Inserted username is correct");
-      assert.strictEqual(data.message, message, "Inserted message is correct");
+      assert.strictEqual(data.username, '17doe', "Inserted username is correct");
+      assert.strictEqual(data.message, "licorne", "Inserted message is correct");
       done();
     });
 
@@ -83,8 +83,8 @@ describe("Testing the messages service", () => {
     socket.on("fetch_response", function(rows) {
       assert.strictEqual(rows.length, limit, "Correct number of rows")
       let row = rows[rows.length-1]
-      assert.strictEqual(row.username, profile.username, "Last message username is correct");
-      assert.strictEqual(row.message, message, "Last message content is correct");
+      assert.strictEqual(row.username, '17doe', "Last message username is correct");
+      assert.strictEqual(row.message, "licorne", "Last message content is correct");
       done();
     });
     

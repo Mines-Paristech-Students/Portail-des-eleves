@@ -27,7 +27,7 @@ services:
       - db
     
     env_file:
-      - ../db/db.env
+      - ../db.env
 
   db:
     image: postgres
