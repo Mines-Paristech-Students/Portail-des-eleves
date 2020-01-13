@@ -27,7 +27,10 @@ export const AssociationList = () => {
                 {associations => (
                     <div className={"row"}>
                         {associations.map(association => (
-                            <Card key={association.id} className={"col-md-3 m-4"}>
+                            <Card
+                                key={association.id}
+                                className={"col-md-3 m-4"}
+                            >
                                 <CardBody>
                                     <CardTitle>{association.name}</CardTitle>
                                 </CardBody>

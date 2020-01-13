@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {Poll, PollState} from "../../../models/polls";
-import {dateFormatter} from "../../../utils/format";
+import React, { useState } from "react";
+import { Poll, PollState } from "../../../models/polls";
+import { dateFormatter } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
-import {PollEditModal} from "./PollEditModal";
+import { PollEditModal } from "./PollEditModal";
 
 type Props = {
-    poll: Poll,
-    setPoll: (poll: Poll) => void,
+    poll: Poll;
+    setPoll: (poll: Poll) => void;
 };
 
 export function PollsTableRowAdmin(props: Props) {
@@ -15,11 +15,13 @@ export function PollsTableRowAdmin(props: Props) {
     function render(): React.ReactElement {
         return (
             <tr>
-                <PollEditModal show={editable}
-                               onHide={handleHideModal}
-                               poll={props.poll}
-                               setPoll={props.setPoll}
-                               adminVersion={true}/>
+                <PollEditModal
+                    show={editable}
+                    onHide={handleHideModal}
+                    poll={props.poll}
+                    setPoll={props.setPoll}
+                    adminVersion={true}
+                />
                 <td>{props.poll.question}</td>
                 <td>{props.poll.choices[0].text}</td>
                 <td>{props.poll.choices[1].text}</td>
@@ -28,7 +30,7 @@ export function PollsTableRowAdmin(props: Props) {
                 <td className="text-center">{renderState()}</td>
                 <td className="text-center">{administrateAction}</td>
             </tr>
-        )
+        );
     }
 
     function handleHideModal() {
@@ -38,11 +40,11 @@ export function PollsTableRowAdmin(props: Props) {
     function renderState(): React.ReactElement {
         switch (props.poll.state) {
             case PollState.Accepted:
-                return <i className="fe fe-check text-success"/>;
+                return <i className="fe fe-check text-success" />;
             case PollState.Rejected:
-                return <i className="fe fe-x text-danger"/>;
+                return <i className="fe fe-x text-danger" />;
             case PollState.Reviewing:
-                return <i className="fe fe-eye text-warning"/>;
+                return <i className="fe fe-eye text-warning" />;
         }
     }
 
@@ -52,11 +54,13 @@ export function PollsTableRowAdmin(props: Props) {
     }
 
     const administrateAction = (
-        <Button className="btn-icon mr-1"
-                variant="outline-primary"
-                size="sm"
-                onClick={handleAdministrate}>
-            <i className="fe fe-check-square"/>
+        <Button
+            className="btn-icon mr-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={handleAdministrate}
+        >
+            <i className="fe fe-check-square" />
         </Button>
     );
 

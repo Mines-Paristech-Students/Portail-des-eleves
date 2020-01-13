@@ -1,9 +1,9 @@
-import React from 'react';
-import {SidebarButton} from "../Sidebar";
-import {Sidebar} from "../Sidebar";
+import React from "react";
+import { SidebarButton } from "../Sidebar";
+import { Sidebar } from "../Sidebar";
 
 type Props = {
-    adminVersion?: boolean
+    adminVersion?: boolean;
 };
 
 export function PollsSidebar(props: Props) {
@@ -11,28 +11,29 @@ export function PollsSidebar(props: Props) {
         {
             name: "Récents",
             to: "/sondages/",
-            order: 10,
+            order: 10
         },
         {
             name: "Proposer",
             to: "/sondages/proposer/",
-            order: 20,
+            order: 20
         },
         {
             name: "Mes sondages",
             to: "/sondages/mes-sondages/",
-            order: 30,
-        },
+            order: 30
+        }
     ];
 
-    if (props.adminVersion || true) { // TODO. For debugging
+    if (props.adminVersion || true) {
+        // TODO. For debugging
         actions.push({
             name: "Administration",
             to: "/sondages/administration/",
             order: 0,
-            style: "outline-danger",
-        })
+            style: "outline-danger"
+        });
     }
 
-    return <Sidebar actions={actions}/>;
+    return <Sidebar actions={actions} />;
 }

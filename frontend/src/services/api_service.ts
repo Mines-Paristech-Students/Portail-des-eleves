@@ -1,7 +1,7 @@
 export enum APIServiceStatus {
     Loading = "Loading",
     Loaded = "Loaded",
-    Error = "Error",
+    Error = "Error"
 }
 
 interface APIServiceLoading {

@@ -1,13 +1,13 @@
-import {Choice, Poll, PollState} from "../models/polls";
+import { Choice, Poll, PollState } from "../models/polls";
 
 const choices_1: Choice[] = [
     {
         id: "1",
-        text: "C’est de la merde.",
+        text: "C’est de la merde."
     },
     {
         id: "2",
-        text: "C’est VRAIMENT de la merde.",
+        text: "C’est VRAIMENT de la merde."
     }
 ];
 
@@ -22,17 +22,16 @@ export const poll_1: Poll = {
     isActive: true
 };
 
-
 const choices_2: Choice[] = [
     {
         id: "3",
         text: "17cantelobre",
-        numberOfVotes: 45,
+        numberOfVotes: 45
     },
     {
         id: "4",
         text: "17bocquet",
-        numberOfVotes: 45,
+        numberOfVotes: 45
     }
 ];
 
@@ -51,7 +50,7 @@ const choices_3: Choice[] = [
     {
         id: "5",
         text: "Zaza",
-        numberOfVotes: 54,
+        numberOfVotes: 54
     },
     {
         id: "6",
@@ -75,7 +74,7 @@ const choices_4: Choice[] = [
     {
         id: "7",
         text: "Bla bla bla",
-        numberOfVotes: 54,
+        numberOfVotes: 54
     },
     {
         id: "8",
@@ -99,7 +98,7 @@ const choices_5: Choice[] = [
     {
         id: "9",
         text: "Bla bla bla",
-        numberOfVotes: 54,
+        numberOfVotes: 54
     },
     {
         id: "10",
@@ -118,6 +117,5 @@ export const poll_5: Poll = {
     adminComment: "",
     isActive: false
 };
-
 
 export const polls = [poll_1, poll_2, poll_3, poll_4, poll_5];

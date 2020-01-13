@@ -1,26 +1,26 @@
-import React from 'react';
-import {Route} from "react-router";
-import {PollsTable} from "./polls_table/PollsTable";
-import {ListPublishedPolls} from "./list_published_polls/ListPublishedPolls";
-import {Switch, useRouteMatch} from 'react-router-dom';
-import {SubmitPoll} from "./submit_polls/SubmitPoll";
+import React from "react";
+import { Route } from "react-router";
+import { PollsTable } from "./polls_table/PollsTable";
+import { ListPublishedPolls } from "./list_published_polls/ListPublishedPolls";
+import { Switch, useRouteMatch } from "react-router-dom";
+import { SubmitPoll } from "./submit_polls/SubmitPoll";
 
 export function PollsSwitch() {
-    let {path}: any = useRouteMatch();
+    let { path }: any = useRouteMatch();
 
     return (
         <Switch>
             <Route exact path={String(path)}>
-                <ListPublishedPolls/>
+                <ListPublishedPolls />
             </Route>
             <Route path={`${path}/administration/`}>
-                <PollsTable adminVersion/>
+                <PollsTable adminVersion />
             </Route>
             <Route exact path={`${path}/mes-sondages/`}>
-                <PollsTable/>
+                <PollsTable />
             </Route>
             <Route path={`${path}/proposer/`}>
-                <SubmitPoll/>
+                <SubmitPoll />
             </Route>
         </Switch>
     );

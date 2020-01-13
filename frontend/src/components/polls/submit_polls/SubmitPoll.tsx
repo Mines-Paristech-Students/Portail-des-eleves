@@ -1,21 +1,25 @@
-import React from 'react';
-import {PollsBase} from "../PollsBase";
+import React from "react";
+import { PollsBase } from "../PollsBase";
 import Button from "react-bootstrap/Button";
-import Card from 'react-bootstrap/Card';
+import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Container from 'react-bootstrap/Container';
-import {getRandom} from "../../../utils/random";
-import {Form, Formik} from "formik";
-import * as Yup from 'yup';
-import {TextFormGroup} from "../../utils/forms/TextFormGroup";
+import Container from "react-bootstrap/Container";
+import { getRandom } from "../../../utils/random";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 
 export function SubmitPoll() {
-    const [questionPlaceholder, choice0Placeholder, choice1Placeholder] = getRandom([
+    const [
+        questionPlaceholder,
+        choice0Placeholder,
+        choice1Placeholder
+    ] = getRandom([
         ["Le portail…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
-        ["Le plus beau ?", "17bocquet", "17cantelobre"],
+        ["Le plus beau ?", "17bocquet", "17cantelobre"]
     ]);
 
     function SubmitPollForm() {
@@ -25,17 +29,14 @@ export function SubmitPoll() {
                     initialValues={{
                         question: "",
                         choice0: "",
-                        choice1: "",
+                        choice1: ""
                     }}
                     validationSchema={Yup.object({
-                        question: Yup.string()
-                            .required('Ce champ est requis.'),
-                        choice0: Yup.string()
-                            .required('Ce champ est requis.'),
-                        choice1: Yup.string()
-                            .required('Ce champ est requis.'),
+                        question: Yup.string().required("Ce champ est requis."),
+                        choice0: Yup.string().required("Ce champ est requis."),
+                        choice1: Yup.string().required("Ce champ est requis.")
                     })}
-                    onSubmit={(values, {setSubmitting}) => {
+                    onSubmit={(values, { setSubmitting }) => {
                         // TODO.
                     }}
                 >
@@ -62,8 +63,7 @@ export function SubmitPoll() {
                         </Card.Body>
 
                         <Card.Footer className="text-right">
-                            <Button type="submit"
-                                    variant="outline-success">
+                            <Button type="submit" variant="outline-success">
                                 Envoyer
                             </Button>
                         </Card.Footer>
@@ -74,11 +74,17 @@ export function SubmitPoll() {
     }
 
     return (
-        <PollsBase title={<h1 className="page-title page-header mb-5">Proposer un sondage</h1>}>
+        <PollsBase
+            title={
+                <h1 className="page-title page-header mb-5">
+                    Proposer un sondage
+                </h1>
+            }
+        >
             <Container>
                 <Row>
-                    <Col xs={{offset: 3, span: 6}}>
-                        <SubmitPollForm/>
+                    <Col xs={{ offset: 3, span: 6 }}>
+                        <SubmitPollForm />
                     </Col>
                 </Row>
             </Container>

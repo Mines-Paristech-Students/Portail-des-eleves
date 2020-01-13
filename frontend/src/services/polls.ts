@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import {Poll} from "../models/polls";
-import {useEffect, useState} from "react";
-import {APIService, APIServiceStatus, baseEndpoint} from "./api_service";
-import {polls} from "../fixtures/polls";
+import { Poll } from "../models/polls";
+import { useEffect, useState } from "react";
+import { APIService, APIServiceStatus, baseEndpoint } from "./api_service";
+import { polls } from "../fixtures/polls";
 
 export function useListPollsService() {
     const [result, setResult] = useState<APIService<Poll[]>>({
@@ -18,14 +18,19 @@ export function useListPollsService() {
     }, []);
 
     return result;*/
-    return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
+    return { status: APIServiceStatus.Loaded, payload: polls } as APIService<
+        Poll[]
+    >;
 }
 
-
 export function useListUserPollsService() {
-    return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
+    return { status: APIServiceStatus.Loaded, payload: polls } as APIService<
+        Poll[]
+    >;
 }
 
 export function useListPollsServiceAdmin() {
-    return {status: APIServiceStatus.Loaded, payload: polls} as APIService<Poll[]>;
+    return { status: APIServiceStatus.Loaded, payload: polls } as APIService<
+        Poll[]
+    >;
 }

@@ -1,13 +1,13 @@
-import React from 'react';
-import {Poll} from "../../../models/polls";
-import {dateFormatter} from "../../../utils/format";
+import React from "react";
+import { Poll } from "../../../models/polls";
+import { dateFormatter } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import {SelectGroup} from "../../utils/forms/SelectGroup";
-import {Form, Formik} from "formik";
+import { SelectGroup } from "../../utils/forms/SelectGroup";
+import { Form, Formik } from "formik";
 
 type Props = {
-    poll: Poll,
+    poll: Poll;
 };
 
 export function ActivePoll(props: Props) {
@@ -22,10 +22,12 @@ export function ActivePoll(props: Props) {
         });
 
         return (
-            <SelectGroup type="vertical"
-                         label="Choix"
-                         items={items}
-                         name="choice"/>
+            <SelectGroup
+                type="vertical"
+                label="Choix"
+                items={items}
+                name="choice"
+            />
         );
     }
 
@@ -44,17 +46,15 @@ export function ActivePoll(props: Props) {
                     initialValues={{
                         choice: undefined
                     }}
-                    onSubmit={(values, {setSubmitting}) => {
+                    onSubmit={(values, { setSubmitting }) => {
                         console.log(values);
                     }}
                 >
                     <Form>
-                        <ChoiceFields/>
+                        <ChoiceFields />
 
                         <div className="text-right ml-auto">
-                            <Button
-                                variant="outline-success"
-                                type="submit">
+                            <Button variant="outline-success" type="submit">
                                 Voter
                             </Button>
                         </div>

@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {Poll, PollState} from "../../../models/polls";
-import {dateFormatter} from "../../../utils/format";
+import React, { useState } from "react";
+import { Poll, PollState } from "../../../models/polls";
+import { dateFormatter } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
-import {PollEditModal} from "./PollEditModal";
+import { PollEditModal } from "./PollEditModal";
 
 type Props = {
-    poll: Poll,
-    setPoll: (poll: Poll) => void,
-    deletePoll: () => void,
+    poll: Poll;
+    setPoll: (poll: Poll) => void;
+    deletePoll: () => void;
 };
 
 export function PollsTableRowUser(props: Props) {
@@ -16,11 +16,13 @@ export function PollsTableRowUser(props: Props) {
     function render(): React.ReactElement {
         return (
             <tr>
-                <PollEditModal show={editable}
-                               onHide={handleHideModal}
-                               poll={props.poll}
-                               setPoll={props.setPoll}
-                               adminVersion={false}/>
+                <PollEditModal
+                    show={editable}
+                    onHide={handleHideModal}
+                    poll={props.poll}
+                    setPoll={props.setPoll}
+                    adminVersion={false}
+                />
                 <td>{props.poll.question}</td>
                 <td>{props.poll.choices[0].text}</td>
                 <td>{props.poll.choices[1].text}</td>
@@ -29,7 +31,7 @@ export function PollsTableRowUser(props: Props) {
                 <td>{props.poll.adminComment}</td>
                 <td className="text-center">{renderActions()}</td>
             </tr>
-        )
+        );
     }
 
     function handleHideModal() {
@@ -39,11 +41,11 @@ export function PollsTableRowUser(props: Props) {
     function renderState(): React.ReactElement {
         switch (props.poll.state) {
             case PollState.Accepted:
-                return <i className="fe fe-check text-success"/>;
+                return <i className="fe fe-check text-success" />;
             case PollState.Rejected:
-                return <i className="fe fe-x text-danger"/>;
+                return <i className="fe fe-x text-danger" />;
             case PollState.Reviewing:
-                return <i className="fe fe-eye text-warning"/>;
+                return <i className="fe fe-eye text-warning" />;
         }
     }
 
@@ -53,12 +55,14 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const editAction = (
-        <Button key={`edit-button-${props.poll.id}`}
-                className="btn-icon m-1"
-                variant="outline-primary"
-                size="sm"
-                onClick={handleEdit}>
-            <i className="fe fe-edit"/>
+        <Button
+            key={`edit-button-${props.poll.id}`}
+            className="btn-icon m-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={handleEdit}
+        >
+            <i className="fe fe-edit" />
         </Button>
     );
 
@@ -68,11 +72,14 @@ export function PollsTableRowUser(props: Props) {
     }
 
     const deleteAction = (
-        <Button key={`delete-button-${props.poll.id}`} className="btn-icon m-1"
-                variant="outline-danger"
-                size="sm"
-                onClick={handleDelete}>
-            <i className="fe fe-trash-2"/>
+        <Button
+            key={`delete-button-${props.poll.id}`}
+            className="btn-icon m-1"
+            variant="outline-danger"
+            size="sm"
+            onClick={handleDelete}
+        >
+            <i className="fe fe-trash-2" />
         </Button>
     );
 
