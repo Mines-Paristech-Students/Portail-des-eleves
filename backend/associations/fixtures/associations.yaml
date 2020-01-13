@@ -61,10 +61,14 @@
   fields:
     user: 17bocquet
     role: CTO
-    administration_permission: true
     association: bde
-    election_permission: True
+    administration_permission: true
+    election_permission: true
+    event_permission: true
+    media_permission: true
     library_permission: true
+    marketplace_permission: true
+    page_permission: true
 
 - model: associations.page
   pk: '4'

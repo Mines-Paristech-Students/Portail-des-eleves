@@ -10,7 +10,7 @@ import {map} from "rxjs/operators";
 export class GetRoleService {
 
     /**
-     * In order to work, this service must be listed as provider for the component linked to the view that
+     * In order to work, this services must be listed as provider for the component linked to the view that
      * will use it.
      */
 

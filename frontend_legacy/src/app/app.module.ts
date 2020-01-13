@@ -2,7 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, LOCALE_ID } from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ApiService } from "./api.service";
-import { CookieService } from "ngx-cookie-service";
+import { CookieService } from "ngx-cookie-services";
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
