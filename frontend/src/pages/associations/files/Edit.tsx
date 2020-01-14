@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { api } from "../../../services/apiService";
-import { PageTitle } from "../../../utils/common";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import { ErrorMessage } from "../../ErrorPage";
+import { Form } from "react-bootstrap";
+import { Formik } from "formik";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { Formik } from "formik";
-import { Form } from "react-bootstrap";
+import { api } from "../../../services/apiService";
+import { useQuery } from "react-query";
 
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams();
@@ -29,6 +29,28 @@ export const AssociationFilesystemEdit = ({ association }) => {
             </ErrorMessage>
         );
     }
+
+    const deleteFile = file => {
+        if (!window.confirm("Supprimer le fichier ?")) {
+            return ;
+        }
+
+        api.files
+            .delete(file)
+            .then(res => {
+                newToast({
+                    message: "Fichier supprimé ",
+                    level: ToastLevel.Success
+                });
+                history.push(`/associations/${association.id}/files/`);
+            })
+            .catch(err => {
+                newToast({
+                    message: err.statusCode + " " + err.message,
+                    level: ToastLevel.Error
+                });
+            });
+    };
 
     if (isLoading) return "Loading association...";
     if (error) return `Something went wrong: ${error.message}`;
@@ -109,6 +131,13 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 Mis en ligne le {file.uploadedOn}
                             </Card.Footer>
                         </Card>
+
+                        <Button
+                            className={"btn-danger float-right"}
+                            onClick={() => deleteFile(file)}
+                        >
+                            Supprimer
+                        </Button>
                     </Form>
                 )}
             </Formik>

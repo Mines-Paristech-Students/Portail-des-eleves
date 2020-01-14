@@ -53,13 +53,23 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 </PageTitle>
 
                 {file.tags.map(tag => (
-                    <Tag key={tag.id} addon={tag.value} tag={tag.namespace.name} />
+                    <Tag
+                        key={tag.id}
+                        addon={tag.value}
+                        tag={tag.namespace.name}
+                    />
                 ))}
 
                 {preview}
 
                 <Card>
-                    <Card.Body>{file.description}</Card.Body>
+                    <Card.Body>
+                        {file.description && file.description.length > 0 ? (
+                            file.description
+                        ) : (
+                            <em>Aucune description</em>
+                        )}
+                    </Card.Body>
                     <Card.Footer>Mis en ligne le {file.uploadedOn}</Card.Footer>
                 </Card>
                 <a href={file.file} download className={"btn btn-primary"}>

@@ -55,8 +55,8 @@ export const AssociationFilesystemList = ({ association, ...props }) => {
                                         {media.tags.map(tag => (
                                             <Tag
                                                 key={tag.id}
-                                                tag={tag.namespace.name}
-                                                addon={tag.value}
+                                                tooltip={tag.namespace.name}
+                                                tag={tag.value}
                                             />
                                         ))}
                                     </Card.Body>

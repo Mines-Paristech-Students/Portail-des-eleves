@@ -81,7 +81,7 @@ export const api = {
                 })
             );
         },
-        upload: (file, association) => {
+        upload: (file, association, onUploadProgress) => {
             let formData = new FormData();
             formData.append("name", file.name);
             formData.append("file", file);
@@ -89,7 +89,14 @@ export const api = {
 
             // We don't unwrap here because be need to access all of the axios
             // object in the render logic to display progress
-            return apiService.post(`/associations/media/`, formData);
+            return apiService.post(`/associations/media/`, formData, {
+                onUploadProgress: onUploadProgress
+            });
+        },
+        delete: file => {
+            return apiService.delete(`/associations/media/${file.id}`, null, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
         }
     }
 };

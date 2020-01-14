@@ -1,4 +1,5 @@
 import React from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const types = [
     "blue",
@@ -19,16 +20,40 @@ function hashCode(s) {
     return Math.abs(h);
 }
 
-export const Tag = ({ type = "", tag, addon, ...props }) => {
+export const Tag = ({
+    type = "",
+    tag = "",
+    addon = "",
+    tooltip = "",
+}) => {
     if (type === "") {
         type = types[hashCode(tag) % types.length];
     }
     let className = "mb-2 mr-2 tag tag-" + type;
-
-    return (
+    let tagElement = (
         <div className={className}>
             {tag}
-            <span className="tag-addon">{addon}</span>
+            {addon.length != 0 ? (
+                <span className="tag-addon">{addon}</span>
+            ) : null}
         </div>
     );
+
+    if (tooltip.length > 0) {
+        return (
+            <OverlayTrigger
+                key={type + addon + tooltip + tag}
+                placement={'bottom'}
+                overlay={ props =>
+                    <Tooltip {...props}>
+                        {tooltip}
+                    </Tooltip>
+                }
+            >
+                {tagElement}
+            </OverlayTrigger>
+        );
+    } else {
+        return tagElement;
+    }
 };
