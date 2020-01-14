@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
+import Container from "reactstrap/lib/Container";
 
 export const AssociationList = () => {
     const { data: associations, isLoading, error } = useQuery(
@@ -18,7 +19,7 @@ export const AssociationList = () => {
     }
     if (associations) {
         return (
-            <>
+            <Container>
                 <PageTitle>Associations</PageTitle>
                 <Row>
                     {associations.map(association => (
@@ -31,7 +32,7 @@ export const AssociationList = () => {
                         </Card>
                     ))}
                 </Row>
-            </>
+            </Container>
         );
     }
 

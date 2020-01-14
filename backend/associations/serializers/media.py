@@ -11,8 +11,8 @@ class MediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        read_only_fields = ("id", "uploaded_on", "uploaded_by", "file", "tags")
-        fields = read_only_fields + ("name", "description", "association")
+        read_only_fields = ("id", "uploaded_on", "uploaded_by", "file", "association")
+        fields = read_only_fields + ("name", "description", "tags")
 
     def get_tags(self, obj):
         return filter_tags(self.context, obj, short=False)
