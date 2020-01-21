@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
-import Container from "reactstrap/lib/Container";
+import Container from "react-bootstrap/Container";
 
 export const AssociationList = () => {
     const { data: associations, isLoading, error } = useQuery(

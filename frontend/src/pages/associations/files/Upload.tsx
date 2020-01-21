@@ -9,9 +9,12 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { Button, Form, ProgressBar } from "react-bootstrap";
 import { Media } from "../../../models/associations/media";
 
+// Main page container for file upload
 export const AssociationFilesystemUpload = ({ association, ...props }) => {
+    // Subcomponents that will be used to upload the files
     let [uploadingFiles, setUploadingFiles] = useState<{}[]>([]);
 
+    // Create and handle drop zone
     const onDrop = useCallback(
         acceptedFiles => {
             setUploadingFiles([...uploadingFiles, ...acceptedFiles]);
@@ -23,7 +26,6 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
         onDrop
     });
 
-    // @ts-ignore
     return (
         <>
             <PageTitle>
@@ -33,7 +35,7 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
                 >
                     <i className={"fe fe-arrow-left"} />
                 </Link>
-                Envoie de fichiers
+                Envoi de fichiers
             </PageTitle>
             <div
                 {...getRootProps()}
@@ -42,7 +44,7 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
                 <input {...getInputProps()} />
                 {isDragActive ? (
                     <p className={"lead text-center m-0"}>
-                        Lachez les fichiers ici ...
+                        Déposez les fichiers ici ...
                     </p>
                 ) : (
                     <p className={"lead text-center m-0"}>
@@ -69,13 +71,14 @@ enum UploadState {
     Fail
 }
 
+// Sub-component used to upload a file
 const FileUpload = ({ file, association }) => {
     let [state, setState] = useState<UploadState>(UploadState.Uploading);
     let [progress, setProgress] = useState<number>(0);
     let [error, setError] = useState<string>("");
     let [uploadedFile, setUploadedFile] = useState<Media | null>(null);
 
-    useEffect(() => {
+    useEffect(() => { // Use effect to submit the file only once
         const upload = api.files.upload(file, association, progressEvent => {
             let { loaded, total } = progressEvent;
             setProgress(Math.round((loaded * 100) / total));
@@ -97,7 +100,7 @@ const FileUpload = ({ file, association }) => {
     }, []);
 
     let icon;
-    let details;
+    let details; // Information in the card body
 
     if (state === UploadState.Uploading) {
         icon = (
@@ -133,11 +136,12 @@ const FileUpload = ({ file, association }) => {
     );
 };
 
+// Sub-component used to edit information on a file once its upload is done
 const FileUploadDone = ({ file }) => {
     let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const newToast = useContext(ToastContext);
 
-    const formik = useFormik({
+    const formik = useFormik({ // Use a form to edit name and description
         initialValues: file,
         onSubmit: values => {
             newToast({

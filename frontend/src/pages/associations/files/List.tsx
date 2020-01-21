@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
+import { LoadingAssociation } from "../Loading";
 
 export const AssociationFilesystemList = ({ association, ...props }) => {
     const associationId = association.id;
@@ -29,7 +30,7 @@ export const AssociationFilesystemList = ({ association, ...props }) => {
         );
     }
 
-    if (isLoading) return "Loading association...";
+    if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
     if (data) {
         return (

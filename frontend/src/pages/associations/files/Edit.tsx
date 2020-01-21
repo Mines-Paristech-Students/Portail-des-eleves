@@ -10,6 +10,7 @@ import { Tag } from "../../../utils/Tag";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { api } from "../../../services/apiService";
 import { useQuery } from "react-query";
+import { LoadingAssociation } from "../Loading";
 
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams();
@@ -52,7 +53,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
             });
     };
 
-    if (isLoading) return "Loading association...";
+    if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
     if (file) {
         return (

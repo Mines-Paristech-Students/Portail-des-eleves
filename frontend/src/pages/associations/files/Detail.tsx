@@ -5,6 +5,7 @@ import { api } from "../../../services/apiService";
 import { PageTitle } from "../../../utils/common";
 import Card from "react-bootstrap/Card";
 import { Tag } from "../../../utils/Tag";
+import { LoadingAssociation } from "../Loading";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams();
@@ -13,7 +14,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         api.files.get
     );
 
-    if (isLoading) return "Loading association...";
+    if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
     if (file) {
         let preview;
