@@ -64,5 +64,39 @@ export const api = {
             unwrap<Association>(
                 apiService.get(`/associations/associations/${associationId}`)
             )
+    },
+    files: {
+        list: ({ associationId }) =>
+            unwrap<Page[]>(
+                apiService.get(
+                    `/associations/media/?association=${associationId}`
+                )
+            ),
+        get: ({ fileId }) =>
+            unwrap<Page>(apiService.get(`/associations/media/${fileId}`)),
+        patch: file => {
+            return unwrap<Page>(
+                apiService.patch(`/associations/media/${file.id}/`, file, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                })
+            );
+        },
+        upload: (file, association, onUploadProgress) => {
+            let formData = new FormData();
+            formData.append("name", file.name);
+            formData.append("file", file);
+            formData.append("association", association.id);
+
+            // We don't unwrap here because be need to access all of the axios
+            // object in the render logic to display progress
+            return apiService.post(`/associations/media/`, formData, {
+                onUploadProgress: onUploadProgress
+            });
+        },
+        delete: file => {
+            return apiService.delete(`/associations/media/${file.id}`, null, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+        }
     }
 };

@@ -3,6 +3,7 @@ import { api } from "../../../services/apiService";
 import { Link, useParams } from "react-router-dom";
 import { PageTitle } from "../../../utils/common";
 import { useQuery } from "react-query";
+import { LoadingAssociation } from "../Loading";
 
 export const AssociationShowPage = ({ association }) => {
     const { pageId } = useParams();
@@ -11,7 +12,7 @@ export const AssociationShowPage = ({ association }) => {
         api.pages.get
     );
 
-    if (isLoading) return "Loading association...";
+    if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
     if (data) {
         return (
