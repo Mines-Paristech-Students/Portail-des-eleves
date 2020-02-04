@@ -10,7 +10,8 @@ import { AssociationFilesystemEdit } from "../pages/associations/files/Edit";
 import { AssociationFilesystemUpload } from "../pages/associations/files/Upload";
 
 // To be replaced
-import { AssociationListEvent, AssociationCreateEvent, AssociationEditEvent, AssociationShowEvent } from "../pages/associations/events/Plop";
+import { AssociationListEvent } from "../pages/associations/events/List";
+import { AssociationCreateEvent, AssociationEditEvent, AssociationShowEvent } from "../pages/associations/events/Plop";
 
 export const routes = association => [
     {
@@ -20,7 +21,7 @@ export const routes = association => [
         props: { association: association }
     },
     {
-        path: `/events/new`,
+        path: `/events/`,
         component: AssociationListEvent,
         exact: true,
         props: { association: association }

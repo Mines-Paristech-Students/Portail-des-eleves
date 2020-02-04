@@ -45,6 +45,14 @@ export const api = {
             );
         }
     },
+    events: {
+        list: ({ associationId }) => 
+            unwrap<Page[]>(
+                apiService.get(
+                    `/associations/events/?association=${associationId}`
+                )
+            ),
+    },
     news: {
         list: ({ associationId }) =>
             unwrap<Page[]>(

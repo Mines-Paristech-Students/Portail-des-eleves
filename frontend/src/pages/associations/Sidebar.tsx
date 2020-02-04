@@ -31,6 +31,12 @@ export const AssociationSidebar = ({ association }) => {
             >
                 Fichiers
             </SidebarItem>
+            <SidebarItem
+                icon={"calendar"}
+                to={`/associations/${association.id}/events`}
+            >
+                Events
+            </SidebarItem>
         </Sidebar>
     );
 };
