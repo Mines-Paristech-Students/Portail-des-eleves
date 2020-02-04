@@ -83,6 +83,16 @@
     association: bde
     creation_date: '2018-08-18T13:19:37+00:00'
     last_update_date: '2018-08-18T13:19:37+00:00'
+- model: associations.event
+  pk: 1
+  fields:
+    association: bde
+    name: Soirée croziflette
+    description: Tout le monde le sait, la croziflette est meilleure que la tartiflette
+    participants: [17bocquet]
+    starts_at: '2018-08-18T13:19:37+00:00'
+    ends_at: '2018-08-18T13:19:37+00:00'
+    place: Chez mamy
 - model: associations.association
   pk: biero
   fields:
