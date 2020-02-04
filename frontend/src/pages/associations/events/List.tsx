@@ -8,6 +8,7 @@ import { Col } from "react-bootstrap";
 import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
+import {Badge} from "react-bootstrap/";
 
 export const AssociationListEvent = ({ association, ...props }) => {
     
@@ -25,7 +26,7 @@ export const AssociationListEvent = ({ association, ...props }) => {
         // TODO : Modify this add button
         addButton = (
             <Link
-                to={`/associations/${association.id}/files/upload`}
+                to={`/associations/${association.id}/events/new`}
                 className={"btn btn-success float-right mt-5"}
             >
                 <i className="fe fe-upload" />
@@ -81,18 +82,17 @@ export const AssociationListEvent = ({ association, ...props }) => {
                                         
                                         {/* Add a list of images */}
                                     </Card.Body>
-                                    <Card.Footer>
+                                    <Card.Body>
                                         {/* Format the date */}
                                         {event.description}
                                         <div>
                                             <br/>
-                                                <span className="badge badge-pill bg-blue">De {event.startsAt.toString()}</span>
-                                                <span className="badge badge-pill bg-red">A {event.startsAt.toString()}</span>
-                                                <span className="badge badge-pill bg-green">{event.place.toString()}</span>
+                                            <Badge pill variant="primary">De {event.startsAt.toString()}</Badge>
+                                            <Badge pill variant="primary">A {event.startsAt.toString()}</Badge>
+                                            <Badge pill variant="primary">{event.place.toString()}</Badge>
                                         </div>
-                                    </Card.Footer>
+                                    </Card.Body>
                                 </Card>
-                                
                             </Col>
                         )
                     }
