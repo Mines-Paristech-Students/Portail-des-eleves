@@ -45,35 +45,52 @@ export const AssociationListEvent = ({ association, ...props }) => {
                     {data.map(event => {
                         return (
                             <Col md={4} key={event.id}>
-                                <Card>
+                                <Card className="p-2">
                                     <Card.Header>
                                         <Card.Title>
                                             {/* TODO : icon that changes based on the request of the user
-                                            The icon changes from plus to  */}
+                                            The icon changes from plus-circle to check-circle
+                                            Maibe arrow-up-circle for the loading of the request ?  */}
                                             {event.name}
-                                            <Link
-                                                to={`/associations/${association.id}/files/upload`}
-                                                className={"btn btn-success float-right mt-5"}
-                                            >
-                                                <i className="fe fe-check-circle" />
-                                                S'inscrire
-                                            </Link>
                                         </Card.Title>
                                     </Card.Header>
-                                    <Card.Body>
-                                        {event.description}
-                                        <div className="avatar-list avatar-list-stacked">
-                                        <span className="avatar">EB</span>
-                                            {/* Do an asynchronous request to display the person's images */}
-                                            <span 
-                                                className="avatar" 
-                                                style={{
-                                                    backgroundImage: "url(./static/avatars/016f.jpg)"
-                                            }}></span>
-                                            <span className="avatar">{"+8"}</span>
-                                        </div>
-                                        {/*{description, participants, startsAt, endsAt, place}*/}
+                                    <Card.Body className="p-2">
+                                        <Row>
+                                            <Col className="my-auto">
+                                                <div className="avatar-list avatar-list-stacked">
+                                                    <span className="avatar">EB</span>
+                                                        {/* Do an asynchronous request to display the person's images */}
+                                                    <span 
+                                                        className="avatar" 
+                                                        style={{
+                                                            backgroundImage: "url(./static/avatars/016f.jpg)"
+                                                        }}></span>
+                                                    <span className="avatar">{"+8"}</span>
+                                                </div>
+                                            </Col>
+                                            <Col className="my-auto">
+                                                <Link
+                                                        to={`/associations/${association.id}/files/upload`}
+                                                        className={"btn btn-success"}
+                                                        >
+                                                        <i className="fe fe-check-circle mr-2" />
+                                                        S'inscrire
+                                                </Link>
+                                            </Col>
+                                        </Row>
+                                        
+                                        {/* Add a list of images */}
                                     </Card.Body>
+                                    <Card.Footer>
+                                        {/* Format the date */}
+                                        {event.description}
+                                        <div>
+                                            <br/>
+                                                <span className="badge badge-pill bg-blue">De {event.startsAt.toString()}</span>
+                                                <span className="badge badge-pill bg-red">A {event.startsAt.toString()}</span>
+                                                <span className="badge badge-pill bg-green">{event.place.toString()}</span>
+                                        </div>
+                                    </Card.Footer>
                                 </Card>
                                 
                             </Col>
