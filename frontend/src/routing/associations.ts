@@ -9,10 +9,31 @@ import { AssociationFilesystemDetail } from "../pages/associations/files/Detail"
 import { AssociationFilesystemEdit } from "../pages/associations/files/Edit";
 import { AssociationFilesystemUpload } from "../pages/associations/files/Upload";
 
+// To be replaced
+import { AssociationCreateEvent, AssociationEditEvent, AssociationShowEvent } from "../pages/associations/events/Plop";
+
 export const routes = association => [
     {
         path: `/`,
         component: AssociationHome,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/events/new`,
+        component: AssociationCreateEvent,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/events/:eventId`,
+        component: AssociationShowEvent,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/events/:eventId/edit`,
+        component: AssociationEditEvent,
         exact: true,
         props: { association: association }
     },
