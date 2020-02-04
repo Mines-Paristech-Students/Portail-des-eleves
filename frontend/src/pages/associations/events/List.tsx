@@ -51,32 +51,58 @@ export const AssociationListEvent = ({ association, ...props }) => {
                                         <Card.Title>
                                             {/* TODO : icon that changes based on the request of the user
                                             The icon changes from plus to  */}
-                                            {event.name}
-                                            <Link
-                                                to={`/associations/${association.id}/files/upload`}
-                                                className={"btn btn-success float-right mt-5"}
-                                            >
-                                                <i className="fe fe-check-circle" />
-                                                S'inscrire
-                                            </Link>
+                                            <Row>
+                                                <Col xs={10}>
+                                                    <strong>
+                                                        {event.name}
+                                                    </strong>
+                                                </Col>
+                                                <Col xs={2}>
+                                                    <Link
+                                                        to={`/associations/${association.id}/events/${event.id}/edit`}
+                                                        className={"btn btn-success"}
+                                                    >
+                                                        <i className="fe fe-edit" />
+                                                    </Link>
+                                                </Col>
+                                            </Row>
                                         </Card.Title>
                                     </Card.Header>
                                     <Card.Body>
+                                        <Row>
+                                            <Col>
+                                                <div className="avatar-list avatar-list-stacked">
+                                                    <span className="avatar">EB</span>
+                                                        {/* Do an asynchronous request to display the person's images */}
+                                                        <span 
+                                                            className="avatar" 
+                                                            style={{
+                                                                backgroundImage: "url(./static/avatars/016f.jpg)"
+                                                        }}></span>
+                                                    <span className="avatar">{"+8"}</span>
+                                                </div>
+                                            </Col>
+                                            <Col>
+                                                <Link
+                                                    to={`/associations/${association.id}/files/upload`}
+                                                    className={"btn btn-success"}
+                                                >
+                                                    <i className="fe fe-check-circle" />
+                                                    S'inscrire
+                                                </Link>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                    <Card.Body>
                                         {event.description}
-                                        <div className="avatar-list avatar-list-stacked">
-                                        <span className="avatar">EB</span>
-                                            {/* Do an asynchronous request to display the person's images */}
-                                            <span 
-                                                className="avatar" 
-                                                style={{
-                                                    backgroundImage: "url(./static/avatars/016f.jpg)"
-                                            }}></span>
-                                            <span className="avatar">{"+8"}</span>
-                                        </div>
                                         {/*{description, participants, startsAt, endsAt, place}*/}
                                     </Card.Body>
+                                    <Card.Footer>
+                                        <Tag type="blue" tag={event.startsAt} />
+                                        <Tag type="green" tag={event.endsAt} />
+                                        <Tag type="red" tag={event.place} />
+                                    </Card.Footer>
                                 </Card>
-                                
                             </Col>
                         )
                     }
