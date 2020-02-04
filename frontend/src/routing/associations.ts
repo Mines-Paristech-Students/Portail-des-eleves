@@ -11,7 +11,8 @@ import { AssociationFilesystemUpload } from "../pages/associations/files/Upload"
 
 // To be replaced
 import { AssociationListEvent } from "../pages/associations/events/List";
-import { AssociationCreateEvent, AssociationEditEvent, AssociationShowEvent } from "../pages/associations/events/Plop";
+import { AssociationCreateEvent } from "../pages/associations/events/Edit";
+import { AssociationEditEvent, AssociationShowEvent } from "../pages/associations/events/Plop";
 
 export const routes = association => [
     {

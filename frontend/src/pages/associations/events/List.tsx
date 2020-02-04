@@ -23,13 +23,14 @@ export const AssociationListEvent = ({ association, ...props }) => {
     let addButton;
     if (association.myRole.mediaPermission) {
         // TODO : Modify this add button
+        // Should check whether we have the max number of participants
         addButton = (
             <Link
-                to={`/associations/${association.id}/files/upload`}
+                to={`/associations/${association.id}/events/new`}
                 className={"btn btn-success float-right mt-5"}
             >
                 <i className="fe fe-upload" />
-                Ajouter des fichiers
+                Ajouter un évenement
             </Link>
         );
     }
