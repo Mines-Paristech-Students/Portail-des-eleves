@@ -6,22 +6,22 @@ This project was built arround two containers (yet only used for testing) :
 
 ## Openning the project
 
-1. If you are working with visual studio code, then simply open the folder into a remote container (see module), and choose the docker-compose.yml as config file.
-2. If you don't have visual studio code, you will need to do it manually! Don't worry, it's not time expensive. Simply run the following commands :
+You can run the project in two ways :
+1. Using the tools provided by VsCode (Remote containers)
+2. Using Linux and docker
+
+### Building the container 
 
 ```bash
 # First cmd window
 cd .devcontainer
 docker-compose up
-# Second cmd windows
-docker exec -it devcontainer_web_1 /bin/bash
-cd workspace
-npm test
 ```
 
-# Testing
+### Running the tests
 
-Just run the following command in visual studio / container terminal :
 ```bash
+docker exec -it devcontainer_web_1 /bin/bash
+cd workspace
 npm test
 ```
