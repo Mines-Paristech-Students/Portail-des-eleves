@@ -8,6 +8,7 @@
     "formik": "^2.0.4",
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.15",
+    "react-day-picker": "^7.4.0",
     "react-dom": "^16.11.0",
     "react-query": "^0.3.13",
     "react-router-dom": "latest",
