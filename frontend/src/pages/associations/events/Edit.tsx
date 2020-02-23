@@ -4,19 +4,18 @@ import { useFormik, Field } from "formik";
 import { Form, Button, Col } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { api } from "../../../services/apiService";
-import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { Link, useHistory, useParams, Redirect } from "react-router-dom";
 import { render } from "react-dom";
 import MomentInput from 'react-moment-input';
+import moment from 'moment';
 
-// Keep the assos
-// The participants are adding themselves
 
 export const AssociationCreateEvent = ({ association, ...props }) => {
     const event: Event = {
         association: association.id,
         name: "",
-        description: "dddd",
+        description: "",
         participants: [],
         startsAt: new Date(),
         endsAt: new Date(),
@@ -26,7 +25,7 @@ export const AssociationCreateEvent = ({ association, ...props }) => {
     return <EditEvent {...props} event={event} association={association} />;
 };
 
-// Modify the query
+
 export const AssociationEditEvent = ({ association, ...props }) => {
     const { eventId } = useParams();
 
@@ -45,11 +44,20 @@ export const AssociationEditEvent = ({ association, ...props }) => {
 
 
 const EditEvent = ({ event, association, ...props }) => {
+    const history = useHistory();
     const newToast = useContext(ToastContext);
 
     const formik = useFormik({
         initialValues: event,
         onSubmit: values => {
+            if (values.startsAt > values.endsAt) {
+                newToast({
+                    message: "La date de début est supérieure à la date de fin!",
+                    level: ToastLevel.Error
+                });
+                return;
+            };
+
             newToast({
                 message: "Sauvegarde en cours",
                 level: ToastLevel.Success
@@ -61,8 +69,9 @@ const EditEvent = ({ event, association, ...props }) => {
                         message: "Evenement sauvegardée !",
                         level: ToastLevel.Success
                     });
-                    props.history.push(
-                        `/associations/${association.id}/events/${res.id}`
+
+                    history.push(
+                        `/associations/${association.id}/events`
                     );
                 })
                 .catch(err => {
@@ -80,6 +89,11 @@ const EditEvent = ({ event, association, ...props }) => {
             api.events
                 .delete(event)
                 .then(res => {
+                    newToast({
+                        message: "Evenement supprimé !",
+                        level: ToastLevel.Success
+                    });
+
                     props.history.push(`/associations/${association.id}`);
                 })
                 .catch(err => {
@@ -115,6 +129,7 @@ const EditEvent = ({ event, association, ...props }) => {
                             readOnly={false}
                             icon={true}
                             enableInputClick={true}
+                            value={moment(formik.values.startsAt)}
                             onChange={value => {
                                 formik.setFieldValue("startsAt", value.toDate())
                             }}
@@ -127,6 +142,7 @@ const EditEvent = ({ event, association, ...props }) => {
                             readOnly={false}
                             icon={true}
                             enableInputClick={true}
+                            value={moment(formik.values.endsAt)}
                             onChange={value => {
                                 formik.setFieldValue("endsAt", value.toDate())
                             }}

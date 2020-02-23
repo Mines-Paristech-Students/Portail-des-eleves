@@ -12,7 +12,6 @@ import { AssociationFilesystemUpload } from "../pages/associations/files/Upload"
 // To be replaced
 import { AssociationListEvent } from "../pages/associations/events/List";
 import { AssociationCreateEvent, AssociationEditEvent } from "../pages/associations/events/Edit";
-import { AssociationShowEvent } from "../pages/associations/events/Plop";
 
 export const routes = association => [
     {
@@ -30,12 +29,6 @@ export const routes = association => [
     {
         path: `/events/new`,
         component: AssociationCreateEvent,
-        exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/events/:eventId`,
-        component: AssociationShowEvent,
         exact: true,
         props: { association: association }
     },

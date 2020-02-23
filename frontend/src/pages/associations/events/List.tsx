@@ -8,6 +8,7 @@ import { Col } from "react-bootstrap";
 import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
+import moment from "moment";
 
 export const AssociationListEvent = ({ association, ...props }) => {
     
@@ -49,15 +50,13 @@ export const AssociationListEvent = ({ association, ...props }) => {
                                 <Card>
                                     <Card.Header>
                                         <Card.Title>
-                                            {/* TODO : icon that changes based on the request of the user
-                                            The icon changes from plus to  */}
                                             <Row>
-                                                <Col xs={10}>
+                                                <Col>
                                                     <strong>
                                                         {event.name}
                                                     </strong>
                                                 </Col>
-                                                <Col xs={2}>
+                                                <Col>
                                                     <Link
                                                         to={`/associations/${association.id}/events/${event.id}/edit`}
                                                         className={"btn btn-success"}
@@ -72,19 +71,16 @@ export const AssociationListEvent = ({ association, ...props }) => {
                                         <Row>
                                             <Col>
                                                 <div className="avatar-list avatar-list-stacked">
+                                                    {/* Todo: add avatars */}
                                                     <span className="avatar">EB</span>
-                                                        {/* Do an asynchronous request to display the person's images */}
-                                                        <span 
-                                                            className="avatar" 
-                                                            style={{
-                                                                backgroundImage: "url(./static/avatars/016f.jpg)"
-                                                        }}></span>
+                                                    <span className="avatar"></span>
                                                     <span className="avatar">{"+8"}</span>
                                                 </div>
                                             </Col>
                                             <Col>
+                                                {/* Todo: Register to the event */}
                                                 <Link
-                                                    to={`/associations/${association.id}/files/upload`}
+                                                    to={`Todo`}
                                                     className={"btn btn-success"}
                                                 >
                                                     <i className="fe fe-check-circle" />
@@ -98,9 +94,9 @@ export const AssociationListEvent = ({ association, ...props }) => {
                                         {/*{description, participants, startsAt, endsAt, place}*/}
                                     </Card.Body>
                                     <Card.Footer>
-                                        <Tag type="blue" tag={event.startsAt} />
-                                        <Tag type="green" tag={event.endsAt} />
-                                        <Tag type="red" tag={event.place} />
+                                        <Row><Tag type="blue" tag={`Début: ${moment(event.startsAt).format('MMMM Do YYYY, h:mm:ss a')}`} /></Row>
+                                        <Row><Tag type="green" tag={`Fin: ${moment(event.endsAt).format('MMMM Do YYYY, h:mm:ss a')}`} /></Row>
+                                        <Row><Tag type="red" tag={`Localisation: ${event.place}`} /></Row>
                                     </Card.Footer>
                                 </Card>
                             </Col>
