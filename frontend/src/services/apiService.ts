@@ -98,5 +98,12 @@ export const api = {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }
+    },
+    products: {
+        list: ({associationId}) => unwrap<Page[]>(
+                apiService.get(
+                    `/associations/products/?association=${associationId}`
+                )
+            ),
     }
 };
