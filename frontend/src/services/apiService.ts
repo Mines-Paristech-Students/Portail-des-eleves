@@ -120,7 +120,7 @@ export const api = {
             });
         },
         delete: file => {
-            return apiService.delete(`/associations/media/${file.id}`, null, {
+            return apiService.delete(`/associations/media/${file.id}`, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }
