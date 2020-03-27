@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "tabler-ui/dist/assets/css/dashboard.css";
-import { AuthService } from "./services/authService";
+import { AuthService, UserProvider } from "./services/authService";
 import { CommonPrivateRoute } from "./utils/route";
 import { PageNotFoundError } from "./pages/ErrorPage";
 import { Login } from "./pages/Login";

@@ -2,6 +2,7 @@ import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
 import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
+import { Marketplace, Transaction } from "../models/associations/marketplace";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -99,11 +100,34 @@ export const api = {
             });
         }
     },
+
+    marketplace: {
+        get: ({ marketplaceId }) =>
+            unwrap<Marketplace>(
+                apiService.get(`/associations/marketplace/${marketplaceId}`)
+            )
+    },
+
     products: {
-        list: ({associationId}) => unwrap<Page[]>(
+        list: ({ associationId }) =>
+            unwrap<Page[]>(
                 apiService.get(
                     `/associations/products/?association=${associationId}`
                 )
-            ),
+            )
+    },
+
+    transactions: {
+        create: (product, quantity, buyer) =>
+            apiService.post("/associations/transactions/", {
+                product: product.id,
+                quantity: quantity,
+                buyer: buyer.id
+            }),
+
+        get: ({ marketplaceId, user }) =>
+            unwrap<Transaction[]>(
+                apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
+            )
     }
 };

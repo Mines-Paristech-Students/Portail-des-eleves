@@ -9,6 +9,7 @@ import { AssociationFilesystemDetail } from "../pages/associations/files/Detail"
 import { AssociationFilesystemEdit } from "../pages/associations/files/Edit";
 import { AssociationFilesystemUpload } from "../pages/associations/files/Upload";
 import { AssociationMarketplaceHome } from "../pages/associations/marketplace/Home";
+import { AssociationMarketplaceHistory } from "../pages/associations/marketplace/History";
 
 export const routes = association => [
     {
@@ -64,6 +65,13 @@ export const routes = association => [
     {
         path: `/marketplace`,
         component: AssociationMarketplaceHome,
+        exact: true,
+        props: { association: association }
+    },
+
+    {
+        path: `/marketplace/history`,
+        component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association }
     },
