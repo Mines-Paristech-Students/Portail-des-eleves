@@ -10,7 +10,7 @@
         "react-bootstrap": "^1.0.0-beta.16",
         "react-dom": "^16.11.0",
         "react-dropzone": "^10.2.1",
-        "react-query": "^0.3.13",
+        "react-query": "^1.1.1",
         "react-router-dom": "latest",
         "react-scripts": "^3.3.0",
         "tabler-ui": "0.0.34",
