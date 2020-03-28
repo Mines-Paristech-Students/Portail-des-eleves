@@ -11,12 +11,13 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { api } from "../../../services/apiService";
 import { useQuery } from "react-query";
 import { LoadingAssociation } from "../Loading";
+import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams();
-    const { data: file, isLoading, error } = useQuery(
-        ["file.get", { fileId }],
-        api.files.get
+    const { data: media, isLoading, error } = useQuery<Media, any>(
+        ["media.get", { fileId }],
+        api.medias.get
     );
 
     const history = useHistory();
@@ -31,13 +32,13 @@ export const AssociationFilesystemEdit = ({ association }) => {
         );
     }
 
-    const deleteFile = file => {
+    const deleteFile = media => {
         if (!window.confirm("Supprimer le fichier ?")) {
             return ;
         }
 
-        api.files
-            .delete(file)
+        api.medias
+            .delete(media)
             .then(res => {
                 newToast({
                     message: "Fichier supprimé ",
@@ -55,12 +56,12 @@ export const AssociationFilesystemEdit = ({ association }) => {
 
     if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
-    if (file) {
+    if (media) {
         return (
             <Formik
-                initialValues={file}
+                initialValues={media}
                 onSubmit={(values, actions) => {
-                    api.files
+                    api.medias
                         .patch({
                             id: values.id,
                             name: values.name,
@@ -72,7 +73,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 level: ToastLevel.Success
                             });
                             history.push(
-                                `/associations/${association.id}/files/${file.id}/`
+                                `/associations/${association.id}/files/${media.id}/`
                             );
                         })
                         .catch(err =>
@@ -111,7 +112,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             />
                         </PageTitle>
 
-                        {file.tags.map(tag => (
+                        {media.tags.map(tag => (
                             <Tag
                                 key={tag.id}
                                 addon={tag.value}
@@ -129,13 +130,13 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 value={formik.values.description}
                             />
                             <Card.Footer>
-                                Mis en ligne le {file.uploadedOn}
+                                Mis en ligne le {media.uploadedOn}
                             </Card.Footer>
                         </Card>
 
                         <Button
                             className={"btn-danger float-right"}
-                            onClick={() => deleteFile(file)}
+                            onClick={() => deleteFile(media)}
                         >
                             Supprimer
                         </Button>

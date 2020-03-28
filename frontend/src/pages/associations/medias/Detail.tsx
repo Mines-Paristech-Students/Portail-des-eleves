@@ -6,23 +6,24 @@ import { PageTitle } from "../../../utils/common";
 import Card from "react-bootstrap/Card";
 import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
+import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams();
-    const { data: file, isLoading, error } = useQuery(
-        ["file.get", { fileId }],
-        api.files.get
+    const { data: media, isLoading, error } = useQuery<Media, any>(
+        ["media.get", { fileId }],
+        api.medias.get
     );
 
     if (isLoading) return <LoadingAssociation/>;
     if (error) return `Something went wrong: ${error.message}`;
-    if (file) {
+    if (media) {
         let preview;
-        if (file.type.startsWith("image")) {
+        if (media.type.startsWith("image")) {
             preview = (
                 <img
-                    src={file.file}
-                    alt={file.name}
+                    src={media.media}
+                    alt={media.name}
                     className={"mb-2 rounded"}
                 />
             );
@@ -32,7 +33,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         if (association.myRole.mediaPermission) {
             editButton = (
                 <Link
-                    to={`/associations/${association.id}/files/${file.id}/edit`}
+                    to={`/associations/${association.id}/files/${media.id}/edit`}
                     className={"btn btn-primary float-right"}
                 >
                     Editer
@@ -50,10 +51,10 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     >
                         <i className={"fe fe-arrow-left"} />
                     </Link>
-                    {file.name}
+                    {media.name}
                 </PageTitle>
 
-                {file.tags.map(tag => (
+                {media.tags.map(tag => (
                     <Tag
                         key={tag.id}
                         addon={tag.value}
@@ -65,15 +66,15 @@ export const AssociationFilesystemDetail = ({ association }) => {
 
                 <Card>
                     <Card.Body>
-                        {file.description && file.description.length > 0 ? (
-                            file.description
+                        {media.description && media.description.length > 0 ? (
+                            media.description
                         ) : (
                             <em>Aucune description</em>
                         )}
                     </Card.Body>
-                    <Card.Footer>Mis en ligne le {file.uploadedOn}</Card.Footer>
+                    <Card.Footer>Mis en ligne le {media.uploadedOn}</Card.Footer>
                 </Card>
-                <a href={file.file} download className={"btn btn-primary"}>
+                <a href={media.media} download className={"btn btn-primary"}>
                     <i className="fe fe-download" /> Télécharger
                 </a>
             </div>

@@ -4,12 +4,12 @@ import {
     AssociationCreatePage,
     AssociationEditPage
 } from "../pages/associations/page/Edit";
-import { AssociationFilesystemList } from "../pages/associations/files/List";
-import { AssociationFilesystemDetail } from "../pages/associations/files/Detail";
-import { AssociationFilesystemEdit } from "../pages/associations/files/Edit";
-import { AssociationFilesystemUpload } from "../pages/associations/files/Upload";
 import { AssociationMarketplaceHome } from "../pages/associations/marketplace/Home";
 import { AssociationMarketplaceHistory } from "../pages/associations/marketplace/History";
+import { AssociationFilesystemList } from "../pages/associations/medias/List";
+import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
+import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
+import { AssociationFilesystemUpload } from "../pages/associations/medias/Upload";
 
 export const routes = association => [
     {
@@ -74,5 +74,5 @@ export const routes = association => [
         component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association }
-    },
+    }
 ];

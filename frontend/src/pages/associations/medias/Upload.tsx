@@ -11,7 +11,7 @@ import { Media } from "../../../models/associations/media";
 
 // Main page container for file upload
 export const AssociationFilesystemUpload = ({ association, ...props }) => {
-    // Subcomponents that will be used to upload the files
+    // Subcomponents that will be used to upload the medias
     let [uploadingFiles, setUploadingFiles] = useState<{}[]>([]);
 
     // Create and handle drop zone
@@ -79,7 +79,7 @@ const FileUpload = ({ file, association }) => {
     let [uploadedFile, setUploadedFile] = useState<Media | null>(null);
 
     useEffect(() => { // Use effect to submit the file only once
-        const upload = api.files.upload(file, association, progressEvent => {
+        const upload = api.medias.upload(file, association, progressEvent => {
             let { loaded, total } = progressEvent;
             setProgress(Math.round((loaded * 100) / total));
         });
@@ -148,7 +148,7 @@ const FileUploadDone = ({ file }) => {
                 message: "Sauvegarde en cours",
                 level: ToastLevel.Success
             });
-            api.files
+            api.medias
                 .patch({
                     id: values.id,
                     name: values.name,

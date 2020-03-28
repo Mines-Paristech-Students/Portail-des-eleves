@@ -3,6 +3,7 @@ import applyConverters from "axios-case-converter";
 import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
+import { Media } from "../models/associations/media";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -66,17 +67,17 @@ export const api = {
                 apiService.get(`/associations/associations/${associationId}`)
             )
     },
-    files: {
+    medias: {
         list: ({ associationId }) =>
-            unwrap<Page[]>(
+            unwrap<Media[]>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
                 )
             ),
         get: ({ fileId }) =>
-            unwrap<Page>(apiService.get(`/associations/media/${fileId}`)),
+            unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
         patch: file => {
-            return unwrap<Page>(
+            return unwrap<Media>(
                 apiService.patch(`/associations/media/${file.id}/`, file, {
                     headers: { "Content-Type": "multipart/form-data" }
                 })

@@ -10,4 +10,6 @@ export interface Media {
     name: string;
     description: string;
     association: Association;
+    type: string;
+    media: string
 }
