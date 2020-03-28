@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { PageTitle } from "../../../utils/common";
 import Container from "react-bootstrap/Container";
-import { Button, Modal } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { api } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
@@ -10,10 +9,11 @@ import Card from "react-bootstrap/Card";
 import { QuantitySelect } from "./QuantitySelect";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { UserContext } from "../../../services/authService";
+import { Marketplace } from "../../../models/associations/marketplace";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
-    const { data: marketplace, isLoading, error } = useQuery(
+    const { data: marketplace, isLoading, error } = useQuery<Marketplace, any>(
         ["marketplace.get", { marketplaceId }],
         api.marketplace.get
     );

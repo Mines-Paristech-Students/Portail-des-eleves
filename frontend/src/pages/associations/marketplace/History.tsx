@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { api } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
@@ -6,13 +6,13 @@ import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/common";
 import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
+import { Transaction } from "../../../models/associations/marketplace";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
-    const [showBasket, setShowBasket] = useState(false);
     const user = useContext(UserContext);
 
     const marketplaceId = association.id;
-    const { data: transactions, isLoading, error } = useQuery(
+    const { data: transactions, isLoading, error } = useQuery<Transaction[], any>(
         ["marketplace.transactions.get", { marketplaceId, user }],
         api.transactions.get
     );
@@ -34,7 +34,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
                 </div>
                 <PageTitle>Mon historique</PageTitle>
 
-                {transactions.len != 0 ? (
+                {transactions?.length !== 0 ? (
                     <TransactionsTable transactions={transactions} />
                 ) : (
                     <NoTransactionMessage />
@@ -52,7 +52,7 @@ const TransactionsTable = ({ transactions }) => {
             <table className="table card-table table-vcenter">
                 <tbody>
                     {transactions.map(transaction => {
-                        if (transaction.product != null) {
+                        if (transaction.product !== null) {
                             return (
                                 <PurchaseTransactionLine
                                     transaction={transaction}
@@ -85,19 +85,19 @@ const NoTransactionMessage = () => (
 const PurchaseTransactionLine = ({ transaction }) => {
     let status = <p />;
 
-    if (transaction.status == "ORDERED") {
+    if (transaction.status === "ORDERED") {
         status = <span className="tag tag-blue">Commandée</span>;
     }
-    if (transaction.status == "VALIDATED") {
+    if (transaction.status === "VALIDATED") {
         status = <span className="tag tag-lime">Validée</span>;
     }
-    if (transaction.status == "DELIVERED") {
+    if (transaction.status === "DELIVERED") {
         status = <span className="tag tag-green">Délivrée</span>;
     }
-    if (transaction.status == "CANCELLED") {
+    if (transaction.status === "CANCELLED") {
         status = <span className="tag tag-red">Annulée</span>;
     }
-    if (transaction.status == "REFUNED") {
+    if (transaction.status === "REFUNED") {
         status = <span className="tag tag-yellow">Remboursée</span>;
     }
 
@@ -120,9 +120,9 @@ const PurchaseTransactionLine = ({ transaction }) => {
 const RefundTransactionLine = ({ transaction }) => {
     /* If the user put money  on their account */
     let status = <p />;
-    if (transaction.status == "FUNDED") {
+    if (transaction.status === "FUNDED") {
         status = <span className="tag tag-blue">Versé</span>;
-    } else if (transaction.status == "REFUNED") {
+    } else if (transaction.status === "REFUNED") {
         status = <span className="tag tag-yellow">Remboursé</span>;
     }
 

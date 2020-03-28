@@ -16,7 +16,7 @@ export const QuantitySelect = ({ order }) => {
         setQuantity(0);
     };
 
-    if (quantity == 0) {
+    if (quantity === 0) {
         return (
             <Button variant="primary" onClick={increase}>
                 <i className="fe fe-plus" />

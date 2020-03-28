@@ -122,7 +122,7 @@ const FileUpload = ({ file, association }) => {
         );
     }
 
-    if (state == UploadState.Success && uploadedFile) {
+    if (state === UploadState.Success && uploadedFile) {
         return <FileUploadDone file={uploadedFile} />;
     }
 
@@ -202,7 +202,7 @@ const FileUploadDone = ({ file }) => {
         <form onSubmit={formik.handleSubmit}>
             <Card className={"mt-3"}>
                 <Card.Header>
-                    ✅{" "}
+                    <span role={"img"} aria-label={"check"}>✅</span>{" "}
                     <Form.Control
                         id="name"
                         name="name"
