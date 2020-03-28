@@ -2,9 +2,10 @@ import React from "react";
 import { api } from "../../services/apiService";
 import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { useQuery } from "react-query";
+import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
-    const { data: pages, isLoading, error } = useQuery(
+    const { data: pages, isLoading, error } = useQuery<Page[], any>(
         ["pages.list", { associationId: association.id }],
         api.pages.list
     );
