@@ -8,12 +8,13 @@ import { Col } from "react-bootstrap";
 import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
+import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemList = ({ association, ...props }) => {
     const associationId = association.id;
-    const { data, isLoading, error } = useQuery(
-        ["files.get", { associationId }],
-        api.files.list
+    const { data, isLoading, error } = useQuery<Media[], any>(
+        ["medias.get", { associationId }],
+        api.medias.list
     );
     const history = useHistory();
 
