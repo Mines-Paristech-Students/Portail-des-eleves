@@ -5,10 +5,16 @@ import { CardBody, Row, Col, Button } from "reactstrap";
 import { useFormik } from 'formik';
 
 export const Chat = ({ }) => {
+    const validate = values => {
+        let error = {};
+        return error;
+    };
+
     const formik = useFormik({
         initialValues: {
             message: '',
         },
+        validate,
         onSubmit: values => {
             alert(JSON.stringify(values, null, 2));
         },
@@ -40,7 +46,7 @@ export const Chat = ({ }) => {
                     </div>
                     <div style={{width: "50px"}}>
                     <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                        <i className="fe fe-heart"/>
+                        <i className="fe fe-arrow-up"/>
                     </Accordion.Toggle>
                     </div>
                     </div>
@@ -53,9 +59,9 @@ export const Chat = ({ }) => {
                             </div>
                         </Card.Body>
                         <Card.Footer>
-                            <Row style={inputStyle.div} >
+                            <Row style={inputStyle.div}>
                                 <form onSubmit={formik.handleSubmit}>
-                                    <Col>
+                                    <Col className="w-75 b-0" >
                                         <input
                                             className="no-border"
                                             style={inputStyle.input}
@@ -67,7 +73,7 @@ export const Chat = ({ }) => {
                                         />
                                         {/* Here tou could add emoji */}
                                     </Col>
-                                    <Col>
+                                    <Col className="w-15 b-0">
                                         <Button
                                             className="fe fe-arrow-right btn-default active "
                                             style={{ backgroundColor: "white", border: 0, outline: 0 }}
