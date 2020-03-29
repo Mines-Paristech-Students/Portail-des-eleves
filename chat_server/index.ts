@@ -21,7 +21,7 @@ class Message {
  */
 
 const app = express();
-var port = process.env.PORT || 3000
+var port = process.env.PORT || 3000;
 
 export let httpServer = createServer(app);
 export let io = require('socket.io')(httpServer);

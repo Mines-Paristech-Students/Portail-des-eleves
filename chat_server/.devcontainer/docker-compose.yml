@@ -32,8 +32,6 @@ services:
   db:
     image: postgres
     restart: unless-stopped
-    ports: 
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: docker
       POSTGRES_USER: docker
