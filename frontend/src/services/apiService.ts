@@ -3,6 +3,7 @@ import applyConverters from "axios-case-converter";
 import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Media } from "../models/associations/media";
+import { useEffect, useState } from "react";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -47,7 +48,7 @@ export const api = {
         }
     },
     news: {
-        list: ({ associationId }) =>
+        list: (_, associationId) =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=NEWS`
@@ -61,13 +62,15 @@ export const api = {
             unwrap<Association[]>(
                 apiService.get(`/associations/associations/`)
             ),
-        get: ({ associationId }) =>
-            unwrap<Association>(
+        get: (key: string, associationId) => {
+
+            return unwrap<Association>(
                 apiService.get(`/associations/associations/${associationId}`)
             )
+        }
     },
     medias: {
-        list: ({ associationId }) =>
+        list: (associationId) =>
             unwrap<Media[]>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
@@ -100,4 +103,26 @@ export const api = {
             });
         }
     }
+};
+
+export function useDataApi<T>(apiMethod, ...args): {data: T | null, isLoading: boolean, error: Error | null} {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [data, setData] = useState(null);
+    console.log(args);
+    useEffect(() => {
+        const fetchData = async () => {
+            setError(null);
+            setIsLoading(true);
+            try {
+                const result = await apiMethod(...args);
+                setData(result.data);
+            } catch (error) {
+                setError(error);
+            }
+            setIsLoading(false);
+        };
+        fetchData();
+    }, []);
+    return { data, isLoading, error };
 };

@@ -10,19 +10,18 @@ import { api } from "../../services/apiService";
 import { PrivateRoute } from "../../utils/route";
 import { AssociationSidebar } from "./Sidebar";
 import { routes } from "../../routing/associations";
-import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { PageNotFoundError } from "../ErrorPage";
 import { Association } from "../../models/associations/association";
+import { useQuery } from "react-query";
 
 export const AssociationMain = ({ match }) => {
-    // Load the data
     const { associationId } = useParams();
 
     const { data: association, isLoading, error } = useQuery<Association, any>(
-        ["associations.get", { associationId }],
+        ["associations.get", associationId],
         api.associations.get
     );
 
