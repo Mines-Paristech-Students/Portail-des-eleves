@@ -1,15 +1,12 @@
-import { assert } from 'chai';
-
-const io = require("socket.io-client")
-
-// The index we are testing
-import { index } from './index'
-
-// Generating a random-token for testing
 const jwt = require('jsonwebtoken');
+const io = require("socket.io-client");
+const dotenv = require('dotenv');
+import { assert } from 'chai';
+import { index } from './index';
 
-const dotenv = require('dotenv')
-dotenv.config()
+
+// Parsing environnement configuration
+dotenv.config();
 
 const profile = {
   username: '17doe',
@@ -17,7 +14,11 @@ const profile = {
   id: 123
 };
 
-const token = jwt.sign(profile, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 5 });
+const token = jwt.sign(
+    profile,
+    process.env.JWT_SECRET,
+    { expiresIn: 60 * 60 * 5 }
+);
 
 // Tests
 describe("Testing the messages service", () => {
@@ -28,7 +29,7 @@ describe("Testing the messages service", () => {
   before("Launching the server and getting sockets options", function (done) {
     server = index.server;
     socket_options = {
-      url: 'http://localhost:'+server.address().port,
+      url: 'http://localhost:' + server.address().port,
       options: {
         forceNew: true,
         query: 'token=' + token
@@ -42,8 +43,8 @@ describe("Testing the messages service", () => {
     done();
   });
 
-  beforeEach("Creating a client", function(done) {
-    socket = io.connect(socket_options.url, socket_options.options); 
+  beforeEach("Creating a client", function (done) {
+    socket = io.connect(socket_options.url, socket_options.options);
     socket
       .on('connect', () => {
         done();
@@ -53,46 +54,46 @@ describe("Testing the messages service", () => {
       });
   });
 
-  afterEach("Destroying the client", function(done) {
+  afterEach("Destroying the client", function (done) {
     socket.close();
     done();
   });
 
   // The tests 
 
-  it("User can post a message, socket broadcast is correct", function(done) {
+  it("User can post a message, socket broadcast is correct", function (done) {
     let message = "licorne";
 
     // This broadcast checks that the message is correct
-    socket.on('broadcast', function(data) {
+    socket.on('broadcast', function (data) {
       assert.strictEqual(data.username, '17doe', "Inserted username is correct");
       assert.strictEqual(data.message, "licorne", "Inserted message is correct");
       done();
     });
 
     // Emit the message
-    socket.emit("message", {message: message});
+    socket.emit("message", { message: message });
   });
 
-  it("User can retrieve a message from the database", function(done) {
+  it("User can retrieve a message from the database", function (done) {
     let message = "licorne";
     let limit = 1;
     let date = new Date('2100-12-17T03:24:00');
-    
+
     // Check that the answer is correct
-    socket.on("fetch_response", function(rows) {
+    socket.on("fetch_response", function (rows) {
       assert.strictEqual(rows.length, limit, "Correct number of rows")
-      let row = rows[rows.length-1]
+      let row = rows[rows.length - 1]
       assert.strictEqual(row.username, '17doe', "Last message username is correct");
       assert.strictEqual(row.message, "licorne", "Last message content is correct");
       done();
     });
-    
-    socket.on('broadcast', function(data) {
-      socket.emit("fetch", {from: date, limit: 1});
+
+    socket.on('broadcast', function (data) {
+      socket.emit("fetch", { from: date, limit: 1 });
     });
 
     // Emit the message and fetch last
-    socket.emit("message", {message: message});
+    socket.emit("message", { message: message });
   });
 });

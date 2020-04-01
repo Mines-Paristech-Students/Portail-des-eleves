@@ -23,7 +23,7 @@ pool.on('error', (err, client) => {
 
 // Creating the table if it does not exists
 pool.query(create_schema_query)
-  .then(res => {
+  .then(() => {
     console.info("✅ create schema sucessfully");
   })
   .catch(err => {
@@ -45,4 +45,4 @@ var get = async function get(from: Date, limit: number) {
 module.exports = {
   add: add,
   get: get
-}
+};
