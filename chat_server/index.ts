@@ -5,6 +5,8 @@ import { createServer} from 'http';
 const dotenv = require('dotenv')
 dotenv.config()
 
+console.log(process.env.DBPORT);
+
 const db = require('./db');
 
 
