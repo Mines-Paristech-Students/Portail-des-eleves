@@ -13,6 +13,7 @@
         "react-query": "1.1.1",
         "react-router-dom": "latest",
         "react-scripts": "^3.3.0",
+        "socket.io-client": "^2.3.0",
         "tabler-ui": "0.0.34",
         "yup": "^0.27.0"
     },
