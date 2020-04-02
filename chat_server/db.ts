@@ -17,25 +17,25 @@ const get_query = "SELECT * FROM messages WHERE posted_on <= $1 ORDER BY posted_
 
 // If a client raises an error
 pool.on('error', (err, client) => {
-  console.error('Unexpected error on idle client', err)
+  console.error('Unexpected error on idle client', err);
   process.exit(-1)
 })
 
 // Creating the table if it does not exists
 pool.query(create_schema_query)
   .then(() => {
-    console.info("✅ create schema sucessfully");
+    console.info("Database schema available ✅");
   })
   .catch(err => {
-    console.error("❌ failed to create schema, ", err);
+    console.error("❌ Failed to create schema ", err);
   });
 
 // Query functions
-var add = async function add(username: string, message: string) {
+let add = async function add(username: string, message: string) {
   await pool.query(add_query, [username, message])
 };
 
-var get = async function get(from: Date, limit: number) {
+let get = async function get(from: Date, limit: number) {
   // Converting date to UTC for mysql
   var sql_from = (new Date(from)).toISOString()
   return await pool.query(get_query, [sql_from, limit])

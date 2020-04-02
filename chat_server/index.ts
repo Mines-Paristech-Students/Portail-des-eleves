@@ -4,7 +4,6 @@ import { createServer } from 'http';
 
 const dotenv = require('dotenv');
 dotenv.config();
-
 const db = require('./db');
 
 class Message {
@@ -20,13 +19,13 @@ class Message {
  */
 
 const app = express();
-var port = process.env.PORT || 3001;
+let port = process.env.PORT || 3001;
 
 export let httpServer = createServer(app);
 export let io = require('socket.io')(httpServer);
 
 // Authentification using handshake
-var jwtOption = {
+let jwtOption = {
 	"secret": process.env.JWT_SECRET,
 	// "timeout": 1000,
 	"handshake": true
@@ -40,6 +39,8 @@ io.sockets
 		console.log('New user connected !');
 
 		socket.on("message", async (request: any) => {
+			console.log("new message : ");
+			console.log(request.message);
 			if (request.message === undefined) {
 				return
 			}

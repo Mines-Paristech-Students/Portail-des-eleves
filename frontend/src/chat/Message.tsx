@@ -1,22 +1,36 @@
 import React from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export interface MessageData {
     username: string;
     message: string;
+    time: Date;
 }
 
-export const Message = (me: boolean, message: MessageData) => {
-    let div_class = "w-100 p-3 d-flex flex-row";
-    div_class += me ? "-reverse pl-5" : " pr-5";
+export const Message = (index, me: boolean, message: MessageData) => {
+    let div_class = "d-flex flex-row";
+    div_class += me ? "-reverse pl-5 text-right" : " pr-5";
+    let bg_class = me ? "bg-primary" : "bg-secondary";
 
     return (
         <div className={div_class}>
-            <span className="avatar rounded-circle">
-                {message.username}
-            </span>
-            <p className="mr-1 ml-1 border rounded-sm">
-                {message.message}
+            <p className="float-left">
+                {/* todo: load user avatar */}
+                <span className="avatar" style={{ backgroundImage: "url()" }} />
             </p>
+            <OverlayTrigger
+                placement={"top"}
+                key={`time-message-${index}`}
+                overlay={
+                    <Tooltip id={`time-message-${index}`}>
+                        {message.time.getHours()} : {('0' + message.time.getMinutes()).slice(-2)} {/* format 3 to 03 */}
+                    </Tooltip>
+                }
+            >
+                <p className={"py-1 px-2 mx-1 rounded text-white " + bg_class}>
+                    {message.message}
+                </p>
+            </OverlayTrigger>
         </div>
-    )
+    );
 };
