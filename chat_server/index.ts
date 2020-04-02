@@ -53,7 +53,7 @@ io.sockets
 			await db.add(model.username, model.message);
 
 			// The message is sended to everyone (including sender)
-			io.sockets.emit('broadcast', model);
+			io.sockets.emit('broadcast', {username: model.username, message: model.message, posted_on: model.posted_on.toISOString()});
 		});
 
 		socket.on("fetch", async (request: any) => {

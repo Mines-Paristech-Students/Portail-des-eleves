@@ -6,24 +6,24 @@ import { ToastContext, ToastLevel } from "../utils/Toast";
 
 export const Chat = () => {
     const [messages, setMessages] = useState<MessageData[]>([
-        { username: "17bocquet", time: new Date(), message: "un" },
-        { username: "15plop", time: new Date(), message: "deux" },
-        { username: "17bocquet", time: new Date(), message: "trois" },
-        { username: "15plop", time: new Date(), message: "quatre" },
-        { username: "17bocquet", time: new Date(), message: "cinq" },
+        { username: "17bocquet", posted_on: new Date().toISOString() , message: "un" },
+        { username: "15plop", posted_on: new Date().toISOString(), message: "deux" },
+        { username: "17bocquet", posted_on: new Date().toISOString(), message: "trois" },
+        { username: "15plop", posted_on: new Date().toISOString(), message: "quatre" },
+        { username: "17bocquet", posted_on: new Date().toISOString(), message: "cinq" },
         {
             username: "17bocquet",
-            time: new Date(),
+            posted_on: new Date().toISOString(),
             message:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet velit eget tortor convallis maximus. Cras imperdiet ligula ut dolor dignissim, in sagittis ligula ultrices. Suspendisse suscipit, nulla nec elementum ultricies, neque sem malesuada lorem, vitae iaculis ex eros sit amet lacus. Vestibulum tellus orci, vehicula vel consequat vitae, interdum eget justo. Morbi aliquet feugiat pellentesque. Praesent placerat euismod ipsum, auctor efficitur diam commodo non. Aliquam non mi nisl. Suspendisse metus odio, sollicitudin porttitor tempor ac, gravida sed dolor. Sed eu massa vitae quam sagittis rutrum vel sed nibh. Nunc ultricies mi sit amet sapien iaculis, porttitor egestas eros accumsan."
         },
         {
             username: "15plop",
-            time: new Date(),
+            posted_on: new Date().toISOString(),
             message:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet velit eget tortor convallis maximus. Cras imperdiet ligula ut dolor dignissim, in sagittis ligula ultrices. Suspendisse suscipit, nulla nec elementum ultricies, neque sem malesuada lorem, vitae iaculis ex eros sit amet lacus. Vestibulum tellus orci, vehicula vel consequat vitae, interdum eget justo. Morbi aliquet feugiat pellentesque. Praesent placerat euismod ipsum, auctor efficitur diam commodo non. Aliquam non mi nisl. Suspendisse metus odio, sollicitudin porttitor tempor ac, gravida sed dolor. Sed eu massa vitae quam sagittis rutrum vel sed nibh. Nunc ultricies mi sit amet sapien iaculis, porttitor egestas eros accumsan."
         },
-        { username: "17bocquet", time: new Date(), message: "sept" }
+        { username: "17bocquet", posted_on: new Date().toISOString(), message: "sept" }
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -42,8 +42,9 @@ export const Chat = () => {
     };
 
     socket.on("broadcast", function(data: MessageData) {
+        let time: Date = new Date(data.posted_on);
         newToast({
-            message: data.message,
+            message: time.getHours().toString(),
             level: ToastLevel.Error
         });
         setMessages([...messages, data]);
@@ -76,11 +77,11 @@ export const Chat = () => {
                             id="list-message"
                             style={{paddingTop: "-50px"}}
                         >
-                            {messages.map((message: MessageData, index) => {
+                            {messages.map((data: MessageData, index) => {
                                 return Message(
                                     index,
-                                    username === message.username,
-                                    message
+                                    username === data.username,
+                                    data
                                 );
                             })}
                         </div>
