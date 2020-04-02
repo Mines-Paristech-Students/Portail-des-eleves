@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAccordionToggle } from 'react-bootstrap';
 import Card from "react-bootstrap/Card";
-import { Button } from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
 
 export function ChatToggle({ children, eventKey }) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,3 +27,32 @@ export function ChatToggle({ children, eventKey }) {
         </Card.Header>
     )
 }
+
+export function ChatFooter({ formik }) {
+    return (
+        <Card.Footer>
+            <Row className="border rounded-pill w-100">
+                <form onSubmit={formik.handleSubmit}>
+                    <Col xs={8}>
+                        <input
+                            className="no-border w-100 b-0"
+                            style={{ outline: 0 }}
+                            id="message"
+                            name="message"
+                            type="text"
+                            onChange={formik.handleChange}
+                            value={formik.values.message}
+                        />
+                        {/* Here tou could add emoji */}
+                    </Col>
+                    <Col xs={4}>
+                        <Button
+                            className="fe fe-arrow-right btn-default active"
+                            style={{ backgroundColor: "white", border: 0, outline: 0 }}
+                        />
+                    </Col>
+                </form>
+            </Row>
+        </Card.Footer>
+    )
+};
