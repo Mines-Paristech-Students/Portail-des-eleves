@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 import { Row, Col, Button } from "reactstrap";
@@ -7,6 +7,7 @@ import { Message, MessageData } from "./Message";
 import { socket } from "./Socket";
 import { ToastContext, ToastLevel } from "../utils/Toast";
 import { ChatToggle, ChatFooter } from "./utils";
+import { AccordionCollapse } from "react-bootstrap";
 
 export const Chat = ({ }) => {
     const [messages, setMessages] = useState<Array<MessageData>>([]);
@@ -55,7 +56,7 @@ export const Chat = ({ }) => {
                 </ChatToggle>
                 <Accordion.Collapse eventKey="0">
                     <Card.Body style={{ height: "200px", padding: 0 }}>
-                        <div className="overflow-auto h-100">
+                        <div className="overflow-auto h-100" id="list-message">
                             {
                                 messages.map(function (message: MessageData) {
                                     return Message(
@@ -66,6 +67,9 @@ export const Chat = ({ }) => {
                             }
                         </div>
                     </Card.Body>
+                </Accordion.Collapse>
+
+                <Accordion.Collapse eventKey="0">
                     <ChatFooter formik={formik} />
                 </Accordion.Collapse>
             </Card>

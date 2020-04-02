@@ -35,8 +35,7 @@ export function ChatFooter({ formik }) {
                 <form onSubmit={formik.handleSubmit}>
                     <Col xs={8}>
                         <input
-                            className="no-border w-100 b-0"
-                            style={{ outline: 0 }}
+                            style={{ outline: "0", border: "0"}}
                             id="message"
                             name="message"
                             type="text"

@@ -28,7 +28,7 @@ export let io = require('socket.io')(httpServer);
 // Authentification using handshake
 var jwtOption = {
 	"secret": process.env.JWT_SECRET,
-	"timeout": 1000,
+	// "timeout": 1000,
 	"handshake": true
 };
 
@@ -36,6 +36,8 @@ io.use(socketio_jwt.authorize(jwtOption));
 
 io.sockets
 	.on('connection', (socket) => {
+
+		console.log('New user connected !');
 
 		socket.on("message", async (request: any) => {
 			if (request.message === undefined) {
