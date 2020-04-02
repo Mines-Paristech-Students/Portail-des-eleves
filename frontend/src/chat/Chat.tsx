@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { Message, MessageData } from "./Message";
 import { socket } from "./Socket";
 import { ToastContext, ToastLevel } from "../utils/Toast";
+import { ChatToggle } from "./utils";
 
 export const Chat = ({}) => {
     const [messages, setMessages] = useState<Array<MessageData>>([]);
@@ -62,18 +63,9 @@ export const Chat = ({}) => {
     return (
         <Accordion>
             <Card className="mb-0 mr-3 ml-auto w-50 position-fixed fixed-bottom">
-                <Card.Header className="bg-primary text-white p-0">
-                    <div className="d-flex flex-row justify-content-between w-100">
-                    <div className="m-auto">
-                        {"General chat"}
-                    </div>
-                    <div style={{width: "50px"}}>
-                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                        <i className="fe fe-x"/>
-                    </Accordion.Toggle>
-                    </div>
-                    </div>
-                </Card.Header>
+                <ChatToggle eventKey="0">
+                    <p>Message chat</p>
+                </ChatToggle>
                 <Accordion.Collapse eventKey="0">
                     <div>
                         <Card.Body style={{ height: "200px", padding: 0 }}>
