@@ -1,14 +1,38 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
-import { CardBody, Row, Col, Button } from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 import { useFormik } from 'formik';
-import { Message } from "./Message"
+import { Message, MessageData } from "./Message";
+import { socket } from "./Socket";
+import { ToastContext, ToastLevel } from "../utils/Toast";
 
-export const Chat = ({ }) => {
-    const validate = values => {
-        let error = {};
-        return error;
+export const Chat = ({}) => {
+    const [messages, setMessages] = useState<Array<MessageData>>([]);
+
+    const newToast = useContext(ToastContext);
+
+    socket.on('broadcast', function(data: MessageData) {
+        newToast({
+                message: data.message,
+                level: ToastLevel.Error
+            });
+        setMessages(
+            [...messages, data]
+        )
+    });
+
+    const username: string = '15plop';
+
+    const validate = (values) => {
+        if (values.message == "") {
+            newToast({
+                message: "Message vide",
+                level: ToastLevel.Error
+            });
+            return {message: "Message cannot be empty"};
+        }
+        return {};
     };
 
     const formik = useFormik({
@@ -16,8 +40,9 @@ export const Chat = ({ }) => {
             message: '',
         },
         validate,
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: (values) => {
+            socket.emit('message', {message: values.message});
+            values.message = "";
         },
     });
 
@@ -32,6 +57,7 @@ export const Chat = ({ }) => {
             overflow: 'scroll',
         }
     }
+
 
     return (
         <Accordion>
@@ -52,8 +78,14 @@ export const Chat = ({ }) => {
                     <div>
                         <Card.Body style={{ height: "200px", padding: 0 }}>
                         <div className="overflow-auto h-100">
-                            <Message me={true} sender={"plop"} content={"plop"}/>
-                            <Message me={false} sender={"plop"} content={"plop"}/>
+                            {
+                                messages.map(function(message: MessageData){
+                                    return Message(
+                                        username == message.username,
+                                        message,
+                                    )
+                                })
+                            }
                         </div>
                         </Card.Body>
                         <Card.Footer>

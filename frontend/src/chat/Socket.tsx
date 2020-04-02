@@ -20,4 +20,4 @@ const socket_options = {
   }
 };
 
-const socket = io.connect(socket_options.url, socket_options.options);
+export const socket = io.connect(socket_options.url, socket_options.options);
