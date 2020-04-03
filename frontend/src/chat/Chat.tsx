@@ -73,7 +73,7 @@ export const Chat = () => {
                 "mb-0 mr-md-3 ml-auto col-md-3 position-fixed fixed-bottom"
             }
         >
-            <Card.Header className={"border-0 pb-0"} style={{marginBottom: "-50px", backgroundColor: "white", zIndex:3, opacity: 0.9}}>
+            <Card.Header className={"border-0 pb-0"} style={{ backgroundColor: "white", zIndex:3, opacity: 0.9}}>
                 <Card.Title style={{opacity: 0.9}}>Chat</Card.Title>
                 <div className="card-options">
                     <i
@@ -87,11 +87,11 @@ export const Chat = () => {
             </Card.Header>
             {!isCollapsed ? (
                 <>
-                    <Card.Body style={{ height: "300px" }}>
+                    <Card.Body style={{ height: "300px", marginTop: "-50px" }}>
                         <div
                             className="overflow-auto h-100 mt-2"
                             id="list-message"
-                            style={{paddingTop: "-50px"}}
+                            style={{paddingTop:  "50px"}}
                         >
                             {messages.map((data: MessageData, index) => {
                                 return Message(
