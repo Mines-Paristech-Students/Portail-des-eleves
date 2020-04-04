@@ -5,6 +5,19 @@ import { apiService } from "./apiService";
 export class AuthService {
     isAuthenticated = false;
 
+    getToken(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            apiService
+                .get<string>('auth/jwt')
+                .then((reponse: AxiosResponse) => {
+                    resolve(reponse.data.jwtToken);
+                })
+                .catch((error: AxiosError) => {
+                    reject(error);
+                })
+        });
+    }
+
     checkAuth(): Promise<User | null> {
         return new Promise((resolve, reject) => {
             apiService

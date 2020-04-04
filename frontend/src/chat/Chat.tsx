@@ -1,27 +1,27 @@
 import React, { useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { Message, MessageData } from "./Message";
-import { socket } from "./Socket";
 import { ToastContext, ToastLevel } from "../utils/Toast";
+import { AuthService } from "../services/authService";
+const io = require("socket.io-client");
 
-// Given a cookie key `name`, returns the value of
-// the cookie or `null`, if the key is not found.
-function getCookie(name: string): string | null {
-	const nameLenPlus = (name.length + 1);
-	return document.cookie
-		.split(';')
-		.map(c => c.trim())
-		.filter(cookie => {
-			return cookie.substring(0, nameLenPlus) === `${name}=`;
-		})
-		.map(cookie => {
-			return decodeURIComponent(cookie.substring(nameLenPlus));
-		})[0] || null;
-}
+const chat_server_url = "http://localhost:3001";
 
 export const Chat = () => {
+    // Getting the socket
+    let auth = new AuthService();
+    const token =
+        auth.getToken()
+            .then((token: string) => {
+                return token;
+            });
+    const socket = io.connect(chat_server_url, {
+        forceNew: true,
+        query: "token=" + token
+    });
+
     const [messages, setMessages] = useState<MessageData[]>([
-        { username: "17bocquet", posted_on: new Date().toISOString() , message: "un" },
+        { username: "17bocquet", posted_on: new Date().toISOString(), message: "un" },
         { username: "15plop", posted_on: new Date().toISOString(), message: "deux" },
         { username: "17bocquet", posted_on: new Date().toISOString(), message: "trois" },
         { username: "15plop", posted_on: new Date().toISOString(), message: "quatre" },
@@ -56,12 +56,8 @@ export const Chat = () => {
         }
     };
 
-    socket.on("broadcast", function(data: MessageData) {
+    socket.on("broadcast", function (data: MessageData) {
         let time: Date = new Date(data.posted_on);
-        newToast({
-            message: time.getHours().toString(),
-            level: ToastLevel.Error
-        });
         setMessages([...messages, data]);
     });
 
@@ -73,16 +69,15 @@ export const Chat = () => {
                 "mb-0 mr-md-3 ml-auto col-md-3 position-fixed fixed-bottom"
             }
         >
-            <Card.Header className={"border-0 pb-0"} style={{ backgroundColor: "white", zIndex:3, opacity: 0.9}}>
-                <Card.Title style={{opacity: 0.9}}>Chat</Card.Title>
+            <Card.Header className={"border-0 pb-0"} style={{ backgroundColor: "white", zIndex: 3, opacity: 0.9 }}>
+                <Card.Title style={{ opacity: 0.9 }}>Chat</Card.Title>
                 <div className="card-options">
                     <i
                         className={`fe ${
                             isCollapsed ? "fe-chevron-up" : "fe-chevron-down"
-                        }`}
+                            }`}
                         onClick={() => setIsCollapsed(!isCollapsed)}
                     />
-                    {console.log(getCookie("jwt_access"))}
                 </div>
             </Card.Header>
             {!isCollapsed ? (
@@ -91,7 +86,7 @@ export const Chat = () => {
                         <div
                             className="overflow-auto h-100 mt-2"
                             id="list-message"
-                            style={{paddingTop:  "50px"}}
+                            style={{ paddingTop: "50px" }}
                         >
                             {messages.map((data: MessageData, index) => {
                                 return Message(
