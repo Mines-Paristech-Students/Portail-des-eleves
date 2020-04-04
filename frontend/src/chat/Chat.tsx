@@ -8,18 +8,6 @@ const io = require("socket.io-client");
 const chat_server_url = "http://localhost:3001";
 
 export const Chat = () => {
-    // Getting the socket
-    let auth = new AuthService();
-    const token =
-        auth.getToken()
-            .then((token: string) => {
-                return token;
-            });
-    const socket = io.connect(chat_server_url, {
-        forceNew: true,
-        query: "token=" + token
-    });
-
     const [messages, setMessages] = useState<MessageData[]>([
         { username: "17bocquet", posted_on: new Date().toISOString(), message: "un" },
         { username: "15plop", posted_on: new Date().toISOString(), message: "deux" },
@@ -44,6 +32,18 @@ export const Chat = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const newToast = useContext(ToastContext);
 
+    // Getting the socket
+    let auth = new AuthService();
+    const token =
+        auth.getToken()
+            .then((token: string) => {
+                return token;
+            });
+    const socket = io.connect(chat_server_url, {
+        forceNew: true,
+        query: "token=" + token
+    });
+
     let handleKeyPress = event => {
         if (
             event.key === "Enter" &&
@@ -57,7 +57,6 @@ export const Chat = () => {
     };
 
     socket.on("broadcast", function (data: MessageData) {
-        let time: Date = new Date(data.posted_on);
         setMessages([...messages, data]);
     });
 
