@@ -2,8 +2,7 @@ import React, { useContext } from "react";
 import { Page, PageType } from "../../../models/associations/page";
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
-import { useQuery } from "react-query";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
@@ -23,16 +22,17 @@ export const AssociationCreatePage = ({ association, ...props }) => {
 };
 
 export const AssociationEditPage = ({ association, ...props }) => {
-    const { pageId } = useParams();
+    const { pageId } = useParams<{pageId: string}>();
 
-    const { data: page, isLoading, error } = useQuery<Page, any>(
-        ["page.get", { pageId }],
-        api.pages.get
+    const { data: page, status, error } = useBetterQuery<Page>(
+        "page.get",
+        api.pages.get,
+        pageId
     );
 
-    if (isLoading) return "Chargement en cours...";
-    if (error) return `Une erreur est apparue: ${error.message}`;
-    if (page)
+    if (status === "loading") return "Chargement en cours...";
+    else if (status === "error") return `Une erreur est apparue: ${error}`;
+    else if (page)
         return <EditPage {...props} page={page} association={association} />;
 
     return null;

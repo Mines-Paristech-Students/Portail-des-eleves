@@ -33,7 +33,7 @@ export const Tag = ({
     let tagElement = (
         <div className={className}>
             {tag}
-            {addon.length != 0 ? (
+            {addon.length !== 0 ? (
                 <span className="tag-addon">{addon}</span>
             ) : null}
         </div>
@@ -44,8 +44,8 @@ export const Tag = ({
             <OverlayTrigger
                 key={type + addon + tooltip + tag}
                 placement={'bottom'}
-                overlay={ props =>
-                    <Tooltip {...props}>
+                overlay={
+                    <Tooltip id={type + addon + tooltip + tag}>
                         {tooltip}
                     </Tooltip>
                 }
