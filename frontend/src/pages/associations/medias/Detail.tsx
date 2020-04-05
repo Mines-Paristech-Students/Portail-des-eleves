@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { PageTitle } from "../../../utils/common";
 import Card from "react-bootstrap/Card";
 import { Tag } from "../../../utils/Tag";
@@ -9,15 +8,14 @@ import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemDetail = ({ association }) => {
-    const { fileId } = useParams();
-    const { data: media, isLoading, error } = useQuery<Media, any>(
-        ["media.get", { fileId }],
-        api.medias.get
+    const { fileId } = useParams<{fileId: string}>();
+    const { data: media, status, error } = useBetterQuery<Media>(
+        "media.get", api.medias.get, fileId
     );
 
-    if (isLoading) return <LoadingAssociation/>;
-    if (error) return `Something went wrong: ${error.message}`;
-    if (media) {
+    if (status === 'loading') return <LoadingAssociation/>;
+    else if (status === 'error') return `Something went wrong: ${error}`;
+    else if (media) {
         let preview;
         if (media.type.startsWith("image")) {
             preview = (

@@ -1,7 +1,6 @@
 import React from "react";
-import { useQuery } from "react-query";
 import { Link, useHistory } from "react-router-dom";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
@@ -10,11 +9,12 @@ import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 
-export const AssociationFilesystemList = ({ association, ...props }) => {
+export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
-    const { data, isLoading, error } = useQuery<Media[], any>(
-        ["medias.get", { associationId }],
-        api.medias.list
+    const { data, status, error } = useBetterQuery<Media[]>(
+        "medias.list",
+        api.medias.list,
+        associationId
     );
     const history = useHistory();
 
@@ -31,9 +31,9 @@ export const AssociationFilesystemList = ({ association, ...props }) => {
         );
     }
 
-    if (isLoading) return <LoadingAssociation/>;
-    if (error) return `Something went wrong: ${error.message}`;
-    if (data) {
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (data) {
         return (
             <>
                 {addButton}

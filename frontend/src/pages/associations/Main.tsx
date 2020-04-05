@@ -6,7 +6,7 @@ import {
     useParams
 } from "react-router-dom";
 
-import { api } from "../../services/apiService";
+import { api, useBetterQuery } from "../../services/apiService";
 import { PrivateRoute } from "../../utils/route";
 import { AssociationSidebar } from "./Sidebar";
 import { routes } from "../../routing/associations";
@@ -15,14 +15,14 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { PageNotFoundError } from "../ErrorPage";
 import { Association } from "../../models/associations/association";
-import { useQuery } from "react-query";
 
 export const AssociationMain = ({ match }) => {
-    const { associationId } = useParams();
+    let { associationId } = useParams<{ associationId: string }>();
 
-    const { data: association, isLoading, error } = useQuery<Association, any>(
-        ["associations.get", associationId],
-        api.associations.get
+    const { data: association, error, status } = useBetterQuery<Association>(
+        "association.get",
+        api.associations.get,
+        associationId
     );
 
     // Generate the routes
@@ -39,9 +39,9 @@ export const AssociationMain = ({ match }) => {
     );
 
     // Render
-    if (isLoading) return "Chargement en cours...";
-    if (error) return `Une erreur est apparue: ${error.message}`;
-    if (association) {
+    if (status === "loading") return "Chargement en cours...";
+    if (status === "error") return `Une erreur est apparue: ${error}`;
+    if (status === "success") {
         return (
             <Container>
                 <Row>

@@ -3,7 +3,7 @@ import applyConverters from "axios-case-converter";
 import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Media } from "../models/associations/media";
-import { useEffect, useState } from "react";
+import { QueryResult, useQuery } from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -22,13 +22,13 @@ function unwrap<T>(promise) {
 
 export const api = {
     pages: {
-        list: ({ associationId }) =>
+        list: associationId =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=STATIC`
                 )
             ),
-        get: ({ pageId }) =>
+        get: pageId =>
             unwrap<Page>(apiService.get(`/associations/pages/${pageId}`)),
         save: page => {
             if (!page.id) {
@@ -48,13 +48,13 @@ export const api = {
         }
     },
     news: {
-        list: (_, associationId) =>
+        list: associationId =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=NEWS`
                 )
             ),
-        get: ({ newsId }) =>
+        get: newsId =>
             unwrap<Page>(apiService.get(`/associations/pages/${newsId}`))
     },
     associations: {
@@ -62,21 +62,19 @@ export const api = {
             unwrap<Association[]>(
                 apiService.get(`/associations/associations/`)
             ),
-        get: (key: string, associationId) => {
-
-            return unwrap<Association>(
+        get: associationId =>
+            unwrap<Association>(
                 apiService.get(`/associations/associations/${associationId}`)
             )
-        }
     },
     medias: {
-        list: (associationId) =>
+        list: associationId =>
             unwrap<Media[]>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
                 )
             ),
-        get: ({ fileId }) =>
+        get: fileId =>
             unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
         patch: file => {
             return unwrap<Media>(
@@ -105,24 +103,12 @@ export const api = {
     }
 };
 
-export function useDataApi<T>(apiMethod, ...args): {data: T | null, isLoading: boolean, error: Error | null} {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [data, setData] = useState(null);
-    console.log(args);
-    useEffect(() => {
-        const fetchData = async () => {
-            setError(null);
-            setIsLoading(true);
-            try {
-                const result = await apiMethod(...args);
-                setData(result.data);
-            } catch (error) {
-                setError(error);
-            }
-            setIsLoading(false);
-        };
-        fetchData();
-    }, []);
-    return { data, isLoading, error };
-};
+export function useBetterQuery<T>(
+    key: string,
+    fetchFunction: any,
+    ...params: string[]
+): QueryResult<T> {
+    return useQuery<T, string, any>(key, params, (key, ...params) =>
+        fetchFunction(...params)
+    );
+}

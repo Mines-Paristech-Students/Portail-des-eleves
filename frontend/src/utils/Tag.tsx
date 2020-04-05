@@ -33,7 +33,7 @@ export const Tag = ({
     let tagElement = (
         <div className={className}>
             {tag}
-            {addon.length != 0 ? (
+            {addon.length !== 0 ? (
                 <span className="tag-addon">{addon}</span>
             ) : null}
         </div>
