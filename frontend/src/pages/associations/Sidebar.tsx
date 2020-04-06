@@ -1,45 +1,39 @@
 import React from "react";
-import { api } from "../../services/apiService";
+import { api, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarItem } from "../../utils/Sidebar";
-import { useQuery } from "react-query";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
-    const { data: pages, isLoading, error } = useQuery<Page[], any>(
-        ["pages.list", { associationId: association.id }],
-        api.pages.list
+    const { data: pages, status, error } = useBetterQuery<Page[]>(
+        "pages.list",
+        api.pages.list,
+        association.id
     );
 
-    if (isLoading) {
+    if (status === "loading") {
         return <p>Chargement...</p>;
-    }
-
-    if (error) {
+    } else if (error) {
         return <p>Erreur lors du chargement</p>;
-    }
-
-    if (!pages) {
-        return null;
-    }
-
-    return (
-        <Sidebar title={association.name}>
-            <ListPagesItem association={association} pages={pages} />
-            <AddPageItem association={association} />
-            <SidebarItem
-                icon={"file"}
-                to={`/associations/${association.id}/files`}
-            >
-                Fichiers
-            </SidebarItem>
-            <SidebarItem
+    } else if (association) {
+        return (
+            <Sidebar title={association.name}>
+                <ListPagesItem association={association} pages={pages} />
+                <AddPageItem association={association} />
+                <SidebarItem
+                    icon={"file"}
+                    to={`/associations/${association.id}/files`}
+                >
+                    Fichiers
+                </SidebarItem>
+                <SidebarItem
                 icon={"shopping-cart"}
                 to={`/associations/${association.id}/marketplace`}
             >
                 Magasin
             </SidebarItem>
-        </Sidebar>
-    );
+            </Sidebar>
+        );
+    }
 };
 
 const ListPagesItem = ({ pages, association }) =>

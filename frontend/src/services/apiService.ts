@@ -4,6 +4,7 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
+import { QueryResult, useQuery } from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -22,13 +23,13 @@ function unwrap<T>(promise) {
 
 export const api = {
     pages: {
-        list: ({ associationId }) =>
+        list: associationId =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=STATIC`
                 )
             ),
-        get: ({ pageId }) =>
+        get: pageId =>
             unwrap<Page>(apiService.get(`/associations/pages/${pageId}`)),
         save: page => {
             if (!page.id) {
@@ -48,13 +49,13 @@ export const api = {
         }
     },
     news: {
-        list: ({ associationId }) =>
+        list: associationId =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=NEWS`
                 )
             ),
-        get: ({ newsId }) =>
+        get: newsId =>
             unwrap<Page>(apiService.get(`/associations/pages/${newsId}`))
     },
     associations: {
@@ -62,19 +63,19 @@ export const api = {
             unwrap<Association[]>(
                 apiService.get(`/associations/associations/`)
             ),
-        get: ({ associationId }) =>
+        get: associationId =>
             unwrap<Association>(
                 apiService.get(`/associations/associations/${associationId}`)
             )
     },
     medias: {
-        list: ({ associationId }) =>
+        list: associationId =>
             unwrap<Media[]>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
                 )
             ),
-        get: ({ fileId }) =>
+        get: fileId =>
             unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
         patch: file => {
             return unwrap<Media>(
@@ -132,3 +133,13 @@ export const api = {
             )
     }
 };
+
+export function useBetterQuery<T>(
+    key: string,
+    fetchFunction: any,
+    ...params: string[]
+): QueryResult<T> {
+    return useQuery<T, string, any>(key, params, (key, ...params) =>
+        fetchFunction(...params)
+    );
+}
