@@ -13,7 +13,7 @@ export const apiService = applyConverters(
     })
 );
 
-function unwrap<T>(promise) {
+export function unwrap<T>(promise) {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
@@ -99,5 +99,12 @@ export const api = {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }
+    },
+    jwt: {
+        getToken: () => {
+                return apiService
+                .get("/auth/jwt")
+                .then((response: AxiosResponse) => { return response.data.jwtToken; })
+        },
     }
 };

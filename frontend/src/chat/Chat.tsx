@@ -2,10 +2,9 @@ import React, { useState, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import { Message, MessageData } from "./Message";
 import { ToastContext, ToastLevel } from "../utils/Toast";
-import { AuthService } from "../services/authService";
+import { api } from "../services/apiService";
+import { useQuery } from "react-query";
 const io = require("socket.io-client");
-
-const chat_server_url = "http://localhost:3001";
 
 export const Chat = () => {
     const [messages, setMessages] = useState<MessageData[]>([
@@ -28,17 +27,22 @@ export const Chat = () => {
         },
         { username: "17bocquet", posted_on: new Date().toISOString(), message: "sept" }
     ]);
+    const chat_server_url = "http://localhost:3001";
+    const { data: token, isLoading, error } = useQuery<string, any>(
+        ["jwt.get", {}],
+        api.jwt.getToken
+    );
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
     const newToast = useContext(ToastContext);
 
+    if (isLoading || error) {
+        return (
+            <p>{"jjsj"}</p>
+        )
+    };
+
     // Getting the socket
-    let auth = new AuthService();
-    const token =
-        auth.getToken()
-            .then((token: string) => {
-                return token;
-            });
     const socket = io.connect(chat_server_url, {
         forceNew: true,
         query: "token=" + token
