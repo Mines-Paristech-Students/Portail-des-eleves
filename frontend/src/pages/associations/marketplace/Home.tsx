@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { PageTitle } from "../../../utils/common";
 import Container from "react-bootstrap/Container";
-import { useQuery } from "react-query";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
@@ -13,14 +12,13 @@ import { Marketplace } from "../../../models/associations/marketplace";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
-    const { data: marketplace, isLoading, error } = useQuery<Marketplace, any>(
-        ["marketplace.get", { marketplaceId }],
-        api.marketplace.get
+    const { data: marketplace, status, error } = useBetterQuery<Marketplace>(
+        "marketplace.get", api.marketplace.get, marketplaceId
     );
 
-    if (isLoading) return <LoadingAssociation />;
-    if (error) return `Something went wrong: ${error.message}`;
-    if (marketplace) {
+    if (status === 'loading') return <LoadingAssociation />;
+    else if (status === 'error') return `Something went wrong: ${error}`;
+    else if (status === 'success' && marketplace) {
         return (
             <Container>
                 <div className={"float-right"}>
@@ -52,7 +50,7 @@ const AssociationMarketplaceProduct = ({ product }) => {
     let makeOrder = quantity => {
         api.transactions
             .create(product, quantity, user)
-            .then(r => {
+            .then(_ => {
                 newToast({
                     message: "La commande a bien été passée",
                     level: ToastLevel.Success

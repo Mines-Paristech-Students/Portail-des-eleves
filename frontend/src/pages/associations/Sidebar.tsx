@@ -34,6 +34,8 @@ export const AssociationSidebar = ({ association }) => {
             </Sidebar>
         );
     }
+
+    return null;
 };
 
 const ListPagesItem = ({ pages, association }) =>

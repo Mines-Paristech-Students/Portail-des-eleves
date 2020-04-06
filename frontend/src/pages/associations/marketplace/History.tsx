@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { useQuery } from "react-query";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/common";
@@ -12,14 +11,16 @@ export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
 
     const marketplaceId = association.id;
-    const { data: transactions, isLoading, error } = useQuery<Transaction[], any>(
-        ["marketplace.transactions.get", { marketplaceId, user }],
-        api.transactions.get
+    const { data: transactions, status, error } = useBetterQuery<Transaction[]>(
+        "marketplace.transactions.get",
+        api.transactions.get,
+        marketplaceId,
+        user
     );
 
-    if (isLoading) return <LoadingAssociation />;
-    if (error) return `Something went wrong: ${error.message}`;
-    if (transactions) {
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "success" && transactions) {
         return (
             <Container>
                 <div className={"float-right"}>
@@ -34,7 +35,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
                 </div>
                 <PageTitle>Mon historique</PageTitle>
 
-                {transactions?.length !== 0 ? (
+                {transactions.length !== 0 ? (
                     <TransactionsTable transactions={transactions} />
                 ) : (
                     <NoTransactionMessage />
@@ -51,20 +52,18 @@ const TransactionsTable = ({ transactions }) => {
         <Card>
             <table className="table card-table table-vcenter">
                 <tbody>
-                    {transactions.map(transaction => {
-                        if (transaction.product !== null) {
-                            return (
-                                <PurchaseTransactionLine
-                                    transaction={transaction}
-                                />
-                            );
-                        } else {
-                            return (
-                                <RefundTransactionLine
-                                    transaction={transaction}
-                                />
-                            );
-                        }
+                    {transactions.map((transaction, index) => {
+                        return transaction.product !== null ? (
+                            <PurchaseTransactionLine
+                                key={index}
+                                transaction={transaction}
+                            />
+                        ) : (
+                            <RefundTransactionLine
+                                key={index}
+                                transaction={transaction}
+                            />
+                        );
                     })}
                 </tbody>
             </table>

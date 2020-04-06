@@ -14,6 +14,7 @@ export const QuantitySelect = ({ order }) => {
     let onOrder = () => {
         order(quantity);
         setQuantity(0);
+
     };
 
     if (quantity === 0) {
@@ -46,7 +47,11 @@ export const QuantitySelect = ({ order }) => {
                 </span>
 
                 <Button variant="success" onClick={onOrder}>
-                    Passer la commande
+                    <span
+                        className="fe fe-shopping-cart"
+                        aria-label={"Passer la commande"}
+                        title={"Passer la commande"}
+                    />
                 </Button>
             </div>
         </>

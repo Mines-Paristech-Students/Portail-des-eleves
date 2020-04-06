@@ -104,14 +104,14 @@ export const api = {
     },
 
     marketplace: {
-        get: ({ marketplaceId }) =>
+        get: marketplaceId =>
             unwrap<Marketplace>(
                 apiService.get(`/associations/marketplace/${marketplaceId}`)
             )
     },
 
     products: {
-        list: ({ associationId }) =>
+        list: associationId =>
             unwrap<Page[]>(
                 apiService.get(
                     `/associations/products/?association=${associationId}`
@@ -127,7 +127,7 @@ export const api = {
                 buyer: buyer.id
             }),
 
-        get: ({ marketplaceId, user }) =>
+        get: (marketplaceId, user) =>
             unwrap<Transaction[]>(
                 apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
             )
@@ -137,7 +137,7 @@ export const api = {
 export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
-    ...params: string[]
+    ...params: any[]
 ): QueryResult<T> {
     return useQuery<T, string, any>(key, params, (key, ...params) =>
         fetchFunction(...params)
