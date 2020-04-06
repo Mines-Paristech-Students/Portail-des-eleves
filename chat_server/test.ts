@@ -13,10 +13,10 @@ const token = process.env.JWT_TOKEN_TEST;
 const token_user = process.env.JWT_TOKEN_TEST_USER || '17bocquet';
 
 describe("Testing Django public key integration", () => {
-	it("Check dotenv configutation", () => {
-		assert.notEqual(token, undefined);
-		assert.notEqual(public_key, undefined);
-	})
+  it("Check dotenv configutation", () => {
+    assert.notEqual(token, undefined);
+    assert.notEqual(public_key, undefined);
+  })
 
   it("Can decode token", function () {
     var decoded = jwt.verify(token, public_key, { algorithms: [jwt_algo] });
