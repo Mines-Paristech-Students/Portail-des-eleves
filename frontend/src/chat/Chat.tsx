@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import { Message, MessageData } from "./Message";
 import { ToastContext, ToastLevel } from "../utils/Toast";
@@ -43,11 +43,11 @@ export const Chat = () => {
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [socket, setSocket] = useState<any>(undefined);
+    let socket : any = undefined;
 
-    if (socket == undefined) {
-        setSocket(createSocket());
-    };
+    useEffect(() => {
+        socket = createSocket()},
+    []);
 
     if (socket == undefined) {
         return (
