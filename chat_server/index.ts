@@ -47,12 +47,8 @@ io.sockets
 		console.log('New user connected !');
 
 		socket.on("message", async (request: any) => {
-			console.log("Received new message : %s", request.message);
-			if (request.message === undefined) {
-				return
-			}
-
-			if (request.message == "") {
+			console.log("Received new message : %s", request);
+			if (request.message === undefined || request.message === "") {
 				return
 			}
 

@@ -1,62 +1,79 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Card from "react-bootstrap/Card";
 import { Message, MessageData } from "./Message";
-import { ToastContext, ToastLevel } from "../utils/Toast";
 import { api } from "../services/apiService";
-import { useQuery } from "react-query";
-const io = require("socket.io-client");
+import socketIOClient from "socket.io-client";
 
 const chat_server_url = "http://localhost:3001";
 
 function createSocket() {
-    api.jwt.getToken()
+    return api.jwt
+        .getToken()
         .then((token: string) => {
             return io.connect(chat_server_url, {
                 forceNew: true,
                 query: "token=" + token
             });
-        }).catch(() => {
+        })
+        .catch(() => {
             return undefined;
         });
 }
 
 export const Chat = () => {
-    const [messages, setMessages] = useState<MessageData[]>([
-        { username: "17bocquet", posted_on: new Date().toISOString(), message: "un" },
-        { username: "15plop", posted_on: new Date().toISOString(), message: "deux" },
-        { username: "17bocquet", posted_on: new Date().toISOString(), message: "trois" },
-        { username: "15plop", posted_on: new Date().toISOString(), message: "quatre" },
-        { username: "17bocquet", posted_on: new Date().toISOString(), message: "cinq" },
-        {
-            username: "17bocquet",
-            posted_on: new Date().toISOString(),
-            message:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet velit eget tortor convallis maximus. Cras imperdiet ligula ut dolor dignissim, in sagittis ligula ultrices. Suspendisse suscipit, nulla nec elementum ultricies, neque sem malesuada lorem, vitae iaculis ex eros sit amet lacus. Vestibulum tellus orci, vehicula vel consequat vitae, interdum eget justo. Morbi aliquet feugiat pellentesque. Praesent placerat euismod ipsum, auctor efficitur diam commodo non. Aliquam non mi nisl. Suspendisse metus odio, sollicitudin porttitor tempor ac, gravida sed dolor. Sed eu massa vitae quam sagittis rutrum vel sed nibh. Nunc ultricies mi sit amet sapien iaculis, porttitor egestas eros accumsan."
-        },
-        {
-            username: "15plop",
-            posted_on: new Date().toISOString(),
-            message:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet velit eget tortor convallis maximus. Cras imperdiet ligula ut dolor dignissim, in sagittis ligula ultrices. Suspendisse suscipit, nulla nec elementum ultricies, neque sem malesuada lorem, vitae iaculis ex eros sit amet lacus. Vestibulum tellus orci, vehicula vel consequat vitae, interdum eget justo. Morbi aliquet feugiat pellentesque. Praesent placerat euismod ipsum, auctor efficitur diam commodo non. Aliquam non mi nisl. Suspendisse metus odio, sollicitudin porttitor tempor ac, gravida sed dolor. Sed eu massa vitae quam sagittis rutrum vel sed nibh. Nunc ultricies mi sit amet sapien iaculis, porttitor egestas eros accumsan."
-        },
-        { username: "17bocquet", posted_on: new Date().toISOString(), message: "sept" }
-    ]);
+    const [messages, setMessages] = useState<MessageData[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
-    let socket : any = undefined;
+    const [socket, setSocket] = useState<any>(null);
+
+    const lastElementRef = useRef(null);
+    const scrollToLastMessage = () => {
+        // @ts-ignore
+        lastElementRef.current.parentNode.scrollTo(
+            0,
+            // @ts-ignore
+            lastElementRef.current.offsetTop
+        );
+    };
+
+    const username: string = "17bocquet";
 
     useEffect(() => {
-        socket = createSocket()},
-    []);
+        (async () => {
+            let token = await api.jwt.getToken();
+            let socket = socketIOClient(chat_server_url, {
+                forceNew: true,
+                query: "token=" + token
+            });
 
-    if (socket == undefined) {
-        return (
-            <></>
-        )
-    };
+            setSocket(socket);
+
+            let messages = socket.emit("fetch", {
+                from: new Date(),
+                limit: 20
+            });
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("broadcast", data => {
+                setMessages([...messages, data]);
+                scrollToLastMessage();
+            });
+
+            socket.on("fetch_response", data => {
+                let all_messages = [...messages, ...data];
+                all_messages.sort((a, b) => a.date - b.date);
+                setMessages(all_messages);
+                scrollToLastMessage();
+            });
+        }
+    }, [socket, messages]);
 
     let handleKeyPress = event => {
         if (
+            socket &&
             event.key === "Enter" &&
             !event.shiftKey &&
             newMessage.trim().length > 0
@@ -67,25 +84,22 @@ export const Chat = () => {
         }
     };
 
-    socket.on("broadcast", function (data: MessageData) {
-        setMessages([data, ...messages]);
-    });
-
-    const username: string = "15plop";
-
     return (
         <Card
             className={
                 "mb-0 mr-md-3 ml-auto col-md-3 position-fixed fixed-bottom"
             }
         >
-            <Card.Header className={"border-0 pb-0"} style={{ backgroundColor: "white", zIndex: 3, opacity: 0.9 }}>
+            <Card.Header
+                className={"border-0 pb-0"}
+                style={{ backgroundColor: "white", zIndex: 3, opacity: 0.9 }}
+            >
                 <Card.Title style={{ opacity: 0.9 }}>Chat</Card.Title>
                 <div className="card-options">
                     <i
                         className={`fe ${
                             isCollapsed ? "fe-chevron-up" : "fe-chevron-down"
-                            }`}
+                        }`}
                         onClick={() => setIsCollapsed(!isCollapsed)}
                     />
                 </div>
@@ -98,13 +112,16 @@ export const Chat = () => {
                             id="list-message"
                             style={{ paddingTop: "50px" }}
                         >
-                            {messages.map((data: MessageData, index) => {
-                                return Message(
-                                    index,
-                                    username === data.username,
-                                    data
-                                );
-                            })}
+                            {messages.map((data: MessageData, index) => (
+                                <Message
+                                    id={index}
+                                    key={index}
+                                    me={username === data.username}
+                                    message={data}
+                                />
+                            ))}
+
+                            <div ref={lastElementRef} />
                         </div>
                     </Card.Body>
                     <Card.Footer className={"border-0 mb-2 mt-4 py-0 px-0"}>

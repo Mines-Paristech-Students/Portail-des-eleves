@@ -7,7 +7,15 @@ export interface MessageData {
     posted_on: string;
 }
 
-export const Message = (index, me: boolean, message: MessageData) => {
+export const Message = ({
+    id,
+    me,
+    message
+}: {
+    id: number;
+    me: boolean;
+    message: MessageData;
+}) => {
     let div_class = "d-flex flex-row";
     div_class += me ? "-reverse pl-5 text-right" : " pr-5";
     let bg_class = me ? "bg-primary" : "bg-secondary";
@@ -16,16 +24,31 @@ export const Message = (index, me: boolean, message: MessageData) => {
 
     return (
         <div className={div_class}>
-            <p className="float-left">
-                {/* todo: load user avatar */}
-                <span className="avatar" style={{ backgroundImage: "url()" }} />
-            </p>
             <OverlayTrigger
                 placement={"top"}
-                key={`time-message-${index}`}
+                key={`avatar-message-${id}`}
                 overlay={
-                    <Tooltip id={`time-message-${index}`}>
-                        { time.getHours()} : {('0' + time.getMinutes()).slice(-2)} {/* format 3 to 03 */}
+                    <Tooltip id={`avatar-message-${id}`}>
+                        {message.username}
+                    </Tooltip>
+                }
+            >
+                <p className="float-left">
+                    {/* todo: load user avatar */}
+                    <span
+                        className="avatar"
+                        style={{ backgroundImage: "url()" }}
+                    />
+                </p>
+            </OverlayTrigger>
+            <OverlayTrigger
+                placement={"top"}
+                key={`time-message-${id}`}
+                overlay={
+                    <Tooltip id={`time-message-${id}`}>
+                        {time.getHours()} :{" "}
+                        {("0" + time.getMinutes()).slice(-2)}{" "}
+                        {/* format 3 to 03 */}
                     </Tooltip>
                 }
             >
