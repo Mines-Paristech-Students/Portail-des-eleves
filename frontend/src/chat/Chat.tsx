@@ -6,27 +6,16 @@ import socketIOClient from "socket.io-client";
 
 const chat_server_url = "http://localhost:3001";
 
-function createSocket() {
-    return api.jwt
-        .getToken()
-        .then((token: string) => {
-            return io.connect(chat_server_url, {
-                forceNew: true,
-                query: "token=" + token
-            });
-        })
-        .catch(() => {
-            return undefined;
-        });
-}
-
 export const Chat = () => {
     const [messages, setMessages] = useState<MessageData[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [socket, setSocket] = useState<any>(null);
+    const [date, setDate] = useState<string>((new Date).toISOString());
+    const [fetching, setFetching] = useState<boolean>(false);
 
     const lastElementRef = useRef(null);
+
     const scrollToLastMessage = () => {
         // @ts-ignore
         lastElementRef.current.parentNode.scrollTo(
@@ -38,6 +27,23 @@ export const Chat = () => {
 
     const username: string = "17bocquet";
 
+    const fetchMessages = async () => {
+        if (socket && (!fetching)) {
+            setFetching(true);
+            socket.emit("fetch", {
+                from: new Date(date),
+                limit: 20
+            });
+        }
+    }
+
+    const scrollFetch = async () => {
+        // @ts-ignore
+        if (lastElementRef.current.parentNode.scrollTop <= 150) {
+            fetchMessages();
+        }
+    };
+
     useEffect(() => {
         (async () => {
             let token = await api.jwt.getToken();
@@ -48,8 +54,9 @@ export const Chat = () => {
 
             setSocket(socket);
 
-            let messages = socket.emit("fetch", {
-                from: new Date(),
+            setFetching(true);
+            socket.emit("fetch", {
+                from: date,
                 limit: 20
             });
         })();
@@ -62,16 +69,18 @@ export const Chat = () => {
                 scrollToLastMessage();
             });
 
-            socket.on("fetch_response", data => {
+            // No sort needed -> Messages arrive in order
+            socket.on("fetch_response", async (data: MessageData[]) => {
                 let all_messages = [...messages, ...data];
-                all_messages.sort((a, b) => a.date - b.date);
+                setDate(all_messages[all_messages.length - 1].posted_on);
+                setFetching(false);
                 setMessages(all_messages);
                 scrollToLastMessage();
             });
         }
     }, [socket, messages]);
 
-    let handleKeyPress = event => {
+    let handleKeyPress = (event) => {
         if (
             socket &&
             event.key === "Enter" &&
@@ -99,7 +108,7 @@ export const Chat = () => {
                     <i
                         className={`fe ${
                             isCollapsed ? "fe-chevron-up" : "fe-chevron-down"
-                        }`}
+                            }`}
                         onClick={() => setIsCollapsed(!isCollapsed)}
                     />
                 </div>
@@ -111,6 +120,7 @@ export const Chat = () => {
                             className="overflow-auto h-100 mt-2"
                             id="list-message"
                             style={{ paddingTop: "50px" }}
+                            onScroll={scrollFetch}
                         >
                             {messages.map((data: MessageData, index) => (
                                 <Message
