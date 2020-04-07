@@ -27,18 +27,20 @@ export const Chat = () => {
         },
         { username: "17bocquet", posted_on: new Date().toISOString(), message: "sept" }
     ]);
-    const chat_server_url = "http://localhost:3001";
-    const { data: token, isLoading, error } = useQuery<string, any>(
-        ["jwt.get", {}],
-        api.jwt.getToken
-    );
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
     const newToast = useContext(ToastContext);
 
+    const chat_server_url = "http://localhost:3001";
+    const { data: token, isLoading, error } = useQuery<string, any>(
+        ["jwt.get", {}],
+        api.jwt.getToken,
+        {refetchOnWindowFocus: false}
+    );
+
     if (isLoading || error) {
         return (
-            <p>{"jjsj"}</p>
+            <></>
         )
     };
 
