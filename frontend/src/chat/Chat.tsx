@@ -13,25 +13,27 @@ export const Chat = () => {
     const [socket, setSocket] = useState<any>(null);
     const [date, setDate] = useState<string>((new Date).toISOString());
     const [fetching, setFetching] = useState<boolean>(false);
+    const [indexScroll, setIndexScroll] = useState<Number>(0);
 
-    const lastElementRef = useRef(null);
+    const scrollRef = useRef(null);
 
     const scrollToLastMessage = () => {
         // @ts-ignore
-        lastElementRef.current.parentNode.scrollTo(
+        scrollRef.current.scrollTo(
             0,
             // @ts-ignore
-            lastElementRef.current.offsetTop
+            scrollRef.current.children[indexScroll].offsetTop
         );
     };
 
     const username: string = "17bocquet";
 
-    const fetchMessages = async () => {
+    const fetchMessages = () => {
         if (socket && (!fetching)) {
             setFetching(true);
+            console.log("Date of fetch %s", date);
             socket.emit("fetch", {
-                from: new Date(date),
+                from: date,
                 limit: 20
             });
         }
@@ -39,7 +41,7 @@ export const Chat = () => {
 
     const scrollFetch = async () => {
         // @ts-ignore
-        if (lastElementRef.current.parentNode.scrollTop <= 150) {
+        if (scrollRef.current.scrollTop <= 150) {
             fetchMessages();
         }
     };
@@ -65,6 +67,7 @@ export const Chat = () => {
     useEffect(() => {
         if (socket) {
             socket.on("broadcast", data => {
+                setIndexScroll(messages.length);
                 setMessages([...messages, data]);
                 scrollToLastMessage();
             });
@@ -72,7 +75,13 @@ export const Chat = () => {
             // No sort needed -> Messages arrive in order
             socket.on("fetch_response", async (data: MessageData[]) => {
                 let all_messages = [...messages, ...data];
-                setDate(all_messages[all_messages.length - 1].posted_on);
+                console.log(data[0].posted_on)
+                all_messages.sort(function (a, b) {
+                    // @ts-ignore
+                    return new Date(a.posted_on) - new Date(b.posted_on);
+                });
+                setDate(all_messages[0].posted_on);
+                setIndexScroll(data.length-1);
                 setFetching(false);
                 setMessages(all_messages);
                 scrollToLastMessage();
@@ -121,6 +130,7 @@ export const Chat = () => {
                             id="list-message"
                             style={{ paddingTop: "50px" }}
                             onScroll={scrollFetch}
+                            ref={scrollRef}
                         >
                             {messages.map((data: MessageData, index) => (
                                 <Message
@@ -130,8 +140,6 @@ export const Chat = () => {
                                     message={data}
                                 />
                             ))}
-
-                            <div ref={lastElementRef} />
                         </div>
                     </Card.Body>
                     <Card.Footer className={"border-0 mb-2 mt-4 py-0 px-0"}>
