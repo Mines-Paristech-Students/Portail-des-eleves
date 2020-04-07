@@ -20,14 +20,6 @@ function hashCode(s) {
     return Math.abs(h);
 }
 
-function renderTooltip(props) {
-    return (
-        <Tooltip id="button-tooltip" {...props}>
-            Simple tooltip
-        </Tooltip>
-    );
-}
-
 export const Tag = ({
     type = "",
     tag = "",
@@ -41,7 +33,7 @@ export const Tag = ({
     let tagElement = (
         <div className={className}>
             {tag}
-            {addon.length != 0 ? (
+            {addon.length !== 0 ? (
                 <span className="tag-addon">{addon}</span>
             ) : null}
         </div>
@@ -52,7 +44,11 @@ export const Tag = ({
             <OverlayTrigger
                 key={type + addon + tooltip + tag}
                 placement={'bottom'}
-                overlay={renderTooltip}
+                overlay={
+                    <Tooltip id={type + addon + tooltip + tag}>
+                        {tooltip}
+                    </Tooltip>
+                }
             >
                 {tagElement}
             </OverlayTrigger>
