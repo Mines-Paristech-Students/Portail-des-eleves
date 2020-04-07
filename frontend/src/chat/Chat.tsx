@@ -6,6 +6,20 @@ import { api } from "../services/apiService";
 import { useQuery } from "react-query";
 const io = require("socket.io-client");
 
+const chat_server_url = "http://localhost:3001";
+
+function createSocket() {
+    api.jwt.getToken()
+        .then((token: string) => {
+            return io.connect(chat_server_url, {
+                forceNew: true,
+                query: "token=" + token
+            });
+        }).catch(() => {
+            return undefined;
+        });
+}
+
 export const Chat = () => {
     const [messages, setMessages] = useState<MessageData[]>([
         { username: "17bocquet", posted_on: new Date().toISOString(), message: "un" },
@@ -29,26 +43,17 @@ export const Chat = () => {
     ]);
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const newToast = useContext(ToastContext);
+    const [socket, setSocket] = useState<any>(undefined);
 
-    const chat_server_url = "http://localhost:3001";
-    const { data: token, isLoading, error } = useQuery<string, any>(
-        ["jwt.get", {}],
-        api.jwt.getToken,
-        {refetchOnWindowFocus: false}
-    );
+    if (socket == undefined) {
+        setSocket(createSocket());
+    };
 
-    if (isLoading || error) {
+    if (socket == undefined) {
         return (
             <></>
         )
     };
-
-    // Getting the socket
-    const socket = io.connect(chat_server_url, {
-        forceNew: true,
-        query: "token=" + token
-    });
 
     let handleKeyPress = event => {
         if (
@@ -63,7 +68,7 @@ export const Chat = () => {
     };
 
     socket.on("broadcast", function (data: MessageData) {
-        setMessages([...messages, data]);
+        setMessages([data, ...messages]);
     });
 
     const username: string = "15plop";
