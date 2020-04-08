@@ -4,10 +4,10 @@ import {
     AssociationCreatePage,
     AssociationEditPage
 } from "../pages/associations/page/Edit";
-import { AssociationFilesystemList } from "../pages/associations/files/List";
-import { AssociationFilesystemDetail } from "../pages/associations/files/Detail";
-import { AssociationFilesystemEdit } from "../pages/associations/files/Edit";
-import { AssociationFilesystemUpload } from "../pages/associations/files/Upload";
+import { AssociationFilesystemList } from "../pages/associations/medias/List";
+import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
+import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
+import { AssociationFilesystemUpload } from "../pages/associations/medias/Upload";
 
 // To be replaced
 import { AssociationEventList } from "../pages/associations/events/List";

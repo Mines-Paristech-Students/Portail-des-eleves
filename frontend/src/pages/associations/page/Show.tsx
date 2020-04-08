@@ -4,10 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import { PageTitle } from "../../../utils/common";
 import { useQuery } from "react-query";
 import { LoadingAssociation } from "../Loading";
+import { Page } from "../../../models/associations/page";
 
 export const AssociationShowPage = ({ association }) => {
     const { pageId } = useParams();
-    const { data, isLoading, error } = useQuery(
+    const { data, isLoading, error } = useQuery<Page, any>(
         ["page.get", {pageId}],
         api.pages.get
     );

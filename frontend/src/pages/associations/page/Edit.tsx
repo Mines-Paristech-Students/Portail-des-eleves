@@ -25,7 +25,7 @@ export const AssociationCreatePage = ({ association, ...props }) => {
 export const AssociationEditPage = ({ association, ...props }) => {
     const { pageId } = useParams();
 
-    const { data: page, isLoading, error } = useQuery(
+    const { data: page, isLoading, error } = useQuery<Page, any>(
         ["page.get", { pageId }],
         api.pages.get
     );

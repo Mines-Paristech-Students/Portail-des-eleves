@@ -6,9 +6,10 @@ import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
+import { Association } from "../../models/associations/association";
 
 export const AssociationList = () => {
-    const { data: associations, isLoading, error } = useQuery(
+    const { data: associations, isLoading, error } = useQuery<Association[],  any>(
         "associations.list",
         api.associations.list
     );
