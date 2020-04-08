@@ -52,7 +52,7 @@ const EditEvent = ({ event, association, ...props }) => {
         onSubmit: values => {
             if (values.startsAt > values.endsAt) {
                 newToast({
-                    message: "La date de début est supérieure à la date de fin!",
+                    message: "La date de début doit être avant la date de fin",
                     level: ToastLevel.Error
                 });
                 return;
