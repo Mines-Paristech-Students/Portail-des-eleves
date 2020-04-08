@@ -11,7 +11,7 @@ import MomentInput from 'react-moment-input';
 import moment from 'moment';
 
 
-export const AssociationCreateEvent = ({ association, ...props }) => {
+export const AssociationEventCreate = ({ association, ...props }) => {
     const event: Event = {
         association: association.id,
         name: "",
@@ -26,7 +26,7 @@ export const AssociationCreateEvent = ({ association, ...props }) => {
 };
 
 
-export const AssociationEditEvent = ({ association, ...props }) => {
+export const AssociationEventEdit = ({ association, ...props }) => {
     const { eventId } = useParams();
 
     const { data: event, isLoading, error } = useQuery(

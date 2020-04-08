@@ -10,7 +10,7 @@ import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
 import moment from "moment";
 
-export const AssociationListEvent = ({ association, ...props }) => {
+export const AssociationEventList = ({ association, ...props }) => {
     
     const associationId = association.id;
     const { data, isLoading, error } = useQuery(
