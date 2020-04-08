@@ -166,7 +166,7 @@ const EditEvent = ({ event, association, ...props }) => {
                     name="place"
                     type="text"
                     className=""
-                    placeholder="Localisation"
+                    placeholder="Lieu"
                     onChange={formik.handleChange}
                     value={formik.values.place}
                 />
