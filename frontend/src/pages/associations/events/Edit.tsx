@@ -66,7 +66,7 @@ const EditEvent = ({ event, association, ...props }) => {
                 .save(values)
                 .then(res => {
                     newToast({
-                        message: "Evenement sauvegardée !",
+                        message: "Evènement sauvegardé !",
                         level: ToastLevel.Success
                     });
 
