@@ -85,7 +85,7 @@ const EditEvent = ({ event, association, ...props }) => {
 
     const deleteEvent = () => {
         // eslint-disable-next-line no-restricted-globals
-        if (confirm("Supprimer l'evenement ? Cette action est irréversible")) {
+        if (confirm("Supprimer l'évènement ? Cette action est irréversible")) {
             api.events
                 .delete(event)
                 .then(res => {
