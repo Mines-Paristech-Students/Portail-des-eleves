@@ -1,19 +1,19 @@
 import React from "react";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { Link, useParams } from "react-router-dom";
 import { PageTitle } from "../../../utils/common";
-import { useQuery } from "react-query";
+import { LoadingAssociation } from "../Loading";
+import { Page } from "../../../models/associations/page";
 
 export const AssociationShowPage = ({ association }) => {
-    const { pageId } = useParams();
-    const { data, isLoading, error } = useQuery(
-        ["page.get", {pageId}],
-        api.pages.get
+    const { pageId } = useParams<{pageId: string}>();
+    const { data, status, error } = useBetterQuery<Page>(
+        "page.get", api.pages.get, pageId
     );
 
-    if (isLoading) return "Loading association...";
-    if (error) return `Something went wrong: ${error.message}`;
-    if (data) {
+    if (status === 'loading') return <LoadingAssociation/>;
+    else if (status === 'error') return `Something went wrong: ${error}`;
+    else if (data) {
         return (
             <div>
                 <PageTitle>{data.title}</PageTitle>

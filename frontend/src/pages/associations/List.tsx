@@ -1,24 +1,24 @@
 import React from "react";
 import { PageTitle } from "../../utils/common";
-import { api } from "../../services/apiService";
+import { api, useBetterQuery } from "../../services/apiService";
 import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
+import { Association } from "../../models/associations/association";
 
 export const AssociationList = () => {
-    const { data: associations, isLoading, error } = useQuery(
+    const { data: associations, error, status } = useBetterQuery<Association[]>(
         "associations.list",
         api.associations.list
     );
 
-    if (isLoading) return "Loading...";
-    if (error) {
-        return `Something went wrong: ${error.message}`;
-    }
-    if (associations) {
+    if (status === "loading") return <p>Chargement des associations</p>;
+    else if (status === "error") {
+        return `Something went wrong: ${error}`;
+    } else if (status === "success" && associations) {
         return (
-            <>
+            <Container>
                 <PageTitle>Associations</PageTitle>
                 <Row>
                     {associations.map(association => (
@@ -31,7 +31,7 @@ export const AssociationList = () => {
                         </Card>
                     ))}
                 </Row>
-            </>
+            </Container>
         );
     }
 

@@ -13,9 +13,7 @@ class MediaViewSet(viewsets.ModelViewSet):
     serializer_class = MediaSerializer
 
     filterset_fields = ("association",)
-
     parser_classes = (MultiPartParser,)
-
     permission_classes = (CanEditMedia,)
 
     def create(self, request, *args, **kwargs):

@@ -1,6 +1,11 @@
 import React from "react";
 import { PageTitle } from "../utils/common";
+import Container from "react-bootstrap/Container";
 
 export const Homepage = () => {
-    return <PageTitle>Homepage</PageTitle>;
+    return (
+        <Container>
+            <PageTitle>Homepage</PageTitle>
+        </Container>
+    );
 };

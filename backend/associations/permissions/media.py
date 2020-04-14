@@ -11,7 +11,7 @@ def _get_role_for_user(user, association):
 
 
 class CanEditMedia(BasePermission):
-    message = "Editing files is not allowed."
+    message = "Editing medias is not allowed."
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
@@ -28,7 +28,7 @@ class CanEditMedia(BasePermission):
             if not role:
                 return False
 
-            return role.files
+            return role.media
 
         return True
 
@@ -46,4 +46,4 @@ class CanEditMedia(BasePermission):
         if not role or association is None:
             return False
 
-        return role.files
+        return role.media
