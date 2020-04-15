@@ -12,20 +12,7 @@ ALL_USERS = ["17simple", "18simple", "17admin"]
 
 
 class BaseWidgetsTestCase(WeakAuthenticationBaseTestCase):
-    # TODO: maybe fixtures are a bad approach because of pk collisions and it would be better to dynamically generate
-    # these.
-    # Or, create a "giant" fixture which would contain everything without collisions.
-    fixtures = [
-        "test_authentication.yaml",
-        "test_marketplace.yaml",
-        "test_birthdays.json",
-        "test_library.yaml",
-        "test_polls.yaml",
-        "test_repartition_api.yaml",
-        #        "test_event.yaml",
-        "test_page.yaml",
-        "test_election.yaml",
-    ]
+    fixtures = ["test_widgets.yaml"]
 
     def endpoint_list_widgets(self):
         return f"/subscriptions/"
