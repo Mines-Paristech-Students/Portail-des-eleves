@@ -4,6 +4,8 @@ import {
     AssociationCreatePage,
     AssociationEditPage
 } from "../pages/associations/page/Edit";
+import { AssociationMarketplaceHome } from "../pages/associations/marketplace/Home";
+import { AssociationMarketplaceHistory } from "../pages/associations/marketplace/History";
 import { AssociationFilesystemList } from "../pages/associations/medias/List";
 import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
@@ -56,6 +58,20 @@ export const routes = association => [
     {
         path: `/files/:fileId/edit`,
         component: AssociationFilesystemEdit,
+        exact: true,
+        props: { association: association }
+    },
+
+    {
+        path: `/marketplace`,
+        component: AssociationMarketplaceHome,
+        exact: true,
+        props: { association: association }
+    },
+
+    {
+        path: `/marketplace/history`,
+        component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association }
     }

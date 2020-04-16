@@ -2,6 +2,7 @@ import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
 import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
+import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
 
@@ -100,13 +101,43 @@ export const api = {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }
+    },
+
+    marketplace: {
+        get: marketplaceId =>
+            unwrap<Marketplace>(
+                apiService.get(`/associations/marketplace/${marketplaceId}`)
+            )
+    },
+
+    products: {
+        list: associationId =>
+            unwrap<Page[]>(
+                apiService.get(
+                    `/associations/products/?association=${associationId}`
+                )
+            )
+    },
+
+    transactions: {
+        create: (product, quantity, buyer) =>
+            apiService.post("/associations/transactions/", {
+                product: product.id,
+                quantity: quantity,
+                buyer: buyer.id
+            }),
+
+        get: (marketplaceId, user) =>
+            unwrap<Transaction[]>(
+                apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
+            )
     }
 };
 
 export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
-    ...params: string[]
+    ...params: any[]
 ): QueryResult<T> {
     return useQuery<T, string, any>(key, params, (key, ...params) =>
         fetchFunction(...params)
