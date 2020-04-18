@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../logo-mines.png";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -8,8 +8,51 @@ import Container from "react-bootstrap/Container";
 import "./navbar.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { authService } from "../App";
+
+/**
+ * The links displayed in the navbar. It's an array of objects having three
+ * properties each:
+ *   * `icon`: the Bootstrap icon to display besides the navbar item. It's the
+ *   part after `fe-` in the class name of the icon.
+ *   * `url`: the url of the link.
+ *   * `label`: the text to display.
+ */
+const links = [
+    { icon: "home", url: "/", label: "Accueil" },
+    { icon: "zap", url: "/associations", label: "Associations" },
+    { icon: "check-square", url: "/sondages", label: "Sondages" }
+];
+
+const linksComponent = links.map(({ icon, url, label }) => {
+    let className = "";
+    if (icon) {
+        className = "fe fe-" + icon;
+    }
+
+    return (
+        <li className="nav-item" key={url}>
+            <Link to={url} className="nav-link">
+                <i className={className} />
+                {label}
+            </Link>
+        </li>
+    );
+});
 
 function Navbar() {
+    const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
+
+    const logout = () => {
+        authService.signOut().then(() => {
+            setRedirectToLogin(true);
+        });
+    };
+
+    if (redirectToLogin) {
+        return <Redirect to={"/login"} />;
+    }
+
     return (
         <>
             <div className="header p-1">
@@ -59,7 +102,7 @@ function Navbar() {
                                 Paramètres
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item>
+                            <NavDropdown.Item onClick={logout}>
                                 <i className="dropdown-icon fe fe-log-out" />{" "}
                                 Déconnexion
                             </NavDropdown.Item>
@@ -72,18 +115,7 @@ function Navbar() {
                     <Row className="align-items-center">
                         <Col>
                             <ul className="nav nav-tabs border-0 flex-column flex-lg-row">
-                                <li className="nav-item">
-                                    <Link to="/" className="nav-link">
-                                        <i className="fe fe-home" />
-                                        Accueil
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to="/sondages/" className="nav-link">
-                                        <i className="fe fe-check-square" />
-                                        Sondages
-                                    </Link>
-                                </li>
+                                {linksComponent}
                             </ul>
                         </Col>
                     </Row>
