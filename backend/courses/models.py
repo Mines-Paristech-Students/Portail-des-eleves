@@ -21,21 +21,49 @@ class Course(models.Model):
     name = models.CharField(max_length=128)
 
 
+class NumericScale(IntegerChoices):
+    VERY_UNSATISFIED = 1
+    UNSATISFIED = 2
+    NEUTRAL = 3
+    SATISFIED = 4
+    VERY_SATISFIED = 5
+
+
 class Review(models.Model):
     """
     User review
 
     Attributes
     ----------
-    item: Object to review
-    content: text of the review
-    date: date of the review
-
+    item: Course to review
+    content: General text
+    value: General rating
+    date: Date of the review
 
     Notes
     -----
     Other fields (grade)
     """
+
+    item = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+    )
+
+    content = models.TextField(
+        max_length=1024,
+        blank=True,
+    )
+
+    value = models.IntegerField(choices=NumericScale)
+
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return f"{self.item} {self.value}"
 
 
 class Rating(models.Model):
@@ -54,13 +82,6 @@ class Rating(models.Model):
     You could imagine different kinds of scales
     https://www.questionpro.com/blog/rating-scale/
     """
-
-    class NumericScale(IntegerChoices):
-        VERY_UNSATISFIED = 1
-        UNSATISFIED = 2
-        NEUTRAL = 3
-        SATISFIED = 4
-        VERY_SATISFIED = 5
 
     id = models.AutoField(primary_key=True)
 
