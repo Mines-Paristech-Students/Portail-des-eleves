@@ -8,20 +8,58 @@ what needs to be done :
 * Sort people's opinions ?
 * Functions to compute averages
 * Cache average grade
+* Tags for the courses 
+* Add avg for caching
+* You could in the future have different scales
 """
-
 
 from django.db import models
 from django.db.models.Field import IntegerChoices
 from django.utils.text import slugify
 
+from authentication.models import User
+
+
+class ReviewForm(models.Model):
+    """
+    Generic object for storing a form
+    * Many courses can use this form
+    * Many question can reference to this form
+
+    Attributes
+    ----------
+    id
+    date: Date at which the item was created
+    """
+
+    id = models.AutoField(unique=True, primary_key=True)
+
+    date = models.DateTimeField(auto_now_add=True)
+
 
 class Course(models.Model):
+    """
+    Object for storing Courses
+
+    Attributes
+    ----------
+    id
+    name: name of the course
+    review_form:
+    """
+
     id = models.SlugField(max_length=128, primary_key=True)
+
     name = models.CharField(max_length=128)
+
+    review_form = models.ForeignKey(
+        ReviewForm,
+        on_delete=models.CASCADE,
+    )
 
 
 class NumericScale(IntegerChoices):
+    """Generic scale for user review"""
     VERY_UNSATISFIED = 1
     UNSATISFIED = 2
     NEUTRAL = 3
@@ -29,53 +67,16 @@ class NumericScale(IntegerChoices):
     VERY_SATISFIED = 5
 
 
-class Review(models.Model):
-    """
-    User review
-
-    Attributes
-    ----------
-    item: Course to review
-    content: General text
-    value: General rating
-    date: Date of the review
-
-    Notes
-    -----
-    Other fields (grade)
-    """
-
-    item = models.ForeignKey(
-        Course,
-        on_delete=models.SET_NULL,
-    )
-
-    content = models.TextField(
-        max_length=1024,
-        blank=True,
-    )
-
-    value = models.IntegerField(choices=NumericScale)
-
-    date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['date']
-
-    def __str__(self):
-        return f"{self.item} {self.value}"
-
-
 class Rating(models.Model):
     """
-    Category-based rating
+    User's rate for a field
 
     Attributes
     ----------
-    id : Auto incrementing field 
-    review : review the rating belongs to 
-    category : name of the review
-    value: number given
+    id
+    required
+    name: what will be displayed to the User
+    review_form: associated form
 
     Notes
     -----
@@ -83,25 +84,100 @@ class Rating(models.Model):
     https://www.questionpro.com/blog/rating-scale/
     """
 
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
+
+    required = models.BooleanField(default=False)
 
     category = models.CharField(max_length=64)
 
-    value = models.IntegerField(choices=NumericScale)
-
-    review = models.ForeignKey(
-        Review,
-        on_delete=models.SET_NULL,
-        null=True,
+    review_form = models.ForeignKey(
+        ReviewForm,
+        on_delete=models.CASCADE,
     )
 
-    commentary = models.CharField(
+
+class UserRating(models.Model):
+    """
+    User answer to a rating
+
+    Attributes
+    ----------
+    id
+    value:
+    course:
+    rating:
+    """
+
+    id = models.AutoField(primary_key=True, unique=True)
+
+    value = models.IntegerField(choices=NumericScale)
+
+    rating = models.ForeignKey(
+        Rating,
+        on_delete=models.CASCADE,
+    )
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+    )
+
+
+class Comment(models.Model):
+    """
+    User's rate for a field
+
+    Attributes
+    ----------
+    id
+    required
+    name: what will be displayed to the User
+    review_form: associated form
+    """
+
+    id = models.AutoField(primary_key=True, unique=True)
+
+    required = models.BooleanField(default=False)
+
+    review_form = models.ForeignKey(
+        ReviewForm,
+        on_delete=models.CASCADE,
+    )
+
+
+class UserComment(models.Model):
+    """
+    User answer to a rating
+
+    Attributes
+    ----------
+    id
+    comment
+    course:
+    rating:
+    """
+
+    id = models.AutoField(primary_key=True, unique=True)
+
+    comment = models.CharField(
         max_length=128,
         blank=True,
     )
 
-    class Meta:
-        ordering = ['category', 'value']
+    rating = models.ForeignKey(
+        Rating,
+        on_delete=models.CASCADE,
+    )
 
-    def __str__(self):
-        return f"{self.category}_{self.review} - {self.value}"
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+    )
+
+
+class VoteControl(models.Model):
+    """
+    Controls if a user has voted
+    """
+
+    user =
