@@ -1,10 +1,9 @@
 import React from "react";
-import { useListPollsService } from "../../../services/polls";
-import { APIServiceStatus } from "../../../services/api_service";
+import { api, useBetterQuery } from "../../../services/apiService";
 
 import { ActivePoll } from "./ActivePoll";
 import { InactivePoll } from "./InactivePoll";
-import { PollState } from "../../../models/polls";
+import { Poll, PollState } from "../../../models/polls";
 import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,28 +12,24 @@ import { pluralFormatter } from "../../../utils/format";
 import { PollsBase } from "../PollsBase";
 
 export function ListPublishedPolls() {
-    const service = useListPollsService();
+    const { data: polls, error, status } = useBetterQuery<Poll[]>(
+        "polls.list",
+        api.polls.list
+    );
 
     function Content(): React.ReactElement | null {
-        switch (service.status) {
-            case APIServiceStatus.Loading:
-                return <Spinner animation="border" role="status" />;
-            case APIServiceStatus.Loaded:
-                return <PublishedPolls />;
-            case APIServiceStatus.Error:
-                return <p>{service.error.message}</p>;
-        }
-    }
-
-    function PublishedPolls(): React.ReactElement | null {
-        if (service.status === APIServiceStatus.Loaded) {
-            const activePollCards = service.payload
+        if (status === "loading")
+            return <Spinner animation="border" role="status" />;
+        else if (status === "error") {
+            return <p>`Something went wrong: ${error}`</p>;
+        } else if (status === "success" && polls) {
+            const activePollCards = polls
                 .filter(
                     poll => poll.isActive && poll.state === PollState.Accepted
                 )
                 .map(poll => <ActivePoll poll={poll} />);
 
-            const inactivePollCards = service.payload
+            const inactivePollCards = polls
                 .filter(
                     poll => !poll.isActive && poll.state === PollState.Accepted
                 )

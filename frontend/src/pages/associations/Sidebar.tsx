@@ -25,6 +25,12 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Fichiers
                 </SidebarItem>
+                <SidebarItem
+                icon={"shopping-cart"}
+                to={`/associations/${association.id}/marketplace`}
+            >
+                Magasin
+            </SidebarItem>
             </Sidebar>
         );
     }

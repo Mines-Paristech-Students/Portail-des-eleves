@@ -52,7 +52,7 @@ export function PollEditModalAdminForm(props: Props) {
     }
 
     function AdminCommentField() {
-        const { values } = useFormikContext();
+        const { values } = useFormikContext<any>();
 
         if (values.state === "REJECTED") {
             return (
@@ -69,7 +69,7 @@ export function PollEditModalAdminForm(props: Props) {
     }
 
     function DateField() {
-        const { values } = useFormikContext();
+        const { values } = useFormikContext<any>();
 
         if (values.state === "ACCEPTED") {
             return (
