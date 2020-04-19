@@ -61,13 +61,14 @@ class CourseMedia(models.Model):
         on_delete=models.CASCADE,
     )
 
-class NumericScale(models.IntegerChoices):
-    """Generic scale for user review"""
-    VERY_UNSATISFIED = 1
-    UNSATISFIED = 2
-    NEUTRAL = 3
-    SATISFIED = 4
-    VERY_SATISFIED = 5
+
+NUMERIC_SCALE = (
+    (1, ('VERY_UNSATISFIED')),
+    (2, ('UNSATISFIED')),
+    (3, ('NEUTRAL')),
+    (4, ('SATISFIED')),
+    (5, ('VERY_SATISFIED')),
+)
 
 
 class Rating(models.Model):
@@ -113,7 +114,7 @@ class UserRating(models.Model):
 
     id = models.AutoField(primary_key=True, unique=True)
 
-    value = models.IntegerField(choices=NumericScale)
+    value = models.PositiveSmallIntegerField(choices=NUMERIC_SCALE)
 
     rating = models.ForeignKey(
         Rating,
@@ -191,6 +192,6 @@ class HasVoted(models.Model):
     )
 
     course = models.ForeignKey(
-        User,
+        Course,
         on_delete=models.CASCADE,
     )
