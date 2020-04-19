@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "subscriptions",
     "tags",
     "repartitions",
+    "courses"
 ]
 
 MIDDLEWARE = [
