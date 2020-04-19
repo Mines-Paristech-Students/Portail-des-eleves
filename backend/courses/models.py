@@ -1,20 +1,4 @@
-"""
-The inspirations is taken from :
-https://github.com/bitlabstudio/django-review/blob/master/review/models.py
-
-what needs to be done :
-* Add tags
-* Find a way so that people only vote once
-* Sort people's opinions ?
-* Functions to compute averages
-* Cache average grade
-* Tags for the courses 
-* Add avg for caching
-* You could in the future have different scales
-"""
-
 from django.db import models
-from django.db.models.Field import IntegerChoices
 from django.utils.text import slugify
 
 from authentication.models import User
@@ -48,7 +32,7 @@ class Course(models.Model):
     review_form:
     """
 
-    id = models.SlugField(max_length=128, primary_key=True)
+    id = models.AutoField(unique=True, primary_key=True)
 
     name = models.CharField(max_length=128)
 
@@ -58,7 +42,26 @@ class Course(models.Model):
     )
 
 
-class NumericScale(IntegerChoices):
+class CourseMedia(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+
+    uploaded_on = models.DateTimeField(auto_now_add=True)
+
+    category = models.CharField(max_length=64)
+
+    file = models.FileField(upload_to='courses/')
+
+    iploaded_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+    )
+
+class NumericScale(models.IntegerChoices):
     """Generic scale for user review"""
     VERY_UNSATISFIED = 1
     UNSATISFIED = 2
@@ -137,6 +140,8 @@ class Comment(models.Model):
 
     id = models.AutoField(primary_key=True, unique=True)
 
+    category = models.CharField(max_length=64)
+
     required = models.BooleanField(default=False)
 
     review_form = models.ForeignKey(
@@ -159,12 +164,12 @@ class UserComment(models.Model):
 
     id = models.AutoField(primary_key=True, unique=True)
 
-    comment = models.CharField(
+    content = models.CharField(
         max_length=128,
         blank=True,
     )
 
-    rating = models.ForeignKey(
+    comment = models.ForeignKey(
         Rating,
         on_delete=models.CASCADE,
     )
@@ -175,9 +180,17 @@ class UserComment(models.Model):
     )
 
 
-class VoteControl(models.Model):
+class HasVoted(models.Model):
     """
     Controls if a user has voted
     """
 
-    user =
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    course = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
