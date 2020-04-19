@@ -7,7 +7,7 @@ from polls.models import Choice, Poll, Vote
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "number_of_votes")
         fields = read_only_fields + ("text",)
 
     def save(self, poll, **kwargs):

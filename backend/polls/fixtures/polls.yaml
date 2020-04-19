@@ -19,6 +19,27 @@
     text: "Baguette et pâté"
     poll: 1
 
+- model: polls.Vote
+  pk: 1
+  fields:
+    poll: 1
+    user: "17bocquet"
+    choice: 1
+
+- model: polls.Vote
+  pk: 2
+  fields:
+    poll: 1
+    user: "15veaux"
+    choice: 2
+
+- model: polls.Vote
+  pk: 3
+  fields:
+    poll: 1
+    user: "16leroy"
+    choice: 2
+
 - model: polls.Poll
   pk: 2
   fields:
@@ -39,3 +60,45 @@
   fields:
     text: "Maths 2"
     poll: 2
+
+- model: polls.Poll
+  pk: 3
+  fields:
+    question: "On est confinés !"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-20"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 5
+  fields:
+    text: "Ça fait un mois…"
+    poll: 3
+
+- model: polls.Choice
+  pk: 6
+  fields:
+    text: "Ah bon ?!"
+    poll: 3
+
+- model: polls.Vote
+  pk: 4
+  fields:
+    poll: 3
+    user: "17bocquet"
+    choice: 5
+
+- model: polls.Vote
+  pk: 5
+  fields:
+    poll: 3
+    user: "15veaux"
+    choice: 5
+
+- model: polls.Vote
+  pk: 6
+  fields:
+    poll: 3
+    user: "16leroy"
+    choice: 6

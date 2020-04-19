@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Poll } from "../../../models/polls";
 import { dateFormatter } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
@@ -12,22 +12,17 @@ type Props = {
 
 export function ActivePoll(props: Props) {
     function ChoiceFields() {
-        let items = new Map();
+        let items: Map<string, ReactElement> = new Map();
 
         props.poll.choices.forEach(choice => {
             items.set(
-                choice.id,
+                choice.id.toString(),
                 <span className="selectgroup-button">{choice.text}</span>
             );
         });
 
         return (
-            <SelectGroup
-                type="vertical"
-                label="Choix"
-                items={items}
-                name="choice"
-            />
+            <SelectGroup type="vertical" label="" items={items} name="choice" />
         );
     }
 
@@ -47,6 +42,7 @@ export function ActivePoll(props: Props) {
 
                 <Formik
                     initialValues={{
+                        shipping: "unregistered",
                         choice: undefined
                     }}
                     onSubmit={(values, { setSubmitting }) => {
