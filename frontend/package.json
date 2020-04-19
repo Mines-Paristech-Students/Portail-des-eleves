@@ -12,7 +12,7 @@
         "react-dropzone": "^10.2.1",
         "react-query": "1.2.1",
         "react-router-dom": "latest",
-        "react-scripts": "^3.3.0",
+        "react-scripts": "^3.4.1",
         "tabler-ui": "0.0.34",
         "yup": "^0.27.0",
         "react-chartkick": "latest",

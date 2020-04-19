@@ -10,7 +10,6 @@ export const AssociationSidebar = ({ association }) => {
         association.id
     );
 
-
     if (status === "loading") {
         return <p>Chargement...</p>;
     } else if (error) {
@@ -24,6 +23,12 @@ export const AssociationSidebar = ({ association }) => {
                     to={`/associations/${association.id}/files`}
                 >
                     Fichiers
+                </SidebarItem>
+                <SidebarItem
+                    icon={"shopping-cart"}
+                    to={`/associations/${association.id}/marketplace`}
+                >
+                    Magasin
                 </SidebarItem>
                 <SidebarCategory title={"Élections"}>
                     <SidebarItem
