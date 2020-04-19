@@ -6,6 +6,7 @@ import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
 import {Ballot, Election, Result} from "../models/associations/election";
+import {User} from "../models/user";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -170,7 +171,7 @@ export const api = {
                 buyer: buyer.id
             }),
 
-        get: (marketplaceId, user) =>
+        get: (marketplaceId, user: User) =>
             unwrap<Transaction[]>(
                 apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
             )
@@ -180,7 +181,7 @@ export const api = {
 export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
-    ...params: string[]
+    ...params: any[]
 ): QueryResult<T> {
     return useQuery<T, string, any>(key, params, (key, ...params) =>
         fetchFunction(...params)
