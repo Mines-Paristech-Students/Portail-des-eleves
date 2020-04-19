@@ -12,6 +12,7 @@ const choices_1: Choice[] = [
 ];
 
 export const poll_1: Poll = {
+    hasBeenPublished: true,
     id: "1",
     choices: choices_1,
     question: "Le nouveau portail ?",
@@ -36,6 +37,7 @@ const choices_2: Choice[] = [
 ];
 
 export const poll_2: Poll = {
+    hasBeenPublished: true,
     id: "2",
     choices: choices_2,
     question: "Le plus beau ?",
@@ -60,6 +62,7 @@ const choices_3: Choice[] = [
 ];
 
 export const poll_3: Poll = {
+    hasBeenPublished: true,
     id: "3",
     choices: choices_3,
     question: "Le plus claqueur ?",
@@ -84,6 +87,7 @@ const choices_4: Choice[] = [
 ];
 
 export const poll_4: Poll = {
+    hasBeenPublished: false,
     id: "4",
     choices: choices_4,
     question: "Sondage nul",
@@ -108,6 +112,7 @@ const choices_5: Choice[] = [
 ];
 
 export const poll_5: Poll = {
+    hasBeenPublished: false,
     id: "5",
     choices: choices_5,
     question: "Sondage en attente",

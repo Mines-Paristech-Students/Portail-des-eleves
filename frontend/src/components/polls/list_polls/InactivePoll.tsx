@@ -1,6 +1,6 @@
 import React from "react";
 import { Poll } from "../../../models/polls";
-import "./list_published_polls.css";
+import "./list_polls.css";
 import { dateFormatter } from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
@@ -39,7 +39,10 @@ export function InactivePoll(props: Props) {
             </Card.Header>
             <Card.Body>
                 <Card.Subtitle className="poll-date">
-                    <em>{dateFormatter(props.poll.publicationDate)}</em>
+                    <em>
+                        {props.poll.publicationDate &&
+                            dateFormatter(props.poll.publicationDate)}
+                    </em>
                 </Card.Subtitle>
 
                 <ListGroup>

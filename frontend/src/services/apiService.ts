@@ -16,10 +16,26 @@ export const apiService = applyConverters(
     })
 );
 
-function unwrap<T>(promise) {
+function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
+}
+
+/**
+ * Return the result of `fetchFunction` or a cached result if available.
+ * @param key
+ * @param fetchFunction
+ * @param params
+ */
+export function useBetterQuery<T>(
+    key: string,
+    fetchFunction: any,
+    ...params: any[]
+): QueryResult<T> {
+    return useQuery<T, string, any>(key, params, (key, ...params) =>
+        fetchFunction(...params)
+    );
 }
 
 export const api = {
@@ -137,7 +153,22 @@ export const api = {
     },
 
     polls: {
-        list: () => unwrap<Poll[]>(apiService.get("/polls/")),
+        list: () =>
+            unwrap<Poll[]>(
+                apiService
+                    .get<Poll[]>("/polls/")
+                    .then((response: AxiosResponse<Poll[]>) => {
+                        // Parse the date here.
+                        response.data.forEach(
+                            poll =>
+                                (poll.publicationDate = poll.publicationDate
+                                    ? new Date(poll.publicationDate)
+                                    : undefined)
+                        );
+
+                        return response;
+                    })
+            ),
         get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
         create: (question: string, choices: Choice[]) =>
             unwrap<Poll>(
@@ -150,19 +181,3 @@ export const api = {
             )
     }
 };
-
-/**
- * Return the result of `fetchFunction` or a cached result if available.
- * @param key
- * @param fetchFunction
- * @param params
- */
-export function useBetterQuery<T>(
-    key: string,
-    fetchFunction: any,
-    ...params: any[]
-): QueryResult<T> {
-    return useQuery<T, string, any>(key, params, (key, ...params) =>
-        fetchFunction(...params)
-    );
-}

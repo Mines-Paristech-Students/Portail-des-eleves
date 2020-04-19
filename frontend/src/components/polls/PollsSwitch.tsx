@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router";
 import { PollsTable } from "./polls_table/PollsTable";
-import { ListPublishedPolls } from "./list_published_polls/ListPublishedPolls";
+import { ListPolls } from "./list_polls/ListPolls";
 import { Switch, useRouteMatch } from "react-router-dom";
 import { SubmitPoll } from "./submit_polls/SubmitPoll";
 
@@ -11,7 +11,7 @@ export function PollsSwitch() {
     return (
         <Switch>
             <Route exact path={String(path)}>
-                <ListPublishedPolls />
+                <ListPolls />
             </Route>
             <Route path={`${path}/administration/`}>
                 <PollsTable adminVersion />

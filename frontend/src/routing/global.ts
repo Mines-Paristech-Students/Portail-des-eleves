@@ -1,7 +1,7 @@
 import { Homepage } from "../pages/Homepage";
 import { AssociationList } from "../pages/associations/List";
 import { AssociationMain } from "../pages/associations/Main";
-import { ListPublishedPolls } from "../components/polls/list_published_polls/ListPublishedPolls";
+import { ListPolls } from "../components/polls/list_polls/ListPolls";
 import { PollsTable } from "../components/polls/polls_table/PollsTable";
 import { SubmitPoll } from "../components/polls/submit_polls/SubmitPoll";
 
@@ -13,7 +13,16 @@ export const routes = [
         component: AssociationMain,
         exact: false
     },
-    { path: "/sondages", component: ListPublishedPolls, exact: true },
+    {
+        path: "/sondages",
+        component: () => ListPolls({ active: true }),
+        exact: true
+    },
+    {
+        path: "/sondages/anciens",
+        component: () => ListPolls({ active: false }),
+        exact: true
+    },
     {
         path: "/sondages/administration",
         component: () => PollsTable({ adminVersion: true }),

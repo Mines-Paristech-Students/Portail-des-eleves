@@ -1,0 +1,41 @@
+- model: polls.Poll
+  pk: 1
+  fields:
+    question: "Ton plat préféré ?"
+    user: "17bocquet"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 1
+  fields:
+    text: "Pâtes et fromage"
+    poll: 1
+
+- model: polls.Choice
+  pk: 2
+  fields:
+    text: "Baguette et pâté"
+    poll: 1
+
+- model: polls.Poll
+  pk: 2
+  fields:
+    question: "Ton cours préféré ?"
+    user: "17bocquet"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est nul."
+
+- model: polls.Choice
+  pk: 3
+  fields:
+    text: "Maths 1"
+    poll: 2
+
+- model: polls.Choice
+  pk: 4
+  fields:
+    text: "Maths 2"
+    poll: 2

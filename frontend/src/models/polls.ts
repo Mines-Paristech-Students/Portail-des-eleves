@@ -7,15 +7,24 @@ export enum PollState {
 }
 
 export interface Poll {
-    // TODO: a field `author` is missing for the administrative part (but not public!).
+    id: string;
+    question: string;
+    user?: string;
+    creationDateTime: Date;
+    state: PollState;
+    publicationDate?: Date;
+    adminComment?: string;
+    hasBeenPublished: boolean;
+    isActive: boolean;
+    choices: Choice[];
+}
+
+export interface Poll2 {
     id: string;
     choices: Choice[];
     question: string;
     state: PollState;
-    creationDateTime: Date;
     publicationDate: Date;
-    adminComment: string;
-    isActive: boolean;
 }
 
 export interface Choice {

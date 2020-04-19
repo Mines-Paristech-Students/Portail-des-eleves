@@ -29,13 +29,21 @@ class VoteSerializer(serializers.ModelSerializer):
 
 
 class ReadOnlyPollSerializer(serializers.ModelSerializer):
-    """Only give a read-only access to the question and the choices."""
+    """Only give a read-only access to the polls."""
 
     choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Poll
-        read_only_fields = ("id", "choices", "question")
+        read_only_fields = (
+            "id",
+            "publication_date",
+            "state",
+            "choices",
+            "question",
+            "has_been_published",
+            "is_active",
+        )
         fields = read_only_fields
 
 

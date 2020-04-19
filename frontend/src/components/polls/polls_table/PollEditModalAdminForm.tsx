@@ -108,7 +108,9 @@ export function PollEditModalAdminForm(props: Props) {
                         <Card.Subtitle>
                             <em>
                                 Envoyé par 17TODO le{" "}
-                                {dateFormatter(props.poll.publicationDate)}.
+                                {props.poll.publicationDate &&
+                                    dateFormatter(props.poll.publicationDate)}
+                                .
                             </em>
                         </Card.Subtitle>
 

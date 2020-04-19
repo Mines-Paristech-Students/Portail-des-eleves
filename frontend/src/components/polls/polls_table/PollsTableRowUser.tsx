@@ -26,7 +26,10 @@ export function PollsTableRowUser(props: Props) {
                 <td>{props.poll.question}</td>
                 <td>{props.poll.choices[0].text}</td>
                 <td>{props.poll.choices[1].text}</td>
-                <td>{dateFormatter(props.poll.publicationDate)}</td>
+                <td>
+                    {props.poll.publicationDate &&
+                        dateFormatter(props.poll.publicationDate)}
+                </td>
                 <td className="text-center">{renderState()}</td>
                 <td>{props.poll.adminComment}</td>
                 <td className="text-center">{renderActions()}</td>

@@ -23,6 +23,12 @@ export const SidebarItem = ({ icon, to, children }) => {
     );
 };
 
+export const SidebarSeparator = (props: { size?: number }) => {
+    let size = props.size ? props.size : 2;
+
+    return <p className={`mb-${size} mt-${size}`}></p>;
+};
+
 export const Sidebar = ({ title, children, ...rest }) => {
     return (
         <>

@@ -39,7 +39,10 @@ export function ActivePoll(props: Props) {
 
             <Card.Body>
                 <Card.Subtitle className="poll-date">
-                    <em>{dateFormatter(props.poll.publicationDate)}</em>
+                    <em>
+                        {props.poll.publicationDate &&
+                            dateFormatter(props.poll.publicationDate)}
+                    </em>
                 </Card.Subtitle>
 
                 <Formik

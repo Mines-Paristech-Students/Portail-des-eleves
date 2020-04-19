@@ -25,7 +25,10 @@ export function PollsTableRowAdmin(props: Props) {
                 <td>{props.poll.question}</td>
                 <td>{props.poll.choices[0].text}</td>
                 <td>{props.poll.choices[1].text}</td>
-                <td>{dateFormatter(props.poll.publicationDate)}</td>
+                <td>
+                    {props.poll.publicationDate &&
+                        dateFormatter(props.poll.publicationDate)}
+                </td>
                 <td>17TODO</td>
                 <td className="text-center">{renderState()}</td>
                 <td className="text-center">{administrateAction}</td>
