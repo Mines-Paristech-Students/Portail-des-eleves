@@ -8,6 +8,7 @@ import Card from "react-bootstrap/Card";
 
 import * as data from "../../../fixtures/polls";
 import { PollsBase } from "../PollsBase";
+import { PageTitle } from "../../../utils/common";
 
 type Props = {
     adminVersion?: boolean;
@@ -24,10 +25,13 @@ export function PollsTable(props: Props) {
         setPolls([...polls.slice(0, id), ...polls.slice(id + 1)]);
     }
 
-    function renderContent() {
+    function Content() {
         return (
             <>
                 <Card>
+                    <Card.Header>
+                        <Card.Title>{renderTitle()}</Card.Title>
+                    </Card.Header>
                     <Card.Body>
                         <Table className="card-table polls-table text-left">
                             <thead className="text-center">
@@ -83,12 +87,8 @@ export function PollsTable(props: Props) {
     }
 
     return (
-        <PollsBase
-            title={
-                <h1 className="page-title page-header mb-5">{renderTitle()}</h1>
-            }
-        >
-            {renderContent()}
+        <PollsBase>
+            <Content />
         </PollsBase>
     );
 }

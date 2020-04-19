@@ -10,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { pluralFormatter } from "../../../utils/format";
 import { PollsBase } from "../PollsBase";
+import { PageTitle } from "../../../utils/common";
 
 export function ListPublishedPolls() {
     const { data: polls, error, status } = useBetterQuery<Poll[]>(
@@ -87,13 +88,8 @@ export function ListPublishedPolls() {
     }
 
     return (
-        <PollsBase
-            title={
-                <h1 className="page-title page-header mb-5">
-                    Sondages récents
-                </h1>
-            }
-        >
+        <PollsBase>
+            <PageTitle>Sondages récents</PageTitle>
             <Content />
         </PollsBase>
     );

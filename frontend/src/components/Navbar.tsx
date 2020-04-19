@@ -15,7 +15,7 @@ import { authService } from "../App";
  * properties each:
  *   * `icon`: the Bootstrap icon to display besides the navbar item. It's the
  *   part after `fe-` in the class name of the icon.
- *   * `url`: the url of the link.
+ *   * `url`: the URL of the link.
  *   * `label`: the text to display.
  */
 const links = [

@@ -9,6 +9,7 @@ import { getRandom } from "../../../utils/random";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
+import { PageTitle } from "../../../utils/common";
 
 export function SubmitPoll() {
     const [
@@ -25,6 +26,9 @@ export function SubmitPoll() {
     function SubmitPollForm() {
         return (
             <Card className="text-left">
+                <Card.Header>
+                    <Card.Title>Proposer un sondage</Card.Title>
+                </Card.Header>
                 <Formik
                     initialValues={{
                         question: "",
@@ -74,20 +78,8 @@ export function SubmitPoll() {
     }
 
     return (
-        <PollsBase
-            title={
-                <h1 className="page-title page-header mb-5">
-                    Proposer un sondage
-                </h1>
-            }
-        >
-            <Container>
-                <Row>
-                    <Col xs={{ offset: 3, span: 6 }}>
-                        <SubmitPollForm />
-                    </Col>
-                </Row>
-            </Container>
+        <PollsBase>
+            <SubmitPollForm />
         </PollsBase>
     );
 }

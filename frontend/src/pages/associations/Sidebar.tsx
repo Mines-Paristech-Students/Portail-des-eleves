@@ -1,6 +1,6 @@
 import React from "react";
 import { api, useBetterQuery } from "../../services/apiService";
-import { Sidebar, SidebarItem } from "../../utils/Sidebar";
+import { Sidebar, SidebarItem } from "../../components/Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
@@ -26,11 +26,11 @@ export const AssociationSidebar = ({ association }) => {
                     Fichiers
                 </SidebarItem>
                 <SidebarItem
-                icon={"shopping-cart"}
-                to={`/associations/${association.id}/marketplace`}
-            >
-                Magasin
-            </SidebarItem>
+                    icon={"shopping-cart"}
+                    to={`/associations/${association.id}/marketplace`}
+                >
+                    Magasin
+                </SidebarItem>
             </Sidebar>
         );
     }
