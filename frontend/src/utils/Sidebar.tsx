@@ -16,6 +16,15 @@ export const SidebarItem = ({ icon, to, children }) => {
     );
 };
 
+export const SidebarCategory = ({ title, children }) => {
+    return (
+        <>
+            <h2 className="page-title mb-1 mt-5">{ title }</h2>
+            {children}
+        </>
+    );
+};
+
 export const Sidebar = ({ title, children, ...rest }) => {
     return (
         <>

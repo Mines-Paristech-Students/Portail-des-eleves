@@ -8,6 +8,11 @@ import { AssociationFilesystemList } from "../pages/associations/medias/List";
 import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../pages/associations/medias/Upload";
+import { AssociationElectionActiveList } from "../pages/associations/elections/ActiveList";
+import { AssociationElectionResultsList } from "../pages/associations/elections/ResultsList";
+import { AssociationElectionUpcomingList } from "../pages/associations/elections/UpcomingList";
+import {AssociationCreateElection, AssociationEditElection} from "../pages/associations/elections/Edit";
+
 
 export const routes = association => [
     {
@@ -56,6 +61,36 @@ export const routes = association => [
     {
         path: `/files/:fileId/edit`,
         component: AssociationFilesystemEdit,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/elections-current`,
+        component: AssociationElectionActiveList,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/elections-past`,
+        component: AssociationElectionResultsList,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/elections-upcoming`,
+        component: AssociationElectionUpcomingList,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/elections/new`,
+        component: AssociationCreateElection,
+        exact: true,
+        props: { association: association }
+    },
+    {
+        path: `/elections/:electionId/edit`,
+        component: AssociationEditElection,
         exact: true,
         props: { association: association }
     }

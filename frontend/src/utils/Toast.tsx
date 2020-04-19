@@ -9,6 +9,7 @@ export enum ToastLevel {
 export type ToastInfo = {
     message: string;
     level: ToastLevel;
+    delay?: Number;
 };
 
 type SendToast = (toast: ToastInfo) => void;
@@ -20,7 +21,7 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
 
     return (
         <>
-            {toast && <Toast message={toast.message} type={toast.level} />}
+            {toast && <Toast message={toast.message} type={toast.level} delay={toast.delay}/>}
             <ToastContext.Provider value={setToast}>
                 {children}
             </ToastContext.Provider>
@@ -28,7 +29,7 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
     );
 };
 
-export const Toast = ({ message: msg, type }) => {
+export const Toast = ({ message: msg, type, delay }) => {
     const [show, setShow] = useState(false);
     const [message, setMessage] = useState(msg);
 
@@ -48,7 +49,7 @@ export const Toast = ({ message: msg, type }) => {
                     "0 0 10px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.32)"
             }}
             autohide
-            delay={1000}
+            delay={delay ? delay : 1000}
             onClose={() => {
                 setShow(false);
             }}

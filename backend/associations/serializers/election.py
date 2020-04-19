@@ -64,12 +64,14 @@ class ElectionSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(), many=True, read_only=False
     )
     choices = ChoiceSerializer(many=True, read_only=False)
+    has_voted = serializers.SerializerMethodField(read_only=True)
+    is_registered = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Election
 
         # The 'voters' and 'ballots' fields are on purpose not included.
-        read_only_fields = ("id",)
+        read_only_fields = ("id", "has_voted", "is_registered")
         fields = read_only_fields + (
             "association",
             "name",
@@ -79,6 +81,14 @@ class ElectionSerializer(serializers.ModelSerializer):
             "ends_at",
             "max_choices_per_ballot",
         )
+
+    def get_has_voted(self, obj):
+        idi = self.context["request"].user.id
+        return (idi,) in obj.voters.values_list("id")
+
+    def get_is_registered(self, obj):
+        idi = self.context["request"].user.id
+        return (idi,) in obj.registered_voters.values_list("id")
 
     def is_valid(self, raise_exception=False):
         """Check if the dates are consistent."""
@@ -151,6 +161,11 @@ class ElectionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         registered_voters = validated_data.pop("registered_voters")
+        print("!!!!!!!!!!!!!!!!!!!!")
+        print("coucou, on est dans create")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+        print(validated_data)
         choices = validated_data.pop("choices")
 
         election = Election.objects.create(**validated_data)

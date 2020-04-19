@@ -4,8 +4,15 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
+import {Ballot, Election, Result} from "../models/associations/election";
 
 const baseApi = "http://localhost:8000/api/v1";
+
+export enum activeStatus {
+    Past='past',
+    Current='current',
+    Upcoming='upcoming'
+}
 
 export const apiService = applyConverters(
     Axios.create({
@@ -97,6 +104,42 @@ export const api = {
         },
         delete: file => {
             return apiService.delete(`/associations/media/${file.id}`, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+        }
+    },
+    elections: {
+        list: (associationId, activeStatus) =>
+            unwrap<Election[]>(
+                apiService.get(
+                    `/associations/elections/?association=${associationId}&active_status=${activeStatus}`
+                )
+            ),
+        get: electionId =>
+            unwrap<Election>(apiService.get(`/associations/elections/${electionId}`)),
+        results: electionId =>
+            unwrap<Result>(
+                apiService.get(`associations/elections/${electionId}/results`)
+            ),
+        vote: vote =>
+            unwrap<Ballot>(
+                apiService.post(`/associations/elections/${vote.election}/vote/`, vote)
+            ),
+        save: (election, edit, id) => {
+            if (!edit) {
+                return unwrap<Election>(
+                    apiService.post(`/associations/elections/`, election)
+                );
+            }
+            return (
+                apiService.delete(`/associations/elections/${id}`, {
+                    headers: { "Content-Type": "multipart/form-data" }})
+                    .then(unwrap<Election>(apiService.post(`/associations/elections/`, election)))
+            )
+
+        },
+        delete: election => {
+            return apiService.delete(`/associations/elections/${election.id}`, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }

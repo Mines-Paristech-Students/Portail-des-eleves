@@ -1,6 +1,6 @@
 import React from "react";
 import { api, useBetterQuery } from "../../services/apiService";
-import { Sidebar, SidebarItem } from "../../utils/Sidebar";
+import {Sidebar, SidebarCategory, SidebarItem} from "../../utils/Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
@@ -10,6 +10,7 @@ export const AssociationSidebar = ({ association }) => {
         association.id
     );
 
+
     if (status === "loading") {
         return <p>Chargement...</p>;
     } else if (error) {
@@ -17,14 +18,39 @@ export const AssociationSidebar = ({ association }) => {
     } else if (association) {
         return (
             <Sidebar title={association.name}>
-                <ListPagesItem association={association} pages={pages} />
-                <AddPageItem association={association} />
+
                 <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/files`}
                 >
                     Fichiers
                 </SidebarItem>
+                <SidebarCategory title={"Élections"}>
+                    <SidebarItem
+                        icon={"calendar"}
+                        to={`/associations/${association.id}/elections-upcoming`}
+                    >
+                        À venir
+                    </SidebarItem>
+                    <SidebarItem
+                        icon={"check-square"}
+                        to={`/associations/${association.id}/elections-current`}
+                    >
+                        En cours
+                    </SidebarItem>
+                    <SidebarItem
+                        icon={"bar-chart-2"}
+                        to={`/associations/${association.id}/elections-past`}
+                    >
+                        Résultats
+                    </SidebarItem>
+                    <AddElectionItem association={association}/>
+                </SidebarCategory>
+                <SidebarCategory title={"Pages"}>
+                    <ListPagesItem association={association} pages={pages} />
+                    <AddPageItem association={association} />
+                </SidebarCategory>
+
             </Sidebar>
         );
     }
@@ -56,4 +82,18 @@ const AddPageItem = ({ association }) => {
             Ajouter une page
         </SidebarItem>
     );
+};
+
+const AddElectionItem = ({ association }) => {
+    if (association.myRole.electionPermission) {
+        return (
+            <SidebarItem
+                icon={"plus"}
+                to={`/associations/${association.id}/elections/new`}
+            >
+                Nouvelle élection
+            </SidebarItem>
+        );
+    }
+    return null
 };
