@@ -1,66 +1,68 @@
-- model: course.reviewform
-  pk: math
+- model: courses.reviewform
+  pk: 1
+  fields:
+    date: '2020-04-20T22:10:57.577Z'
 
 - model: courses.course
-  pk: math
+  pk: 1
   fields:
     name: Maths diff
-    review_form: math
+    review_form: 1
   
-- model: course.coursemedia
-  pk: math
+- model: courses.coursemedia
+  pk: 1 
   fields:
     name: palum_2k17
     category: palum
     file: palum.pdf
     uploaded_on: '2017-08-24T17:41:28+00:00'
     uploaded_by: 17bocquet
-    course: math
+    course: 1
 
-- model: course.rating
+- model: courses.rating
   pk: 1
   fields: 
     required: true
     category: general
-    review_form: math
+    review_form: 1
 
-- model: course.rating
+- model: courses.rating
   pk: 2
   fields: 
     required: false 
     category: optional 
-    review_form: math
+    review_form: 1
 
-- model: course.userrating
+- model: courses.userrating
   pk: 1
   fields:
     value: 5
     rating: 1
-    course: math
+    course: 1
 
-- model: course.comment
+- model: courses.comment
   pk: 1
   fields: 
     required: true
     category: general 
-    review_form: math
+    review_form: 1
 
-- model: course.comment
+- model: courses.comment
   pk: 2
   fields: 
     required: false 
     category: optional 
-    review_form: math
+    review_form: 1
 
-- model: course.user
+- model: courses.usercomment
   pk: 1
   fields:
     content: les palums c'est la vie
     comment: 1
-    course: math
+    course: 1
 
-- model: course.hasvoted
+- model: courses.hasvoted
   pk: 1
   fields:
     user: 17bocquet
-    course: math
+    course: 1
