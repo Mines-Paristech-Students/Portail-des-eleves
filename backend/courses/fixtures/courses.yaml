@@ -8,6 +8,7 @@
   fields:
     name: Maths diff
     review_form: 1
+    have_voted: [17bocquet]
   
 - model: courses.coursemedia
   pk: 1 
@@ -19,50 +20,32 @@
     uploaded_by: 17bocquet
     course: 1
 
-- model: courses.rating
-  pk: 1
-  fields: 
-    required: true
-    category: general
-    review_form: 1
-
-- model: courses.rating
-  pk: 2
-  fields: 
-    required: false 
-    category: optional 
-    review_form: 1
-
-- model: courses.userrating
+- model: courses.question
   pk: 1
   fields:
+    label: 2+2?
+    required: true
+    category: S
+    form: 1
+
+- model: courses.question
+  pk: 2
+  fields:
+    label: Le nom de mon chat ?
+    required: false
+    category: C
+    form: 1
+
+- model: courses.rating
+  pk: 1
+  fields: 
     value: 5
-    rating: 1
+    question: 1
     course: 1
 
 - model: courses.comment
   pk: 1
   fields: 
-    required: true
-    category: general 
-    review_form: 1
-
-- model: courses.comment
-  pk: 2
-  fields: 
-    required: false 
-    category: optional 
-    review_form: 1
-
-- model: courses.usercomment
-  pk: 1
-  fields:
-    content: les palums c'est la vie
-    comment: 1
-    course: 1
-
-- model: courses.hasvoted
-  pk: 1
-  fields:
-    user: 17bocquet
+    content: Voltaire
+    question: 2
     course: 1
