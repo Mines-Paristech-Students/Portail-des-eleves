@@ -52,7 +52,7 @@ const EditEvent = ({ event, association, ...props }) => {
         onSubmit: values => {
             if (values.startsAt > values.endsAt) {
                 newToast({
-                    message: "La date de début est supérieure à la date de fin!",
+                    message: "La date de début doit être avant la date de fin",
                     level: ToastLevel.Error
                 });
                 return;
@@ -66,7 +66,7 @@ const EditEvent = ({ event, association, ...props }) => {
                 .save(values)
                 .then(res => {
                     newToast({
-                        message: "Evenement sauvegardée !",
+                        message: "Evènement sauvegardé !",
                         level: ToastLevel.Success
                     });
 
@@ -85,7 +85,7 @@ const EditEvent = ({ event, association, ...props }) => {
 
     const deleteEvent = () => {
         // eslint-disable-next-line no-restricted-globals
-        if (confirm("Supprimer l'evenement ? Cette action est irréversible")) {
+        if (confirm("Supprimer l'évènement ? Cette action est irréversible")) {
             api.events
                 .delete(event)
                 .then(res => {
@@ -166,7 +166,7 @@ const EditEvent = ({ event, association, ...props }) => {
                     name="place"
                     type="text"
                     className=""
-                    placeholder="Localisation"
+                    placeholder="Lieu"
                     onChange={formik.handleChange}
                     value={formik.values.place}
                 />
