@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
@@ -13,13 +13,10 @@ import moment from "moment";
 export const AssociationEventList = ({ association, ...props }) => {
     
     const associationId = association.id;
-    const { data, isLoading, error } = useQuery(
+    const { data, isLoading, error } = useQuery<Event[], any>(
         ["events.get", { associationId }],
         api.events.list
     );
-    const history = useHistory();
-    
-    console.log(isLoading);
 
     let addButton;
     if (association.myRole.mediaPermission) {
@@ -44,7 +41,7 @@ export const AssociationEventList = ({ association, ...props }) => {
                 {addButton}
                 <PageTitle className={"mt-6"}>Evenements</PageTitle>
                 <Row>
-                    {data.map(event => {
+                    {data.map((event: Event | any) => {
                         return (
                             <Col md={4} key={event.id}>
                                 <Card>

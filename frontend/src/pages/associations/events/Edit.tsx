@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Event } from "../../../models/associations/event";
-import { useFormik, Field } from "formik";
+import { useFormik } from "formik";
 import { Form, Button, Col } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { Link, useHistory, useParams, Redirect } from "react-router-dom";
-import { render } from "react-dom";
+import { useHistory, useParams } from "react-router-dom";
 import MomentInput from 'react-moment-input';
 import moment from 'moment';
 
@@ -29,7 +28,7 @@ export const AssociationEventCreate = ({ association, ...props }) => {
 export const AssociationEventEdit = ({ association, ...props }) => {
     const { eventId } = useParams();
 
-    const { data: event, isLoading, error } = useQuery(
+    const { data: event, isLoading, error } = useQuery<Event, any>(
         ["event.get", { eventId }],
         api.events.get
     );
