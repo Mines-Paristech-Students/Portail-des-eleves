@@ -206,4 +206,19 @@
     room: ''
     phone: "+33623149119"
     year_of_entry: 2014
-
+- model: authentication.user
+  pk: 17vialard
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Vialard
+    last_name: Victor
+    email: 17vialard@mpt.fr
+    birthday: '1997-05-17'
+    is_active: true
+    is_admin: true
+    nickname: 'sheepsody'
+    city_of_origin: Paris
+    room: ''
+    phone: "+33698895042"
+    year_of_entry: 2017
