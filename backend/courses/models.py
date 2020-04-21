@@ -35,7 +35,11 @@ class Course(models.Model):
         on_delete=models.CASCADE,
     )
 
-    have_voted = models.ManyToManyField(User)
+    have_voted = models.ManyToManyField(
+        User,
+        related_name="course",
+        blank=True,
+    )
 
 
 class CourseMedia(models.Model):
