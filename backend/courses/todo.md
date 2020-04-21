@@ -18,3 +18,9 @@
 * Restrict the type of things that can get uploaded
 * TODO : tell the users they cannot change their votes once submitted
 * Replace by slugfields 
+* Add __str__ in models
+
+## TESTS to implement
+
+* only admin can add a course
+* can add course wo user

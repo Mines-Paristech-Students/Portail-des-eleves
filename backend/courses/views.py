@@ -4,5 +4,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+from rest_framework import views
+from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework import viewsets
+
+from courses.serializers import *
+from courses.models import *
+
+class CourseViewSet(viewsets.ModelViewSet):
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()

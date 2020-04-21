@@ -18,7 +18,7 @@ QUESTION_CATEGORY = (
 )
 
 
-class ReviewForm(models.Model):
+class Form(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
 
     date = models.DateTimeField(auto_now_add=True)
@@ -29,8 +29,8 @@ class Course(models.Model):
 
     name = models.CharField(max_length=128)
 
-    review_form = models.ForeignKey(
-        ReviewForm,
+    form = models.ForeignKey(
+        Form,
         related_name="course",
         on_delete=models.CASCADE,
     )
@@ -73,11 +73,12 @@ class Question(models.Model):
 
     category = models.CharField(
         max_length=1,
-        choices=QUESTION_CATEGORY
+        choices=QUESTION_CATEGORY,
+        default='COMMENT'
     )
 
     form = models.ForeignKey(
-        ReviewForm,
+        Form,
         related_name="question",
         on_delete=models.CASCADE,
     )
