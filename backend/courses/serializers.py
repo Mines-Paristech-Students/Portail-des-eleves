@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime
 
-from courses.models import Course, Form, Question
+from courses.models import Course, Form, Question, Rating, Comment
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         read_only_fields = ('id', )
-        fields = read_only_fields + ('label', 'required', 'category')
+        fields = read_only_fields + ('label', 'required', 'archived', 'category')
 
 
 class FormSerializer(serializers.ModelSerializer):
@@ -38,7 +38,6 @@ class FormSerializer(serializers.ModelSerializer):
         for question_data in update_questions:
             question_data["form"] = instance
             Question.objects.filter(id=question_data["id"]).update(**question_data)
-
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
@@ -65,5 +64,56 @@ class FormSerializer(serializers.ModelSerializer):
                 create_questions.append(question)
 
         self.create_questions(instance, create_questions)
-        self.update_questions(instance, update_questions) 
+        self.update_questions(instance, update_questions)
+
         return instance
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    """
+    TODO : 
+    Validator for rating -> Check field type based on the question
+    """
+
+    class Meta:
+        model = Rating
+        read_only_fields = ("id", )
+        fields = read_only_fields + ('value')
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Rating.objects.all(),
+                fields=['question', 'course']
+            )
+        ]
+
+    def validate(self, data):
+        """Check that the answer type is correct"""
+        super(serializers.ModelSerializer, self).validate(data)
+
+        if not Question.objects.filter(id=data["question"]).category == 'R':
+            raise serializers.ValidationError("Rating must refer to a 'R' category question")
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """
+    TODO : 
+    Validator for rating -> Check field type based on the question
+    """
+
+    class Meta:
+        model = Comment
+        read_only_fields = ("id", )
+        fields = read_only_fields + ('content')
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Comment.objects.all(),
+                fields=['question', 'course']
+            )
+        ]
+
+    def validate(self, data):
+        """Check that the answer type is correct"""
+        super(serializers.ModelSerializer, self).validate(data)
+
+        if not Question.objects.filter(id=data["question"]).category == 'C':
+            raise serializers.ValidationError("Comment must refer to a 'C' category question")

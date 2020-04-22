@@ -13,8 +13,8 @@ NUMERIC_SCALE = (
 )
 
 QUESTION_CATEGORY = (
-    ('S', ('SCALE')),
     ('C', ('COMMENT')),
+    ('R', ('RATING')),
 )
 
 
