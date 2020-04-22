@@ -78,7 +78,7 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         read_only_fields = ("id", )
-        fields = read_only_fields + ('value')
+        fields = read_only_fields + ('value', )
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Rating.objects.all(),
@@ -103,7 +103,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         read_only_fields = ("id", )
-        fields = read_only_fields + ('content')
+        fields = read_only_fields + ('content', )
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Comment.objects.all(),
