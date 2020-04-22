@@ -15,15 +15,13 @@ from associations.serializers import ElectionSerializer, BallotSerializer
 
 """
     Endpoints:
-        * List elections:               GET     /associations/elections/
+        * List elections:               GET     /associations/elections/  (?association='election.id'      & active_status='upcoming/current/past'
         * Retrieve an election:         GET     /associations/elections/1/
         * Create an election:           POST    /associations/elections/1/
         * Update an election:           PATCH   /associations/elections/1/
         * Destroy an election:          DELETE  /associations/elections/1/
         * Vote to an election:          POST    /associations/elections/1/vote/
         * Results of an election:       GET     /associations/elections/1/results/
-        * List living elections:        GET     /associations/elections/living
-        * List finished elections:      GET     /associations/elections/finished
 """
 
 
@@ -38,11 +36,12 @@ class ElectionViewSet(viewsets.ModelViewSet):
         """Sorting by property (here only active_status)"""
         active_status = self.request.query_params.get("active_status", None)
         if active_status:
-            L = []
-            for obj in queryset:
-                if obj.active_status == active_status:
-                    L.append(obj.id)
-            queryset = queryset.filter(pk__in=L)
+            selected = [
+                election.id
+                for election in queryset
+                if election.active_status == active_status
+            ]
+            queryset = queryset.filter(pk__in=selected)
         return queryset
 
     @action(detail=True, methods=("get",), permission_classes=(ResultsPermission,))
@@ -71,9 +70,6 @@ class CreateBallotView(generics.CreateAPIView):
 
         # Serialize the data.
         serializer = self.get_serializer(data=request.data)
-        print("salut")
-        print(serializer)
-        print(request.data)
         serializer.is_valid(raise_exception=True)
 
         # Check if the new Ballot object is valid.

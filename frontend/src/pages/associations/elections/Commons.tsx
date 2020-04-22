@@ -1,13 +1,19 @@
-import {PageTitle} from "../../../utils/common";
 import React, {useContext, useState} from "react";
-import {Link} from "react-router-dom";
 import {Button, Modal} from "react-bootstrap";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import {activeStatus, api, useBetterQuery} from "../../../services/apiService";
-import {LoadingAssociation} from "../Loading";
-import {Election, Ballot, Choice} from "../../../models/associations/election";
-import {ToastContext} from "../../../utils/Toast";
+
+
+export const ChoiceButton = (props) => {
+    return(
+        <Button
+            variant={props.selected ? 'dark' : 'outline-dark'}
+            onClick={() => props.onClick()}
+            block
+            disabled={props.disabled}
+        >
+            {props.children}
+        </Button>
+    )
+};
 
 export const ListOfVotersButtonModal = ({election, ...props}) => {
     const [show, setShow] = useState<boolean>(false);

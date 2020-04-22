@@ -204,8 +204,37 @@
   fields:
     association: bde
     name: 'Élections BDE'
-    registered_voters: [17bocquet, 17wan-fat]
+    registered_voters: [17bocquet, 17wan-fat, 17thomas]
+    voters: [17bocquet, 17wan-fat]
     starts_at: '2019-09-10T17:41:28+00:00'
+    ends_at: '2020-02-10T17:41:28+00:00'
+    max_choices_per_ballot: 1
+- model: associations.election
+  pk: 2
+  fields:
+    association: bde
+    name: 'Les meilleures listes'
+    registered_voters: [17bocquet, 17wan-fat, 17thomas]
+    voters: [17bocquet, 17wan-fat]
+    starts_at: '2019-09-10T17:41:28+00:00'
+    ends_at: '2020-02-10T17:41:28+00:00'
+    max_choices_per_ballot: 2
+- model: associations.election
+  pk: 3
+  fields:
+    association: bde
+    name: 'Poulet ou Curry'
+    registered_voters: [17bocquet, 17wan-fat, 17thomas]
+    starts_at: '2019-09-10T17:41:28+00:00'
+    ends_at: '2020-09-10T17:41:28+00:00'
+    max_choices_per_ballot: 1
+- model: associations.election
+  pk: 4
+  fields:
+    association: bde
+    name: 'La future élection'
+    registered_voters: [17bocquet, 17wan-fat, 17thomas]
+    starts_at: '2020-08-10T17:41:28+00:00'
     ends_at: '2020-09-10T17:41:28+00:00'
     max_choices_per_ballot: 1
 
@@ -214,33 +243,66 @@
   fields:
     election: 1
     name: Pichalaya
-
 - model: associations.choice
   pk: 2
   fields:
     election: 1
     name: Adrénapiche
+- model: associations.choice
+  pk: 3
+  fields:
+    election: 2
+    name: Pichalaya
+- model: associations.choice
+  pk: 4
+  fields:
+    election: 2
+    name: Adrénapiche
+- model: associations.choice
+  pk: 5
+  fields:
+    election: 2
+    name: Polaropiche
+- model: associations.choice
+  pk: 6
+  fields:
+    election: 3
+    name: Poulet
+- model: associations.choice
+  pk: 7
+  fields:
+    election: 3
+    name: Curry
+- model: associations.choice
+  pk: 8
+  fields:
+    election: 4
+    name: L'élection BDE
+- model: associations.choice
+  pk: 9
+  fields:
+    election: 4
+    name: Miss France
 
 - model: associations.ballot
   pk: 1
   fields:
     election: 1
     choices: [1]
-
 - model: associations.ballot
   pk: 2
   fields:
     election: 1
-    choices: [1]
-
+    choices: [2]
 - model: associations.ballot
   pk: 3
   fields:
-    election: 1
-    choices: [2]
-
+    election: 2
+    choices: [3,4]
 - model: associations.ballot
   pk: 4
   fields:
-    election: 1
-    choices: [2]
+    election: 2
+    choices: [4,5]
+
+

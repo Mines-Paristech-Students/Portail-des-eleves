@@ -1,9 +1,9 @@
 import {PageTitle} from "../../../utils/common";
 import React, {useContext, useState} from "react";
-import {api, useBetterQuery, activeStatus} from "../../../services/apiService";
+import {api, useBetterQuery, electionActiveStatus} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import Row from "react-bootstrap/Row";
-import {Button, Col, Table} from "react-bootstrap";
+import {Col, Table} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import {Election, Result,} from "../../../models/associations/election";
 import { PieChart, BarChart } from 'react-chartkick';
@@ -15,7 +15,7 @@ export const AssociationElectionResultsList = ({ association }) => {
         "elections.list",
         api.elections.list,
         associationId,
-        activeStatus.Past
+        electionActiveStatus.Past
     );
 
     if (status === "loading") return <LoadingAssociation />;
@@ -48,31 +48,39 @@ const ElectionResultCard = ({ election }) => {
     if (status === "loading") return <LoadingElectionCard election={election}/>;
     else if (status === "error") return <ErrorLoadingElectionCard error={error} election={election}/>;
     else if (data) {
-        console.log(data);
-        const nbVoters = parseInt(data.nbVoters);
-        const nbRegisterd = parseInt(data.nbRegistered);
+        const numberOfVoters = parseInt(data.numberOfVoters);
+        const isRegistered = parseInt(data.numberOfRegistered);
 
         const dataPieChartWithoutAbstention = election.choices.map(choice => (
-            [choice.name, parseInt(data.result[choice.id])*100/nbVoters]
+            [choice.name, parseInt(data.result[choice.id])*100/numberOfVoters]
         ));
+
+        //console.log('datapieChartnoAbst', dataPieChartWithoutAbstention);
         const dataPieChartWithAbstention = election.choices.map(choice => (
-            [choice.name, parseInt(data.result[choice.id])*100/nbRegisterd]
+            [choice.name, parseInt(data.result[choice.id])*100/isRegistered]
         ));
+
         dataPieChartWithAbstention.push(
-            ['Abstention', (nbRegisterd-nbVoters)*100/nbRegisterd]
+            ['Abstention', (isRegistered-numberOfVoters)*100/isRegistered]
         );
+        //console.log('datapieChartAbst', dataPieChartWithAbstention);
         const dataBarChart = election.choices.map(choice => (
             [choice.name, parseInt(data.result[choice.id])]
         ));
+        //console.log('databarChartAbst', dataBarChart);
         const startsAt = new Date(election.startsAt);
         const endsAt = new Date(election.endsAt);
         return (
             <Card>
-                <Card.Body>
+                <Card.Body className={'ml-2 mr-2'}>
                     <Row>
                         <h4>{election.name}</h4>
-                        <p>Cette élection s'est tenu entre le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()} et le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}</p>
-                        <p>Il était de possible de faire {election.maxChoicesPerBallot} choix parmi ceux proposés</p>
+                    </Row>
+                    <Row>
+                        <p>
+                            Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
+                            Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                        </p>
                     </Row>
                     <Row>
                         <Table striped bordered hover size={'sm'}>
@@ -91,14 +99,14 @@ const ElectionResultCard = ({ election }) => {
                             </thead>
 
                             {election.choices.map(choice => (
-                                <tbody>
+                                <tbody key={choice.id}>
                                     <tr>
                                         <td>{choice.name}</td>
                                         <td>{data.result[choice.id]}</td>
                                         {election.maxChoicesPerBallot === 1 ?
                                             <>
-                                                <td>{(parseInt(data.result[choice.id])*100/nbVoters).toFixed(1)}</td>
-                                                <td>{(parseInt(data.result[choice.id])*100/nbRegisterd).toFixed(1)}</td>
+                                                <td>{(parseInt(data.result[choice.id])*100/numberOfVoters).toFixed(1)}</td>
+                                                <td>{(parseInt(data.result[choice.id])*100/isRegistered).toFixed(1)}</td>
                                             </>
                                             :<></>
                                         }
@@ -108,11 +116,11 @@ const ElectionResultCard = ({ election }) => {
                             <tbody>
                                 <tr>
                                     <td>Abstention</td>
-                                    <td>{nbRegisterd-nbVoters}</td>
+                                    <td>{isRegistered-numberOfVoters}</td>
                                     {election.maxChoicesPerBallot === 1 ?
                                         <>
                                             <td></td>
-                                            <td>{((nbRegisterd-nbVoters)*100/nbRegisterd).toFixed(1)}</td>
+                                            <td>{((isRegistered-numberOfVoters)*100/isRegistered).toFixed(1)}</td>
                                         </>
                                         :<></>
                                     }

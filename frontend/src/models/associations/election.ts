@@ -10,8 +10,8 @@ export interface Choice {
 export interface Result {
     id: string;
     result: string;
-    nbVoters:string;
-    nbRegistered:string;
+    numberOfVoters:string;
+    numberOfRegistered:string;
 }
 
 export interface Ballot {

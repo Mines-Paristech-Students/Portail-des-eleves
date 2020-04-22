@@ -161,11 +161,6 @@ class ElectionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         registered_voters = validated_data.pop("registered_voters")
-        print("!!!!!!!!!!!!!!!!!!!!")
-        print("coucou, on est dans create")
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-        print(validated_data)
         choices = validated_data.pop("choices")
 
         election = Election.objects.create(**validated_data)

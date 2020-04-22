@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Form, Button, Col, InputGroup, Alert} from "react-bootstrap";
+import {Form, Button, Col, InputGroup, Alert, Card} from "react-bootstrap";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
@@ -163,137 +163,141 @@ const EditElection = ({ election, association, ...props }) => {
     };
 
     return (
-        <>
-            {formCorrectionsAlert}
-            <p>Pensez à ajouter un option pour le vote blanc si vous voulez le différencier de l'abstention.</p>
-            <form onSubmit={() => null}>
-                <Form.Group className="mt-6">
-                    <Form.Row>
-                        <h4>Nom</h4>
-                    </Form.Row>
-                    <Form.Control
-                        id="name"
-                        name="name"
-                        type="text"
-                        className="my-2 form-control-lg"
-                        placeholder="Entrez un nom"
-                        onChange={(e) => setName(e.target.value)}
-                        value={name}
-                        required
-                    />
-                </Form.Group>
-                <Form.Row>
-                    <Form.Group className='mt-1'>
-                        <h4>Dates</h4>
+        <Card>
+            <div className={'ml-5 mr-5'}>
+                {formCorrectionsAlert}
+                <form onSubmit={() => null}>
+                    <Form.Group className="mt-6">
                         <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>Début</Form.Label>
-                                <Form.Control
-                                    id="startDate"
-                                    name="startDate"
-                                    type="datetime-local"
-                                    className="my-2 form-control-g"
-                                    value={toGoodString(startsAt)}
-                                    onChange={(e) => setStartsAt(new Date(e.target.value))}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col}>
-                                <Form.Label>Fin</Form.Label>
-                                <Form.Control
-                                    id="endDate"
-                                    name="endDate"
-                                    type="datetime-local"
-                                    className="my-2 form-control-g"
-                                    value={toGoodString(endsAt)}
-                                    onChange={(e) => {
-                                        setEndsAt(new Date(e.target.value))}}
-                                    required
-                                />
-                            </Form.Group>
+                            <h4>Nom</h4>
                         </Form.Row>
+                        <Form.Control
+                            id="name"
+                            name="name"
+                            type="text"
+                            className="my-2 form-control-lg"
+                            placeholder="Entrez un nom"
+                            onChange={(e) => setName(e.target.value)}
+                            value={name}
+                            required
+                        />
                     </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                    <Form.Group  className={'mt-1'}>
-                        <h4>Choix</h4>
-                        <Form.Group>
-                            <ListOfChoices
-                                choices={choices}
-                                onChange={(e, k)=> {
-                                    const newChoicesState = choices.slice();
-                                    newChoicesState[k] = e.target.value;
-                                    setChoices(newChoicesState)
-                                }}
-                                onDelete={k => {
-                                    const newChoicesState = choices.slice();
-                                    newChoicesState.splice(k,1);
-                                    setChoices(newChoicesState)
-                                }}
-                            />
-                            <NewChoiceInputButton
-                                onClick={() => {
-                                    const newChoicesState = choices.slice();
-                                    newChoicesState.push("");
-                                    setChoices((newChoicesState));
-                                }}
-                            />
-                        </Form.Group>
-                        <Form.Row>
-                            <Form.Group>
+                    <Form.Row>
+                        <Form.Group className='mt-1'>
+                            <h4>Dates</h4>
+                            <Form.Row>
                                 <Form.Group as={Col}>
-                                    <Form.Label>
-                                        Nombre de choix par vote
-                                    </Form.Label>
-                                </Form.Group>
-                                <Form.Group as={Col} md={'6'}>
+                                    <Form.Label>Début</Form.Label>
                                     <Form.Control
-                                        id="maxChoicesPerBallot"
-                                        name="maxChoicesPerBallot"
-                                        type="number"
-                                        className="form-control"
-                                        value={maxChoicesPerBallot.toString()}
-                                        onChange={(e) => setMaxChoicesPerBallot(Math.max(e.target.value, 1))}
+                                        id="startDate"
+                                        name="startDate"
+                                        type="datetime-local"
+                                        className="my-2 form-control-g"
+                                        value={toGoodString(startsAt)}
+                                        onChange={(e) => setStartsAt(new Date(e.target.value))}
                                         required
                                     />
-
                                 </Form.Group>
-                             </Form.Group>
-                        </Form.Row>
-                    </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                    Il manque encore les registered voters pour l'instant 17bocquet et 17wan-fat par defaut
-                </Form.Row>
-                <Form.Row>
-                    <Form.Group>
-                        {(props.edit) ?
+                                <Form.Group as={Col}>
+                                    <Form.Label>Fin</Form.Label>
+                                    <Form.Control
+                                        id="endDate"
+                                        name="endDate"
+                                        type="datetime-local"
+                                        className="my-2 form-control-g"
+                                        value={toGoodString(endsAt)}
+                                        onChange={(e) => {
+                                            setEndsAt(new Date(e.target.value))}}
+                                        required
+                                    />
+                                </Form.Group>
+                            </Form.Row>
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Group  className={'mt-1'}>
+                            <h4>Choix</h4>
+                            <div className={'small'}>
+                                Pensez à ajouter un option pour le vote blanc si vous voulez le différencier de l'abstention.
+                            </div>
+                            <Form.Group>
+                                <ListOfChoices
+                                    choices={choices}
+                                    onChange={(e, k)=> {
+                                        const newChoicesState = choices.slice();
+                                        newChoicesState[k] = e.target.value;
+                                        setChoices(newChoicesState)
+                                    }}
+                                    onDelete={k => {
+                                        const newChoicesState = choices.slice();
+                                        newChoicesState.splice(k,1);
+                                        setChoices(newChoicesState)
+                                    }}
+                                />
+                                <NewChoiceInputButton
+                                    onClick={() => {
+                                        const newChoicesState = choices.slice();
+                                        newChoicesState.push("");
+                                        setChoices((newChoicesState));
+                                    }}
+                                />
+                            </Form.Group>
+                            <Form.Row>
+                                <Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>
+                                            Nombre de choix par vote
+                                        </Form.Label>
+                                    </Form.Group>
+                                    <Form.Group as={Col} md={'6'}>
+                                        <Form.Control
+                                            id="maxChoicesPerBallot"
+                                            name="maxChoicesPerBallot"
+                                            type="number"
+                                            className="form-control"
+                                            value={maxChoicesPerBallot.toString()}
+                                            onChange={(e) => setMaxChoicesPerBallot(Math.max(e.target.value, 1))}
+                                            required
+                                        />
+
+                                    </Form.Group>
+                                 </Form.Group>
+                            </Form.Row>
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                        Il manque encore les registered voters pour l'instant 17bocquet et 17wan-fat par defaut
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Group>
+                            {(props.edit) ?
+                                <Button
+                                    variant="danger"
+                                    className={"mr-3"}
+                                    type="button"
+                                    onClick={deleteElection}
+                                >
+                                    Supprimer
+                                </Button> : <></>
+                            }
                             <Button
-                                variant="danger"
-                                className={"mr-3"}
+                                variant="primary"
                                 type="button"
-                                onClick={deleteElection}
+                                onClick={handleSubmit}
                             >
-                                Supprimer
-                            </Button> : <></>
-                        }
-                        <Button
-                            variant="primary"
-                            type="button"
-                            onClick={handleSubmit}
-                        >
-                            {props.edit? "Supprimer et remplacer":"Créer l'élection"}
-                        </Button>
-                    </Form.Group>
-                </Form.Row>
-            </form>
-        </>
+                                {props.edit? "Supprimer et remplacer":"Créer l'élection"}
+                            </Button>
+                        </Form.Group>
+                    </Form.Row>
+                </form>
+            </div>
+        </Card>
     );
 };
 
 const ListOfChoices = props => {
     const list = props.choices.map((choice, k) =>
-        <Col>
+        <Col key={k}>
             <ChoiceInput
                 id={k}
                 onChange={(e) => props.onChange(e, k)}
@@ -303,28 +307,28 @@ const ListOfChoices = props => {
         </Col>
     );
 
-    const workOnList = (list: any[], n: number) => {
-        const lists : any[][]= [];
-        list.map((o, k) => {
-            if (k % n === 0) {
-                lists.push([o])
-            } else {
-                lists[lists.length -1].push(o)
-            }
-            return null;
-        });
-        return lists
-    };
-    const newList = workOnList(list, 3);
+    // const workOnList = (list: any[], n: number) => {
+    //     const lists : any[][]= [];
+    //     list.map((o, k) => {
+    //         if (k % n === 0) {
+    //             lists.push([o])
+    //         } else {
+    //             lists[lists.length -1].push(o)
+    //         }
+    //         return null;
+    //     });
+    //     return lists
+    // };
+    // const newList = workOnList(list, 3);
 
-    return (
-        <>
-            {newList.map(l =>
-                <Form.Row>
-                    {l}
-                </Form.Row>
-            )}
-        </>
+    return ( list
+        // <>
+        //     {newList.map(l =>
+        //         <Form.Row>
+        //             {l}
+        //         </Form.Row>
+        //     )}
+        // </>
     )
 };
 
@@ -366,47 +370,23 @@ const NewChoiceInputButton = (props) => {
 
 const toGoodString = (date: Date) => {
     const getGoodMonth = (date: Date) => {
-        const month = date.getMonth() + 1;
-        if (month < 10) {
-            return "0" + month
-        }
-        return month
+        return (date.getMonth() + 1).toString().padStart(2, '0');
     };
 
     const getGoodDate = (date: Date) => {
-        const date1 = date.getDate();
-        if (date1 < 10) {
-            return "0" + date1
-        }
-        return date1
+        return date.getDate().toString().padStart(2, '0');
     };
 
     const getGoodHours = (date: Date) => {
-        const hours = date.getHours();
-        if (hours < 10) {
-            return "0" + hours
-        }
-        return hours
+        return date.getHours().toString().padStart(2, '0');
     };
 
     const getGoodMinutes = (date: Date) => {
-        const minutes = date.getMinutes();
-        if (minutes < 10) {
-            return "0" + minutes
-        }
-        return minutes
+        return date.getMinutes().toString().padStart(2, '0');
     };
 
     const getGoodYear = (date: Date) => {
-        const year = date.getFullYear();
-        if (year < 1000) {
-            return "0" + year
-        } else if (year < 100) {
-            return "00" + year
-        } else if (year < 10) {
-            return "000" + year
-        }
-        return year
+        return date.getFullYear().toString().padStart(4, '0');
     };
 
     if (date) {

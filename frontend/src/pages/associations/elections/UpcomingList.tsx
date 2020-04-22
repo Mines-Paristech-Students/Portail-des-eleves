@@ -4,10 +4,10 @@ import {Link} from "react-router-dom";
 import {Col} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
-import {activeStatus, api, useBetterQuery} from "../../../services/apiService";
+import {electionActiveStatus, api, useBetterQuery} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import {Election} from "../../../models/associations/election";
-import {ListOfVotersButtonModal} from "./Commons";
+import {ChoiceButton, ListOfVotersButtonModal} from "./Commons";
 
 export const AssociationElectionUpcomingList = ({ association }) => {
 
@@ -16,7 +16,7 @@ export const AssociationElectionUpcomingList = ({ association }) => {
         "elections.list",
         api.elections.list,
         associationId,
-        activeStatus.Upcoming
+        electionActiveStatus.Upcoming
     );
 
     if (status === "loading") return <LoadingAssociation />;
@@ -50,7 +50,7 @@ const ElectionCard = ({ election, association }) => {
                 to={`/associations/${association.id}/files/upload`}
                 className={"float-right mt-0"}
             >
-                <i className={"fe fe-edit"}/> Modifier
+                <i className={"fe fe-edit"}/>
             </Link>
         );
     } else {
@@ -58,7 +58,7 @@ const ElectionCard = ({ election, association }) => {
     }
     return (
         <Card>
-            <Card.Body>
+            <Card.Body className={'ml-2 mr-2'}>
                 <Row>
                     <Col xs={0}>
                         <h4>{election.name}</h4>
@@ -68,17 +68,25 @@ const ElectionCard = ({ election, association }) => {
                     </Col>
                 </Row>
                 <Row>
-                    <p>Cette élection se tiendra entre le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()} et le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}</p>
-                    <p>Chaque électeur pourra faire {election.maxChoicesPerBallot} choix parmi les suivants :</p>
+                    <p>
+                        Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
+                        Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                    </p>
                 </Row>
                 <Row>
-                    <ul>
-                        {election.choices.map(choice => (
-                            <li key={choice.id}>
-                                {choice.name}
-                            </li>
-                        ))}
-                    </ul>
+                    {election.choices.map(choice => (
+                        <ChoiceButton
+                            selected={false}
+                            onClick={() => null}
+                            disabled={true}
+                            key={choice.id}
+                        >
+                            {choice.name}
+                        </ChoiceButton>
+                    ))}
+                    <div className={'small'}>
+                        {election.maxChoicesPerBallot} choix maximum
+                    </div>
                 </Row>
                 <Row>
                     <ListOfVotersButtonModal election={election}/>

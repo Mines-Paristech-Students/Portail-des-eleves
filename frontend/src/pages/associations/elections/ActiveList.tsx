@@ -4,11 +4,11 @@ import {Link} from "react-router-dom";
 import {Button, Col, Modal} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
-import {activeStatus, api, useBetterQuery} from "../../../services/apiService";
+import {electionActiveStatus, api, useBetterQuery} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import {Election, Ballot, Choice} from "../../../models/associations/election";
 import {ToastContext} from "../../../utils/Toast";
-import {ListOfVotersButtonModal} from "./Commons";
+import {ChoiceButton, ListOfVotersButtonModal} from "./Commons";
 
 export const AssociationElectionActiveList = ({ association }) => {
 
@@ -17,7 +17,7 @@ export const AssociationElectionActiveList = ({ association }) => {
         "elections.list",
         api.elections.list,
         associationId,
-        activeStatus.Current
+        electionActiveStatus.Current
     );
 
     if (status === "loading") return <LoadingAssociation />;
@@ -48,7 +48,7 @@ const ElectionCard = ({ election, association }) => {
                 to={`/associations/${association.id}/elections/${election.id}/edit`}
                 className={"float-right mt-0"}
             >
-                <i className={"fe fe-edit"}/> Modifier
+                <i className={"fe fe-edit"}/>
             </Link>
         );
     } else {
@@ -58,7 +58,7 @@ const ElectionCard = ({ election, association }) => {
     const endsAt = new Date(election.endsAt);
     return (
         <Card>
-            <Card.Body>
+            <Card.Body className={'ml-2 mr-2'}>
                 <Row>
                     <Col xs={0}>
                         <h4>{election.name}</h4>
@@ -68,8 +68,10 @@ const ElectionCard = ({ election, association }) => {
                     </Col>
                 </Row>
                 <Row>
-                    <p>Cette élection, ouverte le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}, fermera le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}. Les résultats seront immédiatement publiés.</p>
-                    <p>Vous avez le droit à un maximum de {election.maxChoicesPerBallot} choix</p>
+                    <p>
+                        Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
+                        Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                    </p>
                 </Row>
                 <Row>
                     <Vote election={election} association={association}/>
@@ -83,16 +85,16 @@ const ElectionCard = ({ election, association }) => {
 };
 
 const Vote = ({ election, association, ...props }) => {
-    const isRegisterd = election.isRegistered;
-    const hasVoted = election.hasVoted;
-    const disabled = hasVoted || !isRegisterd;
+    const isRegisterd = election.isRegistered; //to know if the current user is registered to this election
+    const hasVoted = election.hasVoted; //to know if the current user hasVoted
+    const disabled = hasVoted || !isRegisterd; //if the current user has voter or is not registered he can't click on the choices button as well as the vote button
     const maxChoicesPerBallot = parseInt(election.maxChoicesPerBallot);
 
-    const [selected, setSelected] = useState<number[]>([]);
+    const [selected, setSelected] = useState<number[]>([]); //pk of selected choices
     const [showVoteConfirmation, setShowVoteConfirmation] = useState<boolean>(false);
     const newToast = useContext(ToastContext);
 
-    const disabledVoteButton = disabled || selected.length===0;
+    const disabledVoteButton = disabled || selected.length===0; //can't click on the vote button if vote is disabled or no choices are selected
 
 
     const handleClick = (choice: Choice) => {
@@ -142,10 +144,14 @@ const Vote = ({ election, association, ...props }) => {
                     selected={selected.includes(choice.id)}
                     onClick={() => handleClick(choice)}
                     disabled={disabled}
+                    key={choice.id}
                 >
                     {choice.name}
                 </ChoiceButton>
             ))}
+            <div className={'small'}>
+                {election.maxChoicesPerBallot} choix maximum
+            </div>
             <VoteButton
                 hasVoted={hasVoted}
                 isRegistered={isRegisterd}
@@ -159,20 +165,10 @@ const Vote = ({ election, association, ...props }) => {
                 handleVote={() => handleVote()}
                 handleClose={() => handleCloseAlert()}
             />
+            <div className={'small'}>
+                Les choix seront publiés à la fermeture de l'élection
+            </div>
         </>
-    )
-};
-
-const ChoiceButton = (props) => {
-    return(
-        <Button
-            variant={props.selected ? 'dark' : 'outline-dark'}
-            onClick={() => props.onClick()}
-            block
-            disabled={props.disabled}
-        >
-            {props.children}
-        </Button>
     )
 };
 
@@ -194,7 +190,7 @@ const VoteButton = (props) => {
                 block
                 disabled
             >
-                Vous n'êtes inscrit à ce scrutin
+                Vous n'êtes pas inscrit à ce scrutin
             </Button>
         )
     } else {
@@ -210,6 +206,7 @@ const VoteButton = (props) => {
         )
     }
 };
+
 
 const AlertVoteConfirmation = (props) => {
     return(

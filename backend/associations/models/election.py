@@ -53,12 +53,17 @@ class Election(models.Model):
         # First, we fetch all the ballots, but by replacing them by the associated choice name.
         # We then wrap all of these choices into a Counter, which is a nice built-in object which will
         # count the ballots for us.
+        result = Counter(
+            [ballot[0] for ballot in self.ballots.values_list("choices__id")]
+        )
+        choices = [choice[0] for choice in self.choices.values_list("id")]
+        for choice in choices:
+            if not choice in result:
+                result[choice] = 0
         return {
-            "result": Counter(
-                [ballot[0] for ballot in self.ballots.values_list("choices__id")]
-            ),
-            "nb_voters": len(self.voters.all()),
-            "nb_registered": len(self.registered_voters.all()),
+            "result": result,
+            "number_of_voters": len(self.voters.all()),
+            "number_of_registered": len(self.registered_voters.all()),
         }
 
     @cached_property
