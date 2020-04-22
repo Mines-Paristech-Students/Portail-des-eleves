@@ -55,7 +55,6 @@ const ElectionResultCard = ({ election }) => {
             [choice.name, parseInt(data.result[choice.id])*100/numberOfVoters]
         ));
 
-        //console.log('datapieChartnoAbst', dataPieChartWithoutAbstention);
         const dataPieChartWithAbstention = election.choices.map(choice => (
             [choice.name, parseInt(data.result[choice.id])*100/isRegistered]
         ));
@@ -63,11 +62,11 @@ const ElectionResultCard = ({ election }) => {
         dataPieChartWithAbstention.push(
             ['Abstention', (isRegistered-numberOfVoters)*100/isRegistered]
         );
-        //console.log('datapieChartAbst', dataPieChartWithAbstention);
+
         const dataBarChart = election.choices.map(choice => (
             [choice.name, parseInt(data.result[choice.id])]
         ));
-        //console.log('databarChartAbst', dataBarChart);
+
         const startsAt = new Date(election.startsAt);
         const endsAt = new Date(election.endsAt);
         return (

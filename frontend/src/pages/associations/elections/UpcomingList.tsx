@@ -47,7 +47,7 @@ const ElectionCard = ({ election, association }) => {
     if (association.myRole.electionPermission) {
         editButton = (
             <Link
-                to={`/associations/${association.id}/files/upload`}
+                to={`/associations/${association.id}/elections/${election.id}/modifier`}
                 className={"float-right mt-0"}
             >
                 <i className={"fe fe-edit"}/>

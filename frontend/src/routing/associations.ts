@@ -67,31 +67,31 @@ export const routes = association => [
         props: { association: association }
     },
     {
-        path: `/elections-current`,
+        path: `/elections-en-cours`,
         component: AssociationElectionActiveList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/elections-past`,
+        path: `/elections-passees`,
         component: AssociationElectionResultsList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/elections-upcoming`,
+        path: `/elections-a-venir`,
         component: AssociationElectionUpcomingList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/elections/new`,
+        path: `/elections/nouvelle`,
         component: AssociationCreateElection,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/elections/:electionId/edit`,
+        path: `/elections/:electionId/modifier`,
         component: AssociationEditElection,
         exact: true,
         props: { association: association }

@@ -33,19 +33,19 @@ export const AssociationSidebar = ({ association }) => {
                 <SidebarCategory title={"Élections"}>
                     <SidebarItem
                         icon={"calendar"}
-                        to={`/associations/${association.id}/elections-upcoming`}
+                        to={`/associations/${association.id}/elections-a-venir`}
                     >
                         À venir
                     </SidebarItem>
                     <SidebarItem
                         icon={"check-square"}
-                        to={`/associations/${association.id}/elections-current`}
+                        to={`/associations/${association.id}/elections-en-cours`}
                     >
                         En cours
                     </SidebarItem>
                     <SidebarItem
                         icon={"bar-chart-2"}
-                        to={`/associations/${association.id}/elections-past`}
+                        to={`/associations/${association.id}/elections-passees`}
                     >
                         Résultats
                     </SidebarItem>
@@ -94,7 +94,7 @@ const AddElectionItem = ({ association }) => {
         return (
             <SidebarItem
                 icon={"plus"}
-                to={`/associations/${association.id}/elections/new`}
+                to={`/associations/${association.id}/elections/nouvelle`}
             >
                 Nouvelle élection
             </SidebarItem>
