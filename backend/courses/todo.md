@@ -24,3 +24,6 @@
 
 * only admin can add a course
 * can add course wo user
+* check required fields 
+* Test same instance 
+* Test for same instance  

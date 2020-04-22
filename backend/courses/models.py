@@ -71,10 +71,13 @@ class Question(models.Model):
 
     required = models.BooleanField(default=False)
 
+    # Archived field is used to keep old data, while ensuring that it is deprecated
+    archived = models.BooleanField(default=False)
+
     category = models.CharField(
         max_length=1,
         choices=QUESTION_CATEGORY,
-        default='COMMENT'
+        default='C'
     )
 
     form = models.ForeignKey(
