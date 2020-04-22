@@ -33,6 +33,7 @@ class Course(models.Model):
         Form,
         related_name="course",
         on_delete=models.CASCADE,
+        blank=True, null=True,
     )
 
     have_voted = models.ManyToManyField(

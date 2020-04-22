@@ -1,11 +1,10 @@
-from courses.views import CourseViewSet
 from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
+from courses import views
 
-from rest_framework_bulk.routes import BulkRouter
+urlpatterns = [
+    path('courses/', views.CourseList.as_view()),
+    path('courses/<int:pk>/', views.CourseDetail.as_view()),
+]
 
-router = BulkRouter()
-urlpatterns = []
-
-router.register(f"courses", CourseViewSet)
-
-urlpatterns += router.urls
+urlpatterns = format_suffix_patterns(urlpatterns)
