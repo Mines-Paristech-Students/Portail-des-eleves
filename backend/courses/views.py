@@ -1,13 +1,15 @@
+from rest_framework import generics
+from rest_framework import viewsets
+
 from courses.models import Course
 from courses.serializers import CourseSerializer
-from rest_framework import generics
+from courses.permissions import CoursePermission
 
 
-class CourseList(generics.ListCreateAPIView):
+class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    permission_classes = [CoursePermission]
 
-
-class CourseDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

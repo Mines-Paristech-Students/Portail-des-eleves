@@ -1,10 +1,11 @@
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from courses import views
 
-urlpatterns = [
-    path('', views.CourseList.as_view()),
-    path('<int:pk>/', views.CourseDetail.as_view()),
-]
+router = DefaultRouter()
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+router.register(r'courses', views.CourseViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
