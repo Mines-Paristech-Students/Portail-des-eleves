@@ -19,6 +19,7 @@
 * TODO : tell the users they cannot change their votes once submitted
 * Replace by slugfields 
 * Add __str__ in models
+* When doing a submission, ask to confirm before sending
 
 ## TESTS to implement
 

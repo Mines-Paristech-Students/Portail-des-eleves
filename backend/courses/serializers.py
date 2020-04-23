@@ -17,12 +17,13 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         read_only_fields = ('id', )
-        fields = read_only_fields + ('label', 'required', 'archived', 'category')
+        fields = read_only_fields + ('form', 'label', 'required', 'archived', 'category')
 
 
 class FormSerializer(serializers.ModelSerializer):
     # Writable nested serializer
     questions = QuestionSerializer(many=True)
+    courses = CourseSerializer(many=True)
 
     class Meta:
         model = Form

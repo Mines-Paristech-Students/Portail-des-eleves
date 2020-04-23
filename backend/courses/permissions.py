@@ -13,3 +13,15 @@ class CoursePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS or request.user.is_staff
+
+
+
+class FormPermission(permissions.BasePermission):
+    """
+                             | Association |
+        Global administrator | CRUD        |
+        User                 | R           |
+    """
+
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS or request.user.is_staff
