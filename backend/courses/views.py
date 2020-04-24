@@ -2,9 +2,10 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.authentication import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
-from courses.models import Course, Form, Question, Object
+from courses.models import Course, Form, Question, Comment 
 from courses.serializers import CourseSerializer, FormSerializer, QuestionSerializer, CommentSerializer
 from courses.permissions import CoursePermission, FormPermission
 

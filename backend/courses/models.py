@@ -39,7 +39,7 @@ class Course(models.Model):
     have_voted = models.ManyToManyField(
         User,
         related_name="course",
-        blank=True, null=True,
+        blank=True,
     )
 
 
