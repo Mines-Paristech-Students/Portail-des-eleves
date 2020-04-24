@@ -39,7 +39,7 @@ export const AssociationEventList = ({ association, ...props }) => {
         return (
             <>
                 {addButton}
-                <PageTitle className={"mt-6"}>Evenements</PageTitle>
+                <PageTitle className="mt-6">Liste des évènement</PageTitle>
                 <Row>
                     {data.map((event: Event | any) => {
                         return (

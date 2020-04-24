@@ -65,7 +65,7 @@ const EditEvent = ({ event, association, ...props }) => {
                 .save(values)
                 .then(res => {
                     newToast({
-                        message: "Evènement sauvegardé !",
+                        message: "Évènement sauvegardé !",
                         level: ToastLevel.Success
                     });
 
@@ -89,7 +89,7 @@ const EditEvent = ({ event, association, ...props }) => {
                 .delete(event)
                 .then(res => {
                     newToast({
-                        message: "Evenement supprimé !",
+                        message: "Évènement supprimé !",
                         level: ToastLevel.Success
                     });
 
@@ -108,7 +108,7 @@ const EditEvent = ({ event, association, ...props }) => {
         <form onSubmit={formik.handleSubmit}>
             <Form.Group className="mt-6">
 
-                <Form.Label>Nom de l'evenement</Form.Label>
+                <Form.Label>Nom de l'évènemen</Form.Label>
                 <Form.Control 
                     id="name"
                     name="name"
