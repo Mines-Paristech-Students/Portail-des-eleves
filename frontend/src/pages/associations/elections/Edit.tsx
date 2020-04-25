@@ -5,7 +5,8 @@ import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import {Choice, Election} from "../../../models/associations/election";
 import {PageTitle} from "../../../utils/common";
-import {User} from "../../../models/user";
+import DayPicker from "react-day-picker";
+import "react-day-picker/lib/style.css";
 import {Formik, useField} from "formik";
 
 
@@ -421,3 +422,33 @@ const toGoodString = (date: Date) => {
     }
     return ''
 };
+
+
+
+export function DatePickerField({ label, ...props }: any) {
+    const { setFieldValue } = useFormikContext();
+    const [field, meta] = useField<Date>(props);
+
+    return (
+        <Form.Group>
+            <Form.Label>{label}</Form.Label>
+            <DayPicker
+                {...field}
+                initialMonth={field.value}
+                selectedDays={field.value}
+                onDayClick={day => setFieldValue(field.name as never, day)}
+                locale="fr"
+                months={MONTHS}
+                weekdaysLong={WEEKDAYS_LONG}
+                weekdaysShort={WEEKDAYS_SHORT}
+                firstDayOfWeek={1}
+                disabledDays={{ before: new Date() }}
+            />
+            {meta.touched && meta.error ? (
+                <Form.Control.Feedback type="invalid">
+                    {meta.error}
+                </Form.Control.Feedback>
+            ) : null}
+        </Form.Group>
+    );
+}
