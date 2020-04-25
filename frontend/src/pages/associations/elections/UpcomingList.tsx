@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import {electionActiveStatus, api, useBetterQuery} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import {Election} from "../../../models/associations/election";
-import {ChoiceButton, ListOfVotersButtonModal} from "./Commons";
+import {ChoiceButton, ListOfVotersButtonModal, toFrenchTimeNoSecondString, toFrenchDate} from "./Commons";
 
 export const AssociationElectionUpcomingList = ({ association }) => {
 
@@ -69,8 +69,8 @@ const ElectionCard = ({ election, association }) => {
                 </Row>
                 <Row>
                     <p>
-                        Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
-                        Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                        Ouverture le {toFrenchDate(startsAt)} à {toFrenchTimeNoSecondString(startsAt)}<br/>
+                        Fermeture le {toFrenchDate(endsAt)} à {toFrenchTimeNoSecondString(endsAt)}
                     </p>
                 </Row>
                 <Row>

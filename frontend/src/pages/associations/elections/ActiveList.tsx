@@ -1,5 +1,5 @@
 import {PageTitle} from "../../../utils/common";
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {Button, Col, Modal} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
@@ -7,8 +7,7 @@ import Row from "react-bootstrap/Row";
 import {electionActiveStatus, api, useBetterQuery} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import {Election, Ballot, Choice} from "../../../models/associations/election";
-import {ToastContext} from "../../../utils/Toast";
-import {ChoiceButton, ListOfVotersButtonModal} from "./Commons";
+import {ChoiceButton, ListOfVotersButtonModal, toFrenchDate, toFrenchTimeNoSecondString} from "./Commons";
 
 export const AssociationElectionActiveList = ({ association }) => {
 
@@ -69,8 +68,8 @@ const ElectionCard = ({ election, association }) => {
                 </Row>
                 <Row>
                     <p>
-                        Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
-                        Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                        Ouverture le {toFrenchDate(startsAt)} à {toFrenchTimeNoSecondString(startsAt)}<br/>
+                        Fermeture le {toFrenchDate(endsAt)} à {toFrenchTimeNoSecondString(endsAt)}
                     </p>
                 </Row>
                 <Row>
@@ -92,7 +91,6 @@ const Vote = ({ election, association, ...props }) => {
 
     const [selected, setSelected] = useState<number[]>([]); //pk of selected choices
     const [showVoteConfirmation, setShowVoteConfirmation] = useState<boolean>(false);
-    const newToast = useContext(ToastContext);
 
     const disabledVoteButton = disabled || selected.length===0; //can't click on the vote button if vote is disabled or no choices are selected
 
@@ -166,7 +164,7 @@ const Vote = ({ election, association, ...props }) => {
                 handleClose={() => handleCloseAlert()}
             />
             <div className={'small'}>
-                Les choix seront publiés à la fermeture de l'élection
+                Les résultats seront publiés à la fermeture de l'élection
             </div>
         </>
     )

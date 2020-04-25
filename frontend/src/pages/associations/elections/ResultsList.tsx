@@ -1,5 +1,5 @@
 import {PageTitle} from "../../../utils/common";
-import React, {useContext, useState} from "react";
+import React from "react";
 import {api, useBetterQuery, electionActiveStatus} from "../../../services/apiService";
 import {LoadingAssociation} from "../Loading";
 import Row from "react-bootstrap/Row";
@@ -7,7 +7,7 @@ import {Col, Table} from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import {Election, Result,} from "../../../models/associations/election";
 import { PieChart, BarChart } from 'react-chartkick';
-import { ListOfVotersButtonModal } from './Commons'
+import {ListOfVotersButtonModal, toFrenchDate, toFrenchTimeNoSecondString} from './Commons'
 import 'chart.js';
 export const AssociationElectionResultsList = ({ association }) => {
     const associationId = association.id;
@@ -49,18 +49,18 @@ const ElectionResultCard = ({ election }) => {
     else if (status === "error") return <ErrorLoadingElectionCard error={error} election={election}/>;
     else if (data) {
         const numberOfVoters = parseInt(data.numberOfVoters);
-        const isRegistered = parseInt(data.numberOfRegistered);
+        const numberOfRegistered = parseInt(data.numberOfRegistered);
 
         const dataPieChartWithoutAbstention = election.choices.map(choice => (
             [choice.name, parseInt(data.result[choice.id])*100/numberOfVoters]
         ));
 
         const dataPieChartWithAbstention = election.choices.map(choice => (
-            [choice.name, parseInt(data.result[choice.id])*100/isRegistered]
+            [choice.name, parseInt(data.result[choice.id])*100/numberOfRegistered]
         ));
 
         dataPieChartWithAbstention.push(
-            ['Abstention', (isRegistered-numberOfVoters)*100/isRegistered]
+            ['Abstention', (numberOfRegistered-numberOfVoters)*100/numberOfRegistered]
         );
 
         const dataBarChart = election.choices.map(choice => (
@@ -77,11 +77,14 @@ const ElectionResultCard = ({ election }) => {
                     </Row>
                     <Row>
                         <p>
-                            Ouverture le {startsAt.toLocaleDateString()} à {startsAt.toLocaleTimeString()}<br/>
-                            Fermeture le {endsAt.toLocaleDateString()} à {endsAt.toLocaleTimeString()}
+                            Ouverture le {toFrenchDate(startsAt)} à {toFrenchTimeNoSecondString(startsAt)}<br/>
+                            Fermeture le {toFrenchDate(endsAt)} à {toFrenchTimeNoSecondString(endsAt)}
                         </p>
                     </Row>
                     <Row>
+                        <div className={'small'}>
+                            Total votants : {numberOfVoters} ; Total inscrits : {numberOfRegistered}
+                        </div>
                         <Table striped bordered hover size={'sm'}>
                             <thead>
                                 <tr>
@@ -105,7 +108,7 @@ const ElectionResultCard = ({ election }) => {
                                         {election.maxChoicesPerBallot === 1 ?
                                             <>
                                                 <td>{(parseInt(data.result[choice.id])*100/numberOfVoters).toFixed(1)}</td>
-                                                <td>{(parseInt(data.result[choice.id])*100/isRegistered).toFixed(1)}</td>
+                                                <td>{(parseInt(data.result[choice.id])*100/numberOfRegistered).toFixed(1)}</td>
                                             </>
                                             :<></>
                                         }
@@ -115,11 +118,11 @@ const ElectionResultCard = ({ election }) => {
                             <tbody>
                                 <tr>
                                     <td>Abstention</td>
-                                    <td>{isRegistered-numberOfVoters}</td>
+                                    <td>{numberOfRegistered-numberOfVoters}</td>
                                     {election.maxChoicesPerBallot === 1 ?
                                         <>
-                                            <td></td>
-                                            <td>{((isRegistered-numberOfVoters)*100/isRegistered).toFixed(1)}</td>
+                                            <td>/</td>
+                                            <td>{((numberOfRegistered-numberOfVoters)*100/numberOfRegistered).toFixed(1)}</td>
                                         </>
                                         :<></>
                                     }

@@ -1,6 +1,13 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Button, Modal} from "react-bootstrap";
 
+export const toFrenchTimeNoSecondString = (date : Date) => {
+    return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
+};
+
+export const toFrenchDate = (date : Date) => {
+    return date.getDate().toString().padStart(2, '0') + '/' + (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getFullYear()
+};
 
 export const ChoiceButton = (props) => {
     return(
@@ -17,7 +24,7 @@ export const ChoiceButton = (props) => {
 
 export const ListOfVotersButtonModal = ({election, ...props}) => {
     const [show, setShow] = useState<boolean>(false);
-    const handleClose = () => setShow(false)
+    const handleClose = () => setShow(false);
     return (
         <>
             <Button
@@ -43,4 +50,4 @@ export const ListOfVotersButtonModal = ({election, ...props}) => {
             </Modal>
         </>
     )
-}
+};

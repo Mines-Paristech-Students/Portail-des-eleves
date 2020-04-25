@@ -6,6 +6,7 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import {Choice, Election} from "../../../models/associations/election";
 import {PageTitle} from "../../../utils/common";
 import {User} from "../../../models/user";
+import {Formik, useField} from "formik";
 
 
 export const AssociationCreateElection = ({ association, ...props }) => {
@@ -54,77 +55,8 @@ export const AssociationEditElection = ({ association, ...props }) => {
 };
 
 const EditElection = ({ election, association, ...props }) => {
-    const listOfChoicesNames = (choices: Choice[]) => {
-        const result: string[] = [];
-        choices.map((choice) => result.push(choice.name));
-        return result
-    };
 
     const newToast = useContext(ToastContext);
-
-    const [name, setName] = useState<string>(election.name);
-    const [choices, setChoices] = useState<string[]>(listOfChoicesNames(election.choices));
-    const [registeredVoters, setRegisteredVoters] = useState<User[]>(election.registeredVoters);
-    const [startsAt, setStartsAt] = useState<Date>(new Date(election.startsAt));
-    const [endsAt, setEndsAt] = useState<Date>(new Date(election.endsAt));
-    const [maxChoicesPerBallot, setMaxChoicesPerBallot] = useState<number>(election.maxChoicesPerBallot);
-
-    const [formCorrections, setFormCorrections] = useState<string[]>([]);
-    const formCorrectionsAlert = formCorrections.length > 0 ?
-        <Alert variant="danger" onClose={() => setFormCorrections([])} dismissible>
-            <Alert.Heading>Votre élection comporte des erreurs :</Alert.Heading>
-            <ul>
-                {formCorrections.map(msg =>
-                    <li key={msg}>
-                        {msg}
-                    </li>
-                )}
-            </ul>
-        </Alert>
-        :<></>;
-
-    const listOfChoicesNamesOnlyObject  = (names: string[]) => {
-        const nameObjects : Object[] = [];
-        names.map((name) => nameObjects.push({
-            name: name
-        }));
-        return nameObjects
-    };
-
-    const handleSubmit = () => {
-        if (!formIsCorrect()) {
-            return null;
-        }
-
-        const newElection: Election = {
-            name: name,
-            association: association.id,
-            choices: listOfChoicesNamesOnlyObject(choices),
-            registeredVoters: registeredVoters,
-            startsAt: startsAt,
-            endsAt: endsAt,
-            maxChoicesPerBallot: maxChoicesPerBallot,
-        };
-        newToast({
-            message: "Sauvegarde en cours",
-            level: ToastLevel.Success
-        });
-        api.elections
-            .save(newElection, props.edit, election.id)
-            .then(res => {
-                newToast({
-                    message: "Election enregistrée",
-                    level: ToastLevel.Success
-                });
-            }).then(() => props.history.push(`/associations/${association.id}`))
-            .catch(err => {
-                newToast({
-                    message: err.message,
-                    level: ToastLevel.Error,
-                    delay: 2000
-                });
-            });
-    };
 
     const deleteElection = () => {
         // eslint-disable-next-line no-restricted-globals
@@ -143,156 +75,202 @@ const EditElection = ({ election, association, ...props }) => {
         }
     };
 
-    const formIsCorrect = () => {
-        const formCorrections :string[] = [];
-        let isCorrect = true;
-        if (name==='') {
-            isCorrect=false;
-            formCorrections.push('Le titre ne peut pas être vide')
-        }
-        if (startsAt >= endsAt) {
-            isCorrect=false;
-            formCorrections.push("L'élection ne peut pas se terminer avant de commencer")
-        }
-        if (choices.includes("")) {
-            isCorrect=false;
-            formCorrections.push('Un choix ne peut pas être vide')
-        }
-        setFormCorrections(formCorrections);
-        return isCorrect;
-    };
-
     return (
         <Card>
-            <div className={'ml-5 mr-5'}>
-                {formCorrectionsAlert}
-                <form onSubmit={() => null}>
-                    <Form.Group className="mt-6">
-                        <Form.Row>
-                            <h4>Nom</h4>
-                        </Form.Row>
-                        <Form.Control
-                            id="name"
-                            name="name"
-                            type="text"
-                            className="my-2 form-control-lg"
-                            placeholder="Entrez un nom"
-                            onChange={(e) => setName(e.target.value)}
-                            value={name}
-                            required
-                        />
-                    </Form.Group>
-                    <Form.Row>
-                        <Form.Group className='mt-1'>
-                            <h4>Dates</h4>
-                            <Form.Row>
-                                <Form.Group as={Col}>
-                                    <Form.Label>Début</Form.Label>
-                                    <Form.Control
-                                        id="startDate"
-                                        name="startDate"
-                                        type="datetime-local"
-                                        className="my-2 form-control-g"
-                                        value={toGoodString(startsAt)}
-                                        onChange={(e) => setStartsAt(new Date(e.target.value))}
-                                        required
-                                    />
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Label>Fin</Form.Label>
-                                    <Form.Control
-                                        id="endDate"
-                                        name="endDate"
-                                        type="datetime-local"
-                                        className="my-2 form-control-g"
-                                        value={toGoodString(endsAt)}
-                                        onChange={(e) => {
-                                            setEndsAt(new Date(e.target.value))}}
-                                        required
-                                    />
-                                </Form.Group>
-                            </Form.Row>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group  className={'mt-1'}>
-                            <h4>Choix</h4>
-                            <div className={'small'}>
-                                Pensez à ajouter un option pour le vote blanc si vous voulez le différencier de l'abstention.
-                            </div>
-                            <Form.Group>
-                                <ListOfChoices
-                                    choices={choices}
-                                    onChange={(e, k)=> {
-                                        const newChoicesState = choices.slice();
-                                        newChoicesState[k] = e.target.value;
-                                        setChoices(newChoicesState)
-                                    }}
-                                    onDelete={k => {
-                                        const newChoicesState = choices.slice();
-                                        newChoicesState.splice(k,1);
-                                        setChoices(newChoicesState)
-                                    }}
-                                />
-                                <NewChoiceInputButton
-                                    onClick={() => {
-                                        const newChoicesState = choices.slice();
-                                        newChoicesState.push("");
-                                        setChoices((newChoicesState));
-                                    }}
-                                />
-                            </Form.Group>
-                            <Form.Row>
-                                <Form.Group>
-                                    <Form.Group as={Col}>
-                                        <Form.Label>
-                                            Nombre de choix par vote
-                                        </Form.Label>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md={'6'}>
-                                        <Form.Control
-                                            id="maxChoicesPerBallot"
-                                            name="maxChoicesPerBallot"
-                                            type="number"
-                                            className="form-control"
-                                            value={maxChoicesPerBallot.toString()}
-                                            onChange={(e) => setMaxChoicesPerBallot(Math.max(e.target.value, 1))}
-                                            required
-                                        />
-
-                                    </Form.Group>
-                                 </Form.Group>
-                            </Form.Row>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        Il manque encore les registered voters pour l'instant 17bocquet et 17wan-fat par defaut
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group>
-                            {(props.edit) ?
-                                <Button
-                                    variant="danger"
-                                    className={"mr-3"}
-                                    type="button"
-                                    onClick={deleteElection}
-                                >
-                                    Supprimer
-                                </Button> : <></>
-                            }
-                            <Button
-                                variant="primary"
-                                type="button"
-                                onClick={handleSubmit}
-                            >
-                                {props.edit? "Supprimer et remplacer":"Créer l'élection"}
-                            </Button>
-                        </Form.Group>
-                    </Form.Row>
-                </form>
-            </div>
+            <EditElectionForm
+                election={election}
+                association={association}
+                edit={props.edit}
+                onDelete={deleteElection}
+                className={'ml-3 mr-3'}
+            />
         </Card>
     );
+};
+
+const EditElectionForm = ({election, association, ...props}) => {
+    const newToast = useContext(ToastContext);
+
+    const listOfChoicesNames = (choices: Choice[]) => {
+        const result: string[] = [];
+        choices.map((choice) => result.push(choice.name));
+        return result
+    };
+
+    interface Dates {
+        startsAt: Date,
+        endsAt: Date,
+    }
+
+    const formIsValid = values => {
+        interface Errors {
+            name:string | null,
+            dates: string | null
+            choices:string | null
+            maxChoicesPerBallot:string|null
+            registeredVoters:string|null
+        }
+        const errors :Errors = {
+            name:null,
+            dates:null,
+            choices:null,
+            maxChoicesPerBallot:null,
+            registeredVoters:null
+        };
+        if (values.name==='') {
+            errors.name = 'Le titre ne peut pas être vide';
+        }
+        if (values.dates.startsAt >= values.dates.endsAt) {
+            errors.dates = "L'élection ne peut pas se terminer avant de commencer"
+        }
+        if (values.choices.includes("")) {
+            errors.choices = 'Un choix ne peut pas être vide'
+        }
+        if (values.maxChoicesPerBallot < 1) {
+            errors.maxChoicesPerBallot = 'Minimum 1'
+        }
+        if (values.registeredVoters.length < 0) {
+            errors.registeredVoters = "Deux personnes au moins doivent être inscrites"
+        }
+        return errors;
+    };
+
+
+    const handleSubmit = (values, {setSubmitting}) => {
+        console.log('coucou', JSON.stringify(values));
+        const listOfChoicesNamesOnlyObject  = (names: string[]) => {
+            const nameObjects : Object[] = [];
+            names.map((name) => nameObjects.push({
+                name: name
+            }));
+            return nameObjects
+        };
+
+        const newElection: Election = {
+            name: values.name,
+            association: association.id,
+            choices: listOfChoicesNamesOnlyObject(values.choices),
+            registeredVoters: values.registeredVoters,
+            startsAt: values.dates.startAt,
+            endsAt: values.dates.endsAt,
+            maxChoicesPerBallot: values.maxChoicesPerBallot,
+        };
+        newToast({
+            message: "Sauvegarde en cours",
+            level: ToastLevel.Success
+        });
+        api.elections
+            .save(newElection, props.edit, election.id)
+            .then(res => {
+                newToast({
+                    message: "Election enregistrée",
+                    level: ToastLevel.Success
+                });
+            })
+            .catch(err => {
+                newToast({
+                    message: err.message,
+                    level: ToastLevel.Error,
+                    delay: 2000
+                });
+            }).finally(() => setSubmitting(false));
+    };
+
+    return(
+        <Formik
+            initialValues={{
+                name: election.name,
+                registeredVoters: election.registeredVoters,
+                choices: listOfChoicesNames(election.choices),
+                dates: {startAt: election.startsAt, endsAt:election.endsAt},
+                maxChoicesPerBallot: election.maxChoicesPerBallot,
+                }}
+            validate={formIsValid}
+            onSubmit={handleSubmit}
+        >
+            {formik => (<form onSubmit={formik.handleSubmit} className={props.className}>
+                <Form.Group className="mt-6">
+                    <Form.Row>
+                        <h4>Nom</h4>
+                    </Form.Row>
+                    <Form.Control
+                        id="name"
+                        name="name"
+                        type="text"
+                        className="my-2 form-control-lg"
+                        placeholder="Entrez un nom"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.name}
+                    />
+                    {formik.touched.name && formik.errors.name ?
+                        <div className={'small text-red'}>{formik.errors.name}</div>
+                        : null}
+                </Form.Group>
+                <Form.Row>
+                    <DatesField/>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group  className={'mt-1'}>
+                        <h4>Choix</h4>
+                        <div className={'small'}>
+                            Pensez à ajouter un option pour le vote blanc si vous voulez le différencier de l'abstention.
+                        </div>
+                        <ChoicesField
+                            name={'choices'}
+                            choices={formik.values.choices}
+                        />
+                        <Form.Row>
+                            <Form.Group>
+                                <Form.Group as={Col}>
+                                    <Form.Label>
+                                        Nombre de choix par vote
+                                    </Form.Label>
+                                </Form.Group>
+                                <Form.Group as={Col} md={'6'}>
+                                    <Form.Control
+                                        id="maxChoicesPerBallot"
+                                        name="maxChoicesPerBallot"
+                                        type="number"
+                                        className="form-control"
+                                        value={formik.values.maxChoicesPerBallot}
+                                        onChange={formik.handleChange}
+                                    />
+                                    {formik.errors.maxChoicesPerBallot ? //no touched here
+                                        <div className={'small text-red'}>{formik.errors.maxChoicesPerBallot}</div>
+                                        : null}
+                                </Form.Group>
+                            </Form.Group>
+                        </Form.Row>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    Il manque encore les registered voters pour l'instant 17bocquet et 17wan-fat par defaut
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group>
+                        {(props.edit) ?
+                            <Button
+                                variant="danger"
+                                className={"mr-3"}
+                                type="button"
+                                onClick={props.onDelete}
+                            >
+                                Supprimer
+                            </Button> : <></>
+                        }
+                        <Button
+                            variant="primary"
+                            type="submit"
+                        >
+                            {props.edit? "Supprimer et remplacer":"Créer l'élection"}
+                        </Button>
+                    </Form.Group>
+                </Form.Row>
+            </form>
+            )}
+        </Formik>
+    )
 };
 
 const ListOfChoices = props => {
@@ -302,34 +280,14 @@ const ListOfChoices = props => {
                 id={k}
                 onChange={(e) => props.onChange(e, k)}
                 onDelete={() => props.onDelete(k)}
+                onBlur={() => props.onBlur(k)}
                 text={choice}
             />
         </Col>
     );
 
-    // const workOnList = (list: any[], n: number) => {
-    //     const lists : any[][]= [];
-    //     list.map((o, k) => {
-    //         if (k % n === 0) {
-    //             lists.push([o])
-    //         } else {
-    //             lists[lists.length -1].push(o)
-    //         }
-    //         return null;
-    //     });
-    //     return lists
-    // };
-    // const newList = workOnList(list, 3);
 
-    return ( list
-        // <>
-        //     {newList.map(l =>
-        //         <Form.Row>
-        //             {l}
-        //         </Form.Row>
-        //     )}
-        // </>
-    )
+    return (list)
 };
 
 const ChoiceInput = props => {
@@ -342,7 +300,7 @@ const ChoiceInput = props => {
                 placeholder={'Entrez un choix'}
                 value={props.text}
                 onChange={(e) => props.onChange(e)}
-                required
+                onBlur={() => props.onBlur()}
             />
             <InputGroup.Append>
                 <Button
@@ -356,6 +314,75 @@ const ChoiceInput = props => {
 
     )
 };
+
+const ChoicesField = (props) => {
+    const [field, meta, helpers] = useField<string[]>(props);
+    return (
+        <Form.Group>
+            <ListOfChoices
+                choices={props.choices}
+                onChange={(e, k)=> {
+                    const newChoicesState = field.value.slice();
+                    newChoicesState[k] = e.target.value;
+                    helpers.setValue(newChoicesState)
+                }}
+                onDelete={k => {
+                    const newChoicesState = field.value.slice();
+                    newChoicesState.splice(k,1);
+                    helpers.setValue(newChoicesState)
+                }}
+                onBlur={() => helpers.setTouched(true)}
+            />
+            {meta.touched && meta.error ?
+                        <div className={'small text-red'}>{meta.error}</div>
+                        : null}
+            <NewChoiceInputButton
+                onClick={() => {
+                    const newChoicesState = field.value.slice();
+                    newChoicesState.push("");
+                    helpers.setValue(newChoicesState)
+                }}
+            />
+        </Form.Group>
+    )
+}
+
+
+const DatesField = () => {
+    return (
+        <Form.Group className='mt-1'>
+            <h4>Dates</h4>
+            <Form.Row>
+                <Form.Group as={Col}>
+                    <Form.Label>Début</Form.Label>
+                    <Form.Control
+                        id="startDate"
+                        name="startDate"
+                        type="datetime-local"
+                        className="my-2 form-control-g"
+                        value={toGoodString(startsAt)}
+                        onChange={(e) => setStartsAt(new Date(e.target.value))}
+                        required
+                    />
+                </Form.Group>
+                <Form.Group as={Col}>
+                    <Form.Label>Fin</Form.Label>
+                    <Form.Control
+                        id="endDate"
+                        name="endDate"
+                        type="datetime-local"
+                        className="my-2 form-control-g"
+                        value={toGoodString(endsAt)}
+                        onChange={(e) => {
+                            setEndsAt(new Date(e.target.value))}}
+                        required
+                    />
+                </Form.Group>
+            </Form.Row>
+        </Form.Group>
+    )
+}
+
 
 const NewChoiceInputButton = (props) => {
     return (
