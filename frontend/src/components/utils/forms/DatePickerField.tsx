@@ -54,7 +54,7 @@ export function DateTimePickerField( { label, ...props } :any) {
                 weekdaysLong={WEEKDAYS_LONG}
                 weekdaysShort={WEEKDAYS_SHORT}
                 firstDayOfWeek={1}
-                disabledDays={{ before: new Date() }}
+                disabledDays={props.fromNow ? { before: new Date() }:{before: new Date(0)}}
             />
             <Form.Row>
                 <Col>

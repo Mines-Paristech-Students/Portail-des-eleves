@@ -43,9 +43,9 @@ class Election(models.Model):
     def active_status(self):
         now = datetime.now(tz=timezone.utc)
         return (
-            "upcoming"
+            "UPCOMING"
             if self.starts_at > now
-            else ("current" if self.ends_at > now else "past")
+            else ("ACTIVE" if self.ends_at > now else "PAST")
         )
 
     @cached_property

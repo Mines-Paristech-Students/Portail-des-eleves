@@ -125,6 +125,9 @@ const EditElectionForm = ({election, association, ...props}) => {
         if (values.dates.startsAt >= values.dates.endsAt) {
             errors.dates = "L'élection ne peut pas se terminer avant de commencer"
         }
+        if (values.dates.endsAt < new Date()) {
+            errors.dates = "L'élection ne peut pas être déjà terminée"
+        }
         if (values.choices.includes("")) {
             errors.choices = 'Un choix ne peut pas être vide'
         }
@@ -187,7 +190,7 @@ const EditElectionForm = ({election, association, ...props}) => {
                 name: election.name,
                 registeredVoters: election.registeredVoters,
                 choices: listOfChoicesNames(election.choices),
-                dates: {startsAt: election.startsAt, endsAt:election.endsAt},
+                dates: {startsAt: new Date(election.startsAt), endsAt: new Date(election.endsAt)},
                 maxChoicesPerBallot: election.maxChoicesPerBallot,
                 }}
             validate={formIsValid}
@@ -209,9 +212,9 @@ const EditElectionForm = ({election, association, ...props}) => {
                         value={formik.values.name}
                     />
                     {formik.touched.name && formik.errors.name ?
-                        <div className={'text-red small'}>
+                        <Form.Control.Feedback type={'invalid'}>
                             {formik.errors.name}
-                        </div>
+                        </Form.Control.Feedback>
                         : null}
                 </Form.Group>
                 <Form.Row>
@@ -245,9 +248,9 @@ const EditElectionForm = ({election, association, ...props}) => {
                                         onChange={formik.handleChange}
                                     />
                                     {formik.errors.maxChoicesPerBallot ? //no touched here
-                                        <div className={'small text-red'}>
+                                        <Form.Control.Feedback type='invalid'>
                                             {formik.errors.maxChoicesPerBallot}
-                                        </div>
+                                        </Form.Control.Feedback>
                                         : null}
                                 </Form.Group>
                             </Form.Group>
@@ -344,9 +347,9 @@ const ChoicesField = (props) => {
                 onBlur={() => helpers.setTouched(true)}
             />
             {meta.touched && meta.error ?
-                <div className={'small text-red'}>
+                <Form.Control.Feedback type='invalid'>
                     {meta.error}
-                </div>
+                </Form.Control.Feedback>
                 : null}
             <NewChoiceInputButton
                 onClick={() => {
@@ -370,17 +373,19 @@ const DatesField = (props) => {
                     <DateTimePickerField
                         label={'Début'}
                         name={'dates.startsAt'}
+                        fromNow={false}
                     />
                 </Col>
                 <Col className={'ml-3'}>
                     <DateTimePickerField
                         label={"Fin"}
                         name={'dates.endsAt'}
+                        fromNow={false}
                     />
                 </Col>
             </Form.Row>
             {meta.error ?
-                <div className={'small text-red'}>{meta.error}</div>:null}
+                <Form.Control.Feedback type='invalid'>{meta.error}</Form.Control.Feedback>:null}
         </Form.Group>
     )
 };

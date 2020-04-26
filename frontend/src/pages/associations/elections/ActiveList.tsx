@@ -8,6 +8,7 @@ import {electionActiveStatus, api, useBetterQuery} from "../../../services/apiSe
 import {LoadingAssociation} from "../Loading";
 import {Election, Ballot, Choice} from "../../../models/associations/election";
 import {ChoiceButton, ListOfVotersButtonModal, toFrenchDate, toFrenchTimeNoSecondString} from "./Commons";
+import {Formik, useField} from "formik";
 
 export const AssociationElectionActiveList = ({ association }) => {
 
@@ -16,7 +17,7 @@ export const AssociationElectionActiveList = ({ association }) => {
         "elections.list",
         api.elections.list,
         associationId,
-        electionActiveStatus.Current
+        electionActiveStatus.Active
     );
 
     if (status === "loading") return <LoadingAssociation />;
@@ -89,33 +90,13 @@ const Vote = ({ election, association, ...props }) => {
     const disabled = hasVoted || !isRegisterd; //if the current user has voter or is not registered he can't click on the choices button as well as the vote button
     const maxChoicesPerBallot = parseInt(election.maxChoicesPerBallot);
 
-    const [selected, setSelected] = useState<number[]>([]); //pk of selected choices
     const [showVoteConfirmation, setShowVoteConfirmation] = useState<boolean>(false);
-
-    const disabledVoteButton = disabled || selected.length===0; //can't click on the vote button if vote is disabled or no choices are selected
-
-
-    const handleClick = (choice: Choice) => {
-
-        const index = selected.findIndex((e)=>e===choice.id);
-        let newSelected: number[];
-        newSelected = selected.slice();
-        if (index >= 0) {
-            newSelected.splice(index, 1)
-        } else {
-            newSelected.push(choice.id)
-        }
-        if (newSelected.length > maxChoicesPerBallot) {
-            newSelected.shift()
-        }
-        setSelected(newSelected)
-    };
 
     const handleShowAlert = () => {
         setShowVoteConfirmation(true)
     };
 
-    const handleVote = () => {
+    const handleVote = (selected) => {
         setShowVoteConfirmation(false);
         const vote: Ballot = {
             election: election.id,
@@ -136,45 +117,78 @@ const Vote = ({ election, association, ...props }) => {
     };
 
     return (
-        <>
-            {election.choices.map(choice => (
-                <ChoiceButton
-                    selected={selected.includes(choice.id)}
-                    onClick={() => handleClick(choice)}
+        <Formik
+            initialValues={{selected: []}}
+            onSubmit={handleShowAlert}
+        >
+            {formik => (<form onSubmit={formik.handleSubmit}>
+                <ChoicesField
+                    name='selected'
+                    choices={election.choices}
+                    maxChoicesPerBallot={maxChoicesPerBallot}
                     disabled={disabled}
-                    key={choice.id}
-                >
-                    {choice.name}
-                </ChoiceButton>
-            ))}
-            <div className={'small'}>
-                {election.maxChoicesPerBallot} choix maximum
-            </div>
-            <VoteButton
-                hasVoted={hasVoted}
-                isRegistered={isRegisterd}
-                disabled={disabledVoteButton}
-                handleClick={() => handleShowAlert()}
-            />
-            <AlertVoteConfirmation
-                show={showVoteConfirmation}
-                selected={selected}
-                election={election}
-                handleVote={() => handleVote()}
-                handleClose={() => handleCloseAlert()}
-            />
-            <div className={'small'}>
-                Les résultats seront publiés à la fermeture de l'élection
-            </div>
-        </>
+                />
+                <div className={'small'}>
+                    {election.maxChoicesPerBallot} choix maximum
+                </div>
+                <VoteButton
+                    hasVoted={hasVoted}
+                    isRegistered={isRegisterd}
+                    disabled={disabled || formik.values.selected.length === 0} //can't click on the vote button if vote is disabled or no choices are selected
+                />
+                <AlertVoteConfirmation
+                    show={showVoteConfirmation}
+                    selected={formik.values.selected}
+                    election={election}
+                    handleVote={() => handleVote(formik.values.selected)}
+                    handleClose={() => handleCloseAlert()}
+                />
+                <div className={'small'}>
+                    Les résultats seront publiés à la fermeture de l'élection
+                </div>
+            </form>)}
+        </Formik>
     )
 };
+const ChoicesField = (props) => {
+    const [field, meta, helpers] = useField<number[]>(props);
+
+    const handleClick = (choice: Choice) => {
+
+        const index = field.value.findIndex((e)=>e===choice.id);
+        const newSelected: number[] = field.value.slice();
+        if (index >= 0) {
+            newSelected.splice(index, 1)
+        } else {
+            newSelected.push(choice.id)
+        }
+        if (newSelected.length > props.maxChoicesPerBallot) {
+            newSelected.shift()
+        }
+        helpers.setValue(newSelected)
+    };
+
+    return (
+        props.choices.map(choice => (
+            <ChoiceButton
+                selected={field.value.includes(choice.id)}
+                onClick={() => handleClick(choice)}
+                disabled={props.disabled}
+                key={choice.id}
+            >
+                {choice.name}
+            </ChoiceButton>
+        ))
+    )
+};
+
 
 const VoteButton = (props) => {
     if (props.hasVoted) {
         return (
             <Button
-                className={"btn btn-success float-right mt-5"}
+                className={"btn btn-success mt-5"}
+                type={'submit'}
                 block
                 disabled
             >
@@ -184,7 +198,8 @@ const VoteButton = (props) => {
     } else if (!props.isRegistered) {
         return (
             <Button
-                className={"btn btn-success float-right mt-5"}
+                className={"btn btn-success mt-5"}
+                type={'submit'}
                 block
                 disabled
             >
@@ -194,9 +209,9 @@ const VoteButton = (props) => {
     } else {
         return (
             <Button
-                className={"btn btn-success float-right mt-5"}
+                className={"btn btn-success mt-5"}
+                type={'submit'}
                 block
-                onClick={() => props.handleClick()}
                 disabled={props.disabled}
             >
                 Voter

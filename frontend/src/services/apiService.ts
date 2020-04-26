@@ -11,9 +11,9 @@ import {User} from "../models/user";
 const baseApi = "http://localhost:8000/api/v1";
 
 export enum electionActiveStatus {
-    Past='past',
-    Current='current',
-    Upcoming='upcoming'
+    Past='PAST',
+    Active='ACTIVE',
+    Upcoming='UPCOMING'
 }
 
 export const apiService = applyConverters(
