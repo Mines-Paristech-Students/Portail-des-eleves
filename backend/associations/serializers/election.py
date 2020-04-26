@@ -103,13 +103,13 @@ class ElectionSerializer(serializers.ModelSerializer):
 
         if self._errors and raise_exception:
             raise ValidationError(self._errors)
-
         return super(ElectionSerializer, self).is_valid(raise_exception)
 
     @classmethod
     def validate_against_instance(cls, instance, validated_data):
         # If the data is in validated_data, return it; otherwise, if the field is in instance, return it; otherwise,
         # return None.
+
         starts_at = validated_data.get(
             "starts_at", getattr(instance, "starts_at", None)
         )
@@ -122,6 +122,7 @@ class ElectionSerializer(serializers.ModelSerializer):
                 )
 
     def update(self, election, validated_data):
+
         self.validate_against_instance(election, validated_data)
 
         if "association" in validated_data:

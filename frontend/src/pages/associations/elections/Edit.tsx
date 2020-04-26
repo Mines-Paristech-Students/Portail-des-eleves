@@ -1,14 +1,18 @@
-import React, {useContext, useState} from "react";
-import {Form, Button, Col, InputGroup, Alert, Card} from "react-bootstrap";
+import React, {useContext} from "react";
+import {Form, Button, Col, InputGroup, Card} from "react-bootstrap";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import {Choice, Election} from "../../../models/associations/election";
 import {PageTitle} from "../../../utils/common";
-import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-import {Formik, useField, useFormikContext} from "formik";
+import {Formik, useField} from "formik";
+import {DateTimePickerField} from "../../../components/utils/forms/DatePickerField";
 
+interface Dates {
+    startsAt: Date,
+    endsAt: Date,
+}
 
 export const AssociationCreateElection = ({ association, ...props }) => {
     const election: Election = {
@@ -83,7 +87,7 @@ const EditElection = ({ election, association, ...props }) => {
                 association={association}
                 edit={props.edit}
                 onDelete={deleteElection}
-                className={'ml-3 mr-3'}
+                className={'ml-5 mr-5'}
             />
         </Card>
     );
@@ -98,10 +102,7 @@ const EditElectionForm = ({election, association, ...props}) => {
         return result
     };
 
-    interface Dates {
-        startsAt: Date,
-        endsAt: Date,
-    }
+
 
     const formIsValid = values => {
         interface Errors {
@@ -133,12 +134,15 @@ const EditElectionForm = ({election, association, ...props}) => {
         if (values.registeredVoters.length < 0) {
             errors.registeredVoters = "Deux personnes au moins doivent être inscrites"
         }
+
+        if (!errors.name && !errors.dates && !errors.choices && !errors.maxChoicesPerBallot && !errors.registeredVoters) {
+            return {}
+        }
         return errors;
     };
 
 
     const handleSubmit = (values, {setSubmitting}) => {
-        console.log('coucou', JSON.stringify(values));
         const listOfChoicesNamesOnlyObject  = (names: string[]) => {
             const nameObjects : Object[] = [];
             names.map((name) => nameObjects.push({
@@ -152,7 +156,7 @@ const EditElectionForm = ({election, association, ...props}) => {
             association: association.id,
             choices: listOfChoicesNamesOnlyObject(values.choices),
             registeredVoters: values.registeredVoters,
-            startsAt: values.dates.startAt,
+            startsAt: values.dates.startsAt,
             endsAt: values.dates.endsAt,
             maxChoicesPerBallot: values.maxChoicesPerBallot,
         };
@@ -183,7 +187,7 @@ const EditElectionForm = ({election, association, ...props}) => {
                 name: election.name,
                 registeredVoters: election.registeredVoters,
                 choices: listOfChoicesNames(election.choices),
-                dates: {startAt: election.startsAt, endsAt:election.endsAt},
+                dates: {startsAt: election.startsAt, endsAt:election.endsAt},
                 maxChoicesPerBallot: election.maxChoicesPerBallot,
                 }}
             validate={formIsValid}
@@ -205,11 +209,15 @@ const EditElectionForm = ({election, association, ...props}) => {
                         value={formik.values.name}
                     />
                     {formik.touched.name && formik.errors.name ?
-                        <div className={'small text-red'}>{formik.errors.name}</div>
+                        <div className={'text-red small'}>
+                            {formik.errors.name}
+                        </div>
                         : null}
                 </Form.Group>
                 <Form.Row>
-                    <DatesField/>
+                    <DatesField
+                        name={'dates'}
+                    />
                 </Form.Row>
                 <Form.Row>
                     <Form.Group  className={'mt-1'}>
@@ -219,7 +227,6 @@ const EditElectionForm = ({election, association, ...props}) => {
                         </div>
                         <ChoicesField
                             name={'choices'}
-                            choices={formik.values.choices}
                         />
                         <Form.Row>
                             <Form.Group>
@@ -238,7 +245,9 @@ const EditElectionForm = ({election, association, ...props}) => {
                                         onChange={formik.handleChange}
                                     />
                                     {formik.errors.maxChoicesPerBallot ? //no touched here
-                                        <div className={'small text-red'}>{formik.errors.maxChoicesPerBallot}</div>
+                                        <div className={'small text-red'}>
+                                            {formik.errors.maxChoicesPerBallot}
+                                        </div>
                                         : null}
                                 </Form.Group>
                             </Form.Group>
@@ -321,7 +330,7 @@ const ChoicesField = (props) => {
     return (
         <Form.Group>
             <ListOfChoices
-                choices={props.choices}
+                choices={field.value}
                 onChange={(e, k)=> {
                     const newChoicesState = field.value.slice();
                     newChoicesState[k] = e.target.value;
@@ -335,8 +344,10 @@ const ChoicesField = (props) => {
                 onBlur={() => helpers.setTouched(true)}
             />
             {meta.touched && meta.error ?
-                        <div className={'small text-red'}>{meta.error}</div>
-                        : null}
+                <div className={'small text-red'}>
+                    {meta.error}
+                </div>
+                : null}
             <NewChoiceInputButton
                 onClick={() => {
                     const newChoicesState = field.value.slice();
@@ -346,43 +357,33 @@ const ChoicesField = (props) => {
             />
         </Form.Group>
     )
-}
+};
 
 
-const DatesField = () => {
+const DatesField = (props) => {
+    const [field, meta] = useField<Dates>(props)
     return (
         <Form.Group className='mt-1'>
             <h4>Dates</h4>
             <Form.Row>
-                <Form.Group as={Col}>
-                    <Form.Label>Début</Form.Label>
-                    <Form.Control
-                        id="startDate"
-                        name="startDate"
-                        type="datetime-local"
-                        className="my-2 form-control-g"
-                        value={toGoodString(startsAt)}
-                        onChange={(e) => setStartsAt(new Date(e.target.value))}
-                        required
+                <Col className={'ml-3'}>
+                    <DateTimePickerField
+                        label={'Début'}
+                        name={'dates.startsAt'}
                     />
-                </Form.Group>
-                <Form.Group as={Col}>
-                    <Form.Label>Fin</Form.Label>
-                    <Form.Control
-                        id="endDate"
-                        name="endDate"
-                        type="datetime-local"
-                        className="my-2 form-control-g"
-                        value={toGoodString(endsAt)}
-                        onChange={(e) => {
-                            setEndsAt(new Date(e.target.value))}}
-                        required
+                </Col>
+                <Col className={'ml-3'}>
+                    <DateTimePickerField
+                        label={"Fin"}
+                        name={'dates.endsAt'}
                     />
-                </Form.Group>
+                </Col>
             </Form.Row>
+            {meta.error ?
+                <div className={'small text-red'}>{meta.error}</div>:null}
         </Form.Group>
     )
-}
+};
 
 
 const NewChoiceInputButton = (props) => {
@@ -395,60 +396,3 @@ const NewChoiceInputButton = (props) => {
         </Button>
     )
 };
-
-const toGoodString = (date: Date) => {
-    const getGoodMonth = (date: Date) => {
-        return (date.getMonth() + 1).toString().padStart(2, '0');
-    };
-
-    const getGoodDate = (date: Date) => {
-        return date.getDate().toString().padStart(2, '0');
-    };
-
-    const getGoodHours = (date: Date) => {
-        return date.getHours().toString().padStart(2, '0');
-    };
-
-    const getGoodMinutes = (date: Date) => {
-        return date.getMinutes().toString().padStart(2, '0');
-    };
-
-    const getGoodYear = (date: Date) => {
-        return date.getFullYear().toString().padStart(4, '0');
-    };
-
-    if (date) {
-        return (getGoodYear(date) + '-' + getGoodMonth(date) + '-' + getGoodDate(date) + 'T' + getGoodHours(date) + ':' + getGoodMinutes(date))
-    }
-    return ''
-};
-
-
-
-export function DatePickerField({ label, ...props }: any) {
-    const { setFieldValue } = useFormikContext();
-    const [field, meta] = useField<Date>(props);
-
-    return (
-        <Form.Group>
-            <Form.Label>{label}</Form.Label>
-            <DayPicker
-                {...field}
-                initialMonth={field.value}
-                selectedDays={field.value}
-                onDayClick={day => setFieldValue(field.name as never, day)}
-                locale="fr"
-                months={MONTHS}
-                weekdaysLong={WEEKDAYS_LONG}
-                weekdaysShort={WEEKDAYS_SHORT}
-                firstDayOfWeek={1}
-                disabledDays={{ before: new Date() }}
-            />
-            {meta.touched && meta.error ? (
-                <Form.Control.Feedback type="invalid">
-                    {meta.error}
-                </Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-    );
-}
