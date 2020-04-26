@@ -67,7 +67,7 @@
     question: "On est confinés !"
     user: "16leroy"
     creation_date_time: "2020-04-19T20:00:00+00:00"
-    publication_date: "2020-04-20"
+    publication_date: "2020-04-26"
     state: "ACCEPTED"
 
 - model: polls.Choice
@@ -86,7 +86,7 @@
   pk: 4
   fields:
     poll: 3
-    user: "17bocquet"
+    user: "16leroy"
     choice: 5
 
 - model: polls.Vote
@@ -96,9 +96,23 @@
     user: "15veaux"
     choice: 5
 
-- model: polls.Vote
-  pk: 6
+- model: polls.Poll
+  pk: 4
   fields:
-    poll: 3
+    question: "Piche"
     user: "16leroy"
-    choice: 6
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-26"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 7
+  fields:
+    text: "MDR"
+    poll: 4
+
+- model: polls.Choice
+  pk: 8
+  fields:
+    text: "42"
+    poll: 4

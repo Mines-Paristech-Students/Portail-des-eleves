@@ -32,6 +32,7 @@ class ReadOnlyPollSerializer(serializers.ModelSerializer):
     """Only give a read-only access to the polls."""
 
     choices = ChoiceSerializer(many=True, read_only=True)
+    user_has_voted = serializers.SerializerMethodField()
 
     class Meta:
         model = Poll
@@ -43,8 +44,14 @@ class ReadOnlyPollSerializer(serializers.ModelSerializer):
             "question",
             "has_been_published",
             "is_active",
+            "user_has_voted",
         )
         fields = read_only_fields
+
+    def get_user_has_voted(self, poll: Poll):
+        request = self.context.get("request", None)
+        user = getattr(request, "user", None)
+        return user.id in poll.votes.all().values_list("user__id", flat=True)
 
 
 class WritePollSerializer(serializers.ModelSerializer):

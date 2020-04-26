@@ -1,9 +1,13 @@
 import { Homepage } from "../pages/Homepage";
 import { AssociationList } from "../pages/associations/List";
 import { AssociationMain } from "../pages/associations/Main";
-import { ListPolls } from "../components/polls/list_polls/ListPolls";
-import { PollsTable } from "../components/polls/polls_table/PollsTable";
-import { SubmitPoll } from "../components/polls/submit_polls/SubmitPoll";
+import { routes as pollsRoutes } from "./polls";
+
+export type Route = {
+    path: string,
+    component: any,
+    exact: boolean
+}
 
 export const routes = [
     { path: "/", component: Homepage, exact: true },
@@ -12,30 +16,5 @@ export const routes = [
         path: "/associations/:associationId",
         component: AssociationMain,
         exact: false
-    },
-    {
-        path: "/sondages",
-        component: () => ListPolls({ active: true }),
-        exact: true
-    },
-    {
-        path: "/sondages/anciens",
-        component: () => ListPolls({ active: false }),
-        exact: true
-    },
-    {
-        path: "/sondages/administration",
-        component: () => PollsTable({ adminVersion: true }),
-        exact: true
-    },
-    {
-        path: "/sondages/mes-sondages",
-        component: PollsTable,
-        exact: true
-    },
-    {
-        path: "/sondages/proposer",
-        component: SubmitPoll,
-        exact: true
     }
-];
+].concat(pollsRoutes);

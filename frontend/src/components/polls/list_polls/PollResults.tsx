@@ -10,7 +10,7 @@ type Props = {
     poll: Poll;
 };
 
-export function InactivePoll(props: Props) {
+export function PollResults(props: Props) {
     let totalVotes = 0;
     props.poll.choices.forEach(
         choice =>
@@ -54,7 +54,7 @@ export function InactivePoll(props: Props) {
                                 Number(a.numberOfVotes)
                         )
                         .map(choice => {
-                            if (choice.numberOfVotes) {
+                            if (choice.numberOfVotes != undefined) {
                                 return (
                                     <ListGroup.Item
                                         key={choice.id}

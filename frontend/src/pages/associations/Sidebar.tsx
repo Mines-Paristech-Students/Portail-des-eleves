@@ -7,7 +7,7 @@ export const AssociationSidebar = ({ association }) => {
     const { data: pages, status, error } = useBetterQuery<Page[]>(
         "pages.list",
         api.pages.list,
-        association.id
+        [association.id]
     );
 
     if (status === "loading") {

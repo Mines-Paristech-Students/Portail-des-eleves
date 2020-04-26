@@ -14,7 +14,7 @@ export const AssociationFilesystemList = ({ association }) => {
     const { data, status, error } = useBetterQuery<Media[]>(
         "medias.list",
         api.medias.list,
-        associationId
+        [associationId]
     );
     const history = useHistory();
 

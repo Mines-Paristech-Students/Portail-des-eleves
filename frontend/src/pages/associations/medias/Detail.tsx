@@ -10,7 +10,7 @@ import { Media } from "../../../models/associations/media";
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{fileId: string}>();
     const { data: media, status, error } = useBetterQuery<Media>(
-        "media.get", api.medias.get, fileId
+        "media.get", api.medias.get, [fileId]
     );
 
     if (status === 'loading') return <LoadingAssociation/>;

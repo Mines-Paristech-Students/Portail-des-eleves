@@ -6,6 +6,7 @@ import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
 import { Choice, Poll } from "../models/polls";
+import { User } from "../models/user";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -20,22 +21,6 @@ function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
-}
-
-/**
- * Return the result of `fetchFunction` or a cached result if available.
- * @param key
- * @param fetchFunction
- * @param params
- */
-export function useBetterQuery<T>(
-    key: string,
-    fetchFunction: any,
-    ...params: any[]
-): QueryResult<T> {
-    return useQuery<T, string, any>(key, params, (key, ...params) =>
-        fetchFunction(...params)
-    );
 }
 
 export const api = {
@@ -158,7 +143,7 @@ export const api = {
                 apiService
                     .get<Poll[]>("/polls/")
                     .then((response: AxiosResponse<Poll[]>) => {
-                        // Parse the date here.
+                        // Parse the date (because it's not a datetime).
                         response.data.forEach(
                             poll =>
                                 (poll.publicationDate = poll.publicationDate
@@ -178,6 +163,29 @@ export const api = {
                         text: choice.text
                     }))
                 })
-            )
+            ),
+        vote: (user, pollId, choiceId) =>
+            apiService.post(`/polls/${pollId}/vote/`, {
+                user: user.id,
+                choice: choiceId
+            })
     }
 };
+
+/**
+ * Return the result of `fetchFunction` or a cached result if available.
+ * @param key
+ * @param fetchFunction
+ * @param useQueryConfig the parameters passed to `useQuery`.
+ * @param params the parameters passed to `fetchFunction`.
+ */
+export function useBetterQuery<T>(
+    key: string,
+    fetchFunction: any,
+    params?: any[],
+    useQueryConfig?: object,
+): QueryResult<T> {
+    return useQuery<T, string, any>(key, params, (key, ...params) =>
+        fetchFunction(...params), useQueryConfig
+    );
+}

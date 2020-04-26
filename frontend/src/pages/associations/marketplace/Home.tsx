@@ -13,7 +13,7 @@ import { Marketplace } from "../../../models/associations/marketplace";
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
     const { data: marketplace, status, error } = useBetterQuery<Marketplace>(
-        "marketplace.get", api.marketplace.get, marketplaceId
+        "marketplace.get", api.marketplace.get, [marketplaceId]
     );
 
     if (status === 'loading') return <LoadingAssociation />;

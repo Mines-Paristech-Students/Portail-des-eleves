@@ -22,7 +22,7 @@ export const AssociationMain = ({ match }) => {
     const { data: association, error, status } = useBetterQuery<Association>(
         "association.get",
         api.associations.get,
-        associationId
+        [associationId]
     );
 
     // Generate the routes
