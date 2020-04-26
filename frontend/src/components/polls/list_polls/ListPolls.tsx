@@ -4,45 +4,41 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { OpenPoll } from "./OpenPoll";
 import { PollResults } from "./PollResults";
 import { Poll } from "../../../models/polls";
-import Spinner from "react-bootstrap/Spinner";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PollsBase } from "../PollsBase";
 import { PageTitle } from "../../../utils/common";
 import { Link } from "react-router-dom";
+import { PollsLoading } from "../PollsLoading";
+import { PollsError } from "../PollsError";
 
-type Props = {
-    current?: boolean;
-};
 
 /**
  * Display a list of published polls.
  *
- * If `props.current` is `true`, only display the active polls...
+ * If `current` is `true`, only display the active polls...
  *   - if the user has not voted, display the poll as an `OpenPoll`.
  *   - otherwise, display the poll as a `PollResult`.
  *
- * If `props.current` is `false`, only display the inactive polls...
+ * If `current` is `false`, only display the inactive polls...
  *   - always display the poll as a `PollResult`.
  */
-export function ListPolls(props: Props) {
+export const ListPolls = ({ current } : {current ?: boolean}) => {
     const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
         "polls.list",
         api.polls.list,
         [],
-        {refetchOnWindowFocus: false}
+        { refetchOnWindowFocus: false }
     );
 
     function Content(): React.ReactElement | null {
         if (status === "loading")
-            return <Spinner animation="border" role="status"/>;
-        else if (status === "error") {
-            return <p>`Something went wrong: ${error}`</p>;
-        } else if (status === "success" && polls) {
+            return <PollsLoading/>;
+        else if (status === "success" && polls) {
             let cards: ReactElement[] = [];
 
-            if (props.current) {
+            if (current) {
                 cards = cards.concat(
                     polls
                         .filter(poll => poll.isActive && !poll.userHasVoted)
@@ -84,17 +80,17 @@ export function ListPolls(props: Props) {
                     )}
                 </Container>
             );
+        } else {
+            return <PollsError detail={error}/>;
         }
-
-        return null;
     }
 
     return (
         <PollsBase>
             <PageTitle>
-                {props.current ? "Sondages en cours" : "Anciens sondages"}
+                {current ? "Sondages en cours" : "Anciens sondages"}
             </PageTitle>
             <Content/>
         </PollsBase>
     );
-}
+};

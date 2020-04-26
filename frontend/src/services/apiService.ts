@@ -164,6 +164,21 @@ export const api = {
                     }))
                 })
             ),
+        update: (pollId, data: {
+            publicationDate?: string | Date,
+            state?: "REVIEWING" | "REJECTED" | "ACCEPTED",
+            admin_comment?: String,
+            question?: String,
+            choices?: { text: string }[]
+        }) => {
+            // Format the date.
+            if (data.publicationDate && typeof data.publicationDate !== "string") {
+                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() + 1}-${data.publicationDate.getDate()}`;
+            }
+
+            return apiService.patch(`/polls/${pollId}/`, data)
+        },
+        delete: pollId => apiService.delete(`/polls/${pollId}/`),
         vote: (user, pollId, choiceId) =>
             apiService.post(`/polls/${pollId}/vote/`, {
                 user: user.id,
@@ -183,7 +198,7 @@ export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
     params?: any[],
-    useQueryConfig?: object,
+    useQueryConfig?: object
 ): QueryResult<T> {
     return useQuery<T, string, any>(key, params, (key, ...params) =>
         fetchFunction(...params), useQueryConfig

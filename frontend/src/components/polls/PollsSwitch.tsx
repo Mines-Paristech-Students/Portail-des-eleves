@@ -14,7 +14,7 @@ export function PollsSwitch() {
                 <ListPolls />
             </Route>
             <Route path={`${path}/administration/`}>
-                <PollsTable adminVersion />
+                <PollsTable adminVersion/>
             </Route>
             <Route exact path={`${path}/mes-sondages/`}>
                 <PollsTable />

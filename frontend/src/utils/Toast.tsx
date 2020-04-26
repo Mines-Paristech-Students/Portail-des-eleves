@@ -62,7 +62,7 @@ export const Toast = ({ message: msg, type, flip }) => {
                 zIndex: 9999
             }}
             autohide
-            delay={1000}
+            delay={5000}
             onClose={() => {
                 setShow(false);
             }}

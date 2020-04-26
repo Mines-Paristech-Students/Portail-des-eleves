@@ -4,38 +4,28 @@ import Modal from "react-bootstrap/Modal";
 import { PollEditModalAdminForm } from "./PollEditModalAdminForm";
 import { PollEditModalUserForm } from "./PollEditModalUserForm";
 
-type Props = {
-    show: boolean;
-    onHide: any;
-    poll: Poll;
-    setPoll: (poll: Poll) => void;
-    adminVersion: boolean;
-};
+export const PollEditModal = ({ show, onHide, poll, refetch, isAdmin }: {
+    show: boolean,
+    onHide: any,
+    poll: Poll,
+    refetch: any,
+    isAdmin: boolean,
+}) => <Modal size="lg" show={show} onHide={onHide}>
+    <Modal.Header>
+        <Modal.Title>Modifier</Modal.Title>
+    </Modal.Header>
 
-export function PollEditModal(props: Props) {
-    function handleClose(): void {
-        props.onHide();
-    }
-
-    return (
-        <Modal size="lg" show={props.show} onHide={handleClose}>
-            <Modal.Header>
-                <Modal.Title>Modifier</Modal.Title>
-            </Modal.Header>
-
-            {props.adminVersion ? (
-                <PollEditModalAdminForm
-                    poll={props.poll}
-                    setPoll={props.setPoll}
-                    handleClose={handleClose}
-                />
-            ) : (
-                <PollEditModalUserForm
-                    poll={props.poll}
-                    setPoll={props.setPoll}
-                    handleClose={handleClose}
-                />
-            )}
-        </Modal>
-    );
-}
+    {isAdmin ? (
+        <PollEditModalAdminForm
+            poll={poll}
+            handleClose={onHide}
+            refetch={refetch}
+        />
+    ) : (
+        <PollEditModalUserForm
+            poll={poll}
+            handleClose={onHide}
+            refetch={refetch}
+        />
+    )}
+</Modal>;
