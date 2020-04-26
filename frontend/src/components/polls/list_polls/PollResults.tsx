@@ -1,18 +1,14 @@
 import React from "react";
 import { Poll } from "../../../models/polls";
 import "./list_polls.css";
-import { dateFormatter } from "../../../utils/format";
+import { dateFormatter, pluralFormatter } from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
 
-type Props = {
-    poll: Poll;
-};
-
-export function PollResults(props: Props) {
+export const PollResults = ({ poll }: { poll: Poll }) => {
     let totalVotes = 0;
-    props.poll.choices.forEach(
+    poll.choices.forEach(
         choice =>
             (totalVotes = choice.numberOfVotes
                 ? totalVotes + choice.numberOfVotes
@@ -35,26 +31,26 @@ export function PollResults(props: Props) {
     return (
         <Card>
             <Card.Header>
-                <Card.Title as="h3">{props.poll.question}</Card.Title>
+                <Card.Title as="h3">{poll.question}</Card.Title>
             </Card.Header>
             <Card.Body>
                 <Card.Subtitle className="poll-date">
                     <em>
-                        {props.poll.publicationDate &&
-                            dateFormatter(props.poll.publicationDate)}
+                        {poll.publicationDate &&
+                        dateFormatter(poll.publicationDate)}
                     </em>
                 </Card.Subtitle>
 
                 <ListGroup>
-                    {props.poll.choices
-                        // Sort by descending number of votes.
+                    {poll.choices
+                    // Sort by descending number of votes.
                         .sort(
                             (a, b) =>
                                 Number(b.numberOfVotes) -
                                 Number(a.numberOfVotes)
                         )
                         .map(choice => {
-                            if (choice.numberOfVotes != undefined) {
+                            if (choice.numberOfVotes !== undefined) {
                                 return (
                                     <ListGroup.Item
                                         key={choice.id}
@@ -66,7 +62,9 @@ export function PollResults(props: Props) {
                                             </div>
                                             <div className="float-right text-muted">
                                                 <small>
-                                                    {choice.numberOfVotes} votes
+                                                    {`${choice.numberOfVotes} ${pluralFormatter(choice.numberOfVotes,
+                                                        "vote",
+                                                        "votes")}`}
                                                 </small>
                                             </div>
                                         </div>
@@ -90,4 +88,4 @@ export function PollResults(props: Props) {
             </Card.Body>
         </Card>
     );
-}
+};

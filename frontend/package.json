@@ -25,11 +25,9 @@
         "@types/react-dom": "^16.9.6",
         "@types/react-query": "^1.1.2",
         "@types/react-router-dom": "^5.1.4",
-        "@types/reactstrap": "^8.4.2",
         "@types/yup": "^0.26.37",
         "prettier": "^2.0.4",
-        "typescript": "^3.8.3",
-        "reactstrap": "^8.4.1"
+        "typescript": "^3.8.3"
     },
     "scripts": {
         "start": "react-scripts start",

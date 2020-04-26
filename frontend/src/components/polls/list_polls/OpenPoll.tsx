@@ -9,26 +9,21 @@ import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
-type Props = {
-    poll: Poll;
-    refetch: any;
-};
-
-export function OpenPoll(props: Props) {
+export const OpenPoll = ({ poll, refetch }: { poll: Poll, refetch: any }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
 
     return (
         <Card>
             <Card.Header>
-                <Card.Title as="h3">{props.poll.question}</Card.Title>
+                <Card.Title as="h3">{poll.question}</Card.Title>
             </Card.Header>
 
             <Card.Body>
                 <Card.Subtitle className="poll-date">
                     <em>
-                        {props.poll.publicationDate &&
-                        dateFormatter(props.poll.publicationDate)}
+                        {poll.publicationDate &&
+                        dateFormatter(poll.publicationDate)}
                     </em>
                 </Card.Subtitle>
 
@@ -38,35 +33,36 @@ export function OpenPoll(props: Props) {
                     }}
                     onSubmit={(values, { setSubmitting }) => {
                         api.polls
-                            .vote(user, props.poll.id, values.choice)
+                            .vote(user, poll.id, values.choice)
                             .then(response => {
-                                if (response.status == 201) {
+                                if (response.status === 201) {
                                     newToast({
                                         message: "Vous avez voté.",
                                         level: ToastLevel.Success
                                     });
-                                    props.refetch({ force: true });
+                                    refetch({ force: true });
                                 }
                             })
                             .catch(error => {
                                 let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                                let detail = error.response.data.detail;
 
-                                switch (error.response.data.detail) {
+                                switch (detail) {
                                     case "Invalid choice provided.":
-                                        message = "Ce choix est invalide.";
+                                        detail = "Ce choix est invalide.";
                                         break;
                                     case "This poll is not active.":
-                                        message = "Ce sondage n’est plus actif.";
+                                        detail = "Ce sondage n’est plus actif.";
                                         break;
                                     case "You have already voted.":
-                                        message = "Vous avez déjà voté.";
+                                        detail = "Vous avez déjà voté.";
                                         break;
                                     default:
                                         break;
                                 }
 
                                 newToast({
-                                    message: message,
+                                    message: `${message} Détails : ${detail}`,
                                     level: ToastLevel.Error
                                 });
                             })
@@ -76,14 +72,14 @@ export function OpenPoll(props: Props) {
                     }}
                 >
                     <Form>
-                        <ChoiceFields choices={props.poll.choices}/>
+                        <ChoiceFields choices={poll.choices}/>
 
                         <div className="text-center ml-auto">
                             {
-                                props.poll.userHasVoted ? (
+                                poll.userHasVoted ? (
                                     <p>Vous avez déjà voté.</p>
                                 ) : (
-                                    <Button disabled={props.poll.userHasVoted} variant="outline-success" type="submit">
+                                    <Button disabled={poll.userHasVoted} variant="outline-success" type="submit">
                                         Voter
                                     </Button>
                                 )
@@ -94,16 +90,12 @@ export function OpenPoll(props: Props) {
             </Card.Body>
         </Card>
     );
-}
-
-type ChoiceFieldsProps = {
-    choices: Choice[]
 };
 
-function ChoiceFields(props: ChoiceFieldsProps) {
+const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
     let items: Map<string, ReactElement> = new Map();
 
-    props.choices.forEach(choice => {
+    choices.forEach(choice => {
         items.set(
             choice.id.toString(),
             <span className="selectgroup-button">{choice.text}</span>
@@ -113,4 +105,4 @@ function ChoiceFields(props: ChoiceFieldsProps) {
     return (
         <SelectGroup type="vertical" label="" items={items} name="choice"/>
     );
-}
+};
