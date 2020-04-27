@@ -206,4 +206,19 @@
     room: ''
     phone: "+33623149119"
     year_of_entry: 2014
-
+- model: authentication.user
+  pk: 19simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Simple
+    last_name: Iste
+    email: 19simple@mpt.fr
+    birthday: '2000-04-28'
+    is_active: true
+    is_admin: false
+    nickname: 'Simplet'
+    city_of_origin: Paris
+    room: ''
+    phone: "+330011223383"
+    year_of_entry: 2019
