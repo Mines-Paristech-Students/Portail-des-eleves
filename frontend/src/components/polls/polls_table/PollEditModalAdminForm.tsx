@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
@@ -164,11 +164,11 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                                         </Card.Subtitle>
 
                                         <span className="selectgroup-button">
-                                    {poll.choices[0].text}
-                                </span>
+                                            {poll.choices[0].text}
+                                        </span>
                                         <span className="selectgroup-button">
-                                    {poll.choices[1].text}
-                                </span>
+                                            {poll.choices[1].text}
+                                        </span>
                                     </Card.Body>
                                 </Card>
                             </Col>

@@ -8,13 +8,16 @@ import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { CardStatus } from "../../CardStatus";
 
-export const OpenPoll = ({ poll, refetch }: { poll: Poll, refetch: any }) => {
+export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
 
     return (
         <Card>
+            <CardStatus color="random" position="left"/>
+
             <Card.Header>
                 <Card.Title as="h3">{poll.question}</Card.Title>
             </Card.Header>

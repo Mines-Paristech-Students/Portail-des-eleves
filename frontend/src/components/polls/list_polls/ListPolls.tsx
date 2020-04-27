@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { api, useBetterQuery } from "../../../services/apiService";
 
-import { OpenPoll } from "./OpenPoll";
+import { PollVotingForm } from "./PollVotingForm";
 import { PollResults } from "./PollResults";
 import { Poll } from "../../../models/polls";
 import Container from "react-bootstrap/Container";
@@ -12,19 +12,22 @@ import { PageTitle } from "../../../utils/common";
 import { Link } from "react-router-dom";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
+import Card from "react-bootstrap/Card";
+import { dateFormatter } from "../../../utils/format";
+import { PollNoPolls } from "./PollNoPolls";
 
 
 /**
  * Display a list of published polls.
  *
  * If `current` is `true`, only display the active polls...
- *   - if the user has not voted, display the poll as an `OpenPoll`.
+ *   - if the user has not voted, display the poll as an `PollVotingForm`.
  *   - otherwise, display the poll as a `PollResult`.
  *
  * If `current` is `false`, only display the inactive polls...
  *   - always display the poll as a `PollResult`.
  */
-export const ListPolls = ({ current } : {current ?: boolean}) => {
+export const ListPolls = ({ current }: { current?: boolean }) => {
     const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
         "polls.list",
         api.polls.list,
@@ -42,8 +45,8 @@ export const ListPolls = ({ current } : {current ?: boolean}) => {
                 cards = cards.concat(
                     polls
                         .filter(poll => poll.isActive && !poll.userHasVoted)
-                        .map(poll => <OpenPoll poll={poll}
-                                               refetch={refetch}/>),
+                        .map(poll => <PollVotingForm poll={poll}
+                                                     refetch={refetch}/>),
                     polls
                         .filter(poll => poll.isActive && poll.userHasVoted)
                         .map(poll => <PollResults poll={poll}/>)
@@ -59,23 +62,18 @@ export const ListPolls = ({ current } : {current ?: boolean}) => {
                     {cards.length > 0 ? (
                         <Row>
                             {cards.map((pollCard, index) => (
-                                <Col
-                                    key={"poll-card-" + index}
-                                    xs={{ span: 6 }}
-                                >
+                                <Col key={"poll-card-" + index}
+                                     xs={{ span: 6 }}>
                                     {pollCard}
                                 </Col>
                             ))}
                         </Row>
                     ) : (
                         <Row>
-                            <p>
-                                Pour un monde meilleur,{" "}
-                                <Link to="/sondages/proposer">
-                                    propose un sondage
-                                </Link>
-                                .
-                            </p>
+                            <Col key={"poll-card-empty"}
+                                 xs={{ span: 6, offset: 3 }}>
+                                <PollNoPolls/>
+                            </Col>
                         </Row>
                     )}
                 </Container>
