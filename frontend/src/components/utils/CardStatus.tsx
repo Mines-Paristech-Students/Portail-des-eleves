@@ -1,5 +1,5 @@
 import React from "react";
-import { getRandom } from "../utils/random";
+import { getRandom } from "../../utils/random";
 
 /**
  * Display a single line emphasizing either the top or the left side of the card. Should be used as a *top* child of the `Card` component.

@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { CardStatus } from "../../CardStatus";
+import { CardStatus } from "../../utils/CardStatus";
 
 export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) => {
     const newToast = useContext(ToastContext);

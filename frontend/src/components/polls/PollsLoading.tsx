@@ -1,8 +1,4 @@
 import React from "react";
-import Container from "react-bootstrap/Container";
-import Spinner from "react-bootstrap/Spinner";
+import { CenteredSpinner } from "../utils/CenteredSpinner";
 
-export const PollsLoading = () =>
-    <Container>
-        <Spinner animation="border" role="status"/>
-    </Container>;
+export const PollsLoading = CenteredSpinner;

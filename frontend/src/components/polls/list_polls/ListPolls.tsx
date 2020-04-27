@@ -9,11 +9,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PollsBase } from "../PollsBase";
 import { PageTitle } from "../../../utils/common";
-import { Link } from "react-router-dom";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
-import Card from "react-bootstrap/Card";
-import { dateFormatter } from "../../../utils/format";
 import { PollNoPolls } from "./PollNoPolls";
 
 

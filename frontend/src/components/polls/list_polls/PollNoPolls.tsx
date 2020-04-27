@@ -1,7 +1,7 @@
 import Card from "react-bootstrap/Card";
 import React from "react";
 import { Link } from "react-router-dom";
-import { CardStatus } from "../../CardStatus";
+import { CardStatus } from "../../utils/CardStatus";
 
 export const PollNoPolls = () => <Card className="mx-auto">
     <CardStatus color="red"/>
