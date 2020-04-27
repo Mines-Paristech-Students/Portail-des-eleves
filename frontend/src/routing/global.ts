@@ -4,10 +4,10 @@ import { AssociationMain } from "../pages/associations/Main";
 import { routes as pollsRoutes } from "./polls";
 
 export type Route = {
-    path: string,
-    component: any,
-    exact: boolean
-}
+    path: string;
+    component: any;
+    exact: boolean;
+};
 
 export const routes = [
     { path: "/", component: Homepage, exact: true },

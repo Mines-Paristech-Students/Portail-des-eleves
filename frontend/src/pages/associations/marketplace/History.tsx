@@ -17,7 +17,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
         [marketplaceId, user]
     );
 
-    if (status === "loading") return <LoadingAssociation/>;
+    if (status === "loading") return <LoadingAssociation />;
     else if (status === "error") return `Something went wrong: ${error}`;
     else if (status === "success" && transactions) {
         return (
@@ -29,15 +29,15 @@ export const AssociationMarketplaceHistory = ({ association }) => {
                         }
                         className={"btn btn-primary"}
                     >
-                        <i className={"fe fe-book-open"}/> Magasin
+                        <i className={"fe fe-book-open"} /> Magasin
                     </a>
                 </div>
                 <PageTitle>Mon historique</PageTitle>
 
                 {transactions.length !== 0 ? (
-                    <TransactionsTable transactions={transactions}/>
+                    <TransactionsTable transactions={transactions} />
                 ) : (
-                    <NoTransactionMessage/>
+                    <NoTransactionMessage />
                 )}
             </Container>
         );
@@ -51,19 +51,19 @@ const TransactionsTable = ({ transactions }) => {
         <Card>
             <table className="table card-table table-vcenter">
                 <tbody>
-                {transactions.map((transaction, index) => {
-                    return transaction.product !== null ? (
-                        <PurchaseTransactionLine
-                            key={index}
-                            transaction={transaction}
-                        />
-                    ) : (
-                        <RefundTransactionLine
-                            key={index}
-                            transaction={transaction}
-                        />
-                    );
-                })}
+                    {transactions.map((transaction, index) => {
+                        return transaction.product !== null ? (
+                            <PurchaseTransactionLine
+                                key={index}
+                                transaction={transaction}
+                            />
+                        ) : (
+                            <RefundTransactionLine
+                                key={index}
+                                transaction={transaction}
+                            />
+                        );
+                    })}
                 </tbody>
             </table>
         </Card>
@@ -81,7 +81,7 @@ const NoTransactionMessage = () => (
 );
 
 const PurchaseTransactionLine = ({ transaction }) => {
-    let status = <p/>;
+    let status = <p />;
 
     if (transaction.status === "ORDERED") {
         status = <span className="tag tag-blue">Commandée</span>;
@@ -117,7 +117,7 @@ const PurchaseTransactionLine = ({ transaction }) => {
 
 const RefundTransactionLine = ({ transaction }) => {
     /* If the user put money  on their account */
-    let status = <p/>;
+    let status = <p />;
     if (transaction.status === "FUNDED") {
         status = <span className="tag tag-blue">Versé</span>;
     } else if (transaction.status === "REFUNED") {

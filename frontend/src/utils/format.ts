@@ -23,7 +23,15 @@ export const WEEKDAYS_LONG = [
     "Samedi"
 ];
 
-export const WEEKDAYS_SHORT = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+export const WEEKDAYS_SHORT = [
+    "dim.",
+    "lun.",
+    "mar.",
+    "mer.",
+    "jeu.",
+    "ven.",
+    "sam."
+];
 
 /**
  * Format a date as DD/MM/YYYY.
@@ -31,15 +39,15 @@ export const WEEKDAYS_SHORT = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "
  */
 export function dateFormatter(date: Date): string {
     return (
-        date.getDate()
+        date
+            .getDate()
             .toString()
             .padStart(2, "0") +
         "/" +
-        (date.getMonth() + 1)
-            .toString()
-            .padStart(2, "0") +
+        (date.getMonth() + 1).toString().padStart(2, "0") +
         "/" +
-        date.getFullYear()
+        date
+            .getFullYear()
             .toString()
             .padStart(4, "0")
     );

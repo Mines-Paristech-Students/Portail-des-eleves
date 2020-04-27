@@ -5,8 +5,7 @@ import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
-import { Choice, Poll } from "../models/polls";
-import { User } from "../models/user";
+import { Poll } from "../models/polls";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -156,25 +155,31 @@ export const api = {
             ),
         get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
         create: (data: {
-            question: string,
-            choice0: string,
-            choice1: string
-        }) => apiService.post("/polls/", {
-            question: data.question, choices: [
-                { text: data.choice0 },
-                { text: data.choice1 }
-            ]
-        }),
-        update: (pollId, data: {
-            publicationDate?: string | Date,
-            state?: "REVIEWING" | "REJECTED" | "ACCEPTED",
-            admin_comment?: String,
-            question?: String,
-            choices?: { text: string }[]
-        }) => {
+            question: string;
+            choice0: string;
+            choice1: string;
+        }) =>
+            apiService.post("/polls/", {
+                question: data.question,
+                choices: [{ text: data.choice0 }, { text: data.choice1 }]
+            }),
+        update: (
+            pollId,
+            data: {
+                publicationDate?: string | Date;
+                state?: "REVIEWING" | "REJECTED" | "ACCEPTED";
+                admin_comment?: String;
+                question?: String;
+                choices?: { text: string }[];
+            }
+        ) => {
             // Format the date.
-            if (data.publicationDate && typeof data.publicationDate !== "string") {
-                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() + 1}-${data.publicationDate.getDate()}`;
+            if (
+                data.publicationDate &&
+                typeof data.publicationDate !== "string"
+            ) {
+                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
+                    1}-${data.publicationDate.getDate()}`;
             }
 
             return apiService.patch(`/polls/${pollId}/`, data);
@@ -201,7 +206,10 @@ export function useBetterQuery<T>(
     params?: any[],
     useQueryConfig?: object
 ): QueryResult<T> {
-    return useQuery<T, string, any>(key, params, (key, ...params) =>
-        fetchFunction(...params), useQueryConfig
+    return useQuery<T, string, any>(
+        key,
+        params,
+        (key, ...params) => fetchFunction(...params),
+        useQueryConfig
     );
 }

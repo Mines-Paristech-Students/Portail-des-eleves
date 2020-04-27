@@ -37,13 +37,13 @@ export const PollResults = ({ poll }: { poll: Poll }) => {
                 <Card.Subtitle className="poll-date">
                     <em>
                         {poll.publicationDate &&
-                        dateFormatter(poll.publicationDate)}
+                            dateFormatter(poll.publicationDate)}
                     </em>
                 </Card.Subtitle>
 
                 <ListGroup>
                     {poll.choices
-                    // Sort by descending number of votes.
+                        // Sort by descending number of votes.
                         .sort(
                             (a, b) =>
                                 Number(b.numberOfVotes) -
@@ -62,9 +62,13 @@ export const PollResults = ({ poll }: { poll: Poll }) => {
                                             </div>
                                             <div className="float-right text-muted">
                                                 <small>
-                                                    {`${choice.numberOfVotes} ${pluralFormatter(choice.numberOfVotes,
+                                                    {`${
+                                                        choice.numberOfVotes
+                                                    } ${pluralFormatter(
+                                                        choice.numberOfVotes,
                                                         "vote",
-                                                        "votes")}`}
+                                                        "votes"
+                                                    )}`}
                                                 </small>
                                             </div>
                                         </div>

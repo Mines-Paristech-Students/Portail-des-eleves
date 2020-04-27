@@ -13,16 +13,25 @@ import { Marketplace } from "../../../models/associations/marketplace";
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
     const { data: marketplace, status, error } = useBetterQuery<Marketplace>(
-        "marketplace.get", api.marketplace.get, [marketplaceId]
+        "marketplace.get",
+        api.marketplace.get,
+        [marketplaceId]
     );
 
-    if (status === 'loading') return <LoadingAssociation />;
-    else if (status === 'error') return `Something went wrong: ${error}`;
-    else if (status === 'success' && marketplace) {
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "success" && marketplace) {
         return (
             <Container>
                 <div className={"float-right"}>
-                    <a href={"/associations/" + marketplaceId + "/marketplace/history/"} className={"btn btn-primary"}>
+                    <a
+                        href={
+                            "/associations/" +
+                            marketplaceId +
+                            "/marketplace/history/"
+                        }
+                        className={"btn btn-primary"}
+                    >
                         <i className={"fe fe-book-open"} /> Historique
                     </a>
                 </div>

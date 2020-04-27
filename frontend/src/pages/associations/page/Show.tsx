@@ -6,18 +6,26 @@ import { LoadingAssociation } from "../Loading";
 import { Page } from "../../../models/associations/page";
 
 export const AssociationShowPage = ({ association }) => {
-    const { pageId } = useParams<{pageId: string}>();
+    const { pageId } = useParams<{ pageId: string }>();
     const { data, status, error } = useBetterQuery<Page>(
-        "page.get", api.pages.get, [pageId]
+        "page.get",
+        api.pages.get,
+        [pageId]
     );
 
-    if (status === 'loading') return <LoadingAssociation/>;
-    else if (status === 'error') return `Something went wrong: ${error}`;
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
     else if (data) {
         return (
             <div>
                 <PageTitle>{data.title}</PageTitle>
-                <p><Link to={`/associations/${association.id}/pages/${pageId}/edit`}>Editer</Link></p>
+                <p>
+                    <Link
+                        to={`/associations/${association.id}/pages/${pageId}/edit`}
+                    >
+                        Editer
+                    </Link>
+                </p>
                 <p>{data.text}</p>
             </div>
         );

@@ -4,10 +4,10 @@ import React from "react";
 export const PollStateIcon = ({ state }: { state: PollState }) => {
     switch (state) {
         case PollState.Accepted:
-            return <i className="fe fe-check text-success"/>;
+            return <i className="fe fe-check text-success" />;
         case PollState.Rejected:
-            return <i className="fe fe-x text-danger"/>;
+            return <i className="fe fe-x text-danger" />;
         case PollState.Reviewing:
-            return <i className="fe fe-eye text-warning"/>;
+            return <i className="fe fe-eye text-warning" />;
     }
 };

@@ -7,10 +7,27 @@ import { getRandom } from "../../utils/random";
  * @param color to be chosen between `blue`, `green`, `orange`, `red`, `yellow`, `teal`, `purple` and `random`. Defaults to `blue`.
  * @param position to be chosen between `top` and `left`. Defaults to `top`.
  */
-export const CardStatus = ({ color = "blue", position = "top" }: {
-    color?: "blue" | "green" | "orange" | "red" | "yellow" | "teal" | "purple" | "random",
-    position?: "top" | "left"
-}) => <div
-    className={`card-status bg-${color === "random" ? getRandomColor() : color} card-status-${position}`}/>;
+export const CardStatus = ({
+    color = "blue",
+    position = "top"
+}: {
+    color?:
+        | "blue"
+        | "green"
+        | "orange"
+        | "red"
+        | "yellow"
+        | "teal"
+        | "purple"
+        | "random";
+    position?: "top" | "left";
+}) => (
+    <div
+        className={`card-status bg-${
+            color === "random" ? getRandomColor() : color
+        } card-status-${position}`}
+    />
+);
 
-const getRandomColor = () => getRandom(["blue", "green", "orange", "red", "yellow", "teal", "purple"]);
+const getRandomColor = () =>
+    getRandom(["blue", "green", "orange", "red", "yellow", "teal", "purple"]);

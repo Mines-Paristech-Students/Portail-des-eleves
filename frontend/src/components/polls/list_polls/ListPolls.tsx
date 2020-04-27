@@ -13,7 +13,6 @@ import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
 import { PollNoPolls } from "./PollNoPolls";
 
-
 /**
  * Display a list of published polls.
  *
@@ -33,8 +32,7 @@ export const ListPolls = ({ current }: { current?: boolean }) => {
     );
 
     function Content(): React.ReactElement | null {
-        if (status === "loading")
-            return <PollsLoading/>;
+        if (status === "loading") return <PollsLoading />;
         else if (status === "success" && polls) {
             let cards: ReactElement[] = [];
 
@@ -42,16 +40,17 @@ export const ListPolls = ({ current }: { current?: boolean }) => {
                 cards = cards.concat(
                     polls
                         .filter(poll => poll.isActive && !poll.userHasVoted)
-                        .map(poll => <PollVotingForm poll={poll}
-                                                     refetch={refetch}/>),
+                        .map(poll => (
+                            <PollVotingForm poll={poll} refetch={refetch} />
+                        )),
                     polls
                         .filter(poll => poll.isActive && poll.userHasVoted)
-                        .map(poll => <PollResults poll={poll}/>)
+                        .map(poll => <PollResults poll={poll} />)
                 );
             } else {
                 cards = polls
                     .filter(poll => !poll.isActive && poll.hasBeenPublished)
-                    .map(poll => <PollResults poll={poll}/>);
+                    .map(poll => <PollResults poll={poll} />);
             }
 
             return (
@@ -59,24 +58,28 @@ export const ListPolls = ({ current }: { current?: boolean }) => {
                     {cards.length > 0 ? (
                         <Row>
                             {cards.map((pollCard, index) => (
-                                <Col key={"poll-card-" + index}
-                                     xs={{ span: 6 }}>
+                                <Col
+                                    key={"poll-card-" + index}
+                                    xs={{ span: 6 }}
+                                >
                                     {pollCard}
                                 </Col>
                             ))}
                         </Row>
                     ) : (
                         <Row>
-                            <Col key={"poll-card-empty"}
-                                 xs={{ span: 6, offset: 3 }}>
-                                <PollNoPolls/>
+                            <Col
+                                key={"poll-card-empty"}
+                                xs={{ span: 6, offset: 3 }}
+                            >
+                                <PollNoPolls />
                             </Col>
                         </Row>
                     )}
                 </Container>
             );
         } else {
-            return <PollsError detail={error}/>;
+            return <PollsError detail={error} />;
         }
     }
 
@@ -85,7 +88,7 @@ export const ListPolls = ({ current }: { current?: boolean }) => {
             <PageTitle>
                 {current ? "Sondages en cours" : "Anciens sondages"}
             </PageTitle>
-            <Content/>
+            <Content />
         </PollsBase>
     );
 };

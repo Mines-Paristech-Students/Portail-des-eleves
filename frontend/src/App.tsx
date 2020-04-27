@@ -47,7 +47,7 @@ const App: React.FC = () => {
             </ToastProvider>
         );
     } else {
-        return <CenteredSpinner className="mt-9"/>;
+        return <CenteredSpinner className="mt-9" />;
     }
 };
 

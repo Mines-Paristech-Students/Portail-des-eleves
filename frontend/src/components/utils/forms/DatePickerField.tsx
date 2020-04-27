@@ -5,7 +5,7 @@ import FormControl from "react-bootstrap/FormControl";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import { MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } from "../../../utils/format";
-import "./date-picker-field.css"
+import "./date-picker-field.css";
 
 export function DatePickerField({ label, ...props }: any) {
     const { setFieldValue } = useFormikContext();
@@ -16,7 +16,10 @@ export function DatePickerField({ label, ...props }: any) {
             <Form.Group>
                 <Form.Label>{label}</Form.Label>
                 {meta.touched && meta.error ? (
-                    <FormControl.Feedback type="invalid" className="date-picker-feedback">
+                    <FormControl.Feedback
+                        type="invalid"
+                        className="date-picker-feedback"
+                    >
                         {meta.error}
                     </FormControl.Feedback>
                 ) : null}

@@ -24,85 +24,86 @@ export const SubmitPoll = () => {
         ["Le plus beau ?", "17bocquet", "17cantelobre"]
     ]);
 
-    const SubmitPollForm = () => <Card className="text-left">
-        <Formik
-            initialValues={{
-                question: "",
-                choice0: "",
-                choice1: ""
-            }}
-            validationSchema={Yup.object({
-                question: Yup.string().required("Ce champ est requis."),
-                choice0: Yup.string().required("Ce champ est requis."),
-                choice1: Yup.string().required("Ce champ est requis.")
-            })}
-            onSubmit={(values, { resetForm, setSubmitting }) => {
-                let data = {
-                    question: values.question,
-                    choice0: values.choice0,
-                    choice1: values.choice1
-                };
+    const SubmitPollForm = () => (
+        <Card className="text-left">
+            <Formik
+                initialValues={{
+                    question: "",
+                    choice0: "",
+                    choice1: ""
+                }}
+                validationSchema={Yup.object({
+                    question: Yup.string().required("Ce champ est requis."),
+                    choice0: Yup.string().required("Ce champ est requis."),
+                    choice1: Yup.string().required("Ce champ est requis.")
+                })}
+                onSubmit={(values, { resetForm, setSubmitting }) => {
+                    let data = {
+                        question: values.question,
+                        choice0: values.choice0,
+                        choice1: values.choice1
+                    };
 
-                api.polls
-                    .create(data)
-                    .then(response => {
-                        if (response.status === 201) {
+                    api.polls
+                        .create(data)
+                        .then(response => {
+                            if (response.status === 201) {
+                                newToast({
+                                    message: "Sondage envoyé.",
+                                    level: ToastLevel.Success
+                                });
+                                resetForm();
+                            }
+                        })
+                        .catch(error => {
+                            let message =
+                                "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                             newToast({
-                                message: "Sondage envoyé.",
-                                level: ToastLevel.Success
+                                message: `${message} Détails : ${error.response.data.detail}`,
+                                level: ToastLevel.Error
                             });
-                            resetForm();
-                        }
-                    })
-                    .catch(error => {
-                        let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                        newToast({
-                            message: `${message} Détails : ${error.response.data.detail}`,
-                            level: ToastLevel.Error
+                        })
+                        .then(() => {
+                            setSubmitting(false);
                         });
-                    })
-                    .then(() => {
-                        setSubmitting(false);
-                    });
-            }}
-        >
-            <Form>
-                <Card.Body>
-                    <TextFormGroup
-                        label="Question"
-                        name="question"
-                        type="text"
-                        placeholder={questionPlaceholder}
-                    />
-                    <TextFormGroup
-                        label="Choix 1"
-                        name="choice0"
-                        type="text"
-                        placeholder={choice0Placeholder}
-                    />
-                    <TextFormGroup
-                        label="Choix 2"
-                        name="choice1"
-                        type="text"
-                        placeholder={choice1Placeholder}
-                    />
-                </Card.Body>
+                }}
+            >
+                <Form>
+                    <Card.Body>
+                        <TextFormGroup
+                            label="Question"
+                            name="question"
+                            type="text"
+                            placeholder={questionPlaceholder}
+                        />
+                        <TextFormGroup
+                            label="Choix 1"
+                            name="choice0"
+                            type="text"
+                            placeholder={choice0Placeholder}
+                        />
+                        <TextFormGroup
+                            label="Choix 2"
+                            name="choice1"
+                            type="text"
+                            placeholder={choice1Placeholder}
+                        />
+                    </Card.Body>
 
-                <Card.Footer className="text-right">
-                    <Button type="submit" variant="outline-success">
-                        Envoyer
-                    </Button>
-                </Card.Footer>
-            </Form>
-        </Formik>
-    </Card>;
+                    <Card.Footer className="text-right">
+                        <Button type="submit" variant="outline-success">
+                            Envoyer
+                        </Button>
+                    </Card.Footer>
+                </Form>
+            </Formik>
+        </Card>
+    );
 
     return (
         <PollsBase>
-            <PageTitle>
-                Proposer un sondage
-            </PageTitle>
-            <SubmitPollForm/>
+            <PageTitle>Proposer un sondage</PageTitle>
+            <SubmitPollForm />
         </PollsBase>
     );
 };

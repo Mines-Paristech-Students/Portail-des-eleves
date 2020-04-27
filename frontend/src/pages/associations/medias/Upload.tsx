@@ -78,7 +78,8 @@ const FileUpload = ({ file, association }) => {
     let [error, setError] = useState<string>("");
     let [uploadedFile, setUploadedFile] = useState<Media | null>(null);
 
-    useEffect(() => { // Use effect to submit the file only once
+    useEffect(() => {
+        // Use effect to submit the file only once
         const upload = api.medias.upload(file, association, progressEvent => {
             let { loaded, total } = progressEvent;
             setProgress(Math.round((loaded * 100) / total));
@@ -141,7 +142,8 @@ const FileUploadDone = ({ file }) => {
     let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const newToast = useContext(ToastContext);
 
-    const formik = useFormik({ // Use a form to edit name and description
+    const formik = useFormik({
+        // Use a form to edit name and description
         initialValues: file,
         onSubmit: values => {
             newToast({
@@ -202,7 +204,9 @@ const FileUploadDone = ({ file }) => {
         <form onSubmit={formik.handleSubmit}>
             <Card className={"mt-3"}>
                 <Card.Header>
-                    <span role={"img"} aria-label={"check"}>✅</span>{" "}
+                    <span role={"img"} aria-label={"check"}>
+                        ✅
+                    </span>{" "}
                     <Form.Control
                         id="name"
                         name="name"

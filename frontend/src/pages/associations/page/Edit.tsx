@@ -22,7 +22,7 @@ export const AssociationCreatePage = ({ association, ...props }) => {
 };
 
 export const AssociationEditPage = ({ association, ...props }) => {
-    const { pageId } = useParams<{pageId: string}>();
+    const { pageId } = useParams<{ pageId: string }>();
 
     const { data: page, status, error } = useBetterQuery<Page>(
         "page.get",

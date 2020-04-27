@@ -13,7 +13,6 @@ import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
 import { UserContext } from "../../../services/authService";
 
-
 export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
     const user = useContext(UserContext);
 
@@ -24,73 +23,77 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
         { refetchOnWindowFocus: false }
     );
 
-    const Title = () => adminVersion ?
-        (<PageTitle>Administration</PageTitle>)
-        : (<PageTitle>Mes sondages</PageTitle>);
+    const Title = () =>
+        adminVersion ? (
+            <PageTitle>Administration</PageTitle>
+        ) : (
+            <PageTitle>Mes sondages</PageTitle>
+        );
 
     const Header = () => (
         <thead className="text-center">
-        <tr>
-            <th>Question</th>
-            <th>Réponse 1</th>
-            <th>Réponse 2</th>
-            <th>Publication</th>
-            {adminVersion && <th>Auteur</th>}
-            <th>Statut</th>
-            {!adminVersion && (
-                <th>Commentaire</th>
-            )}
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Question</th>
+                <th>Réponse 1</th>
+                <th>Réponse 2</th>
+                <th>Publication</th>
+                {adminVersion && <th>Auteur</th>}
+                <th>Statut</th>
+                {!adminVersion && <th>Commentaire</th>}
+                <th>Actions</th>
+            </tr>
         </thead>
     );
 
     function Content() {
-        if (status === "loading")
-            return <PollsLoading/>;
+        if (status === "loading") return <PollsLoading />;
         else if (status === "success" && polls && user) {
             return (
                 <Card>
                     <Card.Body>
                         <Table className="card-table polls-table text-left">
-                            <Header/>
+                            <Header />
 
-                            <tbody>{
-                                adminVersion ? (
-                                    // Display all the polls in the administrator panel.
-                                    polls
-                                        .map(poll => (
-                                            <PollsTableRowAdmin
-                                                key={"polls-table-row-admin-" + poll.id}
-                                                poll={poll}
-                                                refetch={refetch}
-                                            />
-                                        ))
-                                ) : (
-                                    // Only display their own polls to a normal user.
-                                    polls.filter(poll => poll.user === user.id)
-                                        .map(poll => (
-                                            <PollsTableRowUser
-                                                key={"polls-table-row-user-" + poll.id}
-                                                poll={poll}
-                                                refetch={refetch}
-                                            />
-                                        ))
-                                )
-                            }</tbody>
+                            <tbody>
+                                {adminVersion
+                                    ? // Display all the polls in the administrator panel.
+                                      polls.map(poll => (
+                                          <PollsTableRowAdmin
+                                              key={
+                                                  "polls-table-row-admin-" +
+                                                  poll.id
+                                              }
+                                              poll={poll}
+                                              refetch={refetch}
+                                          />
+                                      ))
+                                    : // Only display their own polls to a normal user.
+                                      polls
+                                          .filter(poll => poll.user === user.id)
+                                          .map(poll => (
+                                              <PollsTableRowUser
+                                                  key={
+                                                      "polls-table-row-user-" +
+                                                      poll.id
+                                                  }
+                                                  poll={poll}
+                                                  refetch={refetch}
+                                              />
+                                          ))}
+                            </tbody>
                         </Table>
                     </Card.Body>
                 </Card>
             );
         } else {
-            return <PollsError detail={error}/>;
+            return <PollsError detail={error} />;
         }
     }
 
     return (
         <PollsBase>
-            <Title/>
-            <Content/>
+            <Title />
+            <Content />
         </PollsBase>
     );
 };

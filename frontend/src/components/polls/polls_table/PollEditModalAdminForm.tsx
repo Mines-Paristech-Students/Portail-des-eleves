@@ -15,10 +15,14 @@ import { dateFormatter } from "../../../utils/format";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
-export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
-    poll: Poll,
-    refetch: any,
-    handleClose: () => void
+export const PollEditModalAdminForm = ({
+    poll,
+    refetch,
+    handleClose
+}: {
+    poll: Poll;
+    refetch: any;
+    handleClose: () => void;
 }) => {
     const newToast = useContext(ToastContext);
 
@@ -28,21 +32,21 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
         items.set(
             "ACCEPTED",
             <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-check text-success"/> Accepté
+                <i className="fe fe-check text-success" /> Accepté
             </span>
         );
 
         items.set(
             "REJECTED",
             <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-x text-danger"/> Refusé
+                <i className="fe fe-x text-danger" /> Refusé
             </span>
         );
 
         items.set(
             "REVIEWING",
             <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-eye text-warning"/> En attente
+                <i className="fe fe-eye text-warning" /> En attente
             </span>
         );
 
@@ -100,7 +104,10 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
             }}
             validationSchema={Yup.object({
                 publicationDate: Yup.date()
-                    .min(minDate, "Le sondage doit être publié aujourd’hui ou dans le futur.")
+                    .min(
+                        minDate,
+                        "Le sondage doit être publié aujourd’hui ou dans le futur."
+                    )
                     .when("state", {
                         is: "ACCEPTED",
                         then: Yup.date().required("Ce champ est requis."),
@@ -110,7 +117,8 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
             onSubmit={(values, { setSubmitting }) => {
                 let data = {
                     state: values.state,
-                    adminComment: values.state === "REJECTED" ? values.adminComment : "",
+                    adminComment:
+                        values.state === "REJECTED" ? values.adminComment : "",
                     publicationDate: values.publicationDate
                 };
 
@@ -125,11 +133,16 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                         }
                     })
                     .catch(error => {
-                        let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                        let message =
+                            "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                         let detail = error.response.data.detail;
 
-                        if (detail === "You are not allowed to update this poll.") {
-                            detail = "Vous n’avez pas le droit de modifier ce sondage.";
+                        if (
+                            detail ===
+                            "You are not allowed to update this poll."
+                        ) {
+                            detail =
+                                "Vous n’avez pas le droit de modifier ce sondage.";
                         }
 
                         newToast({
@@ -151,14 +164,18 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                             <Col>
                                 <Card className="mx-auto">
                                     <Card.Header>
-                                        <Card.Title as="h3">{poll.question}</Card.Title>
+                                        <Card.Title as="h3">
+                                            {poll.question}
+                                        </Card.Title>
                                     </Card.Header>
                                     <Card.Body>
                                         <Card.Subtitle>
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
                                                 {poll.publicationDate &&
-                                                dateFormatter(poll.publicationDate)}
+                                                    dateFormatter(
+                                                        poll.publicationDate
+                                                    )}
                                                 .
                                             </em>
                                         </Card.Subtitle>
@@ -173,9 +190,9 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                                 </Card>
                             </Col>
                             <Col>
-                                <StateField/>
-                                <AdminCommentField/>
-                                <DateField/>
+                                <StateField />
+                                <AdminCommentField />
+                                <DateField />
                             </Col>
                         </Row>
                     </Container>

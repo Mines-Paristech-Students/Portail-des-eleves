@@ -10,13 +10,19 @@ import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { CardStatus } from "../../utils/CardStatus";
 
-export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) => {
+export const PollVotingForm = ({
+    poll,
+    refetch
+}: {
+    poll: Poll;
+    refetch: any;
+}) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
 
     return (
         <Card>
-            <CardStatus color="random" position="left"/>
+            <CardStatus color="random" position="left" />
 
             <Card.Header>
                 <Card.Title as="h3">{poll.question}</Card.Title>
@@ -26,7 +32,7 @@ export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) 
                 <Card.Subtitle className="poll-date">
                     <em>
                         {poll.publicationDate &&
-                        dateFormatter(poll.publicationDate)}
+                            dateFormatter(poll.publicationDate)}
                     </em>
                 </Card.Subtitle>
 
@@ -47,7 +53,8 @@ export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) 
                                 }
                             })
                             .catch(error => {
-                                let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                                let message =
+                                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                                 let detail = error.response.data.detail;
 
                                 switch (detail) {
@@ -75,18 +82,20 @@ export const PollVotingForm = ({ poll, refetch }: { poll: Poll, refetch: any }) 
                     }}
                 >
                     <Form>
-                        <ChoiceFields choices={poll.choices}/>
+                        <ChoiceFields choices={poll.choices} />
 
                         <div className="text-center ml-auto">
-                            {
-                                poll.userHasVoted ? (
-                                    <p>Vous avez déjà voté.</p>
-                                ) : (
-                                    <Button disabled={poll.userHasVoted} variant="outline-success" type="submit">
-                                        Voter
-                                    </Button>
-                                )
-                            }
+                            {poll.userHasVoted ? (
+                                <p>Vous avez déjà voté.</p>
+                            ) : (
+                                <Button
+                                    disabled={poll.userHasVoted}
+                                    variant="outline-success"
+                                    type="submit"
+                                >
+                                    Voter
+                                </Button>
+                            )}
                         </div>
                     </Form>
                 </Formik>
@@ -105,7 +114,5 @@ const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
         );
     });
 
-    return (
-        <SelectGroup type="vertical" label="" items={items} name="choice"/>
-    );
+    return <SelectGroup type="vertical" label="" items={items} name="choice" />;
 };
