@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PollsBase } from "../PollsBase";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
 import { getRandom } from "../../../utils/random";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { PageTitle } from "../../../utils/common";
+import { api } from "../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
-export function SubmitPoll() {
+export const SubmitPoll = () => {
+    const newToast = useContext(ToastContext);
+
     const [
         questionPlaceholder,
         choice0Placeholder,
@@ -23,63 +24,85 @@ export function SubmitPoll() {
         ["Le plus beau ?", "17bocquet", "17cantelobre"]
     ]);
 
-    function SubmitPollForm() {
-        return (
-            <Card className="text-left">
-                <Card.Header>
-                    <Card.Title>Proposer un sondage</Card.Title>
-                </Card.Header>
-                <Formik
-                    initialValues={{
-                        question: "",
-                        choice0: "",
-                        choice1: ""
-                    }}
-                    validationSchema={Yup.object({
-                        question: Yup.string().required("Ce champ est requis."),
-                        choice0: Yup.string().required("Ce champ est requis."),
-                        choice1: Yup.string().required("Ce champ est requis.")
-                    })}
-                    onSubmit={(values, { setSubmitting }) => {
-                        // TODO.
-                    }}
-                >
-                    <Form>
-                        <Card.Body>
-                            <TextFormGroup
-                                label="Question"
-                                name="question"
-                                type="text"
-                                placeholder={questionPlaceholder}
-                            />
-                            <TextFormGroup
-                                label="Choix 1"
-                                name="choice0"
-                                type="text"
-                                placeholder={choice0Placeholder}
-                            />
-                            <TextFormGroup
-                                label="Choix 2"
-                                name="choice1"
-                                type="text"
-                                placeholder={choice1Placeholder}
-                            />
-                        </Card.Body>
+    const SubmitPollForm = () => <Card className="text-left">
+        <Formik
+            initialValues={{
+                question: "",
+                choice0: "",
+                choice1: ""
+            }}
+            validationSchema={Yup.object({
+                question: Yup.string().required("Ce champ est requis."),
+                choice0: Yup.string().required("Ce champ est requis."),
+                choice1: Yup.string().required("Ce champ est requis.")
+            })}
+            onSubmit={(values, { resetForm, setSubmitting }) => {
+                let data = {
+                    question: values.question,
+                    choice0: values.choice0,
+                    choice1: values.choice1
+                };
 
-                        <Card.Footer className="text-right">
-                            <Button type="submit" variant="outline-success">
-                                Envoyer
-                            </Button>
-                        </Card.Footer>
-                    </Form>
-                </Formik>
-            </Card>
-        );
-    }
+                api.polls
+                    .create(data)
+                    .then(response => {
+                        if (response.status === 201) {
+                            newToast({
+                                message: "Sondage envoyé.",
+                                level: ToastLevel.Success
+                            });
+                            resetForm();
+                        }
+                    })
+                    .catch(error => {
+                        let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                        newToast({
+                            message: `${message} Détails : ${error.response.data.detail}`,
+                            level: ToastLevel.Error
+                        });
+                    })
+                    .then(() => {
+                        setSubmitting(false);
+                    });
+            }}
+        >
+            <Form>
+                <Card.Body>
+                    <TextFormGroup
+                        label="Question"
+                        name="question"
+                        type="text"
+                        placeholder={questionPlaceholder}
+                    />
+                    <TextFormGroup
+                        label="Choix 1"
+                        name="choice0"
+                        type="text"
+                        placeholder={choice0Placeholder}
+                    />
+                    <TextFormGroup
+                        label="Choix 2"
+                        name="choice1"
+                        type="text"
+                        placeholder={choice1Placeholder}
+                    />
+                </Card.Body>
+
+                <Card.Footer className="text-right">
+                    <Button type="submit" variant="outline-success">
+                        Envoyer
+                    </Button>
+                </Card.Footer>
+            </Form>
+        </Formik>
+    </Card>;
 
     return (
         <PollsBase>
-            <SubmitPollForm />
+            <PageTitle>
+                Proposer un sondage
+            </PageTitle>
+            <SubmitPollForm/>
         </PollsBase>
     );
-}
+};

@@ -155,15 +155,16 @@ export const api = {
                     })
             ),
         get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
-        create: (question: string, choices: Choice[]) =>
-            unwrap<Poll>(
-                apiService.post("/polls/", {
-                    question: question,
-                    choices: choices.map(choice => ({
-                        text: choice.text
-                    }))
-                })
-            ),
+        create: (data: {
+            question: string,
+            choice0: string,
+            choice1: string
+        }) => apiService.post("/polls/", {
+            question: data.question, choices: [
+                { text: data.choice0 },
+                { text: data.choice1 }
+            ]
+        }),
         update: (pollId, data: {
             publicationDate?: string | Date,
             state?: "REVIEWING" | "REJECTED" | "ACCEPTED",
@@ -176,7 +177,7 @@ export const api = {
                 data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() + 1}-${data.publicationDate.getDate()}`;
             }
 
-            return apiService.patch(`/polls/${pollId}/`, data)
+            return apiService.patch(`/polls/${pollId}/`, data);
         },
         delete: pollId => apiService.delete(`/polls/${pollId}/`),
         vote: (user, pollId, choiceId) =>

@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Poll } from "../../../models/polls";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { Form, Formik } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import * as Yup from "yup";
+import { api } from "../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
 export const PollEditModalUserForm = ({ poll, refetch, handleClose }: {
     poll: Poll,
     refetch: any,
     handleClose: () => void
 }) => {
+    const newToast = useContext(ToastContext);
+
     return <Formik
         initialValues={{
             question: poll.question,
@@ -23,7 +27,40 @@ export const PollEditModalUserForm = ({ poll, refetch, handleClose }: {
             choice1: Yup.string().required("Ce champ est requis.")
         })}
         onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+            let data = {
+                question: values.question,
+                choice0: values.choice0,
+                choice1: values.choice1
+            };
+
+            api.polls
+                .update(poll.id, data)
+                .then(response => {
+                    if (response.status === 200) {
+                        newToast({
+                            message: "Sondage modifié.",
+                            level: ToastLevel.Success
+                        });
+                        refetch({ force: true });
+                    }
+                })
+                .catch(error => {
+                    let message = "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                    let detail = error.response.data.detail;
+
+                    if (detail === "You are not allowed to update this poll.") {
+                        detail = "Vous n’avez pas le droit de modifier ce sondage.";
+                    }
+
+                    newToast({
+                        message: `${message} Détails : ${detail}`,
+                        level: ToastLevel.Error
+                    });
+                })
+                .then(() => {
+                    setSubmitting(false);
+                    handleClose();
+                });
         }}
     >
         <Form>

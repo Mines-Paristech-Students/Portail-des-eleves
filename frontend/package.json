@@ -15,7 +15,7 @@
         "react-router-dom": "^5.1.2",
         "react-scripts": "^3.4.1",
         "tabler-ui": "^0.0.34",
-        "yup": "^0.28.3"
+        "yup": "^0.28.4"
     },
     "devDependencies": {
         "@types/jest": "^25.2.1",
@@ -25,7 +25,7 @@
         "@types/react-dom": "^16.9.6",
         "@types/react-query": "^1.1.2",
         "@types/react-router-dom": "^5.1.4",
-        "@types/yup": "^0.26.37",
+        "@types/yup": "^0.28.0",
         "prettier": "^2.0.4",
         "typescript": "^3.8.3"
     },

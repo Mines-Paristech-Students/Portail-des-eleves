@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import * as Yup from "yup";
+import * as Yup from 'yup';
 import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
@@ -100,13 +100,17 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
             }}
             validationSchema={Yup.object({
                 publicationDate: Yup.date()
-                    .min(minDate, "Le sondage doit être publié dans le futur.")
-                    .required("Ce champ est requis.")
+                    .min(minDate, "Le sondage doit être publié aujourd’hui ou dans le futur.")
+                    .when("state", {
+                        is: "ACCEPTED",
+                        then: Yup.date().required("Ce champ est requis."),
+                        otherwise: Yup.date().notRequired()
+                    })
             })}
             onSubmit={(values, { setSubmitting }) => {
                 let data = {
                     state: values.state,
-                    adminComment: values.adminComment,
+                    adminComment: values.state === "REJECTED" ? values.adminComment : "",
                     publicationDate: values.publicationDate
                 };
 
@@ -118,7 +122,6 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                                 message: "Sondage modifié.",
                                 level: ToastLevel.Success
                             });
-                            refetch({ force: true });
                         }
                     })
                     .catch(error => {
@@ -137,6 +140,7 @@ export const PollEditModalAdminForm = ({ poll, refetch, handleClose }: {
                     .then(() => {
                         setSubmitting(false);
                         handleClose();
+                        refetch({ force: true });
                     });
             }}
         >
