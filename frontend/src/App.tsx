@@ -8,7 +8,7 @@ import { PageNotFoundError } from "./pages/ErrorPage";
 import { Login } from "./pages/Login";
 import { routes } from "./routing/global";
 import { ToastProvider } from "./utils/Toast";
-import { CenteredSpinner } from "./components/utils/CenteredSpinner";
+import { Loading } from "./components/utils/Loading";
 
 export const authService = new AuthService();
 
@@ -47,7 +47,7 @@ const App: React.FC = () => {
             </ToastProvider>
         );
     } else {
-        return <CenteredSpinner className="mt-9" />;
+        return <Loading className="mt-9" />;
     }
 };
 

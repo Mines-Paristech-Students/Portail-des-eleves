@@ -19,6 +19,44 @@ export const PollEditModalUserForm = ({
 }) => {
     const newToast = useContext(ToastContext);
 
+    const onSubmit = (values, { setSubmitting }) => {
+        let data = {
+            question: values.question,
+            choice0: values.choice0,
+            choice1: values.choice1
+        };
+
+        api.polls
+            .update(poll.id, data)
+            .then(response => {
+                if (response.status === 200) {
+                    newToast({
+                        message: "Sondage modifié.",
+                        level: ToastLevel.Success
+                    });
+                    refetch({ force: true });
+                }
+            })
+            .catch(error => {
+                let message =
+                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                let detail = error.response.data.detail;
+
+                if (detail === "You are not allowed to update this poll.") {
+                    detail = "Vous n’avez pas le droit de modifier ce sondage.";
+                }
+
+                newToast({
+                    message: `${message} Détails : ${detail}`,
+                    level: ToastLevel.Error
+                });
+            })
+            .then(() => {
+                setSubmitting(false);
+                handleClose();
+            });
+    };
+
     return (
         <Formik
             initialValues={{
@@ -31,47 +69,7 @@ export const PollEditModalUserForm = ({
                 choice0: Yup.string().required("Ce champ est requis."),
                 choice1: Yup.string().required("Ce champ est requis.")
             })}
-            onSubmit={(values, { setSubmitting }) => {
-                let data = {
-                    question: values.question,
-                    choice0: values.choice0,
-                    choice1: values.choice1
-                };
-
-                api.polls
-                    .update(poll.id, data)
-                    .then(response => {
-                        if (response.status === 200) {
-                            newToast({
-                                message: "Sondage modifié.",
-                                level: ToastLevel.Success
-                            });
-                            refetch({ force: true });
-                        }
-                    })
-                    .catch(error => {
-                        let message =
-                            "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                        let detail = error.response.data.detail;
-
-                        if (
-                            detail ===
-                            "You are not allowed to update this poll."
-                        ) {
-                            detail =
-                                "Vous n’avez pas le droit de modifier ce sondage.";
-                        }
-
-                        newToast({
-                            message: `${message} Détails : ${detail}`,
-                            level: ToastLevel.Error
-                        });
-                    })
-                    .then(() => {
-                        setSubmitting(false);
-                        handleClose();
-                    });
-            }}
+            onSubmit={onSubmit}
         >
             <Form>
                 <Modal.Body>

@@ -23,28 +23,6 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
         { refetchOnWindowFocus: false }
     );
 
-    const Title = () =>
-        adminVersion ? (
-            <PageTitle>Administration</PageTitle>
-        ) : (
-            <PageTitle>Mes sondages</PageTitle>
-        );
-
-    const Header = () => (
-        <thead className="text-center">
-            <tr>
-                <th>Question</th>
-                <th>Réponse 1</th>
-                <th>Réponse 2</th>
-                <th>Publication</th>
-                {adminVersion && <th>Auteur</th>}
-                <th>Statut</th>
-                {!adminVersion && <th>Commentaire</th>}
-                <th>Actions</th>
-            </tr>
-        </thead>
-    );
-
     function Content() {
         if (status === "loading") return <PollsLoading />;
         else if (status === "success" && polls && user) {
@@ -52,7 +30,18 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
                 <Card>
                     <Card.Body>
                         <Table className="card-table polls-table text-left">
-                            <Header />
+                            <thead className="text-center">
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Réponse 1</th>
+                                    <th>Réponse 2</th>
+                                    <th>Publication</th>
+                                    {adminVersion && <th>Auteur</th>}
+                                    <th>Statut</th>
+                                    {!adminVersion && <th>Commentaire</th>}
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
 
                             <tbody>
                                 {adminVersion
@@ -92,7 +81,11 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
 
     return (
         <PollsBase>
-            <Title />
+            {adminVersion ? (
+                <PageTitle>Administration</PageTitle>
+            ) : (
+                <PageTitle>Mes sondages</PageTitle>
+            )}
             <Content />
         </PollsBase>
     );

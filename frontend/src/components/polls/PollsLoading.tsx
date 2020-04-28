@@ -1,4 +1,4 @@
 import React from "react";
-import { CenteredSpinner } from "../utils/CenteredSpinner";
+import { Loading } from "../utils/Loading";
 
-export const PollsLoading = CenteredSpinner;
+export const PollsLoading = Loading;

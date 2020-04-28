@@ -9,7 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
  * Display a (somewhat) centered `Spinner`.
  * @param className given to the `Container` element.
  */
-export const CenteredSpinner = ({ className = "" }: { className?: string }) => (
+export const Loading = ({ className = "" }: { className?: string }) => (
     <Container className={className}>
         <Row className="justify-content-center">
             <Col xs="1">

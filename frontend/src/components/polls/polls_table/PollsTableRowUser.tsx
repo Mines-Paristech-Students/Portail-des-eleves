@@ -17,75 +17,40 @@ export const PollsTableRowUser = ({
     const newToast = useContext(ToastContext);
     const [editable, setEditable] = useState<boolean>(false);
 
-    const EditAction = () => (
-        <Button
-            className="btn-icon m-1"
-            variant="outline-primary"
-            size="sm"
-            onClick={(event: React.FormEvent) => {
-                event.preventDefault();
-                setEditable(true);
-            }}
-        >
-            <i className="fe fe-edit" />
-        </Button>
-    );
+    const onClickEdit = (event: React.FormEvent) => {
+        event.preventDefault();
+        setEditable(true);
+    };
 
-    const DeleteAction = () => (
-        <Button
-            className="btn-icon m-1"
-            variant="outline-danger"
-            size="sm"
-            onClick={(event: React.FormEvent) => {
-                event.preventDefault();
+    const onClickDelete = (event: React.FormEvent) => {
+        event.preventDefault();
 
-                api.polls
-                    .delete(poll.id)
-                    .then(response => {
-                        if (response.status === 204) {
-                            newToast({
-                                message: "Sondage supprimé.",
-                                level: ToastLevel.Success
-                            });
-                            refetch({ force: true });
-                        }
-                    })
-                    .catch(error => {
-                        let message =
-                            "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                        let detail = error.response.data.detail;
-
-                        if (
-                            detail ===
-                            "You are not allowed to delete this poll."
-                        ) {
-                            detail =
-                                "Vous n’avez pas le droit de supprimer ce sondage.";
-                        }
-
-                        newToast({
-                            message: `${message} Détails : ${detail}`,
-                            level: ToastLevel.Error
-                        });
+        api.polls
+            .delete(poll.id)
+            .then(response => {
+                if (response.status === 204) {
+                    newToast({
+                        message: "Sondage supprimé.",
+                        level: ToastLevel.Success
                     });
-            }}
-        >
-            <i className="fe fe-trash-2" />
-        </Button>
-    );
+                    refetch({ force: true });
+                }
+            })
+            .catch(error => {
+                let message =
+                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                let detail = error.response.data.detail;
 
-    const actions = () => {
-        if (
-            poll.state === PollState.Reviewing ||
-            poll.state === PollState.Rejected
-        ) {
-            return [
-                <EditAction key={`edit-button-${poll.id}`} />,
-                <DeleteAction key={`delete-button-${poll.id}`} />
-            ];
-        }
+                if (error.response.status == 403) {
+                    detail =
+                        "Vous n’avez pas le droit de supprimer ce sondage.";
+                }
 
-        return [];
+                newToast({
+                    message: `${message} Détails : ${detail}`,
+                    level: ToastLevel.Error
+                });
+            });
     };
 
     return (
@@ -109,7 +74,29 @@ export const PollsTableRowUser = ({
                 <PollStateIcon state={poll.state} />
             </td>
             <td>{poll.adminComment}</td>
-            <td className="text-center">{actions()}</td>
+            <td className="text-center">
+                {poll.state === PollState.Reviewing ||
+                poll.state === PollState.Rejected ? (
+                    <>
+                        <Button
+                            className="btn-icon m-1"
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={onClickEdit}
+                        >
+                            <i className="fe fe-edit" />
+                        </Button>
+                        <Button
+                            className="btn-icon m-1"
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={onClickDelete}
+                        >
+                            <i className="fe fe-trash-2" />
+                        </Button>
+                    </>
+                ) : null}
+            </td>
         </tr>
     );
 };

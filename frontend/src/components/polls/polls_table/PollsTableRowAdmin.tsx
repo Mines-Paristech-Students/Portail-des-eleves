@@ -14,6 +14,11 @@ export const PollsTableRowAdmin = ({
 }) => {
     const [editable, setEditable] = useState<boolean>(false);
 
+    const onClickEdit = event => {
+        event.preventDefault();
+        setEditable(true);
+    };
+
     return (
         <tr>
             <PollEditModal
@@ -41,10 +46,7 @@ export const PollsTableRowAdmin = ({
                     className="btn-icon mr-1"
                     variant="outline-primary"
                     size="sm"
-                    onClick={event => {
-                        event.preventDefault();
-                        setEditable(true);
-                    }}
+                    onClick={onClickEdit}
                 >
                     <i className="fe fe-check-square" />
                 </Button>
