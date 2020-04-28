@@ -1,14 +1,16 @@
 import React from "react";
-import { api, PaginatedResponse, useBetterQuery } from "../../services/apiService";
+import {
+    api,
+    PaginatedResponse,
+    useBetterQuery
+} from "../../services/apiService";
 import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
-    const { data: pages, status, error } = useBetterQuery<PaginatedResponse<Page[]>>(
-        "pages.list",
-        api.pages.list,
-        association.id
-    );
+    const { data: pages, status, error } = useBetterQuery<
+        PaginatedResponse<Page[]>
+    >("pages.list", api.pages.list, association.id);
 
     if (status === "loading") {
         return <p>Chargement...</p>;
@@ -17,7 +19,10 @@ export const AssociationSidebar = ({ association }) => {
     } else if (pages) {
         return (
             <Sidebar title={association.name}>
-                <ListPagesItem association={association} pages={pages.results} />
+                <ListPagesItem
+                    association={association}
+                    pages={pages.results}
+                />
                 <AddPageItem association={association} />
                 <SidebarItem
                     icon={"file"}
@@ -26,11 +31,11 @@ export const AssociationSidebar = ({ association }) => {
                     Fichiers
                 </SidebarItem>
                 <SidebarItem
-                icon={"shopping-cart"}
-                to={`/associations/${association.id}/marketplace`}
-            >
-                Magasin
-            </SidebarItem>
+                    icon={"shopping-cart"}
+                    to={`/associations/${association.id}/marketplace`}
+                >
+                    Magasin
+                </SidebarItem>
             </Sidebar>
         );
     }

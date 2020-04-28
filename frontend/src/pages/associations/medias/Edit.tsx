@@ -13,7 +13,7 @@ import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemEdit = ({ association }) => {
-    const { fileId } = useParams<{fileId: string}>();
+    const { fileId } = useParams<{ fileId: string }>();
     const { data: media, status, error } = useBetterQuery<Media>(
         "media.get",
         api.medias.get,

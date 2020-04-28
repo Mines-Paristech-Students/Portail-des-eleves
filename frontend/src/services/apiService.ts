@@ -4,7 +4,12 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
-import { PaginatedQueryResult, QueryResult, usePaginatedQuery, useQuery } from "react-query";
+import {
+    PaginatedQueryResult,
+    QueryResult,
+    usePaginatedQuery,
+    useQuery
+} from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -158,7 +163,10 @@ export function useBetterPaginatedQuery(
     fetchFunction: any,
     ...params: any[]
 ): PaginatedQueryResult<any> {
-    return usePaginatedQuery<any, [string, any]>([key, params], (key, ...params) => {
-        return fetchFunction(...params[0]);
-    });
+    return usePaginatedQuery<any, [string, any]>(
+        [key, params],
+        (key, ...params) => {
+            return fetchFunction(...params[0]);
+        }
+    );
 }

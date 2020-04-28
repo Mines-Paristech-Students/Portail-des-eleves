@@ -7,7 +7,7 @@ import { authService } from "../App";
 export const UserContext = createContext<User | null>(null);
 
 export const UserProvider: React.FunctionComponent = ({ children }) => {
-    let [user, setUser] = useState<User|null>(null);
+    let [user, setUser] = useState<User | null>(null);
 
     authService.getUser().then(u => {
         setUser(u);

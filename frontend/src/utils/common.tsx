@@ -5,7 +5,7 @@ import React from "react";
  * require an important number of nested objects or classes.
  */
 
-export const PageTitle = (props) => (
+export const PageTitle = props => (
     <div className="page-header">
         <h1 className="page-title">{props.children}</h1>
     </div>
