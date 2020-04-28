@@ -142,16 +142,16 @@ export const PollEditModalAdminForm = ({
                 publicationDate: poll.publicationDate
             }}
             validationSchema={Yup.object({
-                publicationDate: Yup.date()
-                    .min(
-                        minDate,
-                        "Le sondage doit être publié aujourd’hui ou dans le futur."
-                    )
-                    .when("state", {
-                        is: "ACCEPTED",
-                        then: Yup.date().required("Ce champ est requis."),
-                        otherwise: Yup.date().notRequired()
-                    })
+                publicationDate: Yup.date().when("state", {
+                    is: "ACCEPTED",
+                    then: Yup.date()
+                        .min(
+                            minDate,
+                            "Le sondage doit être publié aujourd’hui ou dans le futur."
+                        )
+                        .required("Ce champ est requis."),
+                    otherwise: Yup.date().notRequired()
+                })
             })}
             onSubmit={onSubmit}
         >
