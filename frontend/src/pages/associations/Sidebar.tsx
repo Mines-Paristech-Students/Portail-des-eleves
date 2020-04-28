@@ -1,10 +1,10 @@
 import React from "react";
-import { api, useBetterQuery } from "../../services/apiService";
+import { api, PaginatedResponse, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
-    const { data: pages, status, error } = useBetterQuery<Page[]>(
+    const { data: pages, status, error } = useBetterQuery<PaginatedResponse<Page[]>>(
         "pages.list",
         api.pages.list,
         association.id
@@ -14,10 +14,10 @@ export const AssociationSidebar = ({ association }) => {
         return <p>Chargement...</p>;
     } else if (error) {
         return <p>Erreur lors du chargement</p>;
-    } else if (association) {
+    } else if (pages) {
         return (
             <Sidebar title={association.name}>
-                <ListPagesItem association={association} pages={pages} />
+                <ListPagesItem association={association} pages={pages.results} />
                 <AddPageItem association={association} />
                 <SidebarItem
                     icon={"file"}
