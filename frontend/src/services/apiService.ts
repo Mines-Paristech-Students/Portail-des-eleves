@@ -4,7 +4,7 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
-import { QueryResult, useQuery } from "react-query";
+import { PaginatedQueryResult, QueryResult, usePaginatedQuery, useQuery } from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -149,6 +149,16 @@ export function useBetterQuery<T>(
     ...params: any[]
 ): QueryResult<T> {
     return useQuery<T, [string, any]>([key, params], (key, ...params) => {
+        return fetchFunction(...params[0]);
+    });
+}
+
+export function useBetterPaginatedQuery(
+    key: string,
+    fetchFunction: any,
+    ...params: any[]
+): PaginatedQueryResult<any> {
+    return usePaginatedQuery<any, [string, any]>([key, params], (key, ...params) => {
         return fetchFunction(...params[0]);
     });
 }

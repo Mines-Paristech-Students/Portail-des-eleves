@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useBetterQuery } from "../services/apiService";
+import { useBetterPaginatedQuery } from "../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 
 export const Pagination = ({ render, apiKey, apiMethod, apiParams }) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
-    const { data, status, error } = useBetterQuery<any>(
+    const { resolvedData: data, status, error } = useBetterPaginatedQuery(
         apiKey,
         apiMethod,
         ...apiParams,
