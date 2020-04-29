@@ -20,7 +20,7 @@ CREATE DATABASE portail_message OWNER root
 
 ### Building the container 
 
-Another way to use the project is with containers. If you are using vscode, I would recommand checking the "Remote container" extension, but you can still run :
+Another way to use the project is with containers. If you are using vscode, you should check checking the "Remote container" extension, but you can still run :
 
 ```bash
 # First cmd window
