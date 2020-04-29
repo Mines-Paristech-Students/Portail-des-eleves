@@ -1,5 +1,7 @@
 # Course management
 
+## Short term planning
+
 ## TODOS :
 
 1. Tags for the courses

@@ -1,13 +1,14 @@
-- model: courses.reviewform
+- model: courses.form
   pk: 1
   fields:
     date: '2020-04-20T22:10:57.577Z'
+    name: "generic"
 
 - model: courses.course
   pk: 1
   fields:
     name: Maths diff
-    review_form: 1
+    form: 1
     have_voted: [17bocquet]
   
 - model: courses.coursemedia
@@ -25,7 +26,15 @@
   fields:
     label: 2+2?
     required: true
-    category: S
+    category: R
+    form: 1
+
+- model: courses.question
+  pk: 3
+  fields:
+    label: 3+3?
+    required: false 
+    category: R
     form: 1
 
 - model: courses.question
@@ -41,6 +50,20 @@
   fields: 
     value: 5
     question: 1
+    course: 1
+
+- model: courses.rating
+  pk: 2
+  fields: 
+    value: 3
+    question: 1
+    course: 1
+
+- model: courses.rating
+  pk: 3
+  fields: 
+    value: 3
+    question: 3
     course: 1
 
 - model: courses.comment

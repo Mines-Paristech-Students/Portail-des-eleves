@@ -1,7 +1,10 @@
 from django.db import models
 from django.utils.text import slugify
+from django.db.models import Avg
 
 from authentication.models import User
+
+from django.db.utils import cached_property
 
 
 NUMERIC_SCALE = (
@@ -23,6 +26,8 @@ class Form(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
 
+    name = models.CharField(max_length=64)
+
 
 class Course(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
@@ -41,6 +46,19 @@ class Course(models.Model):
         related_name="course",
         blank=True,
     )
+
+    @cached_property
+    def avg_ratings(self):
+        query = self.rating.values('question__id').annotate(Avg('value')).values('value__avg','question__label', 'question__id')
+
+        return [
+            {
+                "id": question["question__id"],
+                "label": question["question__label"],
+                "avg": question["value__avg"],
+            }
+            for question in query
+        ]
 
 
 class CourseMedia(models.Model):
@@ -66,7 +84,13 @@ class CourseMedia(models.Model):
 
 
 class Question(models.Model):
+
+    # class Meta:
+    #     unique_together = ('form', 'order')
+
     id = models.AutoField(primary_key=True, unique=True)
+
+    # order = models.SmallIntegerField()
 
     label = models.CharField(max_length=64)
 
@@ -86,6 +110,11 @@ class Question(models.Model):
         related_name="question",
         on_delete=models.CASCADE,
     )
+
+    @cached_property
+    def average(self):
+        query = self.rating.values('question__id').annotate(Avg('value'))
+        return query[0]["value__avg"]
 
 
 class Rating(models.Model):

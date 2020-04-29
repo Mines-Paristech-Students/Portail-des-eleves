@@ -22,23 +22,25 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class FormSerializer(serializers.ModelSerializer):
     # Writable nested serializer
-    questions = QuestionSerializer(many=True)
-    courses = CourseSerializer(many=True)
+    questions = QuestionSerializer(many=True, required=False)
+    courses = CourseSerializer(many=True, required=False)
 
     class Meta:
         model = Form
         read_only_fields = ('id', 'date', )
-        fields = read_only_fields + ('questions', )
+        fields = read_only_fields + ('name', 'questions', 'courses')
 
     def create_questions(self, instance, update_questions):
         for question_data in update_questions:
             question_data["form"] = instance
-            Question.objects.create(**question_data)
+            question = Question.objects.create(**question_data)
+            question.save()
 
     def update_questions(self, instance, update_questions):
         for question_data in update_questions:
             question_data["form"] = instance
             Question.objects.filter(id=question_data["id"]).update(**question_data)
+            question.save()
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')

@@ -1,5 +1,6 @@
-from courses.models import Course
-from courses.serializers import CourseSerializer
+
+from courses.models import Form
+from courses.serializers import FormSerializer
 
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
@@ -8,40 +9,39 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class AssociationTestCase(WeakAuthenticationBaseTestCase):
     EXPECTED_FIELDS = {
         "id",
-        "name",
-        "form",
-        "has_voted",
+        "date",
+        "questions",
+        "courses"
     }
-
+    
     ALL_USERS = ["17admin", "17simple"]
-    """A list of user ids covering all the spectrum of roles and permissions."""
 
     def endpoint_list(self):
-        return "/users/profile_question/"
+        return "/courses/form/"
 
     def list(self):
         return self.get(self.endpoint_list())
 
     def endpoint_retrieve(self, pk):
-        return f"/users/profile_question/{pk}/"
+        return f"/courses/form/{pk}/"
 
     def retrieve(self, pk):
         return self.get(self.endpoint_retrieve(pk))
 
     def endpoint_create(self):
-        return "/users/profile_question/"
+        return "/courses/form/"
 
     def create(self, data=None, format="json", content_type="application/json"):
         return self.post(self.endpoint_create(), data, format)
 
     def endpoint_update(self, pk):
-        return f"/users/profile_question/{pk}/"
+        return f"/courses/form/{pk}/"
 
     def update(self, pk, data=None, format="json", content_type="application/json"):
         return self.patch(self.endpoint_update(pk), data, format)
 
     def endpoint_destroy(self, pk):
-        return f"/users/profile_question/{pk}/"
+        return f"/courses/form/{pk}/"
 
     def destroy(self, pk, data="", format=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk))
@@ -66,12 +66,12 @@ class AssociationTestCase(WeakAuthenticationBaseTestCase):
     ############
 
     def test_if_not_logged_in_then_cannot_retrieve(self):
-        res = self.retrieve("biero")
+        res = self.retrieve("1")
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_then_can_retrieve(self):
         self.login("17simple")
-        res = self.retrieve("biero")
+        res = self.retrieve("1")
         self.assertStatusCode(res, 200)
         self.assertSetEqual(set(res.data), self.EXPECTED_FIELDS)
 
@@ -88,15 +88,15 @@ class AssociationTestCase(WeakAuthenticationBaseTestCase):
     }
 
     def test_if_not_global_admin_then_cannot_create(self):
-        for user in ALL_USERS_EXCEPT_GLOBAL_ADMIN:
-            self.login(user)
-            res = self.create(self.create_association_data)
-            self.assertStatusCode(res, 403)
-            self.assertFalse(
-                Association.objects.filter(
-                    pk=self.create_association_data["id"]
-                ).exists()
-            )
+        self.login("17simple")
+        self.login(user)
+        res = self.create(self.create_association_data)
+        self.assertStatusCode(res, 403)
+        self.assertFalse(
+            Association.objects.filter(
+                pk=self.create_association_data["id"]
+            ).exists()
+        )
 
     def test_if_global_admin_then_can_create(self):
         self.login("17admin")
@@ -126,11 +126,11 @@ class AssociationTestCase(WeakAuthenticationBaseTestCase):
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
-        for user in ALL_USERS_EXCEPT_GLOBAL_ADMIN:
-            self.login(user)
-            res = self.update("pdm", self.update_association_data)
-            self.assertStatusCode(res, 403)
-            self.assertTrue(Association.objects.filter(pk="pdm").exists())
+        self.login('17simple')
+        self.login(user)
+        res = self.update("pdm", self.update_association_data)
+        self.assertStatusCode(res, 403)
+        self.assertTrue(Association.objects.filter(pk="pdm").exists())
 
     def test_if_global_admin_then_can_update(self):
         self.login("17admin")
@@ -153,11 +153,11 @@ class AssociationTestCase(WeakAuthenticationBaseTestCase):
     ###########
 
     def test_if_not_global_admin_then_cannot_destroy(self):
-        for user in ALL_USERS_EXCEPT_GLOBAL_ADMIN:
-            self.login(user)
-            res = self.destroy("pdm")
-            self.assertStatusCode(res, 403)
-            self.assertTrue(Association.objects.filter(pk="pdm").exists())
+        self.login('17simple')
+        self.login(user)
+        res = self.destroy("pdm")
+        self.assertStatusCode(res, 403)
+        self.assertTrue(Association.objects.filter(pk="pdm").exists())
 
     def test_if_global_admin_then_can_destroy(self):
         self.login("17admin")
