@@ -8,14 +8,10 @@ import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
+import { Pagination } from "../../../utils/pagination";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
-    const { data, status, error } = useBetterQuery<Media[]>(
-        "medias.list",
-        api.medias.list,
-        associationId
-    );
     const history = useHistory();
 
     let addButton;
@@ -31,45 +27,47 @@ export const AssociationFilesystemList = ({ association }) => {
         );
     }
 
-    if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error") return `Something went wrong: ${error}`;
-    else if (data) {
-        return (
-            <>
-                {addButton}
-                <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-                <Row>
-                    {data.map(media => {
-                        return (
-                            <Col md={4} key={media.id}>
-                                <Card
-                                    onClick={() =>
-                                        history.push(
-                                            `/associations/${association.id}/files/${media.id}/`
-                                        )
-                                    }
-                                >
-                                    <Card.Body>
-                                        <h4>{media.name}</h4>
-                                        <p className="text-muted">
-                                            {media.description}
-                                        </p>
-                                        {media.tags.map(tag => (
-                                            <Tag
-                                                key={tag.id}
-                                                tooltip={tag.namespace.name}
-                                                tag={tag.value}
-                                            />
-                                        ))}
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        );
-                    })}
-                </Row>
-            </>
-        );
-    }
-
-    return null;
+    return (
+        <Pagination
+            apiKey={"medias.list"}
+            apiMethod={api.medias.list}
+            apiParams={[associationId]}
+            render={(medias, paginationControl) => (
+                <>
+                    {addButton}
+                    <PageTitle className={"mt-6"}>Fichiers</PageTitle>
+                    <Row>
+                        {medias.map(media => {
+                            return (
+                                <Col md={4} key={media.id}>
+                                    <Card
+                                        onClick={() =>
+                                            history.push(
+                                                `/associations/${association.id}/files/${media.id}/`
+                                            )
+                                        }
+                                    >
+                                        <Card.Body>
+                                            <h4>{media.name}</h4>
+                                            <p className="text-muted">
+                                                {media.description}
+                                            </p>
+                                            {media.tags.map(tag => (
+                                                <Tag
+                                                    key={tag.id}
+                                                    tooltip={tag.namespace.name}
+                                                    tag={tag.value}
+                                                />
+                                            ))}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            );
+                        })}
+                    </Row>
+                    {paginationControl}
+                </>
+            )}
+        />
+    );
 };

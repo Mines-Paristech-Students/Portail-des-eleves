@@ -139,7 +139,7 @@ export const api = {
                 buyer: buyer.id
             }),
 
-        get: (marketplaceId, user) =>
+        list: (marketplaceId, user) =>
             unwrap<Transaction[]>(
                 apiService.get(
                     `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
