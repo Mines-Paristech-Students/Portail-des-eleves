@@ -36,18 +36,32 @@ class FormSerializer(serializers.ModelSerializer):
             question = Question.objects.create(**question_data)
             question.save()
 
+    def create_courses(self, instance, update_courses):
+        for course_data in update_courses:
+            course_data["form"] = instance
+            course = Course.objects.create(**course_data)
+            course.save()
+
     def update_questions(self, instance, update_questions):
         for question_data in update_questions:
             question_data["form"] = instance
             Question.objects.filter(id=question_data["id"]).update(**question_data)
             question.save()
 
+    def update_courses(self, instance, update_courses):
+        for course_data in update_courses:
+            course_data["form"] = instance
+            Course.objects.filter(id=course_data["id"]).update(**course_data)
+            course.save()
+
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
+        course_data = validated_data.pop('courses')
 
         form = Form.objects.create(**validated_data)
 
         self.create_questions(form, questions_data)
+        self.create_courses(form, course_data)
 
         return form
 
@@ -55,6 +69,7 @@ class FormSerializer(serializers.ModelSerializer):
         # Issue with required fields ?
         instance.date = datetime.now()
         questions_data = validated_data.get("questions")
+        courses_data = validated_data.pop('courses')
 
         update_questions = []
         create_questions = []
@@ -68,6 +83,19 @@ class FormSerializer(serializers.ModelSerializer):
 
         self.create_questions(instance, create_questions)
         self.update_questions(instance, update_questions)
+
+        update_courses = []
+        create_courses = []
+
+        for course in courses_data:
+            course = courses_data[0]
+            if course.get('id'):
+                update_courses.append(course)
+            else:
+                create_courses.append(course)
+
+        self.create_courses(instance, create_courses)
+        self.update_courses(instance, update_courses)
 
         return instance
 

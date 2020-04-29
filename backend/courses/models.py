@@ -37,7 +37,7 @@ class Course(models.Model):
     form = models.ForeignKey(
         Form,
         related_name="course",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True, null=True,
     )
 
@@ -111,6 +111,7 @@ class Question(models.Model):
         Form,
         related_name="question",
         on_delete=models.CASCADE,
+        null=True,
     )
 
     @cached_property
