@@ -35,18 +35,33 @@ export const PaginationControl = ({ page, maxPage, setPage }) => {
         return null;
     }
 
+    let minProposedPage = Math.max(1, page - 2);
+    let maxProposedPage = Math.min(maxPage + 1, minProposedPage + 5);
+    minProposedPage = Math.max(1, maxProposedPage - 5);
+
+    minProposedPage = Math.max(2, minProposedPage);
+    maxProposedPage = Math.min(maxPage, maxProposedPage);
+
     return (
         <BoostrapPagination>
-            <BoostrapPagination.First
-                disabled={page === 1}
-                onClick={() => setPage(1)}
-            />
             <BoostrapPagination.Prev
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
             />
-            {/*<BoostrapPagination.Ellipsis />*/}
-            {Array.from({ length: maxPage }, (_, index) => index + 1).map(i => (
+            <BoostrapPagination.Item
+                onClick={() => setPage(1)}
+                key={1}
+                active={1 === page}
+            >
+                1
+            </BoostrapPagination.Item>
+            {minProposedPage > 2 ? (
+                <BoostrapPagination.Ellipsis disabled />
+            ) : null}
+            {Array.from(
+                { length: maxProposedPage - minProposedPage },
+                (_, index) => index + minProposedPage
+            ).map(i => (
                 <BoostrapPagination.Item
                     onClick={() => setPage(i)}
                     key={i}
@@ -55,13 +70,19 @@ export const PaginationControl = ({ page, maxPage, setPage }) => {
                     {i}
                 </BoostrapPagination.Item>
             ))}
+            {maxProposedPage < maxPage ? (
+                <BoostrapPagination.Ellipsis disabled />
+            ) : null}
+            <BoostrapPagination.Item
+                onClick={() => setPage(maxPage)}
+                key={maxPage}
+                active={maxPage === page}
+            >
+                {maxPage}
+            </BoostrapPagination.Item>
             <BoostrapPagination.Next
                 disabled={page === maxPage}
                 onClick={() => setPage(page + 1)}
-            />
-            <BoostrapPagination.Last
-                disabled={page === maxPage}
-                onClick={() => setPage(maxPage)}
             />
         </BoostrapPagination>
     );
