@@ -1,0 +1,24 @@
+name: Blackend
+
+on:
+  pull_request:
+      branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - run: pip install black
+      - run: black --check backend
+      - if: failure()
+        run: |
+          black backend
+          git config --global user.name $GITHUB_ACTOR
+          git config --global user.email '${GITHUB_ACTOR}@users.noreply.github.com'          
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git commit -am "[action] Blackend."
+          git push --force origin HEAD:$GITHUB_REF
