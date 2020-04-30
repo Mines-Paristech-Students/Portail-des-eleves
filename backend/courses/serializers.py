@@ -34,16 +34,6 @@ class FormSerializer(serializers.ModelSerializer):
             question = Question.objects.create(**question_data)
             question.save()
 
-    def update_questions(self, instance, update_questions):
-        for question_data in update_questions:
-            question_data["form"] = instance
-            question = Question.objects.get(
-                    pk=question_data["id"], 
-                    form__pk=question_data["form"]
-                )
-            question.label = question_data["label"]
-            question.save()
-
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
 
@@ -61,23 +51,6 @@ class FormSerializer(serializers.ModelSerializer):
         """
         # Issue with required fields ?
         instance.date = datetime.now()
-        questions_data = validated_data.get("questions")
-
-        update_questions = []
-        create_questions = []
-
-        for question in questions_data:
-            print(question.keys())
-            assert(question.pop('label'))
-            if question.get("id"):
-                question.pop("category")
-                update_questions.append(question)
-            else:
-                create_questions.append(question)
-
-        self.create_questions(instance, create_questions)
-        self.update_questions(instance, update_questions)
-
         instance.name = validated_data.get('name', instance.name)
         instance.save()
 

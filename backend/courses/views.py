@@ -9,7 +9,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 
 from courses.models import Course, Form, Question, Comment, Rating
@@ -27,6 +27,10 @@ class FormViewSet(viewsets.ModelViewSet):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
     permission_classes = [FormPermission]
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAdminUser])
+    def update_with_questions(self, request, pk=None):
+        pass
 
 
 class QuestionViewSet(viewsets.ModelViewSet):

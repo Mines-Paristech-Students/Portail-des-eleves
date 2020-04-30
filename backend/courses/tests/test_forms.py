@@ -144,11 +144,15 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 403)
         self.assertTrue(Form.objects.filter(pk="1").exists())
 
-    # TODO remove fiels
-    def test_if_global_admin_then_can_update(self):
+    # This function shouldn't change the questions 
+    def test_if_global_admin_then_can_update_only_form(self):
         self.login("17admin")
         res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 200)
+
+        seri = FormSerializer(data=self.update_form_data)
+        self.assertTrue(seri.is_valid())
+        print(seri.data)
 
         self.assertTrue(
             Form.objects.filter(pk=self.update_form_data["id"]).exists()
@@ -162,10 +166,20 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
             Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"]).exists()
         )
         question = Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"])[0]
-        self.assertEqual(question.label, question_data["label"])
-        self.assertEqual(question.required, question_data["required"])
-        self.assertEqual(question.archived, True)
-        self.assertEqual(question.category, 'R')
+        self.assertNotEqual(question.label, question_data["label"])
+        self.assertNotEqual(question.required, question_data["required"])
+        self.assertNotEqual(question.archived, True)
+        self.assertNotEqual(question.category, 'C')
+    
+    #########################
+    # UPDATE_WITH_QUESTIONS #
+    #########################
+    
+    def test_if_not_global_admin_then_cannot_update_with_questions(self):
+        pass
+
+    def test_if_global_admin_then_can_update_with_questions(self):
+        pass
 
     ###########
     # DESTROY #
