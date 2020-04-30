@@ -20,6 +20,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: frontend
 
       - name: Run Prettier
         run: prettier frontend/**/*.ts*
