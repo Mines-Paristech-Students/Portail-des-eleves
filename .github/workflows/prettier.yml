@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: "14"
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install Prettier
+        run: npm install --global prettier
         working-directory: frontend
 
       - name: Run Prettier
