@@ -42,7 +42,7 @@ export const PollEditModalUserForm = ({
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
 
-                if (detail === "You are not allowed to update this poll.") {
+                if (error.response.status === 403) {
                     detail = "Vous n’avez pas le droit de modifier ce sondage.";
                 }
 

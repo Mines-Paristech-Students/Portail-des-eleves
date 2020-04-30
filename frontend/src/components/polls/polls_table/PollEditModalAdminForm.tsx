@@ -15,6 +15,72 @@ import { dateFormatter } from "../../../utils/format";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 
+const StateField = () => {
+    let items = new Map();
+
+    items.set(
+        "ACCEPTED",
+        <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-check text-success" /> Accepté
+        </span>
+    );
+
+    items.set(
+        "REJECTED",
+        <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-x text-danger" /> Refusé
+        </span>
+    );
+
+    items.set(
+        "REVIEWING",
+        <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-eye text-warning" /> En attente
+        </span>
+    );
+
+    return (
+        <SelectGroup
+            type="pills"
+            label="Statut"
+            name="state"
+            items={items}
+        />
+    );
+};
+
+const AdminCommentField = () => {
+    const { values } = useFormikContext<any>();
+
+    if (values.state === "REJECTED") {
+        return (
+            <TextFormGroup
+                label="Commentaire"
+                name="adminComment"
+                type="text"
+                placeholder="Un commentaire ?"
+            />
+        );
+    }
+
+    return null;
+};
+
+const DateField = () => {
+    const { values } = useFormikContext<any>();
+
+    if (values.state === "ACCEPTED") {
+        return (
+            <DatePickerField
+                label="Date de publication"
+                name="publicationDate"
+            />
+        );
+    }
+
+    return null;
+};
+
 export const PollEditModalAdminForm = ({
     poll,
     refetch,
@@ -25,72 +91,6 @@ export const PollEditModalAdminForm = ({
     handleClose: () => void;
 }) => {
     const newToast = useContext(ToastContext);
-
-    function StateField() {
-        let items = new Map();
-
-        items.set(
-            "ACCEPTED",
-            <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-check text-success" /> Accepté
-            </span>
-        );
-
-        items.set(
-            "REJECTED",
-            <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-x text-danger" /> Refusé
-            </span>
-        );
-
-        items.set(
-            "REVIEWING",
-            <span className="selectgroup-button selectgroup-button-icon">
-                <i className="fe fe-eye text-warning" /> En attente
-            </span>
-        );
-
-        return (
-            <SelectGroup
-                type="pills"
-                label="Statut"
-                name="state"
-                items={items}
-            />
-        );
-    }
-
-    function AdminCommentField() {
-        const { values } = useFormikContext<any>();
-
-        if (values.state === "REJECTED") {
-            return (
-                <TextFormGroup
-                    label="Commentaire"
-                    name="adminComment"
-                    type="text"
-                    placeholder="Un commentaire ?"
-                />
-            );
-        }
-
-        return null;
-    }
-
-    function DateField() {
-        const { values } = useFormikContext<any>();
-
-        if (values.state === "ACCEPTED") {
-            return (
-                <DatePickerField
-                    label="Date de publication"
-                    name="publicationDate"
-                />
-            );
-        }
-
-        return null;
-    }
 
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
