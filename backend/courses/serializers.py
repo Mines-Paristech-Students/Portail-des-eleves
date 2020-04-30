@@ -54,6 +54,11 @@ class FormSerializer(serializers.ModelSerializer):
         return form
 
     def update(self, instance, validated_data):
+        """
+        Because of issues with nested representations
+        * Questions can not be updated with that function
+        * The logic is moved to the view itself
+        """
         # Issue with required fields ?
         instance.date = datetime.now()
         questions_data = validated_data.get("questions")
