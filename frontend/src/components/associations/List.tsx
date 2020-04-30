@@ -1,10 +1,10 @@
 import React from "react";
-import { PageTitle } from "../../utils/common";
+import { PageTitle } from "../utils/PageTitle";
 import { api } from "../../services/apiService";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { Pagination } from "../../utils/pagination";
+import { Pagination } from "../utils/Pagination";
 
 export const AssociationList = () => (
     <Container>

@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "tabler-ui/dist/assets/css/dashboard.css";
 import { AuthService } from "./services/authService";
-import { CommonPrivateRoute } from "./utils/route";
-import { PageNotFoundError } from "./pages/ErrorPage";
-import { Login } from "./pages/Login";
+import { CommonPrivateRoute } from "./components/utils/Route";
+import { PageNotFoundError } from "./components/utils/ErrorPage";
+import { Login } from "./components/Login";
 import { routes } from "./routing/global";
-import { ToastProvider } from "./utils/Toast";
+import { ToastProvider } from "./components/utils/Toast";
 import { Loading } from "./components/utils/Loading";
 
 export const authService = new AuthService();

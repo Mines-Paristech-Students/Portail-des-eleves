@@ -7,7 +7,7 @@ import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { CardStatus } from "../../utils/CardStatus";
 
 export const PollVotingForm = ({

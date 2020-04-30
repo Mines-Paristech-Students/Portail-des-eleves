@@ -6,9 +6,9 @@ import { getRandom } from "../../../utils/random";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const SubmitPoll = () => {
     const newToast = useContext(ToastContext);

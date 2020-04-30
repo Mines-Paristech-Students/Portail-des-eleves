@@ -6,7 +6,7 @@ import { Form, Formik } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import * as Yup from "yup";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const PollEditModalUserForm = ({
     poll,

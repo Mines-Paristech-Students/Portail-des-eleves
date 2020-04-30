@@ -4,7 +4,7 @@ import {
     PaginatedResponse,
     useBetterQuery
 } from "../../services/apiService";
-import { Sidebar, SidebarItem } from "../../components/Sidebar";
+import { Sidebar, SidebarItem } from "../Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {

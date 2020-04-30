@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { api } from "../../../services/apiService";
 import { useFormik } from "formik";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { Button, Form, ProgressBar } from "react-bootstrap";
 import { Media } from "../../../models/associations/media";
 

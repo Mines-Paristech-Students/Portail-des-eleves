@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { PollEditModal } from "./PollEditModal";
 import { PollStateIcon } from "./PollStateIcon";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const PollsTableRowUser = ({
     poll,

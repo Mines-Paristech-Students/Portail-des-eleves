@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { useParams } from "react-router";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const AssociationCreatePage = ({ association, ...props }) => {
     const page: Page = {
