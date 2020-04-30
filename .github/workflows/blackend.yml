@@ -20,4 +20,4 @@ jobs:
         run: pip install black
 
       - name: Run Black
-        run: black --check backend
+        run: black --diff backend
