@@ -30,7 +30,7 @@ jobs:
       working-directory: backend
 
     - name: Create .env
-      run: cp .env.dist env
+      run: cp .env.dist .env
       working-directory: backend/backend
 
     - name: Run Tests
