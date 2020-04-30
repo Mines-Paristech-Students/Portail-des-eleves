@@ -17,15 +17,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
       working-directory: backend
+
+    - name: Create .env
+      run: cp .env.dist env
+      working-directory: backend
+
     - name: Run Tests
       run: |
         python manage.py test
