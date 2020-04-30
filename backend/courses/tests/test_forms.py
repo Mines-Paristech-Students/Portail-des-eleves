@@ -11,10 +11,9 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     EXPECTED_FIELDS = {
         "id",
         "date",
-        "questions",
-        "courses",
+        "name",
     }
-    
+
     ALL_USERS = ["17admin", "17simple"]
 
     def endpoint_list(self):
@@ -80,13 +79,9 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     # CREATE #
     ##########
 
-    create_association_data = {
+    create_form_data = {
         "id": 2,
         "name": "maths generic",
-        "courses": [{
-            "id": 1,
-            "name": "plop",
-        }],
         "questions": [{
             "label": "2+2?",
             "required": True,
@@ -96,61 +91,81 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
 
     def test_if_not_global_admin_then_cannot_create(self):
         self.login("17simple")
-        res = self.create(self.create_association_data)
+        res = self.create(self.create_form_data)
         self.assertStatusCode(res, 403)
         self.assertFalse(
             Form.objects.filter(
-                pk=self.create_association_data["id"]
+                pk=self.create_form_data["id"]
             ).exists()
         )
 
     def test_if_global_admin_then_can_create(self):
         self.login("17admin")
-        res = self.create(self.create_association_data)
+        res = self.create(self.create_form_data)
         self.assertStatusCode(res, 201)
 
         self.assertTrue(
             Form.objects.filter(pk=self.create_form_data["id"]).exists()
         )
         form = Form.objects.get(pk=self.create_form_data["id"])
-        self.assertEqual(form.name, self.create_association_data["name"])
+        self.assertEqual(form.name, self.create_form_data["name"])
 
+        question_data = self.create_form_data["questions"][0]
         self.assertTrue(
-            
+            Question.objects.filter(form__pk=self.create_form_data["id"]).exists()
         )
+        question = Question.objects.filter(form__pk=self.create_form_data["id"])[0]
+        self.assertEqual(question.label, question_data["label"])
+        self.assertEqual(question.required, question_data["required"])
+        self.assertEqual(question.archived, False)
 
     ##########
     # UPDATE #
-    ##########
-    update_association_data = {
-        "id": "bds",
-        "name": "Bureau des Sports",
-        "logo": None,
-        "is_hidden": True,
-        "rank": 42,
+    ##########  
+
+    update_form_data = {
+        "id": 1,
+        "date": '2020-04-20T22:10:57.577Z',
+        "name": "maths 2",
+        "questions": [
+            {
+                "id": 1,
+                "label": "changed",
+                "required": False,
+                "archived": True,
+                "category": 'C',
+            },
+        ]
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
         self.login('17simple')
-        res = self.update("pdm", self.update_association_data)
+        res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 403)
-        self.assertTrue(Association.objects.filter(pk="pdm").exists())
+        self.assertTrue(Form.objects.filter(pk="1").exists())
 
+    # TODO remove fiels
     def test_if_global_admin_then_can_update(self):
         self.login("17admin")
-        res = self.update("pdm", self.update_association_data)
+        res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 200)
 
         self.assertTrue(
-            Association.objects.filter(pk=self.update_association_data["id"]).exists()
+            Form.objects.filter(pk=self.update_form_data["id"]).exists()
         )
-        association = Association.objects.get(pk=self.update_association_data["id"])
-        self.assertEqual(association.name, self.update_association_data["name"])
-        self.assertFalse(association.logo)
-        self.assertEqual(
-            association.is_hidden, self.update_association_data["is_hidden"]
+        form = Form.objects.get(pk=1)
+        self.assertEqual(form.name, self.update_form_data["name"])
+        self.assertNotEqual(form.date, self.update_form_data["date"])
+
+        question_data = self.update_form_data["questions"][0]
+        self.assertTrue(
+            Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"]).exists()
         )
-        self.assertEqual(association.rank, self.update_association_data["rank"])
+        question = Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"])[0]
+        self.assertEqual(question.label, question_data["label"])
+        self.assertEqual(question.required, question_data["required"])
+        self.assertEqual(question.archived, True)
+        self.assertEqual(question.category, 'R')
 
     ###########
     # DESTROY #
@@ -158,12 +173,14 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
 
     def test_if_not_global_admin_then_cannot_destroy(self):
         self.login('17simple')
-        res = self.destroy("pdm")
+        res = self.destroy("1")
         self.assertStatusCode(res, 403)
-        self.assertTrue(Association.objects.filter(pk="pdm").exists())
+        self.assertTrue(Form.objects.filter(pk="1").exists())
+        self.assertTrue(Question.objects.filter(pk="1").exists())
 
     def test_if_global_admin_then_can_destroy(self):
         self.login("17admin")
-        res = self.destroy("pdm")
+        res = self.destroy("1")
         self.assertStatusCode(res, 204)
-        self.assertFalse(Association.objects.filter(pk="pdm").exists())
+        self.assertFalse(Form.objects.filter(pk="1").exists())
+        self.assertFalse(Question.objects.filter(pk="1").exists())

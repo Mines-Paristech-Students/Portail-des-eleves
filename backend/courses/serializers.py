@@ -16,19 +16,17 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        read_only_fields = ('id', )
-        fields = read_only_fields + ('form', 'label', 'required', 'archived', 'category')
-
+        read_only_fields = ('id', 'category', 'form')
+        fields = read_only_fields + ('label', 'required', 'archived')
 
 class FormSerializer(serializers.ModelSerializer):
     # Writable nested serializer
     questions = QuestionSerializer(many=True, required=False)
-    courses = CourseSerializer(many=True, required=False)
 
     class Meta:
         model = Form
-        read_only_fields = ('id', 'date', )
-        fields = read_only_fields + ('name', 'questions', 'courses')
+        read_only_fields = ('id', 'date')
+        fields = read_only_fields + ('name', 'questions')
 
     def create_questions(self, instance, update_questions):
         for question_data in update_questions:
@@ -36,32 +34,22 @@ class FormSerializer(serializers.ModelSerializer):
             question = Question.objects.create(**question_data)
             question.save()
 
-    def create_courses(self, instance, update_courses):
-        for course_data in update_courses:
-            course_data["form"] = instance
-            course = Course.objects.create(**course_data)
-            course.save()
-
     def update_questions(self, instance, update_questions):
         for question_data in update_questions:
             question_data["form"] = instance
-            Question.objects.filter(id=question_data["id"]).update(**question_data)
+            question = Question.objects.get(
+                    pk=question_data["id"], 
+                    form__pk=question_data["form"]
+                )
+            question.label = question_data["label"]
             question.save()
-
-    def update_courses(self, instance, update_courses):
-        for course_data in update_courses:
-            course_data["form"] = instance
-            Course.objects.filter(id=course_data["id"]).update(**course_data)
-            course.save()
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
-        course_data = validated_data.pop('courses')
 
         form = Form.objects.create(**validated_data)
 
         self.create_questions(form, questions_data)
-        self.create_courses(form, course_data)
 
         return form
 
@@ -69,14 +57,15 @@ class FormSerializer(serializers.ModelSerializer):
         # Issue with required fields ?
         instance.date = datetime.now()
         questions_data = validated_data.get("questions")
-        courses_data = validated_data.pop('courses')
 
         update_questions = []
         create_questions = []
 
         for question in questions_data:
-            question = questions_data[0]
-            if question.get('id'):
+            print(question.keys())
+            assert(question.pop('label'))
+            if question.get("id"):
+                question.pop("category")
                 update_questions.append(question)
             else:
                 create_questions.append(question)
@@ -84,18 +73,8 @@ class FormSerializer(serializers.ModelSerializer):
         self.create_questions(instance, create_questions)
         self.update_questions(instance, update_questions)
 
-        update_courses = []
-        create_courses = []
-
-        for course in courses_data:
-            course = courses_data[0]
-            if course.get('id'):
-                update_courses.append(course)
-            else:
-                create_courses.append(course)
-
-        self.create_courses(instance, create_courses)
-        self.update_courses(instance, update_courses)
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
 
         return instance
 
