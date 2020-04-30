@@ -32,8 +32,9 @@ export const Login = () => {
                                         Connexion au portail des élèves
                                     </div>
                                     <p>
-                                        Vous devez vous connecter pour continuer : {" "}
-                                        <a href={authUrl}>cliquez ici</a> <br />
+                                        Vous devez vous connecter pour continuer
+                                        : <a href={authUrl}>cliquez ici</a>{" "}
+                                        <br />
                                         Lorsque vous aurez cliqué, revenez en
                                         arrière pour être définitivement
                                         connecté

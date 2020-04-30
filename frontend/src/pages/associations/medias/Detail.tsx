@@ -8,13 +8,15 @@ import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemDetail = ({ association }) => {
-    const { fileId } = useParams<{fileId: string}>();
+    const { fileId } = useParams<{ fileId: string }>();
     const { data: media, status, error } = useBetterQuery<Media>(
-        "media.get", api.medias.get, fileId
+        "media.get",
+        api.medias.get,
+        fileId
     );
 
-    if (status === 'loading') return <LoadingAssociation/>;
-    else if (status === 'error') return `Something went wrong: ${error}`;
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
     else if (media) {
         let preview;
         if (media.type.startsWith("image")) {
@@ -70,7 +72,9 @@ export const AssociationFilesystemDetail = ({ association }) => {
                             <em>Aucune description</em>
                         )}
                     </Card.Body>
-                    <Card.Footer>Mis en ligne le {media.uploadedOn}</Card.Footer>
+                    <Card.Footer>
+                        Mis en ligne le {media.uploadedOn}
+                    </Card.Footer>
                 </Card>
                 <a href={media.media} download className={"btn btn-primary"}>
                     <i className="fe fe-download" /> Télécharger

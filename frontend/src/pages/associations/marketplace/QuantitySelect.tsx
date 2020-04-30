@@ -14,7 +14,6 @@ export const QuantitySelect = ({ order }) => {
     let onOrder = () => {
         order(quantity);
         setQuantity(0);
-
     };
 
     if (quantity === 0) {

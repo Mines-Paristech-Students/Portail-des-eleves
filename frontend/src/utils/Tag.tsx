@@ -20,12 +20,7 @@ function hashCode(s) {
     return Math.abs(h);
 }
 
-export const Tag = ({
-    type = "",
-    tag = "",
-    addon = "",
-    tooltip = "",
-}) => {
+export const Tag = ({ type = "", tag = "", addon = "", tooltip = "" }) => {
     if (type === "") {
         type = types[hashCode(tag) % types.length];
     }
@@ -43,7 +38,7 @@ export const Tag = ({
         return (
             <OverlayTrigger
                 key={type + addon + tooltip + tag}
-                placement={'bottom'}
+                placement={"bottom"}
                 overlay={
                     <Tooltip id={type + addon + tooltip + tag}>
                         {tooltip}
