@@ -19,7 +19,7 @@ jobs:
           node-version: "14"
 
       - name: Install Prettier
-        run: npm install --global prettier
+        run: npm install --global prettier@2.0.5
         working-directory: frontend
 
       - name: Run Prettier
