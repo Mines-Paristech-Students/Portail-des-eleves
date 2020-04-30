@@ -2,6 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useBetterPaginatedQuery } from "../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 
+/**
+ * Pagination is a component that handles the pagination on the API level + the
+ * rendering of the page bar for you.
+ *
+ * To use it, simply do
+ * <Pagination
+        apiKey={"associations.list"}
+        apiMethod={api.associations.list}
+        apiParams={[]}
+        render={(associations, paginationControl) => (
+            <>
+                // your JSX ...
+                {paginationControl} // the pagination control
+            </>
+        )}
+   />
+ *
+ * @param render a closure that takes the a list of instances and the pagination
+ * control bar as parameters
+ * @param apiKey same api key as in `useBetterPaginatedQuery`
+ * @param apiMethod same method as in `useBetterPaginatedQuery`
+ * @param apiParams parameters given to the apiMethod on query.
+ */
 export const Pagination = ({ render, apiKey, apiMethod, apiParams }) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
@@ -30,7 +53,14 @@ export const Pagination = ({ render, apiKey, apiMethod, apiParams }) => {
     );
 };
 
-export const PaginationControl = ({ page, maxPage, setPage }) => {
+/**
+ * PaginationControl  is a JSX component that will render the `pagination`
+ * Bootstrap component. It'll display a list of the reachable pages and will
+ * update the page in the parent when clicked.
+ *
+ * This component is only used internally by the `Pagination` component.
+ */
+const PaginationControl = ({ page, maxPage, setPage }) => {
     if (maxPage === 1) {
         return null;
     }
