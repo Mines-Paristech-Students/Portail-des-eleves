@@ -10,7 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
-      - run: pip install black
-      - run: black --check backend
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+
+      - name: Install Black
+        run: pip install black
+
+      - name: Run Black
+        run: black --check backend
