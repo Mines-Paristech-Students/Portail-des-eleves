@@ -40,12 +40,7 @@ const StateField = () => {
     );
 
     return (
-        <SelectGroup
-            type="pills"
-            label="Statut"
-            name="state"
-            items={items}
-        />
+        <SelectGroup type="pills" label="Statut" name="state" items={items} />
     );
 };
 

@@ -41,7 +41,7 @@ export const PollsTableRowUser = ({
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
 
-                if (error.response.status == 403) {
+                if (error.response.status === 403) {
                     detail =
                         "Vous n’avez pas le droit de supprimer ce sondage.";
                 }

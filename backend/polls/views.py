@@ -18,6 +18,7 @@ class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
     serializer_class = ReadOnlyPollSerializer
     permission_classes = (PollPermission,)
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:

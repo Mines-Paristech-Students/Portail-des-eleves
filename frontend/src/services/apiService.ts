@@ -4,10 +4,22 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
-import { QueryResult, useQuery } from "react-query";
 import { Poll } from "../models/polls";
+import {
+    PaginatedQueryResult,
+    QueryResult,
+    usePaginatedQuery,
+    useQuery
+} from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
+
+export type PaginatedResponse<T> = {
+    count: number;
+    next: string;
+    previous: string;
+    results: T;
+};
 
 export const apiService = applyConverters(
     Axios.create({
@@ -25,7 +37,7 @@ function unwrap<T>(promise): Promise<T> {
 export const api = {
     pages: {
         list: associationId =>
-            unwrap<Page[]>(
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=STATIC`
                 )
@@ -51,7 +63,7 @@ export const api = {
     },
     news: {
         list: associationId =>
-            unwrap<Page[]>(
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=NEWS`
                 )
@@ -61,7 +73,7 @@ export const api = {
     },
     associations: {
         list: () =>
-            unwrap<Association[]>(
+            unwrap<PaginatedResponse<Association[]>>(
                 apiService.get(`/associations/associations/`)
             ),
         get: associationId =>
@@ -71,7 +83,7 @@ export const api = {
     },
     medias: {
         list: associationId =>
-            unwrap<Media[]>(
+            unwrap<PaginatedResponse<Media[]>>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
                 )
@@ -112,10 +124,10 @@ export const api = {
     },
 
     products: {
-        list: associationId =>
-            unwrap<Page[]>(
+        list: (associationId, page = 1) =>
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
-                    `/associations/products/?association=${associationId}`
+                    `/associations/products/?association=${associationId}&page=${page}`
                 )
             )
     },
@@ -128,7 +140,7 @@ export const api = {
                 buyer: buyer.id
             }),
 
-        get: (marketplaceId, user) =>
+        list: (marketplaceId, user) =>
             unwrap<Transaction[]>(
                 apiService.get(
                     `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
@@ -209,7 +221,20 @@ export function useBetterQuery<T>(
     return useQuery<T, string, any>(
         key,
         params,
-        (key, ...params) => fetchFunction(...params),
+        (_, ...rest) => fetchFunction(...rest),
         useQueryConfig
+    );
+}
+
+export function useBetterPaginatedQuery(
+    key: string,
+    fetchFunction: any,
+    ...params: any[]
+): PaginatedQueryResult<any> {
+    return usePaginatedQuery<any, [string, any]>(
+        [key, params],
+        (_, ...rest) => {
+            return fetchFunction(...rest[0]);
+        }
     );
 }

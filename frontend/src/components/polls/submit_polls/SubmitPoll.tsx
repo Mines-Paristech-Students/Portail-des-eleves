@@ -18,12 +18,16 @@ export const SubmitPoll = () => {
         choice0Placeholder,
         choice1Placeholder
     ] = getRandom([
-        ["Le portail…", "C’était pas mieux avant.", "C’est bien mieux maintenant."],
+        [
+            "Le portail…",
+            "C’était pas mieux avant.",
+            "C’est bien mieux maintenant."
+        ],
         ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Ton premier choix ?", "L’X", "Ulm"],
         ["Le plus claqué ?", "L’Octo", "La biéro"],
-        ["Les plus sharks ?", "(La) JuMP", "Le Trium"],
+        ["Les plus sharks ?", "(La) JuMP", "Le Trium"]
     ]);
 
     const onSubmit = (values, { resetForm, setSubmitting }) => {

@@ -1,26 +1,20 @@
 import React from "react";
 import { PageTitle } from "../../utils/common";
-import { api, useBetterQuery } from "../../services/apiService";
+import { api } from "../../services/apiService";
 import { Link } from "react-router-dom";
-import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { Association } from "../../models/associations/association";
+import { Pagination } from "../../utils/pagination";
 
-export const AssociationList = () => {
-    const { data: associations, error, status } = useBetterQuery<Association[]>(
-        "associations.list",
-        api.associations.list
-    );
-
-    if (status === "loading") return <p>Chargement des associations</p>;
-    else if (status === "error") {
-        return `Something went wrong: ${error}`;
-    } else if (status === "success" && associations) {
-        return (
-            <Container>
-                <PageTitle>Associations</PageTitle>
-                <Row>
+export const AssociationList = () => (
+    <Container>
+        <PageTitle>Associations</PageTitle>
+        <Pagination
+            apiKey={"associations.list"}
+            apiMethod={api.associations.list}
+            apiParams={[]}
+            render={(associations, paginationControl) => (
+                <>
                     {associations.map(association => (
                         <Card key={association.id} className={"col-md-3 m-4"}>
                             <Link to={`/associations/${association.id}/`}>
@@ -30,10 +24,9 @@ export const AssociationList = () => {
                             </Link>
                         </Card>
                     ))}
-                </Row>
-            </Container>
-        );
-    }
-
-    return null;
-};
+                    {paginationControl}
+                </>
+            )}
+        />
+    </Container>
+);

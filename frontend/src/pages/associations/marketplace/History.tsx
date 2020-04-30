@@ -1,49 +1,49 @@
 import React, { useContext } from "react";
-import { api, useBetterQuery } from "../../../services/apiService";
-import { LoadingAssociation } from "../Loading";
+import { api } from "../../../services/apiService";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/common";
 import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
-import { Transaction } from "../../../models/associations/marketplace";
+import { Pagination } from "../../../utils/pagination";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
-
     const marketplaceId = association.id;
-    const { data: transactions, status, error } = useBetterQuery<Transaction[]>(
-        "marketplace.transactions.get",
-        api.transactions.get,
-        [marketplaceId, user]
+
+    return (
+        <Pagination
+            apiKey={"marketplace.transactions.list"}
+            apiMethod={api.transactions.list}
+            apiParams={[marketplaceId, user]}
+            render={(transactions, paginationControl) => (
+                <Container>
+                    <div className={"float-right"}>
+                        <a
+                            href={
+                                "/associations/" +
+                                marketplaceId +
+                                "/marketplace/"
+                            }
+                            className={"btn btn-primary"}
+                        >
+                            <i className={"fe fe-book-open"} /> Magasin
+                        </a>
+                    </div>
+                    <PageTitle>Mon historique</PageTitle>
+
+                    {transactions.length !== 0 ? (
+                        <>
+                            {paginationControl}
+                            <TransactionsTable transactions={transactions} />
+                            {paginationControl}
+                        </>
+                    ) : (
+                        <NoTransactionMessage />
+                    )}
+                </Container>
+            )}
+        />
     );
-
-    if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error") return `Something went wrong: ${error}`;
-    else if (status === "success" && transactions) {
-        return (
-            <Container>
-                <div className={"float-right"}>
-                    <a
-                        href={
-                            "/associations/" + marketplaceId + "/marketplace/"
-                        }
-                        className={"btn btn-primary"}
-                    >
-                        <i className={"fe fe-book-open"} /> Magasin
-                    </a>
-                </div>
-                <PageTitle>Mon historique</PageTitle>
-
-                {transactions.length !== 0 ? (
-                    <TransactionsTable transactions={transactions} />
-                ) : (
-                    <NoTransactionMessage />
-                )}
-            </Container>
-        );
-    }
-
-    return null;
 };
 
 const TransactionsTable = ({ transactions }) => {

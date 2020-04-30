@@ -63,8 +63,6 @@ export const PollVotingForm = ({
 
     return (
         <Card>
-            <CardStatus color="random" position="left" />
-
             <Card.Header>
                 <Card.Title as="h3">{poll.question}</Card.Title>
             </Card.Header>

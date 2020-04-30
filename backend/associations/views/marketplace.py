@@ -12,6 +12,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.paginator import SmallResultsSetPagination
 from associations.models import Marketplace, Product, Transaction, Funding
 from associations.permissions import (
     MarketplacePermission,
@@ -49,6 +50,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (ProductPermission,)
+
+    pagination_class = SmallResultsSetPagination
 
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
