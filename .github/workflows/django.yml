@@ -31,7 +31,7 @@ jobs:
 
     - name: Create .env
       run: cp .env.dist env
-      working-directory: backend
+      working-directory: backend/backend
 
     - name: Run Tests
       run: |
