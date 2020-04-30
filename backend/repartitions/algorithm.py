@@ -168,8 +168,8 @@ def make_repartition_for_category(
             penalty[np.argmax(repartition_size)] += 1
         else:
             repartition_cardinal_diff = (
-                0
-            )  # there is nothing to do, avoid being stuck in an infinite loop
+                0  # there is nothing to do, avoid being stuck in an infinite loop
+            )
 
     return repartition
 

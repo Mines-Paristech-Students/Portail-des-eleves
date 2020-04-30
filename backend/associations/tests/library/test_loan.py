@@ -137,7 +137,7 @@ class LoanTestCase(BaseLibraryTestCase):
                 self.assertAccessToLoan(loan.id, code=200, user=user)
 
     def test_if_not_library_admin_then_only_access_to_own_loan_in_enabled_libraries(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_LIBRARY_ADMIN:
             self.login(user)
@@ -234,7 +234,7 @@ class LoanTestCase(BaseLibraryTestCase):
             self.assertEqual(last_loan.real_return_date, None)
 
     def test_if_not_library_administrator_and_library_disabled_then_cannot_create_loan(
-        self
+        self,
     ):
         loanable_id = 1
         self.assertFalse(
@@ -248,7 +248,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_not_library_administrator_then_cannot_create_loan_for_another_user_in_own_library(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             if user != "17wan-fat":
@@ -257,7 +257,7 @@ class LoanTestCase(BaseLibraryTestCase):
                 )
 
     def test_if_not_library_administrator_and_loanable_already_borrowed_then_cannot_create_loan(
-        self
+        self,
     ):
         loanable_id = 4
         self.assertTrue(
@@ -327,7 +327,7 @@ class LoanTestCase(BaseLibraryTestCase):
         return run
 
     def test_every_user_can_update_own_loan_status_from_pending_to_cancelled_in_enabled_libraries(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             self.assertTrue(
@@ -341,7 +341,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_not_library_administrator_then_cannot_update_own_loan_status_except_from_pending_to_cancelled(
-        self
+        self,
     ):
         for (old_status, new_status) in self.STATUS_COUPLES:
             if "PENDING" == old_status and "CANCELLED" == new_status:
@@ -410,7 +410,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_cannot_update_status_of_other_library_loans(
-        self
+        self,
     ):
         user = "17library_bd-tek"
 
@@ -488,7 +488,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_cannot_update_with_inconsistent_loan_date(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)
@@ -519,7 +519,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_can_update_with_consistent_expected_return_date(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)
@@ -544,7 +544,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_cannot_update_with_inconsistent_expected_return_date(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)
@@ -570,7 +570,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_can_update_with_consistent_real_return_date(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)
@@ -600,7 +600,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_cannot_update_with_inconsistent_real_return_date(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)
@@ -626,7 +626,7 @@ class LoanTestCase(BaseLibraryTestCase):
             )
 
     def test_if_library_administrator_then_cannot_update_dates_of_other_library_loans(
-        self
+        self,
     ):
         user = "17library_bd-tek"
         self.login(user)

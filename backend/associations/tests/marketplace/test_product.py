@@ -136,7 +136,7 @@ class ProductTestCase(BaseMarketPlaceTestCase):
         self.assertEqual(Product.objects.get(pk=3).description, data["description"])
 
     def test_if_marketplace_admin_and_marketplace_disabled_then_can_update_product(
-        self
+        self,
     ):
         self.login("17market_pdm")
         data = {"pk": 5, "name": "CHOCOLATINE", "description": "Bordel."}
