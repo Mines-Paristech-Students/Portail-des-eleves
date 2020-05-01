@@ -45,7 +45,7 @@ export const Tag = ({
                 key={type + addon + tooltip + tag}
                 placement={'bottom'}
                 overlay={ props =>
-                    <Tooltip {...props}>
+                    <Tooltip id={type + addon + tooltip + tag}>
                         {tooltip}
                     </Tooltip>
                 }

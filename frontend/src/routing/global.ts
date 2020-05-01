@@ -9,5 +9,5 @@ export const routes = [
         path: "/associations/:associationId",
         component: AssociationMain,
         exact: false
-    }
+    },
 ];
