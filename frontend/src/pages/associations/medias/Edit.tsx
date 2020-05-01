@@ -17,7 +17,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
     const { data: media, status, error } = useBetterQuery<Media>(
         "media.get",
         api.medias.get,
-        fileId
+        [fileId]
     );
 
     const history = useHistory();

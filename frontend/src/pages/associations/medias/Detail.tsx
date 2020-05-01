@@ -12,7 +12,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
     const { data: media, status, error } = useBetterQuery<Media>(
         "media.get",
         api.medias.get,
-        fileId
+        [fileId]
     );
 
     if (status === "loading") return <LoadingAssociation />;

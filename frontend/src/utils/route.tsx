@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { authService } from "../App";
-import Navbar from "./navbar";
+import Navbar from "../components/Navbar";
 import { UserProvider } from "../services/authService";
 
 /**

@@ -10,7 +10,7 @@ export const AssociationShowPage = ({ association }) => {
     const { data, status, error } = useBetterQuery<Page>(
         "page.get",
         api.pages.get,
-        pageId
+        [pageId]
     );
 
     if (status === "loading") return <LoadingAssociation />;

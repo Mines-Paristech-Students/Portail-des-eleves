@@ -4,6 +4,7 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
+import { Poll } from "../models/polls";
 import {
     PaginatedQueryResult,
     QueryResult,
@@ -27,7 +28,7 @@ export const apiService = applyConverters(
     })
 );
 
-function unwrap<T>(promise) {
+function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
@@ -145,17 +146,84 @@ export const api = {
                     `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
                 )
             )
+    },
+
+    polls: {
+        list: () =>
+            unwrap<Poll[]>(
+                apiService
+                    .get<Poll[]>("/polls/")
+                    .then((response: AxiosResponse<Poll[]>) => {
+                        // Parse the date (because it's not a datetime).
+                        response.data.forEach(
+                            poll =>
+                                (poll.publicationDate = poll.publicationDate
+                                    ? new Date(poll.publicationDate)
+                                    : undefined)
+                        );
+
+                        return response;
+                    })
+            ),
+        get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
+        create: (data: {
+            question: string;
+            choice0: string;
+            choice1: string;
+        }) =>
+            apiService.post("/polls/", {
+                question: data.question,
+                choices: [{ text: data.choice0 }, { text: data.choice1 }]
+            }),
+        update: (
+            pollId,
+            data: {
+                publicationDate?: string | Date;
+                state?: "REVIEWING" | "REJECTED" | "ACCEPTED";
+                admin_comment?: String;
+                question?: String;
+                choices?: { text: string }[];
+            }
+        ) => {
+            // Format the date.
+            if (
+                data.publicationDate &&
+                typeof data.publicationDate !== "string"
+            ) {
+                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
+                    1}-${data.publicationDate.getDate()}`;
+            }
+
+            return apiService.patch(`/polls/${pollId}/`, data);
+        },
+        delete: pollId => apiService.delete(`/polls/${pollId}/`),
+        vote: (user, pollId, choiceId) =>
+            apiService.post(`/polls/${pollId}/vote/`, {
+                user: user.id,
+                choice: choiceId
+            })
     }
 };
 
+/**
+ * Return the result of `fetchFunction` or a cached result if available.
+ * @param key
+ * @param fetchFunction
+ * @param useQueryConfig the parameters passed to `useQuery`.
+ * @param params the parameters passed to `fetchFunction`.
+ */
 export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
-    ...params: any[]
+    params?: any[],
+    useQueryConfig?: object
 ): QueryResult<T> {
-    return useQuery<T, [string, any]>([key, params], (key, ...params) => {
-        return fetchFunction(...params[0]);
-    });
+    return useQuery<T, string, any>(
+        key,
+        params,
+        (_, ...rest) => fetchFunction(...rest),
+        useQueryConfig
+    );
 }
 
 export function useBetterPaginatedQuery(
@@ -165,8 +233,8 @@ export function useBetterPaginatedQuery(
 ): PaginatedQueryResult<any> {
     return usePaginatedQuery<any, [string, any]>(
         [key, params],
-        (key, ...params) => {
-            return fetchFunction(...params[0]);
+        (_, ...rest) => {
+            return fetchFunction(...rest[0]);
         }
     );
 }

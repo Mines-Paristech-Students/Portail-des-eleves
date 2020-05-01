@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { api, useBetterQuery } from "../../../services/apiService";
-import { LoadingAssociation } from "../Loading";
+import { api } from "../../../services/apiService";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/common";
 import { UserContext } from "../../../services/authService";

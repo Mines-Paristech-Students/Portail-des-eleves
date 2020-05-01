@@ -8,6 +8,7 @@ import { PageNotFoundError } from "./pages/ErrorPage";
 import { Login } from "./pages/Login";
 import { routes } from "./routing/global";
 import { ToastProvider } from "./utils/Toast";
+import { Loading } from "./components/utils/Loading";
 
 export const authService = new AuthService();
 
@@ -46,7 +47,7 @@ const App: React.FC = () => {
             </ToastProvider>
         );
     } else {
-        return <p>Loading...</p>;
+        return <Loading className="mt-9" />;
     }
 };
 
