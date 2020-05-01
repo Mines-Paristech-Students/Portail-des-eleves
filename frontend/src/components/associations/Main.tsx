@@ -7,13 +7,13 @@ import {
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";
-import { PrivateRoute } from "../../utils/route";
+import { PrivateRoute } from "../utils/Route";
 import { AssociationSidebar } from "./Sidebar";
 import { routes } from "../../routing/associations";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { PageNotFoundError } from "../ErrorPage";
+import { PageNotFoundError } from "../utils/ErrorPage";
 import { Association } from "../../models/associations/association";
 
 export const AssociationMain = ({ match }) => {

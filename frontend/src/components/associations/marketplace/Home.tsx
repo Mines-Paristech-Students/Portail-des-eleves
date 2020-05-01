@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import Container from "react-bootstrap/Container";
 import { api } from "../../../services/apiService";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import { QuantitySelect } from "./QuantitySelect";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
-import { Pagination } from "../../../utils/pagination";
+import { Pagination } from "../../utils/Pagination";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;

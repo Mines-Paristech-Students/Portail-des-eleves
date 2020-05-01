@@ -7,7 +7,7 @@ import { PollsTableRowUser } from "./PollsTableRowUser";
 import Card from "react-bootstrap/Card";
 
 import { PollsBase } from "../PollsBase";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";

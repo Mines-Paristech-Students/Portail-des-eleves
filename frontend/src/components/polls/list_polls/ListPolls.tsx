@@ -8,7 +8,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PollsBase } from "../PollsBase";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
 import { PollNoPolls } from "./PollNoPolls";

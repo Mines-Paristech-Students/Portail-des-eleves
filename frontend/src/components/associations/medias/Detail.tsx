@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
-import { Tag } from "../../../utils/Tag";
+import { Tag } from "../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 

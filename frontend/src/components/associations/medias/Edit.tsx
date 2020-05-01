@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ErrorMessage } from "../../ErrorPage";
+import { ErrorMessage } from "../../utils/ErrorPage";
 import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { PageTitle } from "../../../utils/common";
-import { Tag } from "../../../utils/Tag";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { PageTitle } from "../../utils/PageTitle";
+import { Tag } from "../../utils/Tag";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";

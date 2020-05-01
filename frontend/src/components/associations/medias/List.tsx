@@ -4,11 +4,11 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
-import { PageTitle } from "../../../utils/common";
-import { Tag } from "../../../utils/Tag";
+import { PageTitle } from "../../utils/PageTitle";
+import { Tag } from "../../utils/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
-import { Pagination } from "../../../utils/pagination";
+import { Pagination } from "../../utils/Pagination";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
