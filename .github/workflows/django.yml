@@ -15,7 +15,6 @@ jobs:
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -37,7 +36,7 @@ jobs:
         working-directory: backend
 
       - name: Create .env
-        run: cp .env.dist .env
+        run: cp .env.ci .env
         working-directory: backend/backend
 
       - name: Run Tests
