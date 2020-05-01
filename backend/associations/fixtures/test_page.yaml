@@ -19,7 +19,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -38,7 +38,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -57,7 +57,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -104,7 +104,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -123,7 +123,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -142,7 +142,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role

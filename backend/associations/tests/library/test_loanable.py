@@ -22,14 +22,14 @@ class LoanableTestCase(BaseLibraryTestCase):
         self.login("17simple")
         res = self.get("/associations/loanables/")
         self.assertStatusCode(res, 200)
-        libraries = set([x["library"] for x in res.data])
+        libraries = set([x["library"] for x in res.data["results"]])
         self.assertNotIn("biero", libraries)
 
     def test_if_library_disabled_and_library_admin_then_loanables_show(self):
         self.login("17library_biero")
         res = self.get("/associations/loanables/")
         self.assertStatusCode(res, 200)
-        libraries = set([x["library"] for x in res.data])
+        libraries = set([x["library"] for x in res.data["results"]])
         self.assertIn("biero", libraries)
 
     ############

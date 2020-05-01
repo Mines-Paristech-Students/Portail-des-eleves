@@ -30,14 +30,14 @@ class ProductTestCase(BaseMarketPlaceTestCase):
         self.login("17simple")
         res = self.get("/associations/products/")
         self.assertStatusCode(res, 200)
-        marketplaces = set([x["marketplace"] for x in res.data])
+        marketplaces = set([x["marketplace"] for x in res.data["results"]])
         self.assertNotIn("pdm", marketplaces)
 
     def test_if_marketplace_disabled_and_marketplace_admin_then_products_show(self):
         self.login("17market_pdm")
         res = self.get("/associations/products/")
         self.assertStatusCode(res, 200)
-        marketplaces = set([x["marketplace"] for x in res.data])
+        marketplaces = set([x["marketplace"] for x in res.data["results"]])
         self.assertIn("pdm", marketplaces)
 
     ############

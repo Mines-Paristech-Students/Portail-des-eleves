@@ -36,14 +36,16 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         # Try to get all namespaces
         res = self.get("/tags/namespaces/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 2)
-        self.assertSetEqual({n["name"] for n in res.data}, {"users", "farine"})
+        self.assertEqual(len(res.data["results"]), 2)
+        self.assertSetEqual(
+            {n["name"] for n in res.data["results"]}, {"users", "farine"}
+        )
 
         # Try to get only the namespaces for the association
         res = self.get("/tags/namespaces/?scoped_to_model=association&scoped_to_pk=pdm")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 1)
-        self.assertSetEqual({n["name"] for n in res.data}, {"farine"})
+        self.assertEqual(len(res.data["results"]), 1)
+        self.assertSetEqual({n["name"] for n in res.data["results"]}, {"farine"})
 
         # Try to get namespace forgetting the scope
         res = self.post(
@@ -57,8 +59,8 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         # Try to get global namespace
         res = self.get("/tags/namespaces/?scoped_to_model=global")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 1)
-        self.assertSetEqual({n["name"] for n in res.data}, {"users"})
+        self.assertEqual(len(res.data["results"]), 1)
+        self.assertSetEqual({n["name"] for n in res.data["results"]}, {"users"})
 
         #######################################
         # Creation without proper authorization
@@ -82,7 +84,7 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         res = self.post(
             "/tags/namespaces/", {"scoped_to_model": "global", "name": "users"}
         )
-        self.assertStatusCode(res, 201, user_msg=res.data)
+        self.assertStatusCode(res, 201, user_msg=res.data["results"])
         namespace_user = json.loads(res.content)
 
         self.login("17admin_pdm")

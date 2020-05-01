@@ -19,7 +19,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: authentication.user
@@ -29,7 +29,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -48,7 +48,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Events
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -100,7 +100,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -119,7 +119,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -138,7 +138,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Events
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -240,7 +240,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -259,7 +259,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -278,7 +278,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -297,7 +297,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biero
     last_name: Manager
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: authentication.user
@@ -307,7 +307,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -326,7 +326,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -345,7 +345,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -633,7 +633,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -652,7 +652,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Marketplace administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -671,7 +671,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: authentication.user
@@ -681,7 +681,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Pain de Mine
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -700,7 +700,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Pain de Mine
     last_name: Marketplace administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -719,7 +719,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Marketplace administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -738,7 +738,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -757,7 +757,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Consumer
     last_name: Consumer
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.transaction
@@ -1028,7 +1028,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1047,7 +1047,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1066,7 +1066,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1113,7 +1113,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1132,7 +1132,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1151,7 +1151,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -1180,7 +1180,7 @@
     first_name: Admin
     last_name: Admin
     email: admin@mpt.fr
-    is_admin: true
+    is_staff: true
     year_of_entry: 2017
 
 - model: authentication.user
@@ -1190,7 +1190,7 @@
     first_name: Simple
     last_name: Simple
     email: simple@mpt.fr
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: authentication.user
@@ -1200,7 +1200,7 @@
     first_name: Simple
     last_name: Simple
     email: 18simple@mpt.fr
-    is_admin: false
+    is_staff: false
     year_of_entry: 2018
 
 - model: authentication.user
@@ -1213,7 +1213,7 @@
     email: 17bocquet@mpt.fr
     birthday: '1997-01-08'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: the roc
     city_of_origin: Gotham
     room: '1234'
@@ -1230,7 +1230,7 @@
     email: 17wan-fat@mpt.fr
     birthday: '1998-06-26'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: Le Rocher
     city_of_origin: Le Tampon
     room: '802'
@@ -1248,7 +1248,7 @@
     email: 17wan-fat@mpt.fr
     birthday: '1998-06-26'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: Le Rocher
     city_of_origin: Le Tampon
     room: '802'
