@@ -1,5 +1,7 @@
 # Course management
 
+Do an endpoint to modify questions
+
 ## Short term planning
 
 ## TODOS :
@@ -7,6 +9,7 @@
 1. Tags for the courses
 2. Teachers
 3. Grading as forms (should be as general as possible)
+
 
 
 * Add tags
@@ -29,4 +32,9 @@
 * can add course wo user
 * check required fields 
 * Test same instance 
-* Test for same instance  
+* Test for same instance 
+
+## Frontend
+
+For the form modification
+* Allow to modify each field sort of independently

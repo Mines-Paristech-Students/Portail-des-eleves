@@ -44,12 +44,16 @@ class Course(models.Model):
     have_voted = models.ManyToManyField(
         User,
         related_name="course",
-        blank=True,
+        blank=True, 
     )
 
     @cached_property
     def avg_ratings(self):
-        query = self.rating.values('question__id').annotate(Avg('value')).values('value__avg','question__label', 'question__id')
+        query = self.rating.values('question__id')\
+            .filter(question__archived=False)\
+            .annotate(Avg('value'))\
+            .values('value__avg','question__label', 'question__id')\
+            .order_by('question__id')
 
         return [
             {
@@ -87,11 +91,13 @@ class CourseMedia(models.Model):
 
 class Question(models.Model):
 
-    # class Meta:
-    #     unique_together = ('form', 'order')
+    # TODO add test
+    class Meta:
+        unique_together = [['form', 'label']]
 
     id = models.AutoField(primary_key=True, unique=True)
 
+    # TODO
     # order = models.SmallIntegerField()
 
     label = models.CharField(max_length=64)

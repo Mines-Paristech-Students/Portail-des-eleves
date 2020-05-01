@@ -19,6 +19,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'category', 'form')
         fields = read_only_fields + ('label', 'required', 'archived')
 
+
 class FormSerializer(serializers.ModelSerializer):
     # Writable nested serializer
     questions = QuestionSerializer(many=True, required=False)
@@ -27,12 +28,17 @@ class FormSerializer(serializers.ModelSerializer):
         model = Form
         read_only_fields = ('id', 'date')
         fields = read_only_fields + ('name', 'questions')
+        depth = 1
 
-    def create_questions(self, instance, update_questions):
-        for question_data in update_questions:
+    @staticmethod
+    def create_question(question_data):
+        question = Question.objects.create(**question_data)
+        question.save()
+
+    def create_questions(self, instance, questions_data):
+        for question_data in questions_data:
             question_data["form"] = instance
-            question = Question.objects.create(**question_data)
-            question.save()
+            self.create_question(question_data)
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions')
@@ -44,12 +50,6 @@ class FormSerializer(serializers.ModelSerializer):
         return form
 
     def update(self, instance, validated_data):
-        """
-        Because of issues with nested representations
-        * Questions can not be updated with that function
-        * The logic is moved to the view itself
-        """
-        # Issue with required fields ?
         instance.date = datetime.now()
         instance.name = validated_data.get('name', instance.name)
         instance.save()
@@ -113,7 +113,7 @@ class MediaSerializer(serializers.ModelSerializer):
         model = CourseMedia
         read_only_fields = ('id', 'uploaded_on', 'file', 'uploaded_by', 'course')
         fields = ('name', 'category') + read_only_fields
-    
+
     def create(self, validated_data):
         validated_data["uploaded_by"] = self.context["request"].user
 

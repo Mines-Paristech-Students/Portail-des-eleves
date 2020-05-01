@@ -1,4 +1,3 @@
-
 from courses.models import Form, Question
 from courses.serializers import FormSerializer
 
@@ -150,10 +149,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 200)
 
-        seri = FormSerializer(data=self.update_form_data)
-        self.assertTrue(seri.is_valid())
-        print(seri.data)
-
         self.assertTrue(
             Form.objects.filter(pk=self.update_form_data["id"]).exists()
         )
@@ -171,16 +166,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertNotEqual(question.archived, True)
         self.assertNotEqual(question.category, 'C')
     
-    #########################
-    # UPDATE_WITH_QUESTIONS #
-    #########################
-    
-    def test_if_not_global_admin_then_cannot_update_with_questions(self):
-        pass
-
-    def test_if_global_admin_then_can_update_with_questions(self):
-        pass
-
     ###########
     # DESTROY #
     ###########
