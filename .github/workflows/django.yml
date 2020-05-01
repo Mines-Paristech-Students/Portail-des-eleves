@@ -30,6 +30,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
@@ -39,6 +40,16 @@ jobs:
       - name: Create .env
         run: cp .env.ci .env
         working-directory: backend/backend
+
+      - name: Make migrations
+        run: |
+          python manage.py makemigrations
+        working-directory: backend
+
+      - name: Migrate
+        run: |
+          python manage.py migrate
+        working-directory: backend
 
       - name: Run Tests
         run: |
