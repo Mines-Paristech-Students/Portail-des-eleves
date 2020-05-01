@@ -1,29 +1,69 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PollsBase } from "../PollsBase";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
 import { getRandom } from "../../../utils/random";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
+import { PageTitle } from "../../utils/PageTitle";
+import { api } from "../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
-export function SubmitPoll() {
+export const SubmitPoll = () => {
+    const newToast = useContext(ToastContext);
+
     const [
         questionPlaceholder,
         choice0Placeholder,
         choice1Placeholder
     ] = getRandom([
-        ["Le portail…", "C’était mieux avant.", "C’est moins bien maintenant."],
+        [
+            "Le portail…",
+            "C’était pas mieux avant.",
+            "C’est bien mieux maintenant."
+        ],
         ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
-        ["Le plus beau ?", "17bocquet", "17cantelobre"]
+        ["Ton premier choix ?", "L’X", "Ulm"],
+        ["Le plus claqué ?", "L’Octo", "La biéro"],
+        ["Les plus sharks ?", "(La) JuMP", "Le Trium"]
     ]);
 
-    function SubmitPollForm() {
-        return (
+    const onSubmit = (values, { resetForm, setSubmitting }) => {
+        let data = {
+            question: values.question,
+            choice0: values.choice0,
+            choice1: values.choice1
+        };
+
+        api.polls
+            .create(data)
+            .then(response => {
+                if (response.status === 201) {
+                    newToast({
+                        message: "Sondage envoyé.",
+                        level: ToastLevel.Success
+                    });
+                    resetForm();
+                }
+            })
+            .catch(error => {
+                let message =
+                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                newToast({
+                    message: `${message} Détails : ${error.response.data.detail}`,
+                    level: ToastLevel.Error
+                });
+            })
+            .then(() => {
+                setSubmitting(false);
+            });
+    };
+
+    return (
+        <PollsBase>
+            <PageTitle>Proposer un sondage</PageTitle>
             <Card className="text-left">
                 <Formik
                     initialValues={{
@@ -36,9 +76,7 @@ export function SubmitPoll() {
                         choice0: Yup.string().required("Ce champ est requis."),
                         choice1: Yup.string().required("Ce champ est requis.")
                     })}
-                    onSubmit={(values, { setSubmitting }) => {
-                        // TODO.
-                    }}
+                    onSubmit={onSubmit}
                 >
                     <Form>
                         <Card.Body>
@@ -70,24 +108,6 @@ export function SubmitPoll() {
                     </Form>
                 </Formik>
             </Card>
-        );
-    }
-
-    return (
-        <PollsBase
-            title={
-                <h1 className="page-title page-header mb-5">
-                    Proposer un sondage
-                </h1>
-            }
-        >
-            <Container>
-                <Row>
-                    <Col xs={{ offset: 3, span: 6 }}>
-                        <SubmitPollForm />
-                    </Col>
-                </Row>
-            </Container>
         </PollsBase>
     );
-}
+};

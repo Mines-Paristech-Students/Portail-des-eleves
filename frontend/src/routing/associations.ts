@@ -1,13 +1,15 @@
-import { AssociationHome } from "../pages/associations/Home";
-import { AssociationShowPage } from "../pages/associations/page/Show";
+import { AssociationHome } from "../components/associations/Home";
+import { AssociationShowPage } from "../components/associations/page/Show";
 import {
     AssociationCreatePage,
     AssociationEditPage
-} from "../pages/associations/page/Edit";
-import { AssociationFilesystemList } from "../pages/associations/medias/List";
-import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
-import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
-import { AssociationFilesystemUpload } from "../pages/associations/medias/Upload";
+} from "../components/associations/page/Edit";
+import { AssociationMarketplaceHome } from "../components/associations/marketplace/Home";
+import { AssociationMarketplaceHistory } from "../components/associations/marketplace/History";
+import { AssociationFilesystemList } from "../components/associations/medias/List";
+import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
+import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
+import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
 
 export const routes = association => [
     {
@@ -56,6 +58,20 @@ export const routes = association => [
     {
         path: `/files/:fileId/edit`,
         component: AssociationFilesystemEdit,
+        exact: true,
+        props: { association: association }
+    },
+
+    {
+        path: `/marketplace`,
+        component: AssociationMarketplaceHome,
+        exact: true,
+        props: { association: association }
+    },
+
+    {
+        path: `/marketplace/history`,
+        component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association }
     }

@@ -149,6 +149,9 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
                     "admin_comment",
                     "question",
                     "choices",
+                    "user_has_voted",
+                    "is_active",
+                    "has_been_published",
                 },
             )
 
@@ -183,7 +186,21 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
         for poll in polls:
             res = self.retrieve(poll.id)
             self.assertStatusCode(res, 200),
-            self.assertSetEqual(set(res.data.keys()), {"id", "question", "choices"})
+            self.assertSetEqual(
+                set(res.data.keys()),
+                {
+                    "id",
+                    "question",
+                    "choices",
+                    "has_been_published",
+                    "state",
+                    "user_has_voted",
+                    "publication_date",
+                    "is_active",
+                    "user",
+                },
+            )
+            self.assertEqual(res.data["user"], "")
 
     ##########
     # CREATE #

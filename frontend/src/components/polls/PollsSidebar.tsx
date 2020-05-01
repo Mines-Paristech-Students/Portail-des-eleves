@@ -1,39 +1,26 @@
 import React from "react";
-import { SidebarButton } from "../Sidebar";
-import { Sidebar } from "../Sidebar";
+import { Sidebar, SidebarItem, SidebarSeparator } from "../Sidebar";
 
-type Props = {
-    adminVersion?: boolean;
-};
-
-export function PollsSidebar(props: Props) {
-    const actions: SidebarButton[] = [
-        {
-            name: "Récents",
-            to: "/sondages/",
-            order: 10
-        },
-        {
-            name: "Proposer",
-            to: "/sondages/proposer/",
-            order: 20
-        },
-        {
-            name: "Mes sondages",
-            to: "/sondages/mes-sondages/",
-            order: 30
-        }
-    ];
-
-    if (props.adminVersion || true) {
-        // TODO. For debugging
-        actions.push({
-            name: "Administration",
-            to: "/sondages/administration/",
-            order: 0,
-            style: "outline-danger"
-        });
-    }
-
-    return <Sidebar actions={actions} />;
-}
+export const PollsSidebar = ({ isAdmin }: { isAdmin: boolean }) => (
+    <Sidebar title="Sondages">
+        <SidebarItem icon="clock" to="/sondages/">
+            En cours
+        </SidebarItem>
+        <SidebarItem icon="inbox" to="/sondages/anciens/">
+            Anciens
+        </SidebarItem>
+        <SidebarSeparator />
+        <SidebarItem icon="check-square" to="/sondages/mes-sondages/">
+            Mes sondages
+        </SidebarItem>
+        <SidebarItem icon="plus" to="/sondages/proposer/">
+            Proposer
+        </SidebarItem>
+        <SidebarSeparator />
+        {isAdmin ? (
+            <SidebarItem icon="shield" to="/sondages/administration/">
+                Administration
+            </SidebarItem>
+        ) : null}
+    </Sidebar>
+);

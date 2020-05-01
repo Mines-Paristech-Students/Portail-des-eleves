@@ -23,14 +23,34 @@ export const WEEKDAYS_LONG = [
     "Samedi"
 ];
 
-export const WEEKDAYS_SHORT = ["di", "lu", "ma", "me", "je", "ve", "sa"];
+export const WEEKDAYS_SHORT = [
+    "dim.",
+    "lun.",
+    "mar.",
+    "mer.",
+    "jeu.",
+    "ven.",
+    "sam."
+];
 
 /**
  * Format a date as DD/MM/YYYY.
  * If the day or the month are only one figure long, the left zero is not displayed.
  */
 export function dateFormatter(date: Date): string {
-    return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+    return (
+        date
+            .getDate()
+            .toString()
+            .padStart(2, "0") +
+        "/" +
+        (date.getMonth() + 1).toString().padStart(2, "0") +
+        "/" +
+        date
+            .getFullYear()
+            .toString()
+            .padStart(4, "0")
+    );
 }
 
 /**

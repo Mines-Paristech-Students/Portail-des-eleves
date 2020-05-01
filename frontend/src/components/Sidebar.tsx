@@ -1,66 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./sidebar.css";
-import Container from "react-bootstrap/Container";
 
-type Props = {
-    actions: SidebarButton[];
+/**
+ * A link displayed in the sidebar. It has three props:
+ *   * `icon`: the Bootstrap icon to display besides the sidebar item. It's the
+ *   part after `fe-` in the class name of the icon.
+ *   * `to`: the URL of the link.
+ *   * `children`: the children to render for the link.
+ */
+export const SidebarItem = ({ icon, to, children }) => {
+    const iconClassName = "fe fe-" + icon;
+    return (
+        <Link
+            className="list-group-item list-group-item-action px-0 d-flex align-items-center"
+            to={to}
+        >
+            <span className="icon mr-3">
+                <i className={iconClassName} />
+            </span>
+            {children}
+        </Link>
+    );
 };
 
-/**
- * Simple interface to represent a sidebar button.
- */
-export interface SidebarButton {
-    name: string;
-    to: string;
-    style?:
-        | "primary"
-        | "secondary"
-        | "success"
-        | "warning"
-        | "danger"
-        | "info"
-        | "light"
-        | "dark"
-        | "outline-primary"
-        | "outline-secondary"
-        | "outline-success"
-        | "outline-warning"
-        | "outline-danger"
-        | "outline-info"
-        | "outline-light"
-        | "outline-dark";
+export const SidebarSeparator = (props: { size?: number }) => {
+    let size = props.size ? props.size : 2;
 
-    /**
-     * A lower order should mean higher in the sidebar.
-     */
-    order?: number;
-}
+    return <p className={`mb-${size} mt-${size}`}></p>;
+};
 
-/**
- * Display a sidebar with links rendered as buttons.
- */
-export function Sidebar(props: Props) {
+export const Sidebar = ({ title, children, ...rest }) => {
     return (
-        <Container className="sidebar">
-            {props.actions
-                // Lower order first.
-                .sort((a, b) => Number(a.order) - Number(b.order))
-                .map(function(sidebarData) {
-                    const buttonStyle = sidebarData.style
-                        ? "btn-" + sidebarData.style
-                        : "btn-outline-primary";
-
-                    return (
-                        <Link
-                            to={sidebarData.to}
-                            className={"btn my-1 " + buttonStyle}
-                            key={sidebarData.name}
-                        >
-                            {sidebarData.name}
-                        </Link>
-                    );
-                })}
-        </Container>
+        <>
+            <h1 className="page-title mb-5">{title}</h1>
+            <div className="list-group list-group-transparent mb-0">
+                {children}
+            </div>
+        </>
     );
-}
+};

@@ -87,6 +87,10 @@ class Choice(models.Model):
     def __str__(self):
         return self.text
 
+    @cached_property
+    def number_of_votes(self):
+        return len(self.votes.all())
+
 
 class Vote(models.Model):
     # The related poll
@@ -98,7 +102,9 @@ class Vote(models.Model):
     user = models.ForeignKey(User, verbose_name="utilisateur", on_delete=models.CASCADE)
 
     # The choice
-    choice = models.ForeignKey(Choice, verbose_name="choix", on_delete=models.CASCADE)
+    choice = models.ForeignKey(
+        Choice, verbose_name="choix", on_delete=models.CASCADE, related_name="votes"
+    )
 
     class Meta:
         unique_together = ("poll", "user")

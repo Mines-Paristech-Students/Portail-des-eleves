@@ -38,5 +38,5 @@ export interface Wish {
 export interface UserCampaign {
     user: User;
     category: Category;
-    fixedTo: Proposition
+    fixedTo: Proposition;
 }

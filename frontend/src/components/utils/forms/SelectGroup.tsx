@@ -7,11 +7,7 @@ function SelectGroupItem({ value, render, ...props }: any) {
 
     return (
         <label className="selectgroup-item">
-            <Form.Control
-                className="selectgroup-input"
-                type="radio"
-                {...field}
-            ></Form.Control>
+            <input className="selectgroup-input" type="radio" {...field} />
             {render}
         </label>
     );

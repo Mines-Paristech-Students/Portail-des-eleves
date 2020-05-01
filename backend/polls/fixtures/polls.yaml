@@ -1,0 +1,118 @@
+- model: polls.Poll
+  pk: 1
+  fields:
+    question: "Ton plat préféré ?"
+    user: "17bocquet"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 1
+  fields:
+    text: "Pâtes et fromage"
+    poll: 1
+
+- model: polls.Choice
+  pk: 2
+  fields:
+    text: "Baguette et pâté"
+    poll: 1
+
+- model: polls.Vote
+  pk: 1
+  fields:
+    poll: 1
+    user: "17bocquet"
+    choice: 1
+
+- model: polls.Vote
+  pk: 2
+  fields:
+    poll: 1
+    user: "15veaux"
+    choice: 2
+
+- model: polls.Vote
+  pk: 3
+  fields:
+    poll: 1
+    user: "16leroy"
+    choice: 2
+
+- model: polls.Poll
+  pk: 2
+  fields:
+    question: "Ton cours préféré ?"
+    user: "17bocquet"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est nul."
+
+- model: polls.Choice
+  pk: 3
+  fields:
+    text: "Maths 1"
+    poll: 2
+
+- model: polls.Choice
+  pk: 4
+  fields:
+    text: "Maths 2"
+    poll: 2
+
+- model: polls.Poll
+  pk: 3
+  fields:
+    question: "On est confinés !"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-26"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 5
+  fields:
+    text: "Ça fait un mois…"
+    poll: 3
+
+- model: polls.Choice
+  pk: 6
+  fields:
+    text: "Ah bon ?!"
+    poll: 3
+
+- model: polls.Vote
+  pk: 4
+  fields:
+    poll: 3
+    user: "16leroy"
+    choice: 5
+
+- model: polls.Vote
+  pk: 5
+  fields:
+    poll: 3
+    user: "15veaux"
+    choice: 5
+
+- model: polls.Poll
+  pk: 4
+  fields:
+    question: "Piche"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-26"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 7
+  fields:
+    text: "MDR"
+    poll: 4
+
+- model: polls.Choice
+  pk: 8
+  fields:
+    text: "42"
+    poll: 4

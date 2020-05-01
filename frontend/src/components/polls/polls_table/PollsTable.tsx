@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Poll } from "../../../models/polls";
 import { PollsTableRowAdmin } from "./PollsTableRowAdmin";
 import "./polls-table.css";
@@ -6,27 +6,27 @@ import Table from "react-bootstrap/Table";
 import { PollsTableRowUser } from "./PollsTableRowUser";
 import Card from "react-bootstrap/Card";
 
-import * as data from "../../../fixtures/polls";
 import { PollsBase } from "../PollsBase";
+import { PageTitle } from "../../utils/PageTitle";
+import { api, useBetterQuery } from "../../../services/apiService";
+import { PollsLoading } from "../PollsLoading";
+import { PollsError } from "../PollsError";
+import { UserContext } from "../../../services/authService";
 
-type Props = {
-    adminVersion?: boolean;
-};
+export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
+    const user = useContext(UserContext);
 
-export function PollsTable(props: Props) {
-    const [polls, setPolls] = useState<Poll[]>(data.polls);
+    const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
+        "polls.list",
+        api.polls.list,
+        [],
+        { refetchOnWindowFocus: false }
+    );
 
-    function setPoll(id: number, poll: Poll) {
-        setPolls([...polls.slice(0, id), poll, ...polls.slice(id + 1)]);
-    }
-
-    function deletePoll(id: number) {
-        setPolls([...polls.slice(0, id), ...polls.slice(id + 1)]);
-    }
-
-    function renderContent() {
-        return (
-            <>
+    function Content() {
+        if (status === "loading") return <PollsLoading />;
+        else if (status === "success" && polls && user) {
+            return (
                 <Card>
                     <Card.Body>
                         <Table className="card-table polls-table text-left">
@@ -35,60 +35,58 @@ export function PollsTable(props: Props) {
                                     <th>Question</th>
                                     <th>Réponse 1</th>
                                     <th>Réponse 2</th>
-                                    <th>Date</th>
-                                    {props.adminVersion && <th>Auteur</th>}
+                                    <th>Publication</th>
+                                    {adminVersion && <th>Auteur</th>}
                                     <th>Statut</th>
-                                    {!props.adminVersion && (
-                                        <th>Commentaire</th>
-                                    )}
+                                    {!adminVersion && <th>Commentaire</th>}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
 
-                            <tbody>{renderBody()}</tbody>
+                            <tbody>
+                                {adminVersion
+                                    ? // Display all the polls in the administrator panel.
+                                      polls.map(poll => (
+                                          <PollsTableRowAdmin
+                                              key={
+                                                  "polls-table-row-admin-" +
+                                                  poll.id
+                                              }
+                                              poll={poll}
+                                              refetch={refetch}
+                                          />
+                                      ))
+                                    : // Only display their own polls to a normal user.
+                                      polls
+                                          .filter(poll => poll.user === user.id)
+                                          .map(poll => (
+                                              <PollsTableRowUser
+                                                  key={
+                                                      "polls-table-row-user-" +
+                                                      poll.id
+                                                  }
+                                                  poll={poll}
+                                                  refetch={refetch}
+                                              />
+                                          ))}
+                            </tbody>
                         </Table>
                     </Card.Body>
                 </Card>
-            </>
-        );
-    }
-
-    function renderTitle() {
-        if (props.adminVersion) {
-            return "Administration";
+            );
         } else {
-            return "Mes sondages";
-        }
-    }
-
-    function renderBody() {
-        if (props.adminVersion) {
-            return polls.map((poll, index) => (
-                <PollsTableRowAdmin
-                    key={"polls-table-row-admin-" + poll.id}
-                    poll={poll}
-                    setPoll={(poll: Poll) => setPoll(index, poll)}
-                />
-            ));
-        } else {
-            return polls.map((poll, index) => (
-                <PollsTableRowUser
-                    key={"polls-table-row-user-" + poll.id}
-                    poll={poll}
-                    setPoll={(poll: Poll) => setPoll(index, poll)}
-                    deletePoll={() => deletePoll(index)}
-                />
-            ));
+            return <PollsError detail={error} />;
         }
     }
 
     return (
-        <PollsBase
-            title={
-                <h1 className="page-title page-header mb-5">{renderTitle()}</h1>
-            }
-        >
-            {renderContent()}
+        <PollsBase>
+            {adminVersion ? (
+                <PageTitle>Administration</PageTitle>
+            ) : (
+                <PageTitle>Mes sondages</PageTitle>
+            )}
+            <Content />
         </PollsBase>
     );
-}
+};

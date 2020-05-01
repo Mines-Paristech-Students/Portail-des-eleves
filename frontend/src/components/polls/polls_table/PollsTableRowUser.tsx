@@ -1,98 +1,102 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Poll, PollState } from "../../../models/polls";
 import { dateFormatter } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import { PollEditModal } from "./PollEditModal";
+import { PollStateIcon } from "./PollStateIcon";
+import { api } from "../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
-type Props = {
+export const PollsTableRowUser = ({
+    poll,
+    refetch
+}: {
     poll: Poll;
-    setPoll: (poll: Poll) => void;
-    deletePoll: () => void;
-};
-
-export function PollsTableRowUser(props: Props) {
+    refetch: any;
+}) => {
+    const newToast = useContext(ToastContext);
     const [editable, setEditable] = useState<boolean>(false);
 
-    function render(): React.ReactElement {
-        return (
-            <tr>
-                <PollEditModal
-                    show={editable}
-                    onHide={handleHideModal}
-                    poll={props.poll}
-                    setPoll={props.setPoll}
-                    adminVersion={false}
-                />
-                <td>{props.poll.question}</td>
-                <td>{props.poll.choices[0].text}</td>
-                <td>{props.poll.choices[1].text}</td>
-                <td>{dateFormatter(props.poll.publicationDate)}</td>
-                <td className="text-center">{renderState()}</td>
-                <td>{props.poll.adminComment}</td>
-                <td className="text-center">{renderActions()}</td>
-            </tr>
-        );
-    }
-
-    function handleHideModal() {
-        setEditable(false);
-    }
-
-    function renderState(): React.ReactElement {
-        switch (props.poll.state) {
-            case PollState.Accepted:
-                return <i className="fe fe-check text-success" />;
-            case PollState.Rejected:
-                return <i className="fe fe-x text-danger" />;
-            case PollState.Reviewing:
-                return <i className="fe fe-eye text-warning" />;
-        }
-    }
-
-    function handleEdit(event: React.FormEvent): void {
+    const onClickEdit = (event: React.FormEvent) => {
         event.preventDefault();
         setEditable(true);
-    }
+    };
 
-    const editAction = (
-        <Button
-            key={`edit-button-${props.poll.id}`}
-            className="btn-icon m-1"
-            variant="outline-primary"
-            size="sm"
-            onClick={handleEdit}
-        >
-            <i className="fe fe-edit" />
-        </Button>
-    );
-
-    function handleDelete(event: React.FormEvent): void {
+    const onClickDelete = (event: React.FormEvent) => {
         event.preventDefault();
-        props.deletePoll();
-    }
 
-    const deleteAction = (
-        <Button
-            key={`delete-button-${props.poll.id}`}
-            className="btn-icon m-1"
-            variant="outline-danger"
-            size="sm"
-            onClick={handleDelete}
-        >
-            <i className="fe fe-trash-2" />
-        </Button>
+        api.polls
+            .delete(poll.id)
+            .then(response => {
+                if (response.status === 204) {
+                    newToast({
+                        message: "Sondage supprimé.",
+                        level: ToastLevel.Success
+                    });
+                    refetch({ force: true });
+                }
+            })
+            .catch(error => {
+                let message =
+                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
+                let detail = error.response.data.detail;
+
+                if (error.response.status === 403) {
+                    detail =
+                        "Vous n’avez pas le droit de supprimer ce sondage.";
+                }
+
+                newToast({
+                    message: `${message} Détails : ${detail}`,
+                    level: ToastLevel.Error
+                });
+            });
+    };
+
+    return (
+        <tr>
+            <PollEditModal
+                show={editable}
+                onHide={() => setEditable(false)}
+                poll={poll}
+                refetch={refetch}
+                isAdmin={false}
+            />
+            <td>{poll.question}</td>
+            <td>{poll.choices[0].text}</td>
+            <td>{poll.choices[1].text}</td>
+            <td>
+                {poll.state === PollState.Accepted &&
+                    poll.publicationDate &&
+                    dateFormatter(poll.publicationDate)}
+            </td>
+            <td className="text-center">
+                <PollStateIcon state={poll.state} />
+            </td>
+            <td>{poll.adminComment}</td>
+            <td className="text-center">
+                {poll.state === PollState.Reviewing ||
+                poll.state === PollState.Rejected ? (
+                    <>
+                        <Button
+                            className="btn-icon m-1"
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={onClickEdit}
+                        >
+                            <i className="fe fe-edit" />
+                        </Button>
+                        <Button
+                            className="btn-icon m-1"
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={onClickDelete}
+                        >
+                            <i className="fe fe-trash-2" />
+                        </Button>
+                    </>
+                ) : null}
+            </td>
+        </tr>
     );
-
-    function renderActions(): React.ReactElement[] {
-        switch (props.poll.state) {
-            case PollState.Reviewing:
-                return [editAction, deleteAction];
-            case PollState.Rejected:
-                return [deleteAction];
-            default:
-                return [];
-        }
-    }
-
-    return render();
-}
+};
