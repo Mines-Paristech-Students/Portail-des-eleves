@@ -46,7 +46,7 @@ jobs:
         run: |
           python manage.py makemigrations associations
           python manage.py makemigrations authentication
-$          python manage.py makemigrations polls
+          python manage.py makemigrations polls
           python manage.py makemigrations repartitions
           python manage.py makemigrations subscriptions
           python manage.py makemigrations tags
