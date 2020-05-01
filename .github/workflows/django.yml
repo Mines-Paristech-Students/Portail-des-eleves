@@ -12,8 +12,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: password
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ci
         ports:
           - 5432:5432
         options: >-
