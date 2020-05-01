@@ -52,12 +52,18 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
-@action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
-def submit(self, request, pk=None):
+@permission_classes([IsAuthenticated])
+def submit(request):
     """Defined outside CourseViewSet to simplify permissions"""
+    data = request.data
     current_user = request.user
-    if Course.object.filter(have_voted=current_user, id=course.id).exists():
-        return Response("Should provide answers for all mandatory fields", status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    course_id = data.pop("course")
+    if not course_id:
+        return Response("Has already voted!", status.HTTP_400_BAD_REQUEST)
+
+    if Course.objects.filter(have_voted=current_user, id=data["course"]).exists():
+        return Response("Has already voted!", status.HTTP_405_METHOD_NOT_ALLOWED)
 
     # Check course ID
     course = self.get_object()

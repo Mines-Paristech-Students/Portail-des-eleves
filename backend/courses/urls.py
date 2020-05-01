@@ -6,10 +6,11 @@ router = DefaultRouter()
 
 router.register(r'courses', views.CourseViewSet)
 
-router.register(r'forms', views.FormViewSet, basename="courses")
+router.register(r'forms', views.FormViewSet)
 
-router.register(r'questions', views.QuestionViewSet, basename="courses")
+router.register(r'questions', views.QuestionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('submit', views.submit, name='courses-submit')
 ]
