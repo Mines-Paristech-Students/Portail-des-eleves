@@ -90,13 +90,13 @@ def submit(request):
                 comments_questions.append(comment["question"])
                 comment["course"] = course_id
     except KeyError:
-        return Response("Missing fields for rating/comment", status.HTTP_400_BAD_REQUEST)
+        return Response("Missing question id", status.HTTP_400_BAD_REQUEST)
 
     if Question.objects.filter(form=form)\
         .exclude(pk__in=ratings_questions+comments_questions) \
         .exclude(required=False)\
         .exists():
-        return Response("Missing required rating/comment", status.HTTP_400_BAD_REQUEST)
+        return Response("Missing required fields", status.HTTP_400_BAD_REQUEST)
 
     if Question.objects.filter(form=form)\
         .filter(pk__in=ratings_questions+comments_questions, archived=True)\
