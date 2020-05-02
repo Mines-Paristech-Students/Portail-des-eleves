@@ -16,7 +16,8 @@ import { authService } from "../App";
 
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
-    { icon: "zap", url: "/associations", label: "Associations" }
+    { icon: "zap", url: "/associations", label: "Associations" },
+    { icon: "book", url: "/courses", label: "Cours" },
 ];
 
 const linksComponent = links.map(({ icon, url, label }) => {

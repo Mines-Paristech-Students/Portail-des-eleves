@@ -5,15 +5,16 @@ import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
 import { QueryResult, useQuery } from "react-query";
-import {Ballot, Election, Result} from "../models/associations/election";
-import {User} from "../models/user";
+import { Ballot, Election, Result } from "../models/associations/election";
+import { User } from "../models/user";
+import { Course } from "../models/courses/course"
 
 const baseApi = "http://localhost:8000/api/v1";
 
 export enum electionActiveStatus {
-    Past='PAST',
-    Active='ACTIVE',
-    Upcoming='UPCOMING'
+    Past = 'PAST',
+    Active = 'ACTIVE',
+    Upcoming = 'UPCOMING'
 }
 
 export const apiService = applyConverters(
@@ -135,7 +136,8 @@ export const api = {
             }
             return (
                 apiService.delete(`/associations/elections/${id}`, {
-                    headers: { "Content-Type": "multipart/form-data" }})
+                    headers: { "Content-Type": "multipart/form-data" }
+                })
                     .then(unwrap<Election>(apiService.post(`/associations/elections/`, election)))
             )
 
@@ -175,7 +177,23 @@ export const api = {
             unwrap<Transaction[]>(
                 apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
             )
-    }
+    },
+
+
+    courses: {
+        list: () =>
+            unwrap<Course[]>(
+                apiService.get(
+                    '/courses/courses'
+                )
+            ),
+        get: courseId =>
+            unwrap<Page>(
+                apiService.get(
+                    `/courses/courses/${courseId}`
+                )
+            ),
+    },
 };
 
 export function useBetterQuery<T>(
