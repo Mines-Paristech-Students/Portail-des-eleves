@@ -4,7 +4,7 @@ from django.db.models import Count, Q
 
 from associations.models import Election, Event, Library, Marketplace, Page
 from associations.views.marketplace import compute_balance, BalanceView
-from authentication.views import get_birthdays
+from authentication.views.birthdays import birthdays_to_json
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 ALL_USERS = ["17simple", "18simple", "17admin"]
@@ -12,7 +12,7 @@ ALL_USERS = ["17simple", "18simple", "17admin"]
 
 
 class BaseWidgetsTestCase(WeakAuthenticationBaseTestCase):
-    fixtures = ["test_widgets.yaml"]
+    fixtures = ["test_widgets.yaml", "test_birthdays.json"]
 
     def endpoint_list_widgets(self):
         return f"/subscriptions/"
@@ -153,7 +153,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             res = self.balance_widget()
             self.assertStatusCode(res, 200)
             self.assertEqual(
-                res.data,
+                res.data["balances"],
                 [
                     {
                         "balance": compute_balance(user, marketplace.id),
@@ -169,25 +169,15 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.login(user)
             res = self.birthday_widget()
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data, get_birthdays(None, 7))
+            self.assertEqual(res.data, birthdays_to_json(7))
 
     def test_library_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.library_widget("bd-tek")
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                res.data,
-                {
-                    "suggested_loanables": Library.objects.get(pk="bd-tek")
-                    .loanables.annotate(
-                        number_of_borrow=Count("loans", filter=Q(user=user))
-                    )
-                    .order_by("-number_of_borrow")
-                    .filter(loans_real_return_date__is_null=False)[0:5]
-                    .all()
-                },
-            )
+        self.login("17simple")
+        res = self.library_widget("bd-tek")
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("suggested_loanables" in res.data)
+        self.assertEqual(len(res.data["suggested_loanables"]), 2)
 
     def test_marketplace_widget(self):
         for user in ALL_USERS:

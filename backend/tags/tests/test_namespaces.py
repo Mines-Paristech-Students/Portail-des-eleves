@@ -84,7 +84,7 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         res = self.post(
             "/tags/namespaces/", {"scoped_to_model": "global", "name": "users"}
         )
-        self.assertStatusCode(res, 201, user_msg=res.data["results"])
+        self.assertStatusCode(res, 201, user_msg=res.data)
         namespace_user = json.loads(res.content)
 
         self.login("17admin_pdm")

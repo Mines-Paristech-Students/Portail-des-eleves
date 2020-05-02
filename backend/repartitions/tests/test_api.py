@@ -22,19 +22,17 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         self.assertEqual(res.status_code, 204)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(res.data["results"]), 1)  # we created the campaign
+        self.assertEqual(len(res.data["results"]), 1)  # we deleted the campaign
 
-        # For a non admin
-
-        res = self.post(
-            "/repartitions/campaigns/", {"name": "MIGs groups"}
-        )  # recreate a new campaign
+        # Create a new campaign
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"})
         self.assertEqual(res.status_code, 201)
 
+        # For a non admin
         self.login("15menou")
         res = self.get("/repartitions/campaigns/")
         self.assertEqual(
-            len(res.data["results"]), 1
+            len(res.data["results"]), 1, msg=res.data
         )  # this user is not linked to the new campaign
 
         res = self.post("/repartitions/campaigns/", {"name": "MIGs groups 2"})

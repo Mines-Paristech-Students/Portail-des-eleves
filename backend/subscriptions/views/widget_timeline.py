@@ -35,4 +35,4 @@ def widget_timeline_view(request):
         for page in PageSerializer(many=True).to_representation(pages)
     ]
 
-    return JsonResponse(response)
+    return JsonResponse(response, safe=False)

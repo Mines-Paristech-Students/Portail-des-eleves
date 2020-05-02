@@ -17,4 +17,4 @@ def widget_vote_view(request):
             }
         )
 
-    return JsonResponse(response)
+    return JsonResponse(response, safe=False)

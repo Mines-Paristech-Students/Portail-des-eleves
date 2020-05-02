@@ -11,4 +11,5 @@ def get_widgets(*args, **kwargs):
             for name in ["birthday", "poll", "vote", "repartition", "balance"]
         ],
         "optional": [reverse("widget_" + name) for name in ["marketplace", "library"]],
+        # Fails because `widget_marketplace` requires a `marketplace_id` as a parameter…
     }
