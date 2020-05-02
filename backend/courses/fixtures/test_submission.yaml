@@ -1,4 +1,3 @@
-
 - model: courses.form
   pk: 1
   fields:
@@ -16,6 +15,12 @@
   fields:
     name: Maths diff
     form: 1
+    have_voted: [17simple]
+  
+- model: courses.course
+  pk: 2
+  fields:
+    name: Maths diff
     have_voted: [17simple]
 
 - model: courses.question
@@ -38,12 +43,20 @@
   pk: 3
   fields:
     label: Le nom de mon chat ?
-    required: false
+    required: true 
     category: C
     form: 1
 
 - model: courses.question
   pk: 4
+  fields:
+    label: Le nom de mon chien ?
+    required: false 
+    category: C
+    form: 1
+
+- model: courses.question
+  pk: 5
   fields:
     label: plip 
     required: false 

@@ -53,6 +53,7 @@
 - model: courses.rating
   pk: 1
   fields: 
+    date: '2020-04-20T22:10:57.577Z'
     value: 2
     question: 1
     course: 1
@@ -60,6 +61,7 @@
 - model: courses.rating
   pk: 2
   fields: 
+    date: '2020-04-20T22:10:57.577Z'
     value: 3
     question: 1
     course: 1
@@ -67,6 +69,7 @@
 - model: courses.rating
   pk: 3
   fields: 
+    date: '2020-04-20T22:10:57.577Z'
     value: 5
     question: 2
     course: 1
@@ -74,6 +77,7 @@
 - model: courses.rating
   pk: 4
   fields: 
+    date: '2020-04-20T22:10:57.577Z'
     value: 5
     question: 4
     course: 1

@@ -65,21 +65,13 @@ class RatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rating
-        read_only_fields = ("id", )
-        fields = read_only_fields + ('value', )
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=Rating.objects.all(),
-                fields=['question', 'course']
-            )
-        ]
+        fields = ("id", "course", "question", "value", "date")
 
-    def validate(self, data):
-        """Check that the answer type is correct"""
-        super(serializers.ModelSerializer, self).validate(data)
+    def validate_question(self, question):
+        if question.category != 'R':
+            raise serializers.ValidationError("Comment must refer to a 'C' category question")
 
-        if not Question.objects.filter(id=data["question"]).category == 'R':
-            raise serializers.ValidationError("Rating must refer to a 'R' category question")
+        return question
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -90,21 +82,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        read_only_fields = ("id", )
-        fields = read_only_fields + ('content', )
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=Comment.objects.all(),
-                fields=['question', 'course']
-            )
-        ]
+        fields = ("id", "course", "question", "content")
 
-    def validate(self, data):
-        """Check that the answer type is correct"""
-        super(serializers.ModelSerializer, self).validate(data)
-
-        if not Question.objects.filter(id=data["question"]).category == 'C':
+    def validate_question(self, question):
+        if question.category != 'C':
             raise serializers.ValidationError("Comment must refer to a 'C' category question")
+
+        return question
 
 
 class MediaSerializer(serializers.ModelSerializer):

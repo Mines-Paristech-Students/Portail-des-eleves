@@ -10,7 +10,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.decorators import action, api_view, permission_classes 
+from rest_framework.decorators import action, api_view, permission_classes
 
 from courses.models import Course, Form, Question, Comment, Rating
 from courses.serializers import CourseSerializer, FormSerializer, QuestionSerializer, CommentSerializer, RatingSerializer
@@ -51,6 +51,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Response(course.avg_ratings, status.HTTP_200_OK)
 
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def submit(request):
@@ -60,37 +61,60 @@ def submit(request):
 
     course_id = data.pop("course")
     if not course_id:
-        return Response("Has already voted!", status.HTTP_400_BAD_REQUEST)
+        return Response("Missing course as field", status.HTTP_400_BAD_REQUEST)
+    elif not Course.objects.filter(id=course_id).exists():
+        return Response("Request's course does not exist", status.HTTP_400_BAD_REQUEST)
 
-    if Course.objects.filter(have_voted=current_user, id=data["course"]).exists():
+    if Course.objects.filter(have_voted=current_user, id=course_id).exists():
         return Response("Has already voted!", status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    course = Course.objects.get(id=course_id)
+
     # Check course ID
-    course = self.get_object()
     form = course.form
+    if not form:
+        return Response("Selected course doesn't have any associated form", status.HTTP_400_BAD_REQUEST)
 
-    ratings_data = request.data["ratings"]
-    comments_data = request.data["comments"]
+    ratings_data = request.data.get("ratings")
+    comments_data = request.data.get("comments")
 
-    if ratings_data:
-        question_ids = [question["question"] for question in ratings_data]
-        if Rating.objects.filter(form=form).exclude(pk__in=question_ids, required=True).exists():
-            return Response("Should provide answers for all mandatory fields", status.HTTP_400_BAD_REQUEST)
+    # Check fields are correct
+    ratings_questions, comments_questions = [], []
+    try:
+        if ratings_data:
+            for rating in ratings_data:
+                ratings_questions.append(rating["question"])
+                rating["course"] = course_id
+        if comments_data:
+            for comment in comments_data:
+                comments_questions.append(comment["question"])
+                comment["course"] = course_id
+    except KeyError:
+        return Response("Missing fields for rating/comment", status.HTTP_400_BAD_REQUEST)
 
-        ratings_serializer = QuestionSerializer(ratings_data, many=True)
-        if not ratings_serializer.is_valid():
-            return Response(ratings_serializer.errors, status.HTTP_400_BAD_REQUEST)
+    if Question.objects.filter(form=form)\
+        .exclude(pk__in=ratings_questions+comments_questions) \
+        .exclude(required=False)\
+        .exists():
+        return Response("Missing required rating/comment", status.HTTP_400_BAD_REQUEST)
 
-    if comments_data:
-        question_ids = [comment["question"] for comment in comments_data]
-        if Comment.objects.filter(form=form).exclude(pk__in=question_ids, required=True).exists():
-            return Response("Should provide answers for all mandatory fields", status.HTTP_400_BAD_REQUEST)
+    if Question.objects.filter(form=form)\
+        .filter(pk__in=ratings_questions+comments_questions, archived=True)\
+        .exists():
+        return Response("Cannot submit archived questions", status.HTTP_400_BAD_REQUEST)
 
-        comments_serializer = CommentSerializer(comments_data, many=True)
-        if not comments_serializer.is_valid():
-            return Response(comments_serializer.errors, status.HTTP_400_BAD_REQUEST)
+    ratings_serializer = RatingSerializer(data=ratings_data, many=True)
+    if not ratings_serializer.is_valid():
+        return Response(ratings_serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+    comments_serializer = CommentSerializer(data=comments_data, many=True)
+    if not comments_serializer.is_valid():
+        return Response(comments_serializer.errors, status.HTTP_400_BAD_REQUEST)
+    
+    course.have_voted.add(current_user)
+    course.save()
 
     comments_serializer.save()
     ratings_serializer.save()
 
-    return Response(status.HTTP_201_CREATED)
+    return Response(f"User {current_user.id} has voted", status.HTTP_201_CREATED)

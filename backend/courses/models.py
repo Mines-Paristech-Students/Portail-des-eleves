@@ -129,6 +129,8 @@ class Question(models.Model):
 class Rating(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
 
+    date = models.DateTimeField(auto_now_add=True)
+
     value = models.SmallIntegerField(choices=NUMERIC_SCALE)
 
     question = models.ForeignKey(
@@ -143,9 +145,14 @@ class Rating(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        ordering = ["-date"]
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
+
+    date = models.DateTimeField(auto_now_add=True)
 
     content = models.CharField(max_length=64)
 
@@ -160,3 +167,6 @@ class Comment(models.Model):
         related_name="comment",
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        ordering = ["-date"]
