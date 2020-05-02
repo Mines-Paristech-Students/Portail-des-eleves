@@ -2,23 +2,33 @@ import { User } from "../user";
 import {Association} from "./association";
 
 export interface Choice {
+    id: number;
+    name: string;
+    election: Election | number;
+}
+
+export interface Result {
     id: string;
-    election: Election;
+    result: string;
+    numberOfVoters:string;
+    numberOfRegistered:string;
 }
 
 export interface Ballot {
-    id: string;
+    id?: string;
     election: Election;
-    choices: Choice[];
+    choices: Choice[] | number[];
 }
 
 export interface Election {
-    id: string;
+    id?: string;
     association: Association;
     name: string;
-    choices: Choice[];
-    registeredVoters: User[];
+    choices: Choice[] | Object[];
+    registeredVoters: User[] | string[];
     startsAt: Date;
     endsAt: Date;
     maxChoicesPerBallot: number;
+    hasVoted?: boolean
+    isRegistered?: boolean
 }

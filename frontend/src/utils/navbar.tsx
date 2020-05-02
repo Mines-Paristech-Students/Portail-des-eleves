@@ -16,9 +16,8 @@ import { authService } from "../App";
 
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
-    { icon: "zap", url: "/associations", label: "Associations" },
-    { icon: "book", url: "/courses", label: "cours" },
-    ];
+    { icon: "zap", url: "/associations", label: "Associations" }
+];
 
 const linksComponent = links.map(({ icon, url, label }) => {
     let className = "";
@@ -35,7 +34,7 @@ const linksComponent = links.map(({ icon, url, label }) => {
     );
 });
 
-function Navbar() {
+export const Navbar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
     const toggle = () => setIsOpen(!isOpen);

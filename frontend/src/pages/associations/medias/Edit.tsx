@@ -8,16 +8,16 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { PageTitle } from "../../../utils/common";
 import { Tag } from "../../../utils/Tag";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { api } from "../../../services/apiService";
-import { useQuery } from "react-query";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 
 export const AssociationFilesystemEdit = ({ association }) => {
-    const { fileId } = useParams();
-    const { data: media, isLoading, error } = useQuery<Media, any>(
-        ["media.get", { fileId }],
-        api.medias.get
+    const { fileId } = useParams<{fileId: string}>();
+    const { data: media, status, error } = useBetterQuery<Media>(
+        "media.get",
+        api.medias.get,
+        fileId
     );
 
     const history = useHistory();
@@ -34,7 +34,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
 
     const deleteFile = media => {
         if (!window.confirm("Supprimer le fichier ?")) {
-            return ;
+            return;
         }
 
         api.medias
@@ -54,9 +54,9 @@ export const AssociationFilesystemEdit = ({ association }) => {
             });
     };
 
-    if (isLoading) return <LoadingAssociation/>;
-    if (error) return `Something went wrong: ${error.message}`;
-    if (media) {
+    if (status === "loading") return <LoadingAssociation />;
+    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (media) {
         return (
             <Formik
                 initialValues={media}
