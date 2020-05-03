@@ -29,11 +29,6 @@ class FormSerializer(serializers.ModelSerializer):
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    """
-    TODO : 
-    Validator for rating -> Check field type based on the question
-    """
-
     class Meta:
         model = Rating
         fields = ("id", "course", "question", "value", "date")
@@ -46,11 +41,6 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    """
-    TODO : 
-    Validator for rating -> Check field type based on the question
-    """
-
     class Meta:
         model = Comment
         fields = ("id", "course", "question", "content")
