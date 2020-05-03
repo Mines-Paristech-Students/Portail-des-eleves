@@ -27,7 +27,6 @@ wheels/
 *.egg
 MANIFEST
 Pipfile.lock
-package-lock.json
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -117,7 +116,6 @@ venv.bak/
 backend/api/migrations
 backend/associations/migrations
 backend/authentication/migrations
-backend/chat/migrations
 backend/polls/migrations
 backend/repartitions/migrations
 backend/subscriptions/migrations
