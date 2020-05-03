@@ -3,9 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { PageTitle } from "../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
-import { Tag } from "../../utils/Tag";
+import { Tag } from "../../utils/tags/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
+import { Models, TagList } from "../../utils/tags/TagList";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -54,13 +55,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     {media.name}
                 </PageTitle>
 
-                {media.tags.map(tag => (
-                    <Tag
-                        key={tag.id}
-                        addon={tag.value}
-                        tag={tag.namespace.name}
-                    />
-                ))}
+                <TagList model={Models.Media} id={media.id}/>
 
                 {preview}
 

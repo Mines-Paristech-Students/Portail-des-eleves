@@ -19,15 +19,9 @@ import { marketplace } from "./api/marketplace";
 import { products } from "./api/products";
 import { polls } from "./api/polls";
 import { associations } from "./api/associations";
+import { tags } from "./api/tags";
 
 const baseApi = "http://localhost:8000/api/v1";
-
-export type PaginatedResponse<T> = {
-    count: number;
-    next: string;
-    previous: string;
-    results: T;
-};
 
 export const apiService = applyConverters(
     Axios.create({
@@ -42,6 +36,20 @@ export function unwrap<T>(promise): Promise<T> {
     });
 }
 
+export function toUrlParams(obj: object): string {
+    let params = "?";
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (params.length != 1) {
+                params += "&";
+            }
+            params += `${key}=${obj[key]}`;
+        }
+    }
+
+    return params
+}
+
 export const api = {
     associations: associations,
     pages: pages,
@@ -52,6 +60,8 @@ export const api = {
     transactions: transactions,
 
     polls: polls,
+
+    tags: tags,
 };
 
 /**
@@ -75,6 +85,16 @@ export function useBetterQuery<T>(
     );
 }
 
+export type PaginatedResponse<T> = {
+    count: number;
+    next: string;
+    previous: string;
+    results: T;
+};
+
+/**
+ * Same as useBetterQuery but deals with  paginated responses
+ */
 export function useBetterPaginatedQuery(
     key: string,
     fetchFunction: any,

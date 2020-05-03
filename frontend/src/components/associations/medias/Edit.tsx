@@ -6,7 +6,7 @@ import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
-import { Tag } from "../../utils/Tag";
+import { Tag } from "../../utils/tags/Tag";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";

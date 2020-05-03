@@ -28,12 +28,11 @@ import { Pagination as BoostrapPagination } from "react-bootstrap";
 export const Pagination = ({ render, apiKey, apiMethod, apiParams }) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
-    const { resolvedData: data, status, error } = useBetterPaginatedQuery(
-        apiKey,
-        apiMethod,
-        ...apiParams,
-        page
-    );
+    const {
+        resolvedData: data,
+        status,
+        error,
+    } = useBetterPaginatedQuery(apiKey, apiMethod, [...apiParams, page]);
 
     useEffect(() => {
         if (data && data.totalPages) {
@@ -91,7 +90,7 @@ const PaginationControl = ({ page, maxPage, setPage }) => {
             {Array.from(
                 { length: maxProposedPage - minProposedPage },
                 (_, index) => index + minProposedPage
-            ).map(i => (
+            ).map((i) => (
                 <BoostrapPagination.Item
                     onClick={() => setPage(i)}
                     key={i}

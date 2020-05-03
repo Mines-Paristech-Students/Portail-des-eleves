@@ -5,10 +5,11 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
-import { Tag } from "../../utils/Tag";
+import { Tag } from "../../utils/tags/Tag";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 import { Pagination } from "../../utils/Pagination";
+import { Models, TagList } from "../../utils/tags/TagList";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -52,13 +53,12 @@ export const AssociationFilesystemList = ({ association }) => {
                                             <p className="text-muted">
                                                 {media.description}
                                             </p>
-                                            {media.tags.map(tag => (
-                                                <Tag
-                                                    key={tag.id}
-                                                    tooltip={tag.namespace.name}
-                                                    tag={tag.value}
-                                                />
-                                            ))}
+
+                                            <TagList
+                                                model={Models.Media}
+                                                id={media.id}
+                                                collapsed={true}
+                                            />
                                         </Card.Body>
                                     </Card>
                                 </Col>

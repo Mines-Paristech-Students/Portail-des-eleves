@@ -10,7 +10,7 @@ const types = [
     "orange",
     "yellow",
     "lime",
-    "teal"
+    "teal",
 ];
 
 function hashCode(s) {
@@ -20,10 +20,31 @@ function hashCode(s) {
     return Math.abs(h);
 }
 
-export const Tag = ({ type = "", tag = "", addon = "", tooltip = "" }) => {
+/**
+ * @param type the boostrap style of the tag
+ * @param tag the main value of the tag
+ * @param addon additional information, displayed on the right
+ * @param tooltip on hoover information
+ * @param collapsed true if we want the tag to take less space. In that case,
+ * the tag goes in the tooltip.
+ */
+export const Tag = ({
+    type = "",
+    tag = "",
+    addon = "",
+    tooltip = "",
+    collapsed = false,
+}) => {
     if (type === "") {
         type = types[hashCode(tag) % types.length];
     }
+
+    if (collapsed) {
+        tooltip = tag;
+        tag = addon;
+        addon = "";
+    }
+
     let className = "mb-2 mr-2 tag tag-" + type;
     let tagElement = (
         <div className={className}>
