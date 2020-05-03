@@ -55,18 +55,10 @@ class TagViewSet(
     permission_classes = (ManageTagPermission,)
     queryset = Tag.objects.all()
 
-    def get_queryset(self):
-        queryset = self.queryset
-
-        scope_model = self.request.query_params.get("scoped_to_model", None)
-        scope_id = self.request.query_params.get("scope_id", None)
-
-        if scope_model is not None and scope_id is not None:
-            queryset = queryset.filter(
-                namespace__scoped_to_model=scope_model, namespace__scoped_to_pk=scope_id
-            )
-
-        return queryset
+    filterset_fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
+        "namespace__scoped_to_model",
+        "namespace__scoped_to_pk",
+    )
 
     def create(self, request, *args, **kwargs):
         if "namespace" in request.data and "value" in request.data:
