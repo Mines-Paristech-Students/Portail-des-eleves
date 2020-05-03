@@ -1,9 +1,5 @@
-import datetime
-
-from django.db.models import Count, Q
-
-from associations.models import Election, Event, Library, Marketplace, Page
-from associations.views.marketplace import compute_balance, BalanceView
+from associations.models import Marketplace
+from associations.views.marketplace import compute_balance
 from authentication.views.birthdays import birthdays_to_json
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
@@ -129,23 +125,25 @@ class WidgetsTestCase(BaseWidgetsTestCase):
         for user in ALL_USERS:
             self.login(user)
             res = self.list_widgets()
-            self.assertEqual(
-                res.data,
-                {
-                    "main": self.endpoint_timeline(),
-                    "mandatory": [
-                        self.endpoint_balance(),
-                        self.endpoint_birthday(),
-                        self.endpoint_poll(),
-                        self.endpoint_repartition(),
-                        self.endpoint_vote(),
-                    ],
-                    "optional": [
-                        self.endpoint_library_bd_tek(),
-                        self.endpoint_marketplace_pdm(),
-                    ],
-                },
-            )
+            self.assertStatusCode(res, 200)
+
+            self.assertSetEqual({"widgets"}, set(res.data.keys()))
+            self.assertEqual(len(res.data["widgets"]), 10)
+
+            for widget in res.data["widgets"]:
+                self.assertSetEqual({"type", "mandatory", "url"}, set(widget.keys()))
+
+                if widget["type"] in (
+                    "timeline",
+                    "birthday",
+                    "poll",
+                    "vote",
+                    "repartition",
+                    "balance",
+                ):
+                    self.assertTrue(widget["mandatory"], msg=widget)
+                else:
+                    self.assertFalse(widget["mandatory"], msg=widget)
 
     def test_balance_widget(self):
         for user in ALL_USERS:
