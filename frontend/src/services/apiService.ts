@@ -9,8 +9,16 @@ import {
     PaginatedQueryResult,
     QueryResult,
     usePaginatedQuery,
-    useQuery
+    useQuery,
 } from "react-query";
+import { pages } from "./api/pages";
+import { news } from "./api/news";
+import { medias } from "./api/medias";
+import { transactions } from "./api/transactions";
+import { marketplace } from "./api/marketplace";
+import { products } from "./api/products";
+import { polls } from "./api/polls";
+import { associations } from "./api/associations";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -24,185 +32,26 @@ export type PaginatedResponse<T> = {
 export const apiService = applyConverters(
     Axios.create({
         withCredentials: true,
-        baseURL: baseApi
+        baseURL: baseApi,
     })
 );
 
-function unwrap<T>(promise): Promise<T> {
+export function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
 }
 
 export const api = {
-    pages: {
-        list: associationId =>
-            unwrap<PaginatedResponse<Page[]>>(
-                apiService.get(
-                    `/associations/pages/?association=${associationId}&page_type=STATIC`
-                )
-            ),
-        get: pageId =>
-            unwrap<Page>(apiService.get(`/associations/pages/${pageId}`)),
-        save: page => {
-            if (!page.id) {
-                return unwrap<Page>(
-                    apiService.post(`/associations/pages/`, page)
-                );
-            }
+    associations: associations,
+    pages: pages,
+    news: news,
+    medias: medias,
+    marketplace: marketplace,
+    products: products,
+    transactions: transactions,
 
-            return unwrap<Page>(
-                apiService.patch(`/associations/pages/${page.id}/`, page)
-            );
-        },
-        delete: page => {
-            return unwrap<Page>(
-                apiService.delete(`/associations/pages/${page.id}/`)
-            );
-        }
-    },
-    news: {
-        list: associationId =>
-            unwrap<PaginatedResponse<Page[]>>(
-                apiService.get(
-                    `/associations/pages/?association=${associationId}&page_type=NEWS`
-                )
-            ),
-        get: newsId =>
-            unwrap<Page>(apiService.get(`/associations/pages/${newsId}`))
-    },
-    associations: {
-        list: () =>
-            unwrap<PaginatedResponse<Association[]>>(
-                apiService.get(`/associations/associations/`)
-            ),
-        get: associationId =>
-            unwrap<Association>(
-                apiService.get(`/associations/associations/${associationId}`)
-            )
-    },
-    medias: {
-        list: associationId =>
-            unwrap<PaginatedResponse<Media[]>>(
-                apiService.get(
-                    `/associations/media/?association=${associationId}`
-                )
-            ),
-        get: fileId =>
-            unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
-        patch: file => {
-            return unwrap<Media>(
-                apiService.patch(`/associations/media/${file.id}/`, file, {
-                    headers: { "Content-Type": "multipart/form-data" }
-                })
-            );
-        },
-        upload: (file, association, onUploadProgress) => {
-            let formData = new FormData();
-            formData.append("name", file.name);
-            formData.append("file", file);
-            formData.append("association", association.id);
-
-            // We don't unwrap here because be need to access all of the axios
-            // object in the render logic to display progress
-            return apiService.post(`/associations/media/`, formData, {
-                onUploadProgress: onUploadProgress
-            });
-        },
-        delete: file => {
-            return apiService.delete(`/associations/media/${file.id}`, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
-        }
-    },
-
-    marketplace: {
-        get: marketplaceId =>
-            unwrap<Marketplace>(
-                apiService.get(`/associations/marketplace/${marketplaceId}`)
-            )
-    },
-
-    products: {
-        list: (associationId, page = 1) =>
-            unwrap<PaginatedResponse<Page[]>>(
-                apiService.get(
-                    `/associations/products/?association=${associationId}&page=${page}`
-                )
-            )
-    },
-
-    transactions: {
-        create: (product, quantity, buyer) =>
-            apiService.post("/associations/transactions/", {
-                product: product.id,
-                quantity: quantity,
-                buyer: buyer.id
-            }),
-
-        list: (marketplaceId, user) =>
-            unwrap<Transaction[]>(
-                apiService.get(
-                    `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
-                )
-            )
-    },
-
-    polls: {
-        list: () =>
-            unwrap<Poll[]>(
-                apiService
-                    .get<Poll[]>("/polls/")
-                    .then((response: AxiosResponse<Poll[]>) => {
-                        // Parse the date (because it's not a datetime).
-                        response.data.forEach(
-                            poll =>
-                                (poll.publicationDate = poll.publicationDate
-                                    ? new Date(poll.publicationDate)
-                                    : undefined)
-                        );
-
-                        return response;
-                    })
-            ),
-        get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
-        create: (data: {
-            question: string;
-            choice0: string;
-            choice1: string;
-        }) =>
-            apiService.post("/polls/", {
-                question: data.question,
-                choices: [{ text: data.choice0 }, { text: data.choice1 }]
-            }),
-        update: (
-            pollId,
-            data: {
-                publicationDate?: string | Date;
-                state?: "REVIEWING" | "REJECTED" | "ACCEPTED";
-                admin_comment?: String;
-                question?: String;
-                choices?: { text: string }[];
-            }
-        ) => {
-            // Format the date.
-            if (
-                data.publicationDate &&
-                typeof data.publicationDate !== "string"
-            ) {
-                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
-                    1}-${data.publicationDate.getDate()}`;
-            }
-
-            return apiService.patch(`/polls/${pollId}/`, data);
-        },
-        delete: pollId => apiService.delete(`/polls/${pollId}/`),
-        vote: (user, pollId, choiceId) =>
-            apiService.post(`/polls/${pollId}/vote/`, {
-                user: user.id,
-                choice: choiceId
-            })
-    }
+    polls: polls,
 };
 
 /**
@@ -229,12 +78,14 @@ export function useBetterQuery<T>(
 export function useBetterPaginatedQuery(
     key: string,
     fetchFunction: any,
-    ...params: any[]
+    params?: any[],
+    useQueryConfig?: object
 ): PaginatedQueryResult<any> {
     return usePaginatedQuery<any, [string, any]>(
         [key, params],
         (_, ...rest) => {
             return fetchFunction(...rest[0]);
-        }
+        },
+        useQueryConfig
     );
 }
