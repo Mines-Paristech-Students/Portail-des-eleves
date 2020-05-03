@@ -25,7 +25,7 @@ class FormSerializer(serializers.ModelSerializer):
     class Meta:
         model = Form
         read_only_fields = ('id', 'date')
-        fields = read_only_fields + ('name', 'questions')
+        fields = read_only_fields + ('name', )
 
 
 class RatingSerializer(serializers.ModelSerializer):
