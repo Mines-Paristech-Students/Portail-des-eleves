@@ -12,9 +12,9 @@ export const routes = [
         component: AssociationMain,
         exact: false
     },
-    { path: "/courses", component: CourseList, exact: true },
+    { path: "/cours", component: CourseList, exact: true },
     {
-        path: "/courses/:courseId",
+        path: "/cours/:courseId",
         component: CourseMain,
         exact: false
     },

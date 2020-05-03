@@ -23,7 +23,7 @@ export const CourseList = () => {
                 <Row>
                     {courses.map(course => (
                         <Card key={course.id} className={"col-md-3 m-4"}>
-                            <Link to={`/courses/${course.id}/`}>
+                            <Link to={`/cours/${course.id}/`}>
                                 <Card.Body>
                                     <Card.Title>{course.name}</Card.Title>
                                 </Card.Body>
