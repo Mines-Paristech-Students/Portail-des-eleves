@@ -177,26 +177,17 @@ class WidgetsTestCase(BaseWidgetsTestCase):
         self.assertStatusCode(res, 200)
 
         self.assertTrue("suggested_loanables" in res.data)
+        self.assertEqual(len(res.data), 1)
         self.assertEqual(len(res.data["suggested_loanables"]), 2)
 
     def test_marketplace_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.marketplace_widget("pdm")
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                res.data,
-                {
-                    "balance": BalanceView.get_balance_in_json("pdm", user),
-                    "suggested_products": Marketplace.objects.get(pk="pdm")
-                    .products.annotate(
-                        number_of_purchases=Count("transaction", filter=Q(buyer=user))
-                    )
-                    .order_by("-number_of_purchases")
-                    .exclude(number_left=0)[0:5]
-                    .all(),
-                },
-            )
+        self.login("17simple")
+        res = self.marketplace_widget("pdm")
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("suggested_products" in res.data and "balance" in res.data)
+        self.assertEqual(len(res.data), 2)
+        self.assertEqual(len(res.data["suggested_products"]), 2)
 
     def test_poll_widget(self):
         for user in ALL_USERS:
@@ -213,28 +204,20 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.assertEqual(res.data, {})  # TODO once repartition widget is written.
 
     def test_timeline_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.timeline_widget()
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                len(res.data),
-                Event.objects.filter(
-                    ends_at__lt=datetime.datetime.now(),
-                    starts_at__gt=datetime.datetime.now(),
-                    participants__in=user,
-                )
-                .order_by("-starts_at")
-                .count()
-                + Page.objects.order_by("-last_update_date")[0:10].count(),
-            )
+        self.login("17simple")
+        res = self.timeline_widget()
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("events" in res.data and "pages" in res.data)
+        self.assertEqual(len(res.data), 2)
+        self.assertEqual(len(res.data["events"]), 2)
+        self.assertEqual(len(res.data["pages"]), 3)
 
     def test_vote_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.vote_widget()
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                len(res.data),
-                Election.objects.filter(registered_voters__id=user).count(),
-            )
+        self.login("17simple")
+        res = self.vote_widget()
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("elections" in res.data)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(len(res.data["elections"]), 1)

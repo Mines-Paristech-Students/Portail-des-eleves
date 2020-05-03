@@ -9,7 +9,7 @@ from associations.serializers import LoanableShortSerializer
 @api_view(["GET"])
 def widget_library_view(request, library_id):
     """
-        Display the most borrowed loanables of the library if they are available.
+        Display the five most borrowed loanables of the library if they are available.
 
         :return: A JSON object with one key, `suggested_loanables`, which is a list of serialized `Loanable` objects.
     """

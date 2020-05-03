@@ -7,9 +7,20 @@ from polls.views import PollViewSet
 
 @api_view(["GET"])
 def widget_poll_view(request):
-    todays_poll = Poll.objects.filter(Poll.is_active)
+    """
+        Display the active polls.
 
-    if Vote.objects.filter(poll=todays_poll, user=request.user).exists():
-        return Response(PollViewSet.as_view({"get": "results"})(request).content)
-    else:
-        return Response(PollViewSet.as_view({"get": "retrieve"})(request).content)
+        :return: A JSON object with one key, `active_polls`, containing a list of serialized `Poll` objects.
+    """
+
+    return Response(
+        {
+            "active_polls": [
+                PollViewSet.as_view({"get": "results"})(request).content
+                if Vote.objects.filter(poll=poll, user=request.user).exists()
+                else PollViewSet.as_view({"get": "retrieve"})(request).content
+            ]
+            for poll in Poll.objects.all()
+            if poll.is_active
+        }
+    )
