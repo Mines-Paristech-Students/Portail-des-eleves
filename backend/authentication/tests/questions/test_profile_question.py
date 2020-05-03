@@ -71,7 +71,7 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
 
             self.assertSetEqual(
                 set(q.id for q in ProfileQuestion.objects.all()),
-                set(q["id"] for q in res.data),
+                set(q["id"] for q in res.data["results"]),
             )
 
     ##########

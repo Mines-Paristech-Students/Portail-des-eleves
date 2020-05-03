@@ -16,25 +16,23 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         self.assertEqual(res.status_code, 201)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(res.data), 2)  # we created the campaign
+        self.assertEqual(len(res.data["results"]), 2)  # we created the campaign
 
         res = self.delete("/repartitions/campaigns/2/")
         self.assertEqual(res.status_code, 204)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(res.data), 1)  # we created the campaign
+        self.assertEqual(len(res.data["results"]), 1)  # we deleted the campaign
 
-        # For a non admin
-
-        res = self.post(
-            "/repartitions/campaigns/", {"name": "MIGs groups"}
-        )  # recreate a new campaign
+        # Create a new campaign
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"})
         self.assertEqual(res.status_code, 201)
 
+        # For a non admin
         self.login("15menou")
         res = self.get("/repartitions/campaigns/")
         self.assertEqual(
-            len(res.data), 1
+            len(res.data["results"]), 1, msg=res.data
         )  # this user is not linked to the new campaign
 
         res = self.post("/repartitions/campaigns/", {"name": "MIGs groups 2"})
@@ -68,7 +66,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -100,7 +98,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -138,7 +136,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was removed
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -167,7 +165,8 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data, [{"user": "17bocquet"}, {"user": "15menou"}, {"user": "18chlieh"}]
+            res.data["results"],
+            [{"user": "17bocquet"}, {"user": "15menou"}, {"user": "18chlieh"}],
         )
 
         res = self.post(
@@ -188,7 +187,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -217,7 +216,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
