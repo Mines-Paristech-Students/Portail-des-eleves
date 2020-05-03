@@ -8,6 +8,8 @@ import { QueryResult, useQuery } from "react-query";
 import { Ballot, Election, Result } from "../models/associations/election";
 import { User } from "../models/user";
 import { Course } from "../models/courses/course"
+import { Form } from "../models/courses/form"
+
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -193,6 +195,14 @@ export const api = {
                     `/courses/courses/${courseId}`
                 )
             ),
+        forms: {
+            list: () => 
+                unwrap<Form[]>(
+                    apiService.get(
+                        `courses/forms`
+                    )
+                )
+        },
     },
 };
 

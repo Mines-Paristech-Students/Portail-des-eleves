@@ -18,7 +18,7 @@ export const CourseSidebar = ({ course }) => {
 
                 {/* {user?.isAdmin && */}
                 {true &&
-                    <FormSidebar />
+                    <FormSidebar course={course} />
                 }
 
                 <EvaluationSidebar />
@@ -52,15 +52,21 @@ const EvaluationSidebar = () => {
     )
 }
 
-const FormSidebar = () => {
+const FormSidebar = ({ course }) => {
     return (
         <SidebarCategory title={"Formulaires"}>
+            <SidebarItem
+                icon={"file-plus"}
+                to={`/cours/${course.id}/formulaires/nouveau`}
+            >
+                Creer un formulaire
+            </SidebarItem>
             <SidebarItem
                 icon={"file-plus"}
                 to={"/cours/formulaires"}
             >
                 Modifier un formulaire
-                    </SidebarItem>
+            </SidebarItem>
             <SidebarItem
                 icon={"plus-circle"}
                 to={"edit-3"}
