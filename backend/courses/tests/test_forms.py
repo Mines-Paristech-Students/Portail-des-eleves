@@ -81,11 +81,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     create_form_data = {
         "id": 2,
         "name": "maths generic",
-        "questions": [{
-            "label": "2+2?",
-            "required": True,
-            "category": 'R',
-        }],
     }
 
     def test_if_not_global_admin_then_cannot_create(self):
@@ -109,15 +104,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         form = Form.objects.get(pk=self.create_form_data["id"])
         self.assertEqual(form.name, self.create_form_data["name"])
 
-        question_data = self.create_form_data["questions"][0]
-        self.assertTrue(
-            Question.objects.filter(form__pk=self.create_form_data["id"]).exists()
-        )
-        question = Question.objects.filter(form__pk=self.create_form_data["id"])[0]
-        self.assertEqual(question.label, question_data["label"])
-        self.assertEqual(question.required, question_data["required"])
-        self.assertEqual(question.archived, False)
-
     ##########
     # UPDATE #
     ##########  
@@ -126,15 +112,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         "id": 1,
         "date": '2020-04-20T22:10:57.577Z',
         "name": "maths 2",
-        "questions": [
-            {
-                "id": 1,
-                "label": "changed",
-                "required": False,
-                "archived": True,
-                "category": 'C',
-            },
-        ]
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
@@ -144,7 +121,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertTrue(Form.objects.filter(pk="1").exists())
 
     # This function shouldn't change the questions 
-    def test_if_global_admin_then_can_update_only_form(self):
+    def test_if_global_admin_then_can_update(self):
         self.login("17admin")
         res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 200)
@@ -155,16 +132,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         form = Form.objects.get(pk=1)
         self.assertEqual(form.name, self.update_form_data["name"])
         self.assertNotEqual(form.date, self.update_form_data["date"])
-
-        question_data = self.update_form_data["questions"][0]
-        self.assertTrue(
-            Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"]).exists()
-        )
-        question = Question.objects.filter(pk=question_data["id"], form__pk=self.update_form_data["id"])[0]
-        self.assertNotEqual(question.label, question_data["label"])
-        self.assertNotEqual(question.required, question_data["required"])
-        self.assertNotEqual(question.archived, True)
-        self.assertNotEqual(question.category, 'C')
     
     ###########
     # DESTROY #
