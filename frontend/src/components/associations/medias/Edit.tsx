@@ -6,11 +6,12 @@ import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
-import { Tag } from "../../utils/tags/Tag";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
+import { Models } from "../../utils/tags/TagList";
+import { TagEdition } from "../../utils/tags/TagEdition";
 
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -32,24 +33,24 @@ export const AssociationFilesystemEdit = ({ association }) => {
         );
     }
 
-    const deleteFile = media => {
+    const deleteFile = (media) => {
         if (!window.confirm("Supprimer le fichier ?")) {
             return;
         }
 
         api.medias
             .delete(media)
-            .then(res => {
+            .then((res) => {
                 newToast({
                     message: "Fichier supprimé ",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
                 history.push(`/associations/${association.id}/files/`);
             })
-            .catch(err => {
+            .catch((err) => {
                 newToast({
                     message: err.statusCode + " " + err.message,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             });
     };
@@ -65,26 +66,26 @@ export const AssociationFilesystemEdit = ({ association }) => {
                         .patch({
                             id: values.id,
                             name: values.name,
-                            description: values.description
+                            description: values.description,
                         })
-                        .then(res => {
+                        .then((res) => {
                             newToast({
                                 message: "Sauvegardé : " + res.name,
-                                level: ToastLevel.Success
+                                level: ToastLevel.Success,
                             });
                             history.push(
                                 `/associations/${association.id}/files/${media.id}/`
                             );
                         })
-                        .catch(err =>
+                        .catch((err) =>
                             newToast({
                                 message: err.statusCode + " " + err.message,
-                                level: ToastLevel.Error
+                                level: ToastLevel.Error,
                             })
                         );
                 }}
             >
-                {formik => (
+                {(formik) => (
                     <Form onSubmit={formik.handleSubmit}>
                         <Button
                             className={"btn-success float-right"}
@@ -112,15 +113,9 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             />
                         </PageTitle>
 
-                        {media.tags.map(tag => (
-                            <Tag
-                                key={tag.id}
-                                addon={tag.value}
-                                tag={tag.namespace.name}
-                            />
-                        ))}
+                        <TagEdition model={Models.Media} id={media.id} />
 
-                        <Card>
+                        <Card className={"mt-3"}>
                             <textarea
                                 id={"description"}
                                 name={"description"}

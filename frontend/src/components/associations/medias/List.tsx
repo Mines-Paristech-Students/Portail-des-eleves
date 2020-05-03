@@ -1,13 +1,10 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
-import { api, useBetterQuery } from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
-import { Tag } from "../../utils/tags/Tag";
-import { LoadingAssociation } from "../Loading";
-import { Media } from "../../../models/associations/media";
 import { Pagination } from "../../utils/Pagination";
 import { Models, TagList } from "../../utils/tags/TagList";
 

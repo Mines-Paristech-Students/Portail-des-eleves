@@ -3,10 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { PageTitle } from "../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
-import { Tag } from "../../utils/tags/Tag";
-import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
 import { Models, TagList } from "../../utils/tags/TagList";
+import Spinner from "react-bootstrap/Spinner";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -16,7 +15,8 @@ export const AssociationFilesystemDetail = ({ association }) => {
         [fileId]
     );
 
-    if (status === "loading") return <LoadingAssociation />;
+    if (status === "loading")
+        return <Spinner animation="border" role="status" />;
     else if (status === "error") return `Something went wrong: ${error}`;
     else if (media) {
         let preview;
@@ -55,7 +55,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     {media.name}
                 </PageTitle>
 
-                <TagList model={Models.Media} id={media.id}/>
+                <TagList model={Models.Media} id={media.id} />
 
                 {preview}
 

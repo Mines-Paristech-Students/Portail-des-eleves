@@ -1,6 +1,7 @@
-import { api, useBetterPaginatedQuery } from "../../../services/apiService";
+import { api, PaginatedResponse, useBetterPaginatedQuery, useBetterQuery } from "../../../services/apiService";
 import React from "react";
-import { Tag } from "./Tag";
+import { Tag as TagComponent } from "./Tag";
+import { Tag } from "../../../models/tag";
 
 export enum Models {
     Association = "association",
@@ -18,31 +19,36 @@ export enum Models {
  * @constructor
  */
 export const TagList = ({ model, id, collapsed = false }) => {
-    const {
-        resolvedData: tags,
-        status,
-        error,
-    } = useBetterPaginatedQuery(`tags.${model}.${id}`, api.tags.list, [
-        model,
-        id,
-    ]);
+    let params: any = {};
+    params[model] = id;
+    const { data: tags, status, error } = useBetterQuery<PaginatedResponse<Tag[]>>(
+        "tags.list",
+        api.tags.list,
+        params
+    );
 
     if (status === "loading")
-        return <p className={"text-center"}>Chargement en cours...</p>;
+        return <p className={"text-center"}>Chargement des tags...</p>;
     else if (status === "error") {
         return (
             <p className={"text-danger"}>
-                Erreur lors du chargement des tags: {error}
+                Erreur lors du chargement des tags: {(error as any).toString()}
             </p>
+        );
+    } else if (tags) {
+        return (
+            <>
+                {tags.results.map((tag) => (
+                    <TagComponent
+                        tag={tag.namespace.name}
+                        addon={tag.value}
+                        key={tag.id}
+                        collapsed={collapsed}
+                    />
+                ))}
+            </>
         );
     }
 
-    return tags.results.map((tag) => (
-        <Tag
-            tag={tag.namespace.name}
-            addon={tag.value}
-            key={tag.id}
-            collapsed={collapsed}
-        />
-    ));
+    return null;
 };

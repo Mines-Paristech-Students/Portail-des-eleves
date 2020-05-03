@@ -1,9 +1,10 @@
+from django.db.models import Q
 from django.http import HttpResponseBadRequest
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import mixins
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
@@ -12,15 +13,14 @@ from tags.permissions import (
     NamespacePermission,
     user_can_link_tag_to,
     ManageTagPermission,
+    get_parent_object,
 )
 from tags.serializers import NamespaceSerializer, TagSerializer
 
 """
-
 To create a namespace : 
 - either be an admin and create a global scope
 - either specify a scope and a scoped_to and have permissions on the scoped_to object
-
 """
 
 
@@ -58,6 +58,7 @@ class TagViewSet(
     filterset_fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
         "namespace__scoped_to_model",
         "namespace__scoped_to_pk",
+        "namespace",
     )
 
     def create(self, request, *args, **kwargs):
@@ -104,8 +105,16 @@ class TagLinkView(APIView):
 
 
 @api_view(["GET"])
-def get_tags_for_scope(request, model, instance_pk):
-    tags = Tag.objects.filter(
-        namespace__scoped_to_model=model, namespace__scoped_to_pk=instance_pk
+def get_namespaces_for_object(request, model, instance_pk):
+    """ Returns the namespaces that the object of type `model` and id `instance_pk` can get tags from """
+
+    instance = Tag.LINKED_TO_MODEL[model].objects.get(pk=instance_pk)
+    parent = get_parent_object(instance)
+
+    namespaces = Namespace.objects.filter(
+        Q(scoped_to_model=parent.__class__.__name__.lower(), scoped_to_pk=parent.id)
+        | Q(scoped_to_model="global")
     ).all()
-    return Response({"tags": TagSerializer(many=True).to_representation(tags)})
+    return Response(
+        {"namespaces": NamespaceSerializer(many=True).to_representation(namespaces)}
+    )

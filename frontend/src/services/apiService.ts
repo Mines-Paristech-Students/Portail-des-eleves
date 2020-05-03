@@ -1,10 +1,6 @@
 import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
-import { Association } from "../models/associations/association";
-import { Page } from "../models/associations/page";
-import { Marketplace, Transaction } from "../models/associations/marketplace";
-import { Media } from "../models/associations/media";
-import { Poll } from "../models/polls";
+
 import {
     PaginatedQueryResult,
     QueryResult,
@@ -20,6 +16,7 @@ import { products } from "./api/products";
 import { polls } from "./api/polls";
 import { associations } from "./api/associations";
 import { tags } from "./api/tags";
+import { namespaces } from "./api/namespaces";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -40,14 +37,14 @@ export function toUrlParams(obj: object): string {
     let params = "?";
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
-            if (params.length != 1) {
+            if (params.length !== 1) {
                 params += "&";
             }
             params += `${key}=${obj[key]}`;
         }
     }
 
-    return params
+    return params;
 }
 
 export const api = {
@@ -62,6 +59,7 @@ export const api = {
     polls: polls,
 
     tags: tags,
+    namespaces: namespaces,
 };
 
 /**
@@ -103,8 +101,8 @@ export function useBetterPaginatedQuery(
 ): PaginatedQueryResult<any> {
     return usePaginatedQuery<any, [string, any]>(
         [key, params],
-        (_, ...rest) => {
-            return fetchFunction(...rest[0]);
+        (_, rest) => {
+            return fetchFunction(...rest);
         },
         useQueryConfig
     );

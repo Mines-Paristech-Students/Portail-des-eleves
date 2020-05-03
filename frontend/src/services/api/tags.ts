@@ -7,11 +7,11 @@ import {
 import { Tag } from "../../models/tag";
 
 export const tags = {
-    list: (model, id, ...params) => {
+    list: (params) => {
+        console.log(params)
         params["page_size"] = 1000;
-        params[model] = id;
         return unwrap<PaginatedResponse<Tag[]>>(
-            apiService.get("/tags/tags" + toUrlParams(params))
+            apiService.get("/tags/tags/" + toUrlParams(params))
         );
     },
 };

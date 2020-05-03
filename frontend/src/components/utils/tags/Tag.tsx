@@ -1,24 +1,7 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-
-const types = [
-    "blue",
-    "azure",
-    "indigo",
-    "purple",
-    "pink",
-    "orange",
-    "yellow",
-    "lime",
-    "teal",
-];
-
-function hashCode(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++)
-        h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
-    return Math.abs(h);
-}
+import { hashCode } from "../../../utils/hashcode";
+import { tablerColors } from "../../../utils/colors";
 
 /**
  * @param type the boostrap style of the tag
@@ -36,7 +19,7 @@ export const Tag = ({
     collapsed = false,
 }) => {
     if (type === "") {
-        type = types[hashCode(tag) % types.length];
+        type = tablerColors[hashCode(tag) % tablerColors.length];
     }
 
     if (collapsed) {
