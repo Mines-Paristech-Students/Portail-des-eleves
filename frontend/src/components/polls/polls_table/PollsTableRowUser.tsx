@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Poll, PollState } from "../../../models/polls";
-import { dateFormatter } from "../../../utils/format";
+import { formatDate } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import { PollEditModal } from "./PollEditModal";
 import { PollStateIcon } from "./PollStateIcon";
@@ -68,7 +68,7 @@ export const PollsTableRowUser = ({
             <td>
                 {poll.state === PollState.Accepted &&
                     poll.publicationDate &&
-                    dateFormatter(poll.publicationDate)}
+                    formatDate(poll.publicationDate)}
             </td>
             <td className="text-center">
                 <PollStateIcon state={poll.state} />

@@ -217,7 +217,7 @@
     email: 19simple@mpt.fr
     birthday: '2000-04-28'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: 'Simplet'
     city_of_origin: Paris
     room: ''
