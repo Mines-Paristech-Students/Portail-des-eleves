@@ -1,7 +1,11 @@
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import (
+    BaseUserManager,
+    AbstractBaseUser,
+    PermissionsMixin,
+)
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
@@ -72,7 +76,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     STUDENT_TYPES = (
         ("AST", "AST"),
         ("ISUPFERE", "ISUPFERE"),
@@ -118,7 +122,7 @@ class User(AbstractBaseUser):
 
     # Life on portail.
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -132,8 +136,8 @@ class User(AbstractBaseUser):
         return self.id
 
     @cached_property
-    def is_staff(self):
-        return self.is_admin
+    def is_admin(self):
+        return self.is_staff
 
     @cached_property
     def is_in_first_year(self):

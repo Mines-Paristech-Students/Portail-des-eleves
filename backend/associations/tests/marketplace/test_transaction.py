@@ -49,7 +49,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([transaction["id"] for transaction in res.data])
+        res_ids = set([transaction["id"] for transaction in res.data["results"]])
         for transaction in transactions:
             self.assertIn(
                 transaction.id,
@@ -64,7 +64,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([transaction["id"] for transaction in res.data])
+        res_ids = set([transaction["id"] for transaction in res.data["results"]])
         expected_ids = set([transaction.id for transaction in transactions])
         self.assertEqual(
             res_ids,

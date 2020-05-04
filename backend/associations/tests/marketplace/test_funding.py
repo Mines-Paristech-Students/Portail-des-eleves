@@ -37,7 +37,9 @@ class FundingTestCase(BaseMarketPlaceTestCase):
 
         res = self.get("/associations/fundings/")
         self.assertStatusCode(res, 200)
-        self.assertSetEqual(set([x["marketplace"] for x in res.data]), marketplaces_id)
+        self.assertSetEqual(
+            set([x["marketplace"] for x in res.data["results"]]), marketplaces_id
+        )
 
     ############
     # RETRIEVE #
