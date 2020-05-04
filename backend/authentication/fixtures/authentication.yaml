@@ -8,7 +8,7 @@
     email: 15veaux@mpt.fr
     birthday: '1996-08-01'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: the fair
     city_of_origin: Panem
     room: REDRUM
@@ -24,7 +24,8 @@
     email: 17bocquet@mpt.fr
     birthday: '1997-01-08'
     is_active: true
-    is_admin: true
+    is_staff: true
+    is_superuser: true
     nickname: the roc
     city_of_origin: Gotham
     room: '1234'
@@ -40,7 +41,7 @@
     email: 16leroy@mpt.fr
     birthday: '1997-10-14'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Ragicarpe
     city_of_origin: Troupommé-la-forêt
     room: 95 rue Guizot E
@@ -56,7 +57,7 @@
     email: 17thomas@mpt.fr
     birthday: '1998-07-13'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: ''
     city_of_origin: ''
     room: ''
@@ -72,7 +73,7 @@
     email: 18leponge@mpt.fr
     birthday: '2000-01-01'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: ''
     city_of_origin: Bikini Bottom
     room: ''
@@ -88,7 +89,7 @@
     email: 18aouir@mpt.fr
     birthday: '1997-10-29'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: ''
     city_of_origin: Bikini Bottom
     room: ''
@@ -104,7 +105,7 @@
     email: 17wan-fat@mpt.fr
     birthday: '1998-06-26'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Le Rocher
     city_of_origin: Le Tampon
     room: '802'
@@ -120,7 +121,7 @@
     email: 18chlieh@mpt.fr
     birthday: '1998-06-10'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: Hulk
     city_of_origin: Rabat
     room: '105'
@@ -136,7 +137,7 @@
     email: 18goessel@mpt.fr
     birthday: '1998-12-22'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Titi
     city_of_origin: Rubelles
     room: '1001'
@@ -152,7 +153,7 @@
     email: 18laude@mpt.fr
     birthday: '1998-08-24'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Alex?
     city_of_origin: Aix
     room: '320'
@@ -168,7 +169,7 @@
     email: 15menou@mpt.fr
     birthday: '1996-04-11'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: Hub
     city_of_origin: Pau
     room: '420'
@@ -184,7 +185,7 @@
     email: 18magne@mpt.fr
     birthday: '1998-04-04'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Tanguy
     city_of_origin: Langogne
     room: '327'
@@ -200,7 +201,7 @@
     email: 14alarro@mpt.fr
     birthday: '1994-05-30'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: ''
     city_of_origin: Paris
     room: ''

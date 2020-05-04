@@ -1,0 +1,7 @@
+.caret-off::before {
+    display: none;
+}
+
+.caret-off::after {
+    display: none;
+}

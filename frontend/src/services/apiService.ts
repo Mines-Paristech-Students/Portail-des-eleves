@@ -4,9 +4,22 @@ import { Association } from "../models/associations/association";
 import { Page } from "../models/associations/page";
 import { Marketplace, Transaction } from "../models/associations/marketplace";
 import { Media } from "../models/associations/media";
-import { QueryResult, useQuery } from "react-query";
+import { Poll } from "../models/polls";
+import {
+    PaginatedQueryResult,
+    QueryResult,
+    usePaginatedQuery,
+    useQuery
+} from "react-query";
 
 const baseApi = "http://localhost:8000/api/v1";
+
+export type PaginatedResponse<T> = {
+    count: number;
+    next: string;
+    previous: string;
+    results: T;
+};
 
 export const apiService = applyConverters(
     Axios.create({
@@ -15,7 +28,7 @@ export const apiService = applyConverters(
     })
 );
 
-function unwrap<T>(promise) {
+function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
     });
@@ -24,7 +37,7 @@ function unwrap<T>(promise) {
 export const api = {
     pages: {
         list: associationId =>
-            unwrap<Page[]>(
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=STATIC`
                 )
@@ -50,7 +63,7 @@ export const api = {
     },
     news: {
         list: associationId =>
-            unwrap<Page[]>(
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
                     `/associations/pages/?association=${associationId}&page_type=NEWS`
                 )
@@ -60,7 +73,7 @@ export const api = {
     },
     associations: {
         list: () =>
-            unwrap<Association[]>(
+            unwrap<PaginatedResponse<Association[]>>(
                 apiService.get(`/associations/associations/`)
             ),
         get: associationId =>
@@ -70,7 +83,7 @@ export const api = {
     },
     medias: {
         list: associationId =>
-            unwrap<Media[]>(
+            unwrap<PaginatedResponse<Media[]>>(
                 apiService.get(
                     `/associations/media/?association=${associationId}`
                 )
@@ -111,10 +124,10 @@ export const api = {
     },
 
     products: {
-        list: associationId =>
-            unwrap<Page[]>(
+        list: (associationId, page = 1) =>
+            unwrap<PaginatedResponse<Page[]>>(
                 apiService.get(
-                    `/associations/products/?association=${associationId}`
+                    `/associations/products/?association=${associationId}&page=${page}`
                 )
             )
     },
@@ -127,19 +140,101 @@ export const api = {
                 buyer: buyer.id
             }),
 
-        get: (marketplaceId, user) =>
+        list: (marketplaceId, user) =>
             unwrap<Transaction[]>(
-                apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
+                apiService.get(
+                    `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
+                )
             )
+    },
+
+    polls: {
+        list: () =>
+            unwrap<Poll[]>(
+                apiService
+                    .get<Poll[]>("/polls/")
+                    .then((response: AxiosResponse<Poll[]>) => {
+                        // Parse the date (because it's not a datetime).
+                        response.data.forEach(
+                            poll =>
+                                (poll.publicationDate = poll.publicationDate
+                                    ? new Date(poll.publicationDate)
+                                    : undefined)
+                        );
+
+                        return response;
+                    })
+            ),
+        get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
+        create: (data: {
+            question: string;
+            choice0: string;
+            choice1: string;
+        }) =>
+            apiService.post("/polls/", {
+                question: data.question,
+                choices: [{ text: data.choice0 }, { text: data.choice1 }]
+            }),
+        update: (
+            pollId,
+            data: {
+                publicationDate?: string | Date;
+                state?: "REVIEWING" | "REJECTED" | "ACCEPTED";
+                admin_comment?: String;
+                question?: String;
+                choices?: { text: string }[];
+            }
+        ) => {
+            // Format the date.
+            if (
+                data.publicationDate &&
+                typeof data.publicationDate !== "string"
+            ) {
+                data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
+                    1}-${data.publicationDate.getDate()}`;
+            }
+
+            return apiService.patch(`/polls/${pollId}/`, data);
+        },
+        delete: pollId => apiService.delete(`/polls/${pollId}/`),
+        vote: (user, pollId, choiceId) =>
+            apiService.post(`/polls/${pollId}/vote/`, {
+                user: user.id,
+                choice: choiceId
+            })
     }
 };
 
+/**
+ * Return the result of `fetchFunction` or a cached result if available.
+ * @param key
+ * @param fetchFunction
+ * @param useQueryConfig the parameters passed to `useQuery`.
+ * @param params the parameters passed to `fetchFunction`.
+ */
 export function useBetterQuery<T>(
     key: string,
     fetchFunction: any,
-    ...params: any[]
+    params?: any[],
+    useQueryConfig?: object
 ): QueryResult<T> {
-    return useQuery<T, string, any>(key, params, (key, ...params) =>
-        fetchFunction(...params)
+    return useQuery<T, string, any>(
+        key,
+        params,
+        (_, ...rest) => fetchFunction(...rest),
+        useQueryConfig
+    );
+}
+
+export function useBetterPaginatedQuery(
+    key: string,
+    fetchFunction: any,
+    ...params: any[]
+): PaginatedQueryResult<any> {
+    return usePaginatedQuery<any, [string, any]>(
+        [key, params],
+        (_, ...rest) => {
+            return fetchFunction(...rest[0]);
+        }
     );
 }
