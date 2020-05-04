@@ -1,15 +1,10 @@
 import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
-import { Association } from "../models/associations/association";
-import { Page } from "../models/associations/page";
-import { Marketplace, Transaction } from "../models/associations/marketplace";
-import { Media } from "../models/associations/media";
-import { Poll } from "../models/polls";
 import {
     PaginatedQueryResult,
     QueryResult,
     usePaginatedQuery,
-    useQuery,
+    useQuery
 } from "react-query";
 import { pages } from "./api/pages";
 import { news } from "./api/news";
@@ -32,10 +27,13 @@ export type PaginatedResponse<T> = {
 export const apiService = applyConverters(
     Axios.create({
         withCredentials: true,
-        baseURL: baseApi,
+        baseURL: baseApi
     })
 );
 
+/**
+ * Add a callback function to the promise, called on success, which returns the `data` of the `AxiosResponse`.
+ */
 export function unwrap<T>(promise): Promise<T> {
     return promise.then((response: AxiosResponse<T>) => {
         return response.data;
@@ -44,48 +42,83 @@ export function unwrap<T>(promise): Promise<T> {
 
 export const api = {
     associations: associations,
-    pages: pages,
-    news: news,
-    medias: medias,
     marketplace: marketplace,
+    medias: medias,
+    news: news,
+    pages: pages,
     products: products,
     transactions: transactions,
 
-    polls: polls,
+    polls: polls
 };
 
 /**
- * Return the result of `fetchFunction` or a cached result if available.
- * @param key
- * @param fetchFunction
- * @param useQueryConfig the parameters passed to `useQuery`.
- * @param params the parameters passed to `fetchFunction`.
+ * The same as [`useQuery`](https://github.com/tannerlinsley/react-query), but remove the first element of `key` before passing it to `fetchFunction`.
+ *
+ * This function should be used for non-mutating queries (such as `GET`). Otherwise, use `useMutation`.
+ *
+ * Example:
+ *
+ * ```
+ * // Somewhere in `components/`.
+ *
+ * const { status, data, error } = useBetterQuery(
+ *     ["polls", 1],
+ *     api.polls.get,
+ *     { refetchOnWindowFocus: false }
+ * )
+ *
+ * if (status === "loading") {
+ *     ...
+ * } else if (status === "error") {
+ *     ...
+ * } else if (status === "success" && data) {
+ *     ...
+ * }
+ *
+ * // Somewhere in `services/api/`.
+ *
+ * api.polls = {
+ *     get: id => apiService.get(...)
+ * }
+ * ```
+ *
+ * @param key The request key. Should be a non-empty array which first element is a string. Because of the behaviour of `useQuery`, if any element of this array is falsy, then `fetchFunction` will never be called.
+ * @param fetchFunction The function to call. It will be given the elements of `key` (except its first) as arguments.
+ * @param config An optional object to configure `useQuery`.
+ * @return an object `{ status, data, error }`.
  */
 export function useBetterQuery<T>(
-    key: string,
-    fetchFunction: any,
-    params?: any[],
-    useQueryConfig?: object
+    key: any[],
+    fetchFunction: (...params: any) => any,
+    config?: any
 ): QueryResult<T> {
-    return useQuery<T, string, any>(
+    return useQuery<T, any, any>(
         key,
-        params,
-        (_, ...rest) => fetchFunction(...rest),
-        useQueryConfig
+        (_, ...params) => fetchFunction(...params),
+        config
     );
 }
 
-export function useBetterPaginatedQuery(
-    key: string,
-    fetchFunction: any,
-    params?: any[],
-    useQueryConfig?: object
-): PaginatedQueryResult<any> {
-    return usePaginatedQuery<any, [string, any]>(
-        [key, params],
-        (_, ...rest) => {
-            return fetchFunction(...rest[0]);
-        },
-        useQueryConfig
+/**
+ * The same as [`usePaginatedQuery`](https://github.com/tannerlinsley/react-query), but remove the first element of `key` before passing it to `fetchFunction`.
+ *
+ * This function should be used for non-mutating queries (such as `GET`). Otherwise, use `useBetterMutation`.
+ * Also, it should not be used directly but in a `Pagination` component.
+ *
+ * @param key The request key. Should be a non-empty array which first element is a string. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `fetchFunction` will never be called.
+ * @param fetchFunction The function to call. It will be given the elements of `key` (except its first) as arguments.
+ * @param config An optional object to configure `usePaginatedQuery`.
+ * @return an object `{ status, data, error }`.
+ */
+export function useBetterPaginatedQuery<T>(
+    key: any[],
+    fetchFunction: (...params: any) => any,
+    config?: any
+): PaginatedQueryResult<T> {
+    return usePaginatedQuery<T, any, any>(
+        key,
+        (_, ...params) => fetchFunction(...params),
+        config
     );
 }

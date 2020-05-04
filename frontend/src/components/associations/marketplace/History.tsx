@@ -12,9 +12,8 @@ export const AssociationMarketplaceHistory = ({ association }) => {
 
     return (
         <Pagination
-            apiKey={"marketplace.transactions.list"}
+            apiKey={["marketplace.transactions.list", marketplaceId, user]}
             apiMethod={api.transactions.list}
-            apiParams={[marketplaceId, user]}
             render={(transactions, paginationControl) => (
                 <Container>
                     <div className={"float-right"}>

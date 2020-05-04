@@ -30,9 +30,8 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
             <Row>
                 <Pagination
-                    apiKey={"associations.list"}
+                    apiKey={["associations.list", marketplaceId]}
                     apiMethod={api.products.list}
-                    apiParams={[marketplaceId]}
                     render={(products, controlbar) => (
                         <>
                             {controlbar}

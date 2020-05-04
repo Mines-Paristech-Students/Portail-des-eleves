@@ -2,16 +2,16 @@ import { Media } from "../../models/associations/media";
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 
 export const medias = {
-    list: (associationId) =>
+    list: associationId =>
         unwrap<PaginatedResponse<Media[]>>(
             apiService.get(`/associations/media/?association=${associationId}`)
         ),
-    get: (fileId) =>
+    get: fileId =>
         unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
-    patch: (file) => {
+    patch: file => {
         return unwrap<Media>(
             apiService.patch(`/associations/media/${file.id}/`, file, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "multipart/form-data" }
             })
         );
     },
@@ -24,12 +24,12 @@ export const medias = {
         // We don't unwrap here because be need to access all of the axios
         // object in the render logic to display progress
         return apiService.post(`/associations/media/`, formData, {
-            onUploadProgress: onUploadProgress,
+            onUploadProgress: onUploadProgress
         });
     },
-    delete: (file) => {
+    delete: file => {
         return apiService.delete(`/associations/media/${file.id}`, {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: { "Content-Type": "multipart/form-data" }
         });
-    },
+    }
 };

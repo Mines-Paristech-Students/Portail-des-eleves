@@ -7,5 +7,5 @@ export const products = {
             apiService.get(
                 `/associations/products/?association=${associationId}&page=${page}`
             )
-        ),
+        )
 };

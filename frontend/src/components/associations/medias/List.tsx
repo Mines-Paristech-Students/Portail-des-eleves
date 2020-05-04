@@ -1,13 +1,11 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
-import { api, useBetterQuery } from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Tag } from "../../utils/Tag";
-import { LoadingAssociation } from "../Loading";
-import { Media } from "../../../models/associations/media";
 import { Pagination } from "../../utils/Pagination";
 
 export const AssociationFilesystemList = ({ association }) => {
@@ -29,9 +27,8 @@ export const AssociationFilesystemList = ({ association }) => {
 
     return (
         <Pagination
-            apiKey={"medias.list"}
+            apiKey={["medias.list", associationId]}
             apiMethod={api.medias.list}
-            apiParams={[associationId]}
             render={(medias, paginationControl) => (
                 <>
                     {addButton}

@@ -10,7 +10,7 @@ import { Page } from "../../models/associations/page";
 export const AssociationSidebar = ({ association }) => {
     const { data: pages, status, error } = useBetterQuery<
         PaginatedResponse<Page[]>
-    >("pages.list", api.pages.list, association.id);
+    >(["pages.list", association.id], api.pages.list);
 
     if (status === "loading") {
         return <p>Chargement...</p>;
