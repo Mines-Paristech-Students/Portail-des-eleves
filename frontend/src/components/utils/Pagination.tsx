@@ -6,33 +6,45 @@ import { Pagination as BoostrapPagination } from "react-bootstrap";
  * Pagination is a component that handles the pagination on the API level + the
  * rendering of the page bar for you.
  *
- * To use it, simply do
+ * To use it, simply do:
+ * ```
  * <Pagination
-        apiKey={"associations.list"}
-        apiMethod={api.associations.list}
-        apiParams={[]}
-        render={(associations, paginationControl) => (
-            <>
-                // your JSX ...
-                {paginationControl} // the pagination control
-            </>
-        )}
-   />
+ *     apiKey={["api.products.list", marketplaceId]}
+ *     apiMethod={api.products.list}
+ *     render={
+ *         (products, paginationControl) => (
+ *         <>
+ *             // your JSX...
+ *             {paginationControl}
+ *         </>
+ *     )}
+ * />
+ * ```
  *
- * @param render a closure that takes the a list of instances and the pagination
- * control bar as parameters
- * @param apiKey same api key as in `useBetterPaginatedQuery`
- * @param apiMethod same method as in `useBetterPaginatedQuery`
- * @param apiParams parameters given to the apiMethod on query.
+ * @param render a closure that takes the fetched data and the pagination
+ * control bar as parameters.
+ * @param apiKey The request key. Should be a non-empty array which first element is a string. The `page` last element required by `usePaginatedQuery` is added by the component and should not be included. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `apiMethod` will never be called.
+ * @param apiMethod The function to call. It will be given the elements of `apiKey` (except its first) as arguments.
+ * @param config An optional object to configure `usePaginatedQuery`.
  */
-export const Pagination = ({ render, apiKey, apiMethod, apiParams }) => {
+export const Pagination = ({
+    render,
+    apiKey,
+    apiMethod,
+    config
+}: {
+    render: any;
+    apiKey: any[];
+    apiMethod: (...params: any) => any;
+    config?: any;
+}) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
-    const { resolvedData: data, status, error } = useBetterPaginatedQuery(
-        apiKey,
+
+    const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
+        [...apiKey, page],
         apiMethod,
-        ...apiParams,
-        page
+        config
     );
 
     useEffect(() => {

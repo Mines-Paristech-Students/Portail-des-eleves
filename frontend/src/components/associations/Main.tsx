@@ -20,9 +20,8 @@ export const AssociationMain = ({ match }) => {
     let { associationId } = useParams<{ associationId: string }>();
 
     const { data: association, error, status } = useBetterQuery<Association>(
-        "association.get",
-        api.associations.get,
-        [associationId]
+        ["association.get", associationId],
+        api.associations.get
     );
 
     // Generate the routes

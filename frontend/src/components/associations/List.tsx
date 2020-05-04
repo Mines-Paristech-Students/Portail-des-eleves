@@ -10,9 +10,8 @@ export const AssociationList = () => (
     <Container>
         <PageTitle>Associations</PageTitle>
         <Pagination
-            apiKey={"associations.list"}
+            apiKey={["associations.list"]}
             apiMethod={api.associations.list}
-            apiParams={[]}
             render={(associations, paginationControl) => (
                 <>
                     {associations.map(association => (
