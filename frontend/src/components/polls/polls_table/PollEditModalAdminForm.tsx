@@ -11,7 +11,7 @@ import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { DatePickerField } from "../../utils/forms/DatePickerField";
-import { dateFormatter } from "../../../utils/format";
+import { formatDate } from "../../../utils/format";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 
@@ -166,7 +166,7 @@ export const PollEditModalAdminForm = ({
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
                                                 {poll.publicationDate &&
-                                                    dateFormatter(
+                                                    formatDate(
                                                         poll.publicationDate
                                                     )}
                                                 .
