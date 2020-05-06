@@ -56,8 +56,6 @@ function Navbar() {
         return <Redirect to={"/login"} />;
     }
 
-    console.log(user);
-
     return user ? (
         <>
             <div className="header p-1">
