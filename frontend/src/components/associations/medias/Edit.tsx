@@ -15,9 +15,8 @@ import { Media } from "../../../models/associations/media";
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
     const { data: media, status, error } = useBetterQuery<Media>(
-        "media.get",
-        api.medias.get,
-        [fileId]
+        ["media.get", fileId],
+        api.medias.get
     );
 
     const history = useHistory();

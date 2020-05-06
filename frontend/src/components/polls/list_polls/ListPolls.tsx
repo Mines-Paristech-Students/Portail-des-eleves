@@ -25,9 +25,8 @@ import { PollNoPolls } from "./PollNoPolls";
  */
 export const ListPolls = ({ current }: { current?: boolean }) => {
     const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
-        "polls.list",
+        ["polls.list"],
         api.polls.list,
-        [],
         { refetchOnWindowFocus: false }
     );
 
