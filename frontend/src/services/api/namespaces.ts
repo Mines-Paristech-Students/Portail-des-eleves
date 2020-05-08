@@ -1,8 +1,16 @@
-import { apiService, unwrap } from "../apiService";
+import {
+    apiService,
+    PaginatedResponse,
+    toUrlParams,
+    unwrap,
+} from "../apiService";
 import { Namespace } from "../../models/tag";
 
 export const namespaces = {
-    list: (model, id) => (
-        unwrap<Namespace[]>(apiService.get(`/tags/namespaces/${model}/${id}/`))
-    )
-}
+    list: (params) => {
+        params["page_size"] = 1000;
+        return unwrap<PaginatedResponse<Namespace[]>>(
+            apiService.get("/tags/namespaces/" + toUrlParams(params))
+        );
+    },
+};
