@@ -31,7 +31,7 @@ export interface User {
     yearOfEntry?: number;
     studentType?: StudentType;
     isActive?: boolean;
-    isAdmin?: boolean;
+    isStaff?: boolean;
     nickname?: string;
     phone?: string;
     room?: string;

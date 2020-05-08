@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext } from "react";
 import { Choice, Poll } from "../../../models/polls";
-import { dateFormatter } from "../../../utils/format";
+import { formatDate } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
@@ -71,7 +71,7 @@ export const PollVotingForm = ({
                 <Card.Subtitle className="poll-date">
                     <em>
                         {poll.publicationDate &&
-                            dateFormatter(poll.publicationDate)}
+                            formatDate(poll.publicationDate)}
                     </em>
                 </Card.Subtitle>
 

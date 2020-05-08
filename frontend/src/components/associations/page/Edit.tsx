@@ -25,9 +25,8 @@ export const AssociationEditPage = ({ association, ...props }) => {
     const { pageId } = useParams<{ pageId: string }>();
 
     const { data: page, status, error } = useBetterQuery<Page>(
-        "page.get",
-        api.pages.get,
-        [pageId]
+        ["page.get", pageId],
+        api.pages.get
     );
 
     if (status === "loading") return "Chargement en cours...";

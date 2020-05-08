@@ -72,19 +72,20 @@ class TestProfileAnswer(WeakAuthenticationBaseTestCase):
             self.assertStatusCode(res, 200)
 
             self.assertListEqual(
-                [q.id for q in ProfileAnswer.objects.all()], [q["id"] for q in res.data]
+                [q.id for q in ProfileAnswer.objects.all()],
+                [q["id"] for q in res.data["results"]],
             )
             self.assertListEqual(
                 [q.text for q in ProfileAnswer.objects.all()],
-                [q["text"] for q in res.data],
+                [q["text"] for q in res.data["results"]],
             )
             self.assertListEqual(
                 [q.question.id for q in ProfileAnswer.objects.all()],
-                [q["question"] for q in res.data],
+                [q["question"] for q in res.data["results"]],
             )
             self.assertListEqual(
                 [q.user.id for q in ProfileAnswer.objects.all()],
-                [q["user"] for q in res.data],
+                [q["user"] for q in res.data["results"]],
             )
 
     ##########

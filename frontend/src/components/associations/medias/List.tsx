@@ -27,9 +27,8 @@ export const AssociationFilesystemList = ({ association }) => {
 
     return (
         <Pagination
-            apiKey={"medias.list"}
+            apiKey={["medias.list", associationId]}
             apiMethod={api.medias.list}
-            apiParams={[associationId]}
             render={(medias, paginationControl) => (
                 <>
                     {addButton}

@@ -9,14 +9,14 @@ import Spinner from "react-bootstrap/Spinner";
 import Select from "react-select";
 
 const TagValueSelector = ({ namespace }) => {
-    const { resolvedData: data, status, error } = useBetterPaginatedQuery(
-        "tags.list",
-        api.tags.list,
+    const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
         [
+            "tags.list",
             {
                 namespace: namespace.id,
             },
-        ]
+        ],
+        api.tags.list
     );
 
     if (status === "loading")
@@ -42,9 +42,8 @@ const TagValueSelector = ({ namespace }) => {
 
 export const TagEdition = ({ model, id }) => {
     const { data, status, error } = useBetterQuery<{ namespaces: Namespace[] }>(
-        "namespaces.list",
-        api.namespaces.list,
-        [model, id]
+        ["namespaces.list", model, id],
+        api.namespaces.list
     );
 
     /*let colorStyle = {

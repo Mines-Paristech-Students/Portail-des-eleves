@@ -17,9 +17,8 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
     const user = useContext(UserContext);
 
     const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
-        "polls.list",
+        ["polls.list"],
         api.polls.list,
-        [],
         { refetchOnWindowFocus: false }
     );
 

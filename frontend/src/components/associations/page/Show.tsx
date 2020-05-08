@@ -8,9 +8,8 @@ import { Page } from "../../../models/associations/page";
 export const AssociationShowPage = ({ association }) => {
     const { pageId } = useParams<{ pageId: string }>();
     const { data, status, error } = useBetterQuery<Page>(
-        "page.get",
-        api.pages.get,
-        [pageId]
+        ["page.get", pageId],
+        api.pages.get
     );
 
     if (status === "loading") return <LoadingAssociation />;

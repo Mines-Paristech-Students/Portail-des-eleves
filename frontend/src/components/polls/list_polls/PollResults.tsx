@@ -1,7 +1,7 @@
 import React from "react";
 import { Poll } from "../../../models/polls";
 import "./list_polls.css";
-import { dateFormatter, pluralFormatter } from "../../../utils/format";
+import { formatDate, decidePlural } from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -33,8 +33,7 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
         <Card.Body>
             <Card.Subtitle className="poll-date">
                 <em>
-                    {poll.publicationDate &&
-                        dateFormatter(poll.publicationDate)}
+                    {poll.publicationDate && formatDate(poll.publicationDate)}
                 </em>
             </Card.Subtitle>
 
@@ -60,7 +59,7 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                                             <small>
                                                 {`${
                                                     choice.numberOfVotes
-                                                } ${pluralFormatter(
+                                                } ${decidePlural(
                                                     choice.numberOfVotes,
                                                     "vote",
                                                     "votes"

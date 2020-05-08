@@ -57,6 +57,13 @@ class TagNamespaceTestCase(TagsBaseTestCase):
 
         res = self.post("/tags/namespaces/", {"scoped_to_pk": "pdm", "name": "test_w"})
         self.assertStatusCode(res, 403)
+        # self.assertStatusCode(res, 400)
+
+        # Try to get global namespace
+        res = self.get("/tags/namespaces/?scoped_to_model=global")
+        self.assertStatusCode(res, 200)
+        self.assertEqual(len(res.data["results"]), 1)
+        self.assertSetEqual({n["name"] for n in res.data["results"]}, {"users"})
 
         #######################################
         # Creation without proper authorization

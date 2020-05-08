@@ -10,9 +10,8 @@ import Spinner from "react-bootstrap/Spinner";
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
     const { data: media, status, error } = useBetterQuery<Media>(
-        "media.get",
-        api.medias.get,
-        [fileId]
+        ["media.get", fileId],
+        api.medias.get
     );
 
     if (status === "loading")

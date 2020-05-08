@@ -50,7 +50,7 @@ class LoanTestCase(BaseLibraryTestCase):
         res = self.get("/associations/loans/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([loan["id"] for loan in res.data])
+        res_ids = set([loan["id"] for loan in res.data["results"]])
         for loan in loans:
             self.assertIn(
                 loan.id, res_ids, msg=f"User {user} cannot list loan {loan.id}."
@@ -63,7 +63,7 @@ class LoanTestCase(BaseLibraryTestCase):
         res = self.get("/associations/loans/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([loan["id"] for loan in res.data])
+        res_ids = set([loan["id"] for loan in res.data["results"]])
         expected_ids = set([loan.id for loan in loans])
         self.assertEqual(
             res_ids,

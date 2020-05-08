@@ -44,6 +44,7 @@ export const polls = {
 
         return apiService.patch(`/polls/${pollId}/`, data);
     },
+
     delete: (pollId) => apiService.delete(`/polls/${pollId}/`),
     vote: (user, pollId, choiceId) =>
         apiService.post(`/polls/${pollId}/vote/`, {

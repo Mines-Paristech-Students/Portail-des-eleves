@@ -22,9 +22,8 @@ export const TagList = ({ model, id, collapsed = false }) => {
     let params: any = {};
     params[model] = id;
     const { data: tags, status, error } = useBetterQuery<PaginatedResponse<Tag[]>>(
-        "tags.list",
+        ["tags.list", params],
         api.tags.list,
-        params
     );
 
     if (status === "loading")
