@@ -15,11 +15,7 @@ export const UserProvider: React.FunctionComponent = ({ children }) => {
 
     if (user != null) {
         return (
-            <>
-                <UserContext.Provider value={user}>
-                    {children}
-                </UserContext.Provider>
-            </>
+            <UserContext.Provider value={user}>{children}</UserContext.Provider>
         );
     }
 
@@ -28,6 +24,7 @@ export const UserProvider: React.FunctionComponent = ({ children }) => {
 
 export class AuthService {
     isAuthenticated = false;
+    isStaff = false;
     user: User | null = null;
 
     checkAuth(): Promise<User | null> {
@@ -36,15 +33,18 @@ export class AuthService {
                 .get<User>("/auth/check")
                 .then((response: AxiosResponse) => {
                     if (response.data.userId) {
-                        this.isAuthenticated = true;
-                        const user: User = {
+                        this.user = {
                             id: response.data.userId,
                             lastName: response.data.lastName,
                             firstName: response.data.firstName,
-                            promotion: response.data.promotion
+                            promotion: response.data.promotion,
+                            isStaff: response.data.isStaff
                         };
-                        this.user = user;
-                        resolve(user);
+
+                        this.isAuthenticated = true;
+                        this.isStaff = !!this.user.isStaff; // Cast to boolean.
+
+                        resolve(this.user);
                     } else {
                         reject("not authenticated");
                     }
@@ -81,6 +81,9 @@ export class AuthService {
 
     signOut() {
         this.isAuthenticated = false;
+        this.isStaff = false;
+        this.user = null;
+
         return apiService.get<User>("/auth/logout");
     }
 }

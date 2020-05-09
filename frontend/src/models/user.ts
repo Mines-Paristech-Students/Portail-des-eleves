@@ -27,12 +27,12 @@ export interface User {
     firstName: string;
     lastName: string;
     promotion: number;
+    isStaff?: boolean;
     birthday?: string;
     email?: string;
     yearOfEntry?: number;
     studentType?: StudentType;
     isActive?: boolean;
-    isStaff?: boolean;
     nickname?: string;
     phone?: string;
     room?: string;

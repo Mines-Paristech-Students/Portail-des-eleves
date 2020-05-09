@@ -26,5 +26,14 @@ export const ErrorPage = props => {
 };
 
 export const PageNotFoundError = props => {
-    return <ErrorPage {...props} errorCode={404} title={"Page not Found"} />;
+    return <ErrorPage {...props} errorCode={404} title={"Page non trouvée"} />;
+};
+
+export const ForbiddenError = props => {
+    return (
+        <ErrorPage {...props} errorCode={403} title={"Page interdite"}>
+            Vous n’avez pas le droit d’accéder à cette page. Si vous pensez que
+            c’est une erreur, merci de contacter les administrateurs.
+        </ErrorPage>
+    );
 };

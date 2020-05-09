@@ -12,12 +12,15 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
 import { UserContext } from "../../../services/authService";
+import { authService } from "../../../App";
+import { ForbiddenError } from "../../utils/ErrorPage";
 
 export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
+    const isAllowed = authService.isStaff || !adminVersion;
     const user = useContext(UserContext);
 
     const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
-        ["polls.list"],
+        isAllowed ? ["polls.list"] : false,
         api.polls.list,
         { refetchOnWindowFocus: false }
     );
@@ -78,14 +81,18 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
         }
     }
 
-    return (
-        <PollsBase>
-            {adminVersion ? (
-                <PageTitle>Administration</PageTitle>
-            ) : (
-                <PageTitle>Mes sondages</PageTitle>
-            )}
-            <Content />
-        </PollsBase>
-    );
+    if (isAllowed) {
+        return (
+            <PollsBase>
+                {adminVersion ? (
+                    <PageTitle>Administration</PageTitle>
+                ) : (
+                    <PageTitle>Mes sondages</PageTitle>
+                )}
+                <Content />
+            </PollsBase>
+        );
+    } else {
+        return <ForbiddenError />;
+    }
 };
