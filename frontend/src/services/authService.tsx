@@ -23,7 +23,7 @@ export const UserProvider: React.FunctionComponent = ({ children }) => {
         );
     }
 
-    return <p>"Loading"</p>;
+    return <p>Loading</p>;
 };
 
 export class AuthService {
@@ -40,7 +40,8 @@ export class AuthService {
                         const user: User = {
                             id: response.data.userId,
                             lastName: response.data.lastName,
-                            firstName: response.data.firstName
+                            firstName: response.data.firstName,
+                            promotion: response.data.promotion
                         };
                         this.user = user;
                         resolve(user);
@@ -61,19 +62,19 @@ export class AuthService {
     getUser(): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             if (this.user != null) {
-                resolve(this.user);
+                return resolve(this.user);
             }
 
             this.checkAuth()
                 .then(user => {
                     if (user == null) {
-                        reject("Not logged in");
+                        return reject("Not logged in");
                     } else {
-                        resolve(user);
+                        return resolve(user);
                     }
                 })
                 .catch(err => {
-                    reject(err);
+                    return reject(err);
                 });
         });
     }

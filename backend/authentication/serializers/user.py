@@ -1,3 +1,5 @@
+from os import read
+
 from rest_framework import serializers
 
 from authentication.models import User
@@ -39,5 +41,5 @@ class UserSerializer(serializers.ModelSerializer):
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name")
         read_only_fields = ("first_name", "last_name")
+        fields = read_only_fields

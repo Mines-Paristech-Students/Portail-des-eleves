@@ -73,5 +73,6 @@ class CredentialsView(views.APIView):
                 "user_id": request.user.id,
                 "first_name": request.user.first_name,
                 "last_name": request.user.last_name,
+                "promotion": request.user.promotion,
             }
         )
