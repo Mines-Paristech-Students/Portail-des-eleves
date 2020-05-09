@@ -1,118 +1,644 @@
+##################
+# ACCEPTED POLLS #
+##################
+
 - model: polls.Poll
   pk: 1
   fields:
-    question: "Ton plat préféré ?"
+    question: "Le déconfinement ce sera le"
     user: "17bocquet"
-    creation_date_time: "2019-06-01T20:00:00+00:00"
+    creation_date_time: "2020-05-07T20:00:00+00:00"
     state: "ACCEPTED"
-    publication_date: "2019-08-01"
+    publication_date: "2020-05-10"
 
 - model: polls.Choice
   pk: 1
   fields:
-    text: "Pâtes et fromage"
+    text: "11 mai 2020"
     poll: 1
 
 - model: polls.Choice
   pk: 2
   fields:
-    text: "Baguette et pâté"
+    text: "11 mai 2021 après dix rechutes"
     poll: 1
+
+- model: polls.Poll
+  pk: 2
+  fields:
+    question: "Le plus mignon"
+    user: "17bocquet"
+    creation_date_time: "2020-05-04T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2020-05-08"
+
+- model: polls.Choice
+  pk: 3
+  fields:
+    text: "Une poule avec une tête de chat"
+    poll: 2
+
+- model: polls.Choice
+  pk: 4
+  fields:
+    text: "Un chat avec une tête de poule"
+    poll: 2
+
+- model: polls.Poll
+  pk: 3
+  fields:
+    question: "Vous l’avez regardé deux fois en entier :"
+    user: "19simple"
+    creation_date_time: "2020-05-02T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2020-05-04"
+
+- model: polls.Choice
+  pk: 5
+  fields:
+    text: "Les films de liste P19"
+    poll: 3
+
+- model: polls.Choice
+  pk: 6
+  fields:
+    text: "La PR17"
+    poll: 3
+
+- model: polls.Poll
+  pk: 4
+  fields:
+    question: "Le poste le plus incompatible avec l’autre"
+    user: "19simple"
+    creation_date_time: "2020-05-02T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2020-05-03"
+
+- model: polls.Choice
+  pk: 7
+  fields:
+    text: "Piauleur"
+    poll: 4
+
+- model: polls.Choice
+  pk: 8
+  fields:
+    text: "Respo interne"
+    poll: 4
+
+- model: polls.Poll
+  pk: 5
+  fields:
+    question: "Le meilleur sondage proposé par les VP Geek hier"
+    user: "19simple"
+    creation_date_time: "2020-05-02T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2020-05-04"
+
+- model: polls.Choice
+  pk: 9
+  fields:
+    text: "Le plus bancal : L'acting de Zaza dans Ocean's 23 / La co de 18secher"
+    poll: 5
+
+- model: polls.Choice
+  pk: 10
+  fields:
+    text: "Le plus long : La réponse de 19arguelle à sa question trez / La ballade du daron de 19grebert dans son salon"
+    poll: 5
+
+- model: polls.Poll
+  pk: 6
+  fields:
+    question: "Entre cours et campagne, explosion du nombre de zoom. Qui en pâtit le plus ?"
+    user: "19simple"
+    creation_date_time: "2020-04-15T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2020-04-16"
+
+- model: polls.Choice
+  pk: 11
+  fields:
+    text: "Janco dans son combat contre la pollution numérique"
+    poll: 6
+
+- model: polls.Choice
+  pk: 12
+  fields:
+    text: "Les vendeurs de dentifrice et de chewing gum"
+    poll: 6
+
+- model: polls.Poll
+  pk: 7
+  fields:
+    question: "Ton cours préféré ?"
+    user: "17bocquet"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    publication_date: "2019-06-01"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 13
+  fields:
+    text: "Maths 1"
+    poll: 7
+
+- model: polls.Choice
+  pk: 14
+  fields:
+    text: "Maths 2"
+    poll: 7
+
+- model: polls.Poll
+  pk: 8
+  fields:
+    question: "On est confinés !"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-19"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 15
+  fields:
+    text: "Ça fait un mois…"
+    poll: 8
+
+- model: polls.Choice
+  pk: 16
+  fields:
+    text: "Ah bon ?!"
+    poll: 8
+
+- model: polls.Poll
+  pk: 9
+  fields:
+    question: "Le plus long en confinement"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-19"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 17
+  fields:
+    text: "Le temps entre deux douches"
+    poll: 9
+
+- model: polls.Choice
+  pk: 18
+  fields:
+    text: "Le temps entre deux repas équilibrés"
+    poll: 9
+
+- model: polls.Poll
+  pk: 10
+  fields:
+    question: "Qu'est ce qu'on aura en premier ?"
+    user: "16leroy"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    publication_date: "2020-04-19"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 19
+  fields:
+    text: "Un masque par Français"
+    poll: 10
+
+- model: polls.Choice
+  pk: 20
+  fields:
+    text: "Un nouveau BDE"
+    poll: 10
+
+- model: polls.Poll
+  pk: 11
+  fields:
+    question: "L'alphabet"
+    user: "17bocquet"
+    creation_date_time: "2020-04-17T20:00:00+00:00"
+    publication_date: "2020-04-20"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 21
+  fields:
+    text: "Tu le connais par cœur"
+    poll: 11
+
+- model: polls.Choice
+  pk: 22
+  fields:
+    text: "Tu profites du confinement pour réviser tes voyelles"
+    poll: 11
+
+- model: polls.Poll
+  pk: 12
+  fields:
+    question: "La meilleure idée de la DE"
+    user: "17bocquet"
+    creation_date_time: "2010-03-22T20:00:00+00:00"
+    publication_date: "2010-03-28"
+    state: "ACCEPTED"
+
+- model: polls.Choice
+  pk: 23
+  fields:
+    text: "Donner deux semaines de vacances aux 2A"
+    poll: 12
+
+- model: polls.Choice
+  pk: 24
+  fields:
+    text: "Organiser un enseignement de mécatronique à distance"
+    poll: 12
+
+##################
+# REJECTED POLLS #
+##################
+
+- model: polls.Poll
+  pk: 100
+  fields:
+    question: "Qu'est ce qu'on aura en premier ?"
+    user: "19simple"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    admin_comment: "Doublon."
+    state: "REJECTED"
+
+- model: polls.Choice
+  pk: 101
+  fields:
+    text: "Un masque par Français"
+    poll: 100
+
+- model: polls.Choice
+  pk: 102
+  fields:
+    text: "Un nouveau BDE"
+    poll: 100
+
+###################
+# REVIEWING POLLS #
+###################
+
+- model: polls.Poll
+  pk: 200
+  fields:
+    question: "Tu dis..."
+    user: "19simple"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 201
+  fields:
+    text: "Piche"
+    poll: 200
+
+- model: polls.Choice
+  pk: 202
+  fields:
+    text: "pIChE"
+    poll: 200
+
+#########
+# VOTES #
+#########
 
 - model: polls.Vote
   pk: 1
+  fields:
+    poll: 1
+    user: "15veaux"
+    choice: 2
+
+- model: polls.Vote
+  pk: 2
   fields:
     poll: 1
     user: "17bocquet"
     choice: 1
 
 - model: polls.Vote
-  pk: 2
+  pk: 3
   fields:
     poll: 1
-    user: "15veaux"
+    user: "16leroy"
+    choice: 1
+
+- model: polls.Vote
+  pk: 4
+  fields:
+    poll: 1
+    user: "19normal"
     choice: 2
 
 - model: polls.Vote
-  pk: 3
-  fields:
-    poll: 1
-    user: "16leroy"
-    choice: 2
-
-- model: polls.Poll
-  pk: 2
-  fields:
-    question: "Ton cours préféré ?"
-    user: "17bocquet"
-    creation_date_time: "2019-06-01T20:00:00+00:00"
-    state: "REJECTED"
-    admin_comment: "C’est nul."
-
-- model: polls.Choice
-  pk: 3
-  fields:
-    text: "Maths 1"
-    poll: 2
-
-- model: polls.Choice
-  pk: 4
-  fields:
-    text: "Maths 2"
-    poll: 2
-
-- model: polls.Poll
-  pk: 3
-  fields:
-    question: "On est confinés !"
-    user: "16leroy"
-    creation_date_time: "2020-04-19T20:00:00+00:00"
-    publication_date: "2020-04-26"
-    state: "ACCEPTED"
-
-- model: polls.Choice
   pk: 5
   fields:
-    text: "Ça fait un mois…"
-    poll: 3
+    poll: 2
+    user: "17bocquet"
+    choice: 3
 
-- model: polls.Choice
+- model: polls.Vote
   pk: 6
   fields:
-    text: "Ah bon ?!"
-    poll: 3
+    poll: 2
+    user: "19simple"
+    choice: 4
 
 - model: polls.Vote
-  pk: 4
+  pk: 7
+  fields:
+    poll: 2
+    user: "15veaux"
+    choice: 4
+
+- model: polls.Vote
+  pk: 8
+  fields:
+    poll: 2
+    user: "16leroy"
+    choice: 3
+
+- model: polls.Vote
+  pk: 9
   fields:
     poll: 3
-    user: "16leroy"
-    choice: 5
+    user: "19simple"
+    choice: 6
 
 - model: polls.Vote
-  pk: 5
+  pk: 10
   fields:
     poll: 3
     user: "15veaux"
     choice: 5
 
-- model: polls.Poll
-  pk: 4
+- model: polls.Vote
+  pk: 11
   fields:
-    question: "Piche"
+    poll: 3
     user: "16leroy"
-    creation_date_time: "2020-04-19T20:00:00+00:00"
-    publication_date: "2020-04-26"
-    state: "ACCEPTED"
+    choice: 5
 
-- model: polls.Choice
-  pk: 7
+- model: polls.Vote
+  pk: 12
   fields:
-    text: "MDR"
-    poll: 4
+    poll: 3
+    user: "19normal"
+    choice: 6
 
-- model: polls.Choice
-  pk: 8
+- model: polls.Vote
+  pk: 13
   fields:
-    text: "42"
     poll: 4
+    user: "16leroy"
+    choice: 8
+
+- model: polls.Vote
+  pk: 14
+  fields:
+    poll: 4
+    user: "15veaux"
+    choice: 7
+
+- model: polls.Vote
+  pk: 15
+  fields:
+    poll: 4
+    user: "19simple"
+    choice: 7
+
+- model: polls.Vote
+  pk: 16
+  fields:
+    poll: 4
+    user: "17bocquet"
+    choice: 8
+
+- model: polls.Vote
+  pk: 17
+  fields:
+    poll: 5
+    user: "16leroy"
+    choice: 10
+
+- model: polls.Vote
+  pk: 18
+  fields:
+    poll: 5
+    user: "19simple"
+    choice: 10
+
+- model: polls.Vote
+  pk: 19
+  fields:
+    poll: 5
+    user: "17bocquet"
+    choice: 9
+
+- model: polls.Vote
+  pk: 20
+  fields:
+    poll: 5
+    user: "15veaux"
+    choice: 10
+
+- model: polls.Vote
+  pk: 21
+  fields:
+    poll: 6
+    user: "17bocquet"
+    choice: 11
+
+- model: polls.Vote
+  pk: 22
+  fields:
+    poll: 6
+    user: "15veaux"
+    choice: 11
+
+- model: polls.Vote
+  pk: 23
+  fields:
+    poll: 6
+    user: "16leroy"
+    choice: 11
+
+- model: polls.Vote
+  pk: 24
+  fields:
+    poll: 6
+    user: "19normal"
+    choice: 11
+
+- model: polls.Vote
+  pk: 25
+  fields:
+    poll: 7
+    user: "17bocquet"
+    choice: 14
+
+- model: polls.Vote
+  pk: 26
+  fields:
+    poll: 7
+    user: "16leroy"
+    choice: 14
+
+- model: polls.Vote
+  pk: 27
+  fields:
+    poll: 7
+    user: "19normal"
+    choice: 14
+
+- model: polls.Vote
+  pk: 28
+  fields:
+    poll: 7
+    user: "19simple"
+    choice: 14
+
+- model: polls.Vote
+  pk: 29
+  fields:
+    poll: 8
+    user: "15veaux"
+    choice: 16
+
+- model: polls.Vote
+  pk: 30
+  fields:
+    poll: 8
+    user: "19simple"
+    choice: 16
+
+- model: polls.Vote
+  pk: 31
+  fields:
+    poll: 8
+    user: "16leroy"
+    choice: 15
+
+- model: polls.Vote
+  pk: 32
+  fields:
+    poll: 8
+    user: "19normal"
+    choice: 16
+
+- model: polls.Vote
+  pk: 33
+  fields:
+    poll: 9
+    user: "15veaux"
+    choice: 17
+
+- model: polls.Vote
+  pk: 34
+  fields:
+    poll: 9
+    user: "19normal"
+    choice: 17
+
+- model: polls.Vote
+  pk: 35
+  fields:
+    poll: 9
+    user: "16leroy"
+    choice: 18
+
+- model: polls.Vote
+  pk: 36
+  fields:
+    poll: 9
+    user: "19simple"
+    choice: 18
+
+- model: polls.Vote
+  pk: 37
+  fields:
+    poll: 10
+    user: "19normal"
+    choice: 19
+
+- model: polls.Vote
+  pk: 38
+  fields:
+    poll: 10
+    user: "15veaux"
+    choice: 19
+
+- model: polls.Vote
+  pk: 39
+  fields:
+    poll: 10
+    user: "19simple"
+    choice: 19
+
+- model: polls.Vote
+  pk: 40
+  fields:
+    poll: 10
+    user: "17bocquet"
+    choice: 20
+
+- model: polls.Vote
+  pk: 41
+  fields:
+    poll: 11
+    user: "16leroy"
+    choice: 22
+
+- model: polls.Vote
+  pk: 42
+  fields:
+    poll: 11
+    user: "19simple"
+    choice: 21
+
+- model: polls.Vote
+  pk: 43
+  fields:
+    poll: 11
+    user: "15veaux"
+    choice: 22
+
+- model: polls.Vote
+  pk: 44
+  fields:
+    poll: 11
+    user: "17bocquet"
+    choice: 22
+
+- model: polls.Vote
+  pk: 45
+  fields:
+    poll: 12
+    user: "19simple"
+    choice: 24
+
+- model: polls.Vote
+  pk: 46
+  fields:
+    poll: 12
+    user: "19normal"
+    choice: 23
+
+- model: polls.Vote
+  pk: 47
+  fields:
+    poll: 12
+    user: "17bocquet"
+    choice: 23
+
+- model: polls.Vote
+  pk: 48
+  fields:
+    poll: 12
+    user: "16leroy"
+    choice: 23

@@ -223,3 +223,19 @@
     room: ''
     phone: "+330011223383"
     year_of_entry: 2019
+- model: authentication.user
+  pk: 19normal
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Normal
+    last_name: Ité
+    email: 19normal@mpt.fr
+    birthday: '2000-04-28'
+    is_active: true
+    is_staff: false
+    nickname: 'Normal'
+    city_of_origin: Paris
+    room: ''
+    phone: "+330011223383"
+    year_of_entry: 2019
