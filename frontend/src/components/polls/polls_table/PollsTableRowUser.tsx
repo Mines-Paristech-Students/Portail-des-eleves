@@ -75,26 +75,26 @@ export const PollsTableRowUser = ({
             </td>
             <td>{poll.adminComment}</td>
             <td className="text-center">
+                {poll.state === PollState.Reviewing ? (
+                    <Button
+                        className="btn-icon m-1"
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={onClickEdit}
+                    >
+                        <i className="fe fe-edit" />
+                    </Button>
+                ) : null}
                 {poll.state === PollState.Reviewing ||
                 poll.state === PollState.Rejected ? (
-                    <>
-                        <Button
-                            className="btn-icon m-1"
-                            variant="outline-primary"
-                            size="sm"
-                            onClick={onClickEdit}
-                        >
-                            <i className="fe fe-edit" />
-                        </Button>
-                        <Button
-                            className="btn-icon m-1"
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={onClickDelete}
-                        >
-                            <i className="fe fe-trash-2" />
-                        </Button>
-                    </>
+                    <Button
+                        className="btn-icon m-1"
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={onClickDelete}
+                    >
+                        <i className="fe fe-trash-2" />
+                    </Button>
                 ) : null}
             </td>
         </tr>
