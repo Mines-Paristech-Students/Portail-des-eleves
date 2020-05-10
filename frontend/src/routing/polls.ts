@@ -1,7 +1,9 @@
 import { ListPolls } from "../components/polls/list_polls/ListPolls";
-import { PollsTable } from "../components/polls/polls_table/PollsTable";
 import { SubmitPoll } from "../components/polls/submit_polls/SubmitPoll";
 import { Route } from "./global";
+import { Test } from "../components/polls/test/Test";
+import { PollsTableAdmin } from "../components/polls/polls_table/PollsTableAdmin";
+import { PollsTableUser } from "../components/polls/polls_table/PollsTableUser";
 
 export const routes: Route[] = [
     {
@@ -16,17 +18,22 @@ export const routes: Route[] = [
     },
     {
         path: "/sondages/administration",
-        component: () => PollsTable({ adminVersion: true }),
+        component: PollsTableAdmin,
         exact: true
     },
     {
         path: "/sondages/mes-sondages",
-        component: PollsTable,
+        component: PollsTableUser,
         exact: true
     },
     {
         path: "/sondages/proposer",
         component: SubmitPoll,
+        exact: true
+    },
+    {
+        path: "/sondages/test",
+        component: Test,
         exact: true
     }
 ];

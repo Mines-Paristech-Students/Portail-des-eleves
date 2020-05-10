@@ -1,28 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Poll } from "../../../models/polls";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { Form, Formik } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import * as Yup from "yup";
-import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { queryCache, useMutation } from "react-query";
 
 export const PollEditModalUserForm = ({
     poll,
-    handleClose
+    handleClose,
+    onUpdate
 }: {
     poll: Poll;
     handleClose: () => void;
+    onUpdate: any;
 }) => {
-    const newToast = useContext(ToastContext);
-    const [update] = useMutation(api.polls.update, {
-        onSuccess: () => {
-            queryCache.refetchQueries(["polls.list"]);
-        }
-    });
-
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
             question: values.question,
@@ -36,36 +28,7 @@ export const PollEditModalUserForm = ({
             ]
         };
 
-        update({
-            pollId: poll.id,
-            data: data
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    newToast({
-                        message: "Sondage modifié.",
-                        level: ToastLevel.Success
-                    });
-                }
-            })
-            .catch(error => {
-                let message =
-                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                let detail = error.response.data.detail;
-
-                if (error.response.status === 403) {
-                    detail = "Vous n’avez pas le droit de modifier ce sondage.";
-                }
-
-                newToast({
-                    message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
-                });
-            })
-            .then(() => {
-                setSubmitting(false);
-                handleClose();
-            });
+        onUpdate(data, setSubmitting);
     };
 
     return (

@@ -1,6 +1,12 @@
 import { Poll } from "../../models/polls";
 import { AxiosResponse } from "axios";
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import { sortingToApiParameter } from "../../components/utils/table/sorting";
+import {
+    PollStateFilter,
+    pollStateFilterToApiParameter
+} from "../../components/polls/polls_table/PollsTableFilter";
+import { joinNonEmpty } from "../../utils/parameter";
 
 /**
  * Parse the `publicationDate` and `creationDateTime` JSON field.
@@ -32,8 +38,40 @@ const listGeneric = (parameters: string = "") => (page = 1) =>
 export const polls = {
     /**
      * List all the polls.
+     * @param userFilter if different from "", only list the polls created by `userFilter`; otherwise, list all the polls.
+     * @param stateFilter given to `pollStateFilterToApiParameter` to create a `state` parameter.
+     * @param sorting given to `sortingToApiParameter` to create an `ordering` parameter.
+     * @param page the page to load.
      */
-    listAll: listGeneric("page_size=10"),
+    listAll: (
+        {
+            userFilter,
+            stateFilter,
+            sorting
+        }: { userFilter: string; stateFilter: PollStateFilter; sorting: any },
+        page = 1
+    ) =>
+        listGeneric(
+            // Put all the parameters into an array, then join them with `&`.
+            joinNonEmpty(
+                [
+                    "page_size=10",
+                    userFilter !== "" ? `user=${userFilter}` : "",
+                    pollStateFilterToApiParameter(stateFilter, "state"),
+                    sortingToApiParameter(
+                        sorting,
+                        {
+                            question: "question",
+                            publicationDate: "publication_date",
+                            user: "user__pk",
+                            state: "state"
+                        },
+                        `ordering`
+                    )
+                ],
+                "&"
+            )
+        )(page),
     /**
      * List the polls which are still open (to which people can vote).
      */

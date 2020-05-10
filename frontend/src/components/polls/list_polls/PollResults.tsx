@@ -33,7 +33,13 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
         <Card.Body>
             <Card.Subtitle className="poll-date">
                 <em>
-                    {poll.publicationDate && formatDate(poll.publicationDate)}
+                    {poll.publicationDate && formatDate(poll.publicationDate)} (
+                    {`${totalVotes(poll)} ${decidePlural(
+                        totalVotes(poll),
+                        "vote",
+                        "votes"
+                    )}`}
+                    )
                 </em>
             </Card.Subtitle>
 
@@ -57,13 +63,12 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                                         </div>
                                         <div className="float-right text-muted">
                                             <small>
-                                                {`${
-                                                    choice.numberOfVotes
-                                                } ${decidePlural(
-                                                    choice.numberOfVotes,
-                                                    "vote",
-                                                    "votes"
-                                                )}`}
+                                                {Number(
+                                                    (100 *
+                                                        choice.numberOfVotes) /
+                                                        totalVotes(poll)
+                                                )}{" "}
+                                                %
                                             </small>
                                         </div>
                                     </div>

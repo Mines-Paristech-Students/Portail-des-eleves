@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Poll } from "../../../models/polls";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -12,9 +12,6 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { DatePickerField } from "../../utils/forms/DatePickerField";
 import { formatDate } from "../../../utils/format";
-import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { queryCache, useMutation } from "react-query";
 
 const StateField = () => {
     let items = new Map();
@@ -79,17 +76,15 @@ const DateField = () => {
 
 export const PollEditModalAdminForm = ({
     poll,
-    handleClose
+    handleClose,
+    onUpdate
 }: {
     poll: Poll;
     handleClose: () => void;
+    onUpdate: any;
 }) => {
-    const newToast = useContext(ToastContext);
-    const [update] = useMutation(api.polls.update, {
-        onSuccess: () => {
-            queryCache.refetchQueries(["polls.list"]);
-        }
-    });
+    let minDate = new Date();
+    minDate.setDate(minDate.getDate() - 1);
 
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
@@ -99,40 +94,8 @@ export const PollEditModalAdminForm = ({
             publicationDate: values.publicationDate
         };
 
-        update({
-            pollId: poll.id,
-            data: data
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    newToast({
-                        message: "Sondage modifié.",
-                        level: ToastLevel.Success
-                    });
-                }
-            })
-            .catch(error => {
-                let message =
-                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                let detail = error.response.data.detail;
-
-                if (detail === "You are not allowed to update this poll.") {
-                    detail = "Vous n’avez pas le droit de modifier ce sondage.";
-                }
-
-                newToast({
-                    message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
-                });
-            })
-            .then(() => {
-                setSubmitting(false);
-                handleClose();
-            });
+        onUpdate(data, setSubmitting);
     };
-
-    let minDate = new Date();
-    minDate.setDate(minDate.getDate() - 1);
 
     return (
         <Formik

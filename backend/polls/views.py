@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.db.models import Q
-from django_filters.rest_framework import FilterSet, CharFilter
+from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
 from rest_framework import exceptions, generics, response, status, viewsets
 from rest_framework.decorators import action
 
@@ -25,10 +25,12 @@ class IsActiveFilter(FilterSet):
 
     is_published = CharFilter(method="filter_is_published")
     is_active = CharFilter(method="filter_is_active")
+    user = CharFilter(field_name="user__id")
+    state = MultipleChoiceFilter(choices=Poll.STATES)
 
     class Meta:
         model = Poll
-        fields = ("is_published", "is_active")
+        fields = ("is_published", "is_active", "state", "user")
 
     def filter_is_published(self, queryset, name, value):
         condition = Q(publication_date__lte=date.today()) & Q(state="ACCEPTED")
@@ -42,7 +44,7 @@ class IsActiveFilter(FilterSet):
         condition = (
             Q(publication_date__lte=date.today())
             & Q(state="ACCEPTED")
-            & Q(publication_date__gte=date.today() - Poll.POLL_LIFETIME)
+            & Q(publication_date__gt=date.today() - Poll.POLL_LIFETIME)
         )
 
         if value.lower() == "true" or len(value) == 0:
@@ -57,6 +59,7 @@ class PollViewSet(viewsets.ModelViewSet):
     permission_classes = (PollPermission,)
     pagination_class = SmallResultsSetPagination
     filterset_class = IsActiveFilter
+    ordering_fields = ["question", "user__pk", "state", "publication_date"]
 
     def get_queryset(self):
         if self.request.user.is_staff:

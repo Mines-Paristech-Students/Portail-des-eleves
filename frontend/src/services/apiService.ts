@@ -118,7 +118,9 @@ export function useBetterPaginatedQuery<T>(
 ): PaginatedQueryResult<T> {
     return usePaginatedQuery<T, any, any>(
         key,
-        (_, ...params) => fetchFunction(...params),
+        (_, ...params) => {
+            return fetchFunction(...params);
+        },
         config
     );
 }

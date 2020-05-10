@@ -9,57 +9,59 @@ import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
+import { AxiosError } from "axios";
 
 export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
     const [vote] = useMutation(api.polls.vote, {
-        onSuccess: () => {
+        onSuccess: response => {
             queryCache.refetchQueries(["polls.list"]);
+
+            if (response.status === 201) {
+                newToast({
+                    message: "Vous avez voté.",
+                    level: ToastLevel.Success
+                });
+            }
+        },
+        onError: errorAsUnknown => {
+            const error = errorAsUnknown as AxiosError;
+
+            let detail = error.response ? error.response.data.detail : "";
+
+            switch (detail) {
+                case "Invalid choice provided.":
+                    detail = "Ce choix est invalide.";
+                    break;
+                case "This poll is not active.":
+                    detail = "Ce sondage n’est plus actif.";
+                    break;
+                case "You have already voted.":
+                    detail = "Vous avez déjà voté.";
+                    break;
+                default:
+                    break;
+            }
+
+            newToast({
+                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+                    detail === "" ? "" : "Détails : " + detail
+                }`,
+                level: ToastLevel.Error
+            });
         }
     });
 
     const onSubmit = (values, { setSubmitting }) => {
-        vote({
-            user: user,
-            pollId: poll.id,
-            choiceId: values.choice
-        })
-            .then(response => {
-                if (response.status === 201) {
-                    newToast({
-                        message: "Vous avez voté.",
-                        level: ToastLevel.Success
-                    });
-                }
-            })
-            .catch(error => {
-                let message =
-                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                let detail = error.response.data.detail;
-
-                switch (detail) {
-                    case "Invalid choice provided.":
-                        detail = "Ce choix est invalide.";
-                        break;
-                    case "This poll is not active.":
-                        detail = "Ce sondage n’est plus actif.";
-                        break;
-                    case "You have already voted.":
-                        detail = "Vous avez déjà voté.";
-                        break;
-                    default:
-                        break;
-                }
-
-                newToast({
-                    message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
-                });
-            })
-            .then(() => {
-                setSubmitting(false);
-            });
+        vote(
+            {
+                user: user,
+                pollId: poll.id,
+                choiceId: values.choice
+            },
+            { onSettled: setSubmitting(false) }
+        );
     };
 
     return (

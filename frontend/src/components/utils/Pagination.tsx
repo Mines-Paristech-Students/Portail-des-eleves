@@ -1,9 +1,4 @@
-import React, {
-    FunctionComponent,
-    ReactElement,
-    useEffect,
-    useState
-} from "react";
+import React, { useEffect, useState } from "react";
 import { useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
@@ -33,16 +28,16 @@ import { Error } from "./Error";
  * @param apiKey The request key. Should be a non-empty array which first element is a string. The `page` last element required by `usePaginatedQuery` is added by the component and should not be included. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `apiMethod` will never be called.
  * @param apiMethod The function to call. It will be given the elements of `apiKey` (except its first) as arguments.
  * @param config An optional object to configure `usePaginatedQuery`.
- * @param paginationProps Optional props to be passed to `PaginationControl`.
- * @param loadingElement An optional element to display when loading.
- * @param errorElement An optional element to display if the request encounters an error. The error `detail` is passed to this component.
+ * @param paginationControlProps Optional props to be passed to `PaginationControl`.
+ * @param loadingElement The element to display when loading.
+ * @param errorElement The element to display if the request encounters an error. The error `detail` is passed to this component.
  */
 export const Pagination = ({
     render,
     apiKey,
     apiMethod,
     config,
-    paginationProps,
+    paginationControlProps,
     loadingElement,
     errorElement
 }: {
@@ -50,9 +45,9 @@ export const Pagination = ({
     apiKey: any[];
     apiMethod: (...params: any) => any;
     config?: any;
-    paginationProps?: object;
-    loadingElement?: ReactElement;
-    errorElement?: any;
+    paginationControlProps?: object;
+    loadingElement?: React.ComponentType<{}> | React.ReactNode;
+    errorElement?: React.ComponentType<{ detail: any }> | React.ReactNode;
 }) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
@@ -70,16 +65,18 @@ export const Pagination = ({
     }, [page, data]);
 
     if (status === "loading")
-        return loadingElement === undefined ? <Loading /> : loadingElement;
-    else if (status === "error") {
-        return errorElement === undefined ? (
-            <Error detail={error} />
+        return loadingElement === undefined ? (
+            <Loading />
         ) : (
-            errorElement({ detail: error })
+            React.createElement(loadingElement as any)
         );
+    else if (status === "error") {
+        if (errorElement === undefined) {
+            return <Error detail={error} />;
+        } else {
+            return React.createElement(errorElement as any);
+        }
     }
-
-    console.log(paginationProps);
 
     return render(
         data.results,
@@ -87,7 +84,7 @@ export const Pagination = ({
             page={page}
             maxPage={maxPage}
             setPage={setPage}
-            {...paginationProps}
+            {...paginationControlProps}
         />
     );
 };
