@@ -6,16 +6,16 @@ import { PollEditModal } from "./PollEditModal";
 import { PollStateIcon } from "./PollStateIcon";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
 
-export const PollsTableRowUser = ({
-    poll,
-    refetch
-}: {
-    poll: Poll;
-    refetch: any;
-}) => {
+export const PollsTableRowUser = ({ poll }: { poll: Poll }) => {
     const newToast = useContext(ToastContext);
     const [editable, setEditable] = useState<boolean>(false);
+    const [remove] = useMutation(api.polls.remove, {
+        onSuccess: () => {
+            queryCache.refetchQueries(["polls.list"]);
+        }
+    });
 
     const onClickEdit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -25,15 +25,15 @@ export const PollsTableRowUser = ({
     const onClickDelete = (event: React.FormEvent) => {
         event.preventDefault();
 
-        api.polls
-            .delete(poll.id)
+        remove({
+            pollId: poll.id
+        })
             .then(response => {
                 if (response.status === 204) {
                     newToast({
                         message: "Sondage supprimé.",
                         level: ToastLevel.Success
                     });
-                    refetch({ force: true });
                 }
             })
             .catch(error => {
@@ -59,7 +59,6 @@ export const PollsTableRowUser = ({
                 show={editable}
                 onHide={() => setEditable(false)}
                 poll={poll}
-                refetch={refetch}
                 isAdmin={false}
             />
             <td>{poll.question}</td>

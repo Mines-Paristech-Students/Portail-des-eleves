@@ -5,13 +5,7 @@ import Button from "react-bootstrap/Button";
 import { PollEditModal } from "./PollEditModal";
 import { PollStateIcon } from "./PollStateIcon";
 
-export const PollsTableRowAdmin = ({
-    poll,
-    refetch
-}: {
-    poll: Poll;
-    refetch: any;
-}) => {
+export const PollsTableRowAdmin = ({ poll }: { poll: Poll }) => {
     const [editable, setEditable] = useState<boolean>(false);
 
     const onClickEdit = event => {
@@ -25,7 +19,6 @@ export const PollsTableRowAdmin = ({
                 show={editable}
                 onHide={() => setEditable(false)}
                 poll={poll}
-                refetch={refetch}
                 isAdmin={true}
             />
             <td>{poll.question}</td>

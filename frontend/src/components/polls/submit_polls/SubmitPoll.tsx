@@ -9,9 +9,15 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { PageTitle } from "../../utils/PageTitle";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
 
 export const SubmitPoll = () => {
     const newToast = useContext(ToastContext);
+    const [create] = useMutation(api.polls.create, {
+        onSuccess: () => {
+            queryCache.refetchQueries(["polls.list"]);
+        }
+    });
 
     const [
         questionPlaceholder,
@@ -33,12 +39,10 @@ export const SubmitPoll = () => {
     const onSubmit = (values, { resetForm, setSubmitting }) => {
         let data = {
             question: values.question,
-            choice0: values.choice0,
-            choice1: values.choice1
+            choices: [{ text: values.choice0 }, { text: values.choice1 }]
         };
 
-        api.polls
-            .create(data)
+        create({ data })
             .then(response => {
                 if (response.status === 201) {
                     newToast({

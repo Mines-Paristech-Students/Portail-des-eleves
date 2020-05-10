@@ -8,13 +8,11 @@ export const PollEditModal = ({
     show,
     onHide,
     poll,
-    refetch,
     isAdmin
 }: {
     show: boolean;
     onHide: any;
     poll: Poll;
-    refetch: any;
     isAdmin: boolean;
 }) => (
     <Modal size="lg" show={show} onHide={onHide}>
@@ -23,17 +21,9 @@ export const PollEditModal = ({
         </Modal.Header>
 
         {isAdmin ? (
-            <PollEditModalAdminForm
-                poll={poll}
-                handleClose={onHide}
-                refetch={refetch}
-            />
+            <PollEditModalAdminForm poll={poll} handleClose={onHide} />
         ) : (
-            <PollEditModalUserForm
-                poll={poll}
-                handleClose={onHide}
-                refetch={refetch}
-            />
+            <PollEditModalUserForm poll={poll} handleClose={onHide} />
         )}
     </Modal>
 );

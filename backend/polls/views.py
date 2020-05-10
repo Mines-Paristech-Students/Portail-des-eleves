@@ -1,9 +1,11 @@
 from datetime import date
 
 from django.db.models import Q
+from django_filters.rest_framework import FilterSet, CharFilter
 from rest_framework import exceptions, generics, response, status, viewsets
 from rest_framework.decorators import action
 
+from api.paginator import SmallResultsSetPagination
 from polls.serializers import (
     ReadOnlyPollSerializer,
     AuthorPollSerializer,
@@ -14,22 +16,60 @@ from polls.models import Poll, Vote
 from polls.permissions import PollPermission, ResultsPermission, VotePermission
 
 
+class IsActiveFilter(FilterSet):
+    """
+    This class is needed because Django does not allow to filter on properties.
+
+    Inspired by https://stackoverflow.com/a/44990300.
+    """
+
+    is_published = CharFilter(method="filter_is_published")
+    is_active = CharFilter(method="filter_is_active")
+
+    class Meta:
+        model = Poll
+        fields = ("is_published", "is_active")
+
+    def filter_is_published(self, queryset, name, value):
+        condition = Q(publication_date__lte=date.today()) & Q(state="ACCEPTED")
+
+        if value.lower() == "true" or len(value) == 0:
+            return queryset.filter(condition)
+        else:
+            return queryset.exclude(condition)
+
+    def filter_is_active(self, queryset, _, value):
+        condition = (
+            Q(publication_date__lte=date.today())
+            & Q(state="ACCEPTED")
+            & Q(publication_date__gte=date.today() - Poll.POLL_LIFETIME)
+        )
+
+        if value.lower() == "true" or len(value) == 0:
+            return queryset.filter(condition)
+        else:
+            return queryset.exclude(condition)
+
+
 class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
     serializer_class = ReadOnlyPollSerializer
     permission_classes = (PollPermission,)
-    pagination_class = None
+    pagination_class = SmallResultsSetPagination
+    filterset_class = IsActiveFilter
 
     def get_queryset(self):
         if self.request.user.is_staff:
             # Give access to all the polls.
-            return Poll.objects.all()
+            return Poll.objects.all().order_by(
+                "-publication_date", "-creation_date_time"
+            )
         else:
             # Give access to all the published polls and to their polls.
             return Poll.objects.filter(
                 Q(user=self.request.user)
                 | (Q(state="ACCEPTED") & Q(publication_date__lte=date.today()))
-            )
+            ).order_by("-publication_date", "-creation_date_time")
 
     def get_serializer_class(self):
         if self.action in ("create",):

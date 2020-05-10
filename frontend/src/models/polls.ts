@@ -8,7 +8,7 @@ export interface Poll {
     id: string;
     question: string;
     user?: string;
-    creationDateTime?: Date;
+    creationDateTime: Date;
     state: PollState;
     publicationDate?: Date;
     adminComment?: string;

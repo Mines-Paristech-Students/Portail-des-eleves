@@ -8,28 +8,29 @@ import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { CardStatus } from "../../utils/CardStatus";
+import { queryCache, useMutation } from "react-query";
 
-export const PollVotingForm = ({
-    poll,
-    refetch
-}: {
-    poll: Poll;
-    refetch: any;
-}) => {
+export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
+    const [vote] = useMutation(api.polls.vote, {
+        onSuccess: () => {
+            queryCache.refetchQueries(["polls.list"]);
+        }
+    });
 
     const onSubmit = (values, { setSubmitting }) => {
-        api.polls
-            .vote(user, poll.id, values.choice)
+        vote({
+            user: user,
+            pollId: poll.id,
+            choiceId: values.choice
+        })
             .then(response => {
                 if (response.status === 201) {
                     newToast({
                         message: "Vous avez voté.",
                         level: ToastLevel.Success
                     });
-                    refetch({ force: true });
                 }
             })
             .catch(error => {

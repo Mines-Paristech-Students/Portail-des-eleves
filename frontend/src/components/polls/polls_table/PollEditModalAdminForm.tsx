@@ -14,6 +14,7 @@ import { DatePickerField } from "../../utils/forms/DatePickerField";
 import { formatDate } from "../../../utils/format";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
 
 const StateField = () => {
     let items = new Map();
@@ -78,14 +79,17 @@ const DateField = () => {
 
 export const PollEditModalAdminForm = ({
     poll,
-    refetch,
     handleClose
 }: {
     poll: Poll;
-    refetch: any;
     handleClose: () => void;
 }) => {
     const newToast = useContext(ToastContext);
+    const [update] = useMutation(api.polls.update, {
+        onSuccess: () => {
+            queryCache.refetchQueries(["polls.list"]);
+        }
+    });
 
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
@@ -95,8 +99,10 @@ export const PollEditModalAdminForm = ({
             publicationDate: values.publicationDate
         };
 
-        api.polls
-            .update(poll.id, data)
+        update({
+            pollId: poll.id,
+            data: data
+        })
             .then(response => {
                 if (response.status === 200) {
                     newToast({
@@ -122,7 +128,6 @@ export const PollEditModalAdminForm = ({
             .then(() => {
                 setSubmitting(false);
                 handleClose();
-                refetch({ force: true });
             });
     };
 
@@ -165,10 +170,9 @@ export const PollEditModalAdminForm = ({
                                         <Card.Subtitle>
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
-                                                {poll.publicationDate &&
-                                                    formatDate(
-                                                        poll.publicationDate
-                                                    )}
+                                                {formatDate(
+                                                    poll.creationDateTime
+                                                )}
                                                 .
                                             </em>
                                         </Card.Subtitle>

@@ -7,34 +7,45 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import * as Yup from "yup";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
 
 export const PollEditModalUserForm = ({
     poll,
-    refetch,
     handleClose
 }: {
     poll: Poll;
-    refetch: any;
     handleClose: () => void;
 }) => {
     const newToast = useContext(ToastContext);
+    const [update] = useMutation(api.polls.update, {
+        onSuccess: () => {
+            queryCache.refetchQueries(["polls.list"]);
+        }
+    });
 
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
             question: values.question,
-            choice0: values.choice0,
-            choice1: values.choice1
+            choices: [
+                {
+                    text: values.choice0
+                },
+                {
+                    text: values.choice1
+                }
+            ]
         };
 
-        api.polls
-            .update(poll.id, data)
+        update({
+            pollId: poll.id,
+            data: data
+        })
             .then(response => {
                 if (response.status === 200) {
                     newToast({
                         message: "Sondage modifié.",
                         level: ToastLevel.Success
                     });
-                    refetch({ force: true });
                 }
             })
             .catch(error => {
