@@ -21,25 +21,25 @@ export const routes = association => [
         props: { association: association }
     },
     {
-        path: `/events/`,
+        path: `/evenements/`,
         component: AssociationEventList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/events/new`,
+        path: `/evenements/nouveau`,
         component: AssociationEventCreate,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/events/:eventId/edit`,
+        path: `/evenements/:eventId/modifier`,
         component: AssociationEventEdit,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/pages/new`,
+        path: `/pages/nouveau`,
         component: AssociationCreatePage,
         exact: true,
         props: { association: association }
@@ -51,32 +51,32 @@ export const routes = association => [
         props: { association: association }
     },
     {
-        path: `/pages/:pageId/edit`,
+        path: `/pages/:pageId/editer`,
         component: AssociationEditPage,
         exact: true,
         props: { association: association }
     },
 
     {
-        path: `/files`,
+        path: `/fichiers`,
         component: AssociationFilesystemList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/files/upload`,
+        path: `/fichiers/telecharger`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/files/:fileId`,
+        path: `/fichiers/:fileId`,
         component: AssociationFilesystemDetail,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/files/:fileId/edit`,
+        path: `/fichiers/:fileId/modifier`,
         component: AssociationFilesystemEdit,
         exact: true,
         props: { association: association }

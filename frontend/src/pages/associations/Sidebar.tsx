@@ -34,7 +34,7 @@ export const AssociationSidebar = ({ association }) => {
             </SidebarItem>
             <SidebarItem
                 icon={"calendar"}
-                to={`/associations/${association.id}/events`}
+                to={`/associations/${association.id}/evenements`}
             >
                 Evenements
             </SidebarItem>

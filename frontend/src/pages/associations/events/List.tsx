@@ -24,7 +24,7 @@ export const AssociationEventList = ({ association, ...props }) => {
         // Should check whether we have the max number of participants
         addButton = (
             <Link
-                to={`/associations/${association.id}/events/new`}
+                to={`/associations/${association.id}/evenements/nouveau`}
                 className={"btn btn-success float-right mt-5"}
             >
                 <i className="fe fe-upload" />
@@ -55,7 +55,7 @@ export const AssociationEventList = ({ association, ...props }) => {
                                                 </Col>
                                                 <Col>
                                                     <Link
-                                                        to={`/associations/${association.id}/events/${event.id}/edit`}
+                                                        to={`/associations/${association.id}/evenements/${event.id}/editer`}
                                                         className={"btn btn-success"}
                                                     >
                                                         <i className="fe fe-edit" />

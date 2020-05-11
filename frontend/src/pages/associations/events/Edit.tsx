@@ -70,7 +70,7 @@ const EditEvent = ({ event, association, ...props }) => {
                     });
 
                     history.push(
-                        `/associations/${association.id}/events`
+                        `/associations/${association.id}/evenements`
                     );
                 })
                 .catch(err => {
