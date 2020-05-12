@@ -199,23 +199,9 @@ export const api = {
             list: () => 
                 unwrap<Form[]>(
                     apiService.get(
-<<<<<<< HEAD
-                        `/courses/forms/`
-                    )
-                ),
-            create: (name: string) => 
-                unwrap<Form>(
-                    apiService.post(
-                        `/courses/forms/`, {
-                            name: name,
-                        }
-                    )
-                ),
-=======
                         `courses/forms`
                     )
                 )
->>>>>>> course_frontend
         },
     },
 };
