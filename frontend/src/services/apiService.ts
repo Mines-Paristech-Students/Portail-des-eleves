@@ -9,6 +9,7 @@ import { Ballot, Election, Result } from "../models/associations/election";
 import { User } from "../models/user";
 import { Course } from "../models/courses/course"
 import { Form } from "../models/courses/form"
+import { Question } from "../models/courses/question"
 
 
 const baseApi = "http://localhost:8000/api/v1";
@@ -193,6 +194,12 @@ export const api = {
             unwrap<Page>(
                 apiService.get(
                     `/courses/courses/${courseId}`
+                )
+            ),
+        questions: courseId => 
+            unwrap<Question[]>(
+                apiService.get(
+                    `/courses/courses/${courseId}/questions`
                 )
             ),
         forms: {
