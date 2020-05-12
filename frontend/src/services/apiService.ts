@@ -99,5 +99,104 @@ export const api = {
                 headers: { "Content-Type": "multipart/form-data" }
             });
         }
-    }
+    },
+    elections: {
+        list: (associationId, activeStatus) =>
+            unwrap<Election[]>(
+                apiService.get(
+                    `/associations/elections/?association=${associationId}&active_status=${activeStatus}`
+                )
+            ),
+        get: electionId =>
+            unwrap<Election>(apiService.get(`/associations/elections/${electionId}`)),
+        results: electionId =>
+            unwrap<Result>(
+                apiService.get(`associations/elections/${electionId}/results`)
+            ),
+        vote: vote =>
+            unwrap<Ballot>(
+                apiService.post(`/associations/elections/${vote.election}/vote/`, vote)
+            ),
+        save: (election, edit, id) => {
+            if (!edit) {
+                return unwrap<Election>(
+                    apiService.post(`/associations/elections/`, election)
+                );
+            }
+            return (
+                apiService.delete(`/associations/elections/${id}`, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                })
+                    .then(unwrap<Election>(apiService.post(`/associations/elections/`, election)))
+            )
+
+        },
+        delete: election => {
+            return apiService.delete(`/associations/elections/${election.id}`, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+        }
+    },
+
+    marketplace: {
+        get: marketplaceId =>
+            unwrap<Marketplace>(
+                apiService.get(`/associations/marketplace/${marketplaceId}`)
+            )
+    },
+
+    products: {
+        list: associationId =>
+            unwrap<Page[]>(
+                apiService.get(
+                    `/associations/products/?association=${associationId}`
+                )
+            )
+    },
+
+    transactions: {
+        create: (product, quantity, buyer) =>
+            apiService.post("/associations/transactions/", {
+                product: product.id,
+                quantity: quantity,
+                buyer: buyer.id
+            }),
+
+        get: (marketplaceId, user: User) =>
+            unwrap<Transaction[]>(
+                apiService.get(`associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`)
+            )
+    },
+
+
+    courses: {
+        list: () =>
+            unwrap<Course[]>(
+                apiService.get(
+                    '/courses/courses'
+                )
+            ),
+        get: courseId =>
+            unwrap<Page>(
+                apiService.get(
+                    `/courses/courses/${courseId}`
+                )
+            ),
+        forms: {
+            list: () => 
+                unwrap<Form[]>(
+                    apiService.get(
+                        `/courses/forms/`
+                    )
+                ),
+            create: (name: string) => 
+                unwrap<Form>(
+                    apiService.post(
+                        `/courses/forms/`, {
+                            name: name,
+                        }
+                    )
+                ),
+        },
+    },
 };
