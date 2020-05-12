@@ -1,39 +1,66 @@
 import React from "react";
-import { api } from "../../services/apiService";
-import { Sidebar, SidebarItem } from "../../utils/Sidebar";
-import { useQuery } from "react-query";
+import { api, useBetterQuery } from "../../services/apiService";
+import {Sidebar, SidebarCategory, SidebarItem} from "../../utils/Sidebar";
 import { Page } from "../../models/associations/page";
 
 export const AssociationSidebar = ({ association }) => {
-    const { data: pages, isLoading, error } = useQuery<Page[], any>(
-        ["pages.list", { associationId: association.id }],
-        api.pages.list
+    const { data: pages, status, error } = useBetterQuery<Page[]>(
+        "pages.list",
+        api.pages.list,
+        association.id
     );
 
-    if (isLoading) {
+    if (status === "loading") {
         return <p>Chargement...</p>;
-    }
-
-    if (error) {
+    } else if (error) {
         return <p>Erreur lors du chargement</p>;
+    } else if (association) {
+        return (
+            <Sidebar title={association.name}>
+
+                <SidebarItem
+                    icon={"file"}
+                    to={`/associations/${association.id}/files`}
+                >
+                    Fichiers
+                </SidebarItem>
+                <SidebarItem
+                    icon={"shopping-cart"}
+                    to={`/associations/${association.id}/marketplace`}
+                >
+                    Magasin
+                </SidebarItem>
+                <SidebarCategory title={"Élections"}>
+                    <SidebarItem
+                        icon={"calendar"}
+                        to={`/associations/${association.id}/elections-a-venir`}
+                    >
+                        À venir
+                    </SidebarItem>
+                    <SidebarItem
+                        icon={"check-square"}
+                        to={`/associations/${association.id}/elections-en-cours`}
+                    >
+                        En cours
+                    </SidebarItem>
+                    <SidebarItem
+                        icon={"bar-chart-2"}
+                        to={`/associations/${association.id}/elections-passees`}
+                    >
+                        Résultats
+                    </SidebarItem>
+                    <AddElectionItem association={association}/>
+                </SidebarCategory>
+                <SidebarCategory title={"Pages"}>
+                    <ListPagesItem association={association} pages={pages} />
+                    <AddPageItem association={association} />
+                </SidebarCategory>
+
+            </Sidebar>
+        );
     }
 
-    if (!pages) {
-        return null;
-    }
-
-    return (
-        <Sidebar title={association.name}>
-            <ListPagesItem association={association} pages={pages} />
-            <AddPageItem association={association} />
-            <SidebarItem
-                icon={"file"}
-                to={`/associations/${association.id}/files`}
-            >
-                Fichiers
-            </SidebarItem>
-        </Sidebar>
-    );
+    return null;
 };
 
 const ListPagesItem = ({ pages, association }) =>
@@ -60,4 +87,18 @@ const AddPageItem = ({ association }) => {
             Ajouter une page
         </SidebarItem>
     );
+};
+
+const AddElectionItem = ({ association }) => {
+    if (association.myRole.electionPermission) {
+        return (
+            <SidebarItem
+                icon={"plus"}
+                to={`/associations/${association.id}/elections/nouvelle`}
+            >
+                Nouvelle élection
+            </SidebarItem>
+        );
+    }
+    return null
 };

@@ -21,48 +21,14 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class FormSerializer(serializers.ModelSerializer):
-    # Writable nested serializer
-    questions = QuestionSerializer(many=True, required=False)
 
     class Meta:
         model = Form
         read_only_fields = ('id', 'date')
-        fields = read_only_fields + ('name', 'questions')
-        depth = 1
-
-    @staticmethod
-    def create_question(question_data):
-        question = Question.objects.create(**question_data)
-        question.save()
-
-    def create_questions(self, instance, questions_data):
-        for question_data in questions_data:
-            question_data["form"] = instance
-            self.create_question(question_data)
-
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-
-        form = Form.objects.create(**validated_data)
-
-        self.create_questions(form, questions_data)
-
-        return form
-
-    def update(self, instance, validated_data):
-        instance.date = datetime.now()
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-
-        return instance
+        fields = read_only_fields + ('name', )
 
 
 class RatingSerializer(serializers.ModelSerializer):
-    """
-    TODO : 
-    Validator for rating -> Check field type based on the question
-    """
-
     class Meta:
         model = Rating
         fields = ("id", "course", "question", "value", "date")
@@ -75,11 +41,6 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    """
-    TODO : 
-    Validator for rating -> Check field type based on the question
-    """
-
     class Meta:
         model = Comment
         fields = ("id", "course", "question", "content")

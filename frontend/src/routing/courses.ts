@@ -15,7 +15,7 @@ export const routes = course => [
         props: { course : course }
     },
     {
-        path: `/formulaires/modifier`,
+        path: `/formulaires/:courseId/éditer`,
         component: EditCourseForm,
         exact: true,
         props: { course : course }

@@ -1,45 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col, Button, Modal } from "react-bootstrap";
+import { Form, Row, Col, Button } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form"
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Formik, useField } from "formik";
 
-
-
-export const CreateCourseForm = (props) => {
+export const CreateCourseForm = () => {
     return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Ajoutter un formulaire
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
+        <PrefillItem></PrefillItem>
     )
 }
 
-export const EditCourseForm = ({ form }) => {
+export const EditCourseForm = ({ Form }) => {
     {/*  
     TODOs
     1. Fetch questions
     */}
 
+    return (
+        <PrefillItem></PrefillItem>
+    )
+}
+
+
+export const PrefillItem = () => {
     const { data: forms, status, error } = useBetterQuery<FormModel[]>(
         "forms.list",
         api.courses.forms.list,
     );
-
-    if (status === "success") console.log(forms);
 
     return (
         <Formik
@@ -74,7 +61,7 @@ export const EditCourseForm = ({ form }) => {
                                 <Form.Control
                                     as="select"
                                     id="formId"
-                                    value={formik.values.formId}
+                                    value={formik.values.formId}                                    
                                     onChange={formik.handleChange}
                                     custom
                                 >

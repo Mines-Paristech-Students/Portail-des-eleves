@@ -40,13 +40,31 @@ class Election(models.Model):
     )
 
     @cached_property
+    def active_status(self):
+        now = datetime.now(tz=timezone.utc)
+        return (
+            "UPCOMING"
+            if self.starts_at > now
+            else ("ACTIVE" if self.ends_at > now else "PAST")
+        )
+
+    @cached_property
     def results(self):
         # First, we fetch all the ballots, but by replacing them by the associated choice name.
         # We then wrap all of these choices into a Counter, which is a nice built-in object which will
         # count the ballots for us.
-        return Counter(
-            [ballot[0] for ballot in self.ballots.values_list("choices__name")]
+        result = Counter(
+            [ballot[0] for ballot in self.ballots.values_list("choices__id")]
         )
+        choices = [choice[0] for choice in self.choices.values_list("id")]
+        for choice in choices:
+            if not choice in result:
+                result[choice] = 0
+        return {
+            "result": result,
+            "number_of_voters": len(self.voters.all()),
+            "number_of_registered": len(self.registered_voters.all()),
+        }
 
     @cached_property
     def is_active(self):

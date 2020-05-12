@@ -63,7 +63,7 @@ const FormSidebar = ({ course }) => {
             </SidebarItem>
             <SidebarItem
                 icon={"file-plus"}
-                to={`/cours/${course.id}/formulaires/modifier`}
+                to={"/cours/formulaires"}
             >
                 Modifier un formulaire
             </SidebarItem>
