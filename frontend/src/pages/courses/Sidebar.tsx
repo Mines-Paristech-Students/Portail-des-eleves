@@ -21,7 +21,7 @@ export const CourseSidebar = ({ course }) => {
                     <FormSidebar course={course} />
                 }
 
-                <EvaluationSidebar />
+                <EvaluationSidebar course={course}/>
 
                 {/* TODO: Files */}
 
@@ -32,13 +32,14 @@ export const CourseSidebar = ({ course }) => {
     return null;
 };
 
-const EvaluationSidebar = () => {
+const EvaluationSidebar = ({ course }) => {
 
     return (
         <SidebarCategory title={"Évaluations"}>
+            {/* TODO only available if user has not yet voted */}
             <SidebarItem
                 icon={"edit-3"}
-                to={""}
+                to={`/cours/${course.id}/evaluer`}
             >
                 Évaluer
             </SidebarItem>
