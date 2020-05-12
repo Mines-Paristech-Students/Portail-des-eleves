@@ -12,5 +12,6 @@ router.register(r'questions', views.QuestionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('submit', views.submit, name='courses-submit')
+    path('submit', views.submit, name='courses-submit'),
+    path("courses/<course_pk>/questions", views.list_course_questions),
 ]

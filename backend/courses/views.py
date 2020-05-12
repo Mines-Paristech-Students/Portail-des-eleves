@@ -1,8 +1,8 @@
 from django.utils.functional import cached_property
 from django.db.models import Avg
 from django.core import serializers
-from django.http import HttpResponse
-
+from django.http import HttpResponse, JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.renderers import JSONRenderer
 from rest_framework import generics
@@ -118,3 +118,22 @@ def submit(request):
     ratings_serializer.save()
 
     return Response(f"User {current_user.id} has voted", status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_course_questions(request, course_pk):
+    try:
+        course = Course.objects.get(id=course_pk)
+    except ObjectDoesNotExist:
+        return Response(f"Course with id: {course_pk} does not exist", status.HTTP_400_BAD_REQUEST)
+
+    form = course.form;
+    if not form:
+        return Response(f"Course with name {course.name} is not binded to any form", status.HTTP_400_BAD_REQUEST)
+
+    questions = Question.objects.filter(form__id=course_pk).all()
+
+    serializer = QuestionSerializer(questions, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
