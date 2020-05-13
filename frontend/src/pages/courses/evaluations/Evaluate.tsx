@@ -34,8 +34,8 @@ export const EvaluateCourse = ({ course }) => {
 };
 
 interface Values {
-    ratings: {[key: number] : number};
-    comments: {[key: number] : string};
+    ratings: { [key: number]: number };
+    comments: { [key: number]: string };
 }
 
 export const QuestionsForm = ({ questions }) => {
@@ -44,13 +44,13 @@ export const QuestionsForm = ({ questions }) => {
     //     <QuestionsForm questions={questions} />
     // ))}
 
-    const initRating = ( questions : Question[] ) => {
-        let base : Values = {
+    const initRating = (questions: Question[]) => {
+        let base: Values = {
             ratings: {},
             comments: {},
         };
         for (let i in questions) {
-            let question : Question = questions[i];
+            let question: Question = questions[i];
             if (question.category === 'R') {
                 base.ratings[question.id] = -1;
             } else if (question.category === 'C') {
@@ -64,8 +64,15 @@ export const QuestionsForm = ({ questions }) => {
         return base;
     };
 
-    const submitAnswers = (values, actions) => {
+    const submitAnswers = (values, { setSubmitting }) => {
+        {/* Function to change the form to json */}
+        setSubmitting(false);
+    }
 
+    const validate = (values) => {
+        {/* Validate the data */}
+        const errors = {};
+        return errors;
     }
 
     return (
@@ -73,19 +80,31 @@ export const QuestionsForm = ({ questions }) => {
         <Formik
             initialValues={initRating(questions)}
             onSubmit={submitAnswers}
+            validate={validate}
         >
             {(props: FormikProps<Values>) => (
-                <Card key={questions[0].id} className={"col-md-4 m-4"}>
-                    <p>{props.values.ratings[0]}</p>
-                    <Card.Body>
-                        <Card.Title>{questions[0].label}</Card.Title>
-                        <Form onSubmit={props.handleSubmit}>
-                            {questions.map((question: Question) => 
-                                <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />
-                            )}
-                        </Form>
-                    </Card.Body>
-                </Card>
+                <Form onSubmit={props.handleSubmit}>
+                    {questions.map((question: Question) => {
+                        let field: JSX.Element = <p>Error</p>;
+                        if (question.category === "R") {
+                            field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
+                        }
+                        else if (question.category === "C") {
+                            field = <CommentField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
+                        };
+                        return (
+                            <Card key={questions.id} className={"col-md-4 m-4"}>
+                                <Card.Body>
+                                    <Card.Title>{question.label}</Card.Title>
+                                    {field}
+                                </Card.Body>
+                            </Card>
+                        )
+                    })}
+                    <Button type="submit" disabled={props.isSubmitting}>
+                        Submit
+                    </Button>
+                </Form>
             )}
         </Formik>
     )
@@ -118,7 +137,28 @@ export const RatingField = ({ question, label, ...props }) => {
                     }
                 </Button>
             )}
-            <p>{field.value[question.id]}</p>
         </Row>
+    );
+};
+
+
+export const CommentField = ({ question, label, ...props }) => {
+    // @ts-ignore
+    const [field, meta, helpers] = useField(props);
+
+    const setValue = (value: string) => {
+        field.value[question.id] = value;
+        helpers.setValue(field.value);
+        console.log(field.value)
+    };
+
+    if (meta.touched && meta.error) return <p>{meta.error}</p>
+    return (
+        <Form.Control
+            as="textarea"
+            rows={3}
+            // @ts-ignore
+            onChange={(e) => setValue(e.target.value)}
+        />
     );
 };
