@@ -58,41 +58,35 @@ export const PollsTableFilter = ({
 
     return (
         <Form.Group {...formGroupProps}>
-            <Form.Label className={"d-none"}>Filtre</Form.Label>
+            <Form.Label className="text-uppercase">Statut</Form.Label>
 
-            <div className="selectgroup selectgroup-pills">
-                <label className="selectgroup-item">
+            <div className="custom-controls-stacked ml-4">
+                <label className="custom-control custom-checkbox">
                     <input
-                        className="selectgroup-input"
+                        className="custom-control-input"
                         type="checkbox"
                         checked={accepted}
                         onChange={() => setAccepted(!accepted)}
                     />
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-check text-success" />
-                    </span>
+                    <span className="custom-control-label">Accepté</span>
                 </label>
-                <label className="selectgroup-item">
+                <label className="custom-control custom-checkbox">
                     <input
-                        className="selectgroup-input"
+                        className="custom-control-input"
                         type="checkbox"
                         checked={rejected}
                         onChange={() => setRejected(!rejected)}
                     />
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-x text-danger" />
-                    </span>
+                    <span className="custom-control-label">Refusé</span>
                 </label>
-                <label className="selectgroup-item">
+                <label className="custom-control custom-checkbox">
                     <input
-                        className="selectgroup-input"
+                        className="custom-control-input"
                         type="checkbox"
                         checked={reviewing}
                         onChange={() => setReviewing(!reviewing)}
                     />
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-eye text-warning" />
-                    </span>
+                    <span className="custom-control-label">En attente</span>
                 </label>
             </div>
         </Form.Group>

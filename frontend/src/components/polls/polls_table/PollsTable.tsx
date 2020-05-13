@@ -51,19 +51,19 @@ export const PollsTable = ({
 
     if (authService.isStaff || !adminVersion) {
         return (
-            <PollsBase>
+            <PollsBase
+                sidebarActions={
+                    <PollsTableFilter
+                        defaultStateFilter={defaultStateFilter}
+                        setStateFilter={setStateFilter}
+                        formGroupProps={{ className: "mb-0" }}
+                    />
+                }
+            >
                 <div className="page-header mt-0 mb-5">
                     <h1 className="page-title">
                         {adminVersion ? "Administration" : "Mes sondages"}
                     </h1>
-
-                    <div className="page-options d-flex">
-                        <PollsTableFilter
-                            defaultStateFilter={defaultStateFilter}
-                            setStateFilter={setStateFilter}
-                            formGroupProps={{ className: "mb-0" }}
-                        />
-                    </div>
                 </div>
 
                 <Card>

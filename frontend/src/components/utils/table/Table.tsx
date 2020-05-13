@@ -9,9 +9,11 @@ import { Sorting } from "./sorting";
  * @param columns a list of `Column` objects. If the `Table` does not need a sorting, pass a list of `{ key, header, render }`
  * object; otherwise, it's more convenient to use `useColumns`.<br />
  * `key` is a string, unique among the other keys.<br />
- * `header` is a component which will be displayed in the header row.<br/>
+ * `header` is a component which will be displayed in the header row.<br />
  * `render` is an optional function. If specified, `render(data)` will be used to fill the cell located in the
- * `data` row and the `key` column. Otherwise, `data[key]` will be used.
+ * `data` row and the `key` column. Otherwise, `data[key]` will be used.<br />
+ * `headerClassName` will be appended to the class of the `th` element containing `header`.<br />
+ * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
  * @param data a list of objects (one item per row) which will be used to fill the table.
  */
 export const Table = ({
@@ -49,7 +51,9 @@ export const Table = ({
  * `header` is a component which will be displayed in the header row.<br />
  * `render` is an optional function. If specified, `render(data)` will be used by the `Table` component to generate
  * the cell located in the `data` row and the `key` column. Otherwise, `data[key]` will be used.<br />
- * If `canSort` is truthy, then `sorting[key]` will contain a `Sorting` object linked to the column sort state.
+ * If `canSort` is truthy, then `sorting[key]` will contain a `Sorting` object linked to the column sort state.<br/>
+ * `headerClassName` will be appended to the class of the `th` element containing `header`.<br />
+ * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
  */
 export function useColumns<T = any>(
     columns: {
@@ -57,6 +61,8 @@ export function useColumns<T = any>(
         header: any;
         render?: (data: T) => any;
         canSort?: boolean;
+        headerClassName?: any;
+        cellClassName?: any;
     }[]
 ): { columns: Columns; sorting: object } {
     // Build an initial sorting object filled with `Sorting.Unsorted`.
@@ -71,28 +77,39 @@ export function useColumns<T = any>(
     const [sorting, setSorting] = useState(initialSorting);
 
     return {
-        columns: columns.map(({ key, header, render, canSort }) => {
-            // Even if the column does not need a sort, it requires these attributes.
-            let base = {
-                key: key,
-                header: header,
-                render: render
-            };
+        columns: columns.map(
+            ({
+                key,
+                header,
+                render,
+                canSort,
+                headerClassName,
+                cellClassName
+            }) => {
+                // Even if the column does not need a sort, it requires these attributes.
+                let base = {
+                    key: key,
+                    header: header,
+                    render: render,
+                    headerClassName: headerClassName,
+                    cellClassName: cellClassName
+                };
 
-            // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
-            return canSort
-                ? {
-                      ...base,
-                      sorting: sorting[key],
-                      onChangeSorting: (newSort?: Sorting) =>
-                          setSorting(_ => {
-                              let newState = { ...initialSorting };
-                              newState[key] = newSort;
-                              return newState;
-                          })
-                  }
-                : base;
-        }),
+                // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
+                return canSort
+                    ? {
+                          ...base,
+                          sorting: sorting[key],
+                          onChangeSorting: (newSort?: Sorting) =>
+                              setSorting(_ => {
+                                  let newState = { ...initialSorting };
+                                  newState[key] = newSort;
+                                  return newState;
+                              })
+                      }
+                    : base;
+            }
+        ),
         sorting: sorting
     };
 }

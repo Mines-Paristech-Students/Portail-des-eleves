@@ -12,7 +12,7 @@ const Row = ({
 }) => (
     <tr role="row" className={index % 2 == 0 ? "even" : "odd"}>
         {columns.map((column, i) => (
-            <td key={i}>
+            <td key={i} className={column.cellClassName}>
                 {column.render !== undefined
                     ? column.render(data)
                     : data[column.key]}

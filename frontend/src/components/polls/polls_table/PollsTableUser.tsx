@@ -54,7 +54,8 @@ export const PollsTableUser = () => {
                     </div>
                 </>
             ),
-            canSort: true
+            canSort: true,
+            headerClassName: "w-50"
         },
         {
             key: "state",
@@ -68,7 +69,8 @@ export const PollsTableUser = () => {
         },
         {
             key: "adminComment",
-            header: "Commentaire"
+            header: "Commentaire",
+            cellClassName: "text-break"
         },
         {
             key: "action",

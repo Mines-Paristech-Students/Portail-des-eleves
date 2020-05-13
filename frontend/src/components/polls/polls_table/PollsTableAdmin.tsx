@@ -3,9 +3,10 @@ import { formatDate } from "../../../utils/format";
 import { PollStateIcon } from "./PollStateIcon";
 import Button from "react-bootstrap/Button";
 import { PollsTable } from "./PollsTable";
+import { Columns } from "../../utils/table/TableHeader";
 
 export const PollsTableAdmin = () => {
-    const columnData = setEditPoll => [
+    const columnData: (setEditPoll) => Columns = setEditPoll => [
         {
             key: "question",
             header: "Contenu",
@@ -20,12 +21,14 @@ export const PollsTableAdmin = () => {
                     </div>
                 </>
             ),
-            canSort: true
+            canSort: true,
+            headerClassName: "w-50"
         },
         {
             key: "user",
             header: "Auteur",
-            canSort: true
+            canSort: true,
+            cellClassName: "text-break"
         },
         {
             key: "publicationDate",

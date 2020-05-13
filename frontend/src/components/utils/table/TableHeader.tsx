@@ -8,28 +8,36 @@ export type Column = {
     render?: (data: any) => any;
     sorting?: Sorting;
     onChangeSorting?: (newSorting?: Sorting) => void;
+    headerClassName?: string;
+    cellClassName?: string;
 };
 
 export type Columns = Column[];
 
 const HeaderRow = ({ columns }: { columns: Columns }) => (
     <tr role="row">
-        {columns.map(({ header, key, sorting, onChangeSorting }) => (
-            <th
-                key={key}
-                className={`noSelect ${
-                    sorting !== undefined ? "pointer" : ""
-                } ${sortingToClassName(sorting)}`}
-                aria-label={`${key}`}
-                onClick={
-                    onChangeSorting
-                        ? () => onChangeSorting(cycleSorting(sorting))
-                        : undefined
-                }
-            >
-                {header}
-            </th>
-        ))}
+        {columns.map(
+            ({ header, key, sorting, onChangeSorting, headerClassName }) => {
+                return (
+                    <th
+                        key={key}
+                        className={`noSelect ${
+                            sorting !== undefined ? "pointer" : ""
+                        } ${sortingToClassName(sorting)} ${
+                            headerClassName ? headerClassName : ""
+                        }`}
+                        aria-label={`${key}`}
+                        onClick={
+                            onChangeSorting
+                                ? () => onChangeSorting(cycleSorting(sorting))
+                                : undefined
+                        }
+                    >
+                        {header}
+                    </th>
+                );
+            }
+        )}
     </tr>
 );
 

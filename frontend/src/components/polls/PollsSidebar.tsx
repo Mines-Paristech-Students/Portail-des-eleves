@@ -1,7 +1,13 @@
 import React from "react";
 import { Sidebar, SidebarItem, SidebarSeparator } from "../Sidebar";
 
-export const PollsSidebar = ({ isStaff }: { isStaff: boolean }) => (
+export const PollsSidebar = ({
+    isStaff,
+    actions
+}: {
+    isStaff: boolean;
+    actions?: any;
+}) => (
     <Sidebar title="Sondages">
         <SidebarItem icon="clock" to="/sondages/">
             En cours
@@ -22,5 +28,6 @@ export const PollsSidebar = ({ isStaff }: { isStaff: boolean }) => (
                 Administration
             </SidebarItem>
         ) : null}
+        {actions && <div className="mt-5 pt-5 border-top">{actions}</div>}
     </Sidebar>
 );
