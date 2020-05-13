@@ -71,16 +71,18 @@ export const QuestionsForm = ({ questions }) => {
     return (
 
         <Formik
-            initialValues={{}}
+            initialValues={initRating(questions)}
             onSubmit={submitAnswers}
         >
-            {(props: FormikProps<any>) => (
+            {(props: FormikProps<Values>) => (
                 <Card key={questions[0].id} className={"col-md-4 m-4"}>
-                    <p>{props.values.rating}</p>
+                    <p>{props.values.ratings[0]}</p>
                     <Card.Body>
                         <Card.Title>{questions[0].label}</Card.Title>
                         <Form onSubmit={props.handleSubmit}>
-                            <RatingField question={questions[0]} name="rating" label="First Name" {...props} />
+                            {questions.map((question: Question) => 
+                                <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />
+                            )}
                         </Form>
                     </Card.Body>
                 </Card>
@@ -93,7 +95,11 @@ export const RatingField = ({ question, label, ...props }) => {
     // @ts-ignore
     const [field, meta, helpers] = useField(props);
 
-    console.log(Array.from(Array(5).keys()));
+    const setValue = (value: number) => {
+        field.value[question.id] = value;
+        helpers.setValue(field.value);
+        console.log(field.value)
+    };
 
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
@@ -104,15 +110,15 @@ export const RatingField = ({ question, label, ...props }) => {
                     style={{ maxWidth: 20 }}
                     id={String(index)}
                     name={String(index)}
-                    onClick={e => helpers.setValue(index + 1)}
+                    onClick={e => setValue(index + 1)}
                 >
-                    {(index < field.value)
+                    {(index < field.value[question.id])
                         ? <span className="text-dark">★</span>
                         : <span className="text-dark">☆</span>
                     }
                 </Button>
             )}
-            <p>{field.value}</p>
+            <p>{field.value[question.id]}</p>
         </Row>
     );
 };
