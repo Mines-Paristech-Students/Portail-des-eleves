@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { Question } from "../../../models/courses/question"
 import { Course } from "../../../models/courses/course";
 import { useField, Formik, FieldConfig, FormikProps } from "formik";
@@ -77,7 +77,8 @@ export const RatingField = ({ label, ...props }) => {
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
         <>
-            <input {...field} {...props} />
+            <Button className="fe fe-star" id="star1" onClick={e => helpers.setValue(3)} />
+            <p>{field.value}</p>
             {/* <span className="fe-star" style={{ fill: "black" }} /> */}
         </>
     );
