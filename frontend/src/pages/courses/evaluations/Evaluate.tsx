@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
 import { Question } from "../../../models/courses/question"
 import { Course } from "../../../models/courses/course";
 import { useField, Formik, FieldConfig, FormikProps } from "formik";
@@ -44,7 +44,7 @@ interface Values {
 export const QuestionCard = ({ question }) => {
     const newToast = useContext(ToastContext);
     return (
-        <Card key={question.id} className={"col-md-3 m-4"}>
+        <Card key={question.id} className={"col-md-4 m-4"}>
             <Card.Body>
                 <Card.Title>{question.label}</Card.Title>
                 <Formik
@@ -53,7 +53,7 @@ export const QuestionCard = ({ question }) => {
                     }}
                     onSubmit={(values, actions) => {
                         newToast({
-                            message: "Fichier supprimé ",
+                            message: String(values.rating),
                             level: ToastLevel.Success
                         });
                     }}
@@ -74,12 +74,28 @@ export const RatingField = ({ label, ...props }) => {
     // @ts-ignore
     const [field, meta, helpers] = useField(props);
 
+    console.log(Array.from(Array(5).keys()));
+
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
         <>
-            <Button className="fe fe-star" id="star1" onClick={e => helpers.setValue(3)} />
+            <Row>
+                {Array.from(Array(5).keys()).map((index) =>
+                    <Button
+                        className="btn-outline-light border-0 bg-white w-20"
+                        style={{ maxWidth: 20 }}
+                        id={String(index)}
+                        name={String(index)}
+                        onClick={e => helpers.setValue(index + 1)}
+                    >
+                        {(index < field.value)
+                            ? <span className="text-dark">★</span>
+                            : <span className="text-dark">☆</span>
+                        }
+                    </Button>
+                )}
+            </Row>
             <p>{field.value}</p>
-            {/* <span className="fe-star" style={{ fill: "black" }} /> */}
         </>
     );
 };
