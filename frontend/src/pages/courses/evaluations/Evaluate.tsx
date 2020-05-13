@@ -10,7 +10,7 @@ import { Question } from "../../../models/courses/question"
 import { Course } from "../../../models/courses/course";
 import { useField, Formik, FieldConfig, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { NONAME } from "dns";
+import { CourseHome } from "../Home";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -26,7 +26,7 @@ export const EvaluateCourse = ({ course }) => {
         return (
             <Container>
                 <PageTitle>Cours</PageTitle>
-                <QuestionsForm questions={questions} />
+                <QuestionsForm questions={questions} course={course} />
             </Container>
         );
     }
@@ -39,7 +39,8 @@ interface Values {
     comments: { [key: number]: string };
 }
 
-export const QuestionsForm = ({ questions }) => {
+
+export const QuestionsForm = ({ questions, course }) => {
     const newToast = useContext(ToastContext);
     // {questions.map(question => (
     //     <QuestionsForm questions={questions} />
@@ -65,20 +66,54 @@ export const QuestionsForm = ({ questions }) => {
         return base;
     };
 
-    const submitAnswers = (values, { setSubmitting }) => {
-        {/* Function to change the form to json */ }
-        setSubmitting(false);
-    }
-
-    const getQuestionById = (id: number) => {
+    const getQuestionById = (id_: string) => {
+        let id: number = parseInt(id_);
         for (let i in questions) {
             if (questions[i].id === id) return questions[i];
         }
     };
 
+    const submitAnswers = (values, { setSubmitting }) => {
+        interface Submission {
+            course: any;
+            ratings: any[];
+            comments: any[];
+        }
+
+        let data: Submission = {
+            course: course.id,
+            ratings: [],
+            comments: [],
+        }
+
+        // Already checked by validation
+        for (let id in values.comments) {
+            if (values.comments[id] != "") {
+                const comment_data = {
+                    question: id,
+                    content: values.comments[id],
+                }
+                data.comments.push(comment_data);
+            }
+        }
+        for (let id in values.ratings) {
+            if (values.ratings[id] != -1) {
+                const rating_data = {
+                    question: id,
+                    value: values.ratings[id],
+                }
+                data.ratings.push(rating_data);
+            }
+        }
+
+        console.log(data);
+
+        setSubmitting(false);
+    }
+
     const validateComments = (comments, errors) => {
         for (let i in comments) {
-            let question: Question = getQuestionById(parseInt(i));
+            let question: Question = getQuestionById(i);
             let comment: string = comments[i];
             if (question.required && (comment === "")) {
                 errors[i] = `${question.label} missing required field`;
@@ -92,7 +127,7 @@ export const QuestionsForm = ({ questions }) => {
 
     const validateRatings = (ratings, errors) => {
         for (let i in ratings) {
-            let question: Question = getQuestionById(parseInt(i));
+            let question: Question = getQuestionById(i);
             let rating: number = ratings[i];
             if (question.required && (rating === -1)) {
                 errors[i] = `${question.label} missing required field`;
@@ -122,6 +157,7 @@ export const QuestionsForm = ({ questions }) => {
             {(props: FormikProps<Values>) => (
                 <Form onSubmit={props.handleSubmit}>
                     {questions.map((question: Question) => {
+                        console.log(props.errors);
                         let field: JSX.Element = <p>Error</p>;
                         if (question.category === "R") {
                             field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
@@ -129,10 +165,20 @@ export const QuestionsForm = ({ questions }) => {
                         else if (question.category === "C") {
                             field = <CommentField question={question} id={question.id} name="comments" label="First Name" {...props} />;
                         };
+
+                        let bg = 'light';
+                        if (props.errors[question.id] != undefined) bg = 'danger';
+
                         return (
-                            <Card key={questions.id} className={"col-md-4 m-4"}>
+                            <Card
+                                key={questions.id}
+                                className="col-md-4 m-4"
+                                text={bg === 'light' ? 'dark' : 'white'}
+                                // @ts-ignore
+                                bg={bg}
+                            >
+                                <Card.Header>{question.label}</Card.Header>
                                 <Card.Body>
-                                    <Card.Title>{question.label}</Card.Title>
                                     {field}
                                 </Card.Body>
                             </Card>
@@ -154,12 +200,11 @@ export const RatingField = ({ question, label, ...props }) => {
     const setValue = (value) => {
         field.value[question.id] = value;
         helpers.setValue(field.value);
-        console.log(field.value)
     };
 
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
-        <Row>
+        <Row className="d-flex justify-content-center">
             {Array.from(Array(5).keys()).map((index) =>
                 <Button
                     className="btn-outline-light border-0 bg-white w-20"
@@ -184,7 +229,6 @@ export const CommentField = ({ question, label, ...props }) => {
     const setValue = (value) => {
         field.value[question.id] = value;
         helpers.setValue(field.value);
-        console.log(field.value)
     };
 
     if (meta.touched && meta.error) return <p>{meta.error}</p>
