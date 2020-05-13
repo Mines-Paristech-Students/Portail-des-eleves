@@ -25,11 +25,7 @@ export const EvaluateCourse = ({ course }) => {
         return (
             <Container>
                 <PageTitle>Cours</PageTitle>
-                <Row>
-                    {questions.map(question => (
-                        <QuestionCard question={question} />
-                    ))}
-                </Row>
+                <QuestionsForm questions={questions} />
             </Container>
         );
     }
@@ -38,39 +34,62 @@ export const EvaluateCourse = ({ course }) => {
 };
 
 interface Values {
-    rating: number;
+    ratings: {[key: number] : number};
+    comments: {[key: number] : string};
 }
 
-export const QuestionCard = ({ question }) => {
+export const QuestionsForm = ({ questions }) => {
     const newToast = useContext(ToastContext);
+    // {questions.map(question => (
+    //     <QuestionsForm questions={questions} />
+    // ))}
+
+    const initRating = ( questions : Question[] ) => {
+        let base : Values = {
+            ratings: {},
+            comments: {},
+        };
+        for (let i in questions) {
+            let question : Question = questions[i];
+            if (question.category === 'R') {
+                base.ratings[question.id] = -1;
+            } else if (question.category === 'C') {
+                base.comments[question.id] = "";
+            } else {
+                console.log("Got unexpected");
+                console.log(question.category);
+            }
+        }
+
+        return base;
+    };
+
+    const submitAnswers = (values, actions) => {
+
+    }
+
     return (
-        <Card key={question.id} className={"col-md-4 m-4"}>
-            <Card.Body>
-                <Card.Title>{question.label}</Card.Title>
-                <Formik
-                    initialValues={{
-                        rating: 1,
-                    }}
-                    onSubmit={(values, actions) => {
-                        newToast({
-                            message: String(values.rating),
-                            level: ToastLevel.Success
-                        });
-                    }}
-                >
-                    {(props: FormikProps<Values>) => (
+
+        <Formik
+            initialValues={{}}
+            onSubmit={submitAnswers}
+        >
+            {(props: FormikProps<any>) => (
+                <Card key={questions[0].id} className={"col-md-4 m-4"}>
+                    <p>{props.values.rating}</p>
+                    <Card.Body>
+                        <Card.Title>{questions[0].label}</Card.Title>
                         <Form onSubmit={props.handleSubmit}>
-                            <RatingField name="rating" label="First Name" {...props} />
-                            <button type="submit" {...props} >Submit</button>
+                            <RatingField question={questions[0]} name="rating" label="First Name" {...props} />
                         </Form>
-                    )}
-                </Formik>
-            </Card.Body>
-        </Card>
+                    </Card.Body>
+                </Card>
+            )}
+        </Formik>
     )
 };
 
-export const RatingField = ({ label, ...props }) => {
+export const RatingField = ({ question, label, ...props }) => {
     // @ts-ignore
     const [field, meta, helpers] = useField(props);
 
@@ -78,24 +97,22 @@ export const RatingField = ({ label, ...props }) => {
 
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
-        <>
-            <Row>
-                {Array.from(Array(5).keys()).map((index) =>
-                    <Button
-                        className="btn-outline-light border-0 bg-white w-20"
-                        style={{ maxWidth: 20 }}
-                        id={String(index)}
-                        name={String(index)}
-                        onClick={e => helpers.setValue(index + 1)}
-                    >
-                        {(index < field.value)
-                            ? <span className="text-dark">★</span>
-                            : <span className="text-dark">☆</span>
-                        }
-                    </Button>
-                )}
-            </Row>
+        <Row>
+            {Array.from(Array(5).keys()).map((index) =>
+                <Button
+                    className="btn-outline-light border-0 bg-white w-20"
+                    style={{ maxWidth: 20 }}
+                    id={String(index)}
+                    name={String(index)}
+                    onClick={e => helpers.setValue(index + 1)}
+                >
+                    {(index < field.value)
+                        ? <span className="text-dark">★</span>
+                        : <span className="text-dark">☆</span>
+                    }
+                </Button>
+            )}
             <p>{field.value}</p>
-        </>
+        </Row>
     );
 };
