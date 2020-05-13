@@ -10,6 +10,7 @@ import { Question } from "../../../models/courses/question"
 import { Course } from "../../../models/courses/course";
 import { useField, Formik, FieldConfig, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { NONAME } from "dns";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -65,13 +66,49 @@ export const QuestionsForm = ({ questions }) => {
     };
 
     const submitAnswers = (values, { setSubmitting }) => {
-        {/* Function to change the form to json */}
+        {/* Function to change the form to json */ }
         setSubmitting(false);
     }
 
+    const getQuestionById = (id: number) => {
+        for (let i in questions) {
+            if (questions[i].id === id) return questions[i];
+        }
+    };
+
+    const validateComments = (comments, errors) => {
+        for (let i in comments) {
+            let question: Question = getQuestionById(parseInt(i));
+            let comment: string = comments[i];
+            if (question.required && (comment === "")) {
+                errors[i] = `${question.label} missing required field`;
+                newToast({
+                    message: `La question intitulée : ${question.label} doit être remplit!`,
+                    level: ToastLevel.Error,
+                });
+            }
+        }
+    }
+
+    const validateRatings = (ratings, errors) => {
+        for (let i in ratings) {
+            let question: Question = getQuestionById(parseInt(i));
+            let rating: number = ratings[i];
+            if (question.required && (rating === -1)) {
+                errors[i] = `${question.label} missing required field`;
+                newToast({
+                    message: `La question intitulée : ${question.label} doit être remplit!`,
+                    level: ToastLevel.Error,
+                });
+            }
+        }
+    }
+
     const validate = (values) => {
-        {/* Validate the data */}
+        {/* Validate the data */ }
         const errors = {};
+        validateRatings(values.ratings, errors);
+        validateComments(values.comments, errors);
         return errors;
     }
 
@@ -90,7 +127,7 @@ export const QuestionsForm = ({ questions }) => {
                             field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
                         }
                         else if (question.category === "C") {
-                            field = <CommentField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
+                            field = <CommentField question={question} id={question.id} name="comments" label="First Name" {...props} />;
                         };
                         return (
                             <Card key={questions.id} className={"col-md-4 m-4"}>
@@ -114,7 +151,7 @@ export const RatingField = ({ question, label, ...props }) => {
     // @ts-ignore
     const [field, meta, helpers] = useField(props);
 
-    const setValue = (value: number) => {
+    const setValue = (value) => {
         field.value[question.id] = value;
         helpers.setValue(field.value);
         console.log(field.value)
@@ -127,9 +164,7 @@ export const RatingField = ({ question, label, ...props }) => {
                 <Button
                     className="btn-outline-light border-0 bg-white w-20"
                     style={{ maxWidth: 20 }}
-                    id={String(index)}
-                    name={String(index)}
-                    onClick={e => setValue(index + 1)}
+                    onClick={_ => setValue(index + 1)}
                 >
                     {(index < field.value[question.id])
                         ? <span className="text-dark">★</span>
@@ -146,7 +181,7 @@ export const CommentField = ({ question, label, ...props }) => {
     // @ts-ignore
     const [field, meta, helpers] = useField(props);
 
-    const setValue = (value: string) => {
+    const setValue = (value) => {
         field.value[question.id] = value;
         helpers.setValue(field.value);
         console.log(field.value)
