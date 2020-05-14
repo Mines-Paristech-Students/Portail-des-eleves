@@ -16,7 +16,6 @@ python manage.py reset_db --noinput
 python manage.py makemigrations authentication
 python manage.py makemigrations associations
 python manage.py makemigrations polls
-python manage.py makemigrations profile
 python manage.py makemigrations repartitions
 python manage.py makemigrations subscriptions
 python manage.py makemigrations tags
@@ -24,7 +23,7 @@ python manage.py makemigrations tags
 python manage.py migrate
 
 python manage.py loaddata authentication
-python manage.py loaddata associations
+python manage.py loaddata association election event library marketplace media page role
 python manage.py loaddata polls
 python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
