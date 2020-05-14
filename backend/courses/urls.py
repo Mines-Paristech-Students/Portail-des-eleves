@@ -14,4 +14,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path("<course_pk>/questions", views.list_course_questions),
     path("<course_pk>/submit", views.submit),
+    path("<course_pk>/has_voted", views.has_voted),
 ]
