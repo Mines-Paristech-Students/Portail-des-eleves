@@ -207,6 +207,12 @@ export const api = {
                 `/courses/${courseId}/submit`, 
                 data,
             ),
+        has_voted: (courseId, user) =>
+            apiService.get(
+                `/courses/${courseId}/has_voted`, 
+            ).then(res => {
+                return res.data.hasVoted;
+            }),
         forms: {
             list: () => 
                 unwrap<Form[]>(

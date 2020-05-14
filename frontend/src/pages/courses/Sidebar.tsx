@@ -21,7 +21,7 @@ export const CourseSidebar = ({ course }) => {
                     <FormSidebar course={course} />
                 }
 
-                <EvaluationSidebar course={course}/>
+                <EvaluationSidebar course={course} />
 
                 {/* TODO: Files */}
 
@@ -33,22 +33,51 @@ export const CourseSidebar = ({ course }) => {
 };
 
 const EvaluationSidebar = ({ course }) => {
+    const { data: has_voted, error, status } = useBetterQuery<boolean>(
+        "courses.has_voted",
+        api.courses.has_voted,
+        course.id,
+    );
 
     return (
         <SidebarCategory title={"Évaluations"}>
-            {/* TODO only available if user has not yet voted */}
-            <SidebarItem
-                icon={"edit-3"}
-                to={`/cours/${course.id}/evaluer`}
-            >
-                Évaluer
+
+            {status === "error" &&
+                <SidebarItem
+                    icon="x-circle"
+                    to={`/cours/${course.id}`}
+                >
+                    {error}
+                </SidebarItem>
+            }
+
+            {status === "loading" &&
+                <SidebarItem
+                    icon="loader"
+                    to={`/cours/${course.id}`}
+                >
+                    Loading
+                </SidebarItem>
+            }
+
+            {(status === "success" && has_voted) &&
+                <SidebarItem
+                    icon="pie-chart"
+                    to={""}
+                >
+                    Résultats
             </SidebarItem>
-            <SidebarItem
-                icon={"pie-chart"}
-                to={""}
-            >
-                Résultats
-            </SidebarItem>
+            }
+
+            {(status === "success" && !has_voted) &&
+                <SidebarItem
+                    icon="edit-3"
+                    to={`/cours/${course.id}/evaluer`}
+                >
+                    Évaluer
+                </SidebarItem>
+            }
+
         </SidebarCategory>
     )
 }

@@ -135,11 +135,8 @@ def list_course_questions(request, course_pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def has_voted(request, course_pk):
-    try :
-        username = request.username
-        has_voted = Course.objects.filter(id=course_pk, have_voted=username)
-    except KeyError:
-        return Response("Username missing in request data", status.HTTP_400_BAD_REQUEST)
+    current_user = request.user
+    has_voted = Course.objects.filter(id=course_pk, have_voted=current_user).exists()
     
     return JsonResponse({"has_voted": has_voted}, safe=False)
     
