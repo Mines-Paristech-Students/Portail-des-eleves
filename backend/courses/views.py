@@ -54,21 +54,15 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def submit(request):
+def submit(request, course_pk):
     """Defined outside CourseViewSet to simplify permissions"""
     data = request.data
     current_user = request.user
 
-    course_id = data.pop("course")
-    if not course_id:
-        return Response("Missing course as field", status.HTTP_400_BAD_REQUEST)
-    elif not Course.objects.filter(id=course_id).exists():
-        return Response("Request's course does not exist", status.HTTP_400_BAD_REQUEST)
-
-    if Course.objects.filter(have_voted=current_user, id=course_id).exists():
+    if Course.objects.filter(have_voted=current_user, id=course_pk).exists():
         return Response("Has already voted!", status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    course = Course.objects.get(id=course_id)
+    course = Course.objects.get(id=course_pk)
 
     # Check course ID
     form = course.form
@@ -84,11 +78,11 @@ def submit(request):
         if ratings_data:
             for rating in ratings_data:
                 ratings_questions.append(rating["question"])
-                rating["course"] = course_id
+                rating["course"] = course_pk
         if comments_data:
             for comment in comments_data:
                 comments_questions.append(comment["question"])
-                comment["course"] = course_id
+                comment["course"] = course_pk
     except KeyError:
         return Response("Missing question id", status.HTTP_400_BAD_REQUEST)
 

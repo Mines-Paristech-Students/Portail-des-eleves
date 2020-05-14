@@ -79,7 +79,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     ##########
 
     create_form_data = {
-        "id": 2,
+        "id": 3,
         "name": "maths generic",
     }
 

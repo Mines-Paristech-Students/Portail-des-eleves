@@ -13,14 +13,15 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
 
     ALL_USERS = ["17simple"]
 
-    def submit(self, data=None, format="json", content_type="application/json"):
-        return self.post(self.endpoint_submit(), data, format)
+    def submit(self, pk, data=None, format="json", content_type="application/json"):
+        return self.post(self.endpoint_submit(pk), data, format)
 
-    def endpoint_submit(self):
-        return "/courses/submit"
+    def endpoint_submit(self, pk):
+        return f"/courses/{pk}/submit"
+
+    course = 1
 
     submission_data = {
-        "course": 1,
         "ratings": [
             {
                 "question": 1,
@@ -40,18 +41,18 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
     ########
 
     def test_if_not_logged_in_then_cannot_submit(self):
-        res = self.submit()
+        res = self.submit(self.course)
         self.assertStatusCode(res, 401)
 
     def test_if_logged_in_cannot_submit_twice(self):
         self.login("17simple")
-        res = self.submit(data=self.submission_data)
+        res = self.submit(self.course, data=self.submission_data)
         self.assertStatusCode(res, 405)
         self.assertFalse(Rating.objects.all().exists())
 
     def test_if_logged_in_can_submit_once(self):
         self.login('17bocquet')
-        res = self.submit(data=self.submission_data)
+        res = self.submit(self.course, data=self.submission_data)
         self.assertStatusCode(res, 201)
 
         self.assertTrue(
@@ -63,13 +64,13 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         data_rating = self.submission_data["ratings"][0]
         self.assertEqual(new_rating.value, data_rating["value"])
         self.assertEqual(new_rating.question.id, data_rating["question"])
-        self.assertEqual(new_rating.course.id, self.submission_data["course"])
+        self.assertEqual(new_rating.course.id, self.course)
 
         new_comment = Comment.objects.latest('date')
         data_comment = self.submission_data["comments"][0]
         self.assertEqual(new_comment.content, data_comment["content"])
         self.assertEqual(new_comment.question.id, data_comment["question"])
-        self.assertEqual(new_comment.course.id, self.submission_data["course"])
+        self.assertEqual(new_comment.course.id, self.course)
 
     ######################
     # MISSING & BAD-DATA #
@@ -86,7 +87,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
             "value": "plip",
         })
 
-        res = self.submit(data=fake_data)
+        res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
 
     def test_if_logged_in_cannot_submit_wrong_category_comments(self):
@@ -98,7 +99,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
             "content": "plip",
         })
 
-        res = self.submit(data=fake_data)
+        res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
 
     # ARCHIVED QUESTIONS #
@@ -112,7 +113,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
             "value": 3,
         })
 
-        res = self.submit(data=fake_data)
+        res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
     
     # COURSE WITHOUT FORM #
@@ -120,7 +121,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
     def test_if_logged_in_cannot_submit_if_course_has_no_form(self):
         self.login("17bocquet")
 
-        res = self.submit(data={"course": 2})
+        res = self.submit(self.course, data={"course": 2})
         self.assertStatusCode(res, 400)
 
     # MISSING REQUIRED DATA #
@@ -131,5 +132,5 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         fake_data = copy.deepcopy(self.submission_data)
         fake_data.pop('ratings')
 
-        res = self.submit(data=fake_data)
+        res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
