@@ -187,26 +187,31 @@ export const api = {
         list: () =>
             unwrap<Course[]>(
                 apiService.get(
-                    '/courses/courses'
+                    '/courses'
                 )
             ),
         get: courseId =>
             unwrap<Page>(
                 apiService.get(
-                    `/courses/courses/${courseId}`
+                    `/courses/${courseId}`
                 )
             ),
         questions: courseId => 
             unwrap<Question[]>(
                 apiService.get(
-                    `/courses/courses/${courseId}/questions`
+                    `/courses/${courseId}/questions`
                 )
+            ),
+        submit: (courseId, data) =>
+            apiService.post(
+                `/courses/${courseId}/submit`, 
+                data,
             ),
         forms: {
             list: () => 
                 unwrap<Form[]>(
                     apiService.get(
-                        `courses/forms`
+                        `/courses/forms`
                     )
                 )
         },

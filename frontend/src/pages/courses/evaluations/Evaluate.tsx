@@ -106,7 +106,20 @@ export const QuestionsForm = ({ questions, course }) => {
             }
         }
 
-        console.log(data);
+        api.courses
+            .submit(course.id, data)
+            .then(res => {
+                newToast({
+                    message: "A voté !",
+                    level: ToastLevel.Success,
+                });
+            })
+            .catch(err => {
+                newToast({
+                    message: err.response.status + " " + err.response.data,
+                    level: ToastLevel.Error,
+                });
+            });
 
         setSubmitting(false);
     }
