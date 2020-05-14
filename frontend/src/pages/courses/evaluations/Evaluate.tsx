@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -42,9 +42,7 @@ interface Values {
 
 export const QuestionsForm = ({ questions, course }) => {
     const newToast = useContext(ToastContext);
-    // {questions.map(question => (
-    //     <QuestionsForm questions={questions} />
-    // ))}
+    let [hasVoted, setHasVoted] = useState<boolean>(false);
 
     const initRating = (questions: Question[]) => {
         let base: Values = {
@@ -113,6 +111,9 @@ export const QuestionsForm = ({ questions, course }) => {
                     message: "A voté !",
                     level: ToastLevel.Success,
                 });
+
+                setSubmitting(false);
+                setHasVoted(true);
             })
             .catch(err => {
                 newToast({
@@ -120,8 +121,6 @@ export const QuestionsForm = ({ questions, course }) => {
                     level: ToastLevel.Error,
                 });
             });
-
-        setSubmitting(false);
     }
 
     const validateComments = (comments, errors) => {
@@ -160,6 +159,7 @@ export const QuestionsForm = ({ questions, course }) => {
         return errors;
     }
 
+    if (hasVoted) return <Redirect  to={`/cours/${course.id}`} />
     return (
 
         <Formik
