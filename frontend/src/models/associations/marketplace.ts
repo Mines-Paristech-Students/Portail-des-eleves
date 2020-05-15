@@ -26,7 +26,7 @@ export enum TransactionStatus {
     Rejected = "REJECTED",
     Validated = "VALIDATED",
     Delivered = "DELIVERED",
-    Refunded = "REFUNDED"
+    Refunded = "REFUNDED",
 }
 
 export interface Transaction {

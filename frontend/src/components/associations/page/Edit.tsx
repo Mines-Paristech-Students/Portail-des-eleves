@@ -15,7 +15,7 @@ export const AssociationCreatePage = ({ association, ...props }) => {
         lastUpdateDate: new Date(),
         tags: [],
         association: association.id,
-        pageType: PageType.Static
+        pageType: PageType.Static,
     };
 
     return <EditPage {...props} page={page} association={association} />;
@@ -42,29 +42,29 @@ const EditPage = ({ page, association, ...props }) => {
 
     const formik = useFormik({
         initialValues: page,
-        onSubmit: values => {
+        onSubmit: (values) => {
             newToast({
                 message: "Sauvegarde en cours",
-                level: ToastLevel.Success
+                level: ToastLevel.Success,
             });
             api.pages
                 .save(values)
-                .then(res => {
+                .then((res) => {
                     newToast({
                         message: "Page sauvegardée !",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                     props.history.push(
                         `/associations/${association.id}/pages/${res.id}`
                     );
                 })
-                .catch(err => {
+                .catch((err) => {
                     newToast({
                         message: err.message,
-                        level: ToastLevel.Error
+                        level: ToastLevel.Error,
                     });
                 });
-        }
+        },
     });
 
     const deletePage = () => {
@@ -72,13 +72,13 @@ const EditPage = ({ page, association, ...props }) => {
         if (confirm("Supprimer la page ? Cette action est irréversible")) {
             api.pages
                 .delete(page)
-                .then(res => {
+                .then((res) => {
                     props.history.push(`/associations/${association.id}`);
                 })
-                .catch(err => {
+                .catch((err) => {
                     newToast({
                         message: err.message,
-                        level: ToastLevel.Error
+                        level: ToastLevel.Error,
                     });
                 });
         }

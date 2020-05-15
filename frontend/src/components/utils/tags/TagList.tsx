@@ -1,4 +1,9 @@
-import { api, PaginatedResponse, useBetterPaginatedQuery, useBetterQuery } from "../../../services/apiService";
+import {
+    api,
+    PaginatedResponse,
+    useBetterPaginatedQuery,
+    useBetterQuery,
+} from "../../../services/apiService";
 import React from "react";
 import { Tag as TagComponent } from "./Tag";
 import { Tag } from "../../../models/tag";
@@ -21,10 +26,9 @@ export enum Models {
 export const TagList = ({ model, id, collapsed = false }) => {
     let params: any = {};
     params[model] = id;
-    const { data: tags, status, error } = useBetterQuery<PaginatedResponse<Tag[]>>(
-        ["tags.list", params],
-        api.tags.list,
-    );
+    const { data: tags, status, error } = useBetterQuery<
+        PaginatedResponse<Tag[]>
+    >(["tags.list", params], api.tags.list);
 
     if (status === "loading")
         return <p className={"text-center"}>Chargement des tags...</p>;

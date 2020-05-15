@@ -23,7 +23,7 @@ import { formatShortYear } from "../utils/format";
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
     { icon: "zap", url: "/associations", label: "Associations" },
-    { icon: "check-square", url: "/sondages", label: "Sondages" }
+    { icon: "check-square", url: "/sondages", label: "Sondages" },
 ];
 
 const linksComponent = links.map(({ icon, url, label }) => {

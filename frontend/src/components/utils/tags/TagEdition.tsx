@@ -221,7 +221,8 @@ export const TagEdition = ({ model, id }) => {
     return (
         <Select
             inputValue={inputValue}
-            value={tags.map((tag) => ({ // The current selected tags
+            value={tags.map((tag) => ({
+                // The current selected tags
                 value: tag.value,
                 label: (
                     <>
@@ -241,7 +242,8 @@ export const TagEdition = ({ model, id }) => {
             filterOption={filterOption}
             styles={colourStyles}
             isDisabled={status === "error"}
-            options={ // All possible suggestions
+            options={
+                // All possible suggestions
                 selectedNamespace === null
                     ? (suggestionsNamespace.map((namespace) => ({
                           value: namespace.name,
