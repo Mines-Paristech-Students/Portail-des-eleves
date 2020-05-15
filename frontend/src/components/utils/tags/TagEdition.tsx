@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { api } from "../../../services/apiService";
 import { Namespace, Tag } from "../../../models/tag";
-import { tablerColors } from "../../../utils/colors";
+import { tablerColors, tablerColorsHex } from "../../../utils/colors";
 import { hashCode } from "../../../utils/hashcode";
-import Autosuggest from "react-autosuggest";
 import "./TagEdition.css";
 import Fuse from "fuse.js";
 import { ToastContext, ToastLevel } from "../Toast";
+import Select from "react-select";
 
 export const TagEdition = ({ model, id }) => {
-    let [tags, setTags] = useState<Tag[]>([]);
     const newToast = useContext(ToastContext);
 
+    // API Helpers to bind and remove tags
     let bindTag = (newTag) => {
         api.tags
             .bind(model, id, newTag.id)
@@ -31,10 +31,9 @@ export const TagEdition = ({ model, id }) => {
             });
         setTags([...tags, newTag]);
     };
-
-    let removeTag = (index) => {
+    let removeTag = (tag) => {
         api.tags
-            .unbind(model, id, tags[index].id)
+            .unbind(model, id, tag.id)
             .then((_) => {
                 newToast({
                     message: "Tag retiré.",
@@ -47,56 +46,31 @@ export const TagEdition = ({ model, id }) => {
                     level: ToastLevel.Error,
                 });
             });
-        setTags(tags.filter((tag, tagIndex) => index !== tagIndex));
+        setTags(tags.filter((t) => t.id !== tag.id));
     };
 
-    let params = {};
-    params[model] = id;
-    useEffect(() => {
-        api.tags.list(params).then((data) => {
-            setTags(data.results);
-        });
-    }, [model, id]);
-
-    return (
-        <>
-            <>
-                {tags.map((tag, i) => (
-                    <TagEditor
-                        key={i}
-                        tag={tag}
-                        removeTag={() => removeTag(i)}
-                    />
-                ))}
-            </>
-            <AddTagInput model={model} id={id} bindTag={bindTag} />
-        </>
-    );
-};
-
-const AddTagInput = ({ model, id, bindTag }) => {
-    const newToast = useContext(ToastContext);
-
-    let [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available namespaces
+    // State declaration
     let [selectedNamespace, setSelectedNamespace] = useState<Namespace | null>(
         null
-    );
+    ); // The namespace in which we want to add a tag
+    let [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available tags
     let [fuseNamespace, setFuseNamespace] = useState<Fuse<
         Namespace,
         any
     > | null>(null); // Namespaces search object
-    let [suggestionsNamespace, setSuggestionsNamespace] = useState<
-        Namespace[] // { newTagName: string } is to add a new tag that didn't exist before.
-    >([]); // Currently displayed suggestions
+    let [suggestionsNamespace, setSuggestionsNamespace] = useState<Namespace[]>(
+        []
+    ); // Currently displayed suggestions
 
-    let [tags, setTags] = useState<Tag[]>([]); // All available tags
+    let [tags, setTags] = useState<Tag[]>([]); // Tags that are linked to the model
     let [fuseTag, setFuseTag] = useState<Fuse<Tag, any> | null>(null); // Tag search object
-    let [suggestionsTag, setSuggestionsTag] = useState<
-        (Tag | { newTagName: string })[]
-    >([]); // Currently displayed suggestions
+    let [suggestionsTag, setSuggestionsTag] = useState<Tag[]>([]); // Currently displayed suggestions
 
-    let [value, setValue] = useState("Chargement en cours..."); // Text in the search input
-    let [status, setStatus] = useState<"loading" | "error" | "OK">("loading"); // in {OK, loading, error}
+    let [inputValue, setInputValue] = useState(""); // The text contained in the input
+    let [searchValue, setSearchValue] = useState(""); // The effective value. For "namespace: label", it would be  "label"
+
+    let [status, setStatus] = useState<"loading" | "error" | "OK">("loading");
+    let [menuIsOpen, setMenuIsOpen] = useState(false);
 
     // Load namespaces and set them as suggestion
     useEffect(() => {
@@ -106,30 +80,29 @@ const AddTagInput = ({ model, id, bindTag }) => {
             .list(params)
             .then((res) => {
                 let namespaces = res.results;
-                setNamespaces(namespaces);
-
                 setFuseNamespace(
                     new Fuse(namespaces, {
                         keys: ["name"],
                     })
                 );
 
+                setNamespaces(namespaces);
                 setSuggestionsNamespace(namespaces);
                 setStatus("OK");
-                setValue("");
             })
             .catch((error) => {
                 setStatus("error");
-                setValue(error.toString);
+                setInputValue(
+                    `Erreur durant le chargement : ${error.toString()}`
+                );
             });
     }, [model, id]);
 
     // Give the tags related to the namespace
     useEffect(() => {
-        if (selectedNamespace != null) {
+        if (selectedNamespace !== null) {
             api.tags.list({ namespace: selectedNamespace.id }).then((res) => {
                 let tags = res.results;
-                setTags(tags);
                 setSuggestionsTag(tags);
                 setFuseTag(
                     new Fuse(tags, {
@@ -138,56 +111,41 @@ const AddTagInput = ({ model, id, bindTag }) => {
                 );
             });
         } else {
-            setTags([]);
             setFuseTag(null);
         }
     }, [selectedNamespace]);
 
+    // Get all tags of the model
+    let params = {};
+    params[model] = id;
+    useEffect(() => {
+        api.tags.list(params).then((data) => {
+            setTags(data.results);
+        });
+    }, [model, id]);
+
     // Event handlers
-    const onChange = (event, { newValue, method }) => {
-        // When input changes
-        if (
-            selectedNamespace !== null && // If there is a selected namespace
-            (newValue.indexOf(":") === -1 || // but we removed the colon
-                newValue.split(":")[0] != selectedNamespace.name) // Or tried to change the namespace name
-        ) {
-            setSelectedNamespace(null);
-        } else if (
-            selectedNamespace === null &&
-            newValue.indexOf(":") !== -1 // we just added the colon
-        ) {
-            let namespaceName = newValue.split(":")[0].trim(); // Get the name of the namespace the user wants
-            let selectNamespaceCandiates = namespaces.filter(
-                (n) => n.name == namespaceName
-            ); // Check if a namespace has the name we want
-            if (selectNamespaceCandiates.length == 1) {
-                setSelectedNamespace(selectNamespaceCandiates[0]);
-            }
-        }
+    const handleChange = (selectedOption, action) => {
+        if (action.action === "select-option") {
+            let selectedNamespaces = selectedOption.filter(
+                (option) => option.type == "namespace"
+            );
 
-        setValue(newValue);
-    };
+            let newTag = selectedOption.filter(
+                (option) => option.type == "new_value"
+            );
 
-    const onKeyDown = (event) => {
-        // Prevent from submitting the form on pressing enter
-        if (event.key === "Enter") {
-            event.preventDefault();
-        }
-    };
-
-    let onSuggestionsClearRequested = () => {};
-    let onSuggestionSelected = (
-        event,
-        { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }
-    ) => {
-        if (selectedNamespace === null) {
-            setValue(`${suggestionValue}:`);
-            setSelectedNamespace(suggestion);
-        } else {
-            if (suggestion.hasOwnProperty("newTagName")) {
+            if (selectedNamespaces.length >= 1) {
+                // If there is a namespace in the selected option, we want to display the tags
+                let selectedNamespace = selectedNamespaces[0].namespace;
+                setSelectedNamespace(selectedNamespace);
+                setInputValue(`${selectedNamespace.name}: `);
+                setMenuIsOpen(true);
+            } else if (newTag.length >= 1) {
+                // If there is a namespace in the selected option, we want to display the tags
                 api.tags
-                    .create(suggestion.newTagName, selectedNamespace)
-                    .then(createdTag => {
+                    .create(newTag[0].value, selectedNamespace)
+                    .then((createdTag) => {
                         bindTag(createdTag);
                     })
                     .catch(() => {
@@ -196,105 +154,147 @@ const AddTagInput = ({ model, id, bindTag }) => {
                             level: ToastLevel.Error,
                         });
                     });
+
+                setSelectedNamespace(null);
             } else {
-                bindTag(suggestion);
+                // all tags in the selection options, we bind the lasted option added
+                bindTag(selectedOption[selectedOption.length - 1].tag);
+                setSelectedNamespace(null);
             }
-            setSelectedNamespace(null);
-            setValue("");
+        } else if (action.action === "remove-value") {
+            removeTag(action.removedValue.tag);
         }
     };
-    let onSuggestionsFetchRequested = ({ value, reason }) => {
+
+    const onInputChange = (value, action) => {
+        setInputValue(value);
+
+        // Check if we still have a namespace selected
+        let searchValue = value;
+        if (value.indexOf(":") === -1) {
+            if (selectedNamespace !== null) {
+                setSelectedNamespace(null);
+            }
+        } else {
+            let namespaceValue = value.split(":")[0];
+            let matchingNamespaces = namespaces.filter(
+                (namespace) => namespace.name == namespaceValue
+            );
+            if (matchingNamespaces.length !== 0) {
+                if (selectedNamespace == null) {
+                    setSelectedNamespace(matchingNamespaces[0]);
+                }
+                searchValue = value.split(":")[1];
+            }
+        }
+
+        searchValue = searchValue.trim();
+        setSearchValue(searchValue);
+
+        // Refresh the different suggestions
         if (selectedNamespace === null) {
-            setSuggestionsNamespace(
-                fuseNamespace!
-                    .search(value, { limit: 10 })
+            searchValue.length === 0
+                ? namespaces.slice(0, 10)
+                : setSuggestionsNamespace(
+                      fuseNamespace!
+                          .search(searchValue, { limit: 10 })
+                          .map((suggestion) => suggestion.item)
+                  );
+        } else {
+            setSuggestionsTag(
+                fuseTag!
+                    .search(searchValue, { limit: 10 })
                     .map((suggestion) => suggestion.item)
             );
-        } else {
-            let tagName = value.split(":")[1].trim();
-            setSuggestionsTag([
-                ...fuseTag!
-                    .search(tagName, { limit: 10 })
-                    .map((suggestion) => suggestion.item),
-                { newTagName: tagName },
-            ]);
         }
     };
 
-    // Rendering
-    const theme = {
-        container: "autosuggest",
-        input: "form-control form-control-sm",
-        suggestionsContainer: "dropdown suggestion-dropdown",
-        suggestionsList: `dropdown-menu ${
-            suggestionsNamespace.length ? "show" : ""
-        }`,
-        suggestion: "dropdown-item",
-        suggestionFocused: "active",
-    };
+    const filterOption = (candidate, input) => {
+        // Don't display the "add new suggestion" field if we didn't enter anything
+        if (candidate.data.type == "new_value") {
+            return searchValue.length > 0;
+        }
 
-    const getSuggestionValue = (suggestion) =>
-        (selectedNamespace !== null
-            ? getSuggestionValueTag
-            : getSuggestionValueNamespace)(suggestion);
-
-    const getSuggestionValueNamespace = (suggestion) => suggestion.name;
-
-    const getSuggestionValueTag = (suggestion) =>
-        `${selectedNamespace?.name}: ${
-            suggestion.hasOwnProperty("newTagName")
-                ? suggestion.newTagName
-                : suggestion.value
-        }`;
-    const renderSuggestion = (suggestion, { query, isHighlighted }) => (
-        <div className={isHighlighted ? "active" : ""}>
-            {suggestion.hasOwnProperty("newTagName") ? (
-                <em className={"text-center d-block"}>
-                    Ajouter nouveau tag : {suggestion.newTagName}
-                </em>
-            ) : (
-                getSuggestionValue(suggestion)
-            )}
-        </div>
-    );
-
-    let inputProps = {
-        placeholder: "Ajouter un tag",
-        value,
-        onChange: onChange,
-        onKeyDown: onKeyDown,
-        disabled: status != "OK",
+        return true;
     };
 
     return (
-        <Autosuggest
-            suggestions={
-                selectedNamespace !== null
-                    ? suggestionsTag
-                    : suggestionsNamespace
+        <Select
+            inputValue={inputValue}
+            value={tags.map((tag) => ({ // The current selected tags
+                value: tag.value,
+                label: (
+                    <>
+                        {tag.namespace.name}
+                        <span className={"tag-editor-value"}>{tag.value}</span>
+                    </>
+                ),
+                tag: tag,
+                type: "tag",
+            }))}
+            onChange={handleChange}
+            menuIsOpen={menuIsOpen}
+            onMenuOpen={() => setMenuIsOpen(true)}
+            onMenuClose={() => setMenuIsOpen(false)}
+            isMulti={true}
+            onInputChange={onInputChange}
+            filterOption={filterOption}
+            styles={colourStyles}
+            isDisabled={status === "error"}
+            options={ // All possible suggestions
+                selectedNamespace === null
+                    ? (suggestionsNamespace.map((namespace) => ({
+                          value: namespace.name,
+                          label: namespace.name,
+                          namespace: namespace,
+                          type: "namespace",
+                      })) as any)
+                    : (suggestionsTag.map((tag) => ({
+                          value: tag.value,
+                          label: `${tag.namespace.name}: ${tag.value}`,
+                          tag: tag,
+                          type: "tag",
+                      })) as any[]).concat([
+                          {
+                              value: searchValue,
+                              label: (
+                                  <em className={"text-center d-block"}>
+                                      Ajouter nouveau tag : {searchValue}
+                                  </em>
+                              ),
+                              type: "new_value",
+                          },
+                      ])
             }
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-            onSuggestionSelected={onSuggestionSelected}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
-            inputProps={inputProps}
-            theme={theme}
         />
     );
 };
 
-const TagEditor = ({ tag, removeTag }) => {
-    let type =
-        "tag-" +
-        tablerColors[hashCode(tag.namespace.name) % tablerColors.length];
-    return (
-        <div className={`tag mb-2 mr-2 ${type}`}>
-            {tag.namespace.name}
-            <span className="tag-addon">{tag.value}</span>
-            <span className="align-middle">
-                <i className="fe fe-x ml-3" onClick={removeTag} />
-            </span>
-        </div>
-    );
+// Styling
+const color = (data) =>
+    tablerColorsHex[
+        tablerColors[hashCode(data.tag.namespace.name) % tablerColors.length]
+    ];
+const colourStyles = {
+    control: (styles) => ({ ...styles, backgroundColor: "white" }),
+    multiValue: (styles, { data }) => {
+        return {
+            ...styles,
+            backgroundColor: color(data),
+            color: "white",
+        };
+    },
+    multiValueLabel: (styles, { data }) => ({
+        ...styles,
+        backgroundColor: color(data),
+        color: "white",
+    }),
+    multiValueRemove: (styles, { data }) => ({
+        ...styles,
+        backgroundColor: color(data),
+        color: "white",
+        ":hover": {
+            color: "red",
+        },
+    }),
 };

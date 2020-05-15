@@ -1,33 +1,6 @@
-input.form-control:focus {
-    box-shadow: none;
-    outline: none;
+.tag-editor-value {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: -5px;
 }
-
-.suggestion-dropdown {
-    width: 100%;
-}
-
-.suggestion-dropdown li {
-    padding: 0;
-}
-
-.suggestion-dropdown li div {
-    padding: 0.2em 0.7em;
-}
-
-.suggestion-dropdown li div.active {
-    background: #f8f9fa;
-    color: rgb(22, 24, 27);
-}
-
-.suggestion-dropdown .dropdown-menu {
-    margin-top: -20px !important;
-    width: 100%;
-
-    border-top: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-
-    border-color: var(--azure);
-}
-
