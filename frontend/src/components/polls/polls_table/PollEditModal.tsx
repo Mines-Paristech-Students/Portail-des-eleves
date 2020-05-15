@@ -9,7 +9,7 @@ export const PollEditModal = ({
     onHide,
     poll,
     refetch,
-    isAdmin
+    isAdmin,
 }: {
     show: boolean;
     onHide: any;

@@ -16,7 +16,7 @@ import { Sorting } from "./sorting";
  */
 export const Table = ({
     columns,
-    data
+    data,
 }: {
     columns: Column[];
     data: object[];
@@ -76,7 +76,7 @@ export function useColumns<T = any>(
             let base = {
                 key: key,
                 header: header,
-                render: render
+                render: render,
             };
 
             // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
@@ -85,14 +85,14 @@ export function useColumns<T = any>(
                       ...base,
                       sorting: sorting[key],
                       onChangeSorting: (newSort?: Sorting) =>
-                          setSorting(_ => {
+                          setSorting((_) => {
                               let newState = { ...initialSorting };
                               newState[key] = newSort;
                               return newState;
-                          })
+                          }),
                   }
                 : base;
         }),
-        sorting: sorting
+        sorting: sorting,
     };
 }

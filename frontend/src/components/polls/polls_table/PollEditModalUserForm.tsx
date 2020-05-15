@@ -11,7 +11,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 export const PollEditModalUserForm = ({
     poll,
     refetch,
-    handleClose
+    handleClose,
 }: {
     poll: Poll;
     refetch: any;
@@ -23,21 +23,21 @@ export const PollEditModalUserForm = ({
         let data = {
             question: values.question,
             choice0: values.choice0,
-            choice1: values.choice1
+            choice1: values.choice1,
         };
 
         api.polls
             .update(poll.id, data)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 200) {
                     newToast({
                         message: "Sondage modifié.",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                     refetch({ force: true });
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 let message =
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
@@ -48,7 +48,7 @@ export const PollEditModalUserForm = ({
 
                 newToast({
                     message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             })
             .then(() => {
@@ -62,12 +62,12 @@ export const PollEditModalUserForm = ({
             initialValues={{
                 question: poll.question,
                 choice0: poll.choices[0].text,
-                choice1: poll.choices[1].text
+                choice1: poll.choices[1].text,
             }}
             validationSchema={Yup.object({
                 question: Yup.string().required("Ce champ est requis."),
                 choice0: Yup.string().required("Ce champ est requis."),
-                choice1: Yup.string().required("Ce champ est requis.")
+                choice1: Yup.string().required("Ce champ est requis."),
             })}
             onSubmit={onSubmit}
         >

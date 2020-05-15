@@ -31,24 +31,24 @@ export const AssociationFilesystemEdit = ({ association }) => {
         );
     }
 
-    const deleteFile = media => {
+    const deleteFile = (media) => {
         if (!window.confirm("Supprimer le fichier ?")) {
             return;
         }
 
         api.medias
             .delete(media)
-            .then(res => {
+            .then((res) => {
                 newToast({
                     message: "Fichier supprimé ",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
                 history.push(`/associations/${association.id}/files/`);
             })
-            .catch(err => {
+            .catch((err) => {
                 newToast({
                     message: err.statusCode + " " + err.message,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             });
     };
@@ -64,26 +64,26 @@ export const AssociationFilesystemEdit = ({ association }) => {
                         .patch({
                             id: values.id,
                             name: values.name,
-                            description: values.description
+                            description: values.description,
                         })
-                        .then(res => {
+                        .then((res) => {
                             newToast({
                                 message: "Sauvegardé : " + res.name,
-                                level: ToastLevel.Success
+                                level: ToastLevel.Success,
                             });
                             history.push(
                                 `/associations/${association.id}/files/${media.id}/`
                             );
                         })
-                        .catch(err =>
+                        .catch((err) =>
                             newToast({
                                 message: err.statusCode + " " + err.message,
-                                level: ToastLevel.Error
+                                level: ToastLevel.Error,
                             })
                         );
                 }}
             >
-                {formik => (
+                {(formik) => (
                     <Form onSubmit={formik.handleSubmit}>
                         <Button
                             className={"btn-success float-right"}
@@ -111,7 +111,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             />
                         </PageTitle>
 
-                        {media.tags.map(tag => (
+                        {media.tags.map((tag) => (
                             <Tag
                                 key={tag.id}
                                 addon={tag.value}

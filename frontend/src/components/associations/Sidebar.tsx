@@ -2,7 +2,7 @@ import React from "react";
 import {
     api,
     PaginatedResponse,
-    useBetterQuery
+    useBetterQuery,
 } from "../../services/apiService";
 import { Sidebar, SidebarItem } from "../Sidebar";
 import { Page } from "../../models/associations/page";
@@ -44,7 +44,7 @@ export const AssociationSidebar = ({ association }) => {
 };
 
 const ListPagesItem = ({ pages, association }) =>
-    pages.map(page => (
+    pages.map((page) => (
         <SidebarItem
             icon={"book"}
             to={`/associations/${association.id}/pages/${page.id}`}

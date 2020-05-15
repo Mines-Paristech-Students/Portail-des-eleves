@@ -7,14 +7,14 @@ import { PollStateIcon } from "./PollStateIcon";
 
 export const PollsTableRowAdmin = ({
     poll,
-    refetch
+    refetch,
 }: {
     poll: Poll;
     refetch: any;
 }) => {
     const [editable, setEditable] = useState<boolean>(false);
 
-    const onClickEdit = event => {
+    const onClickEdit = (event) => {
         event.preventDefault();
         setEditable(true);
     };

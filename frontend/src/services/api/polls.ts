@@ -10,7 +10,7 @@ export const polls = {
                 .then((response: AxiosResponse<Poll[]>) => {
                     // Parse the date (because it's not a datetime).
                     response.data.forEach(
-                        poll =>
+                        (poll) =>
                             (poll.publicationDate = poll.publicationDate
                                 ? new Date(poll.publicationDate)
                                 : undefined)
@@ -19,11 +19,11 @@ export const polls = {
                     return response;
                 })
         ),
-    get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
+    get: (pollId) => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
     create: (data: { question: string; choice0: string; choice1: string }) =>
         apiService.post("/polls/", {
             question: data.question,
-            choices: [{ text: data.choice0 }, { text: data.choice1 }]
+            choices: [{ text: data.choice0 }, { text: data.choice1 }],
         }),
     update: (
         pollId,
@@ -37,16 +37,17 @@ export const polls = {
     ) => {
         // Format the date.
         if (data.publicationDate && typeof data.publicationDate !== "string") {
-            data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
-                1}-${data.publicationDate.getDate()}`;
+            data.publicationDate = `${data.publicationDate.getFullYear()}-${
+                data.publicationDate.getMonth() + 1
+            }-${data.publicationDate.getDate()}`;
         }
 
         return apiService.patch(`/polls/${pollId}/`, data);
     },
-    delete: pollId => apiService.delete(`/polls/${pollId}/`),
+    delete: (pollId) => apiService.delete(`/polls/${pollId}/`),
     vote: (user, pollId, choiceId) =>
         apiService.post(`/polls/${pollId}/vote/`, {
             user: user.id,
-            choice: choiceId
-        })
+            choice: choiceId,
+        }),
 };

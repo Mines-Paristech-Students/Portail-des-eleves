@@ -53,7 +53,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     {media.name}
                 </PageTitle>
 
-                {media.tags.map(tag => (
+                {media.tags.map((tag) => (
                     <Tag
                         key={tag.id}
                         addon={tag.value}

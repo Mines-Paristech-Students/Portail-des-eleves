@@ -15,14 +15,14 @@ export const PrivateRoute = ({
     return (
         <Route
             {...rest}
-            render={props =>
+            render={(props) =>
                 authService.isAuthenticated ? (
                     <Component {...props} {...routeProps} />
                 ) : (
                     <Redirect
                         to={{
                             pathname: "/login",
-                            state: { from: props.location }
+                            state: { from: props.location },
                         }}
                     />
                 )
@@ -34,7 +34,7 @@ export const PrivateRoute = ({
 export const CommonPrivateRoute = ({ component: Component, ...rest }) => (
     <PrivateRoute
         {...rest}
-        component={props => (
+        component={(props) => (
             <UserProvider>
                 <Navbar />
                 <Component {...props} />

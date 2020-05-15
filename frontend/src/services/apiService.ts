@@ -4,7 +4,7 @@ import {
     PaginatedQueryResult,
     QueryResult,
     usePaginatedQuery,
-    useQuery
+    useQuery,
 } from "react-query";
 import { pages } from "./api/pages";
 import { news } from "./api/news";
@@ -27,7 +27,7 @@ export type PaginatedResponse<T> = {
 export const apiService = applyConverters(
     Axios.create({
         withCredentials: true,
-        baseURL: baseApi
+        baseURL: baseApi,
     })
 );
 
@@ -49,7 +49,7 @@ export const api = {
     products: products,
     transactions: transactions,
 
-    polls: polls
+    polls: polls,
 };
 
 /**

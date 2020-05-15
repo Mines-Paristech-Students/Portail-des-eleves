@@ -9,7 +9,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const PollsTableRowUser = ({
     poll,
-    refetch
+    refetch,
 }: {
     poll: Poll;
     refetch: any;
@@ -27,16 +27,16 @@ export const PollsTableRowUser = ({
 
         api.polls
             .delete(poll.id)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 204) {
                     newToast({
                         message: "Sondage supprimé.",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                     refetch({ force: true });
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 let message =
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
@@ -48,7 +48,7 @@ export const PollsTableRowUser = ({
 
                 newToast({
                     message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             });
     };

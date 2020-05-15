@@ -10,7 +10,7 @@ const types = [
     "orange",
     "yellow",
     "lime",
-    "teal"
+    "teal",
 ];
 
 function hashCode(s) {
