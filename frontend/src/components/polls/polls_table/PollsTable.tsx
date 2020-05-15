@@ -10,22 +10,18 @@ import { PollsError } from "../PollsError";
 import { authService } from "../../../App";
 import { ForbiddenError } from "../../utils/ErrorPage";
 import { Pagination } from "../../utils/Pagination";
-import {
-    hasPollStateFilter,
-    PollsTableFilter,
-    PollStateFilter
-} from "./PollsTableFilter";
+import { PollsTableFilter, PollStateFilter } from "./PollsTableFilter";
 import { UserContext } from "../../../services/authService";
 import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
-import { Columns } from "../../utils/table/TableHeader";
+import { Column } from "../../utils/table/TableHeader";
 
 export const PollsTable = ({
     adminVersion,
     columnData
 }: {
     adminVersion: boolean;
-    columnData: (setEditPoll) => Columns;
+    columnData: (setEditPoll) => Column[];
 }) => {
     const user = useContext(UserContext);
 

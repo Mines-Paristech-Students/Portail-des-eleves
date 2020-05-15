@@ -3,10 +3,10 @@ import { formatDate } from "../../../utils/format";
 import { PollStateIcon } from "./PollStateIcon";
 import Button from "react-bootstrap/Button";
 import { PollsTable } from "./PollsTable";
-import { Columns } from "../../utils/table/TableHeader";
+import { Column } from "../../utils/table/TableHeader";
 
 export const PollsTableAdmin = () => {
-    const columnData: (setEditPoll) => Columns = setEditPoll => [
+    const columnData: (setEditPoll) => Column[] = setEditPoll => [
         {
             key: "question",
             header: "Contenu",

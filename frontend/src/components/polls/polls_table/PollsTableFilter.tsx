@@ -8,10 +8,6 @@ export type PollStateFilter = {
     reviewing: boolean;
 };
 
-export const hasPollStateFilter = (filter: PollStateFilter) => {
-    return filter.accepted || filter.rejected || filter.reviewing;
-};
-
 /**
  * Build an URL filtering parameter from a `PollStateFilter` object.
  *

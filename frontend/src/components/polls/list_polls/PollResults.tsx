@@ -67,7 +67,7 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                                                     (100 *
                                                         choice.numberOfVotes) /
                                                         totalVotes(poll)
-                                                )}{" "}
+                                                ).toFixed(1)}{" "}
                                                 %
                                             </small>
                                         </div>

@@ -1,0 +1,61 @@
+#######
+# BDE #
+#######
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 19bde
+    role: CEO
+    association: bde
+    administration_permission: true
+    election_permission: true
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 19library-bde
+    role: Archiviste
+    association: bde
+    library_permission: true
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 19membre-bde
+    role: Éditeur en chef
+    association: bde
+    event_permission: true
+    media_permission: true
+    page_permission: true
+
+#########
+# Biéro #
+#########
+
+- model: associations.role
+  pk: 101
+  fields:
+    user: 19biero
+    role: Manager
+    association: biero
+    administration_permission: true
+    election_permission: true
+
+- model: associations.role
+  pk: 102
+  fields:
+    user: 19market-biero
+    role: Caissière
+    association: biero
+    marketplace_permission: true
+
+- model: associations.role
+  pk: 103
+  fields:
+    user: 19membre-biero
+    role: Éditrice en chef
+    association: biero
+    event_permission: true
+    media_permission: true
+    page_permission: true

@@ -6,7 +6,7 @@
   pk: 1
   fields:
     question: "Le déconfinement ce sera le"
-    user: "17bocquet"
+    user: "14alarro"
     creation_date_time: "2020-05-07T20:00:00+00:00"
     state: "ACCEPTED"
     publication_date: "2020-05-10"
@@ -27,7 +27,7 @@
   pk: 2
   fields:
     question: "Le plus mignon"
-    user: "17bocquet"
+    user: "15veaux"
     creation_date_time: "2020-05-04T20:00:00+00:00"
     state: "ACCEPTED"
     publication_date: "2020-05-08"
@@ -90,7 +90,7 @@
   pk: 5
   fields:
     question: "Le meilleur sondage proposé par les VP Geek hier"
-    user: "19simple"
+    user: "16leroy"
     creation_date_time: "2020-05-02T20:00:00+00:00"
     state: "ACCEPTED"
     publication_date: "2020-05-04"
@@ -111,7 +111,7 @@
   pk: 6
   fields:
     question: "Entre cours et campagne, explosion du nombre de zoom. Qui en pâtit le plus ?"
-    user: "19simple"
+    user: "17wan-fat"
     creation_date_time: "2020-04-15T20:00:00+00:00"
     state: "ACCEPTED"
     publication_date: "2020-04-16"
@@ -132,7 +132,7 @@
   pk: 7
   fields:
     question: "Ton cours préféré ?"
-    user: "17bocquet"
+    user: "18aouir"
     creation_date_time: "2019-06-01T20:00:00+00:00"
     publication_date: "2019-06-01"
     state: "ACCEPTED"
@@ -153,7 +153,7 @@
   pk: 8
   fields:
     question: "On est confinés !"
-    user: "16leroy"
+    user: "17bocquet"
     creation_date_time: "2020-04-19T20:00:00+00:00"
     publication_date: "2020-04-19"
     state: "ACCEPTED"
@@ -174,7 +174,7 @@
   pk: 9
   fields:
     question: "Le plus long en confinement"
-    user: "16leroy"
+    user: "17bocquet"
     creation_date_time: "2020-04-19T20:00:00+00:00"
     publication_date: "2020-04-19"
     state: "ACCEPTED"
@@ -195,7 +195,7 @@
   pk: 10
   fields:
     question: "Qu'est ce qu'on aura en premier ?"
-    user: "16leroy"
+    user: "19bde"
     creation_date_time: "2020-04-19T20:00:00+00:00"
     publication_date: "2020-04-19"
     state: "ACCEPTED"
@@ -216,7 +216,7 @@
   pk: 11
   fields:
     question: "L'alphabet"
-    user: "17bocquet"
+    user: "19biero"
     creation_date_time: "2020-04-17T20:00:00+00:00"
     publication_date: "2020-04-20"
     state: "ACCEPTED"
@@ -237,7 +237,7 @@
   pk: 12
   fields:
     question: "La meilleure idée de la DE"
-    user: "17bocquet"
+    user: "19market-biero"
     creation_date_time: "2010-03-22T20:00:00+00:00"
     publication_date: "2010-03-28"
     state: "ACCEPTED"
@@ -279,6 +279,27 @@
     text: "Un nouveau BDE"
     poll: 100
 
+- model: polls.Poll
+  pk: 101
+  fields:
+    question: "Piche ?"
+    user: "17bocquet"
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    admin_comment: "Bof…"
+    state: "REJECTED"
+
+- model: polls.Choice
+  pk: 103
+  fields:
+    text: "Piche."
+    poll: 101
+
+- model: polls.Choice
+  pk: 104
+  fields:
+    text: "Piche !"
+    poll: 101
+
 ###################
 # REVIEWING POLLS #
 ###################
@@ -303,6 +324,26 @@
     text: "pIChE"
     poll: 200
 
+- model: polls.Poll
+  pk: 201
+  fields:
+    question: "Bada..."
+    user: 19bde
+    creation_date_time: "2020-04-19T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 203
+  fields:
+    text: "bim"
+    poll: 201
+
+- model: polls.Choice
+  pk: 204
+  fields:
+    text: "boum"
+    poll: 201
+
 #########
 # VOTES #
 #########
@@ -311,334 +352,922 @@
   pk: 1
   fields:
     poll: 1
-    user: "15veaux"
-    choice: 2
+    user: "16leroy"
+    choice: 1
 
 - model: polls.Vote
   pk: 2
   fields:
     poll: 1
-    user: "17bocquet"
+    user: "19market-biero"
     choice: 1
 
 - model: polls.Vote
   pk: 3
   fields:
     poll: 1
-    user: "16leroy"
+    user: "19bde"
     choice: 1
 
 - model: polls.Vote
   pk: 4
   fields:
     poll: 1
-    user: "19normal"
-    choice: 2
+    user: "18aouir"
+    choice: 1
 
 - model: polls.Vote
   pk: 5
   fields:
-    poll: 2
-    user: "17bocquet"
-    choice: 3
+    poll: 1
+    user: "17wan-fat"
+    choice: 1
 
 - model: polls.Vote
   pk: 6
   fields:
-    poll: 2
-    user: "19simple"
-    choice: 4
+    poll: 1
+    user: "19membre-bde"
+    choice: 1
 
 - model: polls.Vote
   pk: 7
   fields:
-    poll: 2
+    poll: 1
     user: "15veaux"
-    choice: 4
+    choice: 2
 
 - model: polls.Vote
   pk: 8
   fields:
-    poll: 2
-    user: "16leroy"
-    choice: 3
+    poll: 1
+    user: "19membre-biero"
+    choice: 2
 
 - model: polls.Vote
   pk: 9
   fields:
-    poll: 3
-    user: "19simple"
-    choice: 6
+    poll: 1
+    user: "19library-bde"
+    choice: 2
 
 - model: polls.Vote
   pk: 10
   fields:
-    poll: 3
-    user: "15veaux"
-    choice: 5
+    poll: 1
+    user: "19biero"
+    choice: 2
 
 - model: polls.Vote
   pk: 11
   fields:
-    poll: 3
-    user: "16leroy"
-    choice: 5
+    poll: 1
+    user: "14alarro"
+    choice: 1
 
 - model: polls.Vote
   pk: 12
   fields:
-    poll: 3
-    user: "19normal"
-    choice: 6
+    poll: 2
+    user: "16leroy"
+    choice: 4
 
 - model: polls.Vote
   pk: 13
   fields:
-    poll: 4
-    user: "16leroy"
-    choice: 8
+    poll: 2
+    user: "19membre-biero"
+    choice: 3
 
 - model: polls.Vote
   pk: 14
   fields:
-    poll: 4
-    user: "15veaux"
-    choice: 7
+    poll: 2
+    user: "17wan-fat"
+    choice: 3
 
 - model: polls.Vote
   pk: 15
   fields:
-    poll: 4
-    user: "19simple"
-    choice: 7
+    poll: 2
+    user: "19bde"
+    choice: 4
 
 - model: polls.Vote
   pk: 16
   fields:
-    poll: 4
-    user: "17bocquet"
-    choice: 8
+    poll: 2
+    user: "18aouir"
+    choice: 4
 
 - model: polls.Vote
   pk: 17
   fields:
-    poll: 5
-    user: "16leroy"
-    choice: 10
+    poll: 2
+    user: "14alarro"
+    choice: 3
 
 - model: polls.Vote
   pk: 18
   fields:
-    poll: 5
-    user: "19simple"
-    choice: 10
+    poll: 2
+    user: "19biero"
+    choice: 4
 
 - model: polls.Vote
   pk: 19
   fields:
-    poll: 5
-    user: "17bocquet"
-    choice: 9
+    poll: 2
+    user: "15veaux"
+    choice: 3
 
 - model: polls.Vote
   pk: 20
+  fields:
+    poll: 2
+    user: "19market-biero"
+    choice: 4
+
+- model: polls.Vote
+  pk: 21
+  fields:
+    poll: 2
+    user: "19membre-bde"
+    choice: 4
+
+- model: polls.Vote
+  pk: 22
+  fields:
+    poll: 2
+    user: "19library-bde"
+    choice: 3
+
+- model: polls.Vote
+  pk: 23
+  fields:
+    poll: 3
+    user: "18aouir"
+    choice: 5
+
+- model: polls.Vote
+  pk: 24
+  fields:
+    poll: 3
+    user: "19market-biero"
+    choice: 5
+
+- model: polls.Vote
+  pk: 25
+  fields:
+    poll: 3
+    user: "19biero"
+    choice: 5
+
+- model: polls.Vote
+  pk: 26
+  fields:
+    poll: 3
+    user: "16leroy"
+    choice: 6
+
+- model: polls.Vote
+  pk: 27
+  fields:
+    poll: 3
+    user: "14alarro"
+    choice: 6
+
+- model: polls.Vote
+  pk: 28
+  fields:
+    poll: 3
+    user: "19membre-bde"
+    choice: 6
+
+- model: polls.Vote
+  pk: 29
+  fields:
+    poll: 3
+    user: "15veaux"
+    choice: 5
+
+- model: polls.Vote
+  pk: 30
+  fields:
+    poll: 3
+    user: "19membre-biero"
+    choice: 6
+
+- model: polls.Vote
+  pk: 31
+  fields:
+    poll: 3
+    user: "19library-bde"
+    choice: 6
+
+- model: polls.Vote
+  pk: 32
+  fields:
+    poll: 3
+    user: "17wan-fat"
+    choice: 6
+
+- model: polls.Vote
+  pk: 33
+  fields:
+    poll: 3
+    user: "19bde"
+    choice: 5
+
+- model: polls.Vote
+  pk: 34
+  fields:
+    poll: 4
+    user: "19membre-biero"
+    choice: 8
+
+- model: polls.Vote
+  pk: 35
+  fields:
+    poll: 4
+    user: "14alarro"
+    choice: 8
+
+- model: polls.Vote
+  pk: 36
+  fields:
+    poll: 4
+    user: "19market-biero"
+    choice: 7
+
+- model: polls.Vote
+  pk: 37
+  fields:
+    poll: 4
+    user: "15veaux"
+    choice: 8
+
+- model: polls.Vote
+  pk: 38
+  fields:
+    poll: 4
+    user: "17wan-fat"
+    choice: 8
+
+- model: polls.Vote
+  pk: 39
+  fields:
+    poll: 4
+    user: "18aouir"
+    choice: 8
+
+- model: polls.Vote
+  pk: 40
+  fields:
+    poll: 4
+    user: "19membre-bde"
+    choice: 7
+
+- model: polls.Vote
+  pk: 41
+  fields:
+    poll: 4
+    user: "19biero"
+    choice: 7
+
+- model: polls.Vote
+  pk: 42
+  fields:
+    poll: 4
+    user: "19bde"
+    choice: 8
+
+- model: polls.Vote
+  pk: 43
+  fields:
+    poll: 4
+    user: "16leroy"
+    choice: 7
+
+- model: polls.Vote
+  pk: 44
+  fields:
+    poll: 4
+    user: "19library-bde"
+    choice: 7
+
+- model: polls.Vote
+  pk: 45
+  fields:
+    poll: 5
+    user: "16leroy"
+    choice: 10
+
+- model: polls.Vote
+  pk: 46
+  fields:
+    poll: 5
+    user: "19membre-bde"
+    choice: 9
+
+- model: polls.Vote
+  pk: 47
+  fields:
+    poll: 5
+    user: "19biero"
+    choice: 10
+
+- model: polls.Vote
+  pk: 48
+  fields:
+    poll: 5
+    user: "14alarro"
+    choice: 9
+
+- model: polls.Vote
+  pk: 49
   fields:
     poll: 5
     user: "15veaux"
     choice: 10
 
 - model: polls.Vote
-  pk: 21
+  pk: 50
+  fields:
+    poll: 5
+    user: "19library-bde"
+    choice: 9
+
+- model: polls.Vote
+  pk: 51
+  fields:
+    poll: 5
+    user: "17wan-fat"
+    choice: 9
+
+- model: polls.Vote
+  pk: 52
+  fields:
+    poll: 5
+    user: "18aouir"
+    choice: 9
+
+- model: polls.Vote
+  pk: 53
+  fields:
+    poll: 5
+    user: "19market-biero"
+    choice: 10
+
+- model: polls.Vote
+  pk: 54
+  fields:
+    poll: 5
+    user: "19membre-biero"
+    choice: 10
+
+- model: polls.Vote
+  pk: 55
+  fields:
+    poll: 5
+    user: "19bde"
+    choice: 10
+
+- model: polls.Vote
+  pk: 56
   fields:
     poll: 6
-    user: "17bocquet"
+    user: "19market-biero"
     choice: 11
 
 - model: polls.Vote
-  pk: 22
+  pk: 57
   fields:
     poll: 6
     user: "15veaux"
+    choice: 12
+
+- model: polls.Vote
+  pk: 58
+  fields:
+    poll: 6
+    user: "19biero"
     choice: 11
 
 - model: polls.Vote
-  pk: 23
+  pk: 59
+  fields:
+    poll: 6
+    user: "14alarro"
+    choice: 12
+
+- model: polls.Vote
+  pk: 60
+  fields:
+    poll: 6
+    user: "18aouir"
+    choice: 12
+
+- model: polls.Vote
+  pk: 61
+  fields:
+    poll: 6
+    user: "19membre-biero"
+    choice: 11
+
+- model: polls.Vote
+  pk: 62
+  fields:
+    poll: 6
+    user: "17wan-fat"
+    choice: 11
+
+- model: polls.Vote
+  pk: 63
   fields:
     poll: 6
     user: "16leroy"
     choice: 11
 
 - model: polls.Vote
-  pk: 24
+  pk: 64
   fields:
     poll: 6
-    user: "19normal"
-    choice: 11
+    user: "19membre-bde"
+    choice: 12
 
 - model: polls.Vote
-  pk: 25
+  pk: 65
+  fields:
+    poll: 6
+    user: "19library-bde"
+    choice: 12
+
+- model: polls.Vote
+  pk: 66
+  fields:
+    poll: 6
+    user: "19bde"
+    choice: 12
+
+- model: polls.Vote
+  pk: 67
   fields:
     poll: 7
-    user: "17bocquet"
+    user: "15veaux"
     choice: 14
 
 - model: polls.Vote
-  pk: 26
+  pk: 68
+  fields:
+    poll: 7
+    user: "19membre-bde"
+    choice: 13
+
+- model: polls.Vote
+  pk: 69
   fields:
     poll: 7
     user: "16leroy"
     choice: 14
 
 - model: polls.Vote
-  pk: 27
+  pk: 70
   fields:
     poll: 7
-    user: "19normal"
+    user: "17wan-fat"
+    choice: 13
+
+- model: polls.Vote
+  pk: 71
+  fields:
+    poll: 7
+    user: "14alarro"
+    choice: 13
+
+- model: polls.Vote
+  pk: 72
+  fields:
+    poll: 7
+    user: "18aouir"
     choice: 14
 
 - model: polls.Vote
-  pk: 28
+  pk: 73
   fields:
     poll: 7
-    user: "19simple"
+    user: "19membre-biero"
+    choice: 13
+
+- model: polls.Vote
+  pk: 74
+  fields:
+    poll: 7
+    user: "19biero"
+    choice: 13
+
+- model: polls.Vote
+  pk: 75
+  fields:
+    poll: 7
+    user: "19market-biero"
+    choice: 13
+
+- model: polls.Vote
+  pk: 76
+  fields:
+    poll: 7
+    user: "19bde"
     choice: 14
 
 - model: polls.Vote
-  pk: 29
+  pk: 77
+  fields:
+    poll: 7
+    user: "19library-bde"
+    choice: 14
+
+- model: polls.Vote
+  pk: 78
   fields:
     poll: 8
-    user: "15veaux"
+    user: "19membre-bde"
     choice: 16
 
 - model: polls.Vote
-  pk: 30
-  fields:
-    poll: 8
-    user: "19simple"
-    choice: 16
-
-- model: polls.Vote
-  pk: 31
+  pk: 79
   fields:
     poll: 8
     user: "16leroy"
     choice: 15
 
 - model: polls.Vote
-  pk: 32
+  pk: 80
   fields:
     poll: 8
-    user: "19normal"
+    user: "19biero"
+    choice: 15
+
+- model: polls.Vote
+  pk: 81
+  fields:
+    poll: 8
+    user: "19market-biero"
     choice: 16
 
 - model: polls.Vote
-  pk: 33
+  pk: 82
   fields:
-    poll: 9
+    poll: 8
+    user: "19membre-biero"
+    choice: 16
+
+- model: polls.Vote
+  pk: 83
+  fields:
+    poll: 8
+    user: "17wan-fat"
+    choice: 15
+
+- model: polls.Vote
+  pk: 84
+  fields:
+    poll: 8
+    user: "19library-bde"
+    choice: 15
+
+- model: polls.Vote
+  pk: 85
+  fields:
+    poll: 8
+    user: "14alarro"
+    choice: 16
+
+- model: polls.Vote
+  pk: 86
+  fields:
+    poll: 8
+    user: "19bde"
+    choice: 15
+
+- model: polls.Vote
+  pk: 87
+  fields:
+    poll: 8
     user: "15veaux"
-    choice: 17
+    choice: 15
 
 - model: polls.Vote
-  pk: 34
+  pk: 88
+  fields:
+    poll: 8
+    user: "18aouir"
+    choice: 16
+
+- model: polls.Vote
+  pk: 89
   fields:
     poll: 9
-    user: "19normal"
+    user: "18aouir"
     choice: 17
 
 - model: polls.Vote
-  pk: 35
+  pk: 90
+  fields:
+    poll: 9
+    user: "19biero"
+    choice: 17
+
+- model: polls.Vote
+  pk: 91
+  fields:
+    poll: 9
+    user: "17wan-fat"
+    choice: 18
+
+- model: polls.Vote
+  pk: 92
   fields:
     poll: 9
     user: "16leroy"
     choice: 18
 
 - model: polls.Vote
-  pk: 36
+  pk: 93
   fields:
     poll: 9
-    user: "19simple"
+    user: "19library-bde"
     choice: 18
 
 - model: polls.Vote
-  pk: 37
+  pk: 94
   fields:
-    poll: 10
-    user: "19normal"
-    choice: 19
+    poll: 9
+    user: "14alarro"
+    choice: 18
 
 - model: polls.Vote
-  pk: 38
+  pk: 95
+  fields:
+    poll: 9
+    user: "15veaux"
+    choice: 18
+
+- model: polls.Vote
+  pk: 96
+  fields:
+    poll: 9
+    user: "19market-biero"
+    choice: 17
+
+- model: polls.Vote
+  pk: 97
+  fields:
+    poll: 9
+    user: "19bde"
+    choice: 18
+
+- model: polls.Vote
+  pk: 98
+  fields:
+    poll: 9
+    user: "19membre-bde"
+    choice: 17
+
+- model: polls.Vote
+  pk: 99
+  fields:
+    poll: 9
+    user: "19membre-biero"
+    choice: 18
+
+- model: polls.Vote
+  pk: 100
   fields:
     poll: 10
     user: "15veaux"
     choice: 19
 
 - model: polls.Vote
-  pk: 39
+  pk: 101
   fields:
     poll: 10
-    user: "19simple"
+    user: "19market-biero"
     choice: 19
 
 - model: polls.Vote
-  pk: 40
+  pk: 102
   fields:
     poll: 10
-    user: "17bocquet"
+    user: "18aouir"
     choice: 20
 
 - model: polls.Vote
-  pk: 41
+  pk: 103
+  fields:
+    poll: 10
+    user: "19library-bde"
+    choice: 19
+
+- model: polls.Vote
+  pk: 104
+  fields:
+    poll: 10
+    user: "17wan-fat"
+    choice: 19
+
+- model: polls.Vote
+  pk: 105
+  fields:
+    poll: 10
+    user: "19membre-biero"
+    choice: 20
+
+- model: polls.Vote
+  pk: 106
+  fields:
+    poll: 10
+    user: "19membre-bde"
+    choice: 20
+
+- model: polls.Vote
+  pk: 107
+  fields:
+    poll: 10
+    user: "16leroy"
+    choice: 19
+
+- model: polls.Vote
+  pk: 108
+  fields:
+    poll: 10
+    user: "19bde"
+    choice: 20
+
+- model: polls.Vote
+  pk: 109
+  fields:
+    poll: 10
+    user: "14alarro"
+    choice: 20
+
+- model: polls.Vote
+  pk: 110
+  fields:
+    poll: 10
+    user: "19biero"
+    choice: 20
+
+- model: polls.Vote
+  pk: 111
   fields:
     poll: 11
-    user: "16leroy"
+    user: "19membre-bde"
     choice: 22
 
 - model: polls.Vote
-  pk: 42
+  pk: 112
   fields:
     poll: 11
-    user: "19simple"
+    user: "19bde"
     choice: 21
 
 - model: polls.Vote
-  pk: 43
+  pk: 113
+  fields:
+    poll: 11
+    user: "19library-bde"
+    choice: 21
+
+- model: polls.Vote
+  pk: 114
+  fields:
+    poll: 11
+    user: "17wan-fat"
+    choice: 21
+
+- model: polls.Vote
+  pk: 115
+  fields:
+    poll: 11
+    user: "18aouir"
+    choice: 21
+
+- model: polls.Vote
+  pk: 116
   fields:
     poll: 11
     user: "15veaux"
     choice: 22
 
 - model: polls.Vote
-  pk: 44
+  pk: 117
   fields:
     poll: 11
-    user: "17bocquet"
+    user: "19market-biero"
+    choice: 21
+
+- model: polls.Vote
+  pk: 118
+  fields:
+    poll: 11
+    user: "16leroy"
     choice: 22
 
 - model: polls.Vote
-  pk: 45
+  pk: 119
   fields:
-    poll: 12
-    user: "19simple"
-    choice: 24
+    poll: 11
+    user: "14alarro"
+    choice: 21
 
 - model: polls.Vote
-  pk: 46
+  pk: 120
   fields:
-    poll: 12
-    user: "19normal"
-    choice: 23
+    poll: 11
+    user: "19biero"
+    choice: 21
 
 - model: polls.Vote
-  pk: 47
+  pk: 121
   fields:
-    poll: 12
-    user: "17bocquet"
-    choice: 23
+    poll: 11
+    user: "19membre-biero"
+    choice: 21
 
 - model: polls.Vote
-  pk: 48
+  pk: 122
   fields:
     poll: 12
     user: "16leroy"
+    choice: 24
+
+- model: polls.Vote
+  pk: 123
+  fields:
+    poll: 12
+    user: "19membre-bde"
     choice: 23
+
+- model: polls.Vote
+  pk: 124
+  fields:
+    poll: 12
+    user: "15veaux"
+    choice: 24
+
+- model: polls.Vote
+  pk: 125
+  fields:
+    poll: 12
+    user: "18aouir"
+    choice: 24
+
+- model: polls.Vote
+  pk: 126
+  fields:
+    poll: 12
+    user: "19library-bde"
+    choice: 24
+
+- model: polls.Vote
+  pk: 127
+  fields:
+    poll: 12
+    user: "19membre-biero"
+    choice: 23
+
+- model: polls.Vote
+  pk: 128
+  fields:
+    poll: 12
+    user: "19biero"
+    choice: 23
+
+- model: polls.Vote
+  pk: 129
+  fields:
+    poll: 12
+    user: "14alarro"
+    choice: 23
+
+- model: polls.Vote
+  pk: 130
+  fields:
+    poll: 12
+    user: "17wan-fat"
+    choice: 23
+
+- model: polls.Vote
+  pk: 131
+  fields:
+    poll: 12
+    user: "19market-biero"
+    choice: 23
+
+- model: polls.Vote
+  pk: 132
+  fields:
+    poll: 12
+    user: "19bde"
+    choice: 24

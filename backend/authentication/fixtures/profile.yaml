@@ -1,16 +1,145 @@
 - model: authentication.ProfileQuestion
   pk: 1
   fields:
-    text: "Ton plat préféré ?"
+    text: "Ta devise ?"
 
 - model: authentication.ProfileQuestion
   pk: 2
   fields:
-    text: "Combien d'assiettes sur le bateau ?"
+    text: "Tes hobbies ?"
+
+- model: authentication.ProfileQuestion
+  pk: 3
+  fields:
+    text: "Tes sports ?"
+
+- model: authentication.ProfileQuestion
+  pk: 4
+  fields:
+    text: "Raconte une blague :"
 
 - model: authentication.ProfileAnswer
   pk: 1
   fields:
-    text: "Les lasagnes"
-    user: 17bocquet
+    text: "Ne jamais faire le jour même ce qui peut être remis au lendemain..."
+    user: 19membre-biero
     question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 2
+  fields:
+    text: "Cuisiner, jouer du piano, courir, faire la sieste"
+    user: 19membre-biero
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 3
+  fields:
+    text: "Cross-fit, pompom, danse, course"
+    user: 19membre-biero
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 4
+  fields:
+    text: "Allons à l'Octo! C'est parti les amis!"
+    user: 19biero
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 5
+  fields:
+    text: "Le baby, les jeux videos, la boisson"
+    user: 19biero
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 6
+  fields:
+    text: "Aviron, PimPim"
+    user: 19biero
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 7
+  fields:
+    text: "C'est un homme qui rentre dans un café. Et plouf!"
+    user: 19biero
+    question: 4
+
+- model: authentication.ProfileAnswer
+  pk: 8
+  fields:
+    text: "Respect"
+    user: 19membre-bde
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 9
+  fields:
+    text: "Musique, cuisine"
+    user: 19membre-bde
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 10
+  fields:
+    text: "Hand"
+    user: 19membre-bde
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 11
+  fields:
+    text: "Être centralien"
+    user: 19membre-bde
+    question: 4
+
+- model: authentication.ProfileAnswer
+  pk: 12
+  fields:
+    text: "La vie, c'est d'abord des essais culinaires"
+    user: 19bde
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 13
+  fields:
+    text: "Scoutisme, rando, kitesurf, batterie"
+    user: 19bde
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 14
+  fields:
+    text: "Hand, ex-rugbyman"
+    user: 19bde
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 15
+  fields:
+    text: "Piche"
+    user: 19simple
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 16
+  fields:
+    text: "Avion, bateau"
+    user: 19simple
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 17
+  fields:
+    text: "Athlé mais je veux essayer l’aviron"
+    user: 19simple
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 17
+  fields:
+    text: "Piche"
+    user: 19simple
+    question: 4

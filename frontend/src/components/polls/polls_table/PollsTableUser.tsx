@@ -7,6 +7,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../services/apiService";
 import { AxiosError } from "axios";
+import { Column } from "../../utils/table/TableHeader";
 
 export const PollsTableUser = () => {
     const newToast = useContext(ToastContext);
@@ -39,7 +40,7 @@ export const PollsTableUser = () => {
         }
     });
 
-    const columnData = setEditPoll => [
+    const columnData: (setEditPoll) => Column[] = setEditPoll => [
         {
             key: "question",
             header: "Contenu",
