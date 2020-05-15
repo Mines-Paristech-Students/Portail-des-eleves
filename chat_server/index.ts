@@ -1,19 +1,22 @@
 const express = require("express");
-const socketio_jwt = require('socketio-jwt');
-import { createServer} from 'http';
+const socketio_jwt = require("socketio-jwt");
+import { createServer } from "http";
 
-const dotenv = require('dotenv')
-dotenv.config()
+const dotenv = require("dotenv");
+dotenv.config();
 
-const db = require('./db');
-
+const db = require("./db");
 
 class Message {
-	constructor(public username: string, public message: string, public posted_on: Date){
-        this.username = username;
-        this.message = message;
-        this.posted_on = posted_on;
-    }
+  constructor(
+    public username: string,
+    public message: string,
+    public posted_on: Date
+  ) {
+    this.username = username;
+    this.message = message;
+    this.posted_on = posted_on;
+  }
 }
 
 /**
@@ -21,57 +24,57 @@ class Message {
  */
 
 const app = express();
-var port = process.env.PORT || 3000
+var port = process.env.PORT || 3000;
 
 export let httpServer = createServer(app);
-export let io = require('socket.io')(httpServer);
+export let io = require("socket.io")(httpServer);
 
 // Authentification using handshake
 var jwtOption = {
-    "secret": process.env.JWT_SECRET,
-    "timeout": 1000,
-    "handshake": true
+  secret: process.env.JWT_SECRET,
+  timeout: 1000,
+  handshake: true,
 };
 
 io.use(socketio_jwt.authorize(jwtOption));
 
-io.sockets
-.on('connection', (socket) => {
+io.sockets.on("connection", (socket) => {
+  socket.on("message", async (request: any) => {
+    if (request.message === undefined) {
+      return;
+    }
 
-	socket.on("message", async (request: any) => {
-		if (request.message === undefined ){
-			return
-		}
+    if (request.message == "") {
+      return;
+    }
 
-		if (request.message == "") {
-			return
-		}
+    let model = new Message(
+      socket.decoded_token.username,
+      request.message,
+      new Date()
+    );
+    await db.add(model.username, model.message);
 
-		let model = new Message(socket.decoded_token.username, request.message, new Date());
-		await db.add(model.username, model.message);
+    // The message is sended to everyone (including sender)
+    io.sockets.emit("broadcast", model);
+  });
 
-		// The message is sended to everyone (including sender)
-		io.sockets.emit('broadcast', model);
-	});
+  socket.on("fetch", async (request: any) => {
+    if (request.from === undefined || request.limit === undefined) {
+      return;
+    }
 
-	socket.on("fetch", async (request: any) => {
-		if (request.from === undefined || request.limit === undefined){
-			return
-		}
-
-		let messages = await db.get(request.from, request.limit);
-		socket.emit("fetch_response", messages.rows);
-	});
-
+    let messages = await db.get(request.from, request.limit);
+    socket.emit("fetch_response", messages.rows);
+  });
 });
 
 const server = httpServer.listen(port, () => {
   console.log("listening on port %s", port);
 });
 
-
 // This is done for testing purposes
 export var index = {
-	server: server,
-	app : app
-}
+  server: server,
+  app: app,
+};
