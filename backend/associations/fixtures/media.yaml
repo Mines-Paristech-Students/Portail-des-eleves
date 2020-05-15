@@ -1,0 +1,83 @@
+#######
+# BDE #
+#######
+
+- model: associations.media
+  pk: 1
+  fields:
+    name: Lorem Ipsum
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: '2017-08-24T17:41:28+00:00'
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: associations.media
+  pk: 2
+  fields:
+    name: Logo mint
+    description: Logo de Mint
+    file: mint.png
+    uploaded_on: '2017-08-24T18:41:28+00:00'
+    uploaded_by: 15veaux
+    association: bde
+
+- model: associations.media
+  pk: 3
+  fields:
+    name: Recette des pancakes
+    description: Tout ce qu'il vous faut pour faire de bons pancakes
+    file: pancakes.txt
+    uploaded_on: '2017-08-24T19:32:28+02:00'
+    uploaded_by: 14alarro
+    association: bde
+
+- model: associations.media
+  pk: 4
+  fields:
+    name: Recette de la tartiflette
+    description: Pour la tartiflette il vous faut - oups - no spoiler
+    file: tartiflette.txt
+    uploaded_on: '2017-08-25T17:02:52+02:00'
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: associations.media
+  pk: 5
+  fields:
+    name: Lorem Ipsum 2
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: '2017-08-24T17:41:28+02:00'
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: associations.media
+  pk: 6
+  fields:
+    name: Lorem Ipsum 3
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: '2017-08-24T17:41:28+00:00'
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: associations.media
+  pk: 7
+  fields:
+    name: Lorem Ipsum 4
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: '2017-08-24T17:41:28+00:00'
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: associations.media
+  pk: 8
+  fields:
+    name: Lorem Ipsum 5
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: '2017-08-24T17:41:28+00:00'
+    uploaded_by: 17bocquet
+    association: bde
