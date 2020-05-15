@@ -1,16 +1,8 @@
 import React from "react";
-import { Columns } from "./TableHeader";
+import { Column } from "./TableHeader";
 
-const Row = ({
-    columns,
-    data,
-    index
-}: {
-    columns: Columns;
-    data: object;
-    index: number;
-}) => (
-    <tr role="row" className={index % 2 == 0 ? "even" : "odd"}>
+const Row = ({ columns, data }: { columns: Column[]; data: object }) => (
+    <tr role="row">
         {columns.map((column, i) => (
             <td key={i}>
                 {column.render !== undefined
@@ -25,12 +17,12 @@ export const TableBody = ({
     columns,
     data
 }: {
-    columns: Columns;
+    columns: Column[];
     data: object[];
 }) => (
     <tbody>
         {data.map((rowData, i) => (
-            <Row key={i} columns={columns} data={rowData} index={i} />
+            <Row key={i} columns={columns} data={rowData} />
         ))}
     </tbody>
 );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TableBody } from "./TableBody";
-import { Columns, TableHeader } from "./TableHeader";
+import { Column, TableHeader } from "./TableHeader";
 import { Sorting } from "./sorting";
 
 /**
@@ -18,14 +18,14 @@ export const Table = ({
     columns,
     data
 }: {
-    columns: Columns;
+    columns: Column[];
     data: object[];
 }) => {
     return (
         <div className="table-responsive">
             <div className="dataTables_wrapper no-footer">
                 <table
-                    className="table card-table table-vcenter datatable dataTable no-footer"
+                    className="table card-table table-vcenter datatable dataTable no-footer table-striped"
                     role="grid"
                 >
                     <TableHeader columns={columns} />
@@ -37,7 +37,7 @@ export const Table = ({
 };
 
 /**
- * Return a `Columns` object ready to be injected into a `Table` component, as well as a `sorting` object containing
+ * Return a `Column[]` object ready to be injected into a `Table` component, as well as a `sorting` object containing
  * the `Sorting` associated to the `Table` columns. You can then use the value of `sorting[key]` to decide with which
  * `data` your `Table` should be fed.
  *
@@ -58,7 +58,7 @@ export function useColumns<T = any>(
         render?: (data: T) => any;
         canSort?: boolean;
     }[]
-): { columns: Columns; sorting: object } {
+): { columns: Column[]; sorting: object } {
     // Build an initial sorting object filled with `Sorting.Unsorted`.
     let initialSorting = {};
 

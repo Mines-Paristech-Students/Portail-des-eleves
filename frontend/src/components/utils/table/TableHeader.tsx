@@ -10,9 +10,7 @@ export type Column = {
     onChangeSorting?: (newSorting?: Sorting) => void;
 };
 
-export type Columns = Column[];
-
-const HeaderRow = ({ columns }: { columns: Columns }) => (
+const HeaderRow = ({ columns }: { columns: Column[] }) => (
     <tr role="row">
         {columns.map(({ header, key, sorting, onChangeSorting }) => (
             <th
@@ -33,7 +31,7 @@ const HeaderRow = ({ columns }: { columns: Columns }) => (
     </tr>
 );
 
-export const TableHeader = ({ columns }: { columns: Columns }) => (
+export const TableHeader = ({ columns }: { columns: Column[] }) => (
     <thead>
         <HeaderRow columns={columns} />
     </thead>
