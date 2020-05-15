@@ -6,7 +6,7 @@ export enum LoanStatus {
     Rejected = "REJECTED",
     Cancelled = "CANCELLED",
     Borrowed = "BORROWED",
-    Returned = "RETURNED"
+    Returned = "RETURNED",
 }
 
 export interface Loan {

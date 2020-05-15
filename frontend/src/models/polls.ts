@@ -1,7 +1,7 @@
 export enum PollState {
     Accepted = "ACCEPTED",
     Rejected = "REJECTED",
-    Reviewing = "REVIEWING"
+    Reviewing = "REVIEWING",
 }
 
 export interface Poll {

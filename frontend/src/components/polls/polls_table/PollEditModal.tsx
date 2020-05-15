@@ -12,7 +12,7 @@ export const PollEditModal = ({
     show,
     onHide,
     poll,
-    adminVersion
+    adminVersion,
 }: {
     show: boolean;
     onHide: any;
@@ -22,17 +22,17 @@ export const PollEditModal = ({
     const newToast = useContext(ToastContext);
 
     const [update] = useMutation(api.polls.update, {
-        onSuccess: response => {
+        onSuccess: (response) => {
             queryCache.refetchQueries(["polls.list"]);
 
             if (response.status === 200) {
                 newToast({
                     message: "Sondage modifié.",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
             }
         },
-        onError: errorAsUnknown => {
+        onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
             newToast({
@@ -44,22 +44,22 @@ export const PollEditModal = ({
                               : error.response.data.detail)
                         : ""
                 }`,
-                level: ToastLevel.Error
+                level: ToastLevel.Error,
             });
-        }
+        },
     });
 
     const onUpdate = (poll, data, setSubmitting) => {
         update(
             {
                 pollId: poll.id,
-                data: data
+                data: data,
             },
             {
                 onSettled: () => {
                     setSubmitting(false);
                     onHide();
-                }
+                },
             }
         );
     };

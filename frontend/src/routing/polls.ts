@@ -8,26 +8,26 @@ export const routes: Route[] = [
     {
         path: "/sondages",
         component: () => ListPolls({ current: true }),
-        exact: true
+        exact: true,
     },
     {
         path: "/sondages/anciens",
         component: () => ListPolls({ current: false }),
-        exact: true
+        exact: true,
     },
     {
         path: "/sondages/administration",
         component: PollsTableAdmin,
-        exact: true
+        exact: true,
     },
     {
         path: "/sondages/mes-sondages",
         component: PollsTableUser,
-        exact: true
+        exact: true,
     },
     {
         path: "/sondages/proposer",
         component: SubmitPoll,
-        exact: true
-    }
+        exact: true,
+    },
 ];

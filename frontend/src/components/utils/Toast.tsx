@@ -3,7 +3,7 @@ import BootstrapToast from "react-bootstrap/Toast";
 
 export enum ToastLevel {
     Success = "success",
-    Error = "danger"
+    Error = "danger",
 }
 
 export type ToastInfo = {
@@ -30,7 +30,7 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
                 <Toast message={toast.message} type={toast.level} flip={flip} />
             )}
             <ToastContext.Provider
-                value={value => {
+                value={(value) => {
                     setToast(value);
                     setFlip(!flip);
                 }}
@@ -59,7 +59,7 @@ export const Toast = ({ message: msg, type, flip }) => {
                 transform: "translateX(-50%)",
                 boxShadow:
                     "0 0 10px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.32)",
-                zIndex: 9999
+                zIndex: 9999,
             }}
             autohide
             delay={5000}

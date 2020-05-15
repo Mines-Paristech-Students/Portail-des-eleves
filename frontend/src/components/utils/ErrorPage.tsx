@@ -1,6 +1,6 @@
 import React from "react";
 
-export const ErrorMessage = props => {
+export const ErrorMessage = (props) => {
     return (
         <p className="h4 text-muted font-weight-normal mb-7">
             {props.children}
@@ -9,7 +9,7 @@ export const ErrorMessage = props => {
 };
 
 /* Generic template for error pages */
-export const ErrorPage = props => {
+export const ErrorPage = (props) => {
     return (
         <div className="page">
             <div className="page-content">
@@ -25,11 +25,11 @@ export const ErrorPage = props => {
     );
 };
 
-export const PageNotFoundError = props => {
+export const PageNotFoundError = (props) => {
     return <ErrorPage {...props} errorCode={404} title={"Page non trouvée"} />;
 };
 
-export const ForbiddenError = props => {
+export const ForbiddenError = (props) => {
     return (
         <ErrorPage {...props} errorCode={403} title={"Page interdite"}>
             Vous n’avez pas le droit d’accéder à cette page. Si vous pensez que

@@ -9,7 +9,7 @@ import * as Yup from "yup";
 export const PollEditModalUserForm = ({
     poll,
     handleClose,
-    onUpdate
+    onUpdate,
 }: {
     poll: Poll;
     handleClose: () => void;
@@ -20,12 +20,12 @@ export const PollEditModalUserForm = ({
             question: values.question,
             choices: [
                 {
-                    text: values.choice0
+                    text: values.choice0,
                 },
                 {
-                    text: values.choice1
-                }
-            ]
+                    text: values.choice1,
+                },
+            ],
         };
 
         onUpdate(data, setSubmitting);
@@ -36,12 +36,12 @@ export const PollEditModalUserForm = ({
             initialValues={{
                 question: poll.question,
                 choice0: poll.choices[0].text,
-                choice1: poll.choices[1].text
+                choice1: poll.choices[1].text,
             }}
             validationSchema={Yup.object({
                 question: Yup.string().required("Ce champ est requis."),
                 choice0: Yup.string().required("Ce champ est requis."),
-                choice1: Yup.string().required("Ce champ est requis.")
+                choice1: Yup.string().required("Ce champ est requis."),
             })}
             onSubmit={onSubmit}
         >

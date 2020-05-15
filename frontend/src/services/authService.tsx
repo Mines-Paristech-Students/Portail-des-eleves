@@ -9,7 +9,7 @@ export const UserContext = createContext<User | null>(null);
 export const UserProvider: React.FunctionComponent = ({ children }) => {
     let [user, setUser] = useState<User | null>(null);
 
-    authService.getUser().then(u => {
+    authService.getUser().then((u) => {
         setUser(u);
     });
 
@@ -38,7 +38,7 @@ export class AuthService {
                             lastName: response.data.lastName,
                             firstName: response.data.firstName,
                             promotion: response.data.promotion,
-                            isStaff: response.data.isStaff
+                            isStaff: response.data.isStaff,
                         };
 
                         this.isAuthenticated = true;
@@ -66,14 +66,14 @@ export class AuthService {
             }
 
             this.checkAuth()
-                .then(user => {
+                .then((user) => {
                     if (user == null) {
                         return reject("Not logged in");
                     } else {
                         return resolve(user);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     return reject(err);
                 });
         });

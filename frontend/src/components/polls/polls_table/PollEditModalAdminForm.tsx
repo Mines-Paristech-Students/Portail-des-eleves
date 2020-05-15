@@ -77,7 +77,7 @@ const DateField = () => {
 export const PollEditModalAdminForm = ({
     poll,
     handleClose,
-    onUpdate
+    onUpdate,
 }: {
     poll: Poll;
     handleClose: () => void;
@@ -91,7 +91,7 @@ export const PollEditModalAdminForm = ({
             state: values.state,
             adminComment:
                 values.state === "REJECTED" ? values.adminComment : "",
-            publicationDate: values.publicationDate
+            publicationDate: values.publicationDate,
         };
 
         onUpdate(data, setSubmitting);
@@ -102,7 +102,7 @@ export const PollEditModalAdminForm = ({
             initialValues={{
                 state: poll.state,
                 adminComment: poll.adminComment,
-                publicationDate: poll.publicationDate
+                publicationDate: poll.publicationDate,
             }}
             validationSchema={Yup.object({
                 publicationDate: Yup.date().when("state", {
@@ -113,8 +113,8 @@ export const PollEditModalAdminForm = ({
                             "Le sondage doit être publié aujourd’hui ou dans le futur."
                         )
                         .required("Ce champ est requis."),
-                    otherwise: Yup.date().notRequired()
-                })
+                    otherwise: Yup.date().notRequired(),
+                }),
             })}
             onSubmit={onSubmit}
         >

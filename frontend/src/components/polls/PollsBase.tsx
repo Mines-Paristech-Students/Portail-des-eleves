@@ -7,7 +7,7 @@ import { authService } from "../../App";
 
 export const PollsBase = ({
     children,
-    sidebarActions
+    sidebarActions,
 }: {
     children: any;
     sidebarActions?: any;

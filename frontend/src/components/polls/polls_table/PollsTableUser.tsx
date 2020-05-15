@@ -13,17 +13,17 @@ export const PollsTableUser = () => {
     const newToast = useContext(ToastContext);
 
     const [remove] = useMutation(api.polls.remove, {
-        onSuccess: response => {
+        onSuccess: (response) => {
             queryCache.refetchQueries(["polls.list"]);
 
             if (response.status === 204) {
                 newToast({
                     message: "Sondage supprimé.",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
             }
         },
-        onError: errorAsUnknown => {
+        onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
             newToast({
@@ -35,16 +35,16 @@ export const PollsTableUser = () => {
                               : error.response.data.detail)
                         : ""
                 }`,
-                level: ToastLevel.Error
+                level: ToastLevel.Error,
             });
-        }
+        },
     });
 
-    const columnData: (setEditPoll) => Column[] = setEditPoll => [
+    const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
         {
             key: "question",
             header: "Contenu",
-            render: poll => (
+            render: (poll) => (
                 <>
                     {poll.question}
                     <div className="small pollChoice">
@@ -56,26 +56,26 @@ export const PollsTableUser = () => {
                 </>
             ),
             canSort: true,
-            headerClassName: "w-50"
+            headerClassName: "w-50",
         },
         {
             key: "state",
-            render: poll => (
+            render: (poll) => (
                 <div className="text-center">
                     <PollStateIcon state={poll.state} />
                 </div>
             ),
             header: "Statut",
-            canSort: true
+            canSort: true,
         },
         {
             key: "adminComment",
             header: "Commentaire",
-            cellClassName: "text-break"
+            cellClassName: "text-break",
         },
         {
             key: "action",
-            render: poll => (
+            render: (poll) => (
                 <>
                     {poll.state === PollState.Reviewing ? (
                         <Button
@@ -100,8 +100,8 @@ export const PollsTableUser = () => {
                     ) : null}
                 </>
             ),
-            header: "Actions"
-        }
+            header: "Actions",
+        },
     ];
 
     return <PollsTable adminVersion={false} columnData={columnData} />;

@@ -10,7 +10,7 @@ export const MONTHS = [
     "Septembre",
     "Octobre",
     "Novembre",
-    "Décembre"
+    "Décembre",
 ];
 
 export const WEEKDAYS_LONG = [
@@ -20,7 +20,7 @@ export const WEEKDAYS_LONG = [
     "Mercredi",
     "Jeudi",
     "Vendredi",
-    "Samedi"
+    "Samedi",
 ];
 
 export const WEEKDAYS_SHORT = [
@@ -30,7 +30,7 @@ export const WEEKDAYS_SHORT = [
     "mer.",
     "jeu.",
     "ven.",
-    "sam."
+    "sam.",
 ];
 
 /**
@@ -39,17 +39,11 @@ export const WEEKDAYS_SHORT = [
  */
 export const formatDate = (date?: Date) =>
     date
-        ? date
-              .getDate()
-              .toString()
-              .padStart(2, "0") +
+        ? date.getDate().toString().padStart(2, "0") +
           "/" +
           (date.getMonth() + 1).toString().padStart(2, "0") +
           "/" +
-          date
-              .getFullYear()
-              .toString()
-              .padStart(4, "0")
+          date.getFullYear().toString().padStart(4, "0")
         : "";
 
 /**

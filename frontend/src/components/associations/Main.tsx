@@ -3,7 +3,7 @@ import {
     BrowserRouter as Router,
     Route,
     Switch,
-    useParams
+    useParams,
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";

@@ -15,17 +15,17 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
     const [vote] = useMutation(api.polls.vote, {
-        onSuccess: response => {
+        onSuccess: (response) => {
             queryCache.refetchQueries(["polls.list"]);
 
             if (response.status === 201) {
                 newToast({
                     message: "Vous avez voté.",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
             }
         },
-        onError: errorAsUnknown => {
+        onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
             let detail = error.response ? error.response.data.detail : "";
@@ -48,9 +48,9 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
                 message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     detail === "" ? "" : "Détails : " + detail
                 }`,
-                level: ToastLevel.Error
+                level: ToastLevel.Error,
             });
-        }
+        },
     });
 
     const onSubmit = (values, { setSubmitting }) => {
@@ -58,7 +58,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
             {
                 user: user,
                 pollId: poll.id,
-                choiceId: values.choice
+                choiceId: values.choice,
             },
             { onSettled: setSubmitting(false) }
         );
@@ -80,7 +80,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
 
                 <Formik
                     initialValues={{
-                        choice: undefined
+                        choice: undefined,
                     }}
                     onSubmit={onSubmit}
                 >
@@ -110,7 +110,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
 const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
     let items: Map<string, ReactElement> = new Map();
 
-    choices.forEach(choice => {
+    choices.forEach((choice) => {
         items.set(
             choice.id.toString(),
             <span className="selectgroup-button">{choice.text}</span>

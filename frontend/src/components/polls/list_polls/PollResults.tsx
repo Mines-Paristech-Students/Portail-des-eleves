@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
 
-const totalVotes = poll =>
+const totalVotes = (poll) =>
     poll.choices.reduce(
         (total, choice) =>
             choice.numberOfVotes ? total + choice.numberOfVotes : total,
@@ -50,7 +50,7 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                         (a, b) =>
                             Number(b.numberOfVotes) - Number(a.numberOfVotes)
                     )
-                    .map(choice => {
+                    .map((choice) => {
                         if (choice.numberOfVotes !== undefined) {
                             return (
                                 <ListGroup.Item

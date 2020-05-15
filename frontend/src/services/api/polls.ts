@@ -4,7 +4,7 @@ import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { sortingToApiParameter } from "../../components/utils/table/sorting";
 import {
     PollStateFilter,
-    pollStateFilterToApiParameter
+    pollStateFilterToApiParameter,
 } from "../../components/polls/polls_table/PollsTableFilter";
 import { joinNonEmpty } from "../../utils/parameter";
 
@@ -14,7 +14,7 @@ import { joinNonEmpty } from "../../utils/parameter";
  * Should be called in a `then` after an `apiService.get("/polls/...")`.
  */
 const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
-    response.data.results.forEach(poll => {
+    response.data.results.forEach((poll) => {
         poll.creationDateTime = new Date(poll.creationDateTime);
         poll.publicationDate = poll.publicationDate
             ? new Date(poll.publicationDate)
@@ -47,7 +47,7 @@ export const polls = {
         {
             userFilter,
             stateFilter,
-            sorting
+            sorting,
         }: { userFilter: string; stateFilter: PollStateFilter; sorting: any },
         page = 1
     ) =>
@@ -64,10 +64,10 @@ export const polls = {
                             question: "question",
                             publicationDate: "publication_date",
                             user: "user__pk",
-                            state: "state"
+                            state: "state",
                         },
                         `ordering`
-                    )
+                    ),
                 ],
                 "&"
             )
@@ -80,15 +80,15 @@ export const polls = {
      * List the polls which are now closed (but were published before).
      */
     listOld: listGeneric("is_published=true&is_active=false"),
-    get: pollId => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
+    get: (pollId) => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
     create: ({
-        data
+        data,
     }: {
         data: { question: string; choices: { text: string }[] };
     }) => apiService.post("/polls/", data),
     update: ({
         pollId,
-        data
+        data,
     }: {
         pollId;
         data: {
@@ -101,8 +101,9 @@ export const polls = {
     }) => {
         // Format the date.
         if (data.publicationDate && typeof data.publicationDate !== "string") {
-            data.publicationDate = `${data.publicationDate.getFullYear()}-${data.publicationDate.getMonth() +
-                1}-${data.publicationDate.getDate()}`;
+            data.publicationDate = `${data.publicationDate.getFullYear()}-${
+                data.publicationDate.getMonth() + 1
+            }-${data.publicationDate.getDate()}`;
         }
 
         return apiService.patch(`/polls/${pollId}/`, data);
@@ -111,6 +112,6 @@ export const polls = {
     vote: ({ user, pollId, choiceId }) =>
         apiService.post(`/polls/${pollId}/vote/`, {
             user: user.id,
-            choice: choiceId
-        })
+            choice: choiceId,
+        }),
 };

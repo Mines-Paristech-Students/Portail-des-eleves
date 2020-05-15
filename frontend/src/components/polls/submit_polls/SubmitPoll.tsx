@@ -15,17 +15,17 @@ import { AxiosError } from "axios";
 export const SubmitPoll = () => {
     const newToast = useContext(ToastContext);
     const [create] = useMutation(api.polls.create, {
-        onSuccess: response => {
+        onSuccess: (response) => {
             queryCache.refetchQueries(["polls.list"]);
 
             if (response.status === 201) {
                 newToast({
                     message: "Sondage envoyé.",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
             }
         },
-        onError: errorAsUnknown => {
+        onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
             newToast({
@@ -34,39 +34,39 @@ export const SubmitPoll = () => {
                         ? ""
                         : "Détails :" + error.response.data.detail
                 }`,
-                level: ToastLevel.Error
+                level: ToastLevel.Error,
             });
-        }
+        },
     });
 
     const [
         questionPlaceholder,
         choice0Placeholder,
-        choice1Placeholder
+        choice1Placeholder,
     ] = getRandom([
         [
             "Le portail…",
             "C’était pas mieux avant.",
-            "C’est bien mieux maintenant."
+            "C’est bien mieux maintenant.",
         ],
         ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Ton premier choix ?", "L’X", "Ulm"],
         ["Le plus claqué ?", "L’Octo", "La biéro"],
-        ["Les plus sharks ?", "(La) JuMP", "Le Trium"]
+        ["Les plus sharks ?", "(La) JuMP", "Le Trium"],
     ]);
 
     const onSubmit = (values, { resetForm, setSubmitting }) => {
         let data = {
             question: values.question,
-            choices: [{ text: values.choice0 }, { text: values.choice1 }]
+            choices: [{ text: values.choice0 }, { text: values.choice1 }],
         };
 
         create(
             { data },
             {
                 onSuccess: resetForm(),
-                onSettled: setSubmitting(false)
+                onSettled: setSubmitting(false),
             }
         );
     };
@@ -79,12 +79,12 @@ export const SubmitPoll = () => {
                     initialValues={{
                         question: "",
                         choice0: "",
-                        choice1: ""
+                        choice1: "",
                     }}
                     validationSchema={Yup.object({
                         question: Yup.string().required("Ce champ est requis."),
                         choice0: Yup.string().required("Ce champ est requis."),
-                        choice1: Yup.string().required("Ce champ est requis.")
+                        choice1: Yup.string().required("Ce champ est requis."),
                     })}
                     onSubmit={onSubmit}
                 >

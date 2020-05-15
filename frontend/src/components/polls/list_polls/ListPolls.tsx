@@ -15,22 +15,18 @@ import { PollsError } from "../PollsError";
 import { PollsLoading } from "../PollsLoading";
 
 const Content = ({ current, polls, paginationControl }) => {
-    let cards: ReactElement[] = [];
-
-    if (current) {
-        cards = cards.concat(
-            polls
-                .filter(poll => poll.isActive && !poll.userHasVoted)
-                .map(poll => <PollVotingForm poll={poll} />),
-            polls
-                .filter(poll => poll.isActive && poll.userHasVoted)
-                .map(poll => <PollResults poll={poll} />)
-        );
-    } else {
-        cards = polls
-            .filter(poll => !poll.isActive && poll.hasBeenPublished)
-            .map(poll => <PollResults poll={poll} />);
-    }
+    const cards: ReactElement[] = current
+        ? [].concat(
+              polls
+                  .filter((poll) => poll.isActive && !poll.userHasVoted)
+                  .map((poll) => <PollVotingForm poll={poll} />),
+              polls
+                  .filter((poll) => poll.isActive && poll.userHasVoted)
+                  .map((poll) => <PollResults poll={poll} />)
+          )
+        : polls
+              .filter((poll) => !poll.isActive && poll.hasBeenPublished)
+              .map((poll) => <PollResults poll={poll} />);
 
     return (
         <Container>
@@ -82,7 +78,7 @@ export const ListPolls = ({ current }: { current?: boolean }) => (
             apiMethod={current ? api.polls.listCurrent : api.polls.listOld}
             config={{ refetchOnWindowFocus: false }}
             paginationControlProps={{
-                className: "justify-content-center mb-5"
+                className: "justify-content-center mb-5",
             }}
             loadingElement={PollsLoading}
             errorElement={PollsError}

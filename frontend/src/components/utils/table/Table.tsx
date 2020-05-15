@@ -9,22 +9,16 @@ import { Sorting } from "./sorting";
  * @param columns a list of `Column` objects. If the `Table` does not need a sorting, pass a list of `{ key, header, render }`
  * object; otherwise, it's more convenient to use `useColumns`.<br />
  * `key` is a string, unique among the other keys.<br />
-<<<<<<< HEAD
  * `header` is a component which will be displayed in the header row.<br />
  * `render` is an optional function. If specified, `render(data)` will be used to fill the cell located in the
  * `data` row and the `key` column. Otherwise, `data[key]` will be used.<br />
  * `headerClassName` will be appended to the class of the `th` element containing `header`.<br />
  * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
-=======
- * `header` is a component which will be displayed in the header row.<br/>
- * `render` is an optional function. If specified, `render(data)` will be used to fill the cell located in the
- * `data` row and the `key` column. Otherwise, `data[key]` will be used.
->>>>>>> master
  * @param data a list of objects (one item per row) which will be used to fill the table.
  */
 export const Table = ({
     columns,
-    data
+    data,
 }: {
     columns: Column[];
     data: object[];
@@ -45,11 +39,7 @@ export const Table = ({
 };
 
 /**
-<<<<<<< HEAD
- * Return a `Columns` object ready to be injected into a `Table` component, as well as a `sorting` object containing
-=======
  * Return a `Column[]` object ready to be injected into a `Table` component, as well as a `sorting` object containing
->>>>>>> master
  * the `Sorting` associated to the `Table` columns. You can then use the value of `sorting[key]` to decide with which
  * `data` your `Table` should be fed.
  *
@@ -61,13 +51,9 @@ export const Table = ({
  * `header` is a component which will be displayed in the header row.<br />
  * `render` is an optional function. If specified, `render(data)` will be used by the `Table` component to generate
  * the cell located in the `data` row and the `key` column. Otherwise, `data[key]` will be used.<br />
-<<<<<<< HEAD
  * If `canSort` is truthy, then `sorting[key]` will contain a `Sorting` object linked to the column sort state.<br/>
  * `headerClassName` will be appended to the class of the `th` element containing `header`.<br />
  * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
-=======
- * If `canSort` is truthy, then `sorting[key]` will contain a `Sorting` object linked to the column sort state.
->>>>>>> master
  */
 export function useColumns<T = any>(
     columns: {
@@ -98,7 +84,7 @@ export function useColumns<T = any>(
                 render,
                 canSort,
                 headerClassName,
-                cellClassName
+                cellClassName,
             }) => {
                 // Even if the column does not need a sort, it requires these attributes.
                 let base = {
@@ -106,7 +92,7 @@ export function useColumns<T = any>(
                     header: header,
                     render: render,
                     headerClassName: headerClassName,
-                    cellClassName: cellClassName
+                    cellClassName: cellClassName,
                 };
 
                 // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
@@ -115,15 +101,15 @@ export function useColumns<T = any>(
                           ...base,
                           sorting: sorting[key],
                           onChangeSorting: (newSort?: Sorting) =>
-                              setSorting(_ => {
+                              setSorting((_) => {
                                   let newState = { ...initialSorting };
                                   newState[key] = newSort;
                                   return newState;
-                              })
+                              }),
                       }
                     : base;
             }
         ),
-        sorting: sorting
+        sorting: sorting,
     };
 }

@@ -9,4 +9,4 @@
  * If omitted, the array elements are separated with a comma.
  */
 export const joinNonEmpty = (array: string[], separator?: string) =>
-    array.filter(value => value !== "").join(separator);
+    array.filter(Boolean).join(separator);

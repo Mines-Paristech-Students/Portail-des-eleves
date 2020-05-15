@@ -22,7 +22,7 @@ export const pollStateFilterToApiParameter = (
         [
             filter.accepted ? "ACCEPTED" : "",
             filter.rejected ? "REJECTED" : "",
-            filter.reviewing ? "REVIEWING" : ""
+            filter.reviewing ? "REVIEWING" : "",
         ],
         "&state="
     )}`;
@@ -30,7 +30,7 @@ export const pollStateFilterToApiParameter = (
 export const PollsTableFilter = ({
     defaultStateFilter,
     setStateFilter,
-    formGroupProps
+    formGroupProps,
 }: {
     defaultStateFilter: PollStateFilter;
     setStateFilter: (
@@ -48,7 +48,7 @@ export const PollsTableFilter = ({
         setStateFilter({
             accepted: accepted,
             rejected: rejected,
-            reviewing: reviewing
+            reviewing: reviewing,
         });
     }, [accepted, rejected, reviewing]);
 

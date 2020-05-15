@@ -2,7 +2,7 @@ export enum StudentType {
     Ast = "AST",
     Isupfere = "ISUPFERE",
     Ev = "EV",
-    Ic = "IC"
+    Ic = "IC",
 }
 
 export interface Role {

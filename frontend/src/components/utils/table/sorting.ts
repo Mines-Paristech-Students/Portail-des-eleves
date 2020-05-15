@@ -1,7 +1,7 @@
 export enum Sorting {
     Unsorted,
     Ascending,
-    Descending
+    Descending,
 }
 
 /**

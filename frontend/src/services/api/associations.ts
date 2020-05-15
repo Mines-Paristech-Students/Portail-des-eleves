@@ -6,8 +6,8 @@ export const associations = {
         unwrap<PaginatedResponse<Association[]>>(
             apiService.get(`/associations/associations/`)
         ),
-    get: associationId =>
+    get: (associationId) =>
         unwrap<Association>(
             apiService.get(`/associations/associations/${associationId}`)
-        )
+        ),
 };

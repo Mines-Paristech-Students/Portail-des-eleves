@@ -40,7 +40,7 @@ export function DatePickerField({ label, ...props }: any) {
                 {...field}
                 initialMonth={field.value}
                 selectedDays={field.value}
-                onDayClick={day => setFieldValue(field.name as never, day)}
+                onDayClick={(day) => setFieldValue(field.name as never, day)}
                 locale="fr"
                 months={MONTHS}
                 weekdaysLong={WEEKDAYS_LONG}

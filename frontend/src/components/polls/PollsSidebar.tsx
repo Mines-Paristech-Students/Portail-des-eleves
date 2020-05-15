@@ -3,7 +3,7 @@ import { Sidebar, SidebarItem, SidebarSeparator } from "../Sidebar";
 
 export const PollsSidebar = ({
     isStaff,
-    actions
+    actions,
 }: {
     isStaff: boolean;
     actions?: any;

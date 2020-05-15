@@ -6,11 +6,11 @@ import { PollsTable } from "./PollsTable";
 import { Column } from "../../utils/table/TableHeader";
 
 export const PollsTableAdmin = () => {
-    const columnData: (setEditPoll) => Column[] = setEditPoll => [
+    const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
         {
             key: "question",
             header: "Contenu",
-            render: poll => (
+            render: (poll) => (
                 <>
                     {poll.question}
                     <div className="small pollChoice">
@@ -22,33 +22,33 @@ export const PollsTableAdmin = () => {
                 </>
             ),
             canSort: true,
-            headerClassName: "w-50"
+            headerClassName: "w-50",
         },
         {
             key: "user",
             header: "Auteur",
             canSort: true,
-            cellClassName: "text-break"
+            cellClassName: "text-break",
         },
         {
             key: "publicationDate",
-            render: poll => formatDate(poll.publicationDate),
+            render: (poll) => formatDate(poll.publicationDate),
             header: "Publication",
-            canSort: true
+            canSort: true,
         },
         {
             key: "state",
-            render: poll => (
+            render: (poll) => (
                 <div className="text-center">
                     <PollStateIcon state={poll.state} />
                 </div>
             ),
             header: "Statut",
-            canSort: true
+            canSort: true,
         },
         {
             key: "action",
-            render: poll => (
+            render: (poll) => (
                 <Button
                     className="btn-icon mr-1"
                     variant="outline-primary"
@@ -58,8 +58,8 @@ export const PollsTableAdmin = () => {
                     <i className="fe fe-check-square" />
                 </Button>
             ),
-            header: "Actions"
-        }
+            header: "Actions",
+        },
     ];
 
     return <PollsTable adminVersion={true} columnData={columnData} />;

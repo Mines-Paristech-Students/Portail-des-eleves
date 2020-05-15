@@ -37,7 +37,7 @@ export const QuantitySelect = ({ order }) => {
                     type="number"
                     value={quantity}
                     className="form-control"
-                    onChange={e => setQuantity(parseInt(e.target.value))}
+                    onChange={(e) => setQuantity(parseInt(e.target.value))}
                 />
                 <span className="input-group-append mr-3">
                     <Button variant="secondary" onClick={increase}>

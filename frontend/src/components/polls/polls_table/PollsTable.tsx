@@ -18,7 +18,7 @@ import { Column } from "../../utils/table/TableHeader";
 
 export const PollsTable = ({
     adminVersion,
-    columnData
+    columnData,
 }: {
     adminVersion: boolean;
     columnData: (setEditPoll) => Column[];
@@ -38,66 +38,66 @@ export const PollsTable = ({
     const defaultStateFilter: PollStateFilter = {
         accepted: !adminVersion,
         rejected: !adminVersion,
-        reviewing: true
+        reviewing: true,
     };
 
     const [stateFilter, setStateFilter] = useState<PollStateFilter>(
         defaultStateFilter
     );
 
-    if (authService.isStaff || !adminVersion) {
-        return (
-            <PollsBase
-                sidebarActions={
-                    <PollsTableFilter
-                        defaultStateFilter={defaultStateFilter}
-                        setStateFilter={setStateFilter}
-                        formGroupProps={{ className: "mb-0" }}
-                    />
-                }
-            >
-                <div className="page-header mt-0 mb-5">
-                    <h1 className="page-title">
-                        {adminVersion ? "Administration" : "Mes sondages"}
-                    </h1>
-                </div>
-
-                <Card>
-                    <Card.Body>
-                        <Pagination
-                            render={(polls: Poll[], paginationControl) => (
-                                <>
-                                    <PollEditModal
-                                        show={editPoll !== null}
-                                        onHide={() => setEditPoll(null)}
-                                        poll={editPoll}
-                                        adminVersion={adminVersion}
-                                    />
-                                    <Table columns={columns} data={polls} />
-                                    {paginationControl}
-                                </>
-                            )}
-                            apiKey={[
-                                "polls.list",
-                                {
-                                    userFilter: userFilter(),
-                                    stateFilter: stateFilter,
-                                    sorting: sorting
-                                }
-                            ]}
-                            apiMethod={api.polls.listAll}
-                            config={{ refetchOnWindowFocus: false }}
-                            loadingElement={PollsLoading}
-                            errorElement={PollsError}
-                            paginationControlProps={{
-                                className: "justify-content-center mt-5"
-                            }}
-                        />
-                    </Card.Body>
-                </Card>
-            </PollsBase>
-        );
-    } else {
+    if (!authService.isStaff && adminVersion) {
         return <ForbiddenError />;
     }
+
+    return (
+        <PollsBase
+            sidebarActions={
+                <PollsTableFilter
+                    defaultStateFilter={defaultStateFilter}
+                    setStateFilter={setStateFilter}
+                    formGroupProps={{ className: "mb-0" }}
+                />
+            }
+        >
+            <div className="page-header mt-0 mb-5">
+                <h1 className="page-title">
+                    {adminVersion ? "Administration" : "Mes sondages"}
+                </h1>
+            </div>
+
+            <Card>
+                <Card.Body>
+                    <Pagination
+                        render={(polls: Poll[], paginationControl) => (
+                            <>
+                                <PollEditModal
+                                    show={editPoll !== null}
+                                    onHide={() => setEditPoll(null)}
+                                    poll={editPoll}
+                                    adminVersion={adminVersion}
+                                />
+                                <Table columns={columns} data={polls} />
+                                {paginationControl}
+                            </>
+                        )}
+                        apiKey={[
+                            "polls.list",
+                            {
+                                userFilter: userFilter(),
+                                stateFilter: stateFilter,
+                                sorting: sorting,
+                            },
+                        ]}
+                        apiMethod={api.polls.listAll}
+                        config={{ refetchOnWindowFocus: false }}
+                        loadingElement={PollsLoading}
+                        errorElement={PollsError}
+                        paginationControlProps={{
+                            className: "justify-content-center mt-5",
+                        }}
+                    />
+                </Card.Body>
+            </Card>
+        </PollsBase>
+    );
 };
