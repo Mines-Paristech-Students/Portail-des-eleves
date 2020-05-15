@@ -89,10 +89,7 @@ function Navbar() {
                                                 {user.firstName} {user.lastName}
                                             </span>
                                             <small className="text-muted d-block mt-0 text-left">
-                                                {user.yearOfEntry &&
-                                                    `P${formatShortYear(
-                                                        user.yearOfEntry
-                                                    )}`}
+                                                {`P${user.promotion}`}
                                             </small>
                                         </Col>
                                     </Row>

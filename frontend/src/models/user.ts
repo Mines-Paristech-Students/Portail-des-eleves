@@ -26,6 +26,7 @@ export interface User {
     id: string;
     firstName: string;
     lastName: string;
+    promotion: number;
     birthday?: string;
     email?: string;
     yearOfEntry?: number;
