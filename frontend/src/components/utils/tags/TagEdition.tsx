@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { api, useBetterQuery } from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import { Namespace, Tag } from "../../../models/tag";
-import Spinner from "react-bootstrap/Spinner";
 import { tablerColors } from "../../../utils/colors";
 import { hashCode } from "../../../utils/hashcode";
 import Autosuggest from "react-autosuggest";
@@ -13,14 +12,16 @@ export const TagEdition = ({ model, id }) => {
     let [tags, setTags] = useState<Tag[]>([]);
     const newToast = useContext(ToastContext);
 
-    let addTag = (newTag) => {
+    let bindTag = (newTag) => {
         api.tags
             .bind(model, id, newTag.id)
-            .then((_) => {
-                newToast({
-                    message: "Tag ajouté.",
-                    level: ToastLevel.Success,
-                });
+            .then((res) => {
+                if (res != "Tag is already linked") {
+                    newToast({
+                        message: "Tag ajouté.",
+                        level: ToastLevel.Success,
+                    });
+                }
             })
             .catch(() => {
                 newToast({
@@ -68,12 +69,14 @@ export const TagEdition = ({ model, id }) => {
                     />
                 ))}
             </>
-            <AddTagInput model={model} id={id} addTag={addTag} />
+            <AddTagInput model={model} id={id} bindTag={bindTag} />
         </>
     );
 };
 
-const AddTagInput = ({ model, id, addTag }) => {
+const AddTagInput = ({ model, id, bindTag }) => {
+    const newToast = useContext(ToastContext);
+
     let [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available namespaces
     let [selectedNamespace, setSelectedNamespace] = useState<Namespace | null>(
         null
@@ -82,17 +85,20 @@ const AddTagInput = ({ model, id, addTag }) => {
         Namespace,
         any
     > | null>(null); // Namespaces search object
-    let [suggestionsNamespace, setSuggestionsNamespace] = useState<Namespace[]>(
-        []
-    ); // Currently displayed suggestions
+    let [suggestionsNamespace, setSuggestionsNamespace] = useState<
+        Namespace[] // { newTagName: string } is to add a new tag that didn't exist before.
+    >([]); // Currently displayed suggestions
 
     let [tags, setTags] = useState<Tag[]>([]); // All available tags
     let [fuseTag, setFuseTag] = useState<Fuse<Tag, any> | null>(null); // Tag search object
-    let [suggestionsTag, setSuggestionsTag] = useState<Tag[]>([]); // Currently displayed suggestions
+    let [suggestionsTag, setSuggestionsTag] = useState<
+        (Tag | { newTagName: string })[]
+    >([]); // Currently displayed suggestions
 
     let [value, setValue] = useState("Chargement en cours..."); // Text in the search input
     let [status, setStatus] = useState<"loading" | "error" | "OK">("loading"); // in {OK, loading, error}
 
+    // Load namespaces and set them as suggestion
     useEffect(() => {
         let params: any = {};
         params[model] = id;
@@ -118,6 +124,7 @@ const AddTagInput = ({ model, id, addTag }) => {
             });
     }, [model, id]);
 
+    // Give the tags related to the namespace
     useEffect(() => {
         if (selectedNamespace != null) {
             api.tags.list({ namespace: selectedNamespace.id }).then((res) => {
@@ -138,24 +145,35 @@ const AddTagInput = ({ model, id, addTag }) => {
 
     // Event handlers
     const onChange = (event, { newValue, method }) => {
+        // When input changes
         if (
             selectedNamespace !== null && // If there is a selected namespace
             (newValue.indexOf(":") === -1 || // but we removed the colon
                 newValue.split(":")[0] != selectedNamespace.name) // Or tried to change the namespace name
         ) {
             setSelectedNamespace(null);
+        } else if (
+            selectedNamespace === null &&
+            newValue.indexOf(":") !== -1 // we just added the colon
+        ) {
+            let namespaceName = newValue.split(":")[0].trim(); // Get the name of the namespace the user wants
+            let selectNamespaceCandiates = namespaces.filter(
+                (n) => n.name == namespaceName
+            ); // Check if a namespace has the name we want
+            if (selectNamespaceCandiates.length == 1) {
+                setSelectedNamespace(selectNamespaceCandiates[0]);
+            }
         }
 
         setValue(newValue);
     };
 
     const onKeyDown = (event) => {
+        // Prevent from submitting the form on pressing enter
         if (event.key === "Enter") {
             event.preventDefault();
         }
     };
-
-    const bindTag = (namespace, tag) => {};
 
     let onSuggestionsClearRequested = () => {};
     let onSuggestionSelected = (
@@ -166,7 +184,21 @@ const AddTagInput = ({ model, id, addTag }) => {
             setValue(`${suggestionValue}:`);
             setSelectedNamespace(suggestion);
         } else {
-            addTag(suggestion);
+            if (suggestion.hasOwnProperty("newTagName")) {
+                api.tags
+                    .create(suggestion.newTagName, selectedNamespace)
+                    .then(createdTag => {
+                        bindTag(createdTag);
+                    })
+                    .catch(() => {
+                        newToast({
+                            message: "Erreur lors de l'ajout du tag.",
+                            level: ToastLevel.Error,
+                        });
+                    });
+            } else {
+                bindTag(suggestion);
+            }
             setSelectedNamespace(null);
             setValue("");
         }
@@ -179,11 +211,13 @@ const AddTagInput = ({ model, id, addTag }) => {
                     .map((suggestion) => suggestion.item)
             );
         } else {
-            setSuggestionsTag(
-                fuseTag!
-                    .search(value, { limit: 10 })
-                    .map((suggestion) => suggestion.item)
-            );
+            let tagName = value.split(":")[1].trim();
+            setSuggestionsTag([
+                ...fuseTag!
+                    .search(tagName, { limit: 10 })
+                    .map((suggestion) => suggestion.item),
+                { newTagName: tagName },
+            ]);
         }
     };
 
@@ -203,12 +237,24 @@ const AddTagInput = ({ model, id, addTag }) => {
         (selectedNamespace !== null
             ? getSuggestionValueTag
             : getSuggestionValueNamespace)(suggestion);
+
     const getSuggestionValueNamespace = (suggestion) => suggestion.name;
+
     const getSuggestionValueTag = (suggestion) =>
-        `${selectedNamespace?.name}: ${suggestion.value}`;
+        `${selectedNamespace?.name}: ${
+            suggestion.hasOwnProperty("newTagName")
+                ? suggestion.newTagName
+                : suggestion.value
+        }`;
     const renderSuggestion = (suggestion, { query, isHighlighted }) => (
         <div className={isHighlighted ? "active" : ""}>
-            {getSuggestionValue(suggestion)}
+            {suggestion.hasOwnProperty("newTagName") ? (
+                <em className={"text-center d-block"}>
+                    Ajouter nouveau tag : {suggestion.newTagName}
+                </em>
+            ) : (
+                getSuggestionValue(suggestion)
+            )}
         </div>
     );
 

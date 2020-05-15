@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
 from rest_framework import mixins
@@ -90,9 +91,14 @@ class TagLinkView(APIView):
         return tag
 
     def post(self, request, model, instance_pk, tag_pk):
+
         tag = self.get_tag(request, tag_pk)
-        getattr(tag, model).add(instance_pk)
-        tag.save()
+
+        try:
+            getattr(tag, model).add(instance_pk)
+            tag.save()
+        except IntegrityError:
+            return Response(status=200, data="Tag is already linked")
 
         return Response(status=201)
 
@@ -100,6 +106,12 @@ class TagLinkView(APIView):
         tag = self.get_tag(request, tag_pk)
         getattr(tag, model).remove(instance_pk)
         tag.save()
+
+        count_links = 0
+        for model in Tag.LINKED_TO_MODEL:
+            count_links += getattr(tag, model).count()
+        if count_links == 0:
+            tag.delete()
 
         return Response(status=204)
 

@@ -14,15 +14,21 @@ export const tags = {
         );
     },
 
-    bind: (model, instanceId, tagId) => {
-        return unwrap(
+    bind: (model, instanceId, tagId) =>
+        unwrap(
             apiService.post(`/tags/link/${model}/${instanceId}/tag/${tagId}/`)
-        );
-    },
+        ),
 
-    unbind: (model, instanceId, tagId) => {
-        return unwrap(
+    unbind: (model, instanceId, tagId) =>
+        unwrap(
             apiService.delete(`/tags/link/${model}/${instanceId}/tag/${tagId}/`)
-        );
-    },
+        ),
+
+    create: (value, namespace) =>
+        unwrap<Tag>(
+            apiService.post(`/tags/tags/`, {
+                value: value,
+                namespace: namespace.id,
+            })
+        ),
 };
