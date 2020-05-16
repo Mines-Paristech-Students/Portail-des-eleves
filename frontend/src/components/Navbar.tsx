@@ -47,10 +47,10 @@ function Navbar() {
             className = "fe fe-" + icon;
         }
 
-        let isActive =
+        const isActive =
             url == "/"
                 ? location.pathname == "/"
-                : location.pathname.indexOf(url) > -1;
+                : location.pathname.startsWith(url);
 
         return (
             <li className="nav-item" key={url}>
