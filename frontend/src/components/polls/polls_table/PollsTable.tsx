@@ -45,7 +45,7 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
                             <tbody>
                                 {adminVersion
                                     ? // Display all the polls in the administrator panel.
-                                      polls.map(poll => (
+                                      polls.map((poll) => (
                                           <PollsTableRowAdmin
                                               key={
                                                   "polls-table-row-admin-" +
@@ -57,8 +57,10 @@ export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
                                       ))
                                     : // Only display their own polls to a normal user.
                                       polls
-                                          .filter(poll => poll.user === user.id)
-                                          .map(poll => (
+                                          .filter(
+                                              (poll) => poll.user === user.id
+                                          )
+                                          .map((poll) => (
                                               <PollsTableRowUser
                                                   key={
                                                       "polls-table-row-user-" +

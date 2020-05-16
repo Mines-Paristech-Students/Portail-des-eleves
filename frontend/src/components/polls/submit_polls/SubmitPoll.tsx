@@ -16,44 +16,44 @@ export const SubmitPoll = () => {
     const [
         questionPlaceholder,
         choice0Placeholder,
-        choice1Placeholder
+        choice1Placeholder,
     ] = getRandom([
         [
             "Le portail…",
             "C’était pas mieux avant.",
-            "C’est bien mieux maintenant."
+            "C’est bien mieux maintenant.",
         ],
         ["La piche…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Le BDE…", "C’était mieux avant.", "C’est moins bien maintenant."],
         ["Ton premier choix ?", "L’X", "Ulm"],
         ["Le plus claqué ?", "L’Octo", "La biéro"],
-        ["Les plus sharks ?", "(La) JuMP", "Le Trium"]
+        ["Les plus sharks ?", "(La) JuMP", "Le Trium"],
     ]);
 
     const onSubmit = (values, { resetForm, setSubmitting }) => {
         let data = {
             question: values.question,
             choice0: values.choice0,
-            choice1: values.choice1
+            choice1: values.choice1,
         };
 
         api.polls
             .create(data)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 201) {
                     newToast({
                         message: "Sondage envoyé.",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                     resetForm();
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 let message =
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 newToast({
                     message: `${message} Détails : ${error.response.data.detail}`,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             })
             .then(() => {
@@ -69,12 +69,12 @@ export const SubmitPoll = () => {
                     initialValues={{
                         question: "",
                         choice0: "",
-                        choice1: ""
+                        choice1: "",
                     }}
                     validationSchema={Yup.object({
                         question: Yup.string().required("Ce champ est requis."),
                         choice0: Yup.string().required("Ce champ est requis."),
-                        choice1: Yup.string().required("Ce champ est requis.")
+                        choice1: Yup.string().required("Ce champ est requis."),
                     })}
                     onSubmit={onSubmit}
                 >

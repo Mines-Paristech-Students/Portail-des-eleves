@@ -34,7 +34,7 @@ export const AssociationFilesystemList = ({ association }) => {
                     {addButton}
                     <PageTitle className={"mt-6"}>Fichiers</PageTitle>
                     <Row>
-                        {medias.map(media => {
+                        {medias.map((media) => {
                             return (
                                 <Col md={4} key={media.id}>
                                     <Card
@@ -49,7 +49,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                             <p className="text-muted">
                                                 {media.description}
                                             </p>
-                                            {media.tags.map(tag => (
+                                            {media.tags.map((tag) => (
                                                 <Tag
                                                     key={tag.id}
                                                     tooltip={tag.namespace.name}

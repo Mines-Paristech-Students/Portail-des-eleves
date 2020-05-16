@@ -12,7 +12,7 @@ import { CardStatus } from "../../utils/CardStatus";
 
 export const PollVotingForm = ({
     poll,
-    refetch
+    refetch,
 }: {
     poll: Poll;
     refetch: any;
@@ -23,16 +23,16 @@ export const PollVotingForm = ({
     const onSubmit = (values, { setSubmitting }) => {
         api.polls
             .vote(user, poll.id, values.choice)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 201) {
                     newToast({
                         message: "Vous avez voté.",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                     refetch({ force: true });
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 let message =
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
@@ -53,7 +53,7 @@ export const PollVotingForm = ({
 
                 newToast({
                     message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             })
             .then(() => {
@@ -77,7 +77,7 @@ export const PollVotingForm = ({
 
                 <Formik
                     initialValues={{
-                        choice: undefined
+                        choice: undefined,
                     }}
                     onSubmit={onSubmit}
                 >
@@ -107,7 +107,7 @@ export const PollVotingForm = ({
 const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
     let items: Map<string, ReactElement> = new Map();
 
-    choices.forEach(choice => {
+    choices.forEach((choice) => {
         items.set(
             choice.id.toString(),
             <span className="selectgroup-button">{choice.text}</span>

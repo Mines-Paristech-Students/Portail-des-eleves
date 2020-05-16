@@ -31,7 +31,7 @@ export const Pagination = ({
     render,
     apiKey,
     apiMethod,
-    config
+    config,
 }: {
     render: any;
     apiKey: any[];
@@ -103,7 +103,7 @@ const PaginationControl = ({ page, maxPage, setPage }) => {
             {Array.from(
                 { length: maxProposedPage - minProposedPage },
                 (_, index) => index + minProposedPage
-            ).map(i => (
+            ).map((i) => (
                 <BoostrapPagination.Item
                     onClick={() => setPage(i)}
                     key={i}

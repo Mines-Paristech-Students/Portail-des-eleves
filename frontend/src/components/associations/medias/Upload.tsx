@@ -16,14 +16,14 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
 
     // Create and handle drop zone
     const onDrop = useCallback(
-        acceptedFiles => {
+        (acceptedFiles) => {
             setUploadingFiles([...uploadingFiles, ...acceptedFiles]);
         },
         [uploadingFiles]
     );
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop
+        onDrop,
     });
 
     return (
@@ -68,7 +68,7 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
 enum UploadState {
     Uploading,
     Success,
-    Fail
+    Fail,
 }
 
 // Sub-component used to upload a file
@@ -80,13 +80,13 @@ const FileUpload = ({ file, association }) => {
 
     useEffect(() => {
         // Use effect to submit the file only once
-        const upload = api.medias.upload(file, association, progressEvent => {
+        const upload = api.medias.upload(file, association, (progressEvent) => {
             let { loaded, total } = progressEvent;
             setProgress(Math.round((loaded * 100) / total));
         });
 
         upload
-            .then(res => {
+            .then((res) => {
                 setState(UploadState.Success);
                 let resData: Media = res.data;
                 if (resData.description === null) {
@@ -94,7 +94,7 @@ const FileUpload = ({ file, association }) => {
                 }
                 setUploadedFile(resData);
             })
-            .catch(err => {
+            .catch((err) => {
                 setError(err.message);
                 setState(UploadState.Fail);
             });
@@ -145,30 +145,30 @@ const FileUploadDone = ({ file }) => {
     const formik = useFormik({
         // Use a form to edit name and description
         initialValues: file,
-        onSubmit: values => {
+        onSubmit: (values) => {
             newToast({
                 message: "Sauvegarde en cours",
-                level: ToastLevel.Success
+                level: ToastLevel.Success,
             });
             api.medias
                 .patch({
                     id: values.id,
                     name: values.name,
-                    description: values.description
+                    description: values.description,
                 })
-                .then(res => {
+                .then((res) => {
                     newToast({
                         message: "Fichier sauvegardé !",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     newToast({
                         message: err.message,
-                        level: ToastLevel.Error
+                        level: ToastLevel.Error,
                     });
                 });
-        }
+        },
     });
 
     let details;
@@ -190,7 +190,7 @@ const FileUploadDone = ({ file }) => {
                         position: "absolute",
                         bottom: "10px",
                         right: "10px",
-                        width: "100px"
+                        width: "100px",
                     }}
                     type="submit"
                 >

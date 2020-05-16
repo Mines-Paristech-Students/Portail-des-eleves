@@ -38,18 +38,18 @@ export const ListPolls = ({ current }: { current?: boolean }) => {
             if (current) {
                 cards = cards.concat(
                     polls
-                        .filter(poll => poll.isActive && !poll.userHasVoted)
-                        .map(poll => (
+                        .filter((poll) => poll.isActive && !poll.userHasVoted)
+                        .map((poll) => (
                             <PollVotingForm poll={poll} refetch={refetch} />
                         )),
                     polls
-                        .filter(poll => poll.isActive && poll.userHasVoted)
-                        .map(poll => <PollResults poll={poll} />)
+                        .filter((poll) => poll.isActive && poll.userHasVoted)
+                        .map((poll) => <PollResults poll={poll} />)
                 );
             } else {
                 cards = polls
-                    .filter(poll => !poll.isActive && poll.hasBeenPublished)
-                    .map(poll => <PollResults poll={poll} />);
+                    .filter((poll) => !poll.isActive && poll.hasBeenPublished)
+                    .map((poll) => <PollResults poll={poll} />);
             }
 
             return (

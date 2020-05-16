@@ -14,7 +14,7 @@ export const AssociationList = () => (
             apiMethod={api.associations.list}
             render={(associations, paginationControl) => (
                 <>
-                    {associations.map(association => (
+                    {associations.map((association) => (
                         <Card key={association.id} className={"col-md-3 m-4"}>
                             <Link to={`/associations/${association.id}/`}>
                                 <Card.Body>

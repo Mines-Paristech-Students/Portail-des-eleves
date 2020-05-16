@@ -6,12 +6,12 @@ export const transactions = {
         apiService.post("/associations/transactions/", {
             product: product.id,
             quantity: quantity,
-            buyer: buyer.id
+            buyer: buyer.id,
         }),
     list: (marketplaceId, user) =>
         unwrap<Transaction[]>(
             apiService.get(
                 `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
             )
-        )
+        ),
 };
