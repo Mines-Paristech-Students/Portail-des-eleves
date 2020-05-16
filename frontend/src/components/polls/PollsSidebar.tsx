@@ -9,22 +9,22 @@ export const PollsSidebar = ({
     actions?: any;
 }) => (
     <Sidebar title="Sondages">
-        <SidebarItem icon="clock" to="/sondages/">
+        <SidebarItem icon="clock" to="/sondages">
             En cours
         </SidebarItem>
-        <SidebarItem icon="inbox" to="/sondages/anciens/">
+        <SidebarItem icon="inbox" to="/sondages/anciens">
             Anciens
         </SidebarItem>
         <SidebarSeparator />
-        <SidebarItem icon="check-square" to="/sondages/mes-sondages/">
+        <SidebarItem icon="check-square" to="/sondages/mes-sondages">
             Mes sondages
         </SidebarItem>
-        <SidebarItem icon="plus" to="/sondages/proposer/">
+        <SidebarItem icon="plus" to="/sondages/proposer">
             Proposer
         </SidebarItem>
         <SidebarSeparator />
         {isStaff ? (
-            <SidebarItem icon="shield" to="/sondages/administration/">
+            <SidebarItem icon="shield" to="/sondages/administration">
                 Administration
             </SidebarItem>
         ) : null}
