@@ -1,5 +1,6 @@
 import { Transaction } from "../../models/associations/marketplace";
 import { apiService, unwrap } from "../apiService";
+import { marketplace } from "./marketplace";
 
 export const transactions = {
     create: (product, quantity, buyer) =>
@@ -8,10 +9,12 @@ export const transactions = {
             quantity: quantity,
             buyer: buyer.id,
         }),
-    list: (marketplaceId, user) =>
+    list: (marketplaceId, params) => {
+        params["marketplace"] = marketplaceId;
         unwrap<Transaction[]>(
             apiService.get(
-                `associations/transactions/?marketplace=${marketplaceId}&buyer=${user.id}`
+                `associations/transactions/${toUrlParams(params)}`
             )
-        ),
+        )
+    }
 };

@@ -8,14 +8,14 @@ import { Link, useLocation } from "react-router-dom";
  *   * `to`: the URL of the link.
  *   * `children`: the children to render for the link.
  */
-export const SidebarItem = ({ icon, to, children }) => {
+export const SidebarItem = ({ icon, to, children, exact = true }) => {
     const location = useLocation();
     const iconClassName = "fe fe-" + icon;
 
     return (
         <Link
             className={`list-group-item list-group-item-action d-flex align-items-center ${
-                location.pathname === to ? "active" : ""
+                (exact && location.pathname === to) || (!exact && location.pathname.indexOf(to) !== -1) ? "active" : ""
             }`}
             to={to}
         >

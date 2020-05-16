@@ -21,7 +21,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
                             href={
                                 "/associations/" +
                                 marketplaceId +
-                                "/marketplace/"
+                                "/marketplace"
                             }
                             className={"btn btn-primary"}
                         >

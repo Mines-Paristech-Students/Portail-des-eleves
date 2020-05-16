@@ -10,45 +10,45 @@ import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 
 export const AssociationMarketplaceHome = ({ association }) => {
-    const marketplaceId = association.id;
+           const marketplaceId = association.id;
 
-    return (
-        <Container>
-            <div className={"float-right"}>
-                <a
-                    href={
-                        "/associations/" +
-                        marketplaceId +
-                        "/marketplace/history/"
-                    }
-                    className={"btn btn-primary"}
-                >
-                    <i className={"fe fe-book-open"} /> Historique
-                </a>
-            </div>
-            <PageTitle>Magasin</PageTitle>
+           return (
+               <Container>
+                   <div className={"float-right"}>
+                       <a
+                           href={
+                               "/associations/" +
+                               marketplaceId +
+                               "/marketplace/history/"
+                           }
+                           className={"btn btn-primary"}
+                       >
+                           <i className={"fe fe-book-open"} /> Historique
+                       </a>
+                   </div>
+                   <PageTitle>Magasin</PageTitle>
 
-            <Row>
-                <Pagination
-                    apiKey={["associations.list", marketplaceId]}
-                    apiMethod={api.products.list}
-                    render={(products, controlbar) => (
-                        <>
-                            {controlbar}
-                            {products.map((product) => (
-                                <AssociationMarketplaceProduct
-                                    product={product}
-                                    key={product.id}
-                                />
-                            ))}
-                            {controlbar}
-                        </>
-                    )}
-                />
-            </Row>
-        </Container>
-    );
-};
+                   <Row>
+                       <Pagination
+                           apiKey={["associations.list", marketplaceId]}
+                           apiMethod={api.products.list}
+                           render={(products, controlbar) => (
+                               <>
+                                   {controlbar}
+                                   {products.map((product) => (
+                                       <AssociationMarketplaceProduct
+                                           product={product}
+                                           key={product.id}
+                                       />
+                                   ))}
+                                   {controlbar}
+                               </>
+                           )}
+                       />
+                   </Row>
+               </Container>
+           );
+       };
 
 const AssociationMarketplaceProduct = ({ product }) => {
     const newToast = useContext(ToastContext);
