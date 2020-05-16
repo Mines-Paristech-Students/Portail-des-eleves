@@ -76,6 +76,7 @@ describe("Testing the messages service", () => {
         "licorne",
         "Inserted message is correct"
       );
+
       assert.exists(data.posted_on);
       done();
     });

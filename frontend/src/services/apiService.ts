@@ -49,8 +49,8 @@ export const api = {
     pages: pages,
     products: products,
     transactions: transactions,
-    polls: polls,
     jwt: jwt,
+    polls: polls,
 };
 
 /**
@@ -84,13 +84,13 @@ export const api = {
  * }
  * ```
  *
- * @param key The request key. Should be a non-empty array which first element is a string. Because of the behaviour of `useQuery`, if any element of this array is falsy, then `fetchFunction` will never be called.
+ * @param key The request key. Should be a non-empty array which first element is a string or `false` if you don't want `fetchFunction` to be called (useful for conditional queries, because hooks should be used in conditions).
  * @param fetchFunction The function to call. It will be given the elements of `key` (except its first) as arguments.
  * @param config An optional object to configure `useQuery`.
  * @return an object `{ status, data, error }`.
  */
 export function useBetterQuery<T>(
-    key: any[],
+    key: false | any[],
     fetchFunction: (...params: any) => any,
     config?: any
 ): QueryResult<T> {
@@ -107,19 +107,21 @@ export function useBetterQuery<T>(
  * This function should be used for non-mutating queries (such as `GET`). Otherwise, use `useBetterMutation`.
  * Also, it should not be used directly but in a `Pagination` component.
  *
- * @param key The request key. Should be a non-empty array which first element is a string. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `fetchFunction` will never be called.
+ * @param key The request key. Should be a non-empty array which first element is a string or `false` if you don't want `fetchFunction` to be called (useful for conditional queries, because hooks should be used in conditions).
  * @param fetchFunction The function to call. It will be given the elements of `key` (except its first) as arguments.
  * @param config An optional object to configure `usePaginatedQuery`.
  * @return an object `{ status, data, error }`.
  */
 export function useBetterPaginatedQuery<T>(
-    key: any[],
+    key: false | any[],
     fetchFunction: (...params: any) => any,
     config?: any
 ): PaginatedQueryResult<T> {
     return usePaginatedQuery<T, any, any>(
         key,
-        (_, ...params) => fetchFunction(...params),
+        (_, ...params) => {
+            return fetchFunction(...params);
+        },
         config
     );
 }

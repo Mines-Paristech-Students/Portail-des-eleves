@@ -1,93 +1,103 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Poll } from "../../../models/polls";
-import { PollsTableRowAdmin } from "./PollsTableRowAdmin";
 import "./polls-table.css";
-import Table from "react-bootstrap/Table";
-import { PollsTableRowUser } from "./PollsTableRowUser";
 import Card from "react-bootstrap/Card";
 
 import { PollsBase } from "../PollsBase";
-import { PageTitle } from "../../utils/PageTitle";
-import { api, useBetterQuery } from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
+import { authService } from "../../../App";
+import { ForbiddenError } from "../../utils/ErrorPage";
+import { Pagination } from "../../utils/Pagination";
+import { PollsTableFilter, PollStateFilter } from "./PollsTableFilter";
 import { UserContext } from "../../../services/authService";
+import { Table, useColumns } from "../../utils/table/Table";
+import { PollEditModal } from "./PollEditModal";
+import { Column } from "../../utils/table/TableHeader";
 
-export const PollsTable = ({ adminVersion }: { adminVersion?: boolean }) => {
+export const PollsTable = ({
+    adminVersion,
+    columnData,
+}: {
+    adminVersion: boolean;
+    columnData: (setEditPoll) => Column[];
+}) => {
     const user = useContext(UserContext);
 
-    const { data: polls, error, status, refetch } = useBetterQuery<Poll[]>(
-        ["polls.list"],
-        api.polls.list,
-        { refetchOnWindowFocus: false }
+    // Only filter by user for the non admin version.
+    const userFilter = () => (!adminVersion && user ? user.id : "");
+
+    // Contains the poll currently edited in the modal.
+    const [editPoll, setEditPoll] = useState<Poll | null>(null);
+
+    // Create the sorting.
+    const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
+
+    // By default, show all the polls to the simple users and only the polls to be reviewed to the admins.
+    const defaultStateFilter: PollStateFilter = {
+        accepted: !adminVersion,
+        rejected: !adminVersion,
+        reviewing: true,
+    };
+
+    const [stateFilter, setStateFilter] = useState<PollStateFilter>(
+        defaultStateFilter
     );
 
-    function Content() {
-        if (status === "loading") return <PollsLoading />;
-        else if (status === "success" && polls && user) {
-            return (
-                <Card>
-                    <Card.Body>
-                        <Table className="card-table polls-table text-left">
-                            <thead className="text-center">
-                                <tr>
-                                    <th>Question</th>
-                                    <th>Réponse 1</th>
-                                    <th>Réponse 2</th>
-                                    <th>Publication</th>
-                                    {adminVersion && <th>Auteur</th>}
-                                    <th>Statut</th>
-                                    {!adminVersion && <th>Commentaire</th>}
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {adminVersion
-                                    ? // Display all the polls in the administrator panel.
-                                      polls.map((poll) => (
-                                          <PollsTableRowAdmin
-                                              key={
-                                                  "polls-table-row-admin-" +
-                                                  poll.id
-                                              }
-                                              poll={poll}
-                                              refetch={refetch}
-                                          />
-                                      ))
-                                    : // Only display their own polls to a normal user.
-                                      polls
-                                          .filter(
-                                              (poll) => poll.user === user.id
-                                          )
-                                          .map((poll) => (
-                                              <PollsTableRowUser
-                                                  key={
-                                                      "polls-table-row-user-" +
-                                                      poll.id
-                                                  }
-                                                  poll={poll}
-                                                  refetch={refetch}
-                                              />
-                                          ))}
-                            </tbody>
-                        </Table>
-                    </Card.Body>
-                </Card>
-            );
-        } else {
-            return <PollsError detail={error} />;
-        }
+    if (!authService.isStaff && adminVersion) {
+        return <ForbiddenError />;
     }
 
     return (
-        <PollsBase>
-            {adminVersion ? (
-                <PageTitle>Administration</PageTitle>
-            ) : (
-                <PageTitle>Mes sondages</PageTitle>
-            )}
-            <Content />
+        <PollsBase
+            sidebarActions={
+                <PollsTableFilter
+                    defaultStateFilter={defaultStateFilter}
+                    setStateFilter={setStateFilter}
+                    formGroupProps={{ className: "mb-0" }}
+                />
+            }
+        >
+            <div className="page-header mt-0 mb-5">
+                <h1 className="page-title">
+                    {adminVersion ? "Administration" : "Mes sondages"}
+                </h1>
+            </div>
+
+            <Card>
+                <Card.Body>
+                    <Pagination
+                        render={(polls: Poll[], paginationControl) => (
+                            <>
+                                <PollEditModal
+                                    show={editPoll !== null}
+                                    onHide={() => setEditPoll(null)}
+                                    poll={editPoll}
+                                    adminVersion={adminVersion}
+                                />
+                                <Table columns={columns} data={polls} />
+                                {paginationControl}
+                            </>
+                        )}
+                        apiKey={[
+                            "polls.list",
+                            {
+                                userFilter: userFilter(),
+                                stateFilter: stateFilter,
+                                sorting: sorting,
+                            },
+                        ]}
+                        apiMethod={api.polls.listAll}
+                        config={{ refetchOnWindowFocus: false }}
+                        loadingElement={PollsLoading}
+                        errorElement={PollsError}
+                        paginationControlProps={{
+                            className: "justify-content-center mt-5",
+                        }}
+                    />
+                </Card.Body>
+            </Card>
         </PollsBase>
     );
 };

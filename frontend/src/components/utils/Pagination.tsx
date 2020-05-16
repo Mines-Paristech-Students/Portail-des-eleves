@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
+import { Loading } from "./Loading";
+import { Error } from "./Error";
 
 /**
  * Pagination is a component that handles the pagination on the API level + the
@@ -26,17 +28,26 @@ import { Pagination as BoostrapPagination } from "react-bootstrap";
  * @param apiKey The request key. Should be a non-empty array which first element is a string. The `page` last element required by `usePaginatedQuery` is added by the component and should not be included. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `apiMethod` will never be called.
  * @param apiMethod The function to call. It will be given the elements of `apiKey` (except its first) as arguments.
  * @param config An optional object to configure `usePaginatedQuery`.
+ * @param paginationControlProps Optional props to be passed to `PaginationControl`.
+ * @param loadingElement The element to display when loading.
+ * @param errorElement The element to display if the request encounters an error. The error `detail` is passed to this component.
  */
 export const Pagination = ({
     render,
     apiKey,
     apiMethod,
     config,
+    paginationControlProps,
+    loadingElement,
+    errorElement,
 }: {
     render: any;
     apiKey: any[];
     apiMethod: (...params: any) => any;
     config?: any;
+    paginationControlProps?: object;
+    loadingElement?: React.ComponentType<{}> | React.ReactNode;
+    errorElement?: React.ComponentType<{ detail: any }> | React.ReactNode;
 }) => {
     let [page, setPage] = useState(1);
     let [maxPage, setMaxPage] = useState(1);
@@ -54,14 +65,27 @@ export const Pagination = ({
     }, [page, data]);
 
     if (status === "loading")
-        return <p className={"text-center"}>Chargement en cours...</p>;
+        return loadingElement === undefined ? (
+            <Loading />
+        ) : (
+            React.createElement(loadingElement as any)
+        );
     else if (status === "error") {
-        return <p>Something went wrong: {error}</p>;
+        if (errorElement === undefined) {
+            return <Error detail={error} />;
+        } else {
+            return React.createElement(errorElement as any);
+        }
     }
 
     return render(
         data.results,
-        <PaginationControl page={page} maxPage={maxPage} setPage={setPage} />
+        <PaginationControl
+            page={page}
+            maxPage={maxPage}
+            setPage={setPage}
+            {...paginationControlProps}
+        />
     );
 };
 
@@ -72,7 +96,7 @@ export const Pagination = ({
  *
  * This component is only used internally by the `Pagination` component.
  */
-const PaginationControl = ({ page, maxPage, setPage }) => {
+const PaginationControl = ({ page, maxPage, setPage, ...props }) => {
     if (maxPage === 1) {
         return null;
     }
@@ -85,7 +109,7 @@ const PaginationControl = ({ page, maxPage, setPage }) => {
     maxProposedPage = Math.min(maxPage, maxProposedPage);
 
     return (
-        <BoostrapPagination>
+        <BoostrapPagination {...props}>
             <BoostrapPagination.Prev
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
