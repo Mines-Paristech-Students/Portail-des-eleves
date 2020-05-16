@@ -1,4 +1,3 @@
-from django.core.exceptions import SuspiciousOperation
 from rest_framework import permissions
 
 from associations.models import (
@@ -83,21 +82,17 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
 
 class NamespacePermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        # `request.data != []` has to be here because, for some reason, DRF makes a POST request when the user just
+        # `len(request.data) > 0` has to be here because, for some reason, DRF makes a POST request when the user just
         # asked for a GET request (it has to do with the form displayed in the viewsets).
-        # Without this, a `SuspiciousOperation` would be raised (because `scoped_to_model` and `scoped_to_pk` would be
-        # None.
-        if request.method == "POST" and request.data != []:
+        if request.method == "POST" and len(request.data) > 0:
             scoped_to_model = request.data.get("scoped_to_model")
             scoped_to_pk = request.data.get("scoped_to_pk")
-
             # Only the admins can edit a global namespace.
             if scoped_to_model == "global":
                 return request.user.is_admin
             # Or, both parameters have to be provided.
-            else:
-                if scoped_to_model is None or scoped_to_pk is None:
-                    raise SuspiciousOperation()
+            if scoped_to_model is None or scoped_to_pk is None:
+                return False
 
             instance = Tag.get_linked_instance(scoped_to_model, scoped_to_pk)
             return can_manage_tags_for(request.user, instance)
@@ -115,7 +110,7 @@ class NamespacePermission(permissions.BasePermission):
 class ManageTagPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         # Same as above for `request.data != []`.
-        if request.method == "POST" and request.data != []:
+        if request.method == "POST" and len(request.data) > 0:
             namespace = Namespace.objects.get(pk=request.data.get("namespace"))
             instance = namespace.scoped_to
 

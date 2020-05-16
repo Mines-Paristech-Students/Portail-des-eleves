@@ -12,6 +12,12 @@
     scoped_to_model: association
     scoped_to_pk: bde
 
+- model: tags.namespace
+  pk: 3
+  fields:
+    name: cache
+    scoped_to_model: global
+
 - model: tags.tag
   pk: 1
   fields:

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Logo from "../logo-mines.png";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -26,23 +26,8 @@ const links = [
     { icon: "check-square", url: "/sondages", label: "Sondages" },
 ];
 
-const linksComponent = links.map(({ icon, url, label }) => {
-    let className = "";
-    if (icon) {
-        className = "fe fe-" + icon;
-    }
-
-    return (
-        <li className="nav-item" key={url}>
-            <Link to={url} className="nav-link">
-                <i className={className} />
-                {label}
-            </Link>
-        </li>
-    );
-});
-
 function Navbar() {
+    const location = useLocation();
     const user = useContext(UserContext);
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
 
@@ -55,6 +40,30 @@ function Navbar() {
     if (redirectToLogin) {
         return <Redirect to={"/login"} />;
     }
+
+    const linksComponent = links.map(({ icon, url, label }) => {
+        let className = "";
+        if (icon) {
+            className = "fe fe-" + icon;
+        }
+
+        const isActive =
+            url == "/"
+                ? location.pathname == "/"
+                : location.pathname.startsWith(url);
+
+        return (
+            <li className="nav-item" key={url}>
+                <Link
+                    to={url}
+                    className={"nav-link" + (isActive ? " active" : "")}
+                >
+                    <i className={className} />
+                    {label}
+                </Link>
+            </li>
+        );
+    });
 
     return user ? (
         <>

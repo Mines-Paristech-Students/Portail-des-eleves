@@ -14,16 +14,11 @@ import { marketplace } from "./api/marketplace";
 import { products } from "./api/products";
 import { polls } from "./api/polls";
 import { associations } from "./api/associations";
+import { tags } from "./api/tags";
+import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
 
 const baseApi = "http://localhost:8000/api/v1";
-
-export type PaginatedResponse<T> = {
-    count: number;
-    next: string;
-    previous: string;
-    results: T;
-};
 
 export const apiService = applyConverters(
     Axios.create({
@@ -41,6 +36,25 @@ export function unwrap<T>(promise): Promise<T> {
     });
 }
 
+/**
+ * Transforms an object into url parameters, joining parameters with '&'
+ * and adding '?' at the beginning
+ * toUrlParams({foo: 'bar', piche: 'clac'} = "?foo=bar?piche=clac"
+ */
+export function toUrlParams(obj: object): string {
+    let params = "?";
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (params.length !== 1) {
+                params += "&";
+            }
+            params += `${key}=${obj[key]}`;
+        }
+    }
+
+    return params;
+}
+
 export const api = {
     associations: associations,
     marketplace: marketplace,
@@ -51,6 +65,9 @@ export const api = {
     transactions: transactions,
     jwt: jwt,
     polls: polls,
+
+    tags: tags,
+    namespaces: namespaces,
 };
 
 /**
@@ -100,6 +117,13 @@ export function useBetterQuery<T>(
         config
     );
 }
+
+export type PaginatedResponse<T> = {
+    count: number;
+    next: string;
+    previous: string;
+    results: T;
+};
 
 /**
  * The same as [`usePaginatedQuery`](https://github.com/tannerlinsley/react-query), but remove the first element of `key` before passing it to `fetchFunction`.
