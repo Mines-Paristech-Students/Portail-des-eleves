@@ -1,0 +1,26 @@
+name: Prettier
+
+on:
+  pull_request:
+      branches: [ master ]
+
+jobs:
+  prettier:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+
+      - name: Install Prettier
+        run: npm install --global prettier@2.0.5
+        working-directory: frontend
+
+      - name: Run Prettier
+        run: prettier --check frontend/**/*.ts*

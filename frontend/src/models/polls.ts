@@ -1,28 +1,25 @@
-import {User} from "./user";
-
 export enum PollState {
     Accepted = "ACCEPTED",
     Rejected = "REJECTED",
-    Reviewing = "REVIEWING"
+    Reviewing = "REVIEWING",
 }
 
 export interface Poll {
     id: string;
-    choices: Choice[];
     question: string;
+    user?: string;
+    creationDateTime?: Date;
     state: PollState;
-    creationDateTime: Date;
-    publicationDate: Date;
-    adminComment: string;
+    publicationDate?: Date;
+    adminComment?: string;
+    hasBeenPublished: boolean;
+    isActive: boolean;
+    userHasVoted?: boolean;
+    choices: Choice[];
 }
 
 export interface Choice {
     id: string;
     text: string;
-}
-
-export interface Vote {
-    user: User;
-    choice: Choice;
-    poll: Poll;
+    numberOfVotes?: number;
 }

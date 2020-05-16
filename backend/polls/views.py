@@ -18,6 +18,7 @@ class PollViewSet(viewsets.ModelViewSet):
     queryset = Poll.objects.all()
     serializer_class = ReadOnlyPollSerializer
     permission_classes = (PollPermission,)
+    pagination_class = None
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -31,22 +32,14 @@ class PollViewSet(viewsets.ModelViewSet):
             )
 
     def get_serializer_class(self):
-        if self.action in ("list",):
-            return ReadOnlyPollSerializer
-        elif self.action in ("retrieve",):
-            if self.request.user.is_staff:
-                return AdminPollSerializer
-            elif self.request.user == self.get_object().user:
-                return AuthorPollSerializer
-            else:
-                return ReadOnlyPollSerializer
-        elif self.action in ("create",):
+        if self.action in ("create",):
             return AuthorPollSerializer
-        elif self.action in ("update", "partial_update"):
-            if self.request.user.is_staff:
-                return AdminPollSerializer
-            else:
-                return AuthorPollSerializer
+        elif self.request.user.is_staff:
+            return AdminPollSerializer
+        elif self.action in ("list",):
+            return ReadOnlyPollSerializer
+        elif self.request.user == self.get_object().user:
+            return AuthorPollSerializer
         else:
             return ReadOnlyPollSerializer
 

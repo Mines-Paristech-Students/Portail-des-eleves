@@ -27,7 +27,7 @@ class ResultsTestCase(BaseElectionTestCase):
             self.assertNotEqual(res.status_code, 204)
 
     def test_if_not_election_admin_and_election_active_then_cannot_retrieve_results(
-        self
+        self,
     ):
         election = Election.objects.get(pk=1)
         self.assertTrue(

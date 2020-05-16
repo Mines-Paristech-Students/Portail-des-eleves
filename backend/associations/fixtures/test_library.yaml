@@ -77,7 +77,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -96,7 +96,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -115,7 +115,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -134,7 +134,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biero
     last_name: Manager
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -153,7 +153,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -172,7 +172,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -191,7 +191,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role

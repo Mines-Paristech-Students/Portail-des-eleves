@@ -49,7 +49,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([transaction["id"] for transaction in res.data])
+        res_ids = set([transaction["id"] for transaction in res.data["results"]])
         for transaction in transactions:
             self.assertIn(
                 transaction.id,
@@ -64,7 +64,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         res = self.get("/associations/transactions/")
         self.assertEqual(res.status_code, code)
 
-        res_ids = set([transaction["id"] for transaction in res.data])
+        res_ids = set([transaction["id"] for transaction in res.data["results"]])
         expected_ids = set([transaction.id for transaction in transactions])
         self.assertEqual(
             res_ids,
@@ -97,7 +97,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             )
 
     def test_if_market_admin_then_only_access_to_association_transactions_and_own_transactions(
-        self
+        self,
     ):
         user = "17market_biero"
         self.login(user)
@@ -154,7 +154,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
                 self.assertAccessToTransaction(transaction.id, code=200, user=user)
 
     def test_if_not_market_admin_then_only_access_to_own_transaction_in_enabled_markets(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_MARKET_ADMIN:
             self.login(user)
@@ -172,7 +172,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
                     )
 
     def test_if_market_admin_then_only_access_to_own_transactions_and_market_transactions(
-        self
+        self,
     ):
         user = "17market_biero"
         self.login(user)
@@ -264,7 +264,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             self.assertEqual(last_transaction.status, "ORDERED")
 
     def test_if_not_market_administrator_and_market_disabled_then_cannot_create_transaction(
-        self
+        self,
     ):
         product_id = 4
         self.assertFalse(
@@ -278,7 +278,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             )
 
     def test_if_not_market_administrator_then_cannot_create_transaction_for_another_user(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_MARKET_BIERO:
             if user != "17wan-fat":
@@ -366,7 +366,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
         return run
 
     def test_every_user_can_update_own_transaction_status_from_ordered_to_cancelled_in_enabled_markets(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_MARKET_BIERO:
             self.assertTrue(
@@ -382,7 +382,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             )
 
     def test_if_not_market_administrator_then_cannot_update_own_transaction_status_except_from_ordered_to_cancelled(
-        self
+        self,
     ):
         for (old_status, new_status) in self.STATUS_COUPLES:
             if "ORDERED" == old_status and "CANCELLED" == new_status:
@@ -401,7 +401,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             )
 
     def test_if_market_administrator_then_can_update_status_of_own_market_transactions(
-        self
+        self,
     ):
         user = "17market_biero"
 
@@ -417,7 +417,7 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
             )
 
     def test_if_market_administrator_then_cannot_update_status_of_other_market_transactions(
-        self
+        self,
     ):
         user = "17market_biero"
 

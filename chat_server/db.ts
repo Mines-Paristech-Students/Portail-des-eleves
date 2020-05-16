@@ -29,23 +29,23 @@ pool
   .then(() => {
     console.info("Database schema available ✅");
   })
-  .catch(err => {
+  .catch((err) => {
     console.error("❌ Failed to create schema ", err);
   });
 
 // Query functions
-let add = async function add(username: string, message: string) {
+const add = async function add(username: string, message: string) {
   await pool.query(add_query, [username, message]);
 };
 
 let get = async function get(from: Date, limit: number) {
   // Converting date to UTC for mysql
-  var sql_from = new Date(from).toISOString();
+  let sql_from = new Date(from).toISOString();
   return await pool.query(get_query, [sql_from, limit]);
 };
 
 // Functions to export for index.js
 module.exports = {
   add: add,
-  get: get
+  get: get,
 };

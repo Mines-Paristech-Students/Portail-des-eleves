@@ -2,7 +2,7 @@ export enum StudentType {
     Ast = "AST",
     Isupfere = "ISUPFERE",
     Ev = "EV",
-    Ic = "IC"
+    Ic = "IC",
 }
 
 export interface Role {
@@ -26,12 +26,13 @@ export interface User {
     id: string;
     firstName: string;
     lastName: string;
+    promotion: number;
     birthday?: string;
     email?: string;
     yearOfEntry?: number;
     studentType?: StudentType;
     isActive?: boolean;
-    isAdmin?: boolean;
+    isStaff?: boolean;
     nickname?: string;
     phone?: string;
     room?: string;

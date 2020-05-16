@@ -5,7 +5,7 @@
     first_name: Admin
     last_name: Admin
     email: admin@mpt.fr
-    is_admin: true
+    is_staff: true
     year_of_entry: 2017
 
 - model: authentication.user
@@ -15,7 +15,7 @@
     first_name: Simple
     last_name: Simple
     email: simple@mpt.fr
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: authentication.user
@@ -25,7 +25,7 @@
     first_name: Simple
     last_name: Simple
     email: 18simple@mpt.fr
-    is_admin: false
+    is_staff: false
     year_of_entry: 2018
 
 - model: authentication.user
@@ -38,7 +38,7 @@
     email: 17bocquet@mpt.fr
     birthday: '1997-01-08'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: the roc
     city_of_origin: Gotham
     room: '1234'
@@ -55,7 +55,7 @@
     email: 17wan-fat@mpt.fr
     birthday: '1998-06-26'
     is_active: true
-    is_admin: false
+    is_staff: false
     nickname: Le Rocher
     city_of_origin: Le Tampon
     room: '802'
