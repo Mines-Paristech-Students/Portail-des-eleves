@@ -1,3 +1,20 @@
+export enum TablerColor {
+    Blue = "blue",
+    Azure = "azure",
+    Indigo = "indigo",
+    Purple = "purple",
+    Pink = "pink",
+    Red = "red",
+    Orange = "orange",
+    Yellow = "yellow",
+    Lime = "lime",
+    Green = "green",
+    Teal = "teal",
+    Cyan = "cyan",
+    Gray = "gray",
+    DarkGray = "gray-dark",
+}
+
 export const tablerColors = [
     "blue",
     "azure",
