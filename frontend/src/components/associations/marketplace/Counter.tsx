@@ -59,15 +59,25 @@ const CustomerSelecter = ({ setCustomer }) => {
                     minLength={2}
                     onChange={(e) => setSearchValue(e.target.value)}
                 />
-                {data.results.map((user) => (
-                    <span
-                        className={"m-3"}
-                        key={user.id}
-                        onClick={() => setCustomer(user)}
-                    >
-                        {user.id}
-                    </span> // TODO: nice display
-                ))}
+                <div className="row">
+                    {data.results.map((user) => (
+                        <div
+                            className="col-lg-2 col-sm-3 col-6 p-2"
+                            onClick={() => setCustomer(user)}
+                            key={user.id}
+                        >
+                            <div className="card mb-0">
+                                <div className="card-body text-center p-3">
+                                    <span className="avatar avatar-xxl">
+                                        {user.firstName[0]}
+                                        {user.lastName[0]}
+                                    </span>
+                                    <p className="text-muted mt-2">{user.id}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </>
         );
     }
@@ -172,7 +182,7 @@ const CounterOrderMaker = ({ marketplaceId, customer, resetCustomer }) => {
 
             {/* Search and display products */}
             <DebounceInput
-                className="form-control input-lg"
+                className="form-control input-lg mb-2"
                 type="text"
                 placeholder="Chercher un produit..."
                 onChange={(e) => setSearchValue(e.target.value)}
