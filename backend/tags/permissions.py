@@ -82,7 +82,7 @@ def user_can_link_tag_to(user: User, tag: Tag, instance):
 
 class NamespacePermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        # `request.data != []` has to be here because, for some reason, DRF makes a POST request when the user just
+        # `len(request.data) > 0` has to be here because, for some reason, DRF makes a POST request when the user just
         # asked for a GET request (it has to do with the form displayed in the viewsets).
         if request.method == "POST" and len(request.data) > 0:
             scoped_to_model = request.data.get("scoped_to_model")

@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
-import { Models, TagList } from "../../utils/tags/TagList";
+import { TaggableModel, TagList } from "../../utils/tags/TagList";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -51,7 +51,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                             </p>
 
                                             <TagList
-                                                model={Models.Media}
+                                                model={TaggableModel.Media}
                                                 id={media.id}
                                                 collapsed={true}
                                             />

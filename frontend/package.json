@@ -8,7 +8,6 @@
         "formik": "^2.1.4",
         "fuse.js": "^5.2.3",
         "react": "^16.13.1",
-        "react-autosuggest": "^10.0.2",
         "react-bootstrap": "^1.0.0",
         "react-day-picker": "^7.4.5",
         "react-dom": "^16.13.1",

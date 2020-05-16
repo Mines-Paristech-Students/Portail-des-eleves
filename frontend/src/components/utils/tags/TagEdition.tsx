@@ -12,7 +12,7 @@ export const TagEdition = ({ model, id }) => {
     const newToast = useContext(ToastContext);
 
     // API Helpers to bind and remove tags
-    let bindTag = (newTag) => {
+    const bindTag = (newTag) => {
         api.tags
             .bind(model, id, newTag.id)
             .then((res) => {
@@ -31,7 +31,8 @@ export const TagEdition = ({ model, id }) => {
             });
         setTags([...tags, newTag]);
     };
-    let removeTag = (tag) => {
+
+    const removeTag = (tag) => {
         api.tags
             .unbind(model, id, tag.id)
             .then((_) => {
@@ -50,27 +51,27 @@ export const TagEdition = ({ model, id }) => {
     };
 
     // State declaration
-    let [selectedNamespace, setSelectedNamespace] = useState<Namespace | null>(
+    const [selectedNamespace, setSelectedNamespace] = useState<Namespace | null>(
         null
     ); // The namespace in which we want to add a tag
-    let [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available tags
-    let [fuseNamespace, setFuseNamespace] = useState<Fuse<
+    const [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available tags
+    const [fuseNamespace, setFuseNamespace] = useState<Fuse<
         Namespace,
         any
     > | null>(null); // Namespaces search object
-    let [suggestionsNamespace, setSuggestionsNamespace] = useState<Namespace[]>(
+    const [suggestionsNamespace, setSuggestionsNamespace] = useState<Namespace[]>(
         []
     ); // Currently displayed suggestions
 
-    let [tags, setTags] = useState<Tag[]>([]); // Tags that are linked to the model
-    let [fuseTag, setFuseTag] = useState<Fuse<Tag, any> | null>(null); // Tag search object
-    let [suggestionsTag, setSuggestionsTag] = useState<Tag[]>([]); // Currently displayed suggestions
+    const [tags, setTags] = useState<Tag[]>([]); // Tags that are linked to the model
+    const [fuseTag, setFuseTag] = useState<Fuse<Tag, any> | null>(null); // Tag search object
+    const [suggestionsTag, setSuggestionsTag] = useState<Tag[]>([]); // Currently displayed suggestions
 
-    let [inputValue, setInputValue] = useState(""); // The text contained in the input
-    let [searchValue, setSearchValue] = useState(""); // The effective value. For "namespace: label", it would be  "label"
+    const [inputValue, setInputValue] = useState(""); // The text contained in the input
+    const [searchValue, setSearchValue] = useState(""); // The effective value. For "namespace: label", it would be  "label"
 
-    let [status, setStatus] = useState<"loading" | "error" | "OK">("loading");
-    let [menuIsOpen, setMenuIsOpen] = useState(false);
+    const [status, setStatus] = useState<"loading" | "error" | "success">("loading");
+    const [menuIsOpen, setMenuIsOpen] = useState(false);
 
     // Load namespaces and set them as suggestion
     useEffect(() => {
@@ -88,7 +89,7 @@ export const TagEdition = ({ model, id }) => {
 
                 setNamespaces(namespaces);
                 setSuggestionsNamespace(namespaces);
-                setStatus("OK");
+                setStatus("success");
             })
             .catch((error) => {
                 setStatus("error");
@@ -176,8 +177,8 @@ export const TagEdition = ({ model, id }) => {
                 setSelectedNamespace(null);
             }
         } else {
-            let namespaceValue = value.split(":")[0];
-            let matchingNamespaces = namespaces.filter(
+            const namespaceValue = value.split(":")[0];
+            const matchingNamespaces = namespaces.filter(
                 (namespace) => namespace.name == namespaceValue
             );
             if (matchingNamespaces.length !== 0) {
@@ -241,6 +242,7 @@ export const TagEdition = ({ model, id }) => {
             filterOption={filterOption}
             styles={colourStyles}
             isDisabled={status === "error"}
+            placeholder={"Sélectionner des tags"}
             options={ // All possible suggestions
                 selectedNamespace === null
                     ? (suggestionsNamespace.map((namespace) => ({
@@ -259,7 +261,7 @@ export const TagEdition = ({ model, id }) => {
                               value: searchValue,
                               label: (
                                   <em className={"text-center d-block"}>
-                                      Ajouter nouveau tag : {searchValue}
+                                      Ajouter un nouveau tag : {searchValue}
                                   </em>
                               ),
                               type: "new_value",

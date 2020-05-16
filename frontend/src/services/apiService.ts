@@ -34,6 +34,11 @@ export function unwrap<T>(promise): Promise<T> {
     });
 }
 
+/**
+ * Transforms an object into url parameters, joining parameters with '&'
+ * and adding '?' at the beginning
+ * toUrlParams({foo: 'bar', piche: 'clac'} = "?foo=bar?piche=clac"
+ */
 export function toUrlParams(obj: object): string {
     let params = "?";
     for (let key in obj) {

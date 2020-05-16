@@ -91,9 +91,7 @@ class TagLinkView(APIView):
         return tag
 
     def post(self, request, model, instance_pk, tag_pk):
-
         tag = self.get_tag(request, tag_pk)
-
         try:
             getattr(tag, model).add(instance_pk)
             tag.save()
@@ -110,6 +108,7 @@ class TagLinkView(APIView):
         count_links = 0
         for model in Tag.LINKED_TO_MODEL:
             count_links += getattr(tag, model).count()
+            break
         if count_links == 0:
             tag.delete()
 

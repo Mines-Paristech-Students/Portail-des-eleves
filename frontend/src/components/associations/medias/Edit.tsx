@@ -10,7 +10,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
-import { Models } from "../../utils/tags/TagList";
+import { TaggableModel } from "../../utils/tags/TagList";
 import { TagEdition } from "../../utils/tags/TagEdition";
 
 export const AssociationFilesystemEdit = ({ association }) => {
@@ -112,7 +112,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             />
                         </PageTitle>
 
-                        <TagEdition model={Models.Media} id={media.id} />
+                        <TagEdition model={TaggableModel.Media} id={media.id} />
 
                         <Card className={"mt-3"}>
                             <textarea
