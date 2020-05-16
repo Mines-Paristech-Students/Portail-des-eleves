@@ -22,5 +22,8 @@ jobs:
         run: npm install --global prettier@2.0.5
         working-directory: frontend
 
-      - name: Run Prettier
+      - name: Run Prettier on frontend
         run: prettier --check frontend/**/*.ts*
+
+      - name: Run Prettier on chat_server
+        run: prettier --check chat_server/**/*.ts*
