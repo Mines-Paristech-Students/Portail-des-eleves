@@ -11,7 +11,7 @@ export const Chat = () => {
     const [newMessage, setNewMessage] = useState("");
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [socket, setSocket] = useState<any>(null);
-    const [date, setDate] = useState<string>((new Date).toISOString());
+    const [date, setDate] = useState<string>(new Date().toISOString());
     const [fetching, setFetching] = useState<boolean>(false);
     const [indexScroll, setIndexScroll] = useState<Number>(0);
 
@@ -29,15 +29,15 @@ export const Chat = () => {
     const username: string = "17bocquet";
 
     const fetchMessages = () => {
-        if (socket && (!fetching)) {
+        if (socket && !fetching) {
             setFetching(true);
             console.log("Date of fetch %s", date);
             socket.emit("fetch", {
                 from: date,
-                limit: 20
+                limit: 20,
             });
         }
-    }
+    };
 
     const scrollFetch = async () => {
         // @ts-ignore
@@ -51,7 +51,7 @@ export const Chat = () => {
             let token = await api.jwt.getToken();
             let socket = socketIOClient(chat_server_url, {
                 forceNew: true,
-                query: "token=" + token
+                query: "token=" + token,
             });
 
             setSocket(socket);
@@ -59,14 +59,14 @@ export const Chat = () => {
             setFetching(true);
             socket.emit("fetch", {
                 from: date,
-                limit: 20
+                limit: 20,
             });
         })();
     }, []);
 
     useEffect(() => {
         if (socket) {
-            socket.on("broadcast", data => {
+            socket.on("broadcast", (data) => {
                 setIndexScroll(messages.length);
                 setMessages([...messages, data]);
                 scrollToLastMessage();
@@ -75,13 +75,13 @@ export const Chat = () => {
             // No sort needed -> Messages arrive in order
             socket.on("fetch_response", async (data: MessageData[]) => {
                 let all_messages = [...messages, ...data];
-                console.log(data[0].posted_on)
+                console.log(data[0].posted_on);
                 all_messages.sort(function (a, b) {
                     // @ts-ignore
                     return new Date(a.posted_on) - new Date(b.posted_on);
                 });
                 setDate(all_messages[0].posted_on);
-                setIndexScroll(data.length-1);
+                setIndexScroll(data.length - 1);
                 setFetching(false);
                 setMessages(all_messages);
                 scrollToLastMessage();
@@ -117,7 +117,7 @@ export const Chat = () => {
                     <i
                         className={`fe ${
                             isCollapsed ? "fe-chevron-up" : "fe-chevron-down"
-                            }`}
+                        }`}
                         onClick={() => setIsCollapsed(!isCollapsed)}
                     />
                 </div>
@@ -151,7 +151,7 @@ export const Chat = () => {
                                     style={{ resize: "none" }}
                                     onKeyDown={handleKeyPress}
                                     onKeyUp={handleKeyPress}
-                                    onChange={e => {
+                                    onChange={(e) => {
                                         setNewMessage(e.target.value);
                                     }}
                                     rows={Math.min(

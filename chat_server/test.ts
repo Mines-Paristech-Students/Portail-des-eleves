@@ -1,30 +1,3 @@
-<<<<<<< HEAD
-const jwt = require('jsonwebtoken');
-const io = require("socket.io-client");
-const dotenv = require('dotenv');
-import { assert } from 'chai';
-import { index } from './index';
-
-// Parsing environnement configuration
-dotenv.config();
-
-const public_key = process.env.JWT_PUBLIC_KEY;
-const jwt_algo = process.env.JWT_ALGO || 'RS256';
-const token = process.env.JWT_TOKEN_TEST;
-const token_user = process.env.JWT_TOKEN_TEST_USER || '17bocquet';
-
-describe("Testing Django public key integration", () => {
-  it("Check dotenv configutation", () => {
-    assert.notEqual(token, undefined);
-    assert.notEqual(public_key, undefined);
-  })
-
-  it("Can decode token", function () {
-    var decoded = jwt.verify(token, public_key, { algorithms: [jwt_algo] });
-    assert.strictEqual(token_user, decoded.user)
-  });
-})
-=======
 import { assert } from "chai";
 
 const io = require("socket.io-client");
@@ -47,7 +20,6 @@ const profile = {
 const token = jwt.sign(profile, process.env.JWT_SECRET, {
   expiresIn: 60 * 60 * 5,
 });
->>>>>>> master
 
 // Tests
 describe("Testing the messages service", () => {
@@ -57,11 +29,7 @@ describe("Testing the messages service", () => {
   before("Launching the server and getting sockets options", function (done) {
     server = index.server;
     socket_options = {
-<<<<<<< HEAD
-      url: 'http://localhost:' + server.address().port,
-=======
       url: "http://localhost:" + server.address().port,
->>>>>>> master
       options: {
         forceNew: true,
         query: "token=" + token,
@@ -97,16 +65,10 @@ describe("Testing the messages service", () => {
     let message = "licorne";
 
     // This broadcast checks that the message is correct
-<<<<<<< HEAD
-    socket.on('broadcast', function (data) {
-      assert.strictEqual(data.username, token_user, "Inserted username is correct");
-      assert.strictEqual(data.message, "licorne", "Inserted message is correct");
-      assert.exists(data.posted_on);
-=======
     socket.on("broadcast", function (data) {
       assert.strictEqual(
         data.username,
-        "17doe",
+        token_user,
         "Inserted username is correct"
       );
       assert.strictEqual(
@@ -114,7 +76,7 @@ describe("Testing the messages service", () => {
         "licorne",
         "Inserted message is correct"
       );
->>>>>>> master
+      assert.exists(data.posted_on);
       done();
     });
 
@@ -125,21 +87,6 @@ describe("Testing the messages service", () => {
   it("User can retrieve a message from the database", function (done) {
     let message = "licorne";
     let limit = 1;
-<<<<<<< HEAD
-    let date = new Date('2100-12-17T03:24:00');
-
-    // Check that the answer is correct
-    socket.on("fetch_response", function (rows) {
-      assert.strictEqual(rows.length, limit, "Correct number of rows")
-      let row = rows[rows.length - 1]
-      assert.strictEqual(row.username, token_user, "Last message username is correct");
-      assert.strictEqual(row.message, "licorne", "Last message content is correct");
-      assert.exists(row.posted_on);
-      done();
-    });
-
-    socket.on('broadcast', function (data) {
-=======
     let date = new Date("2100-12-17T03:24:00");
 
     // Check that the answer is correct
@@ -148,7 +95,7 @@ describe("Testing the messages service", () => {
       let row = rows[rows.length - 1];
       assert.strictEqual(
         row.username,
-        "17doe",
+        token_user,
         "Last message username is correct"
       );
       assert.strictEqual(
@@ -156,11 +103,11 @@ describe("Testing the messages service", () => {
         "licorne",
         "Last message content is correct"
       );
+      assert.exists(row.posted_on);
       done();
     });
 
     socket.on("broadcast", function (data) {
->>>>>>> master
       socket.emit("fetch", { from: date, limit: 1 });
     });
 

@@ -50,7 +50,7 @@ export const api = {
     products: products,
     transactions: transactions,
     polls: polls,
-    jwt: jwt
+    jwt: jwt,
 };
 
 /**

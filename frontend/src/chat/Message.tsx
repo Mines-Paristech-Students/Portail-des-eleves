@@ -10,7 +10,7 @@ export interface MessageData {
 export const Message = ({
     id,
     me,
-    message
+    message,
 }: {
     id: number;
     me: boolean;
