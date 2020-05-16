@@ -84,7 +84,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         ("IC", "IC"),
     )
 
-    ACADEMIC_YEARS = (("1A", "1A"), ("2A", "2A"), ("GAP YEAR", "CÉSURE"), ("3A", "3A"))
+    ACADEMIC_YEARS = (
+        ("1A", "1A"),
+        ("2A", "2A"),
+        ("GAP YEAR", "césure"),
+        ("3A", "3A"),
+        ("GRADUATE", "diplômé(e)"),
+    )
 
     id = models.CharField(primary_key=True, max_length=30)
 
@@ -114,7 +120,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
 
     # Life at school.
-    sports = models.CharField(max_length=512, blank=True)
     roommate = models.ManyToManyField("self", symmetrical=True, default=None)
     minesparent = models.ManyToManyField(
         "self", related_name="fillots", symmetrical=False, default=None

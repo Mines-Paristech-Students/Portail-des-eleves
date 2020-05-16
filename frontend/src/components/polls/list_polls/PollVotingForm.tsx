@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { Form, Formik } from "formik";
-import { UserContext } from "../../../services/authService";
+import { AuthContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
@@ -13,7 +13,7 @@ import { AxiosError } from "axios";
 
 export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const newToast = useContext(ToastContext);
-    const user = useContext(UserContext);
+    const auth = useContext(AuthContext);
     const [vote] = useMutation(api.polls.vote, {
         onSuccess: (response) => {
             queryCache.refetchQueries(["polls.list"]);
@@ -56,7 +56,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const onSubmit = (values, { setSubmitting }) => {
         vote(
             {
-                user: user,
+                auth: auth,
                 pollId: poll.id,
                 choiceId: values.choice,
             },

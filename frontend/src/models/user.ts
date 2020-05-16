@@ -1,10 +1,3 @@
-export enum StudentType {
-    Ast = "AST",
-    Isupfere = "ISUPFERE",
-    Ev = "EV",
-    Ic = "IC",
-}
-
 export interface Role {
     id: number;
     association: string;
@@ -26,21 +19,21 @@ export interface User {
     id: string;
     firstName: string;
     lastName: string;
+    birthday: Date;
+    email: string;
+    yearOfEntry: number;
+    studentType: "AST" | "ISUPFERE" | "EV" | "IC";
+    currentAcademicYear: "1A"| "2A"| "GAP YEAR"| "3A"| "GRADUATE";
+    isActive: boolean;
+    isStaff: boolean;
     promotion: number;
-    isStaff?: boolean;
-    birthday?: string;
-    email?: string;
-    yearOfEntry?: number;
-    studentType?: StudentType;
-    isActive?: boolean;
-    nickname?: string;
-    phone?: string;
-    room?: string;
-    address?: string;
-    cityOfOrigin?: string;
-    option?: string;
-    sports?: string;
-    roommate?: User;
-    minesparent?: User[];
-    myRole?: Role;
+    nickname: string;
+    phone: string;
+    room: string;
+    address: string;
+    cityOfOrigin: string;
+    option: string;
+    roommate: { id: string; firstName: string; lastName: string }[];
+    minesparent: { id: string; firstName: string; lastName: string }[];
+    fillots: { id: string; firstName: string; lastName: string }[];
 }
