@@ -68,7 +68,7 @@ describe("Testing the messages service", () => {
     socket.on("broadcast", function (data) {
       assert.strictEqual(
         data.username,
-        "17doe",
+        token_user,
         "Inserted username is correct"
       );
       assert.strictEqual(
@@ -76,6 +76,7 @@ describe("Testing the messages service", () => {
         "licorne",
         "Inserted message is correct"
       );
+      assert.exists(data.posted_on);
       done();
     });
 
@@ -94,7 +95,7 @@ describe("Testing the messages service", () => {
       let row = rows[rows.length - 1];
       assert.strictEqual(
         row.username,
-        "17doe",
+        token_user,
         "Last message username is correct"
       );
       assert.strictEqual(
@@ -102,6 +103,7 @@ describe("Testing the messages service", () => {
         "licorne",
         "Last message content is correct"
       );
+      assert.exists(row.posted_on);
       done();
     });
 

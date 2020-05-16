@@ -14,6 +14,7 @@ import { marketplace } from "./api/marketplace";
 import { products } from "./api/products";
 import { polls } from "./api/polls";
 import { associations } from "./api/associations";
+import { jwt } from "./api/jwt";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -48,8 +49,8 @@ export const api = {
     pages: pages,
     products: products,
     transactions: transactions,
-
     polls: polls,
+    jwt: jwt,
 };
 
 /**

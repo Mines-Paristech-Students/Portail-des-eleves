@@ -26,21 +26,21 @@ pool.on("error", (err, client) => {
 // Creating the table if it does not exists
 pool
   .query(create_schema_query)
-  .then((res) => {
-    console.info("✅ create schema sucessfully");
+  .then(() => {
+    console.info("Database schema available ✅");
   })
   .catch((err) => {
-    console.error("❌ failed to create schema, ", err);
+    console.error("❌ Failed to create schema ", err);
   });
 
 // Query functions
-var add = async function add(username: string, message: string) {
+const add = async function add(username: string, message: string) {
   await pool.query(add_query, [username, message]);
 };
 
-var get = async function get(from: Date, limit: number) {
+let get = async function get(from: Date, limit: number) {
   // Converting date to UTC for mysql
-  var sql_from = new Date(from).toISOString();
+  let sql_from = new Date(from).toISOString();
   return await pool.query(get_query, [sql_from, limit]);
 };
 
