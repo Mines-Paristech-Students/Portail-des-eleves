@@ -1,6 +1,5 @@
 import { Transaction } from "../../models/associations/marketplace";
 import { apiService, toUrlParams, unwrap } from "../apiService";
-import { Media } from "../../models/associations/media";
 
 export const transactions = {
     create: (product, quantity, buyer) =>

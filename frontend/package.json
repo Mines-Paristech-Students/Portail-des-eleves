@@ -11,6 +11,7 @@
         "react": "^16.13.1",
         "react-bootstrap": "^1.0.0",
         "react-day-picker": "^7.4.5",
+        "react-debounce-input": "^3.2.2",
         "react-dom": "^16.13.1",
         "react-dropzone": "^10.2.2",
         "react-query": "1.2.1",

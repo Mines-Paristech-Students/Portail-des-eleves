@@ -5,6 +5,7 @@ import { PageTitle } from "../../utils/PageTitle";
 import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
+import { formatDate } from "../../../utils/format";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
@@ -12,7 +13,11 @@ export const AssociationMarketplaceHistory = ({ association }) => {
 
     return (
         <Pagination
-            apiKey={["marketplace.transactions.list", marketplaceId, {buyer: user?.id}]}
+            apiKey={[
+                "marketplace.transactions.list",
+                marketplaceId,
+                { page_size: 10, buyer: user?.id },
+            ]}
             apiMethod={api.transactions.list}
             render={(transactions, paginationControl) => (
                 <Container>
@@ -32,7 +37,6 @@ export const AssociationMarketplaceHistory = ({ association }) => {
 
                     {transactions.length !== 0 ? (
                         <>
-                            {paginationControl}
                             <TransactionsTable transactions={transactions} />
                             {paginationControl}
                         </>
@@ -103,11 +107,14 @@ const PurchaseTransactionLine = ({ transaction }) => {
             <td>
                 <strong>{transaction.product.name}</strong>
             </td>
-            <td className="text-center text-muted d-none d-md-table-cell text-nowrap">
-                Quantité : {transaction.quantity}
+            <td className="text-muted d-none d-md-table-cell text-nowrap p-0">
+                x{transaction.quantity}
+            </td>
+            <td className="text-center">
+                <strong>{transaction.value}€</strong>
             </td>
             <td className="text-right">
-                <strong>{transaction.value}€</strong>
+                {formatDate(new Date(transaction.date))}
             </td>
             <td className="text-right">{status}</td>
         </tr>

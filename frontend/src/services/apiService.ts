@@ -17,6 +17,7 @@ import { associations } from "./api/associations";
 import { tags } from "./api/tags";
 import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
+import { users } from "./api/users";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -68,6 +69,8 @@ export const api = {
 
     tags: tags,
     namespaces: namespaces,
+
+    users: users
 };
 
 /**

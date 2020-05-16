@@ -9,6 +9,7 @@ from django.http import (
     Http404,
 )
 from rest_framework import viewsets, status
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -52,6 +53,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = (ProductPermission,)
 
     pagination_class = SmallResultsSetPagination
+
+    filter_backends = (SearchFilter,)
+    search_fields = ("name", "description")
 
     def get_queryset(self):
         """The user has access to the products coming from every enabled marketplace and to the products of every
@@ -222,11 +226,12 @@ class BalanceView(APIView):
             )
 
             return JsonResponse(
-                [
-                    self.get_balance_in_json(request.user, marketplace)
-                    for marketplace in m
-                ],
-                safe=False,
+                {
+                    "balances": [
+                        self.get_balance_in_json(request.user, marketplace)
+                        for marketplace in m
+                    ]
+                }
             )
         else:
             try:
@@ -259,6 +264,4 @@ class BalanceView(APIView):
                             "You are not allowed to view the balance of this user."
                         )
 
-                return JsonResponse(
-                    [self.get_balance_in_json(user, marketplace)], safe=False
-                )
+                return JsonResponse(self.get_balance_in_json(user, marketplace))

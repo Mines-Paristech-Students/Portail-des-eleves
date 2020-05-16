@@ -8,21 +8,9 @@ import {
     Transaction,
     TransactionStatus,
 } from "../../../models/associations/marketplace";
-import { Tag } from "../../utils/tags/Tag";
 import { OverlayTrigger, Tooltip, Overlay } from "react-bootstrap";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
-
-/*
-export interface Transaction {
-    id: string;
-    product: Product;
-    buyer: User;
-    quantity: number;
-    value: number;
-    date: Date;
-    status: TransactionStatus;
-    marketplace: Marketplace;
- */
+import { formatDate } from "../../../utils/format";
 
 export const AssociationMarketplaceOrders = ({ association }) => {
     const marketplaceId = association.id;
@@ -33,18 +21,31 @@ export const AssociationMarketplaceOrders = ({ association }) => {
             render: (transaction) => transaction.product.name,
         },
         {
-            key: "buyer",
-            header: "Utilisateur",
-            render: (transaction) => transaction.buyer,
-        },
-        {
             key: "quantity",
             header: "Quantité",
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+        {
+            key: "date",
+            header: "Date",
+            render: (transaction) => formatDate(new Date(transaction.date)),
+            headerClassName: "text-center",
+            cellClassName: "text-center",
         },
         {
             key: "value",
             header: "Valeur",
+            headerClassName: "text-right",
+            cellClassName: "text-right",
             render: (transaction) => transaction.value + "€",
+        },
+        {
+            key: "buyer",
+            header: "Utilisateur",
+            render: (transaction) => transaction.buyer,
+            headerClassName: "text-center",
+            cellClassName: "text-center",
         },
         {
             key: "status",
@@ -58,25 +59,27 @@ export const AssociationMarketplaceOrders = ({ association }) => {
     return (
         <>
             <PageTitle>Commandes</PageTitle>
-            <Card>
-                <Pagination
-                    render={(
-                        transactions: Transaction[],
-                        paginationControl
-                    ) => (
-                        <>
+
+            <Pagination
+                render={(transactions: Transaction[], paginationControl) => (
+                    <>
+                        <Card>
                             <Table columns={columns} data={transactions} />
-                            {paginationControl}
-                        </>
-                    )}
-                    apiKey={["transactions.list.admin", marketplaceId, {}]}
-                    apiMethod={api.transactions.list}
-                    config={{ refetchOnWindowFocus: false }}
-                    paginationControlProps={{
-                        className: "justify-content-center mt-5",
-                    }}
-                />
-            </Card>
+                        </Card>
+                        {paginationControl}
+                    </>
+                )}
+                apiKey={[
+                    "transactions.list.admin",
+                    marketplaceId,
+                    { page_size: 10, ordering: "-date" },
+                ]}
+                apiMethod={api.transactions.list}
+                config={{ refetchOnWindowFocus: false }}
+                paginationControlProps={{
+                    className: "justify-content-center mt-5",
+                }}
+            />
         </>
     );
 };

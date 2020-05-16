@@ -1,11 +1,17 @@
 import { Page } from "../../models/associations/page";
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import {
+    apiService,
+    PaginatedResponse,
+    toUrlParams,
+    unwrap,
+} from "../apiService";
 
 export const products = {
-    list: (associationId, page = 1) =>
-        unwrap<PaginatedResponse<Page[]>>(
-            apiService.get(
-                `/associations/products/?association=${associationId}&page=${page}`
-            )
-        ),
+    list: (associationId, params = {}, page = 1) => {
+        params["association"] = associationId;
+        params["page"] = page;
+        return unwrap<PaginatedResponse<Page[]>>(
+            apiService.get(`/associations/products/${toUrlParams(params)}`)
+        );
+    },
 };
