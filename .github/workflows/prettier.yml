@@ -23,4 +23,4 @@ jobs:
         working-directory: frontend
 
       - name: Run Prettier
-        run: prettier frontend/**/*.ts*
+        run: prettier --check frontend/**/*.ts*

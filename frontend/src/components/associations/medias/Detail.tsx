@@ -14,8 +14,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         api.medias.get
     );
 
-    if (status === "loading")
-        return <Loading/>;
+    if (status === "loading") return <Loading />;
     else if (status === "error") return `Something went wrong: ${error}`;
     else if (media) {
         let preview;
@@ -55,7 +54,6 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 </PageTitle>
 
                 <TagList model={TaggableModel.Media} id={media.id} />
-
                 {preview}
 
                 <Card>
