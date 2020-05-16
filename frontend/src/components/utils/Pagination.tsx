@@ -31,7 +31,7 @@ export const Pagination = ({
     render,
     apiKey,
     apiMethod,
-    config
+    config,
 }: {
     render: any;
     apiKey: any[];

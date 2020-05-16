@@ -4,7 +4,7 @@ import { Association } from "./association";
 
 export enum PageType {
     News = "NEWS",
-    Static = "STATIC"
+    Static = "STATIC",
 }
 
 export interface Page {

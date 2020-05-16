@@ -79,7 +79,7 @@ const DateField = () => {
 export const PollEditModalAdminForm = ({
     poll,
     refetch,
-    handleClose
+    handleClose,
 }: {
     poll: Poll;
     refetch: any;
@@ -92,20 +92,20 @@ export const PollEditModalAdminForm = ({
             state: values.state,
             adminComment:
                 values.state === "REJECTED" ? values.adminComment : "",
-            publicationDate: values.publicationDate
+            publicationDate: values.publicationDate,
         };
 
         api.polls
             .update(poll.id, data)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 200) {
                     newToast({
                         message: "Sondage modifié.",
-                        level: ToastLevel.Success
+                        level: ToastLevel.Success,
                     });
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 let message =
                     "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
                 let detail = error.response.data.detail;
@@ -116,7 +116,7 @@ export const PollEditModalAdminForm = ({
 
                 newToast({
                     message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             })
             .then(() => {
@@ -134,7 +134,7 @@ export const PollEditModalAdminForm = ({
             initialValues={{
                 state: poll.state,
                 adminComment: poll.adminComment,
-                publicationDate: poll.publicationDate
+                publicationDate: poll.publicationDate,
             }}
             validationSchema={Yup.object({
                 publicationDate: Yup.date().when("state", {
@@ -145,8 +145,8 @@ export const PollEditModalAdminForm = ({
                             "Le sondage doit être publié aujourd’hui ou dans le futur."
                         )
                         .required("Ce champ est requis."),
-                    otherwise: Yup.date().notRequired()
-                })
+                    otherwise: Yup.date().notRequired(),
+                }),
             })}
             onSubmit={onSubmit}
         >

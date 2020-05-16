@@ -51,17 +51,18 @@ export const TagEdition = ({ model, id }) => {
     };
 
     // State declaration
-    const [selectedNamespace, setSelectedNamespace] = useState<Namespace | null>(
-        null
-    ); // The namespace in which we want to add a tag
+    const [
+        selectedNamespace,
+        setSelectedNamespace,
+    ] = useState<Namespace | null>(null); // The namespace in which we want to add a tag
     const [namespaces, setNamespaces] = useState<Namespace[]>([]); // All available tags
     const [fuseNamespace, setFuseNamespace] = useState<Fuse<
         Namespace,
         any
     > | null>(null); // Namespaces search object
-    const [suggestionsNamespace, setSuggestionsNamespace] = useState<Namespace[]>(
-        []
-    ); // Currently displayed suggestions
+    const [suggestionsNamespace, setSuggestionsNamespace] = useState<
+        Namespace[]
+    >([]); // Currently displayed suggestions
 
     const [tags, setTags] = useState<Tag[]>([]); // Tags that are linked to the model
     const [fuseTag, setFuseTag] = useState<Fuse<Tag, any> | null>(null); // Tag search object
@@ -70,7 +71,9 @@ export const TagEdition = ({ model, id }) => {
     const [inputValue, setInputValue] = useState(""); // The text contained in the input
     const [searchValue, setSearchValue] = useState(""); // The effective value. For "namespace: label", it would be  "label"
 
-    const [status, setStatus] = useState<"loading" | "error" | "success">("loading");
+    const [status, setStatus] = useState<"loading" | "error" | "success">(
+        "loading"
+    );
     const [menuIsOpen, setMenuIsOpen] = useState(false);
 
     // Load namespaces and set them as suggestion
@@ -222,7 +225,8 @@ export const TagEdition = ({ model, id }) => {
     return (
         <Select
             inputValue={inputValue}
-            value={tags.map((tag) => ({ // The current selected tags
+            value={tags.map((tag) => ({
+                // The current selected tags
                 value: tag.value,
                 label: (
                     <>
@@ -243,7 +247,8 @@ export const TagEdition = ({ model, id }) => {
             styles={colourStyles}
             isDisabled={status === "error"}
             placeholder={"Sélectionner des tags"}
-            options={ // All possible suggestions
+            options={
+                // All possible suggestions
                 selectedNamespace === null
                     ? (suggestionsNamespace.map((namespace) => ({
                           value: namespace.name,

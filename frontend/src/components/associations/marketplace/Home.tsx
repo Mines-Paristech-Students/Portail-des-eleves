@@ -35,7 +35,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
                     render={(products, controlbar) => (
                         <>
                             {controlbar}
-                            {products.map(product => (
+                            {products.map((product) => (
                                 <AssociationMarketplaceProduct
                                     product={product}
                                     key={product.id}
@@ -54,19 +54,19 @@ const AssociationMarketplaceProduct = ({ product }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
 
-    let makeOrder = quantity => {
+    let makeOrder = (quantity) => {
         api.transactions
             .create(product, quantity, user)
-            .then(_ => {
+            .then((_) => {
                 newToast({
                     message: "La commande a bien été passée",
-                    level: ToastLevel.Success
+                    level: ToastLevel.Success,
                 });
             })
-            .catch(err => {
+            .catch((err) => {
                 newToast({
                     message: "Erreur durant la commande : " + err,
-                    level: ToastLevel.Error
+                    level: ToastLevel.Error,
                 });
             });
     };

@@ -9,7 +9,7 @@ import { getRandom } from "../../utils/random";
  */
 export const CardStatus = ({
     color = "blue",
-    position = "top"
+    position = "top",
 }: {
     color?:
         | "blue"

@@ -15,7 +15,7 @@ const Row = ({ columns, data }: { columns: Column[]; data: object }) => (
 
 export const TableBody = ({
     columns,
-    data
+    data,
 }: {
     columns: Column[];
     data: object[];
