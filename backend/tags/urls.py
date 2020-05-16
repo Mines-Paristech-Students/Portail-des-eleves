@@ -1,7 +1,12 @@
 from django.urls import path
 from rest_framework_bulk.routes import BulkRouter
 
-from tags.views import NamespaceViewSet, TagViewSet, TagLinkView, get_tags_for_scope
+from tags.views import (
+    NamespaceViewSet,
+    TagViewSet,
+    TagLinkView,
+    get_namespaces_for_object,
+)
 
 urlpatterns = [
     path(
@@ -9,7 +14,11 @@ urlpatterns = [
         TagLinkView.as_view(),
         name="tag_link_view",
     ),
-    path("scope/<model>/<instance_pk>/", get_tags_for_scope, name="tag_scope_view"),
+    path(
+        "namespaces/<model>/<instance_pk>/",
+        get_namespaces_for_object,
+        name="tag_scope_view",
+    ),
 ]
 router = BulkRouter()
 

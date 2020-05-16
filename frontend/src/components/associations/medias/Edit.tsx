@@ -6,11 +6,12 @@ import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
-import { Tag } from "../../utils/Tag";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
+import { TaggableModel } from "../../utils/tags/TagList";
+import { TagEdition } from "../../utils/tags/TagEdition";
 
 export const AssociationFilesystemEdit = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -111,15 +112,9 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             />
                         </PageTitle>
 
-                        {media.tags.map((tag) => (
-                            <Tag
-                                key={tag.id}
-                                addon={tag.value}
-                                tag={tag.namespace.name}
-                            />
-                        ))}
+                        <TagEdition model={TaggableModel.Media} id={media.id} />
 
-                        <Card>
+                        <Card className={"mt-3"}>
                             <textarea
                                 id={"description"}
                                 name={"description"}

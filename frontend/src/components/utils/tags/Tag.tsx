@@ -1,29 +1,33 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { hashCode } from "../../../utils/hashcode";
+import { tablerColors } from "../../../utils/colors";
 
-const types = [
-    "blue",
-    "azure",
-    "indigo",
-    "purple",
-    "pink",
-    "orange",
-    "yellow",
-    "lime",
-    "teal",
-];
-
-function hashCode(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++)
-        h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
-    return Math.abs(h);
-}
-
-export const Tag = ({ type = "", tag = "", addon = "", tooltip = "" }) => {
+/**
+ * @param type the boostrap style of the tag
+ * @param tag the main value of the tag
+ * @param addon additional information, displayed on the right
+ * @param tooltip on hoover information
+ * @param collapsed true if we want the tag to take less space. In that case,
+ * the tag goes in the tooltip.
+ */
+export const Tag = ({
+    type = "",
+    tag = "",
+    addon = "",
+    tooltip = "",
+    collapsed = false,
+}) => {
     if (type === "") {
-        type = types[hashCode(tag) % types.length];
+        type = tablerColors[hashCode(tag) % tablerColors.length];
     }
+
+    if (collapsed) {
+        tooltip = tag;
+        tag = addon;
+        addon = "";
+    }
+
     let className = "mb-2 mr-2 tag tag-" + type;
     let tagElement = (
         <div className={className}>

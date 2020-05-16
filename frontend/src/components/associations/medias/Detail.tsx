@@ -3,9 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { PageTitle } from "../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
-import { Tag } from "../../utils/Tag";
-import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
+import { TaggableModel, TagList } from "../../utils/tags/TagList";
+import { Loading } from "../../utils/Loading";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -14,7 +14,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         api.medias.get
     );
 
-    if (status === "loading") return <LoadingAssociation />;
+    if (status === "loading") return <Loading />;
     else if (status === "error") return `Something went wrong: ${error}`;
     else if (media) {
         let preview;
@@ -53,14 +53,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     {media.name}
                 </PageTitle>
 
-                {media.tags.map((tag) => (
-                    <Tag
-                        key={tag.id}
-                        addon={tag.value}
-                        tag={tag.namespace.name}
-                    />
-                ))}
-
+                <TagList model={TaggableModel.Media} id={media.id} />
                 {preview}
 
                 <Card>
