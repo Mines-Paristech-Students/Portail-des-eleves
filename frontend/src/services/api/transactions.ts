@@ -1,6 +1,6 @@
 import { Transaction } from "../../models/associations/marketplace";
-import { apiService, unwrap } from "../apiService";
-import { marketplace } from "./marketplace";
+import { apiService, toUrlParams, unwrap } from "../apiService";
+import { Media } from "../../models/associations/media";
 
 export const transactions = {
     create: (product, quantity, buyer) =>
@@ -9,12 +9,19 @@ export const transactions = {
             quantity: quantity,
             buyer: buyer.id,
         }),
-    list: (marketplaceId, params) => {
+    list: (marketplaceId, params = {}, page = 1) => {
         params["marketplace"] = marketplaceId;
-        unwrap<Transaction[]>(
-            apiService.get(
-                `associations/transactions/${toUrlParams(params)}`
+        params["page"] = page;
+
+        return unwrap<Transaction[]>(
+            apiService.get(`associations/transactions/${toUrlParams(params)}`)
+        );
+    },
+    patch: (transaction) =>
+        unwrap<Transaction>(
+            apiService.patch(
+                `/associations/transactions/${transaction.id}/`,
+                transaction
             )
-        )
-    }
+        ),
 };

@@ -66,37 +66,35 @@ export const PollsTable = ({
             </div>
 
             <Card>
-                <Card.Body>
-                    <Pagination
-                        render={(polls: Poll[], paginationControl) => (
-                            <>
-                                <PollEditModal
-                                    show={editPoll !== null}
-                                    onHide={() => setEditPoll(null)}
-                                    poll={editPoll}
-                                    adminVersion={adminVersion}
-                                />
-                                <Table columns={columns} data={polls} />
-                                {paginationControl}
-                            </>
-                        )}
-                        apiKey={[
-                            "polls.list",
-                            {
-                                userFilter: userFilter(),
-                                stateFilter: stateFilter,
-                                sorting: sorting,
-                            },
-                        ]}
-                        apiMethod={api.polls.listAll}
-                        config={{ refetchOnWindowFocus: false }}
-                        loadingElement={PollsLoading}
-                        errorElement={PollsError}
-                        paginationControlProps={{
-                            className: "justify-content-center mt-5",
-                        }}
-                    />
-                </Card.Body>
+                <Pagination
+                    render={(polls: Poll[], paginationControl) => (
+                        <>
+                            <PollEditModal
+                                show={editPoll !== null}
+                                onHide={() => setEditPoll(null)}
+                                poll={editPoll}
+                                adminVersion={adminVersion}
+                            />
+                            <Table columns={columns} data={polls} />
+                            {paginationControl}
+                        </>
+                    )}
+                    apiKey={[
+                        "polls.list",
+                        {
+                            userFilter: userFilter(),
+                            stateFilter: stateFilter,
+                            sorting: sorting,
+                        },
+                    ]}
+                    apiMethod={api.polls.listAll}
+                    config={{ refetchOnWindowFocus: false }}
+                    loadingElement={PollsLoading}
+                    errorElement={PollsError}
+                    paginationControlProps={{
+                        className: "justify-content-center mt-5",
+                    }}
+                />
             </Card>
         </PollsBase>
     );

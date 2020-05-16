@@ -12,7 +12,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
 
     return (
         <Pagination
-            apiKey={["marketplace.transactions.list", marketplaceId, user]}
+            apiKey={["marketplace.transactions.list", marketplaceId, {buyer: user?.id}]}
             apiMethod={api.transactions.list}
             render={(transactions, paginationControl) => (
                 <Container>

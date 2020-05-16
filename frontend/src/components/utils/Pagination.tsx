@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useBetterPaginatedQuery } from "../../services/apiService";
+import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
 import { Error } from "./Error";

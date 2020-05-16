@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { PageTitle } from "./utils/PageTitle";
 
 /**
  * A link displayed in the sidebar. It has three props:
@@ -36,7 +37,7 @@ export const SidebarSeparator = (props: { size?: number }) => {
 export const Sidebar = ({ title, children, ...rest }) => {
     return (
         <>
-            <h1 className="page-title mb-5">{title}</h1>
+            <PageTitle>{title}</PageTitle>
             <div className="list-group list-group-transparent mb-0">
                 {children}
             </div>

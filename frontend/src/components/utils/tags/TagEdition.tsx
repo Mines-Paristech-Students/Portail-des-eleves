@@ -16,7 +16,7 @@ export const TagEdition = ({ model, id }) => {
         api.tags
             .bind(model, id, newTag.id)
             .then((res) => {
-                if (res != "Tag is already linked") {
+                if (res !== "Tag is already linked") {
                     newToast({
                         message: "Tag ajouté.",
                         level: ToastLevel.Success,
@@ -132,11 +132,11 @@ export const TagEdition = ({ model, id }) => {
     const handleChange = (selectedOption, action) => {
         if (action.action === "select-option") {
             let selectedNamespaces = selectedOption.filter(
-                (option) => option.type == "namespace"
+                (option) => option.type === "namespace"
             );
 
             let newTag = selectedOption.filter(
-                (option) => option.type == "new_value"
+                (option) => option.type === "new_value"
             );
 
             if (selectedNamespaces.length >= 1) {
@@ -182,10 +182,10 @@ export const TagEdition = ({ model, id }) => {
         } else {
             const namespaceValue = value.split(":")[0];
             const matchingNamespaces = namespaces.filter(
-                (namespace) => namespace.name == namespaceValue
+                (namespace) => namespace.name === namespaceValue
             );
             if (matchingNamespaces.length !== 0) {
-                if (selectedNamespace == null) {
+                if (selectedNamespace === null) {
                     setSelectedNamespace(matchingNamespaces[0]);
                 }
                 searchValue = value.split(":")[1];
@@ -215,7 +215,7 @@ export const TagEdition = ({ model, id }) => {
 
     const filterOption = (candidate, input) => {
         // Don't display the "add new suggestion" field if we didn't enter anything
-        if (candidate.data.type == "new_value") {
+        if (candidate.data.type === "new_value") {
             return searchValue.length > 0;
         }
 
