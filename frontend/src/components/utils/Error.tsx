@@ -4,11 +4,9 @@ import Container from "react-bootstrap/Container";
 export const Error = ({ detail }: { detail?: any }) => (
     <Container>
         <p>
-            Erreur de chargement. Merci de réessayer ou de contacter les
-            administrateurs.
+            Erreur. Merci de réessayer ou de contacter les administrateurs.
             <br />
             Détails: {detail}
         </p>
-        ;
     </Container>
 );

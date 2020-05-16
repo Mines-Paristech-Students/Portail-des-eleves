@@ -21,9 +21,32 @@ interface Props {
 }
 
 /**
- * This component encapsulates the Formik logic into a React Bootstrap + Tabler UI component for a “selectgroup-pills”.
- * `items` is a `Map` value => component, which maps the value of a “selectgroup-item” to its rendering.
- * Use the `type` props to choose between "inline", "pills" and "vertical".
+ * This component encapsulates the Formik logic into a React Bootstrap + Tabler UI component for a “selectgroup-...”.
+ * `items` is
+ * Use the `type` props to c
+ *
+ * Example:
+ * ```
+ * let items = new Map();
+ *
+ * items.set(
+ *     "CHOICE_1",
+ *     <span className="selectgroup-button selectgroup-button-icon">
+ *         <i className="fe fe-check text-success" /> Choix 1
+ *     </span>
+ * );
+ *
+ * ...
+ *
+ * return (
+ *     <SelectGroup type="pills" label="Statut" name="state" items={items} />
+ * );
+ * ```
+ *
+ * @param type Choose between "inline", "pills" and "vertical".
+ * @param label the key of Formik's `values` which will give you access to the selected item (this value is the corresponding key of the `items` map).
+ * @param items a `Map` value => component, which maps the value of a “selectgroup-item” to its rendering.
+ * @param props passed to the `SelectGroupItem` component.
  */
 export function SelectGroup({ type, label, items, ...props }: Props) {
     let components: any[] = [];

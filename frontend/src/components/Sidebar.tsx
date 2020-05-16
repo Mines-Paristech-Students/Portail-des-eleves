@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 /**
  * A link displayed in the sidebar. It has three props:
@@ -9,10 +9,14 @@ import { Link } from "react-router-dom";
  *   * `children`: the children to render for the link.
  */
 export const SidebarItem = ({ icon, to, children }) => {
+    const location = useLocation();
     const iconClassName = "fe fe-" + icon;
+
     return (
         <Link
-            className="list-group-item list-group-item-action px-0 d-flex align-items-center"
+            className={`list-group-item list-group-item-action d-flex align-items-center ${
+                location.pathname === to ? "active" : ""
+            }`}
             to={to}
         >
             <span className="icon mr-3">

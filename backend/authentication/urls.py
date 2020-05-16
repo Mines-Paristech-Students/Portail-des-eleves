@@ -13,6 +13,7 @@ from authentication.views import (
     list_profile_questions,
     list_promotions,
 )
+from authentication.views.authentication import JwtView
 
 router = BulkRouter()
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path("auth/login/", LoginView.as_view(), name="login"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
     path("auth/check/", CredentialsView.as_view(), name="check-credentials"),
+    path("auth/jwt/", JwtView.as_view(), name="get-jwt"),
     path("users/birthdays/<int:number_of_days>/", get_birthdays, name="get_birthdays"),
     path("users/promotions/", list_promotions, name="list_promotions"),
     path("users/questions/<slug:user_pk>/", list_profile_questions),

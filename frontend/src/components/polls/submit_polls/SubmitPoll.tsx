@@ -9,9 +9,35 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { PageTitle } from "../../utils/PageTitle";
 import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
+import { AxiosError } from "axios";
 
 export const SubmitPoll = () => {
     const newToast = useContext(ToastContext);
+    const [create] = useMutation(api.polls.create, {
+        onSuccess: (response) => {
+            queryCache.refetchQueries(["polls.list"]);
+
+            if (response.status === 201) {
+                newToast({
+                    message: "Sondage envoyé.",
+                    level: ToastLevel.Success,
+                });
+            }
+        },
+        onError: (errorAsUnknown) => {
+            const error = errorAsUnknown as AxiosError;
+
+            newToast({
+                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+                    error.response === undefined
+                        ? ""
+                        : "Détails :" + error.response.data.detail
+                }`,
+                level: ToastLevel.Error,
+            });
+        },
+    });
 
     const [
         questionPlaceholder,
@@ -33,32 +59,16 @@ export const SubmitPoll = () => {
     const onSubmit = (values, { resetForm, setSubmitting }) => {
         let data = {
             question: values.question,
-            choice0: values.choice0,
-            choice1: values.choice1,
+            choices: [{ text: values.choice0 }, { text: values.choice1 }],
         };
 
-        api.polls
-            .create(data)
-            .then((response) => {
-                if (response.status === 201) {
-                    newToast({
-                        message: "Sondage envoyé.",
-                        level: ToastLevel.Success,
-                    });
-                    resetForm();
-                }
-            })
-            .catch((error) => {
-                let message =
-                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                newToast({
-                    message: `${message} Détails : ${error.response.data.detail}`,
-                    level: ToastLevel.Error,
-                });
-            })
-            .then(() => {
-                setSubmitting(false);
-            });
+        create(
+            { data },
+            {
+                onSuccess: resetForm(),
+                onSettled: setSubmitting(false),
+            }
+        );
     };
 
     return (

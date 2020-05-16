@@ -68,10 +68,11 @@ class UserHasVotedPollSerializerMixin(serializers.ModelSerializer):
 
 
 class ReadOnlyPollSerializer(UserHasVotedPollSerializerMixin):
-    """Give a read-only access to the polls, displaying the user if it is the current user."""
+    """Give a read-only access to the polls, displaying the user and the admin comment if it is the current user."""
 
     choices = ChoiceSerializer(many=True, read_only=True)
     user = serializers.SerializerMethodField()
+    admin_comment = serializers.SerializerMethodField()
 
     class Meta:
         model = Poll
@@ -85,6 +86,7 @@ class ReadOnlyPollSerializer(UserHasVotedPollSerializerMixin):
             "is_active",
             "user_has_voted",
             "user",
+            "admin_comment",
         )
         fields = read_only_fields
 
@@ -93,6 +95,12 @@ class ReadOnlyPollSerializer(UserHasVotedPollSerializerMixin):
         user = getattr(request, "user", None)
 
         return user.id if poll.user == user else ""
+
+    def get_admin_comment(self, poll: Poll):
+        request = self.context.get("request", None)
+        user = getattr(request, "user", None)
+
+        return poll.admin_comment if poll.user == user else ""
 
 
 class AuthorPollSerializer(WritePollSerializerMixin):

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Poll } from "../../../models/polls";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -12,8 +12,6 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { DatePickerField } from "../../utils/forms/DatePickerField";
 import { formatDate } from "../../../utils/format";
-import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 const StateField = () => {
     let items = new Map();
@@ -78,14 +76,15 @@ const DateField = () => {
 
 export const PollEditModalAdminForm = ({
     poll,
-    refetch,
     handleClose,
+    onUpdate,
 }: {
     poll: Poll;
-    refetch: any;
     handleClose: () => void;
+    onUpdate: any;
 }) => {
-    const newToast = useContext(ToastContext);
+    let minDate = new Date();
+    minDate.setDate(minDate.getDate() - 1);
 
     const onSubmit = (values, { setSubmitting }) => {
         let data = {
@@ -95,39 +94,8 @@ export const PollEditModalAdminForm = ({
             publicationDate: values.publicationDate,
         };
 
-        api.polls
-            .update(poll.id, data)
-            .then((response) => {
-                if (response.status === 200) {
-                    newToast({
-                        message: "Sondage modifié.",
-                        level: ToastLevel.Success,
-                    });
-                }
-            })
-            .catch((error) => {
-                let message =
-                    "Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste.";
-                let detail = error.response.data.detail;
-
-                if (detail === "You are not allowed to update this poll.") {
-                    detail = "Vous n’avez pas le droit de modifier ce sondage.";
-                }
-
-                newToast({
-                    message: `${message} Détails : ${detail}`,
-                    level: ToastLevel.Error,
-                });
-            })
-            .then(() => {
-                setSubmitting(false);
-                handleClose();
-                refetch({ force: true });
-            });
+        onUpdate(data, setSubmitting);
     };
-
-    let minDate = new Date();
-    minDate.setDate(minDate.getDate() - 1);
 
     return (
         <Formik
@@ -165,10 +133,9 @@ export const PollEditModalAdminForm = ({
                                         <Card.Subtitle>
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
-                                                {poll.publicationDate &&
-                                                    formatDate(
-                                                        poll.publicationDate
-                                                    )}
+                                                {formatDate(
+                                                    poll.creationDateTime
+                                                )}
                                                 .
                                             </em>
                                         </Card.Subtitle>
