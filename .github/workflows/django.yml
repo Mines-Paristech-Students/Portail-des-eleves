@@ -37,8 +37,9 @@ jobs:
         postgresql password: postgres
     - name: Set up database
       run: |
-        cp backend/backend/.env.ci .env
-        cli/create_and_populate_database.bash
+        cd backend
+        cp backend/.env.ci .env
+        ../cli/create_and_populate_database.bash
     - name: Run Tests
       run: |
         python backend/manage.py test
