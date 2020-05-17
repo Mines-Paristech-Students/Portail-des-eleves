@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from associations.models import Role
 from associations.serializers.association_short import AssociationShortSerializer
@@ -26,7 +27,7 @@ class WriteRoleSerializer(serializers.ModelSerializer):
                 f"{permission_name}_permission"
                 for permission_name in Role.PERMISSION_NAMES
                 if permission_name != "administration"
-            ) + ("is_archived", "role", "rank")
+            ) + ("start_date", "end_date", "role", "rank")
 
             for field in forbidden_fields:
                 if field in self.validated_data:
@@ -44,6 +45,22 @@ class WriteRoleSerializer(serializers.ModelSerializer):
 
         return super(WriteRoleSerializer, self).update(instance, validated_data)
 
+    def is_valid(self, raise_exception=False):
+        """Check if the dates are consistent."""
+
+        self._errors = {}
+
+        if "start_date" in self.initial_data and "end_date" in self.initial_data:
+            if self.initial_data["start_date"] >= self.initial_data["end_date"]:
+                self._errors = {
+                    "field_errors": "field start_date is not consistent with field end_date."
+                }
+
+        if self._errors and raise_exception:
+            raise ValidationError(self._errors)
+
+        return super(WriteRoleSerializer, self).is_valid(raise_exception)
+
     def to_representation(self, instance):
         res = super(WriteRoleSerializer, self).to_representation(instance)
 
@@ -57,7 +74,7 @@ class WriteRoleSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
         fields = (
             read_only_fields
-            + ("association", "user", "role", "rank", "is_archived")
+            + ("association", "user", "role", "rank", "start_date", "end_date")
             + tuple(
                 f"{permission_name}_permission"
                 for permission_name in Role.PERMISSION_NAMES

@@ -46,7 +46,7 @@
     email: 16leroy@mpt.fr
     birthday: '1997-10-14'
     is_active: true
-    is_staff: true
+    is_staff: false
     nickname: Ragicarpe
     city_of_origin: Troupommé-la-forêt
     room: 95 rue Guizot E

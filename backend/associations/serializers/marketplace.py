@@ -170,7 +170,7 @@ class MarketplaceWriteSerializer(serializers.ModelSerializer):
 
         # A new Marketplace is linked to an existing association.
         association_data = validated_data.pop("association")
-        association = Association.objects.get(pk=association_data)
+        association = Association.objects.get(pk=association_data.id)
 
         # A new Marketplace may come with new products.
         products_data = validated_data.pop("products")

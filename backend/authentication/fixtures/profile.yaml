@@ -147,27 +147,27 @@
 - model: authentication.ProfileAnswer
   pk: 19
   fields:
-    text: "Les amis c'est comme les patates, si tu les manges, ils meurent."
+    text: "Donec in est erat. Nunc tincidunt et ex a cursus. Morbi malesuada metus condimentum porta dictum. Nulla sed convallis elit. Nunc eu nisl orci."
     user: 17bocquet
     question: 1
 
 - model: authentication.ProfileAnswer
   pk: 20
   fields:
-    text: "Cinéma, handball, cuisine..."
+    text: "Praesent a vulputate sem."
     user: 17bocquet
     question: 2
 
 - model: authentication.ProfileAnswer
   pk: 21
   fields:
-    text: "Handball, montagne, voile"
+    text: "Integer suscipit vitae lacus eget porta."
     user: 17bocquet
     question: 3
 
 - model: authentication.ProfileAnswer
   pk: 22
   fields:
-    text: "Mon co est génial ! Je vous en parlerais bien devant un bon repas mais c'est Pierre qui fait la cuisine ce soir..."
+    text: "Maecenas tempor egestas quam vel mollis. Nulla ac magna mi. Duis augue mauris, semper in ligula et, volutpat porttitor justo. Donec pharetra consequat vestibulum."
     user: 17bocquet
     question: 4

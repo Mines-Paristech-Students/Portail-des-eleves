@@ -38,6 +38,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: false
 
@@ -57,6 +58,7 @@
     user: 17event_biero
     association: biero
     role: Events admin
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: true
 
@@ -130,6 +132,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     event_permission: false
 
@@ -149,6 +152,7 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: false
 
@@ -168,6 +172,7 @@
     user: 17event_pdm
     association: pdm
     role: Events admin
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: true
 
@@ -270,6 +275,7 @@
     user: 17admin_bd-tek
     association: bd-tek
     role: Admin no library
+    start_date: "2017-01-01"
     administration_permission: true
     library_permission: false
 
@@ -289,6 +295,7 @@
     user: 17library_bd-tek
     association: bd-tek
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -308,6 +315,7 @@
     user: 17member_bd-tek
     association: bd-tek
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: false
 
@@ -337,6 +345,7 @@
     user: 17library_biero
     association: biero
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -356,6 +365,7 @@
     user: 17library_bde
     association: bde
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -375,6 +385,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no library
+    start_date: "2017-01-01"
     administration_permission: true
     library_permission: false
 
@@ -663,6 +674,7 @@
     user: 17admin_biero
     association: biero
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -682,6 +694,7 @@
     user: 17market_biero
     association: biero
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -711,6 +724,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -730,6 +744,7 @@
     user: 17market_pdm
     association: pdm
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -749,6 +764,7 @@
     user: 17market_bde
     association: bde
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -768,6 +784,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -1058,6 +1075,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     page_permission: false
 
@@ -1077,6 +1095,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: false
 
@@ -1096,6 +1115,7 @@
     user: 17page_biero
     association: biero
     role: page admin
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: true
 
@@ -1143,6 +1163,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     page_permission: false
 
@@ -1162,6 +1183,7 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: false
 
@@ -1181,6 +1203,7 @@
     user: 17page_pdm
     association: pdm
     role: page admin
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: true
 
