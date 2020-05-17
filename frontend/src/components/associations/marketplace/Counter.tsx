@@ -15,12 +15,7 @@ import { queryCache, useMutation } from "react-query";
 import { TransactionStatus } from "../../../models/associations/marketplace";
 
 export const AssociationMarketplaceCounter = ({ association }) => {
-    const [customer, setCustomer] = useState<User | null>({
-        id: "17bocquet",
-        lastName: "Bocquet",
-        firstName: "Adrien",
-        promotion: 17,
-    });
+    const [customer, setCustomer] = useState<User | null>(null);
 
     return (
         <>
