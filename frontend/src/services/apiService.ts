@@ -67,8 +67,8 @@ export const api = {
     jwt: jwt,
     polls: polls,
     tags: tags,
-    profile: profile,
     namespaces: namespaces,
+    profile: profile,
 };
 
 /**
