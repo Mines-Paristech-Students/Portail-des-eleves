@@ -1,39 +1,40 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { Auth } from "../models/auth";
+import { User } from "../models/user";
 import { apiService } from "./apiService";
 import React, { createContext, useState } from "react";
-import { authService } from "../App";
+import { userService } from "../App";
+import { Loading } from "../components/utils/Loading";
 
-export const AuthContext = createContext<Auth | null>(null);
+export const UserContext = createContext<User | null>(null);
 
-export const AuthProvider: React.FunctionComponent = ({ children }) => {
-    let [auth, setAuth] = useState<Auth | null>(null);
+export const UserProvider: React.FunctionComponent = ({ children }) => {
+    let [user, setUser] = useState<User | null>(null);
 
-    authService.getAuth().then((u) => {
-        setAuth(u);
+    userService.getUser().then((u) => {
+        setUser(u);
     });
 
-    if (auth != null) {
+    if (user != null) {
         return (
-            <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+            <UserContext.Provider value={user}>{children}</UserContext.Provider>
         );
     }
 
-    return <p>Loading</p>;
+    return <Loading />;
 };
 
-export class AuthService {
+export class UserService {
     isAuthenticated = false;
     isStaff = false;
-    auth: Auth | null = null;
+    user: User | null = null;
 
-    checkAuth(): Promise<Auth | null> {
+    checkUser(): Promise<User | null> {
         return new Promise((resolve, reject) => {
             apiService
-                .get<Auth>("/auth/check")
+                .get<User>("/auth/check")
                 .then((response: AxiosResponse) => {
                     if (response.data.userId) {
-                        this.auth = {
+                        this.user = {
                             id: response.data.userId,
                             firstName: response.data.firstName,
                             lastName: response.data.lastName,
@@ -42,9 +43,9 @@ export class AuthService {
                         };
 
                         this.isAuthenticated = true;
-                        this.isStaff = this.auth.isStaff;
+                        this.isStaff = this.user.isStaff;
 
-                        resolve(this.auth);
+                        resolve(this.user);
                     } else {
                         reject("not authenticated");
                     }
@@ -59,18 +60,18 @@ export class AuthService {
         });
     }
 
-    getAuth(): Promise<Auth> {
-        return new Promise<Auth>((resolve, reject) => {
-            if (this.auth != null) {
-                return resolve(this.auth);
+    getUser(): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            if (this.user != null) {
+                return resolve(this.user);
             }
 
-            this.checkAuth()
-                .then((auth) => {
-                    if (auth == null) {
+            this.checkUser()
+                .then((user) => {
+                    if (user == null) {
                         return reject("Not logged in");
                     } else {
-                        return resolve(auth);
+                        return resolve(user);
                     }
                 })
                 .catch((err) => {
@@ -82,8 +83,8 @@ export class AuthService {
     signOut() {
         this.isAuthenticated = false;
         this.isStaff = false;
-        this.auth = null;
+        this.user = null;
 
-        return apiService.get<Auth>("/auth/logout");
+        return apiService.get<User>("/auth/logout");
     }
 }

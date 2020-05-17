@@ -17,7 +17,7 @@ import { associations } from "./api/associations";
 import { tags } from "./api/tags";
 import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
-import { user } from "./api/user";
+import { profile } from "./api/profile";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -67,7 +67,7 @@ export const api = {
     jwt: jwt,
     polls: polls,
     tags: tags,
-    user: user,
+    profile: profile,
     namespaces: namespaces,
 };
 

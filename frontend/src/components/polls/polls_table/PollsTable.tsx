@@ -7,11 +7,11 @@ import { PollsBase } from "../PollsBase";
 import { api } from "../../../services/apiService";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
-import { authService } from "../../../App";
+import { userService } from "../../../App";
 import { ForbiddenError } from "../../utils/ErrorPage";
 import { Pagination } from "../../utils/Pagination";
 import { PollsTableFilter, PollStateFilter } from "./PollsTableFilter";
-import { AuthContext } from "../../../services/authService";
+import { UserContext } from "../../../services/userService";
 import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
 import { Column } from "../../utils/table/TableHeader";
@@ -23,10 +23,10 @@ export const PollsTable = ({
     adminVersion: boolean;
     columnData: (setEditPoll) => Column[];
 }) => {
-    const auth = useContext(AuthContext);
+    const user = useContext(UserContext);
 
-    // Only filter by auth for the non admin version.
-    const userFilter = () => (!adminVersion && auth ? auth.id : "");
+    // Only filter by user for the non admin version.
+    const userFilter = () => (!adminVersion && user ? user.id : "");
 
     // Contains the poll currently edited in the modal.
     const [editPoll, setEditPoll] = useState<Poll | null>(null);
@@ -45,7 +45,7 @@ export const PollsTable = ({
         defaultStateFilter
     );
 
-    if (!authService.isStaff && adminVersion) {
+    if (!userService.isStaff && adminVersion) {
         return <ForbiddenError />;
     }
 

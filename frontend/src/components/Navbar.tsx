@@ -8,8 +8,8 @@ import Container from "react-bootstrap/Container";
 import "./navbar.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { authService } from "../App";
-import { AuthContext } from "../services/authService";
+import { userService } from "../App";
+import { UserContext } from "../services/userService";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -27,11 +27,11 @@ const links = [
 
 function Navbar() {
     const location = useLocation();
-    const auth = useContext(AuthContext);
+    const user = useContext(UserContext);
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
 
     const logout = () => {
-        authService.signOut().then(() => {
+        userService.signOut().then(() => {
             setRedirectToLogin(true);
         });
     };
@@ -64,7 +64,7 @@ function Navbar() {
         );
     });
 
-    return auth ? (
+    return user ? (
         <>
             <div className="header p-1">
                 <Container>
@@ -94,17 +94,17 @@ function Navbar() {
                                         </Col>
                                         <Col className="ml-2 float-right">
                                             <span className="text-default">
-                                                {auth.firstName} {auth.lastName}
+                                                {user.firstName} {user.lastName}
                                             </span>
                                             <small className="text-muted d-block mt-0 text-left">
-                                                {`P${auth.promotion}`}
+                                                {`P${user.promotion}`}
                                             </small>
                                         </Col>
                                     </Row>
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item href={`/profils/${auth.id}`}>
+                            <NavDropdown.Item href={`/profils/${user.id}`}>
                                 <i className="dropdown-icon fe fe-user" />{" "}
                                 Profil
                             </NavDropdown.Item>

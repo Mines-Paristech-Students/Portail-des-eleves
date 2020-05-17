@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 // @ts-ignore
 import Logo from "../logo-mines.png";
-import { authService } from "../App";
+import { userService } from "../App";
 
 /**
  * This page should be modified to be displayed in dev mode, but only redirect to the SSO in prod mode.
@@ -15,7 +15,7 @@ const authUrlSimple =
     "http://localhost:8000/api/v1/auth/login/?access=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2NzQ0MjQ4MjAuMTgzNzI0LCJpc3MiOiJzc29fc2VydmVyIiwiYXVkIjoicG9ydGFpbCIsImp0aSI6IjFkYzg4OGQzYjhlMjRhYzFiOGE0YThmZGE2NTRlODA1IiwidXNlciI6IjE5c2ltcGxlIn0.DNX6smizhwaIhZvkRWYtGSKidltnA1IVCdcWZJZe0m--jeK7NapqMMGmd_NpTh2kC7rSHY60vi4mCJvr740NGaJFHcMU_4j_GkrmIEl2M7RraU52JTDIRdttsfNFQN7pxgJllpzZrCHHE37UZ0fUEu0m9FCUxYkL4AoTIbwxScXZ3NFNK0kXhqQGtzaLNv9g4QUUTTq30eopkh5iWugCkJ8aFBzI1jn821URw8Kpz3CoV_aT1I2iFs6OrE35iP1arpIaD9Vt8QX393LTYISx-Y5N4074gbGlMgdEhH-E1Iqxlm7v-CBbvELD09K1U1YFzk7oEZMID7sS-94ebLElUQ";
 
 export const Login = () => {
-    if (authService.isAuthenticated) {
+    if (userService.isAuthenticated) {
         return <Redirect to={"/"} />;
     }
 

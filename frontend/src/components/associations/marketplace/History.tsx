@@ -2,17 +2,17 @@ import React, { useContext } from "react";
 import { api } from "../../../services/apiService";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../utils/PageTitle";
-import { AuthContext } from "../../../services/authService";
+import { UserContext } from "../../../services/userService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
-    const auth = useContext(AuthContext);
+    const user = useContext(UserContext);
     const marketplaceId = association.id;
 
     return (
         <Pagination
-            apiKey={["marketplace.transactions.list", marketplaceId, auth]}
+            apiKey={["marketplace.transactions.list", marketplaceId, user]}
             apiMethod={api.transactions.list}
             render={(transactions, paginationControl) => (
                 <Container>
