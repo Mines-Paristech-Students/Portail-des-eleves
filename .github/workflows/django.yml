@@ -38,7 +38,7 @@ jobs:
     - name: Set up database
       run: |
         cd backend
-        cp backend/.env.ci .env
+        cp backend/.env.ci backend/.env
         ../cli/create_and_populate_database.bash
     - name: Run Tests
       run: |
