@@ -8,7 +8,7 @@ import {
 
 export const products = {
     list: (associationId, params = {}, page = 1) => {
-        params["association"] = associationId;
+        params["marketplace"] = associationId;
         params["page"] = page;
         return unwrap<PaginatedResponse<Page[]>>(
             apiService.get(`/associations/products/${toUrlParams(params)}`)

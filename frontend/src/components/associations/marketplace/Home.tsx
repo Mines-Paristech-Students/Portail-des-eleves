@@ -30,11 +30,14 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
             <Row>
                 <Pagination
-                    apiKey={["associations.list", marketplaceId, {}]}
+                    apiKey={[
+                        "associations.list",
+                        marketplaceId,
+                        { page_size: 5 },
+                    ]}
                     apiMethod={api.products.list}
                     render={(products, controlbar) => (
                         <>
-                            {controlbar}
                             {products.map((product) => (
                                 <AssociationMarketplaceProduct
                                     product={product}
@@ -74,16 +77,20 @@ const AssociationMarketplaceProduct = ({ product }) => {
     return (
         <Card>
             <Card.Body>
-                <Card.Title className="card-title">{product.name}</Card.Title>
-                <div className="card-subtitle">{product.description}</div>
-                <div className="mt-5 d-flex align-items-center">
-                    <div className="product-price">
-                        <strong>{product.price}€</strong>
-                    </div>
-                    <div className="ml-auto">
-                        <QuantitySelect order={makeOrder} />
-                    </div>
+                <div className="float-right">
+                    <QuantitySelect order={makeOrder} />
                 </div>
+                <Card.Title className="card-title">
+                    {product.name}{" "}
+                    <span className={"text-muted"}>
+                        {product.price}€ (
+                        {product.numberLeft > -1
+                            ? `${product.numberLeft} restants`
+                            : ""}
+                        )
+                    </span>
+                </Card.Title>
+                <div className="card-subtitle">{product.description}</div>
             </Card.Body>
         </Card>
     );

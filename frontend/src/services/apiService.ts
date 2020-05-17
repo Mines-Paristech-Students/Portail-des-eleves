@@ -18,6 +18,7 @@ import { tags } from "./api/tags";
 import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
 import { users } from "./api/users";
+import { fundings } from "./api/fundings";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -58,19 +59,22 @@ export function toUrlParams(obj: object): string {
 
 export const api = {
     associations: associations,
-    marketplace: marketplace,
     medias: medias,
     news: news,
     pages: pages,
+
+    marketplace: marketplace,
     products: products,
     transactions: transactions,
-    jwt: jwt,
+    fundings: fundings,
+
     polls: polls,
 
     tags: tags,
     namespaces: namespaces,
 
-    users: users
+    users: users,
+    jwt: jwt,
 };
 
 /**

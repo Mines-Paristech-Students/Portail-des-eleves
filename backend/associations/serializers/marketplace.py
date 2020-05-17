@@ -22,8 +22,9 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
         # Compute the value of the transaction.
         product = Product.objects.get(pk=validated_data["product"].id)
-        validated_data["value"] = product.price * validated_data["quantity"]
-        validated_data["status"] = "ORDERED"
+        validated_data["value"] = round(product.price * validated_data["quantity"], 2)
+        if not validated_data.get("status", False):
+            validated_data["status"] = "ORDERED"
 
         return Transaction.objects.create(**validated_data)
 
@@ -71,7 +72,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        read_only_fields = ("id", "tags")
+        read_only_fields = ("id", "tags", "marketplace")
         fields = read_only_fields + (
             "name",
             "description",

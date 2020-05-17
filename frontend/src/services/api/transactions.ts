@@ -1,8 +1,8 @@
-import { Transaction } from "../../models/associations/marketplace";
+import { Transaction, TransactionStatus } from "../../models/associations/marketplace";
 import { apiService, toUrlParams, unwrap } from "../apiService";
 
 export const transactions = {
-    create: (product, quantity, buyer) =>
+    create: (product, quantity, buyer, status=TransactionStatus.Ordered) =>
         apiService.post("/associations/transactions/", {
             product: product.id,
             quantity: quantity,

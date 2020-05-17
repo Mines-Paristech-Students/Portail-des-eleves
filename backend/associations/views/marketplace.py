@@ -8,6 +8,7 @@ from django.http import (
     HttpResponseBadRequest,
     Http404,
 )
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
@@ -54,7 +55,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     pagination_class = SmallResultsSetPagination
 
-    filter_backends = (SearchFilter,)
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ("marketplace",)
     search_fields = ("name", "description")
 
     def get_queryset(self):
@@ -112,9 +114,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
         product = Product.objects.get(pk=serializer.validated_data["product"].id)
 
         # Check if there are enough products remaining.
-        if (
-            "quantity" not in serializer.validated_data
-            or product.number_left < serializer.validated_data["quantity"]
+        # -1 means there are as much of the product as we want
+        if "quantity" not in serializer.validated_data or (
+            -1 < product.number_left < serializer.validated_data["quantity"]
         ):
             return HttpResponseBadRequest("Not enough products remaining.")
 

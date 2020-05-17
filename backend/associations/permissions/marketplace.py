@@ -128,7 +128,7 @@ class FundingPermission(BasePermission):
             if market_query.exists():
                 market = market_query[0]
                 role = request.user.get_role(market.association)
-                return market.enabled and role and role.marketplace
+                return role and role.marketplace
             else:
                 raise NotFound("The requested marketplace does not exist.")
 

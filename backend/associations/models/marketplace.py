@@ -65,7 +65,7 @@ class Transaction(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     # Total value is remembered because the price might change, the product might be deleted, etc.
-    value = models.DecimalField(max_digits=5, decimal_places=2)
+    value = models.DecimalField(max_digits=9, decimal_places=2)
     date = models.DateTimeField(auto_now=True)
 
     #           --- CANCELLED
@@ -93,7 +93,7 @@ class Transaction(models.Model):
     @cached_property
     def value_in_balance(self):
         """
-            :return True iff the value of the transaction must be removed from their balance.
+            :return True if the value of the transaction must be removed from their balance.
         """
         return self.status in ("ORDERED", "VALIDATED", "DELIVERED")
 

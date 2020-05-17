@@ -20,6 +20,7 @@ from associations.serializers.association import AssociationLogoSerializer
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     permission_classes = (RolePermission,)
+    serializer_class = RoleSerializer
 
     filter_fields = ("user", "association")
 
