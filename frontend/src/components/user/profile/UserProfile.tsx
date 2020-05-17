@@ -4,7 +4,6 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { ProfileInfo } from "./ProfileInfo";
 import { ProfileAssociations } from "./ProfileAssociations";
-import { ProfileEducation } from "./ProfileEducation";
 import { ProfileAnswers } from "./ProfileAnswers";
 import { ProfileRelated } from "./ProfileRelated";
 import { api, useBetterQuery } from "../../../services/apiService";
@@ -37,7 +36,6 @@ export const UserProfile = ({ match }: { match: any }) => {
                     </Col>
                     <Col md="8">
                         <ProfileAssociations profile={profile} />
-                        <ProfileEducation profile={profile} />
                         <ProfileAnswers profile={profile} />
                     </Col>
                 </Row>
