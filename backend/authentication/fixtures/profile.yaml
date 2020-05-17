@@ -138,8 +138,36 @@
     question: 3
 
 - model: authentication.ProfileAnswer
-  pk: 17
+  pk: 18
   fields:
     text: "Piche"
     user: 19simple
+    question: 4
+
+- model: authentication.ProfileAnswer
+  pk: 19
+  fields:
+    text: "Les amis c'est comme les patates, si tu les manges, ils meurent."
+    user: 17bocquet
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 20
+  fields:
+    text: "Cinéma, handball, cuisine..."
+    user: 17bocquet
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 21
+  fields:
+    text: "Handball, montagne, voile"
+    user: 17bocquet
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 22
+  fields:
+    text: "Mon co est génial ! Je vous en parlerais bien devant un bon repas mais c'est Pierre qui fait la cuisine ce soir..."
+    user: 17bocquet
     question: 4

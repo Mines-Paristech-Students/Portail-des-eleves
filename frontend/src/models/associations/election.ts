@@ -1,4 +1,4 @@
-import { User } from "../user";
+import { User } from "../user/user";
 import { Association } from "./association";
 
 export interface Choice {

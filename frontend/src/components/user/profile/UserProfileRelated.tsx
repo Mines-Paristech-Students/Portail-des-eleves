@@ -2,7 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { User } from "../../../models/user";
+import { User } from "../../../models/user/user";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { AvatarList } from "../../utils/avatar/AvatarList";
 import { decidePlural } from "../../../utils/format";

@@ -1,5 +1,5 @@
 import { apiService, unwrap } from "../apiService";
-import { User } from "../../models/user";
+import { User } from "../../models/user/user";
 import { AxiosResponse } from "axios";
 
 /**

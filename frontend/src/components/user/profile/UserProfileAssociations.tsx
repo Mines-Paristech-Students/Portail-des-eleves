@@ -1,5 +1,5 @@
 import React from "react";
-import { User } from "../../../models/user";
+import { User } from "../../../models/user/user";
 import { CardStatus } from "../../utils/CardStatus";
 import Card from "react-bootstrap/Card";
 import { TablerColor } from "../../../utils/colors";

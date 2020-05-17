@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import { User } from "../../../models/user";
+import { User } from "../../../models/user/user";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { Size } from "../../../utils/size";
 import Button from "react-bootstrap/Button";

@@ -1,6 +1,6 @@
 import { Association } from "./association";
 import { Tag } from "../tag";
-import { User } from "../user";
+import { User } from "../user/user";
 
 export interface Marketplace {
     id: string;

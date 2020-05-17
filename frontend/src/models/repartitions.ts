@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./user/user";
 
 export enum CampaignStatus {
     Closed = "CLOSED",

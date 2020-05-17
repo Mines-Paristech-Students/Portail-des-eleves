@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import { CardStatus } from "../../utils/CardStatus";
-import { User } from "../../../models/user";
+import { User } from "../../../models/user/user";
 import { Timeline } from "../../utils/timeline/Timeline";
 import { TablerColor } from "../../../utils/colors";
 

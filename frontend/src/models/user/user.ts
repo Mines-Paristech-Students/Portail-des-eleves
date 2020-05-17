@@ -1,19 +1,4 @@
-export interface Role {
-    id: number;
-    association: string;
-    role: string;
-    rank: number;
-
-    isArchived: boolean;
-
-    administrationPermission: boolean;
-    electionPermission: boolean;
-    eventPermission: boolean;
-    mediaPermission: boolean;
-    libraryPermission: boolean;
-    marketplacePermission: boolean;
-    pagePermission: boolean;
-}
+import { ProfileAnswer } from "./profile";
 
 export interface User {
     id: string;
@@ -23,7 +8,7 @@ export interface User {
     email: string;
     yearOfEntry: number;
     studentType: "AST" | "ISUPFERE" | "EV" | "IC";
-    currentAcademicYear: "1A"| "2A"| "GAP YEAR"| "3A"| "GRADUATE";
+    currentAcademicYear: "1A" | "2A" | "GAP YEAR" | "3A" | "GRADUATE";
     isActive: boolean;
     isStaff: boolean;
     promotion: number;
@@ -36,4 +21,5 @@ export interface User {
     roommate: { id: string; firstName: string; lastName: string }[];
     minesparent: { id: string; firstName: string; lastName: string }[];
     fillots: { id: string; firstName: string; lastName: string }[];
+    profileAnswers: ProfileAnswer[];
 }

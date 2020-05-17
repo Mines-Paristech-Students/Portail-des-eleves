@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { User } from "../../../models/user";
+import { User } from "../../../models/user/user";
 import { UserProfileInfo } from "./UserProfileInfo";
 import { UserProfileAssociations } from "./UserProfileAssociations";
 import { UserProfileEducation } from "./UserProfileEducation";
-import { UserProfileQuestions } from "./UserProfileQuestions";
+import { UserProfileAnswers } from "./UserProfileAnswers";
 import { UserProfileRelated } from "./UserProfileRelated";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
@@ -39,7 +39,7 @@ export const UserProfile = ({ match }: { match: any }) => {
                     <Col md="8">
                         <UserProfileAssociations user={user} />
                         <UserProfileEducation user={user} />
-                        <UserProfileQuestions user={user} />
+                        <UserProfileAnswers user={user} />
                     </Col>
                 </Row>
             </Container>
