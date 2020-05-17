@@ -7,11 +7,11 @@ import { PollsBase } from "../PollsBase";
 import { api } from "../../../services/apiService";
 import { PollsLoading } from "../PollsLoading";
 import { PollsError } from "../PollsError";
-import { userService } from "../../../App";
+import { authService } from "../../../App";
 import { ForbiddenError } from "../../utils/ErrorPage";
 import { Pagination } from "../../utils/Pagination";
 import { PollsTableFilter, PollStateFilter } from "./PollsTableFilter";
-import { UserContext } from "../../../services/userService";
+import { UserContext } from "../../../services/authService";
 import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
 import { Column } from "../../utils/table/TableHeader";
@@ -45,7 +45,7 @@ export const PollsTable = ({
         defaultStateFilter
     );
 
-    if (!userService.isStaff && adminVersion) {
+    if (!authService.isStaff && adminVersion) {
         return <ForbiddenError />;
     }
 

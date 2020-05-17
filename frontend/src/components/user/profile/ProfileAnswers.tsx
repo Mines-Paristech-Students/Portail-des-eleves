@@ -3,9 +3,8 @@ import { CardStatus } from "../../utils/CardStatus";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { User } from "../../../models/user/user";
 import { TablerColor } from "../../../utils/colors";
-import { ProfileAnswer } from "../../../models/user/profile";
+import { Profile, ProfileAnswer } from "../../../models/profile";
 
 const UserProfileAnswer = ({
     profileAnswer,
@@ -20,23 +19,29 @@ const UserProfileAnswer = ({
     </Row>
 );
 
-export const UserProfileAnswers = ({ user }: { user: User }) => (
+export const ProfileAnswers = ({ profile }: { profile: Profile }) => (
     <Card>
         <CardStatus position="left" color={TablerColor.Blue} />
         <Card.Header>
             <Card.Title>Questions et réponses</Card.Title>
         </Card.Header>
         <Card.Body className="px-7">
-            {
-                user.profileAnswers.length > 0 ?
-                    <>{user.profileAnswers
-                .sort((answerA, answerB) => answerA.question.localeCompare(answerB.question) )
-                .map((answer) => (
-                    <UserProfileAnswer profileAnswer={answer} key={answer.id}/>
-                ))}</>
-                    : <p className="text-center">Rien ici 😭😭😭</p>
-            }
-
+            {profile.profileAnswers.length > 0 ? (
+                <>
+                    {profile.profileAnswers
+                        .sort((answerA, answerB) =>
+                            answerA.question.localeCompare(answerB.question)
+                        )
+                        .map((answer) => (
+                            <UserProfileAnswer
+                                profileAnswer={answer}
+                                key={answer.id}
+                            />
+                        ))}
+                </>
+            ) : (
+                <p className="text-center">Rien ici 😭😭😭</p>
+            )}
         </Card.Body>
     </Card>
 );

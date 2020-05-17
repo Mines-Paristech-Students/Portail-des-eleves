@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { PollsSidebar } from "./PollsSidebar";
 import Container from "react-bootstrap/Container";
-import { userService } from "../../App";
+import { authService } from "../../App";
 
 export const PollsBase = ({
     children,
@@ -16,7 +16,7 @@ export const PollsBase = ({
         <Row>
             <Col md="3">
                 <PollsSidebar
-                    isStaff={userService.isStaff}
+                    isStaff={authService.isStaff}
                     actions={sidebarActions}
                 />
             </Col>

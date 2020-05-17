@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { userService } from "../../App";
+import { authService } from "../../App";
 import Navbar from "../Navbar";
-import { UserProvider } from "../../services/userService";
+import { UserProvider } from "../../services/authService";
 
 /**
  * Ensure the user is logged-in before displaying them the route
@@ -16,7 +16,7 @@ export const PrivateRoute = ({
         <Route
             {...rest}
             render={(props) =>
-                userService.isAuthenticated ? (
+                authService.isAuthenticated ? (
                     <Component {...props} {...routeProps} />
                 ) : (
                     <Redirect

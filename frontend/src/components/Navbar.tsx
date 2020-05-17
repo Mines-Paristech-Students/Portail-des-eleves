@@ -8,8 +8,8 @@ import Container from "react-bootstrap/Container";
 import "./navbar.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { userService } from "../App";
-import { UserContext } from "../services/userService";
+import { authService } from "../App";
+import { UserContext } from "../services/authService";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -31,7 +31,7 @@ function Navbar() {
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
 
     const logout = () => {
-        userService.signOut().then(() => {
+        authService.signOut().then(() => {
             setRedirectToLogin(true);
         });
     };

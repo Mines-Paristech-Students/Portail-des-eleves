@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import { User } from "../../../models/user/user";
+import { Profile } from "../../../models/profile";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { Size } from "../../../utils/size";
 import Button from "react-bootstrap/Button";
@@ -18,11 +18,11 @@ const ACADEMIC_YEAR = new Map([
     ["GRADUATE", "Alumni"]
 ]);
 
-export const UserProfileInfo = ({
-    user,
+export const ProfileInfo = ({
+    profile,
     showEditButton = false,
 }: {
-    user: User;
+    profile: Profile;
     showEditButton?: boolean;
 }) => (
     <Card>
@@ -30,15 +30,15 @@ export const UserProfileInfo = ({
             <Row>
                 <div className="media">
                     <UserAvatar
-                        userId={user.id}
+                        userId={profile.id}
                         size={Size.XXL}
                         className="ml-3 mr-5"
                         link={false}
                     />
                     <div className="media-body">
-                        <h3 className="m-0">{`${user.firstName} ${user.lastName}`}</h3>
-                        <p className="font-italic mb-2">{user.nickname}</p>
-                        <p className="text-muted">{`P${user.promotion} ${user.studentType} (${ACADEMIC_YEAR.get(user.currentAcademicYear)})`}</p>
+                        <h3 className="m-0">{`${profile.firstName} ${profile.lastName}`}</h3>
+                        <p className="font-italic mb-2">{profile.nickname}</p>
+                        <p className="text-muted">{`P${profile.promotion} ${profile.studentType} (${ACADEMIC_YEAR.get(profile.currentAcademicYear)})`}</p>
                     </div>
                 </div>
             </Row>
@@ -49,23 +49,23 @@ export const UserProfileInfo = ({
                             <span className="icon mr-3">
                                 <i className="fe fe-calendar"></i>
                             </span>
-                            {formatLongDate(user.birthday)}
+                            {formatLongDate(profile.birthday)}
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <span className="icon mr-3">
                                 <i className="fe fe-mail"></i>
                             </span>
-                            <a href={`mailto:${user.email}`}>{user.email}</a>
+                            <a href={`mailto:${profile.email}`}>{profile.email}</a>
                         </ListGroup.Item>
-                        {user.phone && (
+                        {profile.phone && (
                             <ListGroup.Item>
                                 <span className="icon mr-3">
                                     <i className="fe fe-phone"></i>
                                 </span>
-                                {user.phone}
+                                {profile.phone}
                             </ListGroup.Item>
                         )}
-                        {user.room && (
+                        {profile.room && (
                             <ListGroup.Item>
                                 <OverlayTrigger
                                     placement={"bottom"}
@@ -80,10 +80,10 @@ export const UserProfileInfo = ({
                                     </span>
                                 </OverlayTrigger>
 
-                                {user.room}
+                                {profile.room}
                             </ListGroup.Item>
                         )}
-                        {user.address && (
+                        {profile.address && (
                             <ListGroup.Item>
                                 <OverlayTrigger
                                     placement={"bottom"}
@@ -97,7 +97,7 @@ export const UserProfileInfo = ({
                                         <i className="fe fe-home"></i>
                                     </span>
                                 </OverlayTrigger>
-                                {user.address}
+                                {profile.address}
                             </ListGroup.Item>
                         )}
                     </ListGroup>

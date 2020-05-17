@@ -1,5 +1,5 @@
 import { Association } from "./association";
-import { User } from "../user/user";
+import { User } from "../user";
 
 export enum LoanStatus {
     Accepted = "ACCEPTED",

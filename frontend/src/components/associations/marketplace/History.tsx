@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { api } from "../../../services/apiService";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../utils/PageTitle";
-import { UserContext } from "../../../services/userService";
+import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
 

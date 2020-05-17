@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { User } from "../models/user";
 import { apiService } from "./apiService";
 import React, { createContext, useState } from "react";
-import { userService } from "../App";
+import { authService } from "../App";
 import { Loading } from "../components/utils/Loading";
 
 export const UserContext = createContext<User | null>(null);
@@ -10,7 +10,7 @@ export const UserContext = createContext<User | null>(null);
 export const UserProvider: React.FunctionComponent = ({ children }) => {
     let [user, setUser] = useState<User | null>(null);
 
-    userService.getUser().then((u) => {
+    authService.getUser().then((u) => {
         setUser(u);
     });
 
@@ -23,7 +23,7 @@ export const UserProvider: React.FunctionComponent = ({ children }) => {
     return <Loading />;
 };
 
-export class UserService {
+export class AuthService {
     isAuthenticated = false;
     isStaff = false;
     user: User | null = null;

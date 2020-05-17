@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import { QuantitySelect } from "./QuantitySelect";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { UserContext } from "../../../services/userService";
+import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 
 export const AssociationMarketplaceHome = ({ association }) => {

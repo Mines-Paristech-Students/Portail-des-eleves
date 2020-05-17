@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "tabler-ui/dist/assets/css/dashboard.css";
-import { UserService } from "./services/userService";
+import { AuthService } from "./services/authService";
 import { CommonPrivateRoute } from "./components/utils/Route";
 import { PageNotFoundError } from "./components/utils/ErrorPage";
 import { Login } from "./components/Login";
@@ -10,7 +10,7 @@ import { routes } from "./routing/global";
 import { ToastProvider } from "./components/utils/Toast";
 import { Loading } from "./components/utils/Loading";
 
-export const userService = new UserService();
+export const authService = new AuthService();
 
 const privateRoutes = routes.map(({ path, component, exact }) => (
     <CommonPrivateRoute
@@ -25,7 +25,7 @@ const App: React.FC = () => {
     // Check the authentication then render the page
     let [checkedAuth, setCheckedAuth] = useState(false);
     useEffect(() => {
-        userService.checkUser().then(() => {
+        authService.checkUser().then(() => {
             setCheckedAuth(true);
         });
     });

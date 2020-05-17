@@ -1,4 +1,4 @@
-import { User } from "./user/user";
+import { User } from "./user";
 
 export interface WidgetSubscriptions {
     user: User;

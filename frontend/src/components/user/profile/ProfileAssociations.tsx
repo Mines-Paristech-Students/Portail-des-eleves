@@ -1,15 +1,15 @@
 import React from "react";
-import { User } from "../../../models/user/user";
 import { CardStatus } from "../../utils/CardStatus";
 import Card from "react-bootstrap/Card";
 import { TablerColor } from "../../../utils/colors";
 import { Timeline } from "../../utils/timeline/Timeline";
+import {Profile} from "../../../models/profile";
 
 const UserProfileAssociationsNoContent = () => (
-    <>Pas d’historique associatif. :'(</>
+    <>Pas d’historique associatif 😅</>
 );
 
-export const UserProfileAssociations = ({ user }: { user: User }) => (
+export const ProfileAssociations = ({ profile }: { profile: Profile }) => (
     <Card>
         <CardStatus color={TablerColor.Green} position="left" />
         <Card.Header>

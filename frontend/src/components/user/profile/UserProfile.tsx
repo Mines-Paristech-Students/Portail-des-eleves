@@ -2,43 +2,43 @@ import React, { useContext } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { User } from "../../../models/user/user";
-import { UserProfileInfo } from "./UserProfileInfo";
-import { UserProfileAssociations } from "./UserProfileAssociations";
-import { UserProfileEducation } from "./UserProfileEducation";
-import { UserProfileAnswers } from "./UserProfileAnswers";
-import { UserProfileRelated } from "./UserProfileRelated";
+import { ProfileInfo } from "./ProfileInfo";
+import { ProfileAssociations } from "./ProfileAssociations";
+import { ProfileEducation } from "./ProfileEducation";
+import { ProfileAnswers } from "./ProfileAnswers";
+import { ProfileRelated } from "./ProfileRelated";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 import { Error } from "../../utils/Error";
-import { AuthContext } from "../../../services/authService";
+import { UserContext } from "../../../services/authService";
+import {Profile} from "../../../models/profile";
 
 export const UserProfile = ({ match }: { match: any }) => {
-    const auth = useContext(AuthContext);
-    const { status, data: user, error } = useBetterQuery<User>(
-        ["user.get", { userId: match.params.userId }],
-        api.user.get
+    const user = useContext(UserContext);
+    const { status, data: profile, error } = useBetterQuery<Profile>(
+        ["profile.get", { userId: match.params.userId }],
+        api.profile.get
     );
 
     if (status === "loading") {
         return <Loading />;
     } else if (status === "error") {
         return <Error detail={error} />;
-    } else if (status === "success" && user) {
+    } else if (status === "success" && profile) {
         return (
             <Container className="mt-5">
                 <Row>
                     <Col md="4">
-                        <UserProfileInfo
-                            user={user}
-                            showEditButton={!!auth && user.id === auth.id}
+                        <ProfileInfo
+                            profile={profile}
+                            showEditButton={!!user && profile.id === user.id}
                         />
-                        <UserProfileRelated user={user} />
+                        <ProfileRelated profile={profile} />
                     </Col>
                     <Col md="8">
-                        <UserProfileAssociations user={user} />
-                        <UserProfileEducation user={user} />
-                        <UserProfileAnswers user={user} />
+                        <ProfileAssociations profile={profile} />
+                        <ProfileEducation profile={profile} />
+                        <ProfileAnswers profile={profile} />
                     </Col>
                 </Row>
             </Container>
