@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import { QuantitySelect } from "./QuantitySelect";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { AuthContext } from "../../../services/authService";
+import { UserContext } from "../../../services/userService";
 import { Pagination } from "../../utils/Pagination";
 
 export const AssociationMarketplaceHome = ({ association }) => {
@@ -52,11 +52,11 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
 const AssociationMarketplaceProduct = ({ product }) => {
     const newToast = useContext(ToastContext);
-    const auth = useContext(AuthContext);
+    const user = useContext(UserContext);
 
     let makeOrder = (quantity) => {
         api.transactions
-            .create(product, quantity, auth)
+            .create(product, quantity, user)
             .then((_) => {
                 newToast({
                     message: "La commande a bien été passée",

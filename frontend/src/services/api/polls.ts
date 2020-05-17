@@ -109,9 +109,9 @@ export const polls = {
         return apiService.patch(`/polls/${pollId}/`, data);
     },
     remove: ({ pollId }) => apiService.delete(`/polls/${pollId}/`),
-    vote: ({ auth, pollId, choiceId }) =>
+    vote: ({ user, pollId, choiceId }) =>
         apiService.post(`/polls/${pollId}/vote/`, {
-            user: auth.id,
+            user: user.id,
             choice: choiceId,
         }),
 };
