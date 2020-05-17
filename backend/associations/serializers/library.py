@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from associations.models import Association, Library, Loanable, Loan
-from associations.serializers.association import AssociationShortSerializer
+from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
 

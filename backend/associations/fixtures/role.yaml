@@ -8,6 +8,7 @@
     user: 17bocquet
     role: Grand Chef
     association: bde
+    start_date: "2019-05-01"
     administration_permission: true
     election_permission: true
     event_permission: true
@@ -19,26 +20,39 @@
 - model: associations.role
   pk: 2
   fields:
-    user: 19bde
-    role: CEO
+    user: 17bocquet
+    role: Petit Chef
     association: bde
-    administration_permission: true
-    election_permission: true
+    start_date: "2018-05-01"
+    end_date: "2018-09-01"
+    library_permission: true
 
 - model: associations.role
   pk: 3
   fields:
-    user: 19library-bde
-    role: Archiviste
+    user: 19bde
+    role: CEO
     association: bde
-    library_permission: true
+    start_date: "2020-05-01"
+    administration_permission: true
+    election_permission: true
 
 - model: associations.role
   pk: 4
   fields:
+    user: 19library-bde
+    role: Archiviste
+    association: bde
+    start_date: "2020-05-01"
+    library_permission: true
+
+- model: associations.role
+  pk: 5
+  fields:
     user: 19membre-bde
     role: Éditeur en chef
     association: bde
+    start_date: "2020-05-01"
     event_permission: true
     media_permission: true
     page_permission: true
@@ -53,6 +67,7 @@
     user: 17bocquet
     role: Propriétaire
     association: biero
+    start_date: "2018-01-01"
     administration_permission: true
     election_permission: true
     event_permission: true
@@ -67,6 +82,7 @@
     user: 19biero
     role: Manager
     association: biero
+    start_date: "2020-05-01"
     administration_permission: true
     election_permission: true
 
@@ -76,6 +92,7 @@
     user: 19market-biero
     role: Caissière
     association: biero
+    start_date: "2020-05-01"
     marketplace_permission: true
 
 - model: associations.role
@@ -84,6 +101,7 @@
     user: 19membre-biero
     role: Éditrice en chef
     association: biero
+    start_date: "2020-05-01"
     event_permission: true
     media_permission: true
     page_permission: true

@@ -4,19 +4,15 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { TablerColor } from "../../../utils/colors";
-import { Profile, ProfileAnswer } from "../../../models/profile";
+import {Profile, ProfileAnswer} from "../../../models/profile";
 
-const UserProfileAnswer = ({
-    profileAnswer,
-}: {
-    profileAnswer: ProfileAnswer;
-}) => (
-    <Row className="mb-3">
-        <Col className="font-weight-bold" md={5}>
-            {profileAnswer.question}
-        </Col>
-        <Col md={7}>{profileAnswer.text}</Col>
-    </Row>
+const NoContent = () => (
+    <p className="text-center">
+        Rien ici{" "}
+        <span role="img" aria-label="Visage qui pleure à chaudes larmes">
+            😭
+        </span>
+    </p>
 );
 
 export const ProfileAnswers = ({ profile }: { profile: Profile }) => (
@@ -32,15 +28,17 @@ export const ProfileAnswers = ({ profile }: { profile: Profile }) => (
                         .sort((answerA, answerB) =>
                             answerA.question.localeCompare(answerB.question)
                         )
-                        .map((answer) => (
-                            <UserProfileAnswer
-                                profileAnswer={answer}
-                                key={answer.id}
-                            />
+                        .map((answer: ProfileAnswer) => (
+                            <Row className="mb-3" key={answer.id}>
+                                <Col className="font-weight-bold" md={5}>
+                                    {answer.question}
+                                </Col>
+                                <Col md={7}>{answer.text}</Col>
+                            </Row>
                         ))}
                 </>
             ) : (
-                <p className="text-center">Rien ici 😭😭😭</p>
+                <NoContent />
             )}
         </Card.Body>
     </Card>

@@ -56,6 +56,21 @@
     current_academic_year: 3A
 
 - model: authentication.user
+  pk: 16parrain
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Parrain
+    last_name: Padre
+    email: 16parrain@mpt.fr
+    birthday: '1997-02-19'
+    is_active: true
+    is_staff: false
+    year_of_entry: 2016
+    student_type: IC
+    current_academic_year: 3A
+
+- model: authentication.user
   pk: 17bocquet
   fields:
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
@@ -76,6 +91,7 @@
     year_of_entry: 2017
     student_type: IC
     current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
     roommate: [17wan-fat]
 
 - model: authentication.user
@@ -97,6 +113,7 @@
     year_of_entry: 2017
     student_type: IC
     current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
     roommate: [17bocquet]
 
 - model: authentication.user

@@ -1,16 +1,18 @@
+export type RolePermission =
+    | "administration"
+    | "election"
+    | "event"
+    | "media"
+    | "library"
+    | "marketplace"
+    | "page";
+
 export interface Role {
     id: number;
-    association: string;
+    association: { id: string; name: string; logo?: string };
     role: string;
     rank: number;
-
-    isArchived: boolean;
-
-    administrationPermission: boolean;
-    electionPermission: boolean;
-    eventPermission: boolean;
-    mediaPermission: boolean;
-    libraryPermission: boolean;
-    marketplacePermission: boolean;
-    pagePermission: boolean;
+    startDate: Date;
+    endDate: Date;
+    permissions: RolePermission[];
 }

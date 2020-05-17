@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
-from associations.serializers.association import AssociationShortSerializer
+from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
 

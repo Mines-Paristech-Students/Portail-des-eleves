@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.functional import cached_property
@@ -53,7 +55,7 @@ class Association(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.name)
 
     class Meta:
         ordering = ["rank", "name"]
@@ -84,18 +86,19 @@ class Role(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=False, related_name="roles"
     )
+
     association = models.ForeignKey(
         Association, on_delete=models.CASCADE, null=False, related_name="roles"
     )
+
     role = models.CharField(max_length=200, null=False, blank=True, default="")
+
+    start_date = models.DateField(auto_now_add=True, null=False)
+
+    end_date = models.DateField(null=True, default=None)
+
     rank = models.IntegerField(
         default=0, help_text="Order of appearance in the members list (lowest first)."
-    )
-
-    is_archived = models.BooleanField(
-        default=False,
-        help_text="Archived roles are not operating anymore but they allow to remember "
-        "who was in the association.",
     )
 
     # Permissions:
@@ -106,6 +109,13 @@ class Role(models.Model):
     library_permission = models.BooleanField(default=False)
     marketplace_permission = models.BooleanField(default=False)
     page_permission = models.BooleanField(default=False)
+
+    @cached_property
+    def is_archived(self):
+        """"Archived roles are not operating anymore but they allow to remember "
+        who was in the association."""
+
+        return self.end_date is not None and self.end_date <= date.today()
 
     @cached_property
     def administration(self):
@@ -135,8 +145,16 @@ class Role(models.Model):
     def page(self):
         return self.page_permission and not self.is_archived
 
+    @cached_property
+    def permissions(self):
+        """Return the permissions in a string array."""
+        return [
+            permission_name
+            for permission_name in self.PERMISSION_NAMES
+            if getattr(self, permission_name)
+        ]
+
     class Meta:
-        unique_together = ("user", "association")
         ordering = ("rank", "user__last_name")
 
     def __str__(self):

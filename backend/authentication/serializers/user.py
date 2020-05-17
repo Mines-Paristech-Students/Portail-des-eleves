@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from associations.serializers import RoleSerializer
 from authentication.models import User
 from authentication.serializers.questions_short import ProfileAnswerShortSerializer
 
@@ -16,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     minesparent = UserShortSerializer(many=True, read_only=True)
     fillots = UserShortSerializer(many=True, read_only=True)
     profile_answers = ProfileAnswerShortSerializer(many=True, read_only=True)
+    roles = RoleSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -32,6 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "is_staff",
             "profile_answers",
+            "roles",
         )
         fields = read_only_fields + (
             "nickname",

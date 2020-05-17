@@ -1,3 +1,5 @@
+import {Role} from "./associations/role";
+
 export interface ProfileAnswer {
     id: number;
     text: string;
@@ -26,4 +28,5 @@ export interface Profile {
     minesparent: { id: string; firstName: string; lastName: string }[];
     fillots: { id: string; firstName: string; lastName: string }[];
     profileAnswers: ProfileAnswer[];
+    roles: Role[];
 }
