@@ -42,4 +42,5 @@ jobs:
         ../cli/create_and_populate_database.bash
     - name: Run Tests
       run: |
-        python backend/manage.py test
+        cd backend
+        python manage.py test
