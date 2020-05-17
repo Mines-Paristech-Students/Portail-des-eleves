@@ -27,11 +27,16 @@ export const UserProfileAnswers = ({ user }: { user: User }) => (
             <Card.Title>Questions et réponses</Card.Title>
         </Card.Header>
         <Card.Body className="px-7">
-            {user.profileAnswers
+            {
+                user.profileAnswers.length > 0 ?
+                    <>{user.profileAnswers
                 .sort((answerA, answerB) => answerA.question.localeCompare(answerB.question) )
                 .map((answer) => (
-                    <UserProfileAnswer profileAnswer={answer} />
-                ))}
+                    <UserProfileAnswer profileAnswer={answer} key={answer.id}/>
+                ))}</>
+                    : <p className="text-center">Rien ici 😭😭😭</p>
+            }
+
         </Card.Body>
     </Card>
 );

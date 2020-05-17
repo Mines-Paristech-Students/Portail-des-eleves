@@ -25,7 +25,6 @@ export const UserProfile = ({ match }: { match: any }) => {
     } else if (status === "error") {
         return <Error detail={error} />;
     } else if (status === "success" && user) {
-        console.log(user);
         return (
             <Container className="mt-5">
                 <Row>
