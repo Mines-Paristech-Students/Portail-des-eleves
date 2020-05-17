@@ -70,6 +70,7 @@
     nickname: the roc
     address: Batcave
     city_of_origin: Gotham
+    option: Géostats
     room: '1234'
     phone: "+33456789012"
     year_of_entry: 2017
@@ -90,6 +91,7 @@
     is_staff: true
     nickname: Le Rocher
     city_of_origin: Le Tampon
+    option: M&E
     room: '802'
     phone: ''
     year_of_entry: 2017

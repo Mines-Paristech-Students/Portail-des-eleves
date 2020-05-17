@@ -100,6 +100,23 @@ export const ProfileInfo = ({
                                 {profile.address}
                             </ListGroup.Item>
                         )}
+                        {profile.option && (
+                            <ListGroup.Item>
+                                <OverlayTrigger
+                                    placement={"bottom"}
+                                    overlay={
+                                        <Tooltip id={`tooltip-address-icon`}>
+                                            Option
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span className="icon mr-3">
+                                        <i className="fe fe-activity"></i>
+                                    </span>
+                                </OverlayTrigger>
+                                {profile.option}
+                            </ListGroup.Item>
+                        )}
                     </ListGroup>
                 </Col>
             </Row>
