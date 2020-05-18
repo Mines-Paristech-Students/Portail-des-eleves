@@ -50,8 +50,8 @@ function Navbar() {
         }
 
         const isActive =
-            url == "/"
-                ? location.pathname == "/"
+            url === "/"
+                ? location.pathname === "/"
                 : location.pathname.startsWith(url);
 
         return (

@@ -50,7 +50,7 @@ export const PollsTableFilter = ({
             rejected: rejected,
             reviewing: reviewing,
         });
-    }, [accepted, rejected, reviewing]);
+    }, [accepted, rejected, reviewing, setStateFilter]);
 
     return (
         <Form.Group {...formGroupProps}>
