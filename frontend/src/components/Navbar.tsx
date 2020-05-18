@@ -10,7 +10,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { authService } from "../App";
 import { UserContext } from "../services/authService";
-import { formatShortYear } from "../utils/format";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -22,6 +21,7 @@ import { formatShortYear } from "../utils/format";
  */
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
+    { icon: "user", url: "/trombi", label: "Trombi" },
     { icon: "zap", url: "/associations", label: "Associations" },
     { icon: "check-square", url: "/sondages", label: "Sondages" },
 ];
