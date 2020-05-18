@@ -37,7 +37,7 @@ export const UserAvatar = ({
 }: UserAvatarProps) => {
     const avatar = (
         <Avatar
-            url={`profile/${userId}`}
+            url={`/profile/${userId}`}
             size={size}
             backgroundColor={backgroundColor}
             className={className}

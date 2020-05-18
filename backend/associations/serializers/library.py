@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from associations.models import Association, Library, Loanable, Loan
-from associations.serializers.association import AssociationShortSerializer
+from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
 
@@ -189,7 +189,7 @@ class LibraryWriteSerializer(serializers.ModelSerializer):
 
         # A new Library is linked to an existing association.
         association_data = validated_data.pop("association")
-        association = Association.objects.get(pk=association_data)
+        association = Association.objects.get(pk=association_data.id)
 
         # A new Library may come with new loanables.
         loanables_data = validated_data.pop("loanables")

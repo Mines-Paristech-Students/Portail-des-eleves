@@ -18,4 +18,6 @@ export const routes = [
         component: AssociationMain,
         exact: false,
     },
-].concat(pollsRoutes).concat(usersRoutes);
+]
+    .concat(pollsRoutes)
+    .concat(usersRoutes);

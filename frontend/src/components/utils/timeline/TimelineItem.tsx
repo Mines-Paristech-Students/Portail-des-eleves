@@ -1,13 +1,6 @@
 import React from "react";
 import { TablerColor } from "../../../utils/colors";
 
-export type TimelineItemProps = {
-    badgeColor?: TablerColor;
-    content?: any;
-    startDate?: Date;
-    endDate?: Date;
-};
-
 /**
  * A Timeline item, like the ones at https://preview.tabler.io/maps.html.
  *
@@ -21,7 +14,12 @@ export const TimelineItem = ({
     content,
     startDate,
     endDate,
-}: TimelineItemProps) => (
+}: {
+    badgeColor?: TablerColor;
+    content?: any;
+    startDate?: Date;
+    endDate?: Date;
+}) => (
     <li className="timeline-item">
         <div className={`timeline-badge bg-${badgeColor}`}></div>
         {content && content}

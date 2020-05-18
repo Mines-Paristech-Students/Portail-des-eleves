@@ -66,9 +66,9 @@
   fields:
     association: public_association
     name: public_association_election
-    registered_voters: ['17simple']
-    starts_at: '2019-06-01T20:00:00+00:00'
-    ends_at: '2019-06-02T02:00:00+00:00'
+    registered_voters: ["17simple"]
+    starts_at: "2019-06-01T20:00:00+00:00"
+    ends_at: "2019-06-02T02:00:00+00:00"
     max_choices_per_ballot: 1
 
 - model: associations.election
@@ -76,9 +76,9 @@
   fields:
     association: hidden_association
     name: hidden_association_election
-    registered_voters: ['17simple']
-    starts_at: '2019-06-01T20:00:00+00:00'
-    ends_at: '2019-06-02T02:00:00+00:00'
+    registered_voters: ["17simple"]
+    starts_at: "2019-06-01T20:00:00+00:00"
+    ends_at: "2019-06-02T02:00:00+00:00"
     max_choices_per_ballot: 1
 
 ##########
@@ -92,8 +92,8 @@
     name: public_association
     description: should not be hidden
     participants: [17simple]
-    starts_at: '2019-06-01T20:00:00+00:00'
-    ends_at: '2019-06-02T02:00:00+00:00'
+    starts_at: "2019-06-01T20:00:00+00:00"
+    ends_at: "2019-06-02T02:00:00+00:00"
     place: Paris
 
 - model: associations.event
@@ -103,8 +103,8 @@
     name: hidden_association
     description: should be hidden
     participants: [17simple]
-    starts_at: '2019-06-01T20:00:00+00:00'
-    ends_at: '2019-06-02T02:00:00+00:00'
+    starts_at: "2019-06-01T20:00:00+00:00"
+    ends_at: "2019-06-02T02:00:00+00:00"
     place: Paris
 
 #########
@@ -116,7 +116,7 @@
   fields:
     association: public_association
     name: public_association_public_media
-    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_on: "2019-06-01T20:00:00+00:00"
     uploaded_by_id: "17admin"
 
 - model: associations.media
@@ -124,7 +124,7 @@
   fields:
     association: hidden_association
     name: hidden_association-public_media
-    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_on: "2019-06-01T20:00:00+00:00"
     uploaded_by_id: "17admin"
 
 - model: associations.media
@@ -132,7 +132,7 @@
   fields:
     association: public_association
     name: public_association-hidden_media
-    uploaded_on: '2019-06-01T20:00:00+00:00'
+    uploaded_on: "2019-06-01T20:00:00+00:00"
     uploaded_by_id: "17admin"
 
 ###########
@@ -144,7 +144,7 @@
   fields:
     user: 17simple
     value: 500
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     marketplace: public_association
     status: FUNDED
 
@@ -153,7 +153,7 @@
   fields:
     user: 17simple
     value: 500
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     marketplace: hidden_association
     status: FUNDED
 
@@ -166,9 +166,9 @@
   fields:
     loanable: 1
     user: 17simple
-    loan_date: '2019-01-01T00:00:00+00:00'
-    expected_return_date: '2019-01-07T00:00:00+00:00'
-    real_return_date: '2019-01-02T00:00:00+00:00'
+    loan_date: "2019-01-01T00:00:00+00:00"
+    expected_return_date: "2019-01-07T00:00:00+00:00"
+    real_return_date: "2019-01-02T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -176,9 +176,9 @@
   fields:
     loanable: 2
     user: 17simple
-    loan_date: '2019-01-03T00:00:00+00:00'
-    expected_return_date: '2019-01-09T00:00:00+00:00'
-    real_return_date: '2019-01-04T00:00:00+00:00'
+    loan_date: "2019-01-03T00:00:00+00:00"
+    expected_return_date: "2019-01-09T00:00:00+00:00"
+    real_return_date: "2019-01-04T00:00:00+00:00"
     status: RETURNED
 
 ############
@@ -219,8 +219,8 @@
     title: public_association-public_page
     text: this page should be visible
     association: public_association
-    creation_date: '2019-06-01T20:00:00+00:00'
-    last_update_date: '2019-06-01T20:00:00+00:00'
+    creation_date: "2019-06-01T20:00:00+00:00"
+    last_update_date: "2019-06-01T20:00:00+00:00"
 
 - model: associations.page
   pk: 2
@@ -228,8 +228,8 @@
     title: hidden_association-public_page
     text: this page should not be visible
     association: hidden_association
-    creation_date: '2019-06-01T20:00:00+00:00'
-    last_update_date: '2019-06-01T20:00:00+00:00'
+    creation_date: "2019-06-01T20:00:00+00:00"
+    last_update_date: "2019-06-01T20:00:00+00:00"
 
 - model: associations.page
   pk: 3
@@ -237,8 +237,8 @@
     title: public_association-hidden_page
     text: this page should not be visible
     association: public_association
-    creation_date: '2019-06-01T20:00:00+00:00'
-    last_update_date: '2019-06-01T20:00:00+00:00'
+    creation_date: "2019-06-01T20:00:00+00:00"
+    last_update_date: "2019-06-01T20:00:00+00:00"
 
 ###########
 # Product #
@@ -268,7 +268,6 @@
     price: 3.5
     marketplace: public_association
 
-
 ########
 # Role #
 ########
@@ -278,6 +277,7 @@
   fields:
     role: public_association-public_role
     association: public_association
+    start_date: "2017-01-01"
     user: 17admin
 
 - model: associations.role
@@ -285,6 +285,7 @@
   fields:
     role: hidden_association-public_role
     association: hidden_association
+    start_date: "2017-01-01"
     user: 17admin
 
 - model: associations.role
@@ -292,6 +293,7 @@
   fields:
     role: public_association-hidden_role
     association: public_association
+    start_date: "2017-01-01"
     user: 17bocquet
 
 ###############
@@ -305,7 +307,7 @@
     buyer: 17simple
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -315,5 +317,5 @@
     buyer: 17simple
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
