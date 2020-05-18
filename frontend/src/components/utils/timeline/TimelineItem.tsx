@@ -1,6 +1,5 @@
 import React from "react";
 import { TablerColor } from "../../../utils/colors";
-import { formatLongDateMonthYear } from "../../../utils/format";
 
 export type TimelineItemProps = {
     badgeColor?: TablerColor;
@@ -28,8 +27,7 @@ export const TimelineItem = ({
         {content && content}
         {startDate && (
             <div className="timeline-time">
-                {formatLongDateMonthYear(startDate)}
-                {endDate && ` — ${formatLongDateMonthYear(endDate)}`}
+
             </div>
         )}
     </li>
