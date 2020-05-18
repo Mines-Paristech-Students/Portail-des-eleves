@@ -34,7 +34,11 @@ export const Trombi = () => {
             <Row className="mb-3">
                 <Col xs={12}>
                     <Card>
-                        <Select options={options} isMulti placeholder="Filtrer par promotion…" />
+                        <Select
+                            options={options}
+                            isMulti
+                            placeholder="Filtrer par promotion…"
+                        />
                     </Card>
                 </Col>
             </Row>
@@ -43,6 +47,7 @@ export const Trombi = () => {
                 apiKey={["users.list"]}
                 apiMethod={api.users.list}
                 render={(users, paginationControl) => {
+                    console.log(users);
                     return (
                         <>
                             <Row>

@@ -5,6 +5,7 @@ from authentication.permissions import ProfilePermission
 from authentication.serializers.user import (
     ReadOnlyUserSerializer,
     UpdateOnlyUserSerializer,
+    UserShortSerializer,
 )
 
 
@@ -17,10 +18,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     search_fields = ("id", "first_name", "last_name")
     filter_fields = ("year_of_entry",)
-    pagination_class = None
 
     def get_serializer_class(self):
-        if self.action in ("partial_update", "update"):
+        if self.action in ("list",):
+            return UserShortSerializer
+        elif self.action in ("partial_update", "update"):
             return UpdateOnlyUserSerializer
 
         return ReadOnlyUserSerializer

@@ -1,5 +1,6 @@
 import React from "react";
 import { TablerColor } from "../../../utils/colors";
+import { formatLongDateMonthYear } from "../../../utils/format";
 
 /**
  * A Timeline item, like the ones at https://preview.tabler.io/maps.html.
@@ -25,7 +26,8 @@ export const TimelineItem = ({
         {content && content}
         {startDate && (
             <div className="timeline-time">
-
+                {formatLongDateMonthYear(startDate)}
+                {endDate && ` — ${formatLongDateMonthYear(endDate)}`}
             </div>
         )}
     </li>
