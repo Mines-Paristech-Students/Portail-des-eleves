@@ -1,6 +1,7 @@
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
+from django_filters import rest_framework as filters
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -56,6 +57,7 @@ class TagViewSet(
     permission_classes = (ManageTagPermission,)
     queryset = Tag.objects.all()
 
+    filter_backends = (filters.DjangoFilterBackend,)
     filterset_fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
         "namespace__scoped_to_model",
         "namespace__scoped_to_pk",

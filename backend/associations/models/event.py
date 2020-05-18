@@ -18,3 +18,6 @@ class Event(models.Model):
     ends_at = models.DateTimeField()
 
     place = models.TextField()
+
+    class Meta:
+        ordering = ["-id"]
