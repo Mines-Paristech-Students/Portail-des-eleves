@@ -2,10 +2,11 @@ import Card from "react-bootstrap/Card";
 import React from "react";
 import { Link } from "react-router-dom";
 import { CardStatus } from "../../utils/CardStatus";
+import { TablerColor } from "../../../utils/colors";
 
 export const PollNoPolls = () => (
     <Card className="mx-auto">
-        <CardStatus color="red" />
+        <CardStatus color={TablerColor.Red} />
 
         <Card.Header>
             <Card.Title as="h3">Pas de sondage !</Card.Title>

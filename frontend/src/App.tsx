@@ -25,7 +25,7 @@ const App: React.FC = () => {
     // Check the authentication then render the page
     let [checkedAuth, setCheckedAuth] = useState(false);
     useEffect(() => {
-        authService.checkAuth().then(() => {
+        authService.checkUser().then(() => {
             setCheckedAuth(true);
         });
     });

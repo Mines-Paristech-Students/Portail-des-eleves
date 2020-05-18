@@ -8,7 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 /**
  * Display a (somewhat) centered `Spinner`.
  * @param className given to the `Container` element.
- * @param children the react children
+ * @param children the React children.
  */
 export const Loading = ({
     className = "",

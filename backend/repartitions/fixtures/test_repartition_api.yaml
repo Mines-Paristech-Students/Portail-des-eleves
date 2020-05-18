@@ -36,11 +36,11 @@
     category: 1
 - model: repartitions.usercampaign
   fields:
-    user: 15menou
+    user: 16leroy
     campaign: 1
     category: 1
 - model: repartitions.usercampaign
   fields:
-    user: 18chlieh
+    user: 18aouir
     campaign: 1
     category: 1

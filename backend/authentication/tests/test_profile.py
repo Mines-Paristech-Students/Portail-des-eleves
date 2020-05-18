@@ -1,5 +1,5 @@
 from authentication.models import User
-from authentication.serializers import UserSerializer
+from authentication.serializers import ReadOnlyUserSerializer
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from rest_framework.renderers import JSONRenderer
@@ -9,7 +9,9 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml"]
 
     def assertContentIsEqualToUser(self, res, user):
-        self.assertEqual(res.content, JSONRenderer().render(UserSerializer(user).data))
+        self.assertEqual(
+            res.content, JSONRenderer().render(ReadOnlyUserSerializer(user).data)
+        )
 
     ############
     # RETRIEVE #
@@ -81,7 +83,6 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
         "address": "60 boulevard SM",
         "city_of_origin": "Paris",
         "option": "Mécatro",
-        "sports": "Pichage",
         "roommate": ["17bocquet"],
         "minesparent": ["17wan-fat"],
     }

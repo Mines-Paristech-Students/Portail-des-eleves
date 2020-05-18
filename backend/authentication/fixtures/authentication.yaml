@@ -14,6 +14,8 @@
     room: ''
     phone: "+33623149119"
     year_of_entry: 2014
+    student_type: IC
+    current_academic_year: GRADUATE
 
 - model: authentication.user
   pk: 15veaux
@@ -31,6 +33,8 @@
     room: REDRUM
     phone: "+33000000000"
     year_of_entry: 2015
+    student_type: IC
+    current_academic_year: GRADUATE
 
 - model: authentication.user
   pk: 16leroy
@@ -42,12 +46,29 @@
     email: 16leroy@mpt.fr
     birthday: '1997-10-14'
     is_active: true
-    is_staff: true
+    is_staff: false
     nickname: Ragicarpe
     city_of_origin: Troupommé-la-forêt
     room: 95 rue Guizot E
     phone: "+33658895122"
     year_of_entry: 2016
+    student_type: IC
+    current_academic_year: 3A
+
+- model: authentication.user
+  pk: 16parrain
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Parrain
+    last_name: Padre
+    email: 16parrain@mpt.fr
+    birthday: '1997-02-19'
+    is_active: true
+    is_staff: false
+    year_of_entry: 2016
+    student_type: IC
+    current_academic_year: 3A
 
 - model: authentication.user
   pk: 17bocquet
@@ -62,10 +83,16 @@
     is_staff: true
     is_superuser: true
     nickname: the roc
+    address: Batcave
     city_of_origin: Gotham
+    option: Géostats
     room: '1234'
     phone: "+33456789012"
     year_of_entry: 2017
+    student_type: IC
+    current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
+    roommate: [17wan-fat]
 
 - model: authentication.user
   pk: 17wan-fat
@@ -80,9 +107,14 @@
     is_staff: true
     nickname: Le Rocher
     city_of_origin: Le Tampon
+    option: M&E
     room: '802'
     phone: ''
     year_of_entry: 2017
+    student_type: IC
+    current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
+    roommate: [17bocquet]
 
 - model: authentication.user
   pk: 18aouir
@@ -100,6 +132,8 @@
     room: ''
     phone: ''
     year_of_entry: 2018
+    student_type: IC
+    current_academic_year: 2A
 
 - model: authentication.user
   pk: 19simple
@@ -117,6 +151,8 @@
     room: PAM
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
 
 - model: authentication.user
   pk: 19bde
@@ -134,6 +170,9 @@
     room: 304
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19membre-bde, 19library-bde]
 
 - model: authentication.user
   pk: 19library-bde
@@ -151,6 +190,9 @@
     room: 302
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19bde, 19membre-bde]
 
 - model: authentication.user
   pk: 19membre-bde
@@ -168,6 +210,9 @@
     room: Piaule à crêpes
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19bde, 19library-bde]
 
 - model: authentication.user
   pk: 19biero
@@ -185,6 +230,10 @@
     room: FAO
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    minesparent: [17bocquet, 17wan-fat]
+    roommate: [19membre-biero, 19market-biero]
 
 - model: authentication.user
   pk: 19market-biero
@@ -202,6 +251,9 @@
     room: FAO
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19biero, 19membre-biero]
 
 - model: authentication.user
   pk: 19membre-biero
@@ -219,3 +271,7 @@
     room: Octo
     phone: "+330011223383"
     year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    minesparent: [17bocquet]
+    roommate: [19biero, 19market-biero]

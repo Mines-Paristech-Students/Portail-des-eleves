@@ -138,8 +138,36 @@
     question: 3
 
 - model: authentication.ProfileAnswer
-  pk: 17
+  pk: 18
   fields:
     text: "Piche"
     user: 19simple
+    question: 4
+
+- model: authentication.ProfileAnswer
+  pk: 19
+  fields:
+    text: "Donec in est erat. Nunc tincidunt et ex a cursus. Morbi malesuada metus condimentum porta dictum. Nulla sed convallis elit. Nunc eu nisl orci."
+    user: 17bocquet
+    question: 1
+
+- model: authentication.ProfileAnswer
+  pk: 20
+  fields:
+    text: "Praesent a vulputate sem."
+    user: 17bocquet
+    question: 2
+
+- model: authentication.ProfileAnswer
+  pk: 21
+  fields:
+    text: "Integer suscipit vitae lacus eget porta."
+    user: 17bocquet
+    question: 3
+
+- model: authentication.ProfileAnswer
+  pk: 22
+  fields:
+    text: "Maecenas tempor egestas quam vel mollis. Nulla ac magna mi. Duis augue mauris, semper in ligula et, volutpat porttitor justo. Donec pharetra consequat vestibulum."
+    user: 17bocquet
     question: 4

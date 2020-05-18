@@ -10,7 +10,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { authService } from "../App";
 import { UserContext } from "../services/authService";
-import { formatShortYear } from "../utils/format";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -105,7 +104,7 @@ function Navbar() {
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item>
+                            <NavDropdown.Item href={`/profils/${user.id}`}>
                                 <i className="dropdown-icon fe fe-user" />{" "}
                                 Profil
                             </NavDropdown.Item>

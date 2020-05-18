@@ -16,9 +16,9 @@ from associations.views import (
     RoleViewSet,
     ElectionViewSet,
     CreateBallotView,
+    set_association_logo,
 )
 from associations.views.media import MediaViewSet
-from associations.views import set_association_logo
 
 
 urlpatterns = []
