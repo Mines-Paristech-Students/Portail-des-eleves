@@ -9,12 +9,12 @@ export const routes: Route[] = [
         exact: true,
     },
     {
-        path: `/profils/:userId`,
+        path: `/profils/modifier`,
         component: UserProfile,
         exact: true,
     },
     {
-        path: `/profils/modifier`,
+        path: `/profils/:userId`,
         component: UserProfile,
         exact: true,
     },

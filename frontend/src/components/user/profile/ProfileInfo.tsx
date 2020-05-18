@@ -15,7 +15,7 @@ const ACADEMIC_YEAR = new Map([
     ["2A", "2A"],
     ["GAP YEAR", "Césure"],
     ["3A", "3A"],
-    ["GRADUATE", "Alumni"]
+    ["GRADUATE", "Alumni"],
 ]);
 
 export const ProfileInfo = ({
@@ -38,7 +38,11 @@ export const ProfileInfo = ({
                     <div className="media-body">
                         <h3 className="m-0">{`${profile.firstName} ${profile.lastName}`}</h3>
                         <p className="font-italic mb-2">{profile.nickname}</p>
-                        <p className="text-muted">{`P${profile.promotion} ${profile.studentType} (${ACADEMIC_YEAR.get(profile.currentAcademicYear)})`}</p>
+                        <p className="text-muted">{`${profile.promotion} ${
+                            profile.studentType
+                        } (${ACADEMIC_YEAR.get(
+                            profile.currentAcademicYear
+                        )})`}</p>
                     </div>
                 </div>
             </Row>
@@ -55,7 +59,9 @@ export const ProfileInfo = ({
                             <span className="icon mr-3">
                                 <i className="fe fe-mail"></i>
                             </span>
-                            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+                            <a href={`mailto:${profile.email}`}>
+                                {profile.email}
+                            </a>
                         </ListGroup.Item>
                         {profile.phone && (
                             <ListGroup.Item>
@@ -123,7 +129,7 @@ export const ProfileInfo = ({
         </Card.Body>
         {showEditButton && (
             <Card.Footer>
-                <Button href="profil/modifier" variant="outline-primary">
+                <Button href="/profils/modifier" variant="outline-primary">
                     Modifier mon profil
                 </Button>
             </Card.Footer>

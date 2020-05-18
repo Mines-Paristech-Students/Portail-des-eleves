@@ -10,6 +10,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { authService } from "../App";
 import { UserContext } from "../services/authService";
+import { UserAvatar } from "./utils/avatar/UserAvatar";
+import { Size } from "../utils/size";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -91,23 +93,28 @@ function Navbar() {
                                         className="align-items-center"
                                     >
                                         <Col>
-                                            <span className="avatar" />
+                                            <UserAvatar userId={user.id} link={false} size={Size.Medium}/>
                                         </Col>
                                         <Col className="ml-2 float-right">
                                             <span className="text-default">
                                                 {user.firstName} {user.lastName}
                                             </span>
                                             <small className="text-muted d-block mt-0 text-left">
-                                                {`P${user.promotion}`}
+                                                {user.promotion}
                                             </small>
                                         </Col>
                                     </Row>
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item href={`/profils/${user.id}`}>
-                                <i className="dropdown-icon fe fe-user" />{" "}
-                                Profil
+                            <NavDropdown.Item>
+                                <Link
+                                    to={`/profils/${user.id}`}
+                                    className="text-reset text-decoration-none"
+                                >
+                                    <i className="dropdown-icon fe fe-user" />{" "}
+                                    Profil
+                                </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item>
                                 <i className="dropdown-icon fe fe-settings" />{" "}
