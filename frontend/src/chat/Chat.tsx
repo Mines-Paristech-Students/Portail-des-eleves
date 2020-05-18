@@ -62,7 +62,7 @@ export const Chat = () => {
                 limit: 20,
             });
         })();
-    }, []);
+    }, [date]);
 
     useEffect(() => {
         if (socket) {
@@ -87,7 +87,7 @@ export const Chat = () => {
                 scrollToLastMessage();
             });
         }
-    }, [socket, messages]);
+    }, [socket, messages, scrollToLastMessage]);
 
     let handleKeyPress = (event) => {
         if (
