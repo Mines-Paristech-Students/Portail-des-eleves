@@ -1,3 +1,12 @@
+from functools import reduce
+
+from django.db.models import Q
+from django_filters.rest_framework import (
+    FilterSet,
+    MultipleChoiceFilter,
+    DjangoFilterBackend,
+    CharFilter,
+)
 from rest_framework import filters, viewsets
 
 from authentication.models import User
@@ -7,18 +16,51 @@ from authentication.serializers.user import (
     UpdateOnlyUserSerializer,
     UserShortSerializer,
 )
+from tags.filters import HasHiddenTagFilter
+
+
+class ProfileFilter(FilterSet):
+    """
+    This class is needed because of the behaviour of the `promotion` field: the commas (`,`) act as OR.
+    """
+
+    promotion = CharFilter(method="filter_promotion")
+
+    class Meta:
+        model = User
+        fields = ("promotion",)
+
+    def filter_promotion(self, queryset, _, value):
+        condition = reduce(
+            lambda temp_condition, promotion: temp_condition | Q(promotion=promotion),
+            value.split(","),
+            Q(),
+        )
+
+        return queryset.filter(condition)
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    """API endpoint that allows an user profile to be viewed or edited."""
+    """
+        API endpoint that allows an user profile to be viewed or edited.
+
+        Parameters:
+            - search: search in `id`, `first_name`, `last_name` fields.
+            - promotion: does NOT follow the standard behaviour. Filter on the `promotion` field. Several promotions may be given, they must be separated by commas.
+    """
 
     queryset = User.objects.all()
     serializer_class = ReadOnlyUserSerializer
     permission_classes = (ProfilePermission,)
 
-    filter_backends = [filters.SearchFilter]  # SearchFilter is not enabled by default.
-    search_fields = ("id", "first_name", "last_name")
-    filter_fields = ("promotion",)
+    filterset_class = ProfileFilter
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
+    search_fields = ("id", "first_name", "last_name", "option")
 
     def get_serializer_class(self):
         if self.action in ("list",):
