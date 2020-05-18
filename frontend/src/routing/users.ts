@@ -1,6 +1,7 @@
 import { Route } from "./global";
 import { UserProfile } from "../components/user/profile/UserProfile";
 import { Trombi } from "../components/user/trombi/Trombi";
+import { EditUserProfile } from "../components/user/edit_profile/EditUserProfile";
 
 export const routes: Route[] = [
     {
@@ -10,7 +11,7 @@ export const routes: Route[] = [
     },
     {
         path: `/profils/modifier`,
-        component: UserProfile,
+        component: EditUserProfile,
         exact: true,
     },
     {

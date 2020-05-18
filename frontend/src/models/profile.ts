@@ -1,8 +1,14 @@
-import {Role} from "./associations/role";
+import { Role } from "./associations/role";
+
+export interface ProfileQuestion {
+    id: number;
+    text: string;
+}
 
 export interface ProfileAnswer {
     id: number;
     text: string;
+    questionId: number;
     question: string;
 }
 
