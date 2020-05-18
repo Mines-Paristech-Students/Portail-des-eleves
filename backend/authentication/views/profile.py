@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import filters, viewsets
 
 from authentication.models import User
 from authentication.permissions import ProfilePermission
@@ -16,8 +16,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ReadOnlyUserSerializer
     permission_classes = (ProfilePermission,)
 
+    filter_backends = [filters.SearchFilter]  # SearchFilter is not enabled by default.
     search_fields = ("id", "first_name", "last_name")
-    filter_fields = ("year_of_entry",)
+    filter_fields = ("promotion",)
 
     def get_serializer_class(self):
         if self.action in ("list",):

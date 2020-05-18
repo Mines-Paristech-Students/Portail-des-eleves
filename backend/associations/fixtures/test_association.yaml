@@ -20,6 +20,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -39,6 +40,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -68,6 +70,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -88,6 +91,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
