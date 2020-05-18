@@ -12,7 +12,7 @@ import Select, { OptionsType, ValueType } from "react-select";
 import InputGroup from "react-bootstrap/InputGroup";
 
 export const Trombi = () => {
-    const { status, data: promotions, error } = useBetterQuery<{
+    const { data: promotions } = useBetterQuery<{
         promotions: string[];
     }>(["listPromotions"], api.users.listPromotions, {
         refetchOnWindowFocus: false,
@@ -33,7 +33,19 @@ export const Trombi = () => {
         }
     }, [promotions]);
 
+    // The search key sent to `api.users.list`. It is debounced thanks to the `searchInputValue` hooks.
     const [searchKey, setSearchKey] = useState<string>("");
+    const [searchInputValue, setSearchInputValue] = useState<string>("");
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearchKey(searchInputValue);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [searchInputValue]);
+
+    // The promotions filter sent to `api.users.list`.
     const [promotionsFilter, setPromotionsFilter] = useState<
         ValueType<{ value: string; label: string }>
     >([]);
@@ -49,7 +61,7 @@ export const Trombi = () => {
                             <FormControl
                                 placeholder="Rechercher…"
                                 onChange={(event) =>
-                                    setSearchKey(event.target.value)
+                                    setSearchInputValue(event.target.value)
                                 }
                             />
                             <span className="input-icon-addon">
@@ -77,6 +89,7 @@ export const Trombi = () => {
                     { searchKey: searchKey, promotions: promotionsFilter },
                 ]}
                 apiMethod={api.users.list}
+                config={{ refetchOnWindowFocus: false }}
                 render={(users, paginationControl) => {
                     return (
                         <>

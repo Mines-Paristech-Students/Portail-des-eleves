@@ -93,7 +93,11 @@ function Navbar() {
                                         className="align-items-center"
                                     >
                                         <Col>
-                                            <UserAvatar userId={user.id} link={false} size={Size.Medium}/>
+                                            <UserAvatar
+                                                userId={user.id}
+                                                link={false}
+                                                size={Size.Medium}
+                                            />
                                         </Col>
                                         <Col className="ml-2 float-right">
                                             <span className="text-default">
@@ -107,14 +111,20 @@ function Navbar() {
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item>
-                                <Link
-                                    to={`/profils/${user.id}`}
-                                    className="text-reset text-decoration-none"
-                                >
-                                    <i className="dropdown-icon fe fe-user" />{" "}
-                                    Profil
-                                </Link>
+                            {/*
+                            The `as` prop is used to render a `Link` element instead of an `a` element, which reloads the full page.
+                            For some reason, the anonymous function is passed _two_ parameters, and only the first one is the props.
+                            */}
+                            <NavDropdown.Item
+                                as={(...props) => (
+                                    <Link
+                                        to={`/profils/${user.id}`}
+                                        {...props[0]}
+                                    />
+                                )}
+                            >
+                                <i className="dropdown-icon fe fe-user" />{" "}
+                                Profil
                             </NavDropdown.Item>
                             <NavDropdown.Item>
                                 <i className="dropdown-icon fe fe-settings" />{" "}
