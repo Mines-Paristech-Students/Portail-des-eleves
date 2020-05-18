@@ -24,7 +24,7 @@ export const TimelineItem = ({
 }: TimelineItemProps) => (
     <li className="timeline-item">
         <div className={`timeline-badge bg-${badgeColor}`}></div>
-        {content && content}
+        {content}
         {startDate && (
             <div className="timeline-time">
 
