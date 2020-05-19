@@ -1,4 +1,8 @@
-from associations.views.association import *
+from associations.views.association import (
+    RoleViewSet,
+    AssociationViewSet,
+    set_association_logo,
+)
 from associations.views.election import ElectionViewSet, CreateBallotView
 from associations.views.event import EventViewSet
 from associations.views.library import LibraryViewSet, LoanableViewSet, LoansViewSet

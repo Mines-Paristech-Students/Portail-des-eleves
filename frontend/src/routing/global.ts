@@ -2,6 +2,7 @@ import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
 import { AssociationMain } from "../components/associations/Main";
 import { routes as pollsRoutes } from "./polls";
+import { routes as usersRoutes } from "./users";
 
 export type Route = {
     path: string;
@@ -17,4 +18,6 @@ export const routes = [
         component: AssociationMain,
         exact: false,
     },
-].concat(pollsRoutes);
+]
+    .concat(pollsRoutes)
+    .concat(usersRoutes);

@@ -484,12 +484,3 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/tags/namespaces/1/")
         self.assertEqual(response.status_code, 403)
-
-    def test_hiding_tags_in_namespaces(self):
-        self.login("17simple")
-        response = self.get("/tags/namespaces/")
-        self.assertEqual(len(response.data["results"][0]["tags"]), 1)
-
-        self.switch_17simple_to_first_year()
-        response = self.get("/tags/namespaces/")
-        self.assertEqual(len(response.data["results"][0]["tags"]), 0)

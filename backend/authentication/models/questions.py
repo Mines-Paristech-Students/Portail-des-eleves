@@ -10,6 +10,10 @@ class ProfileQuestion(models.Model):
     class Meta:
         ordering = ["-id"]
 
+    def __str__(self):
+        return self.text
+
+
 
 class ProfileAnswer(models.Model):
     id = models.AutoField(primary_key=True)

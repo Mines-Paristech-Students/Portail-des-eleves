@@ -11,7 +11,6 @@ from associations.serializers import (
     AssociationShortSerializer,
     AssociationSerializer,
     RoleSerializer,
-    RoleShortSerializer,
     WriteRoleSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
@@ -19,6 +18,7 @@ from associations.serializers.association import AssociationLogoSerializer
 
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
+    serializer_class = RoleSerializer
     permission_classes = (RolePermission,)
 
     filter_fields = ("user", "association")
@@ -48,8 +48,6 @@ class RoleViewSet(viewsets.ModelViewSet):
         elif self.action in ("update", "partial_update"):
             association = self.get_object().association
             return self.get_write_role_serializer(association, *args, **kwargs)
-        elif self.action in ("list",):
-            return RoleShortSerializer(*args, **kwargs)
         else:
             return RoleSerializer(*args, **kwargs)
 
