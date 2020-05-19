@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     BrowserRouter as Router,
     Route,
     Switch,
     useParams,
+    useLocation,
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";
@@ -15,6 +16,8 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { PageNotFoundError } from "../utils/ErrorPage";
 import { Association } from "../../models/associations/association";
+import { OptionSidebar } from "../utils/sidebar/OptionSidebar";
+import { SidebarOption } from "../utils/sidebar/interfaces";
 
 export const AssociationMain = ({ match }) => {
     let { associationId } = useParams<{ associationId: string }>();
@@ -22,6 +25,10 @@ export const AssociationMain = ({ match }) => {
     const { data: association, error, status } = useBetterQuery<Association>(
         ["association.get", associationId],
         api.associations.get
+    );
+
+    const [sidebarOptions, setSidebarOptions] = useState<SidebarOption | null>(
+        null
     );
 
     // Generate the routes
@@ -32,7 +39,10 @@ export const AssociationMain = ({ match }) => {
                 path={match.url + path} // Path is the relative path, match.url makes it absolute
                 component={component}
                 key={path}
-                routeProps={props}
+                routeProps={{
+                    ...props,
+                    setSidebar: setSidebarOptions,
+                }}
             />
         )
     );
@@ -46,6 +56,7 @@ export const AssociationMain = ({ match }) => {
                 <Row>
                     <Col md={3}>
                         <AssociationSidebar association={association} />
+                        <OptionSidebar options={sidebarOptions} />
                     </Col>
                     <Col md={9}>
                         <Router>
