@@ -48,6 +48,7 @@ export const useTagSearch = (tagsQueryParams, setSidebar) => {
                 setSidebar({
                     notifyChange: onSearchChange,
                     sections: sections,
+                    searchable: true
                 });
             })
             .catch((err) => {

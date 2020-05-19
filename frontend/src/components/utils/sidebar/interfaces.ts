@@ -1,5 +1,6 @@
 export interface SidebarOption {
     notifyChange: (object) => {};
+    searchable?: boolean,
     sections: {
         title: string;
         id: string;
@@ -9,7 +10,7 @@ export interface SidebarOption {
     }[];
 }
 
-interface SidebarOptionField {
+export interface SidebarOptionField {
     type: string;
     id: string;
     label: string;
