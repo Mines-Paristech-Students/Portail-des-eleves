@@ -42,18 +42,33 @@ const currentAcademicYearValues: string[] = [
  * Return the form initial values based on `profile` (for the provided answers) and the `questions` (for the answers not yet provided).
  */
 const getInitialValues = (profile: Profile, questions: ProfileQuestion[]) => {
-    let initialValues = {
+    let initialValues: any = {
         nickname: profile.nickname,
         phone: profile.phone,
         room: profile.room,
         cityOfOrigin: profile.cityOfOrigin,
         option: profile.option,
         currentAcademicYear: profile.currentAcademicYear,
-        cos: [],
+        minesparent: [],
+        roommate: [],
     };
 
     profile.profileAnswers.forEach(({ questionId, text }) => {
         initialValues[`question-${questionId}`] = text;
+    });
+
+    profile.roommate.forEach(({ id, firstName, lastName }) => {
+        initialValues.roommate.push({
+            value: id,
+            label: `${firstName} ${lastName}`,
+        });
+    });
+
+    profile.minesparent.forEach(({ id, firstName, lastName }) => {
+        initialValues.minesparent.push({
+            value: id,
+            label: `${firstName} ${lastName}`,
+        });
     });
 
     // For every question not found in `initialAnswers`, add an empty string.
@@ -64,6 +79,57 @@ const getInitialValues = (profile: Profile, questions: ProfileQuestion[]) => {
     });
 
     return initialValues;
+};
+
+/**
+ * Transform the Formik values into a data object consumable by the API.
+ */
+export const getData = (values: { [key: string]: any }) => {
+    let data: {
+        profileAnswers: {
+            question: number;
+            text: string;
+        }[];
+        roommate: string[];
+        minesparent: string[];
+    } = {
+        profileAnswers: [],
+        roommate: [],
+        minesparent: [],
+    };
+
+    // These keys are kept as-is.
+    const noChangeKeys = [
+        "nickname",
+        "phone",
+        "room",
+        "cityOfOrigin",
+        "option",
+        "currentAcademicYear",
+    ];
+
+    for (let key of Object.getOwnPropertyNames(values)) {
+        if (key === "roommate") {
+            for (let option of values[key]) {
+                data.roommate.push(option.value);
+            }
+        } else if (key === "minesparent") {
+            for (let option of values[key]) {
+                data.minesparent.push(option.value);
+            }
+        } else if (noChangeKeys.includes(key)) {
+            data[key] = values[key];
+        } else if (key.startsWith("question-")) {
+            if (values[key] !== "") {
+                data.profileAnswers.push({
+                    question: Number(key.split("-")[1]),
+                    text: values[key],
+                });
+            }
+        }
+    }
+
+    return data;
 };
 
 /**
@@ -94,25 +160,14 @@ export const EditUserProfile = () => {
     );
 
     // Mutation for updating the profile data.
-    const [update] = useMutation(
-        ({ userId, profile, data }: { userId; profile: Profile; data }) =>
-            // Two APIs are called: one for updating the global information (nickname, option, etc.), the other for updating the answers.
-            Promise.all([
-                api.profile.updateGlobal({ userId, data }),
-                api.profile.updateAnswers({
-                    userId,
-                    initialAnswers: profile.profileAnswers,
-                    data,
-                }),
-            ])
-    );
+    const [update] = useMutation(api.profile.updateGlobal);
 
-    const onSubmit = (profile) => (values, { setSubmitting }) => {
+    const onSubmit = (values, { setSubmitting }) => {
+        console.log(values);
         update(
             {
                 userId: user && user.id,
-                profile,
-                data: values,
+                data: getData(values),
             },
             {
                 onSuccess: () => {
@@ -166,7 +221,7 @@ export const EditUserProfile = () => {
                             ),
                     })}
                     onSubmit={(values, { setSubmitting }) => {
-                        onSubmit(profile)(values, { setSubmitting });
+                        onSubmit(values, { setSubmitting });
                         console.log(values);
                     }}
                 >
@@ -241,7 +296,7 @@ export const EditUserProfile = () => {
 
                                             <SelectUsers
                                                 className="mt-5"
-                                                name="cos"
+                                                name="roommate"
                                             />
                                         </ReactBootstrapForm.Group>
                                     </Col>

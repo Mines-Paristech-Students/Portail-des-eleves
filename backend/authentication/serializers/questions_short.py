@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from authentication.models import ProfileAnswer
+from authentication.models import ProfileAnswer, ProfileQuestion
 
 
 class ProfileAnswerShortSerializer(serializers.ModelSerializer):
@@ -14,3 +14,14 @@ class ProfileAnswerShortSerializer(serializers.ModelSerializer):
         model = ProfileAnswer
         read_only_fields = ("id", "question_id", "question", "text")
         fields = read_only_fields
+
+
+class ProfileAnswerShortUpdateSerializer(serializers.ModelSerializer):
+    question = serializers.PrimaryKeyRelatedField(
+        queryset=ProfileQuestion.objects.all()
+    )
+
+    class Meta:
+        model = ProfileAnswer
+        read_only_fields = ("id",)
+        fields = read_only_fields + ("question", "text")

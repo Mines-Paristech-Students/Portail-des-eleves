@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Col from "react-bootstrap/Col";
 import Select, { OptionsType, components } from "react-select";
-import Row from "react-bootstrap/Row";
 import {
     api,
     PaginatedResponse,
@@ -9,7 +7,6 @@ import {
 } from "../../../services/apiService";
 import { User } from "../../../models/user";
 import { useField } from "formik";
-import Container from "react-bootstrap/Container";
 import "./select-users.css";
 
 const Option = (props) => {
@@ -86,21 +83,21 @@ export const SelectUsers = ({
     }, [data]);
 
     return (
-                    <Select
-                        isMulti
-                        closeMenuOnSelect={false}
-                        value={value}
-                        options={usersOptions}
-                        components={{
-                            Option,
-                            MenuList,
-                            MultiValueLabel,
-                            MultiValue,
-                        }}
-                        onChange={(newValue) => {
-                            setValue(newValue);
-                        }}
-                        placeholder="Sélectionner quelqu’un…"
-                    />
+        <Select
+            isMulti
+            closeMenuOnSelect={false}
+            value={value}
+            options={usersOptions}
+            components={{
+                Option,
+                MenuList,
+                MultiValueLabel,
+                MultiValue,
+            }}
+            onChange={(newValue) => {
+                setValue(newValue);
+            }}
+            placeholder="Sélectionner quelqu’un…"
+        />
     );
 };
