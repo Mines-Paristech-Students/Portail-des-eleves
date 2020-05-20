@@ -45,6 +45,7 @@
     description: Mélange subtil de fruits des bois pour un rafraichissement sans égal.
     price: 3.5
     marketplace: biero
+    number_left: 10
 
 - model: associations.product
   pk: 2

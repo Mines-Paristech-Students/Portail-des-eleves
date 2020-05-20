@@ -19,7 +19,7 @@ from associations.views import (
 )
 from associations.views.media import MediaViewSet
 from associations.views import set_association_logo
-
+from subscriptions.views.widget_balance import widget_balance_view
 
 urlpatterns = []
 router = BulkRouter()
@@ -51,7 +51,7 @@ router.register(r"transactions", TransactionViewSet)
 router.register(r"fundings", FundingViewSet)
 urlpatterns += [
     path("associations/<association_pk>/image", set_association_logo),
-    path("marketplace/balance/", BalanceView.as_view(), name="balance-list"),
+    path("marketplace/balance/", widget_balance_view, name="balance-list"),
     path(
         "marketplace/<slug:marketplace_id>/balance/",
         BalanceView.as_view(),
