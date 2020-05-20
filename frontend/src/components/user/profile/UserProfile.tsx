@@ -10,7 +10,7 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 import { Error } from "../../utils/Error";
 import { UserContext } from "../../../services/authService";
-import {Profile} from "../../../models/profile";
+import { Profile } from "../../../models/profile";
 
 export const UserProfile = ({ match }: { match: any }) => {
     const user = useContext(UserContext);
