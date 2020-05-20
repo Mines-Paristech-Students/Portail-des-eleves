@@ -18,6 +18,7 @@ import { queryCache, useMutation } from "react-query";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { AxiosError } from "axios";
 import * as Yup from "yup";
+import { SelectUsers } from "../../utils/forms/SelectUsers";
 
 // The items in the select.
 const currentAcademicYearItems = new Map([
@@ -48,6 +49,7 @@ const getInitialValues = (profile: Profile, questions: ProfileQuestion[]) => {
         cityOfOrigin: profile.cityOfOrigin,
         option: profile.option,
         currentAcademicYear: profile.currentAcademicYear,
+        cos: [],
     };
 
     profile.profileAnswers.forEach(({ questionId, text }) => {
@@ -171,14 +173,14 @@ export const EditUserProfile = () => {
                     >
                         <Form>
                             <Card.Body>
-                                <Row className="mb-5">
+                                <Row>
                                     <Col md={12}>
                                         <Card.Title>
                                             Informations générales
                                         </Card.Title>
                                     </Col>
                                 </Row>
-                                <ReactBootstrapForm.Row>
+                                <ReactBootstrapForm.Row className="mt-5">
                                     <Col md={{ span: 6 }}>
                                         <TextFormGroup
                                             label="Surnom"
@@ -221,21 +223,47 @@ export const EditUserProfile = () => {
                                     </Col>
                                 </ReactBootstrapForm.Row>
 
-                                <Row className="mb-5">
+                                <Row className="mt-8">
                                     <Col md={12}>
                                         <Card.Title>Relations</Card.Title>
                                     </Col>
                                 </Row>
+                                <Row className="mt-5">
+                                    <Col md={6}>
+                                        <ReactBootstrapForm.Group>
+                                            <ReactBootstrapForm.Label>
+                                                Cos
+                                            </ReactBootstrapForm.Label>
 
-                                <Row className="mb-5">
+                                            <SelectUsers
+                                                className="mt-5"
+                                                name="cos"
+                                            />
+                                        </ReactBootstrapForm.Group>
+                                    </Col>
+
+                                    <Col md={6}>
+                                        <ReactBootstrapForm.Group>
+                                            <ReactBootstrapForm.Label>
+                                                Marrain(e)s
+                                            </ReactBootstrapForm.Label>
+
+                                            <SelectUsers
+                                                className="mt-5"
+                                                name="minesparent"
+                                            />
+                                        </ReactBootstrapForm.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row className="mt-8">
                                     <Col md={12}>
                                         <Card.Title>
                                             Questions et réponses
                                         </Card.Title>
                                     </Col>
                                 </Row>
-
-                                <ReactBootstrapForm.Row>
+                                <ReactBootstrapForm.Row className="mt-5">
                                     {questions.map(({ id, text }) => (
                                         <Col md={{ span: 6 }} key={id}>
                                             <TextFormGroup

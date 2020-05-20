@@ -29,12 +29,13 @@ export const ProfileInfo = ({
         <Card.Body>
             <Row>
                 <div className="media">
-                    <UserAvatar
-                        userId={profile.id}
-                        size={Size.XXL}
-                        className="ml-3 mr-5"
-                        link={false}
-                    />
+                    <div className="ml-3 mr-5">
+                        <UserAvatar
+                            userId={profile.id}
+                            size={Size.XXL}
+                            link={false}
+                        />
+                    </div>
                     <div className="media-body">
                         <h3 className="m-0">{`${profile.firstName} ${profile.lastName}`}</h3>
                         <p className="font-italic mb-2">{profile.nickname}</p>
