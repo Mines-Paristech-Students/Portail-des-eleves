@@ -155,23 +155,23 @@ export const EditUserProfile = () => {
             <Container className="mt-5">
                 <PageTitle>Modifier votre profil</PageTitle>
 
-                <Card className="text-left">
-                    <Formik
-                        initialValues={getInitialValues(profile, questions)}
-                        validationSchema={Yup.object({
-                            currentAcademicYear: Yup.string()
-                                .required("Ce champ est requis.")
-                                .oneOf(
-                                    currentAcademicYearValues,
-                                    "Choix invalide."
-                                ),
-                        })}
-                        onSubmit={(values, { setSubmitting }) => {
-                            onSubmit(profile)(values, { setSubmitting });
-                            console.log(values);
-                        }}
-                    >
-                        <Form>
+                <Formik
+                    initialValues={getInitialValues(profile, questions)}
+                    validationSchema={Yup.object({
+                        currentAcademicYear: Yup.string()
+                            .required("Ce champ est requis.")
+                            .oneOf(
+                                currentAcademicYearValues,
+                                "Choix invalide."
+                            ),
+                    })}
+                    onSubmit={(values, { setSubmitting }) => {
+                        onSubmit(profile)(values, { setSubmitting });
+                        console.log(values);
+                    }}
+                >
+                    <Form>
+                        <Card className="text-left">
                             <Card.Body>
                                 <Row>
                                     <Col md={12}>
@@ -222,8 +222,12 @@ export const EditUserProfile = () => {
                                         />
                                     </Col>
                                 </ReactBootstrapForm.Row>
+                            </Card.Body>
+                        </Card>
 
-                                <Row className="mt-8">
+                        <Card>
+                            <Card.Body>
+                                <Row>
                                     <Col md={12}>
                                         <Card.Title>Relations</Card.Title>
                                     </Col>
@@ -255,15 +259,24 @@ export const EditUserProfile = () => {
                                         </ReactBootstrapForm.Group>
                                     </Col>
                                 </Row>
+                            </Card.Body>
+                        </Card>
 
-                                <Row className="mt-8">
+                        <Card>
+                            <Card.Body>
+                                <Row>
                                     <Col md={12}>
-                                        <Card.Title>
+                                        <Card.Title className="mb-2">
                                             Questions et réponses
                                         </Card.Title>
+
+                                        <p className="text-muted">
+                                            Les questions sans réponses ne
+                                            seront pas affichées.
+                                        </p>
                                     </Col>
                                 </Row>
-                                <ReactBootstrapForm.Row className="mt-5">
+                                <ReactBootstrapForm.Row className="mt-3">
                                     {questions.map(({ id, text }) => (
                                         <Col md={{ span: 6 }} key={id}>
                                             <TextFormGroup
@@ -275,15 +288,15 @@ export const EditUserProfile = () => {
                                     ))}
                                 </ReactBootstrapForm.Row>
                             </Card.Body>
+                        </Card>
 
-                            <Card.Footer className="text-right">
-                                <Button type="submit" variant="outline-success">
-                                    Envoyer
-                                </Button>
-                            </Card.Footer>
-                        </Form>
-                    </Formik>
-                </Card>
+                        <Container className="mb-5 text-right">
+                            <Button type="submit" variant="primary">
+                                Envoyer
+                            </Button>
+                        </Container>
+                    </Form>
+                </Formik>
             </Container>
         );
     }

@@ -9,6 +9,7 @@ import { Size } from "../../../utils/size";
 import Button from "react-bootstrap/Button";
 import { formatLongDate } from "../../../utils/format";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const ACADEMIC_YEAR = new Map([
     ["1A", "1A"],
@@ -130,9 +131,12 @@ export const ProfileInfo = ({
         </Card.Body>
         {showEditButton && (
             <Card.Footer>
-                <Button href="/profils/modifier" variant="outline-primary">
+                <Link
+                    to="/profils/modifier"
+                    className="btn btn-outline-primary text-decoration-none"
+                >
                     Modifier mon profil
-                </Button>
+                </Link>
             </Card.Footer>
         )}
     </Card>
