@@ -52,13 +52,13 @@ export const ProfileInfo = ({
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <span className="icon mr-3">
-                                <i className="fe fe-calendar"/>
+                                <i className="fe fe-calendar" />
                             </span>
                             {formatLongDate(profile.birthday)}
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <span className="icon mr-3">
-                                <i className="fe fe-mail"/>
+                                <i className="fe fe-mail" />
                             </span>
                             <a href={`mailto:${profile.email}`}>
                                 {profile.email}
@@ -67,7 +67,7 @@ export const ProfileInfo = ({
                         {profile.phone && (
                             <ListGroup.Item>
                                 <span className="icon mr-3">
-                                    <i className="fe fe-phone"/>
+                                    <i className="fe fe-phone" />
                                 </span>
                                 {profile.phone}
                             </ListGroup.Item>
@@ -83,7 +83,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-home"/>
+                                        <i className="fe fe-home" />
                                     </span>
                                 </OverlayTrigger>
 
@@ -101,7 +101,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-home"/>
+                                        <i className="fe fe-home" />
                                     </span>
                                 </OverlayTrigger>
                                 {profile.address}
@@ -118,7 +118,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-activity"/>
+                                        <i className="fe fe-activity" />
                                     </span>
                                 </OverlayTrigger>
                                 {profile.option}
