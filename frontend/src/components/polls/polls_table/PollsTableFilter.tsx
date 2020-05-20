@@ -50,6 +50,7 @@ export const PollsTableFilter = ({
             rejected: rejected,
             reviewing: reviewing,
         });
+        /* eslint-disable */
     }, [accepted, rejected, reviewing]);
 
     return (
