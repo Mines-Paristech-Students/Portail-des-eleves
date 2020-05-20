@@ -1,7 +1,6 @@
 import { apiService, unwrap } from "../apiService";
-import { Profile, ProfileAnswer, ProfileQuestion } from "../../models/profile";
+import { Profile, ProfileQuestion } from "../../models/profile";
 import { parseRoleDates } from "./roles";
-import { AxiosResponse } from "axios";
 
 export const profile = {
     get: ({ userId }: { userId: string }) =>
@@ -33,8 +32,5 @@ export const profile = {
                 text: string;
             }[];
         };
-    }) => {
-        console.log(data);
-        return apiService.patch(`/users/users/${userId}/`, data);
-    },
+    }) => apiService.patch(`/users/users/${userId}/`, data),
 };
