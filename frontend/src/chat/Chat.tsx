@@ -62,6 +62,7 @@ export const Chat = () => {
                 limit: 20,
             });
         })();
+        /* eslint-disable */
     }, []);
 
     useEffect(() => {
@@ -75,7 +76,6 @@ export const Chat = () => {
             // No sort needed -> Messages arrive in order
             socket.on("fetch_response", async (data: MessageData[]) => {
                 let all_messages = [...messages, ...data];
-                console.log(data[0].posted_on);
                 all_messages.sort(function (a, b) {
                     // @ts-ignore
                     return new Date(a.posted_on) - new Date(b.posted_on);
@@ -87,6 +87,7 @@ export const Chat = () => {
                 scrollToLastMessage();
             });
         }
+        /* eslint-disable */
     }, [socket, messages]);
 
     let handleKeyPress = (event) => {
