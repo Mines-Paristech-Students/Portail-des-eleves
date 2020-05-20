@@ -6,10 +6,15 @@ from authentication.models import User
 
 @api_view(["GET"])
 def list_promotions(request):
+    # FWIW, `distinct("promotion")` only works on PostgreSQL.
+    # See https://docs.djangoproject.com/en/2.2/ref/models/querysets/#distinct.
     return Response(
         {
             "promotions": sorted(
-                set(User.objects.values_list("promotion", flat=True)), reverse=True
+                User.objects.order_by("promotion")
+                .distinct("promotion")
+                .values_list("promotion", flat=True),
+                reverse=True,
             )
         }
     )

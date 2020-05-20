@@ -3,7 +3,7 @@ from functools import reduce
 from django.db.models import Q
 from django_filters.rest_framework import (
     FilterSet,
-    MultipleChoiceFilter,
+    BaseInFilter,
     DjangoFilterBackend,
     CharFilter,
 )
@@ -19,25 +19,20 @@ from authentication.serializers.user import (
 from tags.filters import HasHiddenTagFilter
 
 
+class CharInFilter(BaseInFilter, CharFilter):
+    pass
+
+
 class ProfileFilter(FilterSet):
     """
     This class is needed because of the behaviour of the `promotion` field: the commas (`,`) act as OR.
     """
 
-    promotion = CharFilter(method="filter_promotion")
+    promotion__in = CharInFilter(field_name="promotion", lookup_expr="in")
 
     class Meta:
         model = User
-        fields = ("promotion",)
-
-    def filter_promotion(self, queryset, _, value):
-        condition = reduce(
-            lambda temp_condition, promotion: temp_condition | Q(promotion=promotion),
-            value.split(","),
-            Q(),
-        )
-
-        return queryset.filter(condition)
+        fields = ("promotion__in",)
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -60,7 +55,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         HasHiddenTagFilter,
     )  # SearchFilter is not enabled by default.
-    search_fields = ("id", "first_name", "last_name", "option")
+    search_fields = ("id", "first_name", "last_name", "option", "promotion")
 
     def get_serializer_class(self):
         if self.action in ("list",):
