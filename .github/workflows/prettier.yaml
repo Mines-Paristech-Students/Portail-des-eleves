@@ -23,7 +23,7 @@ jobs:
         working-directory: frontend
 
       - name: Run Prettier on frontend
-        run: prettier frontend/**/*.ts*
+        run: prettier --check --loglevel debug frontend/**/*.ts*
 
       - name: Run Prettier on chat_server
-        run: prettier chat_server/**/*.ts*
+        run: prettier --check --loglevel debug chat_server/**/*.ts*
