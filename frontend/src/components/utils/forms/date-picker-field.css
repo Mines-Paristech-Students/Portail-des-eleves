@@ -5,5 +5,5 @@ As we only display (in the React code) the Feedback when it's not empty, we just
  */
 
 .invalid-feedback.date-picker-feedback {
-    display: block !important
+    display: block !important;
 }

@@ -1,4 +1,4 @@
-import {Role} from "./associations/role";
+import { Role } from "./associations/role";
 
 export interface ProfileAnswer {
     id: number;

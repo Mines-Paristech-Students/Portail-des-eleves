@@ -9,7 +9,7 @@ export interface UserAvatarProps {
     userId: string;
     size?: Size;
     backgroundColor?: TablerColor;
-    linkClassName ?: string;
+    linkClassName?: string;
     className?: string;
     tooltip?: string;
     link?: boolean;
@@ -45,7 +45,10 @@ export const UserAvatar = ({
         />
     );
     return link ? (
-        <Link to={`/profils/${userId}`} className={`user-avatar-link ${linkClassName ? linkClassName : ""}`}>
+        <Link
+            to={`/profils/${userId}`}
+            className={`user-avatar-link ${linkClassName || ""}`}
+        >
             {avatar}
         </Link>
     ) : (

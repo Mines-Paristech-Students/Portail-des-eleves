@@ -28,7 +28,7 @@ export const UserAvatarCard = ({
         <UserAvatar
             userId={userId}
             className={avatarClassName}
-            linkClassName={"mx-auto " + (linkClassName ? linkClassName : "")}
+            linkClassName={"mx-auto " + (linkClassName || "")}
             size={size}
             link={link}
             {...props}
