@@ -22,8 +22,8 @@ export const TimelineItem = ({
     endDate?: Date;
 }) => (
     <li className="timeline-item">
-        <div className={`timeline-badge bg-${badgeColor}`}></div>
-        {content && content}
+        <div className={`timeline-badge bg-${badgeColor}`}/>
+        {content}
         {startDate && (
             <div className="timeline-time">
                 {formatLongDateMonthYear(startDate)}
