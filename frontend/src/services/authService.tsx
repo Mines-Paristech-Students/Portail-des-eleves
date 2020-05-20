@@ -3,6 +3,7 @@ import { User } from "../models/user";
 import { apiService } from "./apiService";
 import React, { createContext, useState } from "react";
 import { authService } from "../App";
+import { Loading } from "../components/utils/Loading";
 
 export const UserContext = createContext<User | null>(null);
 
@@ -19,7 +20,7 @@ export const UserProvider: React.FunctionComponent = ({ children }) => {
         );
     }
 
-    return <p>Loading</p>;
+    return <Loading />;
 };
 
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
     isStaff = false;
     user: User | null = null;
 
-    checkAuth(): Promise<User | null> {
+    checkUser(): Promise<User | null> {
         return new Promise((resolve, reject) => {
             apiService
                 .get<User>("/auth/check")
@@ -35,14 +36,14 @@ export class AuthService {
                     if (response.data.userId) {
                         this.user = {
                             id: response.data.userId,
-                            lastName: response.data.lastName,
                             firstName: response.data.firstName,
+                            lastName: response.data.lastName,
                             promotion: response.data.promotion,
                             isStaff: response.data.isStaff,
                         };
 
                         this.isAuthenticated = true;
-                        this.isStaff = !!this.user.isStaff; // Cast to boolean.
+                        this.isStaff = this.user.isStaff;
 
                         resolve(this.user);
                     } else {
@@ -65,7 +66,7 @@ export class AuthService {
                 return resolve(this.user);
             }
 
-            this.checkAuth()
+            this.checkUser()
                 .then((user) => {
                     if (user == null) {
                         return reject("Not logged in");

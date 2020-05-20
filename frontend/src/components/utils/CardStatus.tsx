@@ -1,25 +1,18 @@
 import React from "react";
 import { getRandom } from "../../utils/random";
+import { TablerColor } from "../../utils/colors";
 
 /**
  * Display a single line emphasizing either the top or the left side of the card. Should be used as a *top* child of the `Card` component.
  *
- * @param color to be chosen between `blue`, `green`, `orange`, `red`, `yellow`, `teal`, `purple` and `random`. Defaults to `blue`.
+ * @param color a TablerColor or "random". Defaults to `Blue`.
  * @param position to be chosen between `top` and `left`. Defaults to `top`.
  */
 export const CardStatus = ({
-    color = "blue",
+    color = TablerColor.Blue,
     position = "top",
 }: {
-    color?:
-        | "blue"
-        | "green"
-        | "orange"
-        | "red"
-        | "yellow"
-        | "teal"
-        | "purple"
-        | "random";
+    color?: TablerColor | "random";
     position?: "top" | "left";
 }) => (
     <div
@@ -30,4 +23,19 @@ export const CardStatus = ({
 );
 
 const getRandomColor = () =>
-    getRandom(["blue", "green", "orange", "red", "yellow", "teal", "purple"]);
+    getRandom([
+        TablerColor.Blue,
+        TablerColor.Azure,
+        TablerColor.Indigo,
+        TablerColor.Purple,
+        TablerColor.Pink,
+        TablerColor.Red,
+        TablerColor.Orange,
+        TablerColor.Yellow,
+        TablerColor.Lime,
+        TablerColor.Green,
+        TablerColor.Teal,
+        TablerColor.Cyan,
+        TablerColor.Gray,
+        TablerColor.DarkGray,
+    ]);

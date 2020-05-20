@@ -60,7 +60,8 @@
   pk: 3
   fields:
     name: Jus de pomme
-    description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
+    description:
+      Pressade de fruits bio pour être en pleine forme. Rassurez vous,
       y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
       déjeuner.
     price: 5.0
@@ -100,6 +101,7 @@
     user: 17admin_biero
     association: biero
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -119,6 +121,7 @@
     user: 17market_biero
     association: biero
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -138,6 +141,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: false
 
@@ -157,6 +161,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -176,6 +181,7 @@
     user: 17market_pdm
     association: pdm
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -195,6 +201,7 @@
     user: 17market_bde
     association: bde
     role: Marketplace administrator
+    start_date: "2017-01-01"
     administration_permission: false
     marketplace_permission: true
 
@@ -214,6 +221,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no marketplace
+    start_date: "2017-01-01"
     administration_permission: true
     marketplace_permission: false
 
@@ -234,7 +242,7 @@
     buyer: 17admin_biero
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -244,7 +252,7 @@
     buyer: 17market_biero
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -254,7 +262,7 @@
     buyer: 17member_biero
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -264,7 +272,7 @@
     buyer: 17admin_pdm
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -274,7 +282,7 @@
     buyer: 17market_pdm
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -284,7 +292,7 @@
     buyer: 17market_bde
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -294,7 +302,7 @@
     buyer: 17admin_bde
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -304,7 +312,7 @@
     buyer: 17admin
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -314,7 +322,7 @@
     buyer: 17simple
     quantity: 1
     value: 3.5
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -324,7 +332,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -334,7 +342,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: CANCELLED
 
 - model: associations.transaction
@@ -344,7 +352,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: CANCELLED
 
 - model: associations.transaction
@@ -354,7 +362,7 @@
     buyer: 17member_biero
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -364,7 +372,7 @@
     buyer: 17admin_biero
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: ORDERED
 
 - model: associations.transaction
@@ -374,7 +382,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: VALIDATED
 
 - model: associations.transaction
@@ -384,7 +392,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: VALIDATED
 
 - model: associations.transaction
@@ -394,7 +402,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: REJECTED
 
 - model: associations.transaction
@@ -404,7 +412,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: REJECTED
 
 - model: associations.transaction
@@ -414,7 +422,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: DELIVERED
 
 - model: associations.transaction
@@ -424,7 +432,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: DELIVERED
 
 - model: associations.transaction
@@ -434,7 +442,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: REFUNDED
 
 - model: associations.transaction
@@ -444,7 +452,7 @@
     buyer: 17simple
     quantity: 1
     value: 10
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     status: REFUNDED
 
 - model: associations.funding
@@ -452,7 +460,7 @@
   fields:
     user: 17simple
     value: 500
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     marketplace: biero
     status: FUNDED
 
@@ -461,7 +469,7 @@
   fields:
     user: 17simple
     value: 500
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     marketplace: pdm
     status: FUNDED
 
@@ -470,6 +478,6 @@
   fields:
     user: 17simple
     value: 500
-    date: '2019-01-01T00:00:00+00:00'
+    date: "2019-01-01T00:00:00+00:00"
     marketplace: biero
     status: REFUNDED

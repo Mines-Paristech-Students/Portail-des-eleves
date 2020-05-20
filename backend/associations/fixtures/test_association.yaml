@@ -27,6 +27,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
 
 - model: authentication.user
@@ -45,6 +46,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
 
 #######
@@ -73,6 +75,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     election_permission: false
 
@@ -92,5 +95,6 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     election_permission: false

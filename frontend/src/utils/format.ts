@@ -1,4 +1,4 @@
-export const MONTHS = [
+export const MONTHS: string[] = [
     "Janvier",
     "Février",
     "Mars",
@@ -13,7 +13,7 @@ export const MONTHS = [
     "Décembre",
 ];
 
-export const WEEKDAYS_LONG = [
+export const WEEKDAYS_LONG: string[] = [
     "Dimanche",
     "Lundi",
     "Mardi",
@@ -23,7 +23,7 @@ export const WEEKDAYS_LONG = [
     "Samedi",
 ];
 
-export const WEEKDAYS_SHORT = [
+export const WEEKDAYS_SHORT: string[] = [
     "dim.",
     "lun.",
     "mar.",
@@ -32,6 +32,26 @@ export const WEEKDAYS_SHORT = [
     "ven.",
     "sam.",
 ];
+
+/**
+ * Format a date as `month YYYY`.
+ */
+export const formatLongDateMonthYear = (date?: Date) =>
+    date
+        ? `${MONTHS[
+              date.getMonth()
+          ].toLowerCase()} ${date.getFullYear().toString().padStart(4, "0")}`
+        : "";
+
+/**
+ * Format a date as `DD month YYYY`.
+ */
+export const formatLongDate = (date?: Date) =>
+    date
+        ? `${date.getDate().toString().padStart(2, "0")} ${MONTHS[
+              date.getMonth()
+          ].toLowerCase()} ${date.getFullYear().toString().padStart(4, "0")}`
+        : "";
 
 /**
  * Format a date as DD/MM/YYYY.

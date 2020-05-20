@@ -104,7 +104,7 @@ function Navbar() {
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item>
+                            <NavDropdown.Item href={`/profils/${user.id}`}>
                                 <i className="dropdown-icon fe fe-user" />{" "}
                                 Profil
                             </NavDropdown.Item>

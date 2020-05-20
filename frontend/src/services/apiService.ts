@@ -19,6 +19,7 @@ import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
 import { users } from "./api/users";
 import { fundings } from "./api/fundings";
+import { profile } from "./api/profile";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -69,12 +70,13 @@ export const api = {
     fundings: fundings,
 
     polls: polls,
-
     tags: tags,
     namespaces: namespaces,
 
     users: users,
     jwt: jwt,
+
+    profile: profile,
 };
 
 /**

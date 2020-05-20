@@ -1,11 +1,9 @@
 from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 from associations.models.library import Library
 from associations.models.marketplace import Marketplace
-from authentication.models import User
 from backend.settings import MEDIA_ROOT
 
 fs = FileSystemStorage(location=MEDIA_ROOT)
@@ -53,91 +51,7 @@ class Association(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.name)
 
     class Meta:
         ordering = ["rank", "name"]
-
-
-class Role(models.Model):
-    """Each Role links an user, an association, and a set of permissions inside this association.
-
-    For each permission `xxx`, the boolean field `xxx_permission` can be set to grant or not the user the related
-    permission.
-    However, for security reasons, each field `xxx_permission` must be associated to a boolean property `xxx` which
-    relies on `xxx_permission` but also checks `is_archived`. So `xxx` should be the field used for reading a
-    permission.
-    """
-
-    PERMISSION_NAMES = (
-        "administration",
-        "election",
-        "event",
-        "media",
-        "library",
-        "marketplace",
-        "page",
-    )
-
-    id = models.AutoField(primary_key=True)
-
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=False, related_name="roles"
-    )
-    association = models.ForeignKey(
-        Association, on_delete=models.CASCADE, null=False, related_name="roles"
-    )
-    role = models.CharField(max_length=200, null=False, blank=True, default="")
-    rank = models.IntegerField(
-        default=0, help_text="Order of appearance in the members list (lowest first)."
-    )
-
-    is_archived = models.BooleanField(
-        default=False,
-        help_text="Archived roles are not operating anymore but they allow to remember "
-        "who was in the association.",
-    )
-
-    # Permissions:
-    administration_permission = models.BooleanField(default=False)
-    election_permission = models.BooleanField(default=False)
-    event_permission = models.BooleanField(default=False)
-    media_permission = models.BooleanField(default=False)
-    library_permission = models.BooleanField(default=False)
-    marketplace_permission = models.BooleanField(default=False)
-    page_permission = models.BooleanField(default=False)
-
-    @cached_property
-    def administration(self):
-        return self.administration_permission and not self.is_archived
-
-    @cached_property
-    def election(self):
-        return self.election_permission and not self.is_archived
-
-    @cached_property
-    def event(self):
-        return self.event_permission and not self.is_archived
-
-    @cached_property
-    def media(self):
-        return self.media_permission and not self.is_archived
-
-    @cached_property
-    def library(self):
-        return self.library_permission and not self.is_archived
-
-    @cached_property
-    def marketplace(self):
-        return self.marketplace_permission and not self.is_archived
-
-    @cached_property
-    def page(self):
-        return self.page_permission and not self.is_archived
-
-    class Meta:
-        unique_together = ("user", "association")
-        ordering = ("rank", "user__last_name")
-
-    def __str__(self):
-        return self.user.id + "-" + self.association.id + "-" + self.role
