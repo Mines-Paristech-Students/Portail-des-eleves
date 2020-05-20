@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Pagination } from "../../utils/Pagination";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { UserAvatarCard } from "../../utils/avatar/UserAvatarCard";
@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../utils/PageTitle";
 import { Link } from "react-router-dom";
-import Select, { OptionsType, ValueType } from "react-select";
+import Select, { ValueType } from "react-select";
 import InputGroup from "react-bootstrap/InputGroup";
 import { DebounceInput } from "react-debounce-input";
 
@@ -18,23 +18,8 @@ export const Trombi = () => {
         refetchOnWindowFocus: false,
     });
 
-    // react-select requires an `options` field of a special type. These hooks handle this.
-    const [promotionsOptions, setPromotionsOptions] = useState<
-        OptionsType<{ value: string; label: string }>
-    >([]);
-
-    useEffect(() => {
-        if (promotions) {
-            setPromotionsOptions(
-                promotions.promotions.map((promotion) => {
-                    return { value: promotion, label: promotion };
-                })
-            );
-        }
-    }, [promotions]);
-
     // The search key sent to `api.users.list`. It is debounced thanks to the `searchInputValue` hooks.
-    const [searchKey, setSearchKey] = useState<string>("");
+    const [searchKey, setSearchKey] = useState("");
 
     // The promotions filter sent to `api.users.list`.
     const [promotionsFilter, setPromotionsFilter] = useState<
@@ -59,7 +44,7 @@ export const Trombi = () => {
                             />
 
                             <span className="input-icon-addon">
-                                <i className="fe fe-search"/>
+                                <i className="fe fe-search" />
                             </span>
                         </div>
                     </InputGroup>
@@ -67,13 +52,20 @@ export const Trombi = () => {
                 <Col md={{ span: 3, offset: 6 }}>
                     <Select
                         value={promotionsFilter}
-                        options={promotionsOptions}
+                        options={
+                            promotions
+                                ? promotions.promotions.map((promotion) => {
+                                      return {
+                                          value: promotion,
+                                          label: promotion,
+                                      };
+                                  })
+                                : []
+                        }
                         closeMenuOnSelect={false}
                         isMulti
                         placeholder="Filtrer par promotion…"
-                        onChange={(newPromotions) =>
-                            setPromotionsFilter(newPromotions)
-                        }
+                        onChange={setPromotionsFilter}
                     />
                 </Col>
             </Row>

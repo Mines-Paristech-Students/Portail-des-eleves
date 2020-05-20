@@ -1,6 +1,3 @@
-from functools import reduce
-
-from django.db.models import Q
 from django_filters.rest_framework import (
     FilterSet,
     BaseInFilter,
@@ -24,15 +21,9 @@ class CharInFilter(BaseInFilter, CharFilter):
 
 
 class ProfileFilter(FilterSet):
-    """
-    This class is needed because of the behaviour of the `promotion` field: the commas (`,`) act as OR.
-    """
-
-    promotion__in = CharInFilter(field_name="promotion", lookup_expr="in")
-
     class Meta:
         model = User
-        fields = ("promotion__in",)
+        fields = {"promotion": ["exact", "in"]}
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
