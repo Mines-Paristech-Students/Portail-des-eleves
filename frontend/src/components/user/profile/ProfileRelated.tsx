@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { AvatarList } from "../../utils/avatar/AvatarList";
 import { decidePlural } from "../../../utils/format";
-import {Profile} from "../../../models/profile";
+import { Profile } from "../../../models/profile";
 
 const mapToUserAvatar = (userList) =>
     userList.map((user) => (
