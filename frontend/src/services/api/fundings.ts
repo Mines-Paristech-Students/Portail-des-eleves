@@ -11,8 +11,9 @@ export const fundings = {
                 status: FundingStatus.Funded,
             })
         ),
-    list: (marketplaceId, params) => {
-        params["marletplace"] = marketplaceId;
+    list: (marketplaceId, params, page = 1) => {
+        params["marketplace"] = marketplaceId;
+        params["page"] = page;
         return unwrap<Funding[]>(
             apiService.get(`/associations/fundings/${toUrlParams(params)}`)
         );

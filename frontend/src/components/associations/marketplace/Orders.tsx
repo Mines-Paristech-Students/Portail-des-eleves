@@ -89,7 +89,7 @@ const TransactionStatusSelector = ({
 }: {
     transaction: Transaction;
 }) => {
-    let statusList = [
+    const statusList = [
         [TransactionStatus.Ordered, "primary", "Commandée"],
         [TransactionStatus.Cancelled, "success", "Annulée"],
         [TransactionStatus.Rejected, "danger", "Rejetée"],
@@ -98,7 +98,7 @@ const TransactionStatusSelector = ({
         [TransactionStatus.Refunded, "yellow", "Remboursée"],
     ];
 
-    let [status, type, tag] = statusList.filter(
+    const [status, type, tag] = statusList.filter(
         (item) => item[0] === transaction.status
     )[0];
 
@@ -132,7 +132,7 @@ const TransactionStatusSelector = ({
                 key={`tooltip-status-${transaction.id}`}
                 overlay={
                     <Tooltip id={`tooltip-status-${transaction.id}-help`}>
-                        {isOpen ? "" : "Cliquez pour éditer"}
+                        {isOpen ? "" : "Cliquez pour modifier"}
                     </Tooltip>
                 }
             >

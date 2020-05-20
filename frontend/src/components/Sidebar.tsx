@@ -16,7 +16,7 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
     return (
         <Link
             className={`list-group-item list-group-item-action d-flex align-items-center ${
-                (exact && location.pathname === to) || (!exact && location.pathname.indexOf(to) !== -1) ? "active" : ""
+                (exact && location.pathname === to) || (!exact && location.pathname.startsWith(to)) ? "active" : ""
             }`}
             to={to}
         >

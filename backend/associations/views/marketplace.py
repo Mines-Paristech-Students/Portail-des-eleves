@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.db.models import Q
 from django.http import (
     JsonResponse,
@@ -13,6 +14,8 @@ from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
 
 from api.paginator import SmallResultsSetPagination
 from associations.models import Marketplace, Product, Transaction, Funding
@@ -75,7 +78,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         )
 
 
-class TransactionViewSet(viewsets.ModelViewSet):
+class TransactionViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = (TransactionPermission,)
@@ -130,11 +139,45 @@ class TransactionViewSet(viewsets.ModelViewSet):
                     "Cannot create a Transaction for another user."
                 )
 
-        self.perform_create(serializer)
+        with transaction.atomic():
+            self.perform_create(serializer)
+            product.number_left -= serializer.validated_data["quantity"]
+            product.save()
+
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        old_status = instance.status
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        active_status = ["ORDERED", "VALIDATED", "DELIVERED"]
+        disabled_status = ["CANCELLED", "REJECTED", "REFUNDED"]
+
+        product = instance.product
+
+        with transaction.atomic():
+            self.perform_update(serializer)
+            new_status = instance.status
+
+            if old_status in active_status and new_status in disabled_status:
+                product.number_left += instance.quantity
+            elif old_status in disabled_status and new_status in active_status:
+                product.number_left -= instance.quantity
+
+            product.save()
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 
 class FundingViewSet(viewsets.ModelViewSet):

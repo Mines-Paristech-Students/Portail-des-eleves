@@ -8,6 +8,7 @@ import { QuantitySelect } from "./QuantitySelect";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
+import { decidePlural } from "../../../utils/format";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -83,9 +84,15 @@ const AssociationMarketplaceProduct = ({ product }) => {
                 <Card.Title className="card-title">
                     {product.name}{" "}
                     <span className={"text-muted"}>
-                        {product.price}€ (
+                        {product.price} € (
                         {product.numberLeft > -1
-                            ? `${product.numberLeft} restants`
+                            ? product.numberLeft +
+                              " " +
+                              decidePlural(
+                                  product.numberLeft,
+                                  "restant",
+                                  "restants"
+                              )
                             : ""}
                         )
                     </span>
