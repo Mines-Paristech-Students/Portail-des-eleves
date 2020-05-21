@@ -52,7 +52,7 @@ export const SelectUsers = ({
     className?: string;
     [key: string]: any;
 }) => {
-    const [_, meta, helpers] = useField(props);
+    const [, meta, helpers] = useField(props);
     const { value } = meta;
     const { setValue } = helpers;
 
