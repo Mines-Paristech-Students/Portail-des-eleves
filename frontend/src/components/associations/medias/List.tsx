@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
@@ -7,8 +7,10 @@ import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
+import { queryCache } from "react-query";
+import { useTagSearch } from "../../utils/tags/TagSearch";
 
-export const AssociationFilesystemList = ({ association }) => {
+export const AssociationFilesystemList = ({ association, setSidebar }) => {
     const associationId = association.id;
     const history = useHistory();
 
@@ -25,9 +27,19 @@ export const AssociationFilesystemList = ({ association }) => {
         );
     }
 
+    const additionalParams = useTagSearch(
+        {
+            page_size: 1000,
+            scoped_to: "association",
+            scoped_to_pk: associationId,
+            related_to: "media",
+        },
+        setSidebar
+    );
+
     return (
         <Pagination
-            apiKey={["medias.list", associationId]}
+            apiKey={["medias.list", associationId, additionalParams]}
             apiMethod={api.medias.list}
             render={(medias, paginationControl) => (
                 <>
