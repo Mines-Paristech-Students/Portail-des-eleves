@@ -6,7 +6,6 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Profile } from "../../../models/profile";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { Size } from "../../../utils/size";
-import Button from "react-bootstrap/Button";
 import { formatLongDate } from "../../../utils/format";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
