@@ -1,5 +1,5 @@
 # An user called 17member_xxx is a simple member of the association xxx.
-# An user called 17page_xxx is an page admin of the association xxx.
+# An user called 17page_xxx is a page admin of the association xxx.
 # An user called 17admin_xxx is an admin of the association xxx.
 
 #########
@@ -19,7 +19,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -28,6 +28,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     page_permission: false
 
@@ -38,7 +39,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -47,6 +48,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: false
 
@@ -57,7 +59,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -66,6 +68,7 @@
     user: 17page_biero
     association: biero
     role: page admin
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: true
 
@@ -73,19 +76,19 @@
   pk: 0
   fields:
     association: biero
-    title: 'L’équipe'
-    text: 'Un président psychopathe qui écrit des mails hilarants.'
-    creation_date: '2019-06-01T12:00:00+00:00'
-    last_update_date: '2019-06-01T12:00:00+00:00'
+    title: "L’équipe"
+    text: "Un président psychopathe qui écrit des mails hilarants."
+    creation_date: "2019-06-01T12:00:00+00:00"
+    last_update_date: "2019-06-01T12:00:00+00:00"
 
 - model: associations.page
   pk: 1
   fields:
     association: biero
-    title: 'Le concept'
-    text: 'Se bourrer la gueule. Pour 5 €.'
-    creation_date: '2019-06-01T12:00:00+00:00'
-    last_update_date: '2019-06-01T12:00:00+00:00'
+    title: "Le concept"
+    text: "Se bourrer la gueule. Pour 5 €."
+    creation_date: "2019-06-01T12:00:00+00:00"
+    last_update_date: "2019-06-01T12:00:00+00:00"
 
 #######
 # PDM #
@@ -104,7 +107,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -113,6 +116,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     page_permission: false
 
@@ -123,7 +127,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -132,6 +136,7 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: false
 
@@ -142,7 +147,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: page
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -151,6 +156,7 @@
     user: 17page_pdm
     association: pdm
     role: page admin
+    start_date: "2017-01-01"
     administration_permission: false
     page_permission: true
 
@@ -158,7 +164,7 @@
   pk: 2
   fields:
     association: pdm
-    title: 'Le concept'
-    text: 'Soit tu payes. Soit tu voles.'
-    creation_date: '2019-06-01T12:00:00+00:00'
-    last_update_date: '2019-06-01T12:00:00+00:00'
+    title: "Le concept"
+    text: "Soit tu payes. Soit tu voles."
+    creation_date: "2019-06-01T12:00:00+00:00"
+    last_update_date: "2019-06-01T12:00:00+00:00"

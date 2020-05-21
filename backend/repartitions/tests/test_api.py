@@ -16,25 +16,23 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         self.assertEqual(res.status_code, 201)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(res.data), 2)  # we created the campaign
+        self.assertEqual(len(res.data["results"]), 2)  # we created the campaign
 
         res = self.delete("/repartitions/campaigns/2/")
         self.assertEqual(res.status_code, 204)
 
         res = self.get("/repartitions/campaigns/")
-        self.assertEqual(len(res.data), 1)  # we created the campaign
+        self.assertEqual(len(res.data["results"]), 1)  # we deleted the campaign
 
-        # For a non admin
-
-        res = self.post(
-            "/repartitions/campaigns/", {"name": "MIGs groups"}
-        )  # recreate a new campaign
+        # Create a new campaign
+        res = self.post("/repartitions/campaigns/", {"name": "MIGs groups"})
         self.assertEqual(res.status_code, 201)
 
-        self.login("15menou")
+        # For a non admin
+        self.login("16leroy")
         res = self.get("/repartitions/campaigns/")
         self.assertEqual(
-            len(res.data), 1
+            len(res.data["results"]), 1, msg=res.data
         )  # this user is not linked to the new campaign
 
         res = self.post("/repartitions/campaigns/", {"name": "MIGs groups 2"})
@@ -45,7 +43,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.patch("/repartitions/campaigns/1/", {"status": "OPEN"})
         self.assertEqual(res.status_code, 200)
 
-        self.login("15menou")
+        self.login("16leroy")
         res = self.patch("/repartitions/campaigns/1/")
         self.assertEqual(res.status_code, 403)
 
@@ -68,7 +66,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -77,13 +75,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "15menou",
+                    "user": "16leroy",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
                 },
                 {
-                    "user": "18chlieh",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -100,7 +98,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -109,13 +107,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "15menou",
+                    "user": "16leroy",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
                 },
                 {
-                    "user": "18chlieh",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -138,7 +136,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was removed
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -147,13 +145,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "15menou",
+                    "user": "16leroy",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
                 },
                 {
-                    "user": "18chlieh",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -163,11 +161,12 @@ class APITestCase(WeakAuthenticationBaseTestCase):
 
         # For a non admin
 
-        self.login("15menou")
+        self.login("16leroy")
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data, [{"user": "17bocquet"}, {"user": "15menou"}, {"user": "18chlieh"}]
+            res.data["results"],
+            [{"user": "17bocquet"}, {"user": "16leroy"}, {"user": "18aouir"}],
         )
 
         res = self.post(
@@ -182,13 +181,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
     def test_fix_user(self):
         self.login("17bocquet")
 
-        res = self.patch("/repartitions/campaigns/1/users/15menou/", {"fixed_to": 1})
+        res = self.patch("/repartitions/campaigns/1/users/16leroy/", {"fixed_to": 1})
         self.assertEqual(res.status_code, 200)
         res = self.get(
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -197,13 +196,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "18chlieh",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
                 },
                 {
-                    "user": "15menou",
+                    "user": "16leroy",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": 1,
@@ -211,13 +210,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             ],
         )
 
-        res = self.patch("/repartitions/campaigns/1/users/15menou/", {"fixed_to": None})
+        res = self.patch("/repartitions/campaigns/1/users/16leroy/", {"fixed_to": None})
         self.assertEqual(res.status_code, 200)
         res = self.get(
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data,
+            res.data["results"],
             [
                 {
                     "user": "17bocquet",
@@ -226,13 +225,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "18chlieh",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
                 },
                 {
-                    "user": "15menou",
+                    "user": "16leroy",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -245,7 +244,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.patch("/repartitions/campaigns/1/", data={"status": "OPEN"})
         self.assertEqual(res.status_code, 200)
 
-        self.login("15menou")
+        self.login("16leroy")
 
         # good request
 
@@ -323,7 +322,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             res = self.patch("/repartitions/campaigns/1/", data={"status": status})
             self.assertEqual(res.status_code, 200)
 
-            self.login("15menou")
+            self.login("16leroy")
             res = self.post(
                 "/repartitions/1/wishes/",
                 {
@@ -350,7 +349,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                 msg="expected code {} got {}".format(code_admin, res.status_code),
             )
 
-            self.login("15menou")
+            self.login("16leroy")
             res = self.get("/repartitions/1/results/")
             self.assertEqual(res.status_code, 403)
 

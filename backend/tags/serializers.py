@@ -72,11 +72,9 @@ class NamespaceShortSerializer(serializers.ModelSerializer):
 
 
 class NamespaceSerializer(serializers.ModelSerializer):
-    tags = serializers.SerializerMethodField()
-
     class Meta:
         model = Namespace
-        read_only_fields = ("id", "tags")
+        read_only_fields = ("id",)
         fields = read_only_fields + ("name", "scoped_to_pk", "scoped_to_model")
 
     def get_tags(self, obj):

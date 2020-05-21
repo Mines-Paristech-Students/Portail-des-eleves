@@ -52,25 +52,6 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         res = self.post("/tags/tags/", {"namespace": 2, "value": "orge"})
         self.assertStatusCode(res, 201)
 
-        namespace = {
-            "id": 2,
-            "scoped_to_model": "association",
-            "scoped_to_pk": "pdm",
-            "name": "farine",
-        }
-        res = self.get("/tags/scope/association/pdm/")
-        self.assertStatusCode(res, 200)
-        self.assertJSONEqual(
-            res.content,
-            {
-                "tags": [
-                    {"id": 2, "value": "sarrasin", "namespace": namespace},
-                    {"id": 3, "value": "blé", "namespace": namespace},
-                    {"id": 7, "value": "orge", "namespace": namespace},
-                ]
-            },
-        )
-
     def test_delete_scoped_tag(self):
         # Create the tag
         self.login("17admin_pdm")

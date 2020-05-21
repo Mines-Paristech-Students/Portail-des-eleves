@@ -9,9 +9,15 @@ from authentication.utils import Birthday
 
 
 @api_view(["GET"])
-def get_birthdays(request, number_of_days):
-    """API endpoint to get birthdays information in the next X days."""
+def get_birthdays(_, number_of_days):
+    """
+    :return: A JSON object with one key, `birthdays`, which is a list of objects `{"day", "month", "users"}`.
+    """
 
+    return Response(birthdays_to_json(number_of_days), status=status.HTTP_200_OK)
+
+
+def birthdays_to_json(number_of_days):
     # Any request with more than 365 days basically mean to fetch all incoming birthdays over the year
     if number_of_days > 365:
         number_of_days = 365
@@ -100,4 +106,4 @@ def get_birthdays(request, number_of_days):
             {"id": user.id, "first_name": user.first_name, "last_name": user.last_name}
         )
 
-    return Response({"birthdays": list(birthdays.values())}, status=status.HTTP_200_OK)
+    return {"birthdays": list(birthdays.values())}

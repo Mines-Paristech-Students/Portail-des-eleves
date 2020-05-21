@@ -1,4 +1,23 @@
 - model: authentication.user
+  pk: 14alarro
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Arnaud
+    last_name: Larroche
+    email: 14alarro@mpt.fr
+    birthday: '1994-05-30'
+    is_active: false
+    is_staff: true
+    nickname: ''
+    city_of_origin: Paris
+    room: ''
+    phone: "+33623149119"
+    year_of_entry: 2014
+    student_type: IC
+    current_academic_year: GRADUATE
+
+- model: authentication.user
   pk: 15veaux
   fields:
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
@@ -7,29 +26,16 @@
     last_name: Veaux
     email: 15veaux@mpt.fr
     birthday: '1996-08-01'
-    is_active: true
-    is_admin: true
+    is_active: false
+    is_staff: true
     nickname: the fair
     city_of_origin: Panem
     room: REDRUM
     phone: "+33000000000"
     year_of_entry: 2015
-- model: authentication.user
-  pk: 17bocquet
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Adrien
-    last_name: Bocquet
-    email: 17bocquet@mpt.fr
-    birthday: '1997-01-08'
-    is_active: true
-    is_admin: true
-    nickname: the roc
-    city_of_origin: Gotham
-    room: '1234'
-    phone: "+33456789012"
-    year_of_entry: 2017
+    student_type: IC
+    current_academic_year: GRADUATE
+
 - model: authentication.user
   pk: 16leroy
   fields:
@@ -40,60 +46,54 @@
     email: 16leroy@mpt.fr
     birthday: '1997-10-14'
     is_active: true
-    is_admin: true
+    is_staff: false
     nickname: Ragicarpe
     city_of_origin: Troupommé-la-forêt
     room: 95 rue Guizot E
     phone: "+33658895122"
     year_of_entry: 2016
+    student_type: IC
+    current_academic_year: 3A
+
 - model: authentication.user
-  pk: 17thomas
+  pk: 16parrain
   fields:
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     last_login:
-    first_name: Alexandre
-    last_name: Thomas
-    email: 17thomas@mpt.fr
-    birthday: '1998-07-13'
+    first_name: Parrain
+    last_name: Padre
+    email: 16parrain@mpt.fr
+    birthday: '1997-02-19'
     is_active: true
-    is_admin: true
-    nickname: ''
-    city_of_origin: ''
-    room: ''
-    phone: ''
+    is_staff: false
+    year_of_entry: 2016
+    student_type: IC
+    current_academic_year: 3A
+
+- model: authentication.user
+  pk: 17bocquet
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Adrien
+    last_name: Bocquet
+    email: 17bocquet@mpt.fr
+    birthday: '1997-01-08'
+    is_active: true
+    is_staff: true
+    is_superuser: true
+    nickname: the roc
+    address: Batcave
+    city_of_origin: Gotham
+    option: Géostats
+    room: '1234'
+    phone: "+33456789012"
     year_of_entry: 2017
-- model: authentication.user
-  pk: 18leponge
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Bob
-    last_name: L'Éponge
-    email: 18leponge@mpt.fr
-    birthday: '2000-01-01'
-    is_active: true
-    is_admin: false
-    nickname: ''
-    city_of_origin: Bikini Bottom
-    room: ''
-    phone: ''
-    year_of_entry: 2018
-- model: authentication.user
-  pk: 18aouir
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Denis
-    last_name: Aouir
-    email: 18aouir@mpt.fr
-    birthday: '1997-10-29'
-    is_active: true
-    is_admin: true
-    nickname: ''
-    city_of_origin: Bikini Bottom
-    room: ''
-    phone: ''
-    year_of_entry: 2018
+    student_type: IC
+    current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
+    roommate: [17wan-fat]
+
 - model: authentication.user
   pk: 17wan-fat
   fields:
@@ -104,106 +104,174 @@
     email: 17wan-fat@mpt.fr
     birthday: '1998-06-26'
     is_active: true
-    is_admin: true
+    is_staff: true
     nickname: Le Rocher
     city_of_origin: Le Tampon
+    option: M&E
     room: '802'
     phone: ''
     year_of_entry: 2017
+    student_type: IC
+    current_academic_year: "GAP YEAR"
+    minesparent: [16parrain]
+    roommate: [17bocquet]
+
 - model: authentication.user
-  pk: 18chlieh
+  pk: 18aouir
   fields:
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     last_login:
-    first_name: Reda
-    last_name: Chlieh
-    email: 18chlieh@mpt.fr
-    birthday: '1998-06-10'
+    first_name: Denis
+    last_name: Aouir
+    email: 18aouir@mpt.fr
+    birthday: '1997-10-29'
     is_active: true
-    is_admin: false
-    nickname: Hulk
-    city_of_origin: Rabat
-    room: '105'
+    is_staff: true
+    nickname: ''
+    city_of_origin: Bikini Bottom
+    room: ''
     phone: ''
     year_of_entry: 2018
-- model: authentication.user
-  pk: 18goessel
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Thibault
-    last_name: Goessel
-    email: 18goessel@mpt.fr
-    birthday: '1998-12-22'
-    is_active: true
-    is_admin: true
-    nickname: Titi
-    city_of_origin: Rubelles
-    room: '1001'
-    phone: "+33608502620"
-    year_of_entry: 2018
-- model: authentication.user
-  pk: 18laude
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Alexiane
-    last_name: Laude
-    email: 18laude@mpt.fr
-    birthday: '1998-08-24'
-    is_active: true
-    is_admin: true
-    nickname: Alex?
-    city_of_origin: Aix
-    room: '320'
-    phone: 0750384180
-    year_of_entry: 2018
-- model: authentication.user
-  pk: 15menou
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Hubert
-    last_name: Menou
-    email: 15menou@mpt.fr
-    birthday: '1996-04-11'
-    is_active: true
-    is_admin: false
-    nickname: Hub
-    city_of_origin: Pau
-    room: '420'
-    phone: 0799007766
-    year_of_entry: 2015
-- model: authentication.user
-  pk: 18magne
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Tanguy
-    last_name: MAGNE
-    email: 18magne@mpt.fr
-    birthday: '1998-04-04'
-    is_active: true
-    is_admin: true
-    nickname: Tanguy
-    city_of_origin: Langogne
-    room: '327'
-    phone: 0633499049
-    year_of_entry: 2018
-- model: authentication.user
-  pk: 14alarro
-  fields:
-    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
-    last_login:
-    first_name: Arnaud
-    last_name: Larroche
-    email: 14alarro@mpt.fr
-    birthday: '1994-05-30'
-    is_active: true
-    is_admin: true
-    nickname: ''
-    city_of_origin: Paris
-    room: ''
-    phone: "+33623149119"
-    year_of_entry: 2014
+    student_type: IC
+    current_academic_year: 2A
 
+- model: authentication.user
+  pk: 19simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Simple
+    last_name: Mine
+    email: 19simple@mpt.fr
+    birthday: '2000-04-28'
+    is_active: true
+    is_staff: false
+    nickname: 'Simplet'
+    city_of_origin: Paris
+    room: PAM
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+
+- model: authentication.user
+  pk: 19bde
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Présidente
+    last_name: BDE
+    email: 19bde@mpt.fr
+    birthday: '2000-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Dictatrice'
+    city_of_origin: Versailles
+    room: 304
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19membre-bde, 19library-bde]
+
+- model: authentication.user
+  pk: 19library-bde
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Library
+    last_name: BDE
+    email: 19library-bde@mpt.fr
+    birthday: '2000-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Archiviste'
+    city_of_origin: Versailles
+    room: 302
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19bde, 19membre-bde]
+
+- model: authentication.user
+  pk: 19membre-bde
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Membre
+    last_name: BDE
+    email: 19membre-bde@mpt.fr
+    birthday: '2000-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Sous-fifre'
+    city_of_origin: Lyon
+    room: Piaule à crêpes
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19bde, 19library-bde]
+
+- model: authentication.user
+  pk: 19biero
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Président
+    last_name: Biéro
+    email: 19biero@mpt.fr
+    birthday: '1999-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Kro'
+    city_of_origin: Bourg-é
+    room: FAO
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    minesparent: [17bocquet, 17wan-fat]
+    roommate: [19membre-biero, 19market-biero]
+
+- model: authentication.user
+  pk: 19market-biero
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Market
+    last_name: Biéro
+    email: 19market-biero@mpt.fr
+    birthday: '1999-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Heineken'
+    city_of_origin: Cuite-sur-Yvette
+    room: FAO
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    roommate: [19biero, 19membre-biero]
+
+- model: authentication.user
+  pk: 19membre-biero
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Membre
+    last_name: Biéro
+    email: 19membre-biero@mpt.fr
+    birthday: '1999-05-14'
+    is_active: true
+    is_staff: false
+    nickname: 'Seize'
+    city_of_origin: Murge-sur-Seine
+    room: Octo
+    phone: "+330011223383"
+    year_of_entry: 2019
+    student_type: IC
+    current_academic_year: 1A
+    minesparent: [17bocquet]
+    roommate: [19biero, 19market-biero]

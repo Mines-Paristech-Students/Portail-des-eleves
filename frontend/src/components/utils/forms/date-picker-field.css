@@ -1,0 +1,9 @@
+/**
+It seems that, when the input is a DayPicker, Bootstrap does not update the property `display: none` of the
+`invalid-feedback` div when it should. `FormControl.Feedback` is thus never displayed.
+As we only display (in the React code) the Feedback when it's not empty, we just always override the display property.
+ */
+
+.invalid-feedback.date-picker-feedback {
+    display: block !important;
+}

@@ -61,15 +61,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/associations/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all associations, but one should be missing
 
         response = self.get("/associations/associations/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -84,15 +84,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/elections/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all elections, but one should be missing
 
         response = self.get("/associations/elections/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1)
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -121,15 +121,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/events/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all events, but one should be missing
 
         response = self.get("/associations/events/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -144,14 +144,14 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/fundings/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all objects, but one should be missing
 
         response = self.get("/associations/fundings/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
 
         # Cannot directly access a hidden object.
         response = self.get("/associations/fundings/2/")
@@ -165,15 +165,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/library/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all library, but one should be missing
 
         response = self.get("/associations/library/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1)
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["id"])
 
         # Cannot directly access a hidden object.
@@ -188,15 +188,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/loanables/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data["results"]), 3)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all objects, but one should be missing
 
         response = self.get("/associations/loanables/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -213,14 +213,14 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/loans/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all objects, but one should be missing
 
         response = self.get("/associations/loans/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
 
         # Cannot directly access a hidden object.
         response = self.get("/associations/loans/2/")
@@ -234,15 +234,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/marketplace/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all marketplaces, but one should be missing
 
         response = self.get("/associations/marketplace/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1)
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["id"])
 
         # Cannot directly access a hidden object.
@@ -257,15 +257,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/media/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data["results"]), 3)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all media, but one should be missing
 
         response = self.get("/associations/media/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -281,15 +281,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/pages/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data["results"]), 3)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all pages, but one should be missing
 
         response = self.get("/associations/pages/")
-        self.assertEqual(len(response.data), 1)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1)
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["text"])
 
         # Cannot directly access a hidden object.
@@ -304,15 +304,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/products/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data["results"]), 3)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all products, but two should be missing
 
         response = self.get("/associations/products/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["name"])
 
         # Cannot directly access a hidden object.
@@ -329,14 +329,14 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/transactions/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all objects, but one should be missing
 
         response = self.get("/associations/transactions/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
 
         # Cannot directly access a hidden object.
         response = self.get("/associations/transactions/2/")
@@ -350,15 +350,15 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/associations/roles/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data["results"]), 3)
 
         self.switch_17simple_to_first_year()
         ###########################################
         # Get all roles, but one should be missing
 
         response = self.get("/associations/roles/")
-        self.assertEqual(len(response.data), 1, msg=response.data)
-        for item in response.data:
+        self.assertEqual(len(response.data["results"]), 1, msg=response.data["results"])
+        for item in response.data["results"]:
             self.assertNotIn("hidden", item["role"])
 
         # Cannot directly access a hidden object.
@@ -401,7 +401,7 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/associations/public_association/")
         self.assertEqual(response.status_code, 200)
 
-        # Check if `response.data` is what we think it is.
+        # Check if `response.data["results"]` is what we think it is.
         self.assertEqual(response.data["name"], "Public association")
 
         msg = (
@@ -469,7 +469,7 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/associations/public_association/")
         self.assertEqual(response.status_code, 200)
 
-        # Check if `response.data` is what we think it is.
+        # Check if `response.data["results"]` is what we think it is.
         self.assertEqual(response.data["name"], "Public association")
 
         msg = (
@@ -484,12 +484,3 @@ class HidingTestCase(TagsBaseTestCase):
 
         response = self.get("/tags/namespaces/1/")
         self.assertEqual(response.status_code, 403)
-
-    def test_hiding_tags_in_namespaces(self):
-        self.login("17simple")
-        response = self.get("/tags/namespaces/")
-        self.assertEqual(len(response.data[0]["tags"]), 1)
-
-        self.switch_17simple_to_first_year()
-        response = self.get("/tags/namespaces/")
-        self.assertEqual(len(response.data[0]["tags"]), 0)

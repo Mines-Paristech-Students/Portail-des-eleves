@@ -1,0 +1,7 @@
+.pointer {
+    cursor: pointer;
+}
+
+.noSelect {
+    user-select: none;
+}

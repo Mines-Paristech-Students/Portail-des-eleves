@@ -18,7 +18,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -27,6 +27,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
 
 - model: authentication.user
@@ -36,7 +37,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -45,6 +46,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
 
 #######
@@ -64,7 +66,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -73,6 +75,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     election_permission: false
 
@@ -83,7 +86,7 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
 
 - model: associations.role
@@ -92,5 +95,6 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     election_permission: false

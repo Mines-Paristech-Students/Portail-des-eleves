@@ -175,7 +175,7 @@ class ElectionTestCase(BaseElectionTestCase):
         self.assertInstanceEqualData(election, self.update_election_data)
 
     def test_if_election_admin_then_cannot_update_election_with_inconsistent_dates(
-        self
+        self,
     ):
         self.login("17election_biero")
         election_before = Election.objects.get(pk=1)

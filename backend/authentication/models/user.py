@@ -1,7 +1,11 @@
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import (
+    BaseUserManager,
+    AbstractBaseUser,
+    PermissionsMixin,
+)
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
@@ -67,12 +71,12 @@ class UserManager(BaseUserManager):
 
         user.set_password(password)
         if is_admin:
-            user.is_admin = True
+            user.is_staff = True
         user.save(using=self._db)
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     STUDENT_TYPES = (
         ("AST", "AST"),
         ("ISUPFERE", "ISUPFERE"),
@@ -80,7 +84,13 @@ class User(AbstractBaseUser):
         ("IC", "IC"),
     )
 
-    ACADEMIC_YEARS = (("1A", "1A"), ("2A", "2A"), ("GAP YEAR", "CÉSURE"), ("3A", "3A"))
+    ACADEMIC_YEARS = (
+        ("1A", "1A"),
+        ("2A", "2A"),
+        ("GAP YEAR", "césure"),
+        ("3A", "3A"),
+        ("GRADUATE", "diplômé(e)"),
+    )
 
     id = models.CharField(primary_key=True, max_length=30)
 
@@ -110,7 +120,6 @@ class User(AbstractBaseUser):
     current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
 
     # Life at school.
-    sports = models.CharField(max_length=512, blank=True)
     roommate = models.ManyToManyField("self", symmetrical=True, default=None)
     minesparent = models.ManyToManyField(
         "self", related_name="fillots", symmetrical=False, default=None
@@ -118,7 +127,7 @@ class User(AbstractBaseUser):
 
     # Life on portail.
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -132,8 +141,8 @@ class User(AbstractBaseUser):
         return self.id
 
     @cached_property
-    def is_staff(self):
-        return self.is_admin
+    def is_admin(self):
+        return self.is_staff
 
     @cached_property
     def is_in_first_year(self):

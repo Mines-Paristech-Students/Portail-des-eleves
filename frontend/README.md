@@ -2,12 +2,12 @@
 
 ## Used libraries
 
-- React
-- React router
-- Axios : AJAX calls
-- [React async](https://github.com/tannerlinsley/react-query)
-- [Formik](https://jaredpalmer.com/formik/) : forms
-- [Yup](https://github.com/jquense/yup) : form validation
+-   React
+-   React router
+-   Axios : AJAX calls
+-   [React async](https://github.com/tannerlinsley/react-query)
+-   [Formik](https://jaredpalmer.com/formik/) : forms
+-   [Yup](https://github.com/jquense/yup) : form validation
 
 ## Available Scripts
 

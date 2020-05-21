@@ -43,7 +43,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         )
 
     def test_if_not_marketplace_admin_then_cannot_retrieve_balance_of_another_user(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_MARKET_BIERO:
             if user != "17simple":

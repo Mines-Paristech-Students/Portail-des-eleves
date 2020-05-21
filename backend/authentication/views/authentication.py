@@ -73,5 +73,12 @@ class CredentialsView(views.APIView):
                 "user_id": request.user.id,
                 "first_name": request.user.first_name,
                 "last_name": request.user.last_name,
+                "promotion": request.user.promotion,
+                "is_staff": request.user.is_staff,
             }
         )
+
+
+class JwtView(views.APIView):
+    def get(self, request):
+        return Response({"jwt_token": request.COOKIES["jwt_access"]})
