@@ -29,3 +29,6 @@ class Page(models.Model):
     page_type = models.CharField(
         choices=PAGE_TYPES, blank=False, default=STATIC, max_length=6
     )
+
+    class Meta:
+        ordering = ["-id"]

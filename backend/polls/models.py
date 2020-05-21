@@ -108,6 +108,7 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ("poll", "user")
+        ordering = ["-id"]
 
     def __str__(self):
         return str(self.choice)
