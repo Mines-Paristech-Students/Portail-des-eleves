@@ -6,8 +6,9 @@ import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
 import { formatDate } from "../../../utils/format";
-import { TransactionStatus } from "../../../models/associations/marketplace";
+import { Funding, FundingStatus, TransactionStatus } from "../../../models/associations/marketplace";
 import { Table } from "../../utils/table/Table";
+import { Link } from "react-router-dom";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
@@ -16,12 +17,12 @@ export const AssociationMarketplaceHistory = ({ association }) => {
     return (
         <>
             <div className={"float-center"}>
-                <a
-                    href={"/associations/" + marketplaceId + "/marketplace"}
+                <Link
+                    to={"/associations/" + marketplaceId + "/marketplace"}
                     className={"btn btn-primary"}
                 >
                     <i className={"fe fe-book-open"} /> Magasin
-                </a>
+                </Link>
             </div>
             <TransactionHistory marketplaceId={marketplaceId} user={user} />
             <FundingHistory marketplaceId={marketplaceId} user={user} />
@@ -154,10 +155,10 @@ const FundingHistory = ({ marketplaceId, user }) => {
         {
             key: "value",
             header: "Valeur",
-            render: (funding) =>
-                funding.status === "FUNDED" ? (
+            render: (funding: Funding) =>
+                funding.status === FundingStatus.Funded ? (
                     <span className="tag tag-blue">Versé</span>
-                ) : funding.status === "REFUNED" ? (
+                ) : funding.status === FundingStatus.Refunded ? (
                     <span className="tag tag-yellow">Remboursé</span>
                 ) : null,
             headerClassName: "text-center",

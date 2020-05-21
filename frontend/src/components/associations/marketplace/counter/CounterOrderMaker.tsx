@@ -98,7 +98,7 @@ export const CounterOrderMaker = ({
             setBasket({});
             resetCustomer();
             newToast({
-                message: `Commande passé avec succès`,
+                message: "Commande passée avec succès",
                 level: ToastLevel.Success,
             });
         }

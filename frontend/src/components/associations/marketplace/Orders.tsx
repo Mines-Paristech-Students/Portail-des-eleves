@@ -113,7 +113,7 @@ const TransactionStatusSelector = ({
             .patch({ id: transaction.id, status: status })
             .then((_) => {
                 newToast({
-                    message: "Le status a bien été modifié",
+                    message: "Le statut a bien été modifié",
                     level: ToastLevel.Success,
                 });
             })

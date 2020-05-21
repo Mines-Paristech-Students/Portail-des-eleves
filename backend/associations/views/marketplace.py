@@ -3,12 +3,7 @@ from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Q
-from django.http import (
-    JsonResponse,
-    HttpResponseForbidden,
-    HttpResponseBadRequest,
-    Http404,
-)
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.filters import SearchFilter
@@ -139,7 +134,7 @@ class TransactionViewSet(
                     "Cannot create a Transaction for another user."
                 )
 
-        with transaction.atomic():
+        with transaction.atomic():  # make sure the stock is updated iff the transaction is taken into account
             self.perform_create(serializer)
             product.number_left -= serializer.validated_data["quantity"]
             product.save()
@@ -161,7 +156,7 @@ class TransactionViewSet(
 
         product = instance.product
 
-        with transaction.atomic():
+        with transaction.atomic():  # make sure the stock is updated iff the transaction is taken into account
             self.perform_update(serializer)
             new_status = instance.status
 
@@ -270,7 +265,7 @@ class BalanceView(APIView):
                 )
             )
 
-            return JsonResponse(
+            return Response(
                 {
                     "balances": [
                         self.get_balance_in_json(request.user, marketplace)
@@ -290,7 +285,7 @@ class BalanceView(APIView):
             if not user_id:
                 # List the balances of all the users.
                 if role and role.marketplace:
-                    return JsonResponse(
+                    return Response(
                         [
                             self.get_balance_in_json(u, marketplace)
                             for u in User.objects.all()
@@ -309,4 +304,4 @@ class BalanceView(APIView):
                             "You are not allowed to view the balance of this user."
                         )
 
-                return JsonResponse(self.get_balance_in_json(user, marketplace))
+                return Response(self.get_balance_in_json(user, marketplace))

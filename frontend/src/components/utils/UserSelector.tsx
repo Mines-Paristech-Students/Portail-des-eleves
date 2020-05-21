@@ -3,8 +3,9 @@ import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { Loading } from "./Loading";
 import { DebounceInput } from "react-debounce-input";
 import { Row, Card } from "react-bootstrap";
+import { Error } from "../utils/Error";
 
-export const UserSelector = ({ setCustomer }) => {
+export const UserSelector = ({ setUser }) => {
     const [searchValue, setSearchValue] = useState("");
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
         ["users.list.search", { search: searchValue }],
@@ -12,7 +13,7 @@ export const UserSelector = ({ setCustomer }) => {
     );
 
     if (status === "loading") return <Loading />;
-    else if (status === "error") return <p>`Something went wrong: ${error}`</p>;
+    else if (status === "error") return <Error detail={error}/>;
     else if (data) {
         return (
             <>
@@ -28,7 +29,7 @@ export const UserSelector = ({ setCustomer }) => {
                     {data.results.map((user) => (
                         <div
                             className="col-lg-2 col-sm-3 col-6 p-2"
-                            onClick={() => setCustomer(user)}
+                            onClick={() => setUser(user)}
                             key={user.id}
                         >
                             <Card className="mb-0">

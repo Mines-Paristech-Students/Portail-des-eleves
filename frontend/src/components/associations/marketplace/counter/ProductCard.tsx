@@ -1,9 +1,9 @@
-import { Card } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import React from "react";
 import { decidePlural } from "../../../../utils/format";
 
 export const ProductCard = ({ product, addToBasket, quantityOrdered }) => (
-    <div className={"col-lg-3 col-sm-4 col-6 p-1"} key={product.id}>
+    <Col lg={"3"} sm={"4"} xs={"6"} className={"p-1"} key={product.id}>
         <Card className={"m-0"} onClick={() => addToBasket(product)}>
             <Card.Body className={"p-3 text-center"}>
                 {product.name}
@@ -22,5 +22,5 @@ export const ProductCard = ({ product, addToBasket, quantityOrdered }) => (
                 </small>
             </Card.Body>
         </Card>
-    </div>
+    </Col>
 );

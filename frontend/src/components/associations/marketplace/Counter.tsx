@@ -6,7 +6,7 @@ import { CounterOrderMaker } from "./counter/CounterOrderMaker";
 
 /**
  * Counter is the component used by people in marketplace's counter to sell
- * products. It allows quick user choice, making a backet and validating all
+ * products. It allows quick user choice, making a basket and validating all
  * transactions at once.
  */
 export const AssociationMarketplaceCounter = ({ association }) => {
@@ -24,7 +24,7 @@ export const AssociationMarketplaceCounter = ({ association }) => {
                 Comptoir {customer ? ` - ${customer.id}` : null}
             </PageTitle>
             {customer === null ? (
-                <UserSelector setCustomer={setCustomer} />
+                <UserSelector setUser={setCustomer} />
             ) : (
                 <CounterOrderMaker
                     marketplaceId={association.id}

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row, InputGroup } from "react-bootstrap";
 
 export const RefundForm = ({ customer, marketplaceId }) => {
     const newToast = useContext(ToastContext);
@@ -44,20 +44,20 @@ export const RefundForm = ({ customer, marketplaceId }) => {
     const [refundValue, setRefundValue] = useState("");
 
     return (
-        <div className="form-group">
+        <Form.Group>
             <Row>
                 <Col>
-                    <div className="input-group">
+                    <InputGroup>
                         <Form.Control
                             type="number"
                             placeholder="recréditer le compte"
                             value={refundValue}
                             onChange={(e) => setRefundValue(e.target.value)}
                         />
-                        <span className="input-group-append">
-                            <span className="input-group-text">€</span>
-                        </span>
-                    </div>
+                        <InputGroup.Append>
+                            <InputGroup.Text>€</InputGroup.Text>
+                        </InputGroup.Append>
+                    </InputGroup>
                 </Col>
                 <Col xs="auto">
                     <Button variant={"success"} onClick={increaseBalance}>
@@ -66,6 +66,6 @@ export const RefundForm = ({ customer, marketplaceId }) => {
                     </Button>
                 </Col>
             </Row>
-        </div>
+        </Form.Group>
     );
 };
