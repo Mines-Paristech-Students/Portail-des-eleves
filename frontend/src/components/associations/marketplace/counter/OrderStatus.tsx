@@ -10,14 +10,14 @@ export const OrderStatus = ({ product, quantity, status, decreaseNumber }) => (
         </td>
         <td className={"pl-1"}>{product.price * quantity}€</td>
         <td className={"text-right"}>
-            {status == "idle" ? (
+            {status === "idle" ? (
                 <span
                     className="fe fe-delete text-danger"
                     onClick={decreaseNumber}
                 />
-            ) : status == "loading" ? (
+            ) : status === "loading" ? (
                 <span className="fe fe-upload" />
-            ) : status == "success" ? (
+            ) : status === "success" ? (
                 <span className="text-success fe fe-check" />
             ) : (
                 <span className="text-danger fe fe-alert-octagon" />

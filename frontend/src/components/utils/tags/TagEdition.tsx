@@ -126,7 +126,7 @@ export const TagEdition = ({ model, id }) => {
         api.tags.list(params).then((data) => {
             setTags(data.results);
         });
-    }, [model, id]);
+    }, [model, id, params]);
 
     // Event handlers
     const handleChange = (selectedOption, action) => {

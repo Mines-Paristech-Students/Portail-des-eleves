@@ -37,7 +37,7 @@ export const CounterOrderMaker = ({
 
         if (
             product.numberLeft >= newBasket[product.id].quantity + 1 ||
-            product.numberLeft == -1 // unlimited
+            product.numberLeft === -1 // unlimited
         ) {
             newBasket[product.id].quantity += 1;
         }
@@ -62,7 +62,7 @@ export const CounterOrderMaker = ({
         for (let order of orders) {
             let { product, quantity, status } = order;
 
-            if (status == "success") {
+            if (status === "success") {
                 continue;
             }
 
@@ -111,9 +111,9 @@ export const CounterOrderMaker = ({
             <Card>
                 <Card.Header>
                     Solde :{" "}
-                    {balanceStatus == "loading" ? (
+                    {balanceStatus === "loading" ? (
                         <em>Chargement</em>
-                    ) : balanceStatus == "error" ? (
+                    ) : balanceStatus === "error" ? (
                         <em>Erreur {balanceError} : balance</em>
                     ) : (
                         `${(balance as { balance: number }).balance}€`

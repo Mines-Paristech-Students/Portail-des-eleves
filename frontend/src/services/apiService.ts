@@ -70,12 +70,12 @@ export const api = {
     fundings: fundings,
 
     polls: polls,
+
     tags: tags,
     namespaces: namespaces,
 
-    users: users,
     jwt: jwt,
-
+    users: users,
     profile: profile,
 };
 

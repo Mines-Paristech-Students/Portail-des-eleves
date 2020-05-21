@@ -123,7 +123,7 @@ class TransactionViewSet(
         product = Product.objects.get(pk=serializer.validated_data["product"].id)
 
         # Check if there are enough products remaining.
-        # -1 means there are as much of the product as we want
+        # -1 means there is as much of the product as we want
         if "quantity" not in serializer.validated_data or (
             -1 < product.number_left < serializer.validated_data["quantity"]
         ):

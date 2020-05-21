@@ -1,16 +1,31 @@
-import {
-    apiService,
-    PaginatedResponse,
-    toUrlParams,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { User } from "../../models/user";
 
 export const users = {
-    list: (params = {}, page = 1) => {
-        params["page"] = page;
-        return unwrap<PaginatedResponse<User>>(
-            apiService.get(`/users/users/${toUrlParams(params)}`)
-        );
-    },
+    list: (
+        {
+            searchKey,
+            promotions,
+        }: {
+            searchKey: string;
+            promotions?: { value: string; label: string }[];
+        },
+        page
+    ) =>
+        unwrap<PaginatedResponse<User[]>>(
+            apiService.get(
+                `/users/users/?page=${page}${
+                    searchKey ? `&search=${searchKey}` : ""
+                }${
+                    promotions
+                        ? `&promotion__in=${promotions
+                              .map((promotion) => promotion.value)
+                              .join(",")}`
+                        : ""
+                }`
+            )
+        ),
+    listPromotions: () =>
+        unwrap<{ promotions: string[] }>(apiService.get("/users/promotions")),
 };
+

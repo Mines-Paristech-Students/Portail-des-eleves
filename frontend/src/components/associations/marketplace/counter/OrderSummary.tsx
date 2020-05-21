@@ -3,7 +3,7 @@ import React from "react";
 import { OrderStatus } from "./OrderStatus";
 
 export const OrderSummary = ({ basket, removeFromBasket, makeOrder }) => {
-    if (Object.keys(basket).length == 0) {
+    if (Object.keys(basket).length === 0) {
         return null;
     }
 

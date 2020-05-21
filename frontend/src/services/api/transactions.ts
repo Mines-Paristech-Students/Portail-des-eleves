@@ -7,6 +7,7 @@ export const transactions = {
             product: product.id,
             quantity: quantity,
             buyer: buyer.id,
+            status: status
         }),
     list: (marketplaceId, params = {}, page = 1) => {
         params["marketplace"] = marketplaceId;

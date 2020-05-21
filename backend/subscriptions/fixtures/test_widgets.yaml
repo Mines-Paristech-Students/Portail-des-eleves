@@ -21,6 +21,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17member_biero
@@ -31,6 +32,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -51,6 +53,7 @@
     last_name: Events
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -125,6 +128,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -145,6 +149,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -165,6 +170,7 @@
     last_name: Events
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -268,6 +274,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -288,6 +295,7 @@
     last_name: Library administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -308,6 +316,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -328,6 +337,7 @@
     last_name: Manager
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17library_biero
@@ -338,6 +348,7 @@
     last_name: Library administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -358,6 +369,7 @@
     last_name: Library administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -378,6 +390,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 6
@@ -667,6 +680,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -687,6 +701,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -707,6 +722,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17admin_pdm
@@ -717,6 +733,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -737,6 +754,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -757,6 +775,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -777,6 +796,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 6
@@ -797,6 +817,7 @@
     last_name: Consumer
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.transaction
   pk: 0
@@ -1068,6 +1089,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -1088,6 +1110,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -1108,6 +1131,7 @@
     last_name: page
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -1156,6 +1180,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -1176,6 +1201,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -1196,6 +1222,7 @@
     last_name: page
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -1226,6 +1253,7 @@
     email: admin@mpt.fr
     is_staff: true
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17simple
@@ -1236,6 +1264,7 @@
     email: simple@mpt.fr
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 18simple
@@ -1246,6 +1275,7 @@
     email: 18simple@mpt.fr
     is_staff: false
     year_of_entry: 2018
+    promotion: P18
 
 - model: authentication.user
   pk: 17bocquet
@@ -1263,6 +1293,7 @@
     room: '1234'
     phone: "+33456789012"
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17wan-fat
@@ -1280,6 +1311,7 @@
     room: '802'
     phone: ''
     year_of_entry: 2017
+    promotion: P17
 
 
 - model: authentication.user
@@ -1298,6 +1330,7 @@
     room: '802'
     phone: ''
     year_of_entry: 2017
+    promotion: P17
 
 - model: polls.Poll
   pk: 1

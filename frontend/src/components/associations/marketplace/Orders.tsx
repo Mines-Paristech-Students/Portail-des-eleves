@@ -98,7 +98,7 @@ const TransactionStatusSelector = ({
         [TransactionStatus.Refunded, "yellow", "Remboursée"],
     ];
 
-    const [status, type, tag] = statusList.filter(
+    const [, type, tag] = statusList.filter(
         (item) => item[0] === transaction.status
     )[0];
 
