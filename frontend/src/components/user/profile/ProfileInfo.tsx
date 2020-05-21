@@ -130,7 +130,10 @@ export const ProfileInfo = ({
         </Card.Body>
         {showEditButton && (
             <Card.Footer>
-                <Link className="btn btn-outline-primary" to="/profils/modifier">
+                <Link
+                    className="btn btn-outline-primary"
+                    to="/profils/modifier"
+                >
                     Modifier mon profil
                 </Link>
             </Card.Footer>
