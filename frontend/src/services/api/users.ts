@@ -18,7 +18,7 @@ export const users = {
                     searchKey ? `&search=${searchKey}` : ""
                 }${
                     promotions
-                        ? `&promotion=${promotions
+                        ? `&promotion__in=${promotions
                               .map((promotion) => promotion.value)
                               .join(",")}`
                         : ""
