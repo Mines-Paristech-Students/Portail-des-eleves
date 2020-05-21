@@ -54,12 +54,10 @@ export const Trombi = () => {
                         value={promotionsFilter}
                         options={
                             promotions
-                                ? promotions.promotions.map((promotion) => {
-                                      return {
-                                          value: promotion,
-                                          label: promotion,
-                                      };
-                                  })
+                                ? promotions.promotions.map((promotion) => ({
+                                      value: promotion,
+                                      label: promotion,
+                                  }))
                                 : []
                         }
                         closeMenuOnSelect={false}
