@@ -48,7 +48,7 @@ export const UserAvatar = ({
     return link ? (
         <Link
             to={`/profils/${userId}`}
-            className={`user-avatar-link ${linkClassName ? linkClassName : ""}`}
+            className={`user-avatar-link ${linkClassName || ""}`}
         >
             {avatar}
         </Link>

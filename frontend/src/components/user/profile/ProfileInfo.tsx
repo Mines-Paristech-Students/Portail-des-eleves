@@ -6,9 +6,9 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Profile } from "../../../models/profile";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { Size } from "../../../utils/size";
+import Button from "react-bootstrap/Button";
 import { formatLongDate } from "../../../utils/format";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 const ACADEMIC_YEAR = new Map([
     ["1A", "1A"],
@@ -29,13 +29,12 @@ export const ProfileInfo = ({
         <Card.Body>
             <Row>
                 <div className="media">
-                    <div className="ml-3 mr-5">
-                        <UserAvatar
-                            userId={profile.id}
-                            size={Size.XXL}
-                            link={false}
-                        />
-                    </div>
+                    <UserAvatar
+                        userId={profile.id}
+                        size={Size.XXL}
+                        className="ml-3 mr-5"
+                        link={false}
+                    />
                     <div className="media-body">
                         <h3 className="m-0">{`${profile.firstName} ${profile.lastName}`}</h3>
                         <p className="font-italic mb-2">{profile.nickname}</p>
@@ -130,12 +129,9 @@ export const ProfileInfo = ({
         </Card.Body>
         {showEditButton && (
             <Card.Footer>
-                <Link
-                    to="/profils/modifier"
-                    className="btn btn-outline-primary text-decoration-none"
-                >
+                <Button href="/profils/modifier" variant="outline-primary">
                     Modifier mon profil
-                </Link>
+                </Button>
             </Card.Footer>
         )}
     </Card>

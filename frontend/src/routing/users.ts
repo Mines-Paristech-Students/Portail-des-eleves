@@ -19,4 +19,9 @@ export const routes: Route[] = [
         component: UserProfile,
         exact: true,
     },
+    {
+        path: `/profils/:userId`,
+        component: UserProfile,
+        exact: true,
+    },
 ];

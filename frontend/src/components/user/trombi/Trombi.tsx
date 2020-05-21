@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Pagination } from "../../utils/Pagination";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { UserAvatarCard } from "../../utils/avatar/UserAvatarCard";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import FormControl from "react-bootstrap/FormControl";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../utils/PageTitle";
 import { Link } from "react-router-dom";
-import Select, { OptionsType, ValueType } from "react-select";
+import Select, { ValueType } from "react-select";
 import InputGroup from "react-bootstrap/InputGroup";
+import { DebounceInput } from "react-debounce-input";
 
 export const Trombi = () => {
     const { data: promotions } = useBetterQuery<{
@@ -18,32 +18,8 @@ export const Trombi = () => {
         refetchOnWindowFocus: false,
     });
 
-    // react-select requires an `options` field of a special type. These hooks handle this.
-    const [promotionsOptions, setPromotionsOptions] = useState<
-        OptionsType<{ value: string; label: string }>
-    >([]);
-
-    useEffect(() => {
-        if (promotions) {
-            setPromotionsOptions(
-                promotions.promotions.map((promotion) => {
-                    return { value: promotion, label: promotion };
-                })
-            );
-        }
-    }, [promotions]);
-
     // The search key sent to `api.users.list`. It is debounced thanks to the `searchInputValue` hooks.
-    const [searchKey, setSearchKey] = useState<string>("");
-    const [searchInputValue, setSearchInputValue] = useState<string>("");
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setSearchKey(searchInputValue);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, [searchInputValue]);
+    const [searchKey, setSearchKey] = useState("");
 
     // The promotions filter sent to `api.users.list`.
     const [promotionsFilter, setPromotionsFilter] = useState<
@@ -58,14 +34,17 @@ export const Trombi = () => {
                 <Col md={3}>
                     <InputGroup className="mb-3" tabIndex={0}>
                         <div className="input-icon w-100">
-                            <FormControl
+                            <DebounceInput
+                                className="form-control"
                                 placeholder="Rechercher…"
+                                debounceTimeout={500}
                                 onChange={(event) =>
-                                    setSearchInputValue(event.target.value)
+                                    setSearchKey(event.target.value)
                                 }
                             />
+
                             <span className="input-icon-addon">
-                                <i className="fe fe-search"></i>
+                                <i className="fe fe-search" />
                             </span>
                         </div>
                     </InputGroup>
@@ -73,12 +52,18 @@ export const Trombi = () => {
                 <Col md={{ span: 3, offset: 6 }}>
                     <Select
                         value={promotionsFilter}
-                        options={promotionsOptions}
+                        options={
+                            promotions
+                                ? promotions.promotions.map((promotion) => ({
+                                      value: promotion,
+                                      label: promotion,
+                                  }))
+                                : []
+                        }
+                        closeMenuOnSelect={false}
                         isMulti
                         placeholder="Filtrer par promotion…"
-                        onChange={(newPromotions) =>
-                            setPromotionsFilter(newPromotions)
-                        }
+                        onChange={setPromotionsFilter}
                     />
                 </Col>
             </Row>

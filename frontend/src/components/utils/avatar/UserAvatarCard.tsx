@@ -8,6 +8,7 @@ import { Size } from "../../../utils/size";
  *
  * This will not look good unless it's used in a `Col`. Recommended: on full width, `lg={2} sm={3}` with Size=Size.XXL (default).
  *
+<<<<<<< HEAD
  * @param children components to add below the `UserAvatar`.
  * @param userId the user ID.
  * @param className optional, the classes added to the `Card` component.
@@ -18,6 +19,9 @@ import { Size } from "../../../utils/size";
  * @param link optional. If true, add a link to the user profile. Defaults to true.
  * @param props these props will be passed to `UserAvatar`.
  * @constructor
+=======
+ * Except `children`, the props are the same as `UserAvatar`.
+>>>>>>> master
  */
 export const UserAvatarCard = ({
     children,
