@@ -6,14 +6,15 @@
     first_name: Arnaud
     last_name: Larroche
     email: 14alarro@mpt.fr
-    birthday: '1994-05-30'
+    birthday: "1994-05-30"
     is_active: false
     is_staff: true
-    nickname: ''
+    nickname: ""
     city_of_origin: Paris
-    room: ''
+    room: ""
     phone: "+33623149119"
     year_of_entry: 2014
+    promotion: P14
     student_type: IC
     current_academic_year: GRADUATE
 
@@ -25,7 +26,7 @@
     first_name: Florian
     last_name: Veaux
     email: 15veaux@mpt.fr
-    birthday: '1996-08-01'
+    birthday: "1996-08-01"
     is_active: false
     is_staff: true
     nickname: the fair
@@ -33,6 +34,7 @@
     room: REDRUM
     phone: "+33000000000"
     year_of_entry: 2015
+    promotion: P15
     student_type: IC
     current_academic_year: GRADUATE
 
@@ -44,7 +46,7 @@
     first_name: Maxence
     last_name: Leroy
     email: 16leroy@mpt.fr
-    birthday: '1997-10-14'
+    birthday: "1997-10-14"
     is_active: true
     is_staff: false
     nickname: Ragicarpe
@@ -52,6 +54,7 @@
     room: 95 rue Guizot E
     phone: "+33658895122"
     year_of_entry: 2016
+    promotion: P16
     student_type: IC
     current_academic_year: 3A
 
@@ -63,10 +66,11 @@
     first_name: Parrain
     last_name: Padre
     email: 16parrain@mpt.fr
-    birthday: '1997-02-19'
+    birthday: "1997-02-19"
     is_active: true
     is_staff: false
     year_of_entry: 2016
+    promotion: P16
     student_type: IC
     current_academic_year: 3A
 
@@ -78,7 +82,7 @@
     first_name: Adrien
     last_name: Bocquet
     email: 17bocquet@mpt.fr
-    birthday: '1997-01-08'
+    birthday: "1997-01-08"
     is_active: true
     is_staff: true
     is_superuser: true
@@ -86,9 +90,10 @@
     address: Batcave
     city_of_origin: Gotham
     option: Géostats
-    room: '1234'
+    room: "1234"
     phone: "+33456789012"
     year_of_entry: 2017
+    promotion: P17
     student_type: IC
     current_academic_year: "GAP YEAR"
     minesparent: [16parrain]
@@ -102,15 +107,16 @@
     first_name: Pierre
     last_name: Wan-Fat
     email: 17wan-fat@mpt.fr
-    birthday: '1998-06-26'
+    birthday: "1998-06-26"
     is_active: true
     is_staff: true
     nickname: Le Rocher
     city_of_origin: Le Tampon
     option: M&E
-    room: '802'
-    phone: ''
+    room: "802"
+    phone: ""
     year_of_entry: 2017
+    promotion: P17
     student_type: IC
     current_academic_year: "GAP YEAR"
     minesparent: [16parrain]
@@ -124,14 +130,15 @@
     first_name: Denis
     last_name: Aouir
     email: 18aouir@mpt.fr
-    birthday: '1997-10-29'
+    birthday: "1997-10-29"
     is_active: true
     is_staff: true
-    nickname: ''
+    nickname: ""
     city_of_origin: Bikini Bottom
-    room: ''
-    phone: ''
+    room: ""
+    phone: ""
     year_of_entry: 2018
+    promotion: P18
     student_type: IC
     current_academic_year: 2A
 
@@ -143,14 +150,15 @@
     first_name: Simple
     last_name: Mine
     email: 19simple@mpt.fr
-    birthday: '2000-04-28'
+    birthday: "2000-04-28"
     is_active: true
     is_staff: false
-    nickname: 'Simplet'
+    nickname: "Simplet"
     city_of_origin: Paris
     room: PAM
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
 
@@ -162,14 +170,15 @@
     first_name: Présidente
     last_name: BDE
     email: 19bde@mpt.fr
-    birthday: '2000-05-14'
+    birthday: "2000-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Dictatrice'
+    nickname: "Dictatrice"
     city_of_origin: Versailles
     room: 304
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     roommate: [19membre-bde, 19library-bde]
@@ -182,14 +191,15 @@
     first_name: Library
     last_name: BDE
     email: 19library-bde@mpt.fr
-    birthday: '2000-05-14'
+    birthday: "2000-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Archiviste'
+    nickname: "Archiviste"
     city_of_origin: Versailles
     room: 302
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     roommate: [19bde, 19membre-bde]
@@ -202,14 +212,15 @@
     first_name: Membre
     last_name: BDE
     email: 19membre-bde@mpt.fr
-    birthday: '2000-05-14'
+    birthday: "2000-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Sous-fifre'
+    nickname: "Sous-fifre"
     city_of_origin: Lyon
     room: Piaule à crêpes
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     roommate: [19bde, 19library-bde]
@@ -222,14 +233,15 @@
     first_name: Président
     last_name: Biéro
     email: 19biero@mpt.fr
-    birthday: '1999-05-14'
+    birthday: "1999-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Kro'
+    nickname: "Kro"
     city_of_origin: Bourg-é
     room: FAO
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     minesparent: [17bocquet, 17wan-fat]
@@ -243,14 +255,15 @@
     first_name: Market
     last_name: Biéro
     email: 19market-biero@mpt.fr
-    birthday: '1999-05-14'
+    birthday: "1999-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Heineken'
+    nickname: "Heineken"
     city_of_origin: Cuite-sur-Yvette
     room: FAO
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     roommate: [19biero, 19membre-biero]
@@ -263,14 +276,15 @@
     first_name: Membre
     last_name: Biéro
     email: 19membre-biero@mpt.fr
-    birthday: '1999-05-14'
+    birthday: "1999-05-14"
     is_active: true
     is_staff: false
-    nickname: 'Seize'
+    nickname: "Seize"
     city_of_origin: Murge-sur-Seine
     room: Octo
     phone: "+330011223383"
     year_of_entry: 2019
+    promotion: P19
     student_type: IC
     current_academic_year: 1A
     minesparent: [17bocquet]

@@ -20,7 +20,7 @@ export const UserProfile = ({ match }: { match: any }) => {
     );
 
     if (status === "loading") {
-        return <Loading />;
+        return <Loading className="mt-5" />;
     } else if (status === "error") {
         return <Error detail={error} />;
     } else if (status === "success" && profile) {

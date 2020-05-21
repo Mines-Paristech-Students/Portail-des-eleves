@@ -10,6 +10,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { authService } from "../App";
 import { UserContext } from "../services/authService";
+import { UserAvatar } from "./utils/avatar/UserAvatar";
+import { Size } from "../utils/size";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -21,6 +23,7 @@ import { UserContext } from "../services/authService";
  */
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
+    { icon: "user", url: "/trombi", label: "Trombi" },
     { icon: "zap", url: "/associations", label: "Associations" },
     { icon: "check-square", url: "/sondages", label: "Sondages" },
 ];
@@ -90,21 +93,36 @@ function Navbar() {
                                         className="align-items-center"
                                     >
                                         <Col>
-                                            <span className="avatar" />
+                                            <UserAvatar
+                                                userId={user.id}
+                                                link={false}
+                                                size={Size.Medium}
+                                            />
                                         </Col>
                                         <Col className="ml-2 float-right">
                                             <span className="text-default">
                                                 {user.firstName} {user.lastName}
                                             </span>
                                             <small className="text-muted d-block mt-0 text-left">
-                                                {`P${user.promotion}`}
+                                                {user.promotion}
                                             </small>
                                         </Col>
                                     </Row>
                                 </Container>
                             }
                         >
-                            <NavDropdown.Item href={`/profils/${user.id}`}>
+                            {/*
+                            The `as` prop is used to render a `Link` element instead of an `a` element, which reloads the full page.
+                            For some reason, the anonymous function is passed _two_ parameters, and only the first one is the props.
+                            */}
+                            <NavDropdown.Item
+                                as={(...props) => (
+                                    <Link
+                                        to={`/profils/${user.id}`}
+                                        {...props[0]}
+                                    />
+                                )}
+                            >
                                 <i className="dropdown-icon fe fe-user" />{" "}
                                 Profil
                             </NavDropdown.Item>
