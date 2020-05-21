@@ -50,7 +50,8 @@ export const PollsTableFilter = ({
             rejected: rejected,
             reviewing: reviewing,
         });
-    }, [accepted, rejected, reviewing, setStateFilter]);
+        /* eslint-disable */
+    }, [accepted, rejected, reviewing]);
 
     return (
         <Form.Group {...formGroupProps}>

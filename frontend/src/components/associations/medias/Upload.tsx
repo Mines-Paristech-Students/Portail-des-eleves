@@ -98,6 +98,7 @@ const FileUpload = ({ file, association }) => {
                 setError(err.message);
                 setState(UploadState.Fail);
             });
+        /* eslint-disable */
     }, []);
 
     let icon;
