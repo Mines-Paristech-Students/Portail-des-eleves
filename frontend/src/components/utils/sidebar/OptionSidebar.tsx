@@ -5,7 +5,7 @@ import Fuse from "fuse.js";
 import { SidebarSection } from "./SidebarSection";
 
 /**
- * Component for displaying additional options on the right of a page such as
+ * Component for displaying additional options in the sidebar of a page such as
  * in Association pages. To use it, give it a SidebarOption object
  *
  * interface SidebarOption {
@@ -17,7 +17,7 @@ import { SidebarSection } from "./SidebarSection";
  *       id: an id (used for React `key` propp)
  *       retractable: if True, the user will be able to hide the section
  *       props?: additional properties to be given to the section html parent
- *       fields: The fields in the section. Currenlty only
+ *       fields: The fields in the section. Currently only
  *               checkbox (`SidebarOptionCheckField`) and
  *               text input (`SidebarOptionInputField`) are supported
  *   }[];
