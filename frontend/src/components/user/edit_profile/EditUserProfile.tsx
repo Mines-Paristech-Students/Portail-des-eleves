@@ -19,6 +19,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { AxiosError } from "axios";
 import * as Yup from "yup";
 import { SelectUsers } from "../../utils/forms/SelectUsers";
+import { Link } from "react-router-dom";
 
 // The items in the select.
 const currentAcademicYearItems = new Map([
@@ -109,11 +110,12 @@ export const getData = (values: { [key: string]: any }) => {
     ];
 
     for (let key of Object.getOwnPropertyNames(values)) {
-        if (key === "roommate") {
+        // If no roommate is selected, values.roommate will be equal to null, and iterating over it will yield an error.
+        if (key === "roommate" && values[key]) {
             for (let option of values[key]) {
                 data.roommate.push(option.value);
             }
-        } else if (key === "minesparent") {
+        } else if (key === "minesparent" && values[key]) {
             for (let option of values[key]) {
                 data.minesparent.push(option.value);
             }
@@ -163,7 +165,6 @@ export const EditUserProfile = () => {
     const [update] = useMutation(api.profile.updateGlobal);
 
     const onSubmit = (values, { setSubmitting }) => {
-        console.log(values);
         update(
             {
                 userId: user && user.id,
@@ -208,7 +209,16 @@ export const EditUserProfile = () => {
     ) {
         return (
             <Container className="mt-5">
-                <PageTitle>Modifier votre profil</PageTitle>
+                <PageTitle>
+                    <Link
+                        className="text-decoration-none"
+                        to={`/profils/${user ? user.id : ""}`}
+                        style={{ verticalAlign: "middle" }}
+                    >
+                        <i className="fe fe-arrow-left" />
+                    </Link>{" "}
+                    Modifier votre profil
+                </PageTitle>
 
                 <Formik
                     initialValues={getInitialValues(profile, questions)}
@@ -220,10 +230,9 @@ export const EditUserProfile = () => {
                                 "Choix invalide."
                             ),
                     })}
-                    onSubmit={(values, { setSubmitting }) => {
-                        onSubmit(values, { setSubmitting });
-                        console.log(values);
-                    }}
+                    onSubmit={(values, { setSubmitting }) =>
+                        onSubmit(values, { setSubmitting })
+                    }
                 >
                     <Form>
                         <Card className="text-left">
