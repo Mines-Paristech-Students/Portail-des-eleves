@@ -1,25 +1,43 @@
 import React, { useEffect, useState } from "react";
-import Form from "react-bootstrap/Form";
-import { SidebarOption, SidebarOptionField } from "./interfaces";
-import { CheckboxField } from "./CheckboxField";
+import { SidebarOption } from "./interfaces";
 import { InputField } from "./InputField";
 import Fuse from "fuse.js";
 import { SidebarSection } from "./SidebarSection";
 
+/**
+ * Component for displaying additional options on the right of a page such as
+ * in Association pages. To use it, give it a SidebarOption object
+ *
+ * interface SidebarOption {
+ *   notifyChange: callback when the inputs change;
+ *   searchable?: display a search field on the top to look for specific field.
+ *                The search is based on their label
+ *   sections: {
+ *       title: the name of the section
+ *       id: an id (used for React `key` propp)
+ *       retractable: if True, the user will be able to hide the section
+ *       props?: additional properties to be given to the section html parent
+ *       fields: The fields in the section. Currenlty only
+ *               checkbox (`SidebarOptionCheckField`) and
+ *               text input (`SidebarOptionInputField`) are supported
+ *   }[];
+}
+ *
+ */
 export const OptionSidebar = ({
     options,
 }: {
     options: SidebarOption | null;
 }) => {
-    const [state, setState] = useState({});
-    const [tagSearch, setTagSearch] = useState("");
+    const [inputsState, setInputsState] = useState({});
+    const [fieldSearch, setFieldSearch] = useState("");
     const [fuses, setFuses] = useState<Fuse<any, any>[]>([]);
 
     const computeKey = (section, field) => section.id + "." + field.id;
     const changeState = (key, value) => {
-        let newState = { ...state };
+        let newState = { ...inputsState };
         newState[key] = value;
-        setState(newState);
+        setInputsState(newState);
         options?.notifyChange(newState);
     };
 
@@ -44,26 +62,26 @@ export const OptionSidebar = ({
             }
         }
 
-        setState(defaultState);
-    }, [options, tagSearch]);
+        setInputsState(defaultState);
+    }, [options, fieldSearch]);
 
-    if (options === null || Object.keys(state).length === 0) {
+    if (options === null || Object.keys(inputsState).length === 0) {
         return null;
     }
 
-    let displayedFields = 0;
-    let sections = options.sections.map((section, i) => {
+    let numberOfDisplayedFields = 0;
+    const sections = options.sections.map((section, i) => {
         let fields =
-            tagSearch === ""
+            fieldSearch === ""
                 ? section.fields
-                : fuses[i].search(tagSearch).map((x) => x.item);
+                : fuses[i].search(fieldSearch).map((x) => x.item);
 
-        displayedFields += fields.length;
+        numberOfDisplayedFields += fields.length;
         return (
             <SidebarSection
                 key={section.id}
                 computeKey={(field) => computeKey(section, field)}
-                state={state}
+                state={inputsState}
                 changeState={changeState}
                 fields={fields}
                 retractable={section.retractable}
@@ -81,8 +99,8 @@ export const OptionSidebar = ({
                     <InputField
                         label={""}
                         placeholder="Rechercher un champ"
-                        state={tagSearch}
-                        setState={setTagSearch}
+                        state={fieldSearch}
+                        setState={setFieldSearch}
                         size={"sm"}
                         className={"mb-3"}
                     />
@@ -92,7 +110,7 @@ export const OptionSidebar = ({
                 </div>
             )}
             {sections}
-            {displayedFields > 0 || (
+            {numberOfDisplayedFields > 0 || (
                 <p className="text-center">
                     <em>Aucun tag trouvé</em>
                 </p>

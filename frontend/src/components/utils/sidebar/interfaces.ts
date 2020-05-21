@@ -1,6 +1,6 @@
 export interface SidebarOption {
     notifyChange: (object) => {};
-    searchable?: boolean,
+    searchable?: boolean;
     sections: {
         title: string;
         id: string;
@@ -11,7 +11,7 @@ export interface SidebarOption {
 }
 
 export interface SidebarOptionField {
-    type: string;
+    type: "text" | "checkbox";
     id: string;
     label: string;
     defaultValue?: any;

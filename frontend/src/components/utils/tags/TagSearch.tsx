@@ -8,8 +8,8 @@ export const useTagSearch = (tagsQueryParams, setSidebar) => {
 
     const [additionalParams, setAdditionalParams] = useState({});
 
-    let onSearchChange = (params) => {
-        let ids = Object.entries(params) // [ [namespace.tag_id, is_selected] ]
+    const onSearchChange = (params) => {
+        const ids = Object.entries(params) // [ [namespace.tag_id, is_selected] ]
             .map(([key, value]) => value && key.split(".")[1])
             .filter(Boolean)
             .join(",");
@@ -30,7 +30,7 @@ export const useTagSearch = (tagsQueryParams, setSidebar) => {
                     groups[tag.namespace.id].push(tag);
                 }
 
-                let sections = Object.values(groups).map((group) => {
+                const sections = Object.values(groups).map((group) => {
                     let namespace = (group as Tag[])[0].namespace;
                     return {
                         title: namespace.name,
@@ -48,7 +48,7 @@ export const useTagSearch = (tagsQueryParams, setSidebar) => {
                 setSidebar({
                     notifyChange: onSearchChange,
                     sections: sections,
-                    searchable: true
+                    searchable: true,
                 });
             })
             .catch((err) => {

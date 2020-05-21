@@ -10,16 +10,16 @@ class TaggableCase(TagsBaseTestCase):
 
         res = self.get("/associations/media/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(set(map(lambda x: x["id"], res.data["results"])), {1, 2, 3, 4})
+        self.assertEqual(set([x["id"] for x in res.data["results"]]), {1, 2, 3, 4})
 
         res = self.get("/associations/media/?tags__are=1")
         self.assertStatusCode(res, 200)
-        self.assertEqual(set(map(lambda x: x["id"], res.data["results"])), {1, 2})
+        self.assertEqual(set([x["id"] for x in res.data["results"]]), {1, 2})
 
         res = self.get("/associations/media/?tags__are=2")
         self.assertStatusCode(res, 200)
-        self.assertEqual(set(map(lambda x: x["id"], res.data["results"])), {2, 3})
+        self.assertEqual(set([x["id"] for x in res.data["results"]]), {2, 3})
 
         res = self.get("/associations/media/?tags__are=1,2")
         self.assertStatusCode(res, 200)
-        self.assertEqual(set(map(lambda x: x["id"], res.data["results"])), {2})
+        self.assertEqual(set([x["id"] for x in res.data["results"]]), {2})

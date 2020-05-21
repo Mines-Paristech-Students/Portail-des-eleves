@@ -14,7 +14,6 @@ class ProfileQuestion(models.Model):
         return self.text
 
 
-
 class ProfileAnswer(models.Model):
     id = models.AutoField(primary_key=True)
     text = models.CharField(max_length=255)

@@ -6,16 +6,17 @@ from tags.models import Tag
 
 """
 Related to filter must be used in DRF views to check that a tag has been assigned to at least one object of a certain
-type. For instance if "my_tag" is related to a Media but to no Product, /tags/tags?related_to=tag must return my_tag
+type. For instance if "my_tag" is related to a Media but to no Product, /tags/tags?related_to=media must return my_tag
 but /tags/tags?related_to=product must not.
-It's possible to check multiple classes using commas. Example : /tags/tags?related_to=tag,product
+It's possible to check multiple classes using commas. Example : /tags/tags?related_to=tag,product would return all tags
+related to at least one Tag or one Product
 """
 
 
 class RelatedToFilter(filters.FilterSet):
-    related_to = django_filters.CharFilter(method="related_to__gte")
+    related_to = django_filters.CharFilter(method="related_to_method")
 
-    def related_to__gte(self, queryset, value, *args, **kwargs):
+    def related_to_method(self, queryset, value, *args, **kwargs):
         try:
             if args:
                 models = args[0].split(",")
@@ -38,6 +39,7 @@ class RelatedToFilter(filters.FilterSet):
                 if or_filter is not None:
                     queryset = queryset.filter(or_filter)
 
-        except ValueError:
+        except ValueError:  # Value error can occur if the  given values are incorrect. We pass it as recommanded in
+            # the DjangoFilter doc
             pass
         return queryset

@@ -13,10 +13,10 @@ export const SidebarSection = ({
     props,
     retractedByDefault,
 }) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isRetracted, setIsRetracted] = useState(false);
 
     useEffect(() => {
-        setIsOpen(!retractedByDefault);
+        setIsRetracted(retractedByDefault);
     }, []);
 
     if (fields.length == 0) {
@@ -28,20 +28,20 @@ export const SidebarSection = ({
             <Form.Label
                 className="text-uppercase"
                 onClick={() => {
-                    setIsOpen(!isOpen);
+                    setIsRetracted(!isRetracted);
                 }}
             >
                 {retractable && (
                     <span
                         className={`float-right pt-1 fe ${
-                            isOpen ? "fe-chevron-up" : "fe-chevron-down"
+                            isRetracted ? "fe-chevron-up" : "fe-chevron-down"
                         }`}
                     />
                 )}
                 {title}
             </Form.Label>
 
-            {isOpen &&
+            {!isRetracted &&
                 fields.map((field) => {
                     const key = computeKey(field);
                     const commonProps = {
