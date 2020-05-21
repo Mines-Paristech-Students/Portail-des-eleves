@@ -109,7 +109,6 @@ class ReadOnlyUserSerializer(serializers.ModelSerializer):
             "year_of_entry",
             "phone",
             "room",
-            "address",
             "city_of_origin",
             "option",
             "student_type",

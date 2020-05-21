@@ -6,7 +6,6 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Profile } from "../../../models/profile";
 import { UserAvatar } from "../../utils/avatar/UserAvatar";
 import { Size } from "../../../utils/size";
-import Button from "react-bootstrap/Button";
 import { formatLongDate } from "../../../utils/format";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -90,21 +89,23 @@ export const ProfileInfo = ({
                                 {profile.room}
                             </ListGroup.Item>
                         )}
-                        {profile.address && (
+                        {profile.cityOfOrigin && (
                             <ListGroup.Item>
                                 <OverlayTrigger
                                     placement={"bottom"}
                                     overlay={
-                                        <Tooltip id={`tooltip-address-icon`}>
-                                            Adresse
+                                        <Tooltip
+                                            id={`tooltip-city-of-origin-icon`}
+                                        >
+                                            Ville d’origine
                                         </Tooltip>
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-home" />
+                                        <i className="fe fe-map-pin" />
                                     </span>
                                 </OverlayTrigger>
-                                {profile.address}
+                                {profile.cityOfOrigin}
                             </ListGroup.Item>
                         )}
                         {profile.option && (
@@ -112,7 +113,7 @@ export const ProfileInfo = ({
                                 <OverlayTrigger
                                     placement={"bottom"}
                                     overlay={
-                                        <Tooltip id={`tooltip-address-icon`}>
+                                        <Tooltip id={`tooltip-option-icon`}>
                                             Option
                                         </Tooltip>
                                     }

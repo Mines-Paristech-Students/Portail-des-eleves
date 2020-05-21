@@ -87,7 +87,6 @@
     is_staff: true
     is_superuser: true
     nickname: the roc
-    address: Batcave
     city_of_origin: Gotham
     option: Géostats
     room: "1234"
