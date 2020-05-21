@@ -8,7 +8,7 @@ from authentication.serializers.questions_short import ProfileAnswerShortSeriali
 class UserShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        read_only_fields = ("id", "first_name", "last_name")
+        read_only_fields = ("id", "first_name", "last_name", "promotion")
         fields = read_only_fields
 
 

@@ -1,10 +1,18 @@
-import { apiService, unwrap } from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import { Event } from "../../models/associations/event";
 
 export const events = {
     list: ({ associationId }) =>
-        unwrap<Event[]>(
+        unwrap<PaginatedResponse<Event[]>>(
             apiService.get(`/associations/events/?association=${associationId}`)
-        ),
+        ).then((data) => {
+            data.results.forEach((event) => {
+                event.startsAt = new Date(event.startsAt);
+                event.endsAt = new Date(event.endsAt);
+            });
+
+            return data;
+        }),
     get: ({ eventId }) =>
         unwrap<Event>(apiService.get(`/associations/events/${eventId}`)),
     save: (event) => {

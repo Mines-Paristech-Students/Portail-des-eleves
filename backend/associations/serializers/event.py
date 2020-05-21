@@ -2,16 +2,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from associations.models import Association, Event
-from authentication.models import User
+from authentication.serializers import UserShortSerializer
 
 
 class EventSerializer(serializers.ModelSerializer):
     association = serializers.PrimaryKeyRelatedField(
         queryset=Association.objects.all(), read_only=False
     )
-    participants = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), many=True, read_only=False
-    )
+    participants = UserShortSerializer(many=True, read_only=False)
 
     class Meta:
         model = Event

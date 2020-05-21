@@ -11,6 +11,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
  * @param className optional, the classes to add to `Avatar`.
  * @param tooltip optional, a tooltip to display when the avatar is hovered.
  * @param children optional, something to display in the avatar.
+ * @param props optional, passed to the inner `span` element.
  */
 export const Avatar = ({
     url = "",
@@ -19,6 +20,7 @@ export const Avatar = ({
     className,
     tooltip,
     children,
+    ...props
 }: {
     url?: string;
     size?: Size;
@@ -26,13 +28,16 @@ export const Avatar = ({
     className?: string;
     tooltip?: string;
     children?: any;
+    [prop: string]: any;
 }) => {
     const avatar = (
         <span
+            {...props}
             className={`avatar avatar-${size} avatar-${backgroundColor} ${
                 className ? className : ""
             }`}
             style={{
+                ...props.style,
                 boxShadow: "0 2px 4px 0 hsla(0, 0%, 0%, 0.2)",
                 backgroundImage: url ? `url(${url}.jpg)` : "",
             }}
