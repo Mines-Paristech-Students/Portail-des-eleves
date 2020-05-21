@@ -25,6 +25,12 @@ export const AssociationSidebar = ({ association }) => {
                 />
                 <AddPageItem association={association} />
                 <SidebarItem
+                    icon={"calendar"}
+                    to={`/associations/${association.id}/evenements`}
+                >
+                    Événements
+                </SidebarItem>
+                <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/files`}
                 >

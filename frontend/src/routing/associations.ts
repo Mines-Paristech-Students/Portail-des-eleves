@@ -23,19 +23,19 @@ export const routes = (association) => [
         props: { association: association },
     },
     {
-        path: `/evenements/`,
+        path: `/evenements`,
         component: AssociationEventList,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/evenements/nouveau`,
+        path: `/evenements/creer`,
         component: AssociationEventCreate,
         exact: true,
         props: { association: association }
     },
     {
-        path: `/evenements/:eventId/editer`,
+        path: `/evenements/:eventId/modifier`,
         component: AssociationEventEdit,
         exact: true,
         props: { association: association }
