@@ -10,5 +10,12 @@ export interface Association {
     pages: Page[];
     marketplace: Marketplace;
     library: Library;
-    myRole: string;
+    myRole?: {
+        id: string;
+        role: string;
+        rank: number;
+        startDate: Date;
+        endDate?: Date;
+        permissions: string[];
+    };
 }

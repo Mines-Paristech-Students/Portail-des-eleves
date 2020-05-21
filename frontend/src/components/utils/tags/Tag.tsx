@@ -10,6 +10,7 @@ import { tablerColors } from "../../../utils/colors";
  * @param tooltip on hoover information
  * @param collapsed true if we want the tag to take less space. In that case,
  * the tag goes in the tooltip.
+ * @param additionalClassNames
  */
 export const Tag = ({
     type = "",
@@ -17,6 +18,7 @@ export const Tag = ({
     addon = "",
     tooltip = "",
     collapsed = false,
+    additionalClassNames = "",
 }) => {
     if (type === "") {
         type = tablerColors[hashCode(tag) % tablerColors.length];
@@ -28,7 +30,7 @@ export const Tag = ({
         addon = "";
     }
 
-    let className = "mb-2 mr-2 tag tag-" + type;
+    let className = "mr-2 tag tag-" + type + " " + additionalClassNames;
     let tagElement = (
         <div className={className}>
             {tag}

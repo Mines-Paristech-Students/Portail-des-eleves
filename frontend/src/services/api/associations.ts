@@ -8,6 +8,6 @@ export const associations = {
         ),
     get: (associationId) =>
         unwrap<Association>(
-            apiService.get(`/associations/associations/${associationId}`)
+            apiService.get(`/associations/associations/${associationId}/`)
         ),
 };

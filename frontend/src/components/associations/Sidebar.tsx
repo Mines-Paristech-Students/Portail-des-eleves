@@ -36,6 +36,14 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
+                {association.myRole.permissions.includes("administration") && (
+                    <SidebarItem
+                        icon={"settings"}
+                        to={`/associations/${association.id}/parametres`}
+                    >
+                        Paramètres
+                    </SidebarItem>
+                )}
             </Sidebar>
         );
     }
