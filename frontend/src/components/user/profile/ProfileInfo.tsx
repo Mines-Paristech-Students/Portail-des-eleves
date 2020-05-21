@@ -9,6 +9,7 @@ import { Size } from "../../../utils/size";
 import Button from "react-bootstrap/Button";
 import { formatLongDate } from "../../../utils/format";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const ACADEMIC_YEAR = new Map([
     ["1A", "1A"],
@@ -32,7 +33,7 @@ export const ProfileInfo = ({
                     <UserAvatar
                         userId={profile.id}
                         size={Size.XXL}
-                        className="ml-3 mr-5"
+                        avatarClassName="ml-3 mr-5"
                         link={false}
                     />
                     <div className="media-body">
@@ -51,13 +52,13 @@ export const ProfileInfo = ({
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <span className="icon mr-3">
-                                <i className="fe fe-calendar"/>
+                                <i className="fe fe-calendar" />
                             </span>
                             {formatLongDate(profile.birthday)}
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <span className="icon mr-3">
-                                <i className="fe fe-mail"/>
+                                <i className="fe fe-mail" />
                             </span>
                             <a href={`mailto:${profile.email}`}>
                                 {profile.email}
@@ -66,7 +67,7 @@ export const ProfileInfo = ({
                         {profile.phone && (
                             <ListGroup.Item>
                                 <span className="icon mr-3">
-                                    <i className="fe fe-phone"/>
+                                    <i className="fe fe-phone" />
                                 </span>
                                 {profile.phone}
                             </ListGroup.Item>
@@ -82,7 +83,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-home"/>
+                                        <i className="fe fe-home" />
                                     </span>
                                 </OverlayTrigger>
 
@@ -100,7 +101,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-home"/>
+                                        <i className="fe fe-home" />
                                     </span>
                                 </OverlayTrigger>
                                 {profile.address}
@@ -117,7 +118,7 @@ export const ProfileInfo = ({
                                     }
                                 >
                                     <span className="icon mr-3">
-                                        <i className="fe fe-activity"/>
+                                        <i className="fe fe-activity" />
                                     </span>
                                 </OverlayTrigger>
                                 {profile.option}
@@ -129,9 +130,12 @@ export const ProfileInfo = ({
         </Card.Body>
         {showEditButton && (
             <Card.Footer>
-                <Button href="/profils/modifier" variant="outline-primary">
+                <Link
+                    className="btn btn-outline-primary"
+                    to="/profils/modifier"
+                >
                     Modifier mon profil
-                </Button>
+                </Link>
             </Card.Footer>
         )}
     </Card>

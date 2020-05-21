@@ -10,19 +10,19 @@ export interface UserAvatarProps {
     size?: Size;
     backgroundColor?: TablerColor;
     linkClassName?: string;
-    className?: string;
+    avatarClassName?: string;
     tooltip?: string;
     link?: boolean;
 }
 
 /**
- * Thin wrapper over `Avatar` to display the avatar of an user.
+ * Wrapper over `Avatar` to display the avatar of an user.
  *
  * @param userId the user ID.
  * @param size optional, the size of the avatar, a `Size`. Defaults to `Large`.
  * @param backgroundColor optional, the color of the avatar, a `TablerColor`. Defaults to `Gray`.
- * @param linkClassName optional, the classes to add to the `a` element surrounding the `Avatar`.
- * @param className optional, the classes to add to `Avatar`.
+ * @param linkClassName optional, the classes added to the optional `a` element surrounding the `Avatar`.
+ * @param avatarClassName optional, the classes added to the `Avatar` element.
  * @param tooltip optional, a tooltip to display when the avatar is hovered.
  * @param link optional. If true, add a link to the user profile. Defaults to true.
  */
@@ -31,7 +31,7 @@ export const UserAvatar = ({
     size,
     backgroundColor,
     linkClassName,
-    className,
+    avatarClassName,
     tooltip,
     link = true,
 }: UserAvatarProps) => {
@@ -40,10 +40,11 @@ export const UserAvatar = ({
             url={`/profile/${userId}`}
             size={size}
             backgroundColor={backgroundColor}
-            className={className}
+            className={avatarClassName}
             tooltip={tooltip}
         />
     );
+
     return link ? (
         <Link
             to={`/profils/${userId}`}
