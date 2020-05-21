@@ -93,6 +93,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -113,6 +114,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -133,6 +135,7 @@
     last_name: Member
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -153,6 +156,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -173,6 +177,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -193,6 +198,7 @@
     last_name: Marketplace administrator
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -213,6 +219,7 @@
     last_name: Admin
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 6
@@ -233,6 +240,7 @@
     last_name: Consumer
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.transaction
   pk: 0

@@ -1,11 +1,19 @@
 import { Media } from "../../models/associations/media";
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import {
+    apiService,
+    PaginatedResponse,
+    toUrlParams,
+    unwrap,
+} from "../apiService";
 
 export const medias = {
-    list: (associationId) =>
-        unwrap<PaginatedResponse<Media[]>>(
-            apiService.get(`/associations/media/?association=${associationId}`)
-        ),
+    list: (associationId, params = {}, page = 1) => {
+        params["association"] = associationId;
+        params["page"] = page;
+        return unwrap<PaginatedResponse<Media[]>>(
+            apiService.get(`/associations/media/${toUrlParams(params)}`)
+        );
+    },
     get: (fileId) =>
         unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
     patch: (file) => {

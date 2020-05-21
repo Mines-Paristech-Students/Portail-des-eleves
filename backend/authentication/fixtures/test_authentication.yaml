@@ -7,6 +7,7 @@
     email: admin@mpt.fr
     is_staff: true
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17simple
@@ -17,6 +18,7 @@
     email: simple@mpt.fr
     is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 18simple
@@ -27,6 +29,7 @@
     email: 18simple@mpt.fr
     is_staff: false
     year_of_entry: 2018
+    promotion: P18
 
 - model: authentication.user
   pk: 17bocquet
@@ -44,6 +47,7 @@
     room: '1234'
     phone: "+33456789012"
     year_of_entry: 2017
+    promotion: P17
 
 - model: authentication.user
   pk: 17wan-fat
@@ -61,3 +65,4 @@
     room: '802'
     phone: ''
     year_of_entry: 2017
+    promotion: P17

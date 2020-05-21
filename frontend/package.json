@@ -12,12 +12,13 @@
         "react-bootstrap": "^1.0.0",
         "react-datetime": "^2.16.3",
         "react-day-picker": "^7.4.5",
+        "react-debounce-input": "^3.2.2",
         "react-dom": "^16.13.1",
         "react-dropzone": "^10.2.2",
         "react-query": "1.2.1",
         "react-router-dom": "^5.1.2",
         "react-scripts": "^3.4.1",
-        "react-select": "^3.0.12",
+        "react-select": "^3.1.0",
         "socket.io-client": "^2.3.0",
         "tabler-ui": "^0.0.34",
         "yup": "^0.28.4"
@@ -30,7 +31,7 @@
         "@types/react-dom": "^16.9.6",
         "@types/react-query": "^1.1.2",
         "@types/react-router-dom": "^5.1.4",
-        "@types/react-select": "^3.0.12",
+        "@types/react-select": "^3.0.13",
         "@types/yup": "^0.28.0",
         "prettier": "^2.0.4",
         "typescript": "^3.8.3"

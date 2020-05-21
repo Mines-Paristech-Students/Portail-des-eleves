@@ -102,16 +102,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     year_of_entry = models.IntegerField(
         validators=(MinValueValidator(1783),)
     )  # The year MINES ParisTech was created.
+    promotion = models.CharField(max_length=50)
 
     phone = models.CharField(max_length=15, blank=True)
-    room = models.CharField(
-        max_length=128, blank=True, help_text="Blank if the User is PAM."
-    )
-    address = models.CharField(
-        max_length=512,
-        blank=True,
-        help_text="Address outside the Meuh. Blank if the User is not PAM.",
-    )
+    room = models.CharField(max_length=128, blank=True)
     city_of_origin = models.CharField(max_length=128, blank=True)
 
     # Education.
@@ -148,11 +142,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_in_first_year(self):
         """Return True iff the User is in their first year at the school, depending on their year of entry."""
         return self.years_since_entry <= 0
-
-    @cached_property
-    def promotion(self):
-        """The last two digits of the User's entrance year at school."""
-        return self.year_of_entry % 100
 
     @cached_property
     def show(self):

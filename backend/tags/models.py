@@ -23,6 +23,7 @@ class Namespace(models.Model):
 
     class Meta:
         unique_together = ("name", "scoped_to_model", "scoped_to_pk")
+        ordering = ["-id"]
 
     SCOPED_TO_MODELS = {"association": Association, "global": None}
 
@@ -81,6 +82,7 @@ class Tag(models.Model):
 
     class Meta:
         unique_together = (("value", "namespace"),)
+        ordering = ("namespace", "value")
 
     @staticmethod
     def get_linked_instance(linked_to_model, linked_to_pk):
