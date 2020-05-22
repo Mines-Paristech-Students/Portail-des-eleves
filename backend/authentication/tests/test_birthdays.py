@@ -24,7 +24,7 @@ class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
                 is_active=True,
                 is_staff=True,
                 last_login=None,
-                last_name="User{i}",
+                last_name=f"User{i}",
                 nickname="",
                 password="pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
                 phone="",
