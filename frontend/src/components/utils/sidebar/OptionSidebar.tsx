@@ -56,7 +56,7 @@ export const OptionSidebar = ({
             let section = options!.sections[i];
             for (let field of section.fields) {
                 defaultState[computeKey(section, field)] =
-                    field.type == "checkbox"
+                    field.type === "checkbox"
                         ? field.defaultValue || false
                         : field.defaultValue || "";
             }

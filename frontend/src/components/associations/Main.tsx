@@ -4,7 +4,6 @@ import {
     Route,
     Switch,
     useParams,
-    useLocation,
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";
