@@ -42,14 +42,14 @@ export interface Transaction {
 
 export enum FundingStatus {
     Funded = "FUNDED",
-    Refunded = "REFUNDED"
+    Refunded = "REFUNDED",
 }
 
 export interface Funding {
-    id: string,
-    user: User,
-    value: number,
-    date: Date,
-    marketplace: Marketplace,
-    status: FundingStatus,
+    id: string;
+    user: User;
+    value: number;
+    date: Date;
+    marketplace: Marketplace;
+    status: FundingStatus;
 }

@@ -6,7 +6,11 @@ import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
 import { formatDate } from "../../../utils/format";
-import { Funding, FundingStatus, TransactionStatus } from "../../../models/associations/marketplace";
+import {
+    Funding,
+    FundingStatus,
+    TransactionStatus,
+} from "../../../models/associations/marketplace";
 import { Table } from "../../utils/table/Table";
 import { Link } from "react-router-dom";
 
