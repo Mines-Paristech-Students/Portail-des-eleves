@@ -19,6 +19,7 @@ class ProfileQuestionViewSet(viewsets.ModelViewSet):
     queryset = ProfileQuestion.objects.all()
     serializer_class = ProfileQuestionSerializer
     permission_classes = (ProfileQuestionPermission,)
+    pagination_class = None
 
 
 class ProfileAnswerViewSet(viewsets.ModelViewSet):

@@ -105,14 +105,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     promotion = models.CharField(max_length=50)
 
     phone = models.CharField(max_length=15, blank=True)
-    room = models.CharField(
-        max_length=128, blank=True, help_text="Blank if the User is PAM."
-    )
-    address = models.CharField(
-        max_length=512,
-        blank=True,
-        help_text="Address outside the Meuh. Blank if the User is not PAM.",
-    )
+    room = models.CharField(max_length=128, blank=True)
     city_of_origin = models.CharField(max_length=128, blank=True)
 
     # Education.

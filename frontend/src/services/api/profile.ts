@@ -1,5 +1,5 @@
 import { apiService, unwrap } from "../apiService";
-import { Profile } from "../../models/profile";
+import { Profile, ProfileQuestion } from "../../models/profile";
 import { parseRoleDates } from "./roles";
 
 export const profile = {
@@ -11,4 +11,26 @@ export const profile = {
                 return profile;
             }
         ),
+    getQuestions: () =>
+        unwrap<ProfileQuestion[]>(apiService.get("/users/profile_question")),
+    updateGlobal: ({
+        userId,
+        data,
+    }: {
+        userId;
+        data: {
+            nickname?: string;
+            phone?: string;
+            room?: string;
+            cityOfOrigin?: string;
+            option?: string;
+            currentAcademicYear?: "1A" | "2A" | "GAP YEAR" | "3A" | "GRADUATE";
+            minesparent?: string[];
+            roommate?: string[];
+            profileAnswers?: {
+                question: number;
+                text: string;
+            }[];
+        };
+    }) => apiService.patch(`/users/users/${userId}/`, data),
 };

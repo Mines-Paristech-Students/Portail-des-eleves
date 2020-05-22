@@ -80,7 +80,6 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
         "nickname": "Nick",
         "phone": "123456",
         "room": "123",
-        "address": "60 boulevard SM",
         "city_of_origin": "Paris",
         "option": "Mécatro",
         "roommate": ["17bocquet"],

@@ -22,8 +22,6 @@ interface Props {
 
 /**
  * This component encapsulates the Formik logic into a React Bootstrap + Tabler UI component for a “selectgroup-...”.
- * `items` is
- * Use the `type` props to c
  *
  * Example:
  * ```
