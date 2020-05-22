@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
     Card,
     Row,
     Col,
     Button,
+    Modal,
+    InputGroup,
+    Form,
 } from "react-bootstrap";
 import {
     api,
@@ -18,12 +21,36 @@ import { Tag } from "../../utils/tags/Tag";
 import { Tag as TagModel } from "../../../models/tag";
 import { tablerColors } from "../../../utils/colors";
 import { hashCode } from "../../../utils/hashcode";
+import { queryCache, useMutation } from "react-query";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { AxiosError } from "axios";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 export const AssociationNamespaceSettings = ({ association }) => {
+    const newToast = useContext(ToastContext);
+
     const [
         selectedNamespace,
         setSelectedNamespace,
     ] = useState<Namespace | null>(null);
+
+    const [createNamespace] = useMutation(api.namespaces.create, {
+        onSuccess: (response) => {
+            queryCache.refetchQueries("association.namespaces.list");
+            newToast({
+                message: "Namespace ajouté",
+                level: ToastLevel.Success,
+            });
+        },
+        onError: (errorAsUnknown) => {
+            const error = errorAsUnknown as AxiosError;
+            newToast({
+                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`,
+                level: ToastLevel.Error,
+            });
+        },
+    });
 
     return (
         <>
@@ -34,7 +61,10 @@ export const AssociationNamespaceSettings = ({ association }) => {
             </Card>
 
             {selectedNamespace && (
-                <NamespaceTags namespace={selectedNamespace} />
+                <NamespaceTagsModal
+                    namespace={selectedNamespace}
+                    closeModal={() => setSelectedNamespace(null)}
+                />
             )}
 
             <Pagination
@@ -58,6 +88,54 @@ export const AssociationNamespaceSettings = ({ association }) => {
                     </>
                 )}
             />
+
+            <Formik
+                onSubmit={(values) => {
+                    createNamespace({
+                        name: values.namespaceName,
+                        scoped_to_model: "association",
+                        scoped_to_pk: association.id,
+                    });
+                }}
+                initialValues={{ namespaceName: "namespace" }}
+                validationSchema={Yup.object({
+                    namespaceName: Yup.string()
+                        .required("Ce champ est requis.")
+                        .min(
+                            2,
+                            "Un namespace doit avoir au minimum 2 caractères"
+                        ),
+                })}
+            >
+                {({ values, handleChange, errors, touched, handleSubmit }) => (
+                    <form onSubmit={handleSubmit}>
+                        <InputGroup>
+                            <Form.Control
+                                placeholder={"Nouveau namespace"}
+                                name={"namespaceName"}
+                                value={values.namespaceName}
+                                onChange={handleChange}
+                                isInvalid={
+                                    (errors.namespaceName &&
+                                        touched.namespaceName) ||
+                                    undefined
+                                }
+                            />
+                            <InputGroup.Append>
+                                <Button type={"submit"} variant={"success"}>
+                                    <span className="fe fe-plus" />
+                                    Ajouter le namespace
+                                </Button>
+                            </InputGroup.Append>
+                            {errors.namespaceName && touched.namespaceName && (
+                                <Form.Control.Feedback type={"invalid"}>
+                                    {errors.namespaceName}
+                                </Form.Control.Feedback>
+                            )}
+                        </InputGroup>
+                    </form>
+                )}
+            </Formik>
         </>
     );
 };
@@ -73,10 +151,7 @@ const ListNamespaceTags = ({ namespace, setSelectedNamespace }) => {
                             className={"mr-2"}
                             onClick={() => setSelectedNamespace(namespace)}
                         >
-                            Voir
-                        </Button>
-                        <Button size={"sm"} variant={"danger"}>
-                            Supprimer
+                            Détails
                         </Button>
                     </span>
 
@@ -87,7 +162,9 @@ const ListNamespaceTags = ({ namespace, setSelectedNamespace }) => {
     );
 };
 
-const NamespaceTags = ({ namespace }) => {
+const NamespaceTagsModal = ({ namespace, closeModal }) => {
+    const newToast = useContext(ToastContext);
+
     const { data, status, error } = useBetterQuery<
         PaginatedResponse<TagModel[]>
     >(
@@ -95,7 +172,28 @@ const NamespaceTags = ({ namespace }) => {
         api.tags.list
     );
 
+    const [mutate] = useMutation(api.namespaces.delete, {
+        onSuccess: (response) => {
+            queryCache.refetchQueries("association.namespaces.list");
+            newToast({
+                message: "Namespace supprimé",
+                level: ToastLevel.Success,
+            });
+        },
+        onError: (errorAsUnknown) => {
+            const error = errorAsUnknown as AxiosError;
+            newToast({
+                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`,
+                level: ToastLevel.Error,
+            });
+        },
+    });
+
     let type = tablerColors[hashCode(namespace.name) % tablerColors.length];
+
+    const deleteNamespace = () => {
+        mutate(namespace.id).then((_) => closeModal());
+    };
 
     return (
         <>
@@ -104,9 +202,11 @@ const NamespaceTags = ({ namespace }) => {
             ) : status === "error" ? (
                 <Error detail={error} />
             ) : (
-                <Card>
-                    <Card.Body>
-                        <span className={"mr-2"}>Tags dans {namespace.name} :</span>
+                <Modal show={true} onHide={closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Tags dans {namespace.name} </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         {(data?.results.length || 0) > 0 ? (
                             data?.results.map((tag) => (
                                 <span key={tag.id}>
@@ -116,8 +216,16 @@ const NamespaceTags = ({ namespace }) => {
                         ) : (
                             <em className={"text-muted"}>Aucun tag</em>
                         )}
-                    </Card.Body>
-                </Card>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={closeModal}>
+                            Fermer
+                        </Button>
+                        <Button variant="danger" onClick={deleteNamespace}>
+                            Supprimer
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             )}
         </>
     );
