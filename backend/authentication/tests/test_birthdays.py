@@ -14,7 +14,8 @@ class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
         date = datetime(1996, 1, 1, 12, 00, 00)
         one_day = timedelta(1)
 
-        for i in range(1827): # 5 years from the starting date
+        # 5 years from the starting date
+        for i in range(1827): 
             User.objects.create(
                 pk=f"user{i}",
                 birthday=date,
