@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 import { Error } from "../../utils/Error";
 import { Product } from "../../../models/associations/marketplace";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
 import { TagEdition } from "../../utils/tags/TagEdition";
 import { Container, Form as ReactBootstrapForm, Row } from "react-bootstrap";
@@ -37,9 +37,9 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
     ) : product ? (
         <Container>
             <PageTitle>
-                <a onClick={history.goBack} className={"text-primary"}>
+                <span onClick={history.goBack} className={"text-primary"}>
                     <i className={"fe fe-arrow-left"} />
-                </a>
+                </span>
                 Editer le produit
             </PageTitle>
             <Formik

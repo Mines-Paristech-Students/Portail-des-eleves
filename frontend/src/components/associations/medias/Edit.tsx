@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ErrorMessage, ForbiddenError } from "../../utils/ErrorPage";
+import { ForbiddenError } from "../../utils/ErrorPage";
 import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";

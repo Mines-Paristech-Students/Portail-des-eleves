@@ -99,6 +99,7 @@ export const TagEdition = ({ model, id }) => {
                     `Erreur durant le chargement : ${error.toString()}`
                 );
             });
+        // eslint-disable-next-line
     }, ["model", "id"]);
 
     // Give the tags related to the namespace
@@ -116,6 +117,7 @@ export const TagEdition = ({ model, id }) => {
         } else {
             setFuseTag(null);
         }
+        // eslint-disable-next-line
     }, ["selectedNamespace"]);
 
     // Get all tags of the model
@@ -125,6 +127,8 @@ export const TagEdition = ({ model, id }) => {
         api.tags.list(params).then((data) => {
             setTags(data.results);
         });
+
+        // eslint-disable-next-line
     }, ["model", "id", "params"]);
 
     // Event handlers
