@@ -3,6 +3,7 @@ import { useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
 import { Error } from "./Error";
+import { useHistory, useLocation } from "react-router-dom";
 
 /**
  * Pagination is a component that handles the pagination on the API level + the
@@ -49,8 +50,10 @@ export const Pagination = ({
     loadingElement?: React.ComponentType<{}> | React.ReactNode;
     errorElement?: React.ComponentType<{ detail: any }> | React.ReactNode;
 }) => {
-    let [page, setPage] = useState(1);
-    let [maxPage, setMaxPage] = useState(1);
+    const history = useHistory();
+    const location = useLocation();
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
 
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
         [...apiKey, page],
@@ -62,7 +65,33 @@ export const Pagination = ({
         if (data && data.totalPages) {
             setMaxPage(data.totalPages);
         }
+        // eslint-disable-next-line
     }, [page, data]);
+
+    // Handle get parameters, ie when we take a page, we add the parameter
+    // in the URL, and exploit it when the page is loaded
+    // Example : we're on page 1, we go on page 2, the url is now on
+    // /associations/biero/marketplace?page=2
+    // when we reload the page, the "page" parameter will be on 2
+    useEffect(() => {
+        // When the page loads, check if the "page" param is defined in the url
+        // and if so, use the setPage method. This will be called only when
+        // the component is mounted.
+        const pageParam = new URLSearchParams(location.search).get("page");
+        setPage(parseInt(pageParam || "") || 1);
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        // If the "page" parameter changes, change the url so when we reload,
+        // the first useEffect can take action to change the page param
+        let params = new URLSearchParams(location.search);
+        if (page.toString() !== params.get("page")) {
+            params.delete("page");
+            params.append("page", page.toString());
+            history.push(location.pathname + "?" + params.toString());
+        }
+    });
 
     if (status === "loading")
         return loadingElement === undefined ? (

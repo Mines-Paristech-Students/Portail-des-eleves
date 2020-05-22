@@ -84,17 +84,14 @@ const AssociationMarketplaceProduct = ({ product }) => {
                 <Card.Title className="card-title">
                     {product.name}{" "}
                     <span className={"text-muted"}>
-                        {product.price} € (
+                        {product.price} €
                         {product.numberLeft > -1
-                            ? product.numberLeft +
-                              " " +
-                              decidePlural(
+                            ? `(${product.numberLeft} ${decidePlural(
                                   product.numberLeft,
                                   "restant",
                                   "restants"
-                              )
+                              )})`
                             : ""}
-                        )
                     </span>
                 </Card.Title>
                 <div className="card-subtitle">{product.description}</div>
