@@ -4,7 +4,7 @@ import { Column } from "./TableHeader";
 const Row = ({ columns, data }: { columns: Column[]; data: object }) => (
     <tr role="row">
         {columns.map((column, i) => (
-            <td key={i}>
+            <td key={i} className={column.cellClassName}>
                 {column.render !== undefined
                     ? column.render(data)
                     : data[column.key]}

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { PageTitle } from "./utils/PageTitle";
 
 /**
  * A link displayed in the sidebar. It has three props:
@@ -8,14 +9,17 @@ import { Link, useLocation } from "react-router-dom";
  *   * `to`: the URL of the link.
  *   * `children`: the children to render for the link.
  */
-export const SidebarItem = ({ icon, to, children }) => {
+export const SidebarItem = ({ icon, to, children, exact = true }) => {
     const location = useLocation();
     const iconClassName = "fe fe-" + icon;
 
     return (
         <Link
             className={`list-group-item list-group-item-action d-flex align-items-center ${
-                location.pathname === to ? "active" : ""
+                (exact && location.pathname === to) ||
+                (!exact && location.pathname.startsWith(to))
+                    ? "active"
+                    : ""
             }`}
             to={to}
         >
@@ -36,7 +40,7 @@ export const SidebarSeparator = (props: { size?: number }) => {
 export const Sidebar = ({ title, children, ...rest }) => {
     return (
         <>
-            <h1 className="page-title mb-5">{title}</h1>
+            <PageTitle>{title}</PageTitle>
             <div className="list-group list-group-transparent mb-0">
                 {children}
             </div>

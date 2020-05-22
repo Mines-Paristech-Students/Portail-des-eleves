@@ -10,6 +10,9 @@ import { AssociationFilesystemList } from "../components/associations/medias/Lis
 import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
+import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
+import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
+import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
 
 export const routes = (association) => [
     {
@@ -68,10 +71,27 @@ export const routes = (association) => [
         exact: true,
         props: { association: association },
     },
-
     {
         path: `/marketplace/history`,
         component: AssociationMarketplaceHistory,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/orders`,
+        component: AssociationMarketplaceOrders,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/counter`,
+        component: AssociationMarketplaceCounter,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/products`,
+        component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
     },

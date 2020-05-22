@@ -23,7 +23,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         content = json.loads(res.content)
         self.assertEqual(
-            Decimal(content[0]["balance"]),
+            Decimal(content["balance"]),
             compute_balance(
                 User.objects.get(pk="17simple"), Marketplace.objects.get(pk="biero")
             ),
@@ -36,7 +36,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         content = json.loads(res.content)
         self.assertEqual(
-            Decimal(content[0]["balance"]),
+            Decimal(content["balance"]),
             compute_balance(
                 User.objects.get(pk="17simple"), Marketplace.objects.get(pk="biero")
             ),
@@ -61,8 +61,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         self.assertStatusCode(res, 200)
 
         content = json.loads(res.content)
-
-        for market_balance in content:
+        for market_balance in content["balances"]:
             self.assertEqual(
                 Decimal(market_balance["balance"]),
                 compute_balance(
@@ -107,8 +106,9 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
                     f"/associations/marketplace/biero/balance/{consumer.id}/"
                 ).content
             )
+
             biero_balance = (
-                0 if biero_content == [] else Decimal(biero_content[0]["balance"])
+                0 if biero_content == [] else Decimal(biero_content["balance"])
             )
             self.assertEqual(biero_balance, biero_funding)
 
