@@ -1,3 +1,4 @@
+import json
 from unittest.mock import patch
 
 from backend.tests_utils import WeakAuthenticationBaseTestCase
@@ -6,6 +7,9 @@ from repartitions.models import Campaign, Group, Proposition
 
 class APITestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
+
+    def setUp(self):
+        self.maxDiff = None
 
     def test_create_campaign(self):
 
@@ -66,10 +70,11 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data["results"],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
             [
                 {
-                    "user": "17bocquet",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -81,7 +86,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "18aouir",
+                    "user": "17bocquet",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -98,16 +103,11 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data["results"],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
             [
                 {
-                    "user": "17bocquet",
-                    "wishes": [],
-                    "category": {"id": 1, "name": "Everyone"},
-                    "fixed_to": None,
-                },
-                {
-                    "user": "16leroy",
+                    "user": "17wan-fat",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -119,7 +119,13 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "17wan-fat",
+                    "user": "16leroy",
+                    "wishes": [],
+                    "category": {"id": 1, "name": "Everyone"},
+                    "fixed_to": None,
+                },
+                {
+                    "user": "17bocquet",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -136,10 +142,11 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was removed
         self.assertEqual(
-            res.data["results"],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
             [
                 {
-                    "user": "17bocquet",
+                    "user": "18aouir",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -151,7 +158,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "fixed_to": None,
                 },
                 {
-                    "user": "18aouir",
+                    "user": "17bocquet",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,
@@ -165,8 +172,9 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get("/repartitions/campaigns/1/users/")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(
-            res.data["results"],
-            [{"user": "17bocquet"}, {"user": "16leroy"}, {"user": "18aouir"}],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
+            [{"user": "18aouir"}, {"user": "16leroy"}, {"user": "17bocquet"}],
         )
 
         res = self.post(
@@ -186,15 +194,11 @@ class APITestCase(WeakAuthenticationBaseTestCase):
         res = self.get(
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
+
         self.assertEqual(
-            res.data["results"],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
             [
-                {
-                    "user": "17bocquet",
-                    "wishes": [],
-                    "category": {"id": 1, "name": "Everyone"},
-                    "fixed_to": None,
-                },
                 {
                     "user": "18aouir",
                     "wishes": [],
@@ -207,6 +211,12 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": 1,
                 },
+                {
+                    "user": "17bocquet",
+                    "wishes": [],
+                    "category": {"id": 1, "name": "Everyone"},
+                    "fixed_to": None,
+                },
             ],
         )
 
@@ -216,14 +226,9 @@ class APITestCase(WeakAuthenticationBaseTestCase):
             "/repartitions/campaigns/1/users/"
         )  # Check that the user was added
         self.assertEqual(
-            res.data["results"],
+            # better than res.data to make deep comparison (avoid using OrderedDict)
+            json.loads(res.content)["results"],
             [
-                {
-                    "user": "17bocquet",
-                    "wishes": [],
-                    "category": {"id": 1, "name": "Everyone"},
-                    "fixed_to": None,
-                },
                 {
                     "user": "18aouir",
                     "wishes": [],
@@ -232,6 +237,12 @@ class APITestCase(WeakAuthenticationBaseTestCase):
                 },
                 {
                     "user": "16leroy",
+                    "wishes": [],
+                    "category": {"id": 1, "name": "Everyone"},
+                    "fixed_to": None,
+                },
+                {
+                    "user": "17bocquet",
                     "wishes": [],
                     "category": {"id": 1, "name": "Everyone"},
                     "fixed_to": None,

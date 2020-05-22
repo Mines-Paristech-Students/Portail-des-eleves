@@ -1,6 +1,6 @@
 from datetime import date
 
-from associations.models import Role
+from associations.models import Role, Association
 from associations.tests.role.base_test_role import (
     BaseRoleTestCase,
     ALL_USERS,
@@ -308,7 +308,8 @@ class RoleTestCase(BaseRoleTestCase):
         self.assertStatusCode(res, 200)
 
         simple = User.objects.get(pk="17member_biero")
-        role = simple.get_role("biero")
+        biero = Association.objects.get(pk="biero")
+        role = simple.get_role(biero)
         for permission_name in Role.PERMISSION_NAMES:
             self.assertTrue(getattr(role, permission_name))
 
@@ -320,7 +321,7 @@ class RoleTestCase(BaseRoleTestCase):
         )
         self.assertStatusCode(res, 200)
         self.assertFalse(
-            User.objects.get(pk="17admin_biero").get_role("biero").administration
+            User.objects.get(pk="17admin_biero").get_role(biero).administration
         )
 
         # 17admin saves 17admin_biero.
@@ -328,7 +329,7 @@ class RoleTestCase(BaseRoleTestCase):
         res = self.update(0, {"administration_permission": True})
         self.assertStatusCode(res, 200)
         self.assertTrue(
-            User.objects.get(pk="17admin_biero").get_role("biero").administration
+            User.objects.get(pk="17admin_biero").get_role(biero).administration
         )
 
         # 17admin_biero revenges.
@@ -346,7 +347,7 @@ class RoleTestCase(BaseRoleTestCase):
         self.assertStatusCode(res, 200)
 
         simple = User.objects.get(pk="17member_biero")
-        role = simple.get_role("biero")
+        role = simple.get_role(biero)
         for permission_name in Role.PERMISSION_NAMES:
             self.assertFalse(
                 getattr(role, permission_name), msg=f"Permission: {permission_name}"

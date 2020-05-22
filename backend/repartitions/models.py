@@ -65,6 +65,7 @@ class UserCampaign(models.Model):
 
     class Meta:
         unique_together = (("user", "campaign"),)
+        ordering = ["-id"]
 
 
 class Wish(models.Model):

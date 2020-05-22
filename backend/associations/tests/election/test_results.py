@@ -99,7 +99,7 @@ class ResultsTestCase(BaseElectionTestCase):
         self.login("17election_pdm")
         self.assertStatusCode(self.create("pdm", election_data), 201)
 
-        pk = Election.objects.last().id
+        pk = Election.objects.order_by("id").last().id
         croissant_id = Choice.objects.get(name="Croissant").id
         raisins_id = Choice.objects.get(name="Pain aux raisins").id
         pommes_id = Choice.objects.get(name="Chausson aux pommes").id
