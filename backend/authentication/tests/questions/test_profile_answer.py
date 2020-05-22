@@ -117,7 +117,7 @@ class TestProfileAnswer(WeakAuthenticationBaseTestCase):
             res = self.create(data=data)
             self.assertStatusCode(res, 201, user_msg=user)
 
-            last_profile_answer = ProfileAnswer.objects.last()
+            last_profile_answer = ProfileAnswer.objects.order_by("id").last()
             self.assertEqual(last_profile_answer.text, data["text"])
             self.assertEqual(last_profile_answer.question.id, data["question"])
             self.assertEqual(last_profile_answer.user.id, data["user"])
