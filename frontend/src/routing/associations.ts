@@ -14,6 +14,7 @@ import { AssociationSettings } from "../components/associations/settings/Associa
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
 import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
+import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
 
 export const routes = (association) => [
     {
@@ -94,6 +95,12 @@ export const routes = (association) => [
     {
         path: `/marketplace/products`,
         component: AssociationMarketplaceProductAdministration,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/products/:productId/edit`,
+        component: AssociationMarketplaceProductEdit,
         exact: true,
         props: { association: association },
     },

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ErrorMessage } from "../../utils/ErrorPage";
+import { ErrorMessage, ForbiddenError } from "../../utils/ErrorPage";
 import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -23,13 +23,8 @@ export const AssociationFilesystemEdit = ({ association }) => {
     const history = useHistory();
     const newToast = useContext(ToastContext);
 
-    if (!association.myRole.mediaPermission) {
-        return (
-            <ErrorMessage>
-                Vous ne pouvez pas modifier ce fichier car vous n'avez pas les
-                droits requis pour {association.name}
-            </ErrorMessage>
-        );
+    if (!association.myRole.permissions.includes("media")) {
+        return <ForbiddenError/>;
     }
 
     const deleteFile = (media) => {

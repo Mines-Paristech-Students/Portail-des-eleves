@@ -29,8 +29,8 @@ export const AssociationFilesystemList = ({ association, setSidebar }) => {
     const additionalParams = useTagSearch(
         {
             page_size: 1000,
-            scoped_to: "association",
-            scoped_to_pk: associationId,
+            namespace__scoped_to_model: "association",
+            namespace__scoped_to_pk: associationId,
             related_to: "media",
         },
         setSidebar

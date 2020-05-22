@@ -10,7 +10,6 @@ import Select from "react-select";
 
 export const TagEdition = ({ model, id }) => {
     const newToast = useContext(ToastContext);
-
     // API Helpers to bind and remove tags
     const bindTag = (newTag) => {
         api.tags
@@ -100,7 +99,7 @@ export const TagEdition = ({ model, id }) => {
                     `Erreur durant le chargement : ${error.toString()}`
                 );
             });
-    }, [model, id]);
+    }, ["model", "id"]);
 
     // Give the tags related to the namespace
     useEffect(() => {
@@ -117,7 +116,7 @@ export const TagEdition = ({ model, id }) => {
         } else {
             setFuseTag(null);
         }
-    }, [selectedNamespace]);
+    }, ["selectedNamespace"]);
 
     // Get all tags of the model
     let params = {};
@@ -126,7 +125,7 @@ export const TagEdition = ({ model, id }) => {
         api.tags.list(params).then((data) => {
             setTags(data.results);
         });
-    }, [model, id, params]);
+    }, ["model", "id", "params"]);
 
     // Event handlers
     const handleChange = (selectedOption, action) => {

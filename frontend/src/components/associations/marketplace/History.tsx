@@ -19,8 +19,8 @@ export const AssociationMarketplaceHistory = ({ association }) => {
     const marketplaceId = association.id;
 
     return (
-        <>
-            <div className={"float-center"}>
+        <Container>
+            <div className={"float-right"}>
                 <Link
                     to={"/associations/" + marketplaceId + "/marketplace"}
                     className={"btn btn-primary"}
@@ -30,7 +30,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
             </div>
             <TransactionHistory marketplaceId={marketplaceId} user={user} />
             <FundingHistory marketplaceId={marketplaceId} user={user} />
-        </>
+        </Container>
     );
 };
 
