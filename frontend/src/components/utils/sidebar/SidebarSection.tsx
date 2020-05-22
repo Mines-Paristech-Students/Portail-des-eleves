@@ -17,9 +17,10 @@ export const SidebarSection = ({
 
     useEffect(() => {
         setIsRetracted(retractedByDefault);
+        // eslint-disable-next-line
     }, []);
 
-    if (fields.length == 0) {
+    if (fields.length === 0) {
         return null;
     }
 

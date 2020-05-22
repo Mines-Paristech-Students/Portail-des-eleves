@@ -11,6 +11,9 @@ import { AssociationFilesystemDetail } from "../components/associations/medias/D
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
 import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
+import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
+import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
+import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
 
 export const routes = (association) => [
     {
@@ -69,10 +72,28 @@ export const routes = (association) => [
         exact: true,
         props: { association: association },
     },
-
     {
         path: `/marketplace/history`,
         component: AssociationMarketplaceHistory,
+        exact: true,
+        props: { association: association },
+    },
+
+    {
+        path: `/marketplace/orders`,
+        component: AssociationMarketplaceOrders,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/counter`,
+        component: AssociationMarketplaceCounter,
+        exact: true,
+        props: { association: association },
+    },
+    {
+        path: `/marketplace/products`,
+        component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
     },

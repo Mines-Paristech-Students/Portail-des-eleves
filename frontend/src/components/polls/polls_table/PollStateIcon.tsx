@@ -17,7 +17,7 @@ export const PollStateIcon = ({ state }: { state: PollState }) => {
             return (
                 <OverlayTrigger
                     placement={"bottom"}
-                    overlay={<Tooltip id="accepted">Refusé</Tooltip>}
+                    overlay={<Tooltip id="refused">Refusé</Tooltip>}
                 >
                     <i className="fe fe-x text-danger" />
                 </OverlayTrigger>
@@ -26,7 +26,7 @@ export const PollStateIcon = ({ state }: { state: PollState }) => {
             return (
                 <OverlayTrigger
                     placement={"bottom"}
-                    overlay={<Tooltip id="accepted">En attente</Tooltip>}
+                    overlay={<Tooltip id="pending">En attente</Tooltip>}
                 >
                     <i className="fe fe-eye text-warning" />
                 </OverlayTrigger>

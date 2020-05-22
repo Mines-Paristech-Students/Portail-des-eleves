@@ -57,7 +57,10 @@ export const useTagSearch = (tagsQueryParams, setSidebar) => {
                     level: ToastLevel.Error,
                 });
             });
+        // eslint-disable-next-line
     }, []);
+
+    // eslint-disable-next-line
     useEffect(() => () => setSidebar(null), []); // Reset the sidebar when leaving the page
 
     return additionalParams;

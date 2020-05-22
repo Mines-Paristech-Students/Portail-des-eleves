@@ -20,6 +20,7 @@ class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = (RolePermission,)
+    serializer_class = RoleSerializer
 
     filter_fields = ("user", "association")
 
