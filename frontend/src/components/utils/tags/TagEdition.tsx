@@ -185,7 +185,7 @@ export const TagEdition = ({ model, id }) => {
                 (namespace) => namespace.name === namespaceValue
             );
             if (matchingNamespaces.length !== 0) {
-                if (selectedNamespace == null) {
+                if (selectedNamespace === null) {
                     setSelectedNamespace(matchingNamespaces[0]);
                 }
                 searchValue = value.split(":")[1];

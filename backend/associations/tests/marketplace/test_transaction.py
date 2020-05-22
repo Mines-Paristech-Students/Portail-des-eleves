@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Q
 
 from associations.models import Transaction, Product
@@ -303,6 +305,67 @@ class TransactionTestCase(BaseMarketPlaceTestCase):
                 user,
                 data={"buyer": user, "product": product_id, "quantity": quantity},
                 code=400,
+            )
+
+    def test_product_number_left_is_updated_after_transaction_is_created(self):
+        self.login("17bocquet")
+
+        res = self.get("/associations/products/1/")
+        self.assertEqual(json.loads(res.content)["number_left"], 10)
+
+        res = self.post(
+            "/associations/transactions/",
+            data={"buyer": "17bocquet", "product": 1, "quantity": 5},
+        )
+        self.assertStatusCode(res, 201)
+        res = self.get("/associations/products/1/")
+        self.assertEqual(json.loads(res.content)["number_left"], 5)
+
+    def test_product_number_left_is_updated_after_transaction_changes_state(self):
+        self.login("17bocquet")
+
+        res = self.get("/associations/products/1/")
+        self.assertEqual(json.loads(res.content)["number_left"], 10)
+
+        self.post(
+            "/associations/transactions/",
+            data={"buyer": "17bocquet", "product": 1, "quantity": 5},
+        )
+        transaction = Transaction.objects.order_by("-id")[0]
+
+        res = self.get("/associations/products/1/")
+        self.assertEqual(json.loads(res.content)["number_left"], 5)
+
+        # Cancel it
+        all_status = [
+            # Starting from an active state
+            ("ORDERED", "ORDERED"),
+            ("ORDERED", "CANCELLED"),
+            ("ORDERED", "REJECTED"),
+            ("ORDERED", "VALIDATED"),
+            ("ORDERED", "DELIVERED"),
+            ("ORDERED", "REFUNDED"),
+            # Starting from a cancelled state
+            ("CANCELLED", "ORDERED"),
+            ("CANCELLED", "CANCELLED"),
+            ("CANCELLED", "REJECTED"),
+            ("CANCELLED", "VALIDATED"),
+            ("CANCELLED", "DELIVERED"),
+            ("CANCELLED", "REFUNDED"),
+        ]
+
+        for (status_1, status_2) in all_status:
+            self.patch(
+                f"/associations/transactions/{transaction.id}/", {"status": status_1}
+            )
+            self.patch(
+                f"/associations/transactions/{transaction.id}/", {"status": status_2}
+            )
+
+            res = self.get("/associations/products/1/")
+            self.assertEqual(
+                json.loads(res.content)["number_left"],
+                5 if status_2 in ["ORDERED", "VALIDATED", "DELIVERED"] else 10,
             )
 
     ##########

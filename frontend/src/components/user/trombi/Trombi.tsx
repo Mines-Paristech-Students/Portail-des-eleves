@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../utils/PageTitle";
 import { Link } from "react-router-dom";
-import Select, { ValueType } from "react-select";
+import Select from "react-select";
 import InputGroup from "react-bootstrap/InputGroup";
 import { DebounceInput } from "react-debounce-input";
 
@@ -22,9 +22,7 @@ export const Trombi = () => {
     const [searchKey, setSearchKey] = useState("");
 
     // The promotions filter sent to `api.users.list`.
-    const [promotionsFilter, setPromotionsFilter] = useState<
-        ValueType<{ value: string; label: string }>
-    >([]);
+    const [promotionsFilter, setPromotionsFilter] = useState<any[]>([]);
 
     return (
         <Container className="mt-5">
@@ -63,7 +61,7 @@ export const Trombi = () => {
                         closeMenuOnSelect={false}
                         isMulti
                         placeholder="Filtrer par promotion…"
-                        onChange={setPromotionsFilter}
+                        onChange={(value, _) => setPromotionsFilter(value)}
                     />
                 </Col>
             </Row>
@@ -71,7 +69,12 @@ export const Trombi = () => {
             <Pagination
                 apiKey={[
                     "users.list",
-                    { searchKey: searchKey, promotions: promotionsFilter },
+                    {
+                        search: searchKey,
+                        promotion__in: (promotionsFilter || [])
+                            .map((promotion) => promotion.value)
+                            .join(","),
+                    },
                 ]}
                 apiMethod={api.users.list}
                 config={{ refetchOnWindowFocus: false }}

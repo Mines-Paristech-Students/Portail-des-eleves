@@ -174,9 +174,4 @@ class User(AbstractBaseUser, PermissionsMixin):
             return today.year - self.year_of_entry - 1
 
     def get_role(self, association=None):
-        q = self.roles.filter(association_id=association)
-
-        if q.exists():
-            return q[0]
-
-        return None
+        return self.roles.filter(association_id=association.id).first()

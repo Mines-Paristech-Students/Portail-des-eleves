@@ -5,35 +5,115 @@ import { PageTitle } from "../../utils/PageTitle";
 import { UserContext } from "../../../services/authService";
 import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
+import { formatDate } from "../../../utils/format";
+import {
+    Funding,
+    FundingStatus,
+    TransactionStatus,
+} from "../../../models/associations/marketplace";
+import { Table } from "../../utils/table/Table";
+import { Link } from "react-router-dom";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
     const marketplaceId = association.id;
 
     return (
+        <>
+            <div className={"float-center"}>
+                <Link
+                    to={"/associations/" + marketplaceId + "/marketplace"}
+                    className={"btn btn-primary"}
+                >
+                    <i className={"fe fe-book-open"} /> Magasin
+                </Link>
+            </div>
+            <TransactionHistory marketplaceId={marketplaceId} user={user} />
+            <FundingHistory marketplaceId={marketplaceId} user={user} />
+        </>
+    );
+};
+
+const TransactionHistory = ({ marketplaceId, user }) => {
+    const columns = [
+        {
+            key: "product",
+            header: "Produit",
+            render: (transaction) => (
+                <>
+                    <strong>{transaction.product.name}</strong>{" "}
+                    <span className="text-muted">x{transaction.quantity}</span>
+                </>
+            ),
+        },
+        {
+            key: "value",
+            header: "Valeur",
+            render: (transaction) => <strong>{transaction.value} €</strong>,
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+        {
+            key: "date",
+            header: "Date",
+            render: (transaction) => formatDate(new Date(transaction.date)),
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (transaction) => {
+                let status = {};
+
+                status[TransactionStatus.Ordered] = (
+                    <span className="tag tag-blue">Commandée</span>
+                );
+
+                status[TransactionStatus.Validated] = (
+                    <span className="tag tag-lime">Validée</span>
+                );
+
+                status[TransactionStatus.Delivered] = (
+                    <span className="tag tag-green">Délivrée</span>
+                );
+
+                status[TransactionStatus.Cancelled] = (
+                    <span className="tag tag-red">Annulée</span>
+                );
+
+                status[TransactionStatus.Refunded] = (
+                    <span className="tag tag-yellow">Remboursée</span>
+                );
+
+                status[TransactionStatus.Rejected] = (
+                    <span className="tag tag-red">Refusée</span>
+                );
+
+                return status[transaction.status];
+            },
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+    ];
+
+    return (
         <Pagination
-            apiKey={["marketplace.transactions.list", marketplaceId, user]}
+            apiKey={[
+                "marketplace.transactions.list",
+                marketplaceId,
+                { page_size: 10, buyer: user?.id },
+            ]}
             apiMethod={api.transactions.list}
             render={(transactions, paginationControl) => (
                 <Container>
-                    <div className={"float-right"}>
-                        <a
-                            href={
-                                "/associations/" +
-                                marketplaceId +
-                                "/marketplace/"
-                            }
-                            className={"btn btn-primary"}
-                        >
-                            <i className={"fe fe-book-open"} /> Magasin
-                        </a>
-                    </div>
-                    <PageTitle>Mon historique</PageTitle>
+                    <PageTitle>Mes commandes</PageTitle>
 
                     {transactions.length !== 0 ? (
                         <>
-                            {paginationControl}
-                            <TransactionsTable transactions={transactions} />
+                            <Card>
+                                <Table columns={columns} data={transactions} />
+                            </Card>
                             {paginationControl}
                         </>
                     ) : (
@@ -42,30 +122,6 @@ export const AssociationMarketplaceHistory = ({ association }) => {
                 </Container>
             )}
         />
-    );
-};
-
-const TransactionsTable = ({ transactions }) => {
-    return (
-        <Card>
-            <table className="table card-table table-vcenter">
-                <tbody>
-                    {transactions.map((transaction, index) => {
-                        return transaction.product !== null ? (
-                            <PurchaseTransactionLine
-                                key={index}
-                                transaction={transaction}
-                            />
-                        ) : (
-                            <RefundTransactionLine
-                                key={index}
-                                transaction={transaction}
-                            />
-                        );
-                    })}
-                </tbody>
-            </table>
-        </Card>
     );
 };
 
@@ -79,58 +135,75 @@ const NoTransactionMessage = () => (
     </Card>
 );
 
-const PurchaseTransactionLine = ({ transaction }) => {
-    let status = <p />;
-
-    if (transaction.status === "ORDERED") {
-        status = <span className="tag tag-blue">Commandée</span>;
-    }
-    if (transaction.status === "VALIDATED") {
-        status = <span className="tag tag-lime">Validée</span>;
-    }
-    if (transaction.status === "DELIVERED") {
-        status = <span className="tag tag-green">Délivrée</span>;
-    }
-    if (transaction.status === "CANCELLED") {
-        status = <span className="tag tag-red">Annulée</span>;
-    }
-    if (transaction.status === "REFUNED") {
-        status = <span className="tag tag-yellow">Remboursée</span>;
-    }
+const FundingHistory = ({ marketplaceId, user }) => {
+    const columns = [
+        {
+            key: "label",
+            header: "",
+            render: (funding) => "Argent versé sur le compte :",
+        },
+        {
+            key: "value",
+            header: "Valeur",
+            render: (funding) => funding.value + " €",
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+        {
+            key: "date",
+            header: "Date",
+            render: (funding) => formatDate(new Date(funding.date)),
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+        {
+            key: "value",
+            header: "Valeur",
+            render: (funding: Funding) =>
+                funding.status === FundingStatus.Funded ? (
+                    <span className="tag tag-blue">Versé</span>
+                ) : funding.status === FundingStatus.Refunded ? (
+                    <span className="tag tag-yellow">Remboursé</span>
+                ) : null,
+            headerClassName: "text-center",
+            cellClassName: "text-center",
+        },
+    ];
 
     return (
-        <tr>
-            <td>
-                <strong>{transaction.product.name}</strong>
-            </td>
-            <td className="text-center text-muted d-none d-md-table-cell text-nowrap">
-                Quantité : {transaction.quantity}
-            </td>
-            <td className="text-right">
-                <strong>{transaction.value}€</strong>
-            </td>
-            <td className="text-right">{status}</td>
-        </tr>
+        <Pagination
+            apiKey={[
+                "marketplace.funding.list",
+                marketplaceId,
+                { page_size: 10, user: user?.id },
+            ]}
+            apiMethod={api.fundings.list}
+            render={(fundings, paginationControl) => (
+                <Container>
+                    <PageTitle>Mes dépôts</PageTitle>
+
+                    {fundings.length !== 0 ? (
+                        <>
+                            <Card>
+                                <Table columns={columns} data={fundings} />
+                            </Card>
+                            {paginationControl}
+                        </>
+                    ) : (
+                        <NoFundingMessage />
+                    )}
+                </Container>
+            )}
+        />
     );
 };
 
-const RefundTransactionLine = ({ transaction }) => {
-    /* If the user put money  on their account */
-    let status = <p />;
-    if (transaction.status === "FUNDED") {
-        status = <span className="tag tag-blue">Versé</span>;
-    } else if (transaction.status === "REFUNED") {
-        status = <span className="tag tag-yellow">Remboursé</span>;
-    }
-
-    return (
-        <tr>
-            <td colSpan={2}>Argent versé sur le compte :</td>
-            <td className="text-center" colSpan={2}>
-                <strong>{transaction.value}€</strong>
-            </td>
-            <td className="text-right">{status}</td>
-            <td className="text-center">{transaction.date}</td>
-        </tr>
-    );
-};
+const NoFundingMessage = () => (
+    <Card>
+        <Card.Body>
+            <p className="text-center">
+                Vous n'avez jamais rempli votre compte jusqu'à maintenant
+            </p>
+        </Card.Body>
+    </Card>
+);
