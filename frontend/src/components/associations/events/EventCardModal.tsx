@@ -33,7 +33,11 @@ export const EventCardModal = ({
             <Modal.Title>{event.name} — Inscriptions</Modal.Title>
         </Modal.Header>
         <Modal.Body className="pt-0">
-            <Table columns={columns} data={event.participants} dataTable={false} />
+            <Table
+                columns={columns}
+                data={event.participants}
+                dataTable={false}
+            />
         </Modal.Body>
     </Modal>
 );

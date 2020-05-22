@@ -48,7 +48,7 @@ export const AssociationEventList = ({
                                 <EventCard
                                     event={event}
                                     association={association}
-                                    userId={user? user.id : undefined}
+                                    userId={user ? user.id : undefined}
                                 />
                             </Col>
                         ))}
