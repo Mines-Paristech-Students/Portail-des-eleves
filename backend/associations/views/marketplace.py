@@ -32,6 +32,7 @@ from associations.serializers import (
     UpdateFundingSerializer,
 )
 from authentication.models import User
+from tags.filters import HasHiddenTagFilter
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
@@ -53,7 +54,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     pagination_class = SmallResultsSetPagination
 
-    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_backends = (DjangoFilterBackend, SearchFilter, HasHiddenTagFilter)
     filter_fields = ("marketplace",)
     search_fields = ("name", "description")
 
