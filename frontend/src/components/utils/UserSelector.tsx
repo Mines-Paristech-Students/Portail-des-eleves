@@ -13,7 +13,7 @@ export const UserSelector = ({ setUser }) => {
     );
 
     if (status === "loading") return <Loading />;
-    else if (status === "error") return <Error detail={error} />;
+    else if (status === "error") return <Error detail={error}/>;
     else if (data) {
         return (
             <>
