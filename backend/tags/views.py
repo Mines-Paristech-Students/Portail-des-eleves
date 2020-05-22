@@ -1,6 +1,7 @@
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
+from django_filters import rest_framework as filters
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
+from tags.filters.related_to import RelatedToFilter
 from tags.models import Namespace, Tag
 from tags.permissions import (
     NamespacePermission,
@@ -46,6 +48,16 @@ class NamespaceViewSet(viewsets.ModelViewSet):
         return super(NamespaceViewSet, self).update(request, *args, **kwargs)
 
 
+class TagFilter(RelatedToFilter):
+    class Meta:
+        model = Tag
+        fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
+            "namespace__scoped_to_model",
+            "namespace__scoped_to_pk",
+            "namespace",
+        )
+
+
 class TagViewSet(
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
@@ -56,11 +68,8 @@ class TagViewSet(
     permission_classes = (ManageTagPermission,)
     queryset = Tag.objects.all()
 
-    filterset_fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
-        "namespace__scoped_to_model",
-        "namespace__scoped_to_pk",
-        "namespace",
-    )
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = TagFilter
 
     def create(self, request, *args, **kwargs):
         if "namespace" in request.data and "value" in request.data:

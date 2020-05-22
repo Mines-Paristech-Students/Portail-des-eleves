@@ -33,7 +33,7 @@ export const Avatar = ({
                 className ? className : ""
             }`}
             style={{
-                boxShadow: "0 2px 4px 0 hsla(0, 0%, 0%, 0.2)",
+                boxShadow: "0 git editUser2px 4px 0 hsla(0, 0%, 0%, 0.2)",
                 backgroundImage: url ? `url(${url}.jpg)` : "",
             }}
         >

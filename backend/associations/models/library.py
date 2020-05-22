@@ -11,6 +11,9 @@ class Library(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     enabled = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["-id"]
+
 
 class Loanable(models.Model):
     id = models.AutoField(primary_key=True)
@@ -20,6 +23,9 @@ class Loanable(models.Model):
     image = models.ImageField(null=True)
     comment = models.TextField(null=True, blank=True)
     library = models.ForeignKey(Library, models.CASCADE, related_name="loanables")
+
+    class Meta:
+        ordering = ["-id"]
 
     def is_borrowed(self):
         for loan in self.loans.all():
@@ -71,3 +77,6 @@ class Loan(models.Model):
         ("RETURNED", "Rendu"),  # The product has been returned.
     )
     status = models.CharField(choices=STATUS, max_length=200, default="PENDING")
+
+    class Meta:
+        ordering = ["-id"]

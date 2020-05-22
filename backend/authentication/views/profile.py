@@ -1,9 +1,4 @@
-from django_filters.rest_framework import (
-    FilterSet,
-    BaseInFilter,
-    DjangoFilterBackend,
-    CharFilter,
-)
+from django_filters.rest_framework import FilterSet, DjangoFilterBackend
 from rest_framework import filters, viewsets
 
 from authentication.models import User
@@ -14,10 +9,6 @@ from authentication.serializers.user import (
     UserShortSerializer,
 )
 from tags.filters import HasHiddenTagFilter
-
-
-class CharInFilter(BaseInFilter, CharFilter):
-    pass
 
 
 class ProfileFilter(FilterSet):

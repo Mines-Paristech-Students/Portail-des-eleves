@@ -1,6 +1,8 @@
 import { Route } from "./global";
 import { UserProfile } from "../components/user/profile/UserProfile";
 import { Trombi } from "../components/user/trombi/Trombi";
+import { EditUserProfile } from "../components/user/edit_profile/EditUserProfile";
+import { Redirect } from "react-router-dom";
 
 export const routes: Route[] = [
     {
@@ -9,8 +11,13 @@ export const routes: Route[] = [
         exact: true,
     },
     {
+        path: "/profils",
+        component: () => new Redirect({ to: { pathname: "/trombi" } }),
+        exact: true,
+    },
+    {
         path: `/profils/modifier`,
-        component: UserProfile,
+        component: EditUserProfile,
         exact: true,
     },
     {
