@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    toUrlParams,
-    useBetterPaginatedQuery,
-} from "../../services/apiService";
+import { useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
 import { Error } from "./Error";
@@ -95,8 +92,7 @@ export const Pagination = ({
             params.append("page", page.toString());
             history.push(location.pathname + "?" + params.toString());
         }
-        // eslint-disable-next-line
-    }, [page]);
+    });
 
     if (status === "loading")
         return loadingElement === undefined ? (
