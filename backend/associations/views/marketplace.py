@@ -286,11 +286,12 @@ class BalanceView(APIView):
                 # List the balances of all the users.
                 if role and role.marketplace:
                     return Response(
-                        [
-                            self.get_balance_in_json(u, marketplace)
-                            for u in User.objects.all()
-                        ],
-                        safe=False,
+                        {
+                            "balances": [
+                                self.get_balance_in_json(u, marketplace)
+                                for u in User.objects.all()
+                            ]
+                        }
                     )
                 else:
                     return HttpResponseForbidden(
