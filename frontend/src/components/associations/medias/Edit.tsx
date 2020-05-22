@@ -24,7 +24,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
     const newToast = useContext(ToastContext);
 
     if (!association.myRole.permissions.includes("media")) {
-        return <ForbiddenError/>;
+        return <ForbiddenError />;
     }
 
     const deleteFile = (media) => {

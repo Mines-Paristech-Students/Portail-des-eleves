@@ -58,7 +58,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                 message: "Modifications enregistrées",
                                 level: ToastLevel.Success,
                             });
-                            queryCache.refetchQueries("products.list")
+                            queryCache.refetchQueries("products.list");
                         })
                         .catch((err) => {
                             newToast({

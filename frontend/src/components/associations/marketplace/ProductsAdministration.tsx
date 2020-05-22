@@ -15,11 +15,7 @@ export const AssociationMarketplaceProductAdministration = ({
             <PageTitle>Produits</PageTitle>
             <Row>
                 <Pagination
-                    apiKey={[
-                        "products.list",
-                        marketplaceId,
-                        { page_size: 8 },
-                    ]}
+                    apiKey={["products.list", marketplaceId, { page_size: 8 }]}
                     apiMethod={api.products.list}
                     render={(products, controlbar) => (
                         <>
