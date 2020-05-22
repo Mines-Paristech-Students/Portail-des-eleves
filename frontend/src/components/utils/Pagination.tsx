@@ -74,18 +74,17 @@ export const Pagination = ({
     // /associations/biero/marketplace?page=2
     // when we reload the page, the "page" parameter will be on 2
     useEffect(() => {
-        if (page === 1) {
-            const pageParam = new URLSearchParams(location.search).get("page");
-            setPage(parseInt(pageParam || "") || 1);
-        }
+        // When the page loads, check if the "page" param is defined in the url
+        // and if so, use the setPage method. This will be called only when
+        // the component is mounted.
+        const pageParam = new URLSearchParams(location.search).get("page");
+        setPage(parseInt(pageParam || "") || 1);
         // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
-        if (page === 1) {
-            return;
-        }
-
+        // If the "page" parameter changes, change the url so when we reload,
+        // the first useEffect can take action to change the page param
         let params = new URLSearchParams(location.search);
         if (page.toString() !== params.get("page")) {
             params.delete("page");
