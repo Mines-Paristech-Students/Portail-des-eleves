@@ -77,20 +77,24 @@ export const Pagination = ({
     // /associations/biero/marketplace?page=2
     // when we reload the page, the "page" parameter will be on 2
     useEffect(() => {
-        const pageParam = new URLSearchParams(location.search).get("page");
-        if (pageParam && parseInt(pageParam)) {
-            setPage(parseInt(pageParam));
+        if (page === 1) {
+            const pageParam = new URLSearchParams(location.search).get("page");
+            setPage(parseInt(pageParam || "") || 1);
         }
         // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
+        if (page === 1) {
+            return;
+        }
+
         let params = new URLSearchParams(location.search);
-        params.delete("page");
-        params.append("page", page.toString());
-        history.push(
-            location.pathname + "?" + params.toString()
-        );
+        if (page.toString() !== params.get("page")) {
+            params.delete("page");
+            params.append("page", page.toString());
+            history.push(location.pathname + "?" + params.toString());
+        }
         // eslint-disable-next-line
     }, [page]);
 
