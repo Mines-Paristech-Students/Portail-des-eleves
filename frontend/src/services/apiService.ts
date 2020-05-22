@@ -40,23 +40,58 @@ export function unwrap<T>(promise): Promise<T> {
 }
 
 /**
- * Transforms an object into url parameters, joining parameters with '&'
- * and adding '?' at the beginning
- * toUrlParams({foo: 'bar', piche: 'clac'} = "?foo=bar?piche=clac"
+ * Transform a pair key / value into a `key=value` string.
+ * The value should be a number, a string or a boolean. A boolean value will be transformed into either `true` or `false`.
  */
-export function toUrlParams(obj: object): string {
-    let params = "?";
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if (params.length !== 1) {
-                params += "&";
-            }
-            params += `${key}=${obj[key]}`;
-        }
-    }
+const toUrlParam = (key: string, value: boolean | number | string): string =>
+    `${key}=${
+        typeof value === "string" || typeof value === "number"
+            ? value
+            : value
+            ? "true"
+            : "false"
+    }`;
 
-    return params;
-}
+/**
+ * Transforms an object into URL parameters. The returned string joins the parameters found in the object with '&'
+ * and adds '?' at the beginning.
+ * The keys and the values of the object are respectively the names and the values of the URL parameters.
+ * If an array is passed as a value, the parameter will be repeated for each item.
+ * The values should be numbers, strings or booleans. A boolean value will be transformed into either `true` or `false`.
+ *
+ * Examples:
+ * ```
+ * toUrlParams({
+ *     foo: 1,
+ *     piche: 'clac'
+ * }
+ * == "?foo=1&piche=clac"
+ * ```
+ * ```
+ * toUrlParams({
+ *     foo: 42,
+ *     piche: ['clic', 'clac', 'cloc']
+ * }
+ * == "?foo=42&piche=clic&piche=clac&piche=cloc"
+ * ```
+ */
+export const toUrlParams = (parameters: {
+    [key: string]: boolean | number | string | (boolean | number | string)[];
+}) =>
+    "?" +
+    // Iterate through the keys.
+    Object.getOwnPropertyNames(parameters)
+        .map((key) =>
+            // Return the scalar values or iterate through the array.
+            typeof parameters[key] === "string" ||
+            typeof parameters[key] === "number" ||
+            typeof parameters[key] === "boolean"
+                ? toUrlParam(key, parameters[key] as boolean | number | string)
+                : (parameters[key] as (boolean | number | string)[])
+                      .map((value) => toUrlParam(key, value))
+                      .join("&")
+        )
+        .join("&");
 
 export const api = {
     associations: associations,
