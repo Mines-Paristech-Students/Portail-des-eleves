@@ -94,8 +94,8 @@ export const polls = {
         data: {
             publicationDate?: string | Date;
             state?: "REVIEWING" | "REJECTED" | "ACCEPTED";
-            admin_comment?: String;
-            question?: String;
+            admin_comment?: string;
+            question?: string;
             choices?: { text: string }[];
         };
     }) => {
