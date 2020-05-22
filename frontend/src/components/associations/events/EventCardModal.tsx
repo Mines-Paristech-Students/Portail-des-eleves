@@ -32,7 +32,7 @@ export const EventCardModal = ({
         <Modal.Header closeButton>
             <Modal.Title>{event.name} — Inscriptions</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="pt-0">
+        <Modal.Body className="p-0">
             <Table
                 columns={columns}
                 data={event.participants}

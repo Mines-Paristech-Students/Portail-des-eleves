@@ -65,11 +65,11 @@ class BaseEventsTestCase(WeakAuthenticationBaseTestCase):
         return f"/associations/events/{pk}/join/"
 
     def join(self, pk, association_id):
-        return self.get(self.endpoint_join(pk, association_id))
+        return self.put(self.endpoint_join(pk, association_id))
 
     def endpoint_leave(self, pk, association_id):
         """Return the endpoint associated to the leave action."""
         return f"/associations/events/{pk}/leave/"
 
     def leave(self, pk, association_id):
-        return self.get(self.endpoint_leave(pk, association_id))
+        return self.put(self.endpoint_leave(pk, association_id))

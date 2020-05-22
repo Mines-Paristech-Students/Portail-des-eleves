@@ -16,9 +16,9 @@ export const events = {
     get: ({ eventId }) =>
         unwrap<Event>(apiService.get(`/associations/events/${eventId}`)),
     join: ({ eventId }) =>
-        apiService.get(`/associations/events/${eventId}/join/`),
+        apiService.put(`/associations/events/${eventId}/join/`),
     leave: ({ eventId }) =>
-        apiService.get(`/associations/events/${eventId}/leave/`),
+        apiService.put(`/associations/events/${eventId}/leave/`),
     save: (event) => {
         if (!event.id) {
             return unwrap<Event>(
