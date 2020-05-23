@@ -55,4 +55,4 @@ jobs:
         python manage.py test polls
         # python manage.py test repartitions
         python manage.py test subscriptions
-        # python manage.py test tags
+        python manage.py test tags
