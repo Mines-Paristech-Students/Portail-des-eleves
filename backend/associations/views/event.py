@@ -19,7 +19,7 @@ class EventFilter(FilterSet):
     starts_at = DateTimeFromToRangeFilter()
     ends_at = DateTimeFromToRangeFilter()
     time = MultipleChoiceFilter(
-        choices=(("PAST", "PAST"), ("CURRENT", "CURRENT"), ("FUTURE", "FUTURE")),
+        choices=(("BEFORE", "BEFORE"), ("NOW", "NOW"), ("AFTER", "AFTER")),
         method="filter_time",
     )
 
@@ -36,15 +36,15 @@ class EventFilter(FilterSet):
         # https://stackoverflow.com/questions/35893867/always-false-q-object
         condition = Q(pk__in=[])
 
-        if "PAST" in times:
+        if "BEFORE" in times:
             condition |= Q(ends_at__lte=datetime.now())
 
-        if "CURRENT" in times:
+        if "NOW" in times:
             condition |= Q(starts_at__lte=datetime.now()) & Q(
                 ends_at__gte=datetime.now()
             )
 
-        if "FUTURE" in times:
+        if "AFTER" in times:
             condition |= Q(starts_at__gte=datetime.now())
 
         return queryset.filter(condition)
@@ -55,7 +55,7 @@ class EventViewSet(viewsets.ModelViewSet):
         Filters:
             - starts_at_before / starts_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
             - ends_at_before / ends_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
-            - time: choose between PAST, CURRENT, FUTURE. If several `time` are provided, the conditions are OR'ed.
+            - time: choose between BEFORE, NOW, AFTER. If several `time` are provided, the conditions are OR'ed.
             - association: filter the organizing association.
     """
 

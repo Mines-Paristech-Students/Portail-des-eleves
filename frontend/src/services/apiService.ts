@@ -77,20 +77,31 @@ const toUrlParam = (key: string, value: boolean | number | string): string =>
  * ```
  */
 export const toUrlParams = (parameters: {
-    [key: string]: boolean | number | string | (boolean | number | string)[];
+    [key: string]:
+        | undefined
+        | null
+        | boolean
+        | number
+        | string
+        | (boolean | number | string)[];
 }) =>
     "?" +
     // Iterate through the keys.
     Object.getOwnPropertyNames(parameters)
         .map((key) =>
-            // Return the scalar values or iterate through the array.
-            typeof parameters[key] === "string" ||
-            typeof parameters[key] === "number" ||
-            typeof parameters[key] === "boolean"
-                ? toUrlParam(key, parameters[key] as boolean | number | string)
-                : (parameters[key] as (boolean | number | string)[])
-                      .map((value) => toUrlParam(key, value))
-                      .join("&")
+            key
+                ? // Return the scalar values or iterate through the array.
+                  typeof parameters[key] === "string" ||
+                  typeof parameters[key] === "number" ||
+                  typeof parameters[key] === "boolean"
+                    ? toUrlParam(
+                          key,
+                          parameters[key] as boolean | number | string
+                      )
+                    : (parameters[key] as (boolean | number | string)[])
+                          .map((value) => toUrlParam(key, value))
+                          .join("&")
+                : ""
         )
         .join("&");
 

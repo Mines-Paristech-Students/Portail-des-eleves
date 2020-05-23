@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { api } from "../../../services/apiService";
@@ -27,11 +27,35 @@ export const AssociationEventList = ({
     ) => void;
 }) => {
     const user = useContext(UserContext);
+    const [parameters, setParameters] = useState<{
+        association: string;
+        time: ("NOW" | "BEFORE" | "AFTER")[];
+    }>({
+        association: association.id,
+        time: [],
+    });
 
     useEffect(() => {
         setSidebar({
-            notifyChange: (parameters) => {
-                console.log(parameters);
+            notifyChange: (sidebarParameters) => {
+                const time: ("NOW" | "BEFORE" | "AFTER")[] = [];
+
+                if (sidebarParameters["date.before"]) {
+                    time.push("BEFORE");
+                }
+
+                if (sidebarParameters["date.now"]) {
+                    time.push("NOW");
+                }
+
+                if (sidebarParameters["date.after"]) {
+                    time.push("AFTER");
+                }
+
+                setParameters((oldParameters) => ({
+                    ...oldParameters,
+                    time: time,
+                }));
             },
             searchable: false,
             sections: [
@@ -42,19 +66,19 @@ export const AssociationEventList = ({
                     fields: [
                         {
                             type: "checkbox",
-                            id: "past",
+                            id: "before",
                             label: "Terminés",
                             defaultValue: false,
                         },
                         {
                             type: "checkbox",
-                            id: "current",
+                            id: "now",
                             label: "En cours",
                             defaultValue: true,
                         },
                         {
                             type: "checkbox",
-                            id: "future",
+                            id: "after",
                             label: "À venir",
                             defaultValue: true,
                         },
@@ -62,16 +86,19 @@ export const AssociationEventList = ({
                 },
             ],
         });
-    }, [setSidebar]);
+    }, [setParameters, setSidebar]);
 
     return (
         <Pagination
-            apiKey={["events.list", { association: association.id }]}
+            apiKey={["events.list", parameters]}
             apiMethod={api.events.list}
             loadingElement={LoadingAssociation}
+            paginationControlProps={{
+                className: "justify-content-center mb-5",
+            }}
             render={(events, paginationControl) => (
                 <Container className="mt-5">
-                    <PageTitle className="mt-6">Événements</PageTitle>
+                    <PageTitle>Événements</PageTitle>
 
                     {association.myRole.permissions.includes("media") && (
                         <Link
@@ -103,7 +130,13 @@ export const AssociationEventList = ({
                                 <Card>
                                     <Card.Body className="px-7">
                                         <p className="text-center">
-                                            Pas d’événement pour le moment. 😥
+                                            Pas d’événement pour le moment.{" "}
+                                            <span
+                                                role="img"
+                                                aria-label="visage qui pleure"
+                                            >
+                                                😢
+                                            </span>
                                         </p>
                                     </Card.Body>
                                 </Card>

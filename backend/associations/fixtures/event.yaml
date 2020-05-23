@@ -61,8 +61,8 @@
         19market-biero,
         19membre-biero,
       ]
-    starts_at: "2020-05-01T00:00:00+00:00"
-    ends_at: "2020-05-07T23:00:00+00:00"
+    starts_at: "2018-01-01T00:00:00+00:00"
+    ends_at: "2022-01-01T23:00:00+00:00"
     place: Partout
 
 - model: associations.event
@@ -71,12 +71,7 @@
     association: bde
     name: Amphi entreprise
     description: Imperdiet nulla malesuada pellentesque elit. Cras adipiscing enim eu turpis egestas pretium aenean. At volutpat diam ut venenatis tellus in metus vulputate eu. Dis parturient montes nascetur ridiculus mus. Risus quis varius quam quisque id. Ornare suspendisse sed nisi lacus sed. Adipiscing diam donec adipiscing tristique risus. Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis. Massa enim nec dui nunc mattis enim ut tellus elementum. Ullamcorper morbi tincidunt ornare massa. Faucibus vitae aliquet nec ullamcorper.
-    participants: [
-        19simple,
-        19bde,
-        19library-bde,
-        19membre-biero,
-      ]
+    participants: [19simple, 19bde, 19library-bde, 19membre-biero]
     starts_at: "2020-06-04T18:00:00+00:00"
     ends_at: "2020-06-04T20:00:00+00:00"
     place: L106

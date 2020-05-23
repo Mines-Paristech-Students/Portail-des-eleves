@@ -7,9 +7,21 @@ import {
 import { Event } from "../../models/associations/event";
 
 export const events = {
-    list: (parameters: { association: string }) =>
+    list: (
+        parameters: {
+            association: string;
+            time?: ("NOW" | "BEFORE" | "AFTER")[];
+        },
+        page: number
+    ) =>
         unwrap<PaginatedResponse<Event[]>>(
-            apiService.get(`/associations/events/${toUrlParams(parameters)}`)
+            apiService.get(
+                `/associations/events/${toUrlParams({
+                    ...parameters,
+                    page: page,
+                    page_size: 10,
+                })}`
+            )
         ).then((data) => {
             data.results.forEach((event) => {
                 event.startsAt = new Date(event.startsAt);
