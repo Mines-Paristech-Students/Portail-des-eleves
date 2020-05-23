@@ -51,7 +51,7 @@ jobs:
         cd backend
         python manage.py test associations
         python manage.py test authentication
-        # python manage.py test backend
+        python manage.py test backend
         # python manage.py test polls
         # python manage.py test repartitions
         # python manage.py test subscriptions
