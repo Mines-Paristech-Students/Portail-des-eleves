@@ -1,0 +1,58 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
+      with:
+        # Version of PostgreSQL to use
+        # POSTGRES_DB - name for the default database that is created
+        postgresql db: ci
+        # POSTGRES_USER - create the specified user with superuser power
+        postgresql user: postgres
+        # POSTGRES_PASSWORD - superuser password
+        postgresql password: postgres
+    - name: Set up database
+      run: |
+        cd backend
+        cp backend/.env.ci backend/.env
+        ../cli/create_and_populate_database.bash
+    - name: Run Tests
+      run: |
+        cd backend
+        python manage.py test associations
+        python manage.py test authentication
+        python manage.py test backend
+        python manage.py test polls
+        # python manage.py test repartitions
+        python manage.py test subscriptions
+        python manage.py test tags
