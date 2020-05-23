@@ -1,5 +1,5 @@
 export interface SidebarOption {
-    notifyChange: (object) => {};
+    notifyChange: (object) => void;
     searchable?: boolean;
     sections: {
         title: string;

@@ -10,7 +10,7 @@ import { AssociationFilesystemList } from "../components/associations/medias/Lis
 import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
-import { AssociationEventList } from "../components/associations/events/List";
+import { AssociationEventList } from "../components/associations/events/ListEvents";
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
 import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";

@@ -4,7 +4,7 @@ from django.db.models import Q
 from django_filters.rest_framework import (
     DateTimeFromToRangeFilter,
     FilterSet,
-    CharFilter,
+    MultipleChoiceFilter,
 )
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -18,19 +18,36 @@ from associations.serializers import EventSerializer, ReadOnlyEventSerializer
 class EventFilter(FilterSet):
     starts_at = DateTimeFromToRangeFilter()
     ends_at = DateTimeFromToRangeFilter()
-    current = CharFilter(method="filter_current")
+    time = MultipleChoiceFilter(
+        choices=(("PAST", "PAST"), ("CURRENT", "CURRENT"), ("FUTURE", "FUTURE")),
+        method="filter_time",
+    )
 
     class Meta:
         model = Event
-        fields = ("starts_at", "ends_at", "current", "association")
+        fields = ("starts_at", "ends_at", "association", "time")
 
-    def filter_current(self, queryset, _, value):
-        condition = Q(starts_at__lte=datetime.now()) & Q(ends_at__gte=datetime.now())
+    def filter_time(self, queryset, _, times):
+        # No filter or every filter.
+        if len(times) == 0 or len(times) == 3:
+            return queryset
 
-        if value.lower() == "true" or len(value) == 0:
-            return queryset.filter(condition)
-        else:
-            return queryset.exclude(condition)
+        # Looks like the canonical way to get an "always False" condition:
+        # https://stackoverflow.com/questions/35893867/always-false-q-object
+        condition = Q(pk__in=[])
+
+        if "PAST" in times:
+            condition |= Q(ends_at__lte=datetime.now())
+
+        if "CURRENT" in times:
+            condition |= Q(starts_at__lte=datetime.now()) & Q(
+                ends_at__gte=datetime.now()
+            )
+
+        if "FUTURE" in times:
+            condition |= Q(starts_at__gte=datetime.now())
+
+        return queryset.filter(condition)
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -38,7 +55,7 @@ class EventViewSet(viewsets.ModelViewSet):
         Filters:
             - starts_at_before / starts_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
             - ends_at_before / ends_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
-            - current: if set to `true`, only keep the currently ongoing events.
+            - time: choose between PAST, CURRENT, FUTURE. If several `time` are provided, the conditions are OR'ed.
             - association: filter the organizing association.
     """
 

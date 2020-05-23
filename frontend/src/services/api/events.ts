@@ -1,10 +1,15 @@
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import {
+    apiService,
+    PaginatedResponse,
+    unwrap,
+    toUrlParams,
+} from "../apiService";
 import { Event } from "../../models/associations/event";
 
 export const events = {
-    list: ({ associationId }) =>
+    list: (parameters: { association: string }) =>
         unwrap<PaginatedResponse<Event[]>>(
-            apiService.get(`/associations/events/?association=${associationId}`)
+            apiService.get(`/associations/events/${toUrlParams(parameters)}`)
         ).then((data) => {
             data.results.forEach((event) => {
                 event.startsAt = new Date(event.startsAt);
