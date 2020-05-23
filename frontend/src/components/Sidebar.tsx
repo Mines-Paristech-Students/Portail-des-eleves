@@ -34,7 +34,7 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
 export const SidebarSeparator = (props: { size?: number }) => {
     let size = props.size ? props.size : 2;
 
-    return <p className={`mb-${size} mt-${size}`}></p>;
+    return <div className={`pb-${size} pt-${size}`}/>;
 };
 
 export const Sidebar = ({ title, children, ...rest }) => {

@@ -44,7 +44,7 @@ export function unwrap<T>(promise): Promise<T> {
  * and adding '?' at the beginning
  * toUrlParams({foo: 'bar', piche: 'clac'} = "?foo=bar?piche=clac"
  */
-export function toUrlParams(obj: object): string {
+export function toUrlParams(obj) {
     let params = "?";
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {

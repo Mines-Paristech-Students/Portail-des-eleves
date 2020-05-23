@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
@@ -8,42 +8,42 @@ import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
+import { TagSearch } from "../../utils/tags/TagSearch";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
     const history = useHistory();
-
-    let addButton;
-    if (association.myRole.mediaPermission) {
-        addButton = (
-            <Link
-                to={`/associations/${association.id}/files/upload`}
-                className={"btn btn-success float-right mt-5"}
-            >
-                <i className="fe fe-upload" />
-                Ajouter des fichiers
-            </Link>
-        );
-    }
-
-    // const additionalParams = useTagSearch(
-    //     {
-    //         page_size: 1000,
-    //         scoped_to: "association",
-    //         scoped_to_pk: associationId,
-    //         related_to: "media",
-    //     },
-    //     setSidebar
-    // );
+    const [tagParams, setTagParams] = useState({});
 
     return (
-        <AssociationLayout association={association}>
+        <AssociationLayout
+            association={association}
+            additionalSidebar={
+                <TagSearch
+                    tagsQueryParams={{
+                        page_size: 1000,
+                        scoped_to: "association",
+                        scoped_to_pk: associationId,
+                        related_to: "media",
+                    }}
+                    setTagParams={setTagParams}
+                />
+            }
+        >
             <Pagination
-                apiKey={["medias.list", associationId, {}]}
+                apiKey={["medias.list", associationId, tagParams]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
                     <>
-                        {addButton}
+                        {association.myRole.mediaPermission && (
+                            <Link
+                                to={`/associations/${association.id}/files/upload`}
+                                className={"btn btn-success float-right mt-5"}
+                            >
+                                <i className="fe fe-upload" />
+                                Ajouter des fichiers
+                            </Link>
+                        )}
                         <PageTitle className={"mt-6"}>Fichiers</PageTitle>
                         <Row>
                             {medias.map((media) => {

@@ -1,35 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { SidebarOption } from "./interfaces";
-import { InputField } from "./InputField";
-import Fuse from "fuse.js";
-import { SidebarSection } from "./SidebarSection";
-
+import React from "react";
 /**
  * Component for displaying additional options in the sidebar of a page such as
  * in Association pages. To use it, give it a SidebarOption object
- *
- * interface SidebarOption {
- *   notifyChange: callback when the inputs change;
- *   searchable?: display a search field on the top to look for specific field.
- *                The search is based on their label
- *   sections: {
- *       title: the name of the section
- *       id: an id (used for React `key` propp)
- *       retractable: if True, the user will be able to hide the section
- *       props?: additional properties to be given to the section html parent
- *       fields: The fields in the section. Currently only
- *               checkbox (`SidebarOptionCheckField`) and
- *               text input (`SidebarOptionInputField`) are supported
- *   }[];
-}
- *
  */
-export const OptionSidebar = ({
-    options,
-}: {
-    options: SidebarOption | null;
-}) => {
-    const [inputsState, setInputsState] = useState({});
+export const AdditionnalSidebar = ({ children }) => {
+    return children;
+};
+
+/*const [inputsState, setInputsState] = useState({});
     const [fieldSearch, setFieldSearch] = useState("");
     const [fuses, setFuses] = useState<Fuse<any, any>[]>([]);
 
@@ -117,4 +95,4 @@ export const OptionSidebar = ({
             )}
         </div>
     );
-};
+*/

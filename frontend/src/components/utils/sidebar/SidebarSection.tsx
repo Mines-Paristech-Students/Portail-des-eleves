@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import { CheckboxField } from "./CheckboxField";
-import { InputField } from "./InputField";
 
 export const SidebarSection = ({
-    computeKey,
-    state,
-    changeState,
-    fields,
     retractable,
     title,
-    props,
     retractedByDefault,
+    children,
+    ...props
 }) => {
     const [isRetracted, setIsRetracted] = useState(false);
 
@@ -23,10 +18,6 @@ export const SidebarSection = ({
         setIsRetracted(retractedByDefault && !retractable);
         // eslint-disable-next-line
     }, []);
-
-    if (fields.length === 0) {
-        return null;
-    }
 
     return (
         <Form.Group {...props}>
@@ -46,28 +37,7 @@ export const SidebarSection = ({
                 {title}
             </Form.Label>
 
-            {!isRetracted &&
-                fields.map((field) => {
-                    const key = computeKey(field);
-                    const commonProps = {
-                        key: key,
-                        label: field.label,
-                        state: state[key],
-                        setState: (value) => changeState(key, value),
-                    };
-
-                    return (
-                        (field.type === "checkbox" && (
-                            <CheckboxField {...commonProps} />
-                        )) ||
-                        (field.type === "text" && (
-                            <InputField
-                                placeholder={field.placeholder}
-                                {...commonProps}
-                            />
-                        ))
-                    );
-                })}
+            {!isRetracted && children}
         </Form.Group>
     );
 };

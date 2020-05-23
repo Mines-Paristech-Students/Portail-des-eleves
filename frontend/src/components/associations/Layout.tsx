@@ -7,18 +7,18 @@ import { Association } from "../../models/associations/association";
 
 export const AssociationLayout = ({
     association,
-    additionnalSidebar = null,
+    additionalSidebar = null,
     children = null,
 }: {
     association: Association;
-    additionnalSidebar?: any;
+    additionalSidebar?: any;
     children?: any;
 }) => (
     <Container>
         <Row>
             <Col md={3}>
                 <AssociationSidebar association={association} />
-                {additionnalSidebar}
+                {additionalSidebar}
             </Col>
             <Col md={9}>{children}</Col>
         </Row>

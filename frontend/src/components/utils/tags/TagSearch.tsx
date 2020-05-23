@@ -1,67 +1,83 @@
-import { useContext, useEffect, useState } from "react";
-import { api } from "../../../services/apiService";
+import React, { useEffect, useState } from "react";
+import { api, useBetterPaginatedQuery } from "../../../services/apiService";
 import { Tag } from "../../../models/tag";
-import { ToastContext, ToastLevel } from "../Toast";
+import { Loading } from "../Loading";
+import { ErrorMessage } from "../ErrorPage";
+import { SidebarSection } from "../sidebar/SidebarSection";
+import { CheckboxField } from "../sidebar/CheckboxField";
+import { SidebarSeparator } from "../../Sidebar";
 
-export const useTagSearch = (tagsQueryParams, setSidebar) => {
-    const newToast = useContext(ToastContext);
+export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
+    const { resolvedData: tags, status, error } = useBetterPaginatedQuery<any>(
+        ["tags.list", tagsQueryParams],
+        api.tags.list
+    );
 
-    const [additionalParams, setAdditionalParams] = useState({});
+    const [fieldsState, setFieldsState] = useState({});
+    const [groups, setGroups] = useState({});
+
+    const onStateChange = (state) => {
+        setFieldsState(state);
+        onSearchChange(state);
+    };
 
     const onSearchChange = (params) => {
+        // TODO: update with the new toUrlParams function
         const ids = Object.entries(params) // [ [namespace.tag_id, is_selected] ]
-            .map(([key, value]) => value && key.split(".")[1])
+            .map(([key, value]) => value && key)
             .filter(Boolean)
             .join(",");
 
-        setAdditionalParams(ids.length > 0 ? { tags__are: ids } : {});
+        setTagParams(ids.length > 0 ? { tags__are: ids } : {});
     };
 
     useEffect(() => {
-        api.tags
-            .list(tagsQueryParams)
-            .then((tags) => {
-                let groups = {};
+        if (tags === undefined) {
+            return;
+        }
 
-                for (let tag of tags.results) {
-                    if (!groups.hasOwnProperty(tag.namespace.id)) {
-                        groups[tag.namespace.id] = [];
-                    }
-                    groups[tag.namespace.id].push(tag);
-                }
+        let groups = {};
+        let fieldsState = {};
+        for (let tag of tags.results) {
+            if (!groups.hasOwnProperty(tag.namespace.id)) {
+                groups[tag.namespace.id] = [];
+            }
+            groups[tag.namespace.id].push(tag);
+            fieldsState[tag.id] = false;
+        }
 
-                const sections = Object.values(groups).map((group) => {
-                    let namespace = (group as Tag[])[0].namespace;
-                    return {
-                        title: namespace.name,
-                        id: namespace.id,
-                        retractable: true,
-                        fields: (group as Tag[]).map((tag) => ({
-                            type: "checkbox",
-                            id: tag.id,
-                            label: tag.value,
-                            defaultValue: false,
-                        })),
-                    };
-                });
+        setGroups(groups);
+        setFieldsState(fieldsState);
+    }, [tags]);
 
-                setSidebar({
-                    notifyChange: onSearchChange,
-                    sections: sections,
-                    searchable: true,
-                });
-            })
-            .catch((err) => {
-                newToast({
-                    message: `Erreur lors de la récupération des options: ${err}`,
-                    level: ToastLevel.Error,
-                });
-            });
-        // eslint-disable-next-line
-    }, []);
-
-    // eslint-disable-next-line
-    useEffect(() => () => setSidebar(null), []); // Reset the sidebar when leaving the page
-
-    return additionalParams;
+    return status === "loading" ? (
+        <Loading />
+    ) : status === "error" ? (
+        <ErrorMessage>Une erreur est survenue {error}</ErrorMessage>
+    ) : tags ? (
+        <>
+            <SidebarSeparator />
+            {Object.values(groups).map((group) => {
+                let namespace = (group as Tag[])[0].namespace;
+                return (
+                    <SidebarSection
+                        key={namespace.id}
+                        retractable={true}
+                        title={namespace.name}
+                        retractedByDefault={false}
+                    >
+                        {(group as Tag[]).map((tag) => (
+                            <CheckboxField
+                                key={tag.id}
+                                label={tag.value}
+                                id={tag.id}
+                                state={fieldsState}
+                                setState={onStateChange}
+                            />
+                        ))}
+                    </SidebarSection>
+                );
+            })}
+        </>
+    ) : null;
 };
