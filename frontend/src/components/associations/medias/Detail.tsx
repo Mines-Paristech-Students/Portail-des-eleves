@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card";
 import { Media } from "../../../models/associations/media";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { Loading } from "../../utils/Loading";
+import { ErrorMessage } from "../../utils/ErrorPage";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -15,7 +16,8 @@ export const AssociationFilesystemDetail = ({ association }) => {
     );
 
     if (status === "loading") return <Loading />;
-    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "error")
+        return <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>;
     else if (media) {
         let preview;
         if (media.type.startsWith("image")) {

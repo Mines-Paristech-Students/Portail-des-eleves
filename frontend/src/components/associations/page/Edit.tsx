@@ -5,6 +5,8 @@ import { Form, Button } from "react-bootstrap";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { useParams } from "react-router";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { Loading } from "../../utils/Loading";
+import { Error } from "../../utils/Error";
 
 export const AssociationCreatePage = ({ association, ...props }) => {
     const page: Page = {
@@ -29,8 +31,9 @@ export const AssociationEditPage = ({ association, ...props }) => {
         api.pages.get
     );
 
-    if (status === "loading") return "Chargement en cours...";
-    else if (status === "error") return `Une erreur est apparue: ${error}`;
+    if (status === "loading") return <Loading />;
+    else if (status === "error")
+        return <Error detail={`Une erreur est apparue: ${error}`} />;
     else if (page)
         return <EditPage {...props} page={page} association={association} />;
 

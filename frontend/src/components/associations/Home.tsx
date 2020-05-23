@@ -1,10 +1,11 @@
 import React from "react";
 import { PageTitle } from "../utils/PageTitle";
 import Container from "react-bootstrap/Container";
+import { Loading } from "../utils/Loading";
 
 export const AssociationHome = ({ association }) => {
     if (!association) {
-        return "Homepage is loading...";
+        return <Loading/>;
     }
 
     return (
