@@ -16,7 +16,11 @@ export const SidebarSection = ({
     const [isRetracted, setIsRetracted] = useState(false);
 
     useEffect(() => {
-        setIsRetracted(retractedByDefault);
+        /* If the user cannot change the state of the section (retracted or not)
+         * the section should always be visible independently from the default,
+         * hence the "&& !retractable"
+         */
+        setIsRetracted(retractedByDefault && !retractable);
         // eslint-disable-next-line
     }, []);
 
@@ -29,7 +33,7 @@ export const SidebarSection = ({
             <Form.Label
                 className="text-uppercase"
                 onClick={() => {
-                    setIsRetracted(!isRetracted);
+                    retractable && setIsRetracted(!isRetracted);
                 }}
             >
                 {retractable && (
