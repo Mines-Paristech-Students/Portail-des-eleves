@@ -1,21 +1,21 @@
 import React, { useContext, useState } from "react";
 
-import { Event } from "../../../models/associations/event";
+import { Event } from "../../../../models/associations/event";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
-import { Association } from "../../../models/associations/association";
-import { AvatarList } from "../../utils/avatar/AvatarList";
-import { UserAvatar } from "../../utils/avatar/UserAvatar";
-import { Size } from "../../../utils/size";
-import { Avatar } from "../../utils/avatar/Avatar";
+import { Association } from "../../../../models/associations/association";
+import { AvatarList } from "../../../utils/avatar/AvatarList";
+import { UserAvatar } from "../../../utils/avatar/UserAvatar";
+import { Size } from "../../../../utils/size";
+import { Avatar } from "../../../utils/avatar/Avatar";
 import { EventCardModal } from "./EventCardModal";
 import { queryCache, useMutation } from "react-query";
-import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { api } from "../../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { AxiosError } from "axios";
-import { CardStatus } from "../../utils/CardStatus";
-import { TablerColor } from "../../../utils/colors";
+import { CardStatus } from "../../../utils/CardStatus";
+import { TablerColor } from "../../../../utils/colors";
 import { EventDate } from "./EventDate";
 
 /**

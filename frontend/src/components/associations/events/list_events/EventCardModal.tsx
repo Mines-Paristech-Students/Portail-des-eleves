@@ -1,8 +1,8 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 
-import { Event } from "../../../models/associations/event";
-import { Table } from "../../utils/table/Table";
+import { Event } from "../../../../models/associations/event";
+import { Table } from "../../../utils/table/Table";
 
 const columns = [
     {

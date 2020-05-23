@@ -1,6 +1,6 @@
 import React from "react";
-import { Event } from "../../../models/associations/event";
-import { formatDate, formatTime } from "../../../utils/format";
+import { Event } from "../../../../models/associations/event";
+import { formatDate, formatTime } from "../../../../utils/format";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarItem, SidebarSeparator } from "../../Sidebar";
+import { SidebarItem, SidebarSeparator } from "../../../Sidebar";
 
 export const ListEventsSidebar = ({ association }) => (
     <>

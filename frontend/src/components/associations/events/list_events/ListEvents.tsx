@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
-import { api } from "../../../services/apiService";
+import { api } from "../../../../services/apiService";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { LoadingAssociation } from "../Loading";
-import { PageTitle } from "../../utils/PageTitle";
-import { Pagination } from "../../utils/Pagination";
-import { Association } from "../../../models/associations/association";
+import { LoadingAssociation } from "../../Loading";
+import { PageTitle } from "../../../utils/PageTitle";
+import { Pagination } from "../../../utils/Pagination";
+import { Association } from "../../../../models/associations/association";
 import { EventCard } from "./EventCard";
-import { UserContext } from "../../../services/authService";
-import { SidebarOption } from "../../utils/sidebar/interfaces";
+import { UserContext } from "../../../../services/authService";
+import { SidebarOption } from "../../../utils/sidebar/interfaces";
 
 export const AssociationEventList = ({
     association,
