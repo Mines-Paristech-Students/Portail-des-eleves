@@ -15,9 +15,9 @@ export const SidebarSection = ({
          * the section should always be visible independently from the default,
          * hence the "&& !retractable"
          */
-        setIsRetracted(retractedByDefault && !retractable);
+        setIsRetracted(retractedByDefault && retractable);
         // eslint-disable-next-line
-    }, []);
+    }, [retractedByDefault]);
 
     return (
         <Form.Group {...props}>

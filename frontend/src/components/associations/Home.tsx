@@ -5,7 +5,7 @@ import { Loading } from "../utils/Loading";
 
 export const AssociationHome = ({ association }) => {
     if (!association) {
-        return <Loading/>;
+        return <Loading />;
     }
 
     return (

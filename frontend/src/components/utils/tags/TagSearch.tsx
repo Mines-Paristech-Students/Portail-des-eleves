@@ -6,6 +6,8 @@ import { ErrorMessage } from "../ErrorPage";
 import { SidebarSection } from "../sidebar/SidebarSection";
 import { CheckboxField } from "../sidebar/CheckboxField";
 import { SidebarSeparator } from "../../Sidebar";
+import Fuse from "fuse.js";
+import { Form } from "react-bootstrap";
 
 export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
     const { resolvedData: tags, status, error } = useBetterPaginatedQuery<any>(
@@ -15,6 +17,9 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
 
     const [fieldsState, setFieldsState] = useState({});
     const [groups, setGroups] = useState({});
+    const [fuseSearch, setFuseSearch] = useState(new Fuse([]));
+    const [searchValue, setSearchValue] = useState("");
+    const [showingTags, setShowingTags] = useState({});
 
     const onStateChange = (state) => {
         setFieldsState(state);
@@ -32,23 +37,57 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
     };
 
     useEffect(() => {
-        if (tags === undefined) {
-            return;
-        }
+        if (tags === undefined) return;
 
         let groups = {};
         let fieldsState = {};
+        let showingTags = {};
         for (let tag of tags.results) {
             if (!groups.hasOwnProperty(tag.namespace.id)) {
                 groups[tag.namespace.id] = [];
             }
             groups[tag.namespace.id].push(tag);
+
             fieldsState[tag.id] = false;
         }
 
         setGroups(groups);
         setFieldsState(fieldsState);
+        setShowingTags(showingTags);
+
+        setFuseSearch(
+            new Fuse(tags.results, {
+                keys: ["value", "namespace.name"],
+                limit: 10,
+            })
+        );
     }, [tags]);
+
+    useEffect(() => {
+        if (tags === undefined) return;
+
+        let newShowingTags = { ...showingTags };
+
+        for (let tag of tags.results) {
+            if (!newShowingTags.hasOwnProperty(tag.namespace.id)) {
+                newShowingTags[tag.namespace.id] = {};
+            }
+
+            delete newShowingTags[tag.namespace.id][tag.id];
+        }
+
+        fuseSearch
+            .search(searchValue)
+            .map((res) => res.item as Tag)
+            .forEach((tag) => {
+                newShowingTags[tag.namespace.id][tag.id] = true;
+            });
+        setShowingTags(newShowingTags);
+
+        // avoid infinite looping because showingTags triggers the effect,
+        // which changes showingTags, which triggers the effect and so on
+        // eslint-disable-next-line
+    }, [searchValue, tags]);
 
     return status === "loading" ? (
         <Loading />
@@ -57,25 +96,45 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
     ) : tags ? (
         <>
             <SidebarSeparator />
-            {Object.values(groups).map((group) => {
+            <div className="input-icon mb-3">
+                <Form.Control
+                    placeholder="Rechercher un tag"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    size={"sm"}
+                />
+                <span className="input-icon-addon">
+                    <i className="fe fe-search" />
+                </span>
+            </div>
+            {Object.values(groups).map((group, index) => {
                 let namespace = (group as Tag[])[0].namespace;
                 return (
-                    <SidebarSection
-                        key={namespace.id}
-                        retractable={true}
-                        title={namespace.name}
-                        retractedByDefault={false}
-                    >
-                        {(group as Tag[]).map((tag) => (
-                            <CheckboxField
-                                key={tag.id}
-                                label={tag.value}
-                                id={tag.id}
-                                state={fieldsState}
-                                setState={onStateChange}
-                            />
-                        ))}
-                    </SidebarSection>
+                    (searchValue === "" ||
+                        Object.keys(showingTags[namespace.id]).length > 0) && (
+                        <SidebarSection
+                            key={namespace.id}
+                            retractable={true}
+                            title={namespace.name}
+                            retractedByDefault={
+                                index >= 2 && searchValue === ""
+                            }
+                        >
+                            {(group as Tag[]).map(
+                                (tag) =>
+                                    (searchValue === "" ||
+                                        showingTags[namespace.id][tag.id]) && (
+                                        <CheckboxField
+                                            key={tag.id}
+                                            label={tag.value}
+                                            id={tag.id}
+                                            state={fieldsState}
+                                            setState={onStateChange}
+                                        />
+                                    )
+                            )}
+                        </SidebarSection>
+                    )
                 );
             })}
         </>

@@ -17,7 +17,9 @@ export const AssociationFilesystemDetail = ({ association }) => {
 
     if (status === "loading") return <Loading />;
     else if (status === "error")
-        return <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>;
+        return (
+            <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
+        );
     else if (media) {
         let preview;
         if (media.type.startsWith("image")) {
