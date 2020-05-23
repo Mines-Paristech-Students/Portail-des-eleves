@@ -100,16 +100,6 @@ export const AssociationEventList = ({
                 <Container className="mt-5">
                     <PageTitle>Événements</PageTitle>
 
-                    {association.myRole.permissions.includes("media") && (
-                        <Link
-                            to={`/associations/${association.id}/evenements/nouveau`}
-                            className={"btn btn-success float-right mt-5"}
-                        >
-                            <i className="fe fe-upload" />
-                            Ajouter un évenement
-                        </Link>
-                    )}
-
                     <Row>
                         {events.length > 0 ? (
                             events.map((event) => (
