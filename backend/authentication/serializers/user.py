@@ -6,13 +6,7 @@ from authentication.serializers.questions_short import (
     ProfileAnswerShortSerializer,
     ProfileAnswerShortUpdateSerializer,
 )
-
-
-class UserShortSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        read_only_fields = ("id", "first_name", "last_name", "promotion", "is_staff")
-        fields = read_only_fields
+from authentication.serializers.user_short import UserShortSerializer
 
 
 class UpdateOnlyUserSerializer(serializers.ModelSerializer):

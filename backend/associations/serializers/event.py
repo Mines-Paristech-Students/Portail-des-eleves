@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from authentication.models import User
 from associations.models import Association, Event
-from authentication.serializers import UserShortSerializer
+from authentication.serializers.user_short import UserShortSerializer
 
 
 class ReadOnlyEventSerializer(serializers.ModelSerializer):
