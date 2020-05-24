@@ -2,7 +2,6 @@ import React from "react";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { api } from "../../../services/apiService";
-import { Product } from "./Product";
 import { Link } from "react-router-dom";
 import { decidePlural } from "../../../utils/format";
 import { Table } from "../../utils/table/Table";

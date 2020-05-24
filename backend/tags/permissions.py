@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.exceptions import ValidationError
 
 from associations.models import (
     Association,
@@ -91,8 +92,12 @@ class NamespacePermission(permissions.BasePermission):
             if scoped_to_model == "global":
                 return request.user.is_admin
             # Or, both parameters have to be provided.
+
             if scoped_to_model is None or scoped_to_pk is None:
-                return False
+                raise ValidationError(
+                    "Both scoped_to_model and scoped_to_pk parameters must be provided",
+                    400,
+                )
 
             instance = Tag.get_linked_instance(scoped_to_model, scoped_to_pk)
             return can_manage_tags_for(request.user, instance)

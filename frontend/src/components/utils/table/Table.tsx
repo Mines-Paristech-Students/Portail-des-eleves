@@ -15,13 +15,16 @@ import { Sorting } from "./sorting";
  * `headerClassName` will be appended to the class of the `th` element containing `header`.<br />
  * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
  * @param data a list of objects (one item per row) which will be used to fill the table.
+ * @param props props to apply to the  table
  */
 export const Table = ({
     columns,
     data,
+    showHeaders = true,
 }: {
     columns: Column[];
     data: object[];
+    showHeaders?: boolean;
 }) => {
     return (
         <div className="table-responsive">
@@ -30,7 +33,7 @@ export const Table = ({
                     className="table card-table table-vcenter datatable dataTable no-footer table-striped"
                     role="grid"
                 >
-                    <TableHeader columns={columns} />
+                    {showHeaders && <TableHeader columns={columns} />}
                     <TableBody columns={columns} data={data} />
                 </table>
             </div>
