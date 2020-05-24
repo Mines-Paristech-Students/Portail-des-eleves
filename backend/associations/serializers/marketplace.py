@@ -80,6 +80,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "comment",
             "marketplace",
             "number_left",
+            "orderable_online",
         )
 
     def get_tags(self, obj):

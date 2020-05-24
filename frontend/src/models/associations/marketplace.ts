@@ -18,6 +18,7 @@ export interface Product {
     comment: string;
     marketplace: Marketplace;
     numberLeft: number;
+    orderableOnline: boolean;
 }
 
 export enum TransactionStatus {

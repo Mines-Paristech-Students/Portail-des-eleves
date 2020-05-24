@@ -66,11 +66,20 @@ export const AssociationMarketplaceHome = ({ association }) => {
                                         product={product}
                                         key={product.id}
                                         additionalContent={
-                                            <QuantitySelect
-                                                order={(quantity) =>
-                                                    makeOrder(product, quantity)
-                                                }
-                                            />
+                                            product.orderableOnline ? (
+                                                <QuantitySelect
+                                                    order={(quantity) =>
+                                                        makeOrder(
+                                                            product,
+                                                            quantity
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <span className="text-muted">
+                                                    Non commandable en ligne
+                                                </span>
+                                            )
                                         }
                                     />
                                 ))}

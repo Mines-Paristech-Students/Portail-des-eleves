@@ -14,6 +14,7 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { queryCache } from "react-query";
+import { SwitchCheckbox } from "../../utils/forms/SwitchCheckbox";
 
 export const AssociationMarketplaceProductEdit = ({ association }) => {
     const { productId } = useParams<{ productId: string }>();
@@ -69,10 +70,10 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                             });
                         });
                 }}
-                render={({ setFieldValue, values, errors }) => (
+                render={({ setFieldValue, values, errors, getFieldProps }) => (
                     <Form>
                         <ReactBootstrapForm.Row className="mt-5">
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <TextFormGroup
                                     label="Nom du produit"
                                     name="name"
@@ -80,7 +81,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     iconLeft="tag"
                                 />
                             </Col>
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <TextFormGroup
                                     label="Prix"
                                     name="price"
@@ -89,7 +90,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     iconLeft="dollar-sign"
                                 />
                             </Col>
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <TextFormGroup
                                     label="Description"
                                     name="description"
@@ -97,7 +98,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     as="textarea"
                                 />
                             </Col>
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <TextFormGroup
                                     label="Commentaire (privé)"
                                     name="comment"
@@ -105,7 +106,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     as="textarea"
                                 />
                             </Col>
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <ReactBootstrapForm.Group>
                                     <ReactBootstrapForm.Label>
                                         Tags
@@ -116,10 +117,10 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     />
                                 </ReactBootstrapForm.Group>
                             </Col>
-                            <Col md={{ span: 6 }}>
+                            <Col md={6}>
                                 <>
                                     <ReactBootstrapForm.Label>
-                                        Nombre restant
+                                        Stock restant
                                     </ReactBootstrapForm.Label>
                                     <Row>
                                         <label className={"col mt-3"}>
@@ -139,7 +140,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                             />
                                             <span className="custom-switch-indicator" />
                                             <span className="custom-switch-description">
-                                                Stocks limités
+                                                Stocks illimités
                                             </span>
                                         </label>
                                         {values.numberLeft > -1 && (
@@ -154,6 +155,16 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                         )}
                                     </Row>
                                 </>
+                            </Col>
+                            <Col md={6}>
+                                <ReactBootstrapForm.Label>
+                                    Autres
+                                </ReactBootstrapForm.Label>
+                                <Row>
+                                    <SwitchCheckbox name={"orderableOnline"}>
+                                        Commandable en ligne
+                                    </SwitchCheckbox>
+                                </Row>
                             </Col>
                         </ReactBootstrapForm.Row>
 
