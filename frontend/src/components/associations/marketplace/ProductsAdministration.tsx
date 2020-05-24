@@ -3,7 +3,7 @@ import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { api } from "../../../services/apiService";
 import Row from "react-bootstrap/Row";
-import { Product } from "./common/Product";
+import { Product } from "./Product";
 import { Link } from "react-router-dom";
 
 export const AssociationMarketplaceProductAdministration = ({

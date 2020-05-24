@@ -18,7 +18,7 @@ export const QuantitySelect = ({ order }) => {
 
     if (quantity === 0) {
         return (
-            <Button variant="primary" onClick={increase}>
+            <Button variant="outline-primary" onClick={increase}>
                 <i className="fe fe-plus" />
                 Commander
             </Button>

@@ -20,10 +20,10 @@ export const AssociationMarketplaceHistory = ({ association }) => {
 
     return (
         <Container>
-            <div className={"float-right"}>
+            <div className={"float-right mt-2 mr-3"}>
                 <Link
                     to={"/associations/" + marketplaceId + "/magasin"}
-                    className={"btn btn-primary"}
+                    className={"btn btn-primary btn-sm"}
                 >
                     <i className={"fe fe-book-open"} /> Magasin
                 </Link>

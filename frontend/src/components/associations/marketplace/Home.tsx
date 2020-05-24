@@ -7,7 +7,7 @@ import { QuantitySelect } from "./QuantitySelect";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
-import { Product } from "./common/Product";
+import { Product } from "./Product";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -34,19 +34,21 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
     return (
         <Container>
-            <div className={"float-right"}>
-                <a
-                    href={
-                        "/associations/" +
-                        marketplaceId +
-                        "/magasin/historique/"
-                    }
-                    className={"btn btn-primary"}
-                >
-                    <i className={"fe fe-book-open"} /> Historique
-                </a>
+            <div className="d-flex align-items-center">
+                <PageTitle>Magasin</PageTitle>
+                <div className={"ml-auto"}>
+                    <a
+                        href={
+                            "/associations/" +
+                            marketplaceId +
+                            "/magasin/historique/"
+                        }
+                        className={"btn btn-primary btn-sm"}
+                    >
+                        <i className={"fe fe-book-open"} /> Historique
+                    </a>
+                </div>
             </div>
-            <PageTitle>Magasin</PageTitle>
 
             <Row>
                 <Pagination
