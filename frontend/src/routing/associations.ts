@@ -100,7 +100,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/historique`,

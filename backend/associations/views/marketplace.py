@@ -33,6 +33,7 @@ from associations.serializers import (
 )
 from authentication.models import User
 from tags.filters import HasHiddenTagFilter
+from tags.filters.taggable import TaggableFilter
 
 
 class MarketplaceViewSet(viewsets.ModelViewSet):
@@ -47,6 +48,12 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
         return MarketplaceSerializer
 
 
+class ProductFilter(TaggableFilter):
+    class Meta:
+        model = Product
+        fields = ("marketplace",)
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -54,8 +61,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     pagination_class = SmallResultsSetPagination
 
+    filter_class = ProductFilter
     filter_backends = (DjangoFilterBackend, SearchFilter, HasHiddenTagFilter)
-    filter_fields = ("marketplace",)
     search_fields = ("name", "description")
 
     def get_queryset(self):

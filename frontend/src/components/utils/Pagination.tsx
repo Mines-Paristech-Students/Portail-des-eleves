@@ -61,6 +61,18 @@ export const Pagination = ({
         config
     );
 
+    const [prevApiKey, setPrevApiKey] = useState("");
+    useEffect(() => {
+        let apiKeyJSON = JSON.stringify(apiKey);
+        if (apiKeyJSON != prevApiKey) {
+            if (prevApiKey !== "") {
+                setPage(1);
+            }
+            console.log(apiKey);
+            setPrevApiKey(apiKeyJSON);
+        }
+    });
+
     useEffect(() => {
         if (data && data.totalPages) {
             setMaxPage(data.totalPages);
