@@ -17,7 +17,7 @@ import {
     ListEventsSidebarParameters,
 } from "./ListEventsSidebar";
 
-/**
+/**g
  * The API parameters are a bit different of the sidebar parameters and thus need to be transformed.
  */
 const getParameters = (
@@ -47,7 +47,7 @@ const getParameters = (
     };
 };
 
-export const ListEvents = ({ association }: { association: Association }) => {
+export const AssociationListEvents = ({ association }: { association: Association }) => {
     const user = useContext(UserContext);
 
     // By default, only the current and the coming events are displayed.
