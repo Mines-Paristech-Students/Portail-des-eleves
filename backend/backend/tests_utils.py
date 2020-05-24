@@ -68,6 +68,8 @@ class WeakAuthenticationBaseTestCase(BaseTestCase):
         This test base provides convenient methods to log users in and out.
         However, it does so by generating fake JWT and disabling the signature verification.
         Do not use this test base to test the JWT authentication itself.
+
+        If you overload `setUp` in a child class, do not forget to call the base setUp too!
     """
 
     def setUp(self):
