@@ -5,6 +5,13 @@ import Container from "react-bootstrap/Container";
 import React from "react";
 import { Association } from "../../models/associations/association";
 
+/**
+ * @param association an Association model that will be passed to the nav sidebar
+ * @param additionalSidebar a React element, should be any of the component
+ * present in src/components/utils/sidebar
+ * @param children
+ * @constructor
+ */
 export const AssociationLayout = ({
     association,
     additionalSidebar = null,

@@ -13,6 +13,13 @@ import { AssociationFilesystemUpload } from "../components/associations/medias/U
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
 import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
+import { Association } from "../models/associations/association";
+import { Route } from "./global";
+
+type AssociationRoute = Route & {
+    props: object;
+    defaultLayout: boolean;
+};
 
 /**
  * Association routes are like common routes, with  one additional parameter,
@@ -25,7 +32,9 @@ import { AssociationMarketplaceCounter } from "../components/associations/market
  * - you don't want a sidebar at all, in that case you can organise your code as
  * usual
  */
-export const routes = (association) => [
+export const routes: (association: Association) => AssociationRoute[] = (
+    association
+) => [
     {
         path: `/`,
         component: AssociationHome,

@@ -8,9 +8,10 @@ export const CheckboxField = ({ label, state, setState, id }) => (
             type="checkbox"
             checked={state[id]}
             onChange={() => {
-                let newState = { ...state };
-                newState[id] = !state[id];
-                setState(newState);
+                setState({
+                    ...state,
+                    [id]: !state[id],
+                });
             }}
         />
         <span className="custom-control-label">{label}</span>

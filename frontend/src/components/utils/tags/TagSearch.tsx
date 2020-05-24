@@ -5,7 +5,7 @@ import { Loading } from "../Loading";
 import { ErrorMessage } from "../ErrorPage";
 import { SidebarSection } from "../sidebar/SidebarSection";
 import { CheckboxField } from "../sidebar/CheckboxField";
-import { SidebarSeparator } from "../../Sidebar";
+import { SidebarSeparator } from "../sidebar/Sidebar";
 import Fuse from "fuse.js";
 import { Form } from "react-bootstrap";
 

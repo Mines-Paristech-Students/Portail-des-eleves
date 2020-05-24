@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { PageTitle } from "./utils/PageTitle";
+import { PageTitle } from "../PageTitle";
 
 /**
  * A link displayed in the sidebar. It has three props:
