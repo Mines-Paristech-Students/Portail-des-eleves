@@ -4,8 +4,7 @@ import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { AxiosError } from "axios";
 
-export
-const NamespaceDeleteButton = ({ namespace }) => {
+export const NamespaceDeleteButton = ({ namespace }) => {
     const newToast = useContext(ToastContext);
 
     const [mutate] = useMutation(api.namespaces.delete, {

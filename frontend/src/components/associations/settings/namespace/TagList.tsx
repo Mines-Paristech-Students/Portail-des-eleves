@@ -1,4 +1,8 @@
-import { api, PaginatedResponse, useBetterQuery } from "../../../../services/apiService";
+import {
+    api,
+    PaginatedResponse,
+    useBetterQuery,
+} from "../../../../services/apiService";
 import { Tag as TagModel } from "../../../../models/tag";
 import { tablerColors } from "../../../../utils/colors";
 import { hashCode } from "../../../../utils/hashcode";
