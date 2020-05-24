@@ -4,22 +4,24 @@ import { hashCode } from "../../../utils/hashcode";
 import { tablerColors } from "../../../utils/colors";
 
 /**
- * @param type the boostrap style of the tag
+ * @param color the boostrap style of the tag
  * @param tag the main value of the tag
  * @param addon additional information, displayed on the right
  * @param tooltip on hoover information
  * @param collapsed true if we want the tag to take less space. In that case,
  * the tag goes in the tooltip.
+ * @param additionalClassNames
  */
 export const Tag = ({
-    type = "",
+    color = "",
     tag = "",
     addon = "",
     tooltip = "",
     collapsed = false,
+    additionalClassNames = "",
 }) => {
-    if (type === "") {
-        type = tablerColors[hashCode(tag) % tablerColors.length];
+    if (color === "") {
+        color = tablerColors[hashCode(tag) % tablerColors.length];
     }
 
     if (collapsed) {
@@ -28,7 +30,7 @@ export const Tag = ({
         addon = "";
     }
 
-    let className = "mb-2 mr-2 tag tag-" + type;
+    let className = "mr-2 tag tag-" + color + " " + additionalClassNames;
     let tagElement = (
         <div className={className}>
             {tag}
@@ -41,10 +43,10 @@ export const Tag = ({
     if (tooltip.length > 0) {
         return (
             <OverlayTrigger
-                key={type + addon + tooltip + tag}
+                key={color + addon + tooltip + tag}
                 placement={"bottom"}
                 overlay={
-                    <Tooltip id={type + addon + tooltip + tag}>
+                    <Tooltip id={color + addon + tooltip + tag}>
                         {tooltip}
                     </Tooltip>
                 }

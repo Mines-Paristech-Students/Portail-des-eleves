@@ -10,9 +10,11 @@ import { AssociationFilesystemList } from "../components/associations/medias/Lis
 import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
+import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
 import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
+import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
 import { Association } from "../models/associations/association";
 import { Route } from "./global";
 
@@ -43,7 +45,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: true,
     },
     {
-        path: `/pages/new`,
+        path: `/pages/nouvelle`,
         component: AssociationCreatePage,
         exact: true,
         props: { association: association },
@@ -57,7 +59,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: true,
     },
     {
-        path: `/pages/:pageId/edit`,
+        path: `/pages/:pageId/modifier`,
         component: AssociationEditPage,
         exact: true,
         props: { association: association },
@@ -65,28 +67,28 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
 
     {
-        path: `/files`,
+        path: `/fichiers`,
         component: AssociationFilesystemList,
         exact: true,
         props: { association: association },
         defaultLayout: false,
     },
     {
-        path: `/files/upload`,
+        path: `/fichiers/upload`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/files/:fileId`,
+        path: `/fichiers/:fileId`,
         component: AssociationFilesystemDetail,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/files/:fileId/edit`,
+        path: `/fichiers/:fileId/modifier`,
         component: AssociationFilesystemEdit,
         exact: true,
         props: { association: association },
@@ -94,36 +96,52 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
 
     {
-        path: `/marketplace`,
+        path: `/magasin`,
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/history`,
+        path: `/magasin/historique`,
         component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
+
     {
-        path: `/marketplace/orders`,
+        path: `/magasin/commandes`,
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/counter`,
+        path: `/magasin/comptoir`,
         component: AssociationMarketplaceCounter,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/products`,
+        path: `/magasin/produits`,
         component: AssociationMarketplaceProductAdministration,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/produits/:productId/modifier`,
+        component: AssociationMarketplaceProductEdit,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+
+    {
+        path: `/parametres`,
+        component: AssociationSettings,
         exact: true,
         props: { association: association },
         defaultLayout: true,

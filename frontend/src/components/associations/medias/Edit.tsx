@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ErrorMessage } from "../../utils/ErrorPage";
+import { ErrorMessage, ForbiddenError } from "../../utils/ErrorPage";
 import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -23,13 +23,8 @@ export const AssociationFilesystemEdit = ({ association }) => {
     const history = useHistory();
     const newToast = useContext(ToastContext);
 
-    if (!association.myRole.mediaPermission) {
-        return (
-            <ErrorMessage>
-                Vous ne pouvez pas modifier ce fichier car vous n'avez pas les
-                droits requis pour {association.name}
-            </ErrorMessage>
-        );
+    if (!association.myRole.permissions.includes("media")) {
+        return <ForbiddenError />;
     }
 
     const deleteFile = (media) => {
@@ -44,7 +39,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                     message: "Fichier supprimé ",
                     level: ToastLevel.Success,
                 });
-                history.push(`/associations/${association.id}/files/`);
+                history.push(`/associations/${association.id}/fichiers/`);
             })
             .catch((err) => {
                 newToast({
@@ -74,7 +69,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 level: ToastLevel.Success,
                             });
                             history.push(
-                                `/associations/${association.id}/files/${media.id}/`
+                                `/associations/${association.id}/fichiers/${media.id}/`
                             );
                         })
                         .catch((err) =>
@@ -95,7 +90,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                         </Button>
                         <PageTitle>
                             <Link
-                                to={`/associations/${association.id}/files`}
+                                to={`/associations/${association.id}/fichiers`}
                                 className={"text-primary float-left"}
                             >
                                 <i className={"fe fe-arrow-left"} />

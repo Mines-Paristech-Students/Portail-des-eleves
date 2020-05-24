@@ -13,6 +13,7 @@ import { TagSearch } from "../../utils/tags/TagSearch";
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
     const history = useHistory();
+
     const [tagParams, setTagParams] = useState({});
 
     return (
@@ -22,8 +23,8 @@ export const AssociationFilesystemList = ({ association }) => {
                 <TagSearch
                     tagsQueryParams={{
                         page_size: 1000,
-                        scoped_to: "association",
-                        scoped_to_pk: associationId,
+                        namespace__scoped_to_model: "association",
+                        namespace__scoped_to_pk: associationId,
                         related_to: "media",
                     }}
                     setTagParams={setTagParams}
@@ -37,7 +38,7 @@ export const AssociationFilesystemList = ({ association }) => {
                     <>
                         {association.myRole.mediaPermission && (
                             <Link
-                                to={`/associations/${association.id}/files/upload`}
+                                to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-5"}
                             >
                                 <i className="fe fe-upload" />
@@ -52,7 +53,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                         <Card
                                             onClick={() =>
                                                 history.push(
-                                                    `/associations/${association.id}/files/${media.id}/`
+                                                    `/associations/${association.id}/fichiers/${media.id}/`
                                                 )
                                             }
                                         >

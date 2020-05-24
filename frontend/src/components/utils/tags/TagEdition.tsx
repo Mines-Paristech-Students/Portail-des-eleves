@@ -10,7 +10,6 @@ import Select from "react-select";
 
 export const TagEdition = ({ model, id }) => {
     const newToast = useContext(ToastContext);
-
     // API Helpers to bind and remove tags
     const bindTag = (newTag) => {
         api.tags
@@ -78,10 +77,10 @@ export const TagEdition = ({ model, id }) => {
 
     // Load namespaces and set them as suggestion
     useEffect(() => {
-        let params: any = {};
-        params[model] = id;
         api.namespaces
-            .list(params)
+            .list({
+                [model]: id,
+            })
             .then((res) => {
                 let namespaces = res.results;
                 setFuseNamespace(
@@ -100,6 +99,10 @@ export const TagEdition = ({ model, id }) => {
                     `Erreur durant le chargement : ${error.toString()}`
                 );
             });
+
+        // avoid infinite loop with tags :
+        // namespaces changes -> useEffect changes namespaces -> tag changes ...
+        // eslint-disable-next-line
     }, [model, id]);
 
     // Give the tags related to the namespace
@@ -117,16 +120,25 @@ export const TagEdition = ({ model, id }) => {
         } else {
             setFuseTag(null);
         }
+        // avoid infinite loop with tags :
+        // tags changes -> useEffect changes tags -> tag changes ...
+        // eslint-disable-next-line
     }, [selectedNamespace]);
 
     // Get all tags of the model
-    let params = {};
-    params[model] = id;
     useEffect(() => {
-        api.tags.list(params).then((data) => {
-            setTags(data.results);
-        });
-    }, [model, id, params]);
+        api.tags
+            .list({
+                [model]: id,
+            })
+            .then((data) => {
+                setTags(data.results);
+            });
+
+        // avoid infinite loop with tags :
+        // tags changes -> useEffect changes tags -> tag changes ...
+        // eslint-disable-next-line
+    }, [model, id]);
 
     // Event handlers
     const handleChange = (selectedOption, action) => {
