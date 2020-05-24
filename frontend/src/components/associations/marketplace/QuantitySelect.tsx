@@ -2,30 +2,26 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 
 export const QuantitySelect = ({ order }) => {
-    let [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(0);
 
-    let increase = () => {
+    const increase = () => {
         setQuantity(quantity + 1);
     };
-    let decrease = () => {
+    const decrease = () => {
         setQuantity(quantity - 1);
     };
 
-    let onOrder = () => {
+    const onOrder = () => {
         order(quantity);
         setQuantity(0);
     };
 
-    if (quantity === 0) {
-        return (
-            <Button variant="outline-primary" onClick={increase}>
-                <i className="fe fe-plus" />
-                Commander
-            </Button>
-        );
-    }
-
-    return (
+    return quantity === 0 ? (
+        <Button variant="outline-primary" onClick={increase}>
+            <i className="fe fe-plus" />
+            Commander
+        </Button>
+    ) : (
         <>
             <div className="input-group">
                 <span className="input-group-prepend">
