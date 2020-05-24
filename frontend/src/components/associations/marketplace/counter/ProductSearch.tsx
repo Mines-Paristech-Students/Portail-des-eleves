@@ -39,6 +39,7 @@ export const ProductSearch = ({
                                 {products.length > 0 ? (
                                     products.map((product) => (
                                         <Col
+                                            key={product.id}
                                             lg={compressed ? 6 : 3}
                                             sm={compressed ? 6 : 4}
                                             xs={6}

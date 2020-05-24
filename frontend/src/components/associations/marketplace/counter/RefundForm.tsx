@@ -93,6 +93,7 @@ export const RefundForm = ({ customer, marketplaceId, ...props }) => {
                                     <div className="d-flex justify-content-around">
                                         {[5, 10, 20, 50].map((val) => (
                                             <Button
+                                                key={val}
                                                 size={"lg"}
                                                 variant={"outline-secondary"}
                                                 onClick={() =>
