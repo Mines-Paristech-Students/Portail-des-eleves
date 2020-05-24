@@ -1,7 +1,0 @@
-<ng-container *ngFor="let widget of widgets">
-  <ng-container *ngIf="should_display_widget(widget.display_name)">
-    <div class="card">
-      <ng-container *ngComponentOutlet="widget.class"></ng-container>
-    </div>
-  </ng-container>
-</ng-container>
