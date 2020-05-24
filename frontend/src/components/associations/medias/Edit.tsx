@@ -55,7 +55,8 @@ export const AssociationFilesystemEdit = ({ association }) => {
     };
 
     if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "error")
+        return <ErrorMessage details={`Something went wrong: ${error}`} />;
     else if (media) {
         return (
             <Formik

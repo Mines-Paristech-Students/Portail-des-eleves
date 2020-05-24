@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
 import { LoadingAssociation } from "../Loading";
 import { Page } from "../../../models/associations/page";
+import { ErrorMessage } from "../../utils/ErrorPage";
 
 export const AssociationShowPage = ({ association }) => {
     const { pageId } = useParams<{ pageId: string }>();
@@ -13,7 +14,10 @@ export const AssociationShowPage = ({ association }) => {
     );
 
     if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "error")
+        return (
+            <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
+        );
     else if (data) {
         return (
             <div>

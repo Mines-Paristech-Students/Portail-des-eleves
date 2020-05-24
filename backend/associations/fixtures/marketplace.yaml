@@ -5,16 +5,8 @@
 - model: associations.marketplace
   pk: bde
   fields:
-    enabled: false
-
-#########
-# Biéro #
-#########
-
-- model: associations.marketplace
-  pk: biero
-  fields:
     enabled: true
+
 
 - model: associations.product
   pk: 101
@@ -22,7 +14,7 @@
     name: Grenadine
     description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
     price: 3.5
-    marketplace: biero
+    marketplace: bde
 
 - model: associations.product
   pk: 102
@@ -31,7 +23,7 @@
     description: Bon pour le corps et l'esprit, le jus de tomate saura ravir vos
       papilles et votre portefeuille
     price: 1.5
-    marketplace: biero
+    marketplace: bde
     number_left: 18956
 
 - model: associations.product
@@ -42,7 +34,7 @@
       y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
       déjeuner
     price: 12.4
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -51,7 +43,7 @@
     name: Item numéro 4
     description: Pour remplir et tester un peu la pagination
     price: 42
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -60,7 +52,7 @@
     name: Item numéro 5
     description: Pour remplir et tester un peu la pagination
     price: 52
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -69,7 +61,7 @@
     name: Item numéro 6
     description: Pour remplir et tester un peu la pagination
     price: 62
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -78,7 +70,7 @@
     name: Item numéro 7
     description: Pour remplir et tester un peu la pagination
     price: 72
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -87,7 +79,7 @@
     name: Item numéro 8
     description: Pour remplir et tester un peu la pagination
     price: 82
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -96,7 +88,7 @@
     name: Item numéro 9
     description: Pour remplir et tester un peu la pagination
     price: 92
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -105,7 +97,7 @@
     name: Item numéro 10
     description: Pour remplir et tester un peu la pagination
     price: 102
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -114,7 +106,7 @@
     name: Item numéro 11
     description: Pour remplir et tester un peu la pagination
     price: 411
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -123,7 +115,7 @@
     name: Item numéro 12
     description: Pour remplir et tester un peu la pagination
     price: 412
-    marketplace: biero
+    marketplace: bde
     number_left: 24
 
 - model: associations.product
@@ -132,5 +124,15 @@
     name: Item numéro 13
     description: Pour remplir et tester un peu la pagination
     price: 413
-    marketplace: biero
+    marketplace: bde
     number_left: 24
+
+
+#########
+# Biéro #
+#########
+
+- model: associations.marketplace
+  pk: biero
+  fields:
+    enabled: false
