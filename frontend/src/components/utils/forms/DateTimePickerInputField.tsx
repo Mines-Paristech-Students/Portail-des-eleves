@@ -1,14 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useField, useFormikContext } from "formik";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
-import {
-    formatDate,
-    MONTHS,
-    WEEKDAYS_LONG,
-    WEEKDAYS_SHORT,
-} from "../../../utils/format";
+import { formatDate } from "../../../utils/format";
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import { parseDate } from "../../../utils/parse";
+import { dayPickerLocalisationProps } from "./DatePickerField";
 
 /**
  * This component encapsulates a `DayPickerInput` component and two inputs (one for the hours, one for the minutes)
@@ -31,30 +28,52 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
  */
 export const DateTimePickerInputField = ({
     label,
-    todayButton = "",
+    todayButton = false,
     ...props
 }: any) => {
-    const { setFieldValue } = useFormikContext();
+    const { setFieldValue, setFieldTouched } = useFormikContext();
     const [field, meta] = useField<Date>(props);
+
+    // This field is required for setting a default value to the input.
+    const [dayInputValue, setDayInputValue] = useState(field.value);
+
+    const handleDayChange = (selectedDay) => {
+        setFieldTouched(field.name as never, true);
+        setFieldValue(field.name as never, selectedDay);
+    };
+
+    const handleTimeChange = (e) => {
+        console.log(e.target.value);
+    };
 
     return (
         <Form.Group>
             <Form.Label>{label}</Form.Label>
             <DayPickerInput
-                {...field}
-                onDayChange={(day) => setFieldValue(field.name as never, day)}
+                value={dayInputValue}
+                onDayChange={handleDayChange}
                 formatDate={formatDate}
+                parseDate={
+                    // The component will pass extra parameters to this anonymous function, but `parseDate` does not
+                    // need them AND defines a second parameter which would be overwritten otherwise.
+                    (dateString) => parseDate(dateString, "/")
+                }
                 dayPickerProps={{
-                    todayButton: todayButton || "",
-                    locale: "fr",
-                    months: MONTHS,
-                    weekdaysLong: WEEKDAYS_LONG,
-                    weekdaysShort: WEEKDAYS_SHORT,
-                    firstDayOfWeek: 1,
+                    ...field,
+                    month: field.value,
+                    selectedDays: field.value,
+                    ...dayPickerLocalisationProps(todayButton),
                 }}
                 inputProps={{
-                    className: "form-control",
+                    className: `form-control ${meta.error ? "is-invalid" : ""}`,
+                    placeholder: "JJ/MM/YYYY",
+                    onChange: (e) => setDayInputValue(e.target.value),
                 }}
+            />
+            <Form.Control
+                type="time"
+                onChange={handleTimeChange}
+                isInvalid={meta.touched && !!meta.error}
             />
             {meta.touched && meta.error ? (
                 <FormControl.Feedback

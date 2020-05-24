@@ -1,6 +1,10 @@
+/*
+ * Please see the comment at the top of `format.ts` to understand why we define these functions instead of using
+ * a 3rd-party library.
+ */
+
 /**
- * Parse a date formatted as 24/05/2020 (French style). See the comment at the top of `format.ts` to understand why we
- * define such a function instead of using a 3rd-party library.
+ * Parse a date formatted as 24/05/2020 (French style).
  *
  * Return a Date or undefined if the date could not be parsed. If the month is not in [1; 12] or the day not in [1; 31],
  * undefined will be returned.
@@ -29,3 +33,8 @@ export const parseDate = (
 
     return isNaN(date.getTime()) ? undefined : date;
 };
+
+export const parseTime = (
+    timeString: string,
+    separator=":"
+):

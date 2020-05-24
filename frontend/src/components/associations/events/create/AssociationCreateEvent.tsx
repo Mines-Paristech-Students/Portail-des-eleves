@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
 import { getRandom } from "../../../../utils/random";
-import { DatePickerInputField } from "../../../utils/forms/DatePickerInputField";
+import { DateTimePickerInputField } from "../../../utils/forms/DateTimePickerInputField";
 
 const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
     ["Passace", "Et glou, et glou, et glou", "Place du village"],
@@ -90,13 +90,13 @@ export const AssociationCreateEvent = ({
 
                             <Row>
                                 <Col xs={12} md={6}>
-                                    <DatePickerInputField
+                                    <DateTimePickerInputField
                                         label="Début"
                                         name="startsAt"
                                     />
                                 </Col>
                                 <Col xs={12} md={6}>
-                                    <DatePickerInputField
+                                    <DateTimePickerInputField
                                         label="Fin"
                                         name="endsAt"
                                     />

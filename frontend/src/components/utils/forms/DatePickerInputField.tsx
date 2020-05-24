@@ -28,7 +28,7 @@ import { dayPickerLocalisationProps } from "./DatePickerField";
  */
 export const DatePickerInputField = ({
     label,
-    todayButton = "",
+    todayButton = false,
     ...props
 }: any) => {
     const { setFieldValue, setFieldTouched } = useFormikContext();
@@ -58,8 +58,7 @@ export const DatePickerInputField = ({
                     ...field,
                     month: field.value,
                     selectedDays: field.value,
-                    todayButton: todayButton || "",
-                    ...dayPickerLocalisationProps(),
+                    ...dayPickerLocalisationProps(todayButton),
                 }}
                 inputProps={{
                     className: `form-control ${meta.error ? "is-invalid" : ""}`,
