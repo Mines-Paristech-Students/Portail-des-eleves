@@ -7,7 +7,7 @@ import {
 import {
     Sidebar,
     SidebarItem,
-    SidebarSeparator,
+    SidebarSpace,
 } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
@@ -99,7 +99,7 @@ const MarketSubNavbar = ({ association }) => {
         `/associations/${association.id}/magasin`
     ) ? (
         <>
-            <SidebarSeparator />
+            <SidebarSpace />
             <SidebarItem
                 icon={"home"}
                 to={`/associations/${association.id}/magasin`}

@@ -10,7 +10,7 @@ export const events = {
     list: (
         parameters: {
             association: string;
-            time?: ("NOW" | "BEFORE" | "AFTER")[];
+            time: ("NOW" | "BEFORE" | "AFTER")[];
         },
         page: number
     ) =>

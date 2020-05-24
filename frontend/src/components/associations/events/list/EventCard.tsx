@@ -35,7 +35,7 @@ export const EventCard = ({
     userId?: string;
     canEdit?: boolean;
 }) => {
-    const isOver = () => event.endsAt > new Date();
+    const isNotOver = () => event.endsAt > new Date();
 
     const newToast = useContext(ToastContext);
     const [showModal, setShowModal] = useState(false);
@@ -101,14 +101,16 @@ export const EventCard = ({
             )}
 
             <CardStatus
-                color={isOver() ? TablerColor.Blue : TablerColor.Gray}
+                color={isNotOver() ? TablerColor.Blue : TablerColor.Gray}
             />
 
             <Card.Header>
-                <Card.Title>{event.name}</Card.Title>
+                <Card.Title className={isNotOver() ? "" : "text-muted"}>
+                    {event.name}
+                </Card.Title>
 
                 <div className="card-options">
-                    {isOver() && (
+                    {isNotOver() && (
                         <>
                             {userId &&
                             event.participants
@@ -171,7 +173,7 @@ export const EventCard = ({
                     </AvatarList>
                 ) : (
                     <p className="text-muted mb-4">
-                        Pas {isOver() ? "encore " : ""}d’inscription.
+                        Pas {isNotOver() ? "encore " : ""}d’inscription.
                     </p>
                 )}
 

@@ -6,6 +6,7 @@ import {
     usePaginatedQuery,
     useQuery,
 } from "react-query";
+import { events } from "./api/events";
 import { pages } from "./api/pages";
 import { news } from "./api/news";
 import { medias } from "./api/medias";
@@ -105,6 +106,7 @@ export const api = {
     news: news,
     pages: pages,
 
+    events: events,
     marketplace: marketplace,
     products: products,
     transactions: transactions,
