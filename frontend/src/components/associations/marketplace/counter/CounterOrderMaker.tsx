@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { TransactionStatus } from "../../../../models/associations/marketplace";
 import { queryCache } from "react-query";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { RefundForm } from "./RefundForm";
 import { ProductSearch } from "./ProductSearch";
 import { OrderSummary } from "./OrderSummary";
@@ -103,38 +103,57 @@ export const CounterOrderMaker = ({
             });
         }
 
-        queryCache.refetchQueries("marketplace.transactions.list");
+        await queryCache.refetchQueries("marketplace.transactions.list");
     };
+
+    const basketIsEmpty = Object.keys(basket).length === 0;
 
     return (
         <>
-            <Card>
-                <Card.Header>
-                    Solde :{" "}
-                    {balanceStatus === "loading" ? (
-                        <em>Chargement</em>
-                    ) : balanceStatus === "error" ? (
-                        <em>Erreur {balanceError} : balance</em>
-                    ) : (
-                        `${(balance as { balance: number }).balance}€`
-                    )}
-                </Card.Header>
-            </Card>
+            <div className="d-flex justify-content-center mt-4">
+                <Col md={"6"}>
+                    <Card>
+                        <Card.Body className="text-center">
+                            <h5>{customer.id}</h5>
+                            <div className="display-2 font-weight-bold">
+                                {balanceStatus === "loading" ? (
+                                    <em>Chargement</em>
+                                ) : balanceStatus === "error" ? (
+                                    <em>Erreur {balanceError} : balance</em>
+                                ) : (
+                                    `${
+                                        (balance as { balance: number }).balance
+                                    }€`
+                                )}
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </div>
 
             <RefundForm customer={customer} marketplaceId={marketplaceId} />
 
-            <ProductSearch
-                basket={basket}
-                addToBasket={addToBasket}
-                marketplaceId={marketplaceId}
-            />
+            <Row>
+                <Col md={basketIsEmpty ? 12 : 6}>
+                    <ProductSearch
+                        basket={basket}
+                        addToBasket={addToBasket}
+                        marketplaceId={marketplaceId}
+                        compressed={Object.keys(basket).length > 0}
+                    />
+                </Col>
 
-            {/* Show order summary */}
-            <OrderSummary
-                basket={basket}
-                removeFromBasket={removeFromBasket}
-                makeOrder={makeOrder}
-            />
+                {/* Show order summary */}
+                {!basketIsEmpty && (
+                    <Col md={6}>
+                        <OrderSummary
+                            basket={basket}
+                            removeFromBasket={removeFromBasket}
+                            makeOrder={makeOrder}
+                        />
+                    </Col>
+                )}
+            </Row>
         </>
     );
 };

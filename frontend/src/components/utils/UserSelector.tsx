@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { api, useBetterPaginatedQuery } from "../../services/apiService";
-import { Loading } from "./Loading";
+import { api} from "../../services/apiService";
 import { DebounceInput } from "react-debounce-input";
 import { Row } from "react-bootstrap";
-import { Error } from "./Error";
 import { UserAvatarCard } from "./avatar/UserAvatarCard";
 import { Pagination } from "./Pagination";
+import { PageTitle } from "./PageTitle";
 
 export const UserSelector = ({ setUser }) => {
     const [searchValue, setSearchValue] = useState("");
 
     return (
         <>
+            <PageTitle>Comptoir</PageTitle>
             <Pagination
                 apiKey={[
                     "users.list.search",
@@ -38,6 +38,7 @@ export const UserSelector = ({ setUser }) => {
                                     <UserAvatarCard
                                         userId={user.id}
                                         className="h-100"
+                                        link={false}
                                     >
                                         <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
                                             {user.id}

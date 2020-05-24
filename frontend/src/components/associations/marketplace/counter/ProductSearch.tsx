@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { Card, Container, Row } from "react-bootstrap";
+import { Card, Row, Container, Col } from "react-bootstrap";
 import { Pagination } from "../../../utils/Pagination";
 import { api } from "../../../../services/apiService";
 import { ProductCard } from "./ProductCard";
 
-export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
+export const ProductSearch = ({
+    marketplaceId,
+    basket,
+    addToBasket,
+    compressed,
+}) => {
     const [searchValue, setSearchValue] = useState("");
 
     return (
@@ -21,26 +26,32 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                 minLength={2}
             />
             <Container>
-                <Row>
-                    <Pagination
-                        apiKey={[
-                            "marketplace.products.search",
-                            marketplaceId,
-                            { search: searchValue, page_size: 12 },
-                        ]}
-                        apiMethod={api.products.list}
-                        render={(products, paginationControl) => (
-                            <>
+                <Pagination
+                    apiKey={[
+                        "marketplace.products.search",
+                        marketplaceId,
+                        { search: searchValue, page_size: 12 },
+                    ]}
+                    apiMethod={api.products.list}
+                    render={(products, paginationControl) => (
+                        <>
+                            <Row>
                                 {products.length > 0 ? (
                                     products.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            product={product}
-                                            addToBasket={addToBasket}
-                                            quantityOrdered={
-                                                basket[product.id]?.quantity
-                                            }
-                                        />
+                                        <Col
+                                            lg={compressed ? 6 : 3}
+                                            sm={compressed ? 6 : 4}
+                                            xs={6}
+                                        >
+                                            <ProductCard
+                                                key={product.id}
+                                                product={product}
+                                                addToBasket={addToBasket}
+                                                quantityOrdered={
+                                                    basket[product.id]?.quantity
+                                                }
+                                            />
+                                        </Col>
                                     ))
                                 ) : (
                                     <Card>
@@ -51,14 +62,14 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                                         </Card.Body>
                                     </Card>
                                 )}
+                            </Row>
 
-                                <div className="col-12">
-                                    {paginationControl}
-                                </div>
-                            </>
-                        )}
-                    />
-                </Row>
+                            <div className="d-flex justify-content-center mt-4">
+                                <div>{paginationControl}</div>
+                            </div>
+                        </>
+                    )}
+                />
             </Container>
         </>
     );
