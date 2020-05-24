@@ -38,7 +38,7 @@ export const AssociationFilesystemList = ({ association }) => {
                     <>
                         {association.myRole.mediaPermission && (
                             <Link
-                                to={`/associations/${association.id}/files/upload`}
+                                to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-5"}
                             >
                                 <i className="fe fe-upload" />
@@ -53,7 +53,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                         <Card
                                             onClick={() =>
                                                 history.push(
-                                                    `/associations/${association.id}/files/${media.id}/`
+                                                    `/associations/${association.id}/fichiers/${media.id}/`
                                                 )
                                             }
                                         >

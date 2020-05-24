@@ -26,6 +26,8 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
     );
 
     const changeNumberLeftStatus = (numberLeft, setFieldValue) => {
+        // If the the user tries to define the quantity left as being negative,
+        // put it to -1, which is the value for "unlimited stocks"
         const newNumberLeft = (numberLeft || 1) > -1 ? -1 : 1;
         setFieldValue("numberLeft", newNumberLeft);
     };
@@ -40,7 +42,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                 <span onClick={history.goBack} className={"text-primary"}>
                     <i className={"fe fe-arrow-left"} />
                 </span>
-                Editer le produit
+                Modifier le produit
             </PageTitle>
             <Formik
                 initialValues={product}
@@ -75,7 +77,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     label="Nom du produit"
                                     name="name"
                                     type="text"
-                                    iconLeft="user"
+                                    iconLeft="tag"
                                 />
                             </Col>
                             <Col md={{ span: 6 }}>

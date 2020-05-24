@@ -30,7 +30,7 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
         <>
             <PageTitle>
                 <Link
-                    to={`/associations/${association.id}/files`}
+                    to={`/associations/${association.id}/fichiers`}
                     className={"text-primary"}
                 >
                     <i className={"fe fe-arrow-left"} />

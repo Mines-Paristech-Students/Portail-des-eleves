@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 export const AssociationMarketplaceProductAdministration = ({
     association,
 }) => {
-    let marketplaceId = association.id;
+    const marketplaceId = association.id;
     return (
         <>
             <PageTitle>Produits</PageTitle>
@@ -26,7 +26,7 @@ export const AssociationMarketplaceProductAdministration = ({
                                         key={product.id}
                                         additionalContent={
                                             <Link
-                                                to={`/associations/${marketplaceId}/marketplace/products/${product.id}/edit`}
+                                                to={`/associations/${marketplaceId}/magasin/produits/${product.id}/modifier`}
                                             >
                                                 Modifier
                                             </Link>

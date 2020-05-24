@@ -24,7 +24,7 @@ export const AssociationShowPage = ({ association }) => {
                 <PageTitle>{data.title}</PageTitle>
                 <p>
                     <Link
-                        to={`/associations/${association.id}/pages/${pageId}/edit`}
+                        to={`/associations/${association.id}/pages/${pageId}/modifier`}
                     >
                         Editer
                     </Link>

@@ -39,7 +39,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                     message: "Fichier supprimé ",
                     level: ToastLevel.Success,
                 });
-                history.push(`/associations/${association.id}/files/`);
+                history.push(`/associations/${association.id}/fichiers/`);
             })
             .catch((err) => {
                 newToast({
@@ -69,7 +69,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 level: ToastLevel.Success,
                             });
                             history.push(
-                                `/associations/${association.id}/files/${media.id}/`
+                                `/associations/${association.id}/fichiers/${media.id}/`
                             );
                         })
                         .catch((err) =>
@@ -90,7 +90,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                         </Button>
                         <PageTitle>
                             <Link
-                                to={`/associations/${association.id}/files`}
+                                to={`/associations/${association.id}/fichiers`}
                                 className={"text-primary float-left"}
                             >
                                 <i className={"fe fe-arrow-left"} />

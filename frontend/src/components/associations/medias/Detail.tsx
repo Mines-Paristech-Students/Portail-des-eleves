@@ -36,7 +36,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         if (association.myRole.permissions.includes("media")) {
             editButton = (
                 <Link
-                    to={`/associations/${association.id}/files/${media.id}/edit`}
+                    to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
                     className={"btn btn-primary float-right"}
                 >
                     Editer
@@ -49,7 +49,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 {editButton}
                 <PageTitle>
                     <Link
-                        to={`/associations/${association.id}/files`}
+                        to={`/associations/${association.id}/fichiers`}
                         className={"text-primary"}
                     >
                         <i className={"fe fe-arrow-left"} />

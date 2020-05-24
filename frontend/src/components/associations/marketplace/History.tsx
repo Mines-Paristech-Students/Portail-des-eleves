@@ -22,7 +22,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
         <Container>
             <div className={"float-right"}>
                 <Link
-                    to={"/associations/" + marketplaceId + "/marketplace"}
+                    to={"/associations/" + marketplaceId + "/magasin"}
                     className={"btn btn-primary"}
                 >
                     <i className={"fe fe-book-open"} /> Magasin

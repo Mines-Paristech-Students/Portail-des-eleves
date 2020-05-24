@@ -15,7 +15,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
     const newToast = useContext(ToastContext);
     const user = useContext(UserContext);
 
-    let makeOrder = (product, quantity) => {
+    const makeOrder = (product, quantity) => {
         api.transactions
             .create(product, quantity, user)
             .then((_) => {
@@ -39,7 +39,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
                     href={
                         "/associations/" +
                         marketplaceId +
-                        "/marketplace/history/"
+                        "/magasin/historique/"
                     }
                     className={"btn btn-primary"}
                 >

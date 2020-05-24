@@ -71,7 +71,7 @@ export const Pagination = ({
     // Handle get parameters, ie when we take a page, we add the parameter
     // in the URL, and exploit it when the page is loaded
     // Example : we're on page 1, we go on page 2, the url is now on
-    // /associations/biero/marketplace?page=2
+    // /associations/biero/magasin?page=2
     // when we reload the page, the "page" parameter will be on 2
     useEffect(() => {
         // When the page loads, check if the "page" param is defined in the url

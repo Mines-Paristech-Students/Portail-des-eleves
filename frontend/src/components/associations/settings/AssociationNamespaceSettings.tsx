@@ -117,8 +117,7 @@ export const AssociationNamespaceSettings = ({ association }) => {
                                 onChange={handleChange}
                                 isInvalid={
                                     (errors.namespaceName &&
-                                        touched.namespaceName) ||
-                                    undefined
+                                    touched.namespaceName) || false
                                 }
                             />
                             <InputGroup.Append>
@@ -189,7 +188,7 @@ const NamespaceTagsModal = ({ namespace, closeModal }) => {
         },
     });
 
-    let type = tablerColors[hashCode(namespace.name) % tablerColors.length];
+    const color = tablerColors[hashCode(namespace.name) % tablerColors.length];
 
     const deleteNamespace = () => {
         mutate(namespace.id).then((_) => closeModal());
@@ -210,7 +209,7 @@ const NamespaceTagsModal = ({ namespace, closeModal }) => {
                         {(data?.results.length || 0) > 0 ? (
                             data?.results.map((tag) => (
                                 <span key={tag.id}>
-                                    <Tag type={type} tag={tag.value} />
+                                    <Tag color={color} tag={tag.value} />
                                 </span>
                             ))
                         ) : (

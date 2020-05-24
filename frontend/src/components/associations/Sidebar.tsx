@@ -32,13 +32,13 @@ export const AssociationSidebar = ({ association }) => {
                 <AddPageItem association={association} />
                 <SidebarItem
                     icon={"file"}
-                    to={`/associations/${association.id}/files`}
+                    to={`/associations/${association.id}/fichiers`}
                 >
                     Fichiers
                 </SidebarItem>
                 <SidebarItem
                     icon={"shopping-cart"}
-                    to={`/associations/${association.id}/marketplace`}
+                    to={`/associations/${association.id}/magasin`}
                     exact={false}
                 >
                     Magasin
@@ -88,31 +88,31 @@ const AddPageItem = ({ association }) => {
 const MarketSubNavbar = ({ association }) => {
     const location = useLocation();
     return location.pathname.startsWith(
-        `/associations/${association.id}/marketplace`
+        `/associations/${association.id}/magasin`
     ) ? (
         <>
             <SidebarSeparator />
             <SidebarItem
                 icon={"home"}
-                to={`/associations/${association.id}/marketplace`}
+                to={`/associations/${association.id}/magasin`}
             >
                 Accueil
             </SidebarItem>
             <SidebarItem
                 icon={"dollar-sign"}
-                to={`/associations/${association.id}/marketplace/counter`}
+                to={`/associations/${association.id}/magasin/comptoir`}
             >
                 Comptoir
             </SidebarItem>
             <SidebarItem
                 icon={"book-open"}
-                to={`/associations/${association.id}/marketplace/orders`}
+                to={`/associations/${association.id}/magasin/commandes`}
             >
                 Commandes
             </SidebarItem>
             <SidebarItem
                 icon={"settings"}
-                to={`/associations/${association.id}/marketplace/products`}
+                to={`/associations/${association.id}/magasin/produits`}
             >
                 Produits
             </SidebarItem>

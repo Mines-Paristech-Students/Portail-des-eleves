@@ -45,7 +45,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: true,
     },
     {
-        path: `/pages/new`,
+        path: `/pages/nouvelle`,
         component: AssociationCreatePage,
         exact: true,
         props: { association: association },
@@ -59,7 +59,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: true,
     },
     {
-        path: `/pages/:pageId/edit`,
+        path: `/pages/:pageId/modifier`,
         component: AssociationEditPage,
         exact: true,
         props: { association: association },
@@ -67,28 +67,28 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
 
     {
-        path: `/files`,
+        path: `/fichiers`,
         component: AssociationFilesystemList,
         exact: true,
         props: { association: association },
         defaultLayout: false,
     },
     {
-        path: `/files/upload`,
+        path: `/fichiers/upload`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/files/:fileId`,
+        path: `/fichiers/:fileId`,
         component: AssociationFilesystemDetail,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/files/:fileId/edit`,
+        path: `/fichiers/:fileId/modifier`,
         component: AssociationFilesystemEdit,
         exact: true,
         props: { association: association },
@@ -96,14 +96,14 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
 
     {
-        path: `/marketplace`,
+        path: `/magasin`,
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/history`,
+        path: `/magasin/historique`,
         component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association },
@@ -111,28 +111,28 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
 
     {
-        path: `/marketplace/orders`,
+        path: `/magasin/commandes`,
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/counter`,
+        path: `/magasin/comptoir`,
         component: AssociationMarketplaceCounter,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/products`,
+        path: `/magasin/produits`,
         component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
         defaultLayout: true,
     },
     {
-        path: `/marketplace/products/:productId/edit`,
+        path: `/magasin/produits/:productId/modifier`,
         component: AssociationMarketplaceProductEdit,
         exact: true,
         props: { association: association },
