@@ -10,6 +10,9 @@ import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
+import { SidebarInputSearch } from "../../utils/SidebarInputSearch";
+import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
+import { Card } from "react-bootstrap";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -34,20 +37,25 @@ export const AssociationMarketplaceHome = ({ association }) => {
             });
     };
 
+    const [searchParams, setSearchParams] = useState({});
     const [tagParams, setTagParams] = useState({});
     return (
         <AssociationLayout
             association={association}
             additionalSidebar={
-                <TagSearch
-                    tagsQueryParams={{
-                        page_size: 1000,
-                        namespace__scoped_to_model: "association",
-                        namespace__scoped_to_pk: marketplaceId,
-                        related_to: "product",
-                    }}
-                    setTagParams={setTagParams}
-                />
+                <>
+                    <SidebarSeparator />
+                    <SidebarInputSearch setParams={setSearchParams} />
+                    <TagSearch
+                        setTagParams={setTagParams}
+                        tagsQueryParams={{
+                            page_size: 1000,
+                            namespace__scoped_to_model: "association",
+                            namespace__scoped_to_pk: marketplaceId,
+                            related_to: "product",
+                        }}
+                    />
+                </>
             }
         >
             <Container>
@@ -65,44 +73,53 @@ export const AssociationMarketplaceHome = ({ association }) => {
                 </div>
                 <PageTitle>Magasin</PageTitle>
 
-                <Row>
-                    <ProductsPagination
-                        marketplaceId={marketplaceId}
-                        tagParams={tagParams}
-                        makeOrder={makeOrder}
-                    />
-                </Row>
+                <ProductsPagination
+                    marketplaceId={marketplaceId}
+                    queryParams={{ ...tagParams, ...searchParams }}
+                    makeOrder={makeOrder}
+                />
             </Container>
         </AssociationLayout>
     );
 };
 
-const ProductsPagination = ({ marketplaceId, tagParams, makeOrder }) => (
+const ProductsPagination = ({ marketplaceId, queryParams, makeOrder }) => (
     <Pagination
         apiKey={[
             "associations.list",
             marketplaceId,
-            { ...tagParams, page_size: 8 },
+            { ...queryParams, page_size: 8 },
         ]}
         apiMethod={api.products.list}
-        render={(products, controlbar) => (
+        paginationControlProps={{
+            className: "justify-content-center mb-5",
+        }}
+        render={(products, paginationControl) => (
             <>
                 <Row>
-                    {products.map((product) => (
-                        <Product
-                            product={product}
-                            key={product.id}
-                            additionalContent={
-                                <QuantitySelect
-                                    order={(quantity) =>
-                                        makeOrder(product, quantity)
-                                    }
-                                />
-                            }
-                        />
-                    ))}
+                    {products.length > 0 ? (
+                        products.map((product) => (
+                            <Product
+                                product={product}
+                                key={product.id}
+                                additionalContent={
+                                    <QuantitySelect
+                                        order={(quantity) =>
+                                            makeOrder(product, quantity)
+                                        }
+                                    />
+                                }
+                            />
+                        ))
+                    ) : (
+                        <Card>
+                            <Card.Body className={"text-center"}>
+                                <p className={"lead"}>Aucun produit</p>
+                            </Card.Body>
+                        </Card>
+                    )}
                 </Row>
-                {controlbar}
+                {paginationControl}
             </>
         )}
     />
