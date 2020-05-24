@@ -79,7 +79,7 @@ export const TagEdition = ({ model, id }) => {
     useEffect(() => {
         api.namespaces
             .list({
-                [model]: id
+                [model]: id,
             })
             .then((res) => {
                 let namespaces = res.results;
@@ -127,11 +127,13 @@ export const TagEdition = ({ model, id }) => {
 
     // Get all tags of the model
     useEffect(() => {
-        api.tags.list({
-            [model]: id
-        }).then((data) => {
-            setTags(data.results);
-        });
+        api.tags
+            .list({
+                [model]: id,
+            })
+            .then((data) => {
+                setTags(data.results);
+            });
 
         // avoid infinite loop with tags :
         // tags changes -> useEffect changes tags -> tag changes ...

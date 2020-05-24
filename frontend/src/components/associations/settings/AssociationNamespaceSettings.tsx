@@ -117,7 +117,8 @@ export const AssociationNamespaceSettings = ({ association }) => {
                                 onChange={handleChange}
                                 isInvalid={
                                     (errors.namespaceName &&
-                                    touched.namespaceName) || false
+                                        touched.namespaceName) ||
+                                    false
                                 }
                             />
                             <InputGroup.Append>

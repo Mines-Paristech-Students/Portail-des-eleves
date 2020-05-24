@@ -136,7 +136,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceProductEdit,
         exact: true,
         props: { association: association },
-        defaultLayout: true
+        defaultLayout: true,
     },
 
     {
@@ -144,6 +144,6 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationSettings,
         exact: true,
         props: { association: association },
-        defaultLayout: true
+        defaultLayout: true,
     },
 ];
