@@ -10,7 +10,7 @@ import { AssociationFilesystemList } from "../components/associations/medias/Lis
 import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
-import { ListEvents } from "../components/associations/events/list/ListEvents";
+import { AssociationListEvents } from "../components/associations/events/list/AssociationListEvents";
 import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
@@ -47,7 +47,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
     },
     {
         path: `/evenements`,
-        component: ListEvents,
+        component: AssociationListEvents,
         exact: true,
         props: { association: association },
         defaultLayout: false,
@@ -73,7 +73,6 @@ export const routes: (association: Association) => AssociationRoute[] = (
         props: { association: association },
         defaultLayout: true,
     },
-
     {
         path: `/fichiers`,
         component: AssociationFilesystemList,
