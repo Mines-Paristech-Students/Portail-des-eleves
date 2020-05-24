@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { ForbiddenError } from "../../utils/ErrorPage";
+import { ErrorMessage, ForbiddenError } from "../../utils/ErrorPage";
 import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -50,7 +50,8 @@ export const AssociationFilesystemEdit = ({ association }) => {
     };
 
     if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "error")
+        return <ErrorMessage details={`Something went wrong: ${error}`} />;
     else if (media) {
         return (
             <Formik

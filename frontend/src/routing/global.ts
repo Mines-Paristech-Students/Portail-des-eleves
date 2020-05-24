@@ -1,6 +1,6 @@
 import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
-import { AssociationMain } from "../components/associations/Main";
+import { AssociationRouter } from "../components/associations/Router";
 import { routes as pollsRoutes } from "./polls";
 import { routes as usersRoutes } from "./users";
 
@@ -15,7 +15,7 @@ export const routes = [
     { path: "/associations", component: AssociationList, exact: true },
     {
         path: "/associations/:associationId",
-        component: AssociationMain,
+        component: AssociationRouter,
         exact: false,
     },
 ]

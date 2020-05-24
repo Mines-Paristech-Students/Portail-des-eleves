@@ -16,7 +16,7 @@ export const AssociationList = () => (
                 <>
                     {associations.map((association) => (
                         <Card key={association.id} className={"col-md-3 m-4"}>
-                            <Link to={`/associations/${association.id}/`}>
+                            <Link to={`/associations/${association.id}`}>
                                 <Card.Body>
                                     <Card.Title>{association.name}</Card.Title>
                                 </Card.Body>

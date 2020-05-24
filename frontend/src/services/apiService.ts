@@ -39,24 +39,65 @@ export function unwrap<T>(promise): Promise<T> {
     });
 }
 
-/**
- * Transforms an object into url parameters, joining parameters with '&'
- * and adding '?' at the beginning
- * toUrlParams({foo: 'bar', piche: 'clac'} = "?foo=bar?piche=clac"
- */
-export function toUrlParams(obj: object): string {
-    let params = "?";
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if (params.length !== 1) {
-                params += "&";
-            }
-            params += `${key}=${obj[key]}`;
-        }
-    }
+type UrlParam =
+    | boolean
+    | number
+    | string
+    | (boolean | number | string)[]
+    | { [key: string]: UrlParam };
 
-    return params;
-}
+/**
+ * Transforms an object into URL parameters. The returned string joins the parameters found in the object with '&'
+ * and adds '?' at the beginning.
+ * The keys and the values of the object are respectively the names and the values of the URL parameters.
+ * If an array is passed as a value, the parameter will be repeated for each item of the array.
+ * If an object is passed as a value, its key (in the top `parameters` object) will prefix (with a `__` separator) its
+ * keys.
+ * The values should be numbers, strings or booleans. A boolean value will be transformed into either `true` or `false`.
+ *
+ * Examples:
+ * ```
+ * toUrlParams({
+ *     foo: 1,
+ *     piche: 'clac'
+ * }
+ * == "?foo=1&piche=clac"
+ * ```
+ * ```
+ * toUrlParams({
+ *     foo: true,
+ *     bar: {
+ *         in: "it",
+ *         gte: 3,
+ *     },
+ *     piche: ['clic', 'clac']
+ * }
+ * == "?foo=true&bar__in=it&bar__gte=3&piche=clic&piche=clac"
+ * ```
+ */
+export const toUrlParams = (parameters: { [key: string]: UrlParam }): string =>
+    "?" + toUrlParamsAux(parameters);
+
+const toUrlParamsAux = (
+    parameters: {
+        [key: string]: UrlParam;
+    },
+    keyPrefix = ""
+) =>
+    // Iterate through the keys.
+    Object.getOwnPropertyNames(parameters)
+        .map((key) => {
+            const value = parameters[key];
+
+            return Array.isArray(value)
+                ? // Iterate through the array.
+                  value.map((v) => `${keyPrefix + key}=${v}`).join("&")
+                : typeof value === "object"
+                ? // Recursive call with a new prefix.
+                  toUrlParamsAux(value, keyPrefix + key + "__")
+                : `${keyPrefix + key}=${value}`;
+        })
+        .join("&");
 
 export const api = {
     associations: associations,
