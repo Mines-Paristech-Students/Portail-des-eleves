@@ -57,11 +57,6 @@ class NamespaceFilter(filters.FilterSet):
         fields = ("scoped_to_model", "scoped_to_pk")
 
 
-# for model in Tag.LINKED_TO_MODEL.keys():
-#     setattr(NamespaceFilter, model, NamespaceFilter._default_search_field)
-#     print(model)
-
-
 """
 To create a namespace : 
 - either be an admin and create a global scope
