@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { PageTitle } from "../../utils/PageTitle";
 import { User } from "../../../models/user";
 import { UserSelector } from "../../utils/UserSelector";
 import { CounterOrderMaker } from "./counter/CounterOrderMaker";
@@ -10,13 +9,7 @@ import { CounterOrderMaker } from "./counter/CounterOrderMaker";
  * transactions at once.
  */
 export const AssociationMarketplaceCounter = ({ association }) => {
-    const [customer, setCustomer] = useState<User | null>({
-        id: "17bocquet",
-        firstName: "Adrien",
-        lastName: "Bocquet",
-        promotion: 17,
-        isStaff: true,
-    });
+    const [customer, setCustomer] = useState<User | null>(null);
     return (
         <>
             <p className={"display-4 m-0 float-left"}>

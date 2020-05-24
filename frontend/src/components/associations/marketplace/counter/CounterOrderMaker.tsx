@@ -110,6 +110,12 @@ export const CounterOrderMaker = ({
 
     return (
         <>
+            <RefundForm
+                customer={customer}
+                marketplaceId={marketplaceId}
+                className={"float-right mt-2"}
+            />
+
             <div className="d-flex justify-content-center mt-4">
                 <Col md={"6"}>
                     <Card>
@@ -130,8 +136,6 @@ export const CounterOrderMaker = ({
                     </Card>
                 </Col>
             </div>
-
-            <RefundForm customer={customer} marketplaceId={marketplaceId} />
 
             <Row>
                 <Col md={basketIsEmpty ? 12 : 6}>

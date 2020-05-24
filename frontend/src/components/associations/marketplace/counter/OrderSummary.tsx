@@ -51,8 +51,8 @@ const columns = (decreaseNumber) => [
         cellClassName: "text-right",
     },
     {
-        key: "date",
-        header: "Date",
+        key: "actions",
+        header: "",
         render: ({ product, quantity, status }) =>
             status === "idle" ? (
                 <span
