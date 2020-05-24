@@ -61,10 +61,6 @@ jobs:
         run: |
           cd backend
           python manage.py test polls
-      - name: Run Repartitions Tests
-        run: |
-          cd backend
-          python manage.py test repartitions
       - name: Run Subscription Tests
         run: |
           cd backend
