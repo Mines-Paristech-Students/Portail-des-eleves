@@ -18,6 +18,7 @@ import { AssociationMarketplaceCounter } from "../components/associations/market
 import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
 import { Association } from "../models/associations/association";
 import { Route } from "./global";
+import { AssociationCreateEvent } from "../components/associations/events/create/AssociationCreateEvent";
 
 type AssociationRoute = Route & {
     props: object;
@@ -51,6 +52,13 @@ export const routes: (association: Association) => AssociationRoute[] = (
         exact: true,
         props: { association: association },
         defaultLayout: false,
+    },
+    {
+        path: `/evenements/nouveau`,
+        component: AssociationCreateEvent,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
     },
     {
         path: `/pages/nouvelle`,
