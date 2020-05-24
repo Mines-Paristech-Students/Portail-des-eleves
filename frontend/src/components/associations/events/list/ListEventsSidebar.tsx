@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarSeparator, SidebarSpace } from "../../../utils/sidebar/Sidebar";
+import { SidebarSeparator } from "../../../utils/sidebar/Sidebar";
 import { SidebarSection } from "../../../utils/sidebar/SidebarSection";
 import { CheckboxField } from "../../../utils/sidebar/CheckboxField";
 import { Link } from "react-router-dom";

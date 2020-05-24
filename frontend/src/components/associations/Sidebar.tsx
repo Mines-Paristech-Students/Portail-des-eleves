@@ -4,11 +4,7 @@ import {
     PaginatedResponse,
     useBetterQuery,
 } from "../../services/apiService";
-import {
-    Sidebar,
-    SidebarItem,
-    SidebarSpace,
-} from "../utils/sidebar/Sidebar";
+import { Sidebar, SidebarItem, SidebarSpace } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
