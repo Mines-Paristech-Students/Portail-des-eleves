@@ -13,7 +13,7 @@ export const SidebarSection = ({
     useEffect(() => {
         /* If the user cannot change the state of the section (retracted or not)
          * the section should always be visible independently from the default,
-         * hence the "&& !retractable"
+         * hence the "&& retractable"
          */
         setIsRetracted(retractedByDefault && retractable);
         // eslint-disable-next-line
