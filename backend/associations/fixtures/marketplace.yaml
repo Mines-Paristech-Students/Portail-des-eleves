@@ -135,4 +135,44 @@
 - model: associations.marketplace
   pk: biero
   fields:
-    enabled: false
+    enabled: true
+
+- model: associations.product
+  pk: 201
+  fields:
+    name: Jus de tomate
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 202
+  fields:
+    name: Jus de pomme
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 203
+  fields:
+    name: Jus d'ananas
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 204
+  fields:
+    name: Jus de pamplemousse
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 205
+  fields:
+    name: Jus de raisin
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero

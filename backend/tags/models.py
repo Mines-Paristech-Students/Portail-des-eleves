@@ -26,6 +26,7 @@ class Namespace(models.Model):
         ordering = ["-id"]
 
     SCOPED_TO_MODELS = {"association": Association, "global": None}
+    SCOPED_TO_MODELS_REV = {Association: "association", None: "global"}
 
     name = models.CharField(max_length=50)
 

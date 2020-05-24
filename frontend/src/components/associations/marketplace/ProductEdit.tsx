@@ -85,6 +85,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                                     label="Prix"
                                     name="price"
                                     type="number"
+                                    step="0.01"
                                     iconLeft="dollar-sign"
                                 />
                             </Col>

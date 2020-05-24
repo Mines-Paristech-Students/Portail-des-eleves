@@ -1,3 +1,4 @@
+import django_filters
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
@@ -20,6 +21,47 @@ from tags.permissions import (
 )
 from tags.serializers import NamespaceSerializer, TagSerializer
 
+
+class NamespaceFilter(filters.FilterSet):
+    # theses props should be listed automatically but because of drf-filter magics
+    # it's hard to do so.
+    association = django_filters.CharFilter(method="filter_child_of_related")
+    loanable = django_filters.CharFilter(method="filter_child_of_related")
+    media = django_filters.CharFilter(method="filter_child_of_related")
+    page = django_filters.CharFilter(method="filter_child_of_related")
+    product = django_filters.CharFilter(method="filter_child_of_related")
+    role = django_filters.CharFilter(method="filter_child_of_related")
+
+    def filter_child_of_related(self, queryset, value, *args, **kwargs):
+        model = Tag.LINKED_TO_MODEL.get(value, None)
+        if model is None:
+            return queryset
+
+        try:
+            instance = model.objects.get(pk=args[0])
+            parent = get_parent_object(instance)
+            queryset = queryset.filter(
+                Q(scoped_to_model="global")
+                | Q(
+                    scoped_to_model=Namespace.SCOPED_TO_MODELS_REV[parent.__class__],
+                    scoped_to_pk=parent.id,
+                )
+            )
+        except model.DoesNotExist:
+            pass
+
+        return queryset
+
+    class Meta:
+        model = Namespace
+        fields = ("scoped_to_model", "scoped_to_pk")
+
+
+# for model in Tag.LINKED_TO_MODEL.keys():
+#     setattr(NamespaceFilter, model, NamespaceFilter._default_search_field)
+#     print(model)
+
+
 """
 To create a namespace : 
 - either be an admin and create a global scope
@@ -30,8 +72,7 @@ To create a namespace :
 class NamespaceViewSet(viewsets.ModelViewSet):
     queryset = Namespace.objects.all()
     serializer_class = NamespaceSerializer
-
-    filterset_fields = ("scoped_to_model", "scoped_to_pk")
+    filterset_class = NamespaceFilter
     permission_classes = (NamespacePermission,)
 
     def create(self, request, *args, **kwargs):

@@ -51,7 +51,9 @@ export const AssociationSidebar = ({ association }) => {
                         Paramètres
                     </SidebarItem>
                 )}
-                <MarketSubNavbar association={association} />
+                {association.myRole.permissions.includes("marketplace") && (
+                    <MarketSubNavbar association={association} />
+                )}
             </Sidebar>
         );
     }
