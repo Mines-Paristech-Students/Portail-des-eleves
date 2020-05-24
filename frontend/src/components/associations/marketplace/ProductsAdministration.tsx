@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import { Product } from "./common/Product";
 import { Link } from "react-router-dom";
 import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
-import { SidebarInputSearch } from "../../utils/SidebarInputSearch";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
 

@@ -115,7 +115,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/comptoir`,

@@ -5,7 +5,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework.filters import SearchFilter
+from rest_framework import viewsets, status, filters
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -93,6 +94,13 @@ class TransactionViewSet(
     permission_classes = (TransactionPermission,)
 
     filter_fields = ("product", "status", "buyer", "date")
+    search_fields = ("product__name",)
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
 
     def get_queryset(self):
         """The user has access to all of their transactions and to the transactions of every marketplace they are an

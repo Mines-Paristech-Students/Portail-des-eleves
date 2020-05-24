@@ -10,7 +10,7 @@ import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
-import { SidebarInputSearch } from "../../utils/SidebarInputSearch";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
 import { Card } from "react-bootstrap";
 
