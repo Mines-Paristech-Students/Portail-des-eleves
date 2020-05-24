@@ -5,7 +5,6 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
 from rest_framework import viewsets, status, filters
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response

@@ -61,7 +61,6 @@ export const Pagination = ({
         config
     );
 
-
     // When we change the query params there my be a different number of
     // results. Thus we need when the key change, to reset the page to 1.
     // However we shouldn't do it before the key is initialize, hence the
@@ -75,7 +74,7 @@ export const Pagination = ({
             }
             setPrevApiKey(apiKeyJSON);
         }
-    });
+    }, [apiKey, prevApiKey]);
 
     useEffect(() => {
         if (data && data.totalPages) {
