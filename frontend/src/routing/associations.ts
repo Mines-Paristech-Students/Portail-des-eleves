@@ -11,95 +11,147 @@ import { AssociationFilesystemDetail } from "../components/associations/medias/D
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
 import { AssociationEventList } from "../components/associations/events/list_events/ListEvents";
+import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
 import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
+import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
+import { Association } from "../models/associations/association";
+import { Route } from "./global";
 
-export const routes = (association) => [
+type AssociationRoute = Route & {
+    props: object;
+    defaultLayout: boolean;
+};
+
+/**
+ * Association routes are like common routes, with  one additional parameter,
+ * which is `defaultLayout`. If `defaultLayout` is `true`, the `component` will
+ * be automatically be wrapped in an `AssociationLayout`, which includes a sidebar
+ * by default. If it's `false` it will not.
+ * You may want to take advantage of it if :
+ * - you want a custom sidebar, in that case you'll wrap your component with
+ * `AssociationLayout` manually
+ * - you don't want a sidebar at all, in that case you can organise your code as
+ * usual
+ */
+export const routes: (association: Association) => AssociationRoute[] = (
+    association
+) => [
     {
         path: `/`,
         component: AssociationHome,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
         path: `/evenements`,
         component: AssociationEventList,
         exact: true,
         props: { association: association },
+        defaultLayout: false,
     },
     {
-        path: `/pages/new`,
+        path: `/pages/nouvelle`,
         component: AssociationCreatePage,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
         path: `/pages/:pageId`,
         component: AssociationShowPage,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/pages/:pageId/edit`,
+        path: `/pages/:pageId/modifier`,
         component: AssociationEditPage,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
 
     {
-        path: `/files`,
+        path: `/fichiers`,
         component: AssociationFilesystemList,
         exact: true,
         props: { association: association },
+        defaultLayout: false,
     },
     {
-        path: `/files/upload`,
+        path: `/fichiers/upload`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/files/:fileId`,
+        path: `/fichiers/:fileId`,
         component: AssociationFilesystemDetail,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/files/:fileId/edit`,
+        path: `/fichiers/:fileId/modifier`,
         component: AssociationFilesystemEdit,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
 
     {
-        path: `/marketplace`,
+        path: `/magasin`,
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/marketplace/history`,
+        path: `/magasin/historique`,
         component: AssociationMarketplaceHistory,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
+
     {
-        path: `/marketplace/orders`,
+        path: `/magasin/commandes`,
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/marketplace/counter`,
+        path: `/magasin/comptoir`,
         component: AssociationMarketplaceCounter,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/marketplace/products`,
+        path: `/magasin/produits`,
         component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/produits/:productId/modifier`,
+        component: AssociationMarketplaceProductEdit,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+
+    {
+        path: `/parametres`,
+        component: AssociationSettings,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
     },
 ];

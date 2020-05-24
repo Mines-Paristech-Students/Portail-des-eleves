@@ -1,5 +1,9 @@
 import React from "react";
-import { Sidebar, SidebarItem, SidebarSeparator } from "../Sidebar";
+import {
+    Sidebar,
+    SidebarItem,
+    SidebarSeparator,
+} from "../utils/sidebar/Sidebar";
 
 export const PollsSidebar = ({
     isStaff,

@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card";
 import { Media } from "../../../models/associations/media";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { Loading } from "../../utils/Loading";
+import { ErrorMessage } from "../../utils/ErrorPage";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -15,7 +16,10 @@ export const AssociationFilesystemDetail = ({ association }) => {
     );
 
     if (status === "loading") return <Loading />;
-    else if (status === "error") return `Something went wrong: ${error}`;
+    else if (status === "error")
+        return (
+            <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
+        );
     else if (media) {
         let preview;
         if (media.type.startsWith("image")) {
@@ -29,10 +33,10 @@ export const AssociationFilesystemDetail = ({ association }) => {
         }
 
         let editButton;
-        if (association.myRole.mediaPermission) {
+        if (association.myRole.permissions.includes("media")) {
             editButton = (
                 <Link
-                    to={`/associations/${association.id}/files/${media.id}/edit`}
+                    to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
                     className={"btn btn-primary float-right"}
                 >
                     Editer
@@ -45,7 +49,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 {editButton}
                 <PageTitle>
                     <Link
-                        to={`/associations/${association.id}/files`}
+                        to={`/associations/${association.id}/fichiers`}
                         className={"text-primary"}
                     >
                         <i className={"fe fe-arrow-left"} />

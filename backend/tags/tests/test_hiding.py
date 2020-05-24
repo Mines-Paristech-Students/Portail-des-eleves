@@ -46,6 +46,8 @@ class HidingTestCase(TagsBaseTestCase):
             instance.save()
         hiding_tag.save()
 
+        super(HidingTestCase, self).setUp()
+
     def switch_17simple_to_first_year(self):
         simple17 = User.objects.get(pk="17simple")
         now = datetime.datetime.now()

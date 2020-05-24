@@ -4,7 +4,11 @@ import {
     PaginatedResponse,
     useBetterQuery,
 } from "../../services/apiService";
-import { Sidebar, SidebarItem, SidebarSeparator } from "../Sidebar";
+import {
+    Sidebar,
+    SidebarItem,
+    SidebarSeparator,
+} from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
@@ -34,18 +38,28 @@ export const AssociationSidebar = ({ association }) => {
                 </SidebarItem>
                 <SidebarItem
                     icon={"file"}
-                    to={`/associations/${association.id}/files`}
+                    to={`/associations/${association.id}/fichiers`}
                 >
                     Fichiers
                 </SidebarItem>
                 <SidebarItem
                     icon={"shopping-cart"}
-                    to={`/associations/${association.id}/marketplace`}
+                    to={`/associations/${association.id}/magasin`}
                     exact={false}
                 >
                     Magasin
                 </SidebarItem>
-                <MarketSubNavbar association={association} />
+                {association.myRole.permissions.includes("administration") && (
+                    <SidebarItem
+                        icon={"settings"}
+                        to={`/associations/${association.id}/parametres`}
+                    >
+                        Paramètres
+                    </SidebarItem>
+                )}
+                {association.myRole.permissions.includes("marketplace") && (
+                    <MarketSubNavbar association={association} />
+                )}
             </Sidebar>
         );
     }
@@ -82,31 +96,31 @@ const AddPageItem = ({ association }) => {
 const MarketSubNavbar = ({ association }) => {
     const location = useLocation();
     return location.pathname.startsWith(
-        `/associations/${association.id}/marketplace`
+        `/associations/${association.id}/magasin`
     ) ? (
         <>
             <SidebarSeparator />
             <SidebarItem
                 icon={"home"}
-                to={`/associations/${association.id}/marketplace`}
+                to={`/associations/${association.id}/magasin`}
             >
                 Accueil
             </SidebarItem>
             <SidebarItem
                 icon={"dollar-sign"}
-                to={`/associations/${association.id}/marketplace/counter`}
+                to={`/associations/${association.id}/magasin/comptoir`}
             >
                 Comptoir
             </SidebarItem>
             <SidebarItem
                 icon={"book-open"}
-                to={`/associations/${association.id}/marketplace/orders`}
+                to={`/associations/${association.id}/magasin/commandes`}
             >
                 Commandes
             </SidebarItem>
             <SidebarItem
                 icon={"settings"}
-                to={`/associations/${association.id}/marketplace/products`}
+                to={`/associations/${association.id}/magasin/produits`}
             >
                 Produits
             </SidebarItem>

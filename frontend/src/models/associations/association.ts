@@ -1,7 +1,6 @@
 import { Marketplace } from "./marketplace";
 import { Library } from "./library";
 import { Page } from "./page";
-import { Role } from "./role";
 
 export interface Association {
     id: string;
@@ -11,5 +10,12 @@ export interface Association {
     pages: Page[];
     marketplace: Marketplace;
     library: Library;
-    myRole: Role;
+    myRole?: {
+        id: string;
+        role: string;
+        rank: number;
+        startDate: Date;
+        endDate?: Date;
+        permissions: string[];
+    };
 }

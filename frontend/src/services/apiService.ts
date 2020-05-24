@@ -6,7 +6,6 @@ import {
     usePaginatedQuery,
     useQuery,
 } from "react-query";
-import { events } from "./api/events";
 import { pages } from "./api/pages";
 import { news } from "./api/news";
 import { medias } from "./api/medias";
@@ -40,24 +39,20 @@ export function unwrap<T>(promise): Promise<T> {
     });
 }
 
-/**
- * Transform a pair key / value into a `key=value` string.
- * The value should be a number, a string or a boolean. A boolean value will be transformed into either `true` or `false`.
- */
-const toUrlParam = (key: string, value: boolean | number | string): string =>
-    `${key}=${
-        typeof value === "string" || typeof value === "number"
-            ? value
-            : value
-            ? "true"
-            : "false"
-    }`;
+type UrlParam =
+    | boolean
+    | number
+    | string
+    | (boolean | number | string)[]
+    | { [key: string]: UrlParam };
 
 /**
  * Transforms an object into URL parameters. The returned string joins the parameters found in the object with '&'
  * and adds '?' at the beginning.
  * The keys and the values of the object are respectively the names and the values of the URL parameters.
- * If an array is passed as a value, the parameter will be repeated for each item.
+ * If an array is passed as a value, the parameter will be repeated for each item of the array.
+ * If an object is passed as a value, its key (in the top `parameters` object) will prefix (with a `__` separator) its
+ * keys.
  * The values should be numbers, strings or booleans. A boolean value will be transformed into either `true` or `false`.
  *
  * Examples:
@@ -70,44 +65,42 @@ const toUrlParam = (key: string, value: boolean | number | string): string =>
  * ```
  * ```
  * toUrlParams({
- *     foo: 42,
- *     piche: ['clic', 'clac', 'cloc']
+ *     foo: true,
+ *     bar: {
+ *         in: "it",
+ *         gte: 3,
+ *     },
+ *     piche: ['clic', 'clac']
  * }
- * == "?foo=42&piche=clic&piche=clac&piche=cloc"
+ * == "?foo=true&bar__in=it&bar__gte=3&piche=clic&piche=clac"
  * ```
  */
-export const toUrlParams = (parameters: {
-    [key: string]:
-        | undefined
-        | null
-        | boolean
-        | number
-        | string
-        | (boolean | number | string)[];
-}) =>
-    "?" +
+export const toUrlParams = (parameters: { [key: string]: UrlParam }): string =>
+    "?" + toUrlParamsAux(parameters);
+
+const toUrlParamsAux = (
+    parameters: {
+        [key: string]: UrlParam;
+    },
+    keyPrefix = ""
+) =>
     // Iterate through the keys.
     Object.getOwnPropertyNames(parameters)
-        .map((key) =>
-            key
-                ? // Return the scalar values or iterate through the array.
-                  typeof parameters[key] === "string" ||
-                  typeof parameters[key] === "number" ||
-                  typeof parameters[key] === "boolean"
-                    ? toUrlParam(
-                          key,
-                          parameters[key] as boolean | number | string
-                      )
-                    : (parameters[key] as (boolean | number | string)[])
-                          .map((value) => toUrlParam(key, value))
-                          .join("&")
-                : ""
-        )
+        .map((key) => {
+            const value = parameters[key];
+
+            return Array.isArray(value)
+                ? // Iterate through the array.
+                  value.map((v) => `${keyPrefix + key}=${v}`).join("&")
+                : typeof value === "object"
+                ? // Recursive call with a new prefix.
+                  toUrlParamsAux(value, keyPrefix + key + "__")
+                : `${keyPrefix + key}=${value}`;
+        })
         .join("&");
 
 export const api = {
     associations: associations,
-    events: events,
     medias: medias,
     news: news,
     pages: pages,

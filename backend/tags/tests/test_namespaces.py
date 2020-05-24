@@ -146,3 +146,24 @@ class TagNamespaceTestCase(TagsBaseTestCase):
             {"scoped_to_model": "association", "scoped_to_pk": "biero"},
         )
         self.assertStatusCode(res, 400)
+
+    def test_get_namespace_for_object(self):
+        self.login("17admin_pdm")
+        res = self.post(
+            "/tags/namespaces/",
+            {"scoped_to_model": "association", "scoped_to_pk": "pdm", "name": "farine"},
+        )
+        self.assertStatusCode(res, 201)
+
+        namespace_id = res.data["id"]
+
+        results = self.get("/tags/namespaces/?product=4").data[
+            "results"
+        ]  # get namespaces for a pdm product
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["id"], namespace_id)
+
+        results = self.get("/tags/namespaces/?product=3").data[
+            "results"
+        ]  # get namespaces for a biero product
+        self.assertEqual(len(results), 0)
