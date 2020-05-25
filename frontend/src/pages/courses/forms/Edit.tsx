@@ -38,8 +38,9 @@ export const EditCourseForm = ({ course }) => {
             category: "R",
             form: course.form,
         };
-        questions.push(newQuestion);
-        setQuestions(questions);
+        let copy = questions.slice();
+        copy.push(newQuestion);
+        setQuestions(copy);
     }
 
     if (isLoading) return <p>Chargement des cours</p>;
@@ -60,7 +61,9 @@ export const EditCourseForm = ({ course }) => {
 
             <Button
                 onClick={addQuestion}
-            ></Button>
+            >
+                Ajouter une question
+            </Button>
             {/* Add question */}
         </Container>
     );
