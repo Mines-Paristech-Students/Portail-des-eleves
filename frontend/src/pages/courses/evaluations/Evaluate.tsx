@@ -52,7 +52,6 @@ export const QuestionsForm = ({ questions, course }) => {
                 base.comments[question.id] = "";
             } else {
                 console.log("Got unexpected");
-                console.log(question.category);
             }
         }
 
