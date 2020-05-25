@@ -30,7 +30,7 @@ export const EditCourseForm = ({ course }) => {
     }, [])
 
     const addQuestion = () => {
-        const newQuestion : Question = {
+        const newQuestion: Question = {
             id: -1,
             label: "",
             required: true,
@@ -64,7 +64,7 @@ export const EditCourseForm = ({ course }) => {
             >
                 Ajouter une question
             </Button>
-            {/* Add question */}
+
         </Container>
     );
 }
@@ -77,7 +77,10 @@ export const QuestionEditor = ({ question }) => {
             onSubmit={(values, actions) => { }}
         >
             {(props: FormikProps<Question>) =>
-                <Card as={Form} onSubmit={props.handleSubmit}>
+                <Card
+                    as={Form}
+                    onSubmit={props.handleSubmit}
+                >
                     <Card.Title>
                         <Form.Group>
                             <Form.Control
@@ -101,23 +104,27 @@ export const QuestionEditor = ({ question }) => {
                         />
 
                         <Form.Group className="d-flex justify-content-between">
-                            <Form.Label>Paramètres</Form.Label>
-                            <Form.Check
-                                type="switch"
-                                label="Obligatoire"
-                                id="required"
-                                name="required"
-                                value={String(props.values.required)}
-                                onChange={props.handleChange}
-                            />
-                            <Form.Check
-                                type="switch"
-                                label="Activer"
-                                id="archived"
-                                name="archived"
-                                value={String(props.values.archived)}
-                                onChange={props.handleChange}
-                            />
+                            <Row>
+                                <Form.Label>Paramètres</Form.Label>
+                            </Row>
+                            <Row>
+                                <Form.Check
+                                    type="switch"
+                                    label="Obligatoire"
+                                    id="required"
+                                    name="required"
+                                    value={String(props.values.required)}
+                                    onChange={props.handleChange}
+                                />
+                                <Form.Check
+                                    type="switch"
+                                    label="Activer"
+                                    id="archived"
+                                    name="archived"
+                                    value={String(props.values.archived)}
+                                    onChange={props.handleChange}
+                                />
+                            </Row>
                         </Form.Group>
                     </Card.Body>
 
