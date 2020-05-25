@@ -63,13 +63,13 @@ const EvaluationSidebar = ({ course }) => {
             {(status === "success" && has_voted) &&
                 <SidebarItem
                     icon="pie-chart"
-                    to={""}
+                    to={`/cours/${course.id}/stats`}
                 >
-                    Résultats
+                   Statistiques 
             </SidebarItem>
             }
 
-            {(status === "success" && !has_voted) &&
+            {(status === "success" && ! has_voted) &&
                 <SidebarItem
                     icon="edit-3"
                     to={`/cours/${course.id}/evaluer`}

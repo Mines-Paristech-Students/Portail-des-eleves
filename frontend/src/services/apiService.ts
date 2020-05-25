@@ -10,6 +10,7 @@ import { User } from "../models/user";
 import { Course } from "../models/courses/course"
 import { Form } from "../models/courses/form"
 import { Question } from "../models/courses/question"
+import { StatsQuestion } from "../models/courses/requests";
 
 
 const baseApi = "http://localhost:8000/api/v1";
@@ -213,6 +214,12 @@ export const api = {
             ).then(res => {
                 return res.data.hasVoted;
             }),
+        stats: (courseId) =>
+            unwrap<StatsQuestion[]>(
+                apiService.get(
+                    `/courses/${courseId}/stats`
+                )
+            ),
         forms: {
             list: () => 
                 unwrap<Form[]>(

@@ -1,16 +1,11 @@
 import React, { useContext, useState } from "react";
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Link, Redirect } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/Container";
-import { Form, Button, Col } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
+import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Question } from "../../../models/courses/question"
-import { Course } from "../../../models/courses/course";
-import { useField, Formik, FieldConfig, FormikProps } from "formik";
+import { useField, Formik, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
-import { CourseHome } from "../Home";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -159,50 +154,55 @@ export const QuestionsForm = ({ questions, course }) => {
         return errors;
     }
 
-    if (hasVoted) return <Redirect  to={`/cours/${course.id}`} />
+    if (hasVoted) return <Redirect to={`/cours/${course.id}`} />
     return (
+        <Row>
+            <Formik
+                initialValues={initRating(questions)}
+                onSubmit={submitAnswers}
+                validate={validate}
+            >
+                {(props: FormikProps<Values>) => (
+                    <Form onSubmit={props.handleSubmit}>
+                        {questions.map((question: Question) => {
+                            console.log(props.errors);
+                            let field: JSX.Element = <p>Error</p>;
+                            if (question.category === "R") {
+                                field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
+                            }
+                            else if (question.category === "C") {
+                                field = <CommentField question={question} id={question.id} name="comments" label="First Name" {...props} />;
+                            };
 
-        <Formik
-            initialValues={initRating(questions)}
-            onSubmit={submitAnswers}
-            validate={validate}
-        >
-            {(props: FormikProps<Values>) => (
-                <Form onSubmit={props.handleSubmit}>
-                    {questions.map((question: Question) => {
-                        console.log(props.errors);
-                        let field: JSX.Element = <p>Error</p>;
-                        if (question.category === "R") {
-                            field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;
-                        }
-                        else if (question.category === "C") {
-                            field = <CommentField question={question} id={question.id} name="comments" label="First Name" {...props} />;
-                        };
+                            let bg = 'light';
+                            if (props.errors[question.id] != undefined) bg = 'danger';
 
-                        let bg = 'light';
-                        if (props.errors[question.id] != undefined) bg = 'danger';
-
-                        return (
-                            <Card
-                                key={questions.id}
-                                className="col-md-4 m-4"
-                                text={bg === 'light' ? 'dark' : 'white'}
-                                // @ts-ignore
-                                bg={bg}
-                            >
-                                <Card.Header>{question.label}</Card.Header>
-                                <Card.Body>
-                                    {field}
-                                </Card.Body>
-                            </Card>
-                        )
-                    })}
-                    <Button type="submit" disabled={props.isSubmitting}>
-                        Submit
+                            return (
+                                <Col md={8} key={question.id}>
+                                    <Card
+                                        key={questions.id}
+                                        className="col-md-4 m-4"
+                                        text={bg === 'light' ? 'dark' : 'white'}
+                                        // @ts-ignore
+                                        bg={bg}
+                                    >
+                                        <Card.Header>{question.label}</Card.Header>
+                                        <Card.Body>
+                                            {field}
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )
+                        })}
+                        <Button type="submit" disabled={props.isSubmitting}>
+                            Submit
                     </Button>
-                </Form>
-            )}
-        </Formik>
+                    </Form>
+                )
+                }
+            </Formik>
+        </Row>
+
     )
 };
 
