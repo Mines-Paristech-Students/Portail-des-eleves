@@ -8,7 +8,11 @@ import { useParams } from "react-router-dom";
 
 
 export const EditCourseForm = ({ course }) => {
-    const { formId } = useParams<{formId: string}>();
+    const { data: form, error, status } = useBetterQuery<boolean>(
+        "courses.has_voted",
+        api.courses.has_voted,
+        course.id,
+    );
     {/*  
     TODOs
     1. Fetch questions

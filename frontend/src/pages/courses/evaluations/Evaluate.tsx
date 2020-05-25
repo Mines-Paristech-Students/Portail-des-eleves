@@ -165,7 +165,8 @@ export const QuestionsForm = ({ questions, course }) => {
                 {(props: FormikProps<Values>) => (
                     <Form onSubmit={props.handleSubmit}>
                         {questions.map((question: Question) => {
-                            console.log(props.errors);
+                            if (question.archived) return null;
+
                             let field: JSX.Element = <p>Error</p>;
                             if (question.category === "R") {
                                 field = <RatingField question={question} id={question.id} name="ratings" label="First Name" {...props} />;

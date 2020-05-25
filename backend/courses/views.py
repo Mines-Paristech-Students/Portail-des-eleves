@@ -126,7 +126,7 @@ def list_course_questions(request, course_pk):
     if not form:
         return Response(f"Course with name {course.name} is not binded to any form", status.HTTP_400_BAD_REQUEST)
 
-    questions = Question.objects.filter(form__id=course_pk).all()
+    questions = Question.objects.filter(form__course__id=course_pk).all()
 
     serializer = QuestionSerializer(questions, many=True)
 
@@ -139,4 +139,3 @@ def has_voted(request, course_pk):
     has_voted = Course.objects.filter(id=course_pk, have_voted=current_user).exists()
     
     return JsonResponse({"has_voted": has_voted}, safe=False)
-    
