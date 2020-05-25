@@ -196,7 +196,7 @@ export const QuestionsForm = ({ questions, course }) => {
                         })}
                         <Button type="submit" disabled={props.isSubmitting}>
                             Submit
-                    </Button>
+                        </Button>
                     </Form>
                 )
                 }

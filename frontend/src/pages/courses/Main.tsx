@@ -26,8 +26,6 @@ export const CourseMain = ({ match }) => {
         courseId
     );
 
-    console.log(match.url)
-
     // Generate the routes
     const privateRoutes = routes(course).map(
         ({ path, component, exact, props }) => (

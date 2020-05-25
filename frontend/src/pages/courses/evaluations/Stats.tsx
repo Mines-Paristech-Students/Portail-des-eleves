@@ -12,11 +12,12 @@ export const DigitToStar = (num: number) => {
     let floor = Math.floor(num);
 
     let result: string = "★".repeat(floor);
+    let floating = ceil-num;
 
-    if ((ceil - floor) > 0.75) {
+    if (floating > 0.75) {
         result += "★";
-    } else if ((ceil - floor) > 0.25) {
-        result += "⋆";
+    } else if (floating > 0.25) {
+        result += "⭑";
     }
 
     return result;
@@ -36,7 +37,7 @@ export const StatsCardQuestion = ({ stats }) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Card.Footer>
-                            <ColumnChart data={stats.histogramme} stacked={true} />
+                            <ColumnChart data={stats.histogram} stacked={true} />
                         </Card.Footer>
                     </Accordion.Collapse>
                 </Card>
@@ -60,7 +61,9 @@ export const StatsCourse = ({ course }) => {
             <Container>
                 <PageTitle>Cours</PageTitle>
                 <Row>
-                    <StatsCardQuestion stats={questions[0]} />
+                    {questions.map(question =>
+                        <StatsCardQuestion stats={question} />
+                    )}
                 </Row>
             </Container>
         );

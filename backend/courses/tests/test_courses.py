@@ -19,37 +19,37 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     ALL_USERS = ["17admin", "17simple"]
 
     def endpoint_list(self):
-        return "/courses/"
+        return "/courses/courses/"
 
     def list(self):
         return self.get(self.endpoint_list())
 
     def endpoint_retrieve(self, pk):
-        return f"/courses/{pk}/"
+        return f"/courses/courses/{pk}/"
 
     def retrieve(self, pk):
         return self.get(self.endpoint_retrieve(pk))
 
     def endpoint_create(self):
-        return "/courses/"
+        return "/courses/courses/"
 
     def create(self, data=None, courseat="json", content_type="application/json"):
         return self.post(self.endpoint_create(), data, courseat)
 
     def endpoint_update(self, pk):
-        return f"/courses/{pk}/"
+        return f"/courses/courses/{pk}/"
 
     def update(self, pk, data=None, courseat="json", content_type="application/json"):
         return self.patch(self.endpoint_update(pk), data, courseat)
 
     def endpoint_destroy(self, pk):
-        return f"/courses/{pk}/"
+        return f"/courses/courses/{pk}/"
 
     def destroy(self, pk, data="", courseat=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk))
 
     def endpoint_avg_ratings(self, pk):
-        return f"/courses/{pk}/avg_ratings/"
+        return f"/courses/courses/{pk}/avg_ratings/"
 
     def avg_ratings(self, pk):
         return self.get(self.endpoint_avg_ratings(pk))
@@ -163,6 +163,8 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     ###############
     # AVG_RATINGS #
     ###############
+
+    # Doesnt work yet
 
     avg_ratings_course =  [
         {

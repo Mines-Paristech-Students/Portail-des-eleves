@@ -65,11 +65,11 @@ const EvaluationSidebar = ({ course }) => {
                     icon="pie-chart"
                     to={`/cours/${course.id}/stats`}
                 >
-                   Statistiques 
+                    Statistiques
             </SidebarItem>
             }
 
-            {(status === "success" && ! has_voted) &&
+            {(status === "success" && !has_voted) &&
                 <SidebarItem
                     icon="edit-3"
                     to={`/cours/${course.id}/evaluer`}
@@ -92,17 +92,20 @@ const FormSidebar = ({ course }) => {
                 Creer un formulaire
             </SidebarItem>
             <SidebarItem
-                icon={"file-plus"}
-                to={"/cours/formulaires"}
-            >
-                Modifier un formulaire
-            </SidebarItem>
-            <SidebarItem
                 icon={"plus-circle"}
-                to={"edit-3"}
+                to={`/cours/${course.id}/formulaires/lier`}
             >
                 Lier un formulaire
             </SidebarItem>
+
+            {course.form &&
+                <SidebarItem
+                    icon={"file-text"}
+                    to={`/cours/${course.id}/formulaires/editer`}
+                >
+                    Modifier le formulaire
+                </SidebarItem>
+            }
         </SidebarCategory>
     )
 }

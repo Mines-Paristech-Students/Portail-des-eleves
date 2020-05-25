@@ -48,22 +48,33 @@ class Course(models.Model):
     )
 
     @cached_property
-    def avg_ratings(self):
-        query = self.rating.values('question__id')\
-            .filter(question__archived=False)\
+    def stats(self):
+        query = self.rating\
+            .filter(question__form=self.form, question__archived=False)\
+            .values('question__id')\
             .annotate(Avg('value'))\
-            .values('value__avg','question__label', 'question__id')\
+            .values('value__avg', 'question__label', 'question__id')\
             .order_by('question__id')
+
+        def histogram(questionId):
+            values = {}
+            for value in range(1, 6):
+                values[value] = \
+                    self.rating\
+                        .filter(question__id=questionId, value=value)\
+                        .count()
+            return values
 
         return [
             {
                 "id": question["question__id"],
                 "label": question["question__label"],
-                "avg": question["value__avg"],
+                "average": question["value__avg"],
+                # values doesn't group for integers
+                "histogram": histogram(question["question__id"]),
             }
             for question in query
         ]
-
 
 class CourseMedia(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
@@ -125,6 +136,16 @@ class Question(models.Model):
         query = self.rating.values('question__id').annotate(Avg('value'))
         return query[0]["value__avg"]
 
+    @cached_property
+    def histogram(self):
+        # values doesn't group correctly for integers
+        values = dict()
+        for value in range(1, 6):
+            count = self.rating\
+                .filter(value=value)\
+                .count()
+            values[value] = count
+        return values
 
 class Rating(models.Model):
     id = models.AutoField(primary_key=True, unique=True)

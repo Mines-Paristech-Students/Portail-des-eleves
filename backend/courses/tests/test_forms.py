@@ -79,7 +79,6 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     ##########
 
     create_form_data = {
-        "id": 3,
         "name": "maths generic",
     }
 
@@ -89,7 +88,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 403)
         self.assertFalse(
             Form.objects.filter(
-                pk=self.create_form_data["id"]
+                name=self.create_form_data["name"]
             ).exists()
         )
 
@@ -99,9 +98,9 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 201)
 
         self.assertTrue(
-            Form.objects.filter(pk=self.create_form_data["id"]).exists()
+            Form.objects.filter(name=self.create_form_data["name"]).exists()
         )
-        form = Form.objects.get(pk=self.create_form_data["id"])
+        form = Form.objects.get(name=self.create_form_data["name"])
         self.assertEqual(form.name, self.create_form_data["name"])
 
     ##########

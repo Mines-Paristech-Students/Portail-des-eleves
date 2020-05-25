@@ -188,36 +188,46 @@ export const api = {
         list: () =>
             unwrap<Course[]>(
                 apiService.get(
-                    '/courses'
+                    '/courses/courses'
                 )
             ),
         get: courseId =>
             unwrap<Page>(
                 apiService.get(
-                    `/courses/${courseId}`
+                    `/courses/courses/${courseId}`
                 )
             ),
+        save: course => {
+            if (!course.id) {
+                return unwrap<Page>(
+                    apiService.post(`/courses/courses/`, course)
+                );
+            }
+            return unwrap<Page>(
+                apiService.patch(`/courses/courses/${course.id}/`, course)
+            );
+        },
         questions: courseId => 
             unwrap<Question[]>(
                 apiService.get(
-                    `/courses/${courseId}/questions`
+                    `/courses/courses/${courseId}/questions`
                 )
             ),
         submit: (courseId, data) =>
             apiService.post(
-                `/courses/${courseId}/submit`, 
+                `/courses/courses/${courseId}/submit`, 
                 data,
             ),
         has_voted: (courseId, user) =>
             apiService.get(
-                `/courses/${courseId}/has_voted`, 
+                `/courses/courses/${courseId}/has_voted`, 
             ).then(res => {
                 return res.data.hasVoted;
             }),
         stats: (courseId) =>
             unwrap<StatsQuestion[]>(
                 apiService.get(
-                    `/courses/${courseId}/stats`
+                    `/courses/courses/${courseId}/stats`
                 )
             ),
         forms: {
@@ -225,6 +235,13 @@ export const api = {
                 unwrap<Form[]>(
                     apiService.get(
                         `/courses/forms`
+                    )
+                ),
+            create: (name: string) =>
+                unwrap<Form>(
+                    apiService.post(
+                        `courses/forms/`,
+                        {"name" : name},
                     )
                 )
         },

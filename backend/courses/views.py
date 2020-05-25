@@ -46,9 +46,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     # We will need to cache this in the future
     @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
-    def avg_ratings(self, request, pk=None):
+    def stats(self, request, pk=None):
         course = self.get_object()
-        return Response(course.avg_ratings, status.HTTP_200_OK)
+        return Response(course.stats, status.HTTP_200_OK)
 
 
 
