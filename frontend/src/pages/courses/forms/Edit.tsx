@@ -77,10 +77,21 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
     const newToast = useContext(ToastContext);
 
     const formFormik = useFormik({
-        initialValues: { idForm: undefined },
-        validate: (values) => { return (values.idForm ? {} : { idForm: "Obligatoire" }) },
-        onSubmit: (values, {setSubmitting}) => {
-
+        initialValues: { idForm: -1},
+        validate: (values) => { return (values.idForm == -1 ? { idForm: "Obligatoire" } : {}) },
+        onSubmit: (values, { setSubmitting }) => {
+            api.courses.forms
+                .questions.list(values.idForm)
+                .then(forms => {
+                    setForms(forms);
+                    setSubmitting(false);
+                })
+                .catch(err => {
+                    newToast({
+                        message: "Could not fetch questions...",
+                        level: ToastLevel.Error,
+                    })
+                })
         }
     });
 
@@ -89,7 +100,6 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             .list()
             .then(forms => {
                 setForms(forms);
-                setIsLoading(false);
             })
             .catch(err => {
                 newToast({

@@ -244,7 +244,7 @@ export const api = {
                         { "name": name },
                     )
                 ),
-        questions: {
+            questions: {
                 save: (question: Question) => {
                     if (question.id == -1) {
                         return unwrap<Page>(
@@ -255,7 +255,13 @@ export const api = {
                     return unwrap<Page>(
                         apiService.patch(`/courses/questions/${question.id}/`, question)
                     );
-                }
+                },
+                list: (id: number) =>
+                    unwrap<Question[]>(
+                        apiService.get(
+                            `courses/forms/${id}/questions`,
+                        )
+                    ),
             }
         },
     },
