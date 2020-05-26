@@ -15,8 +15,6 @@ export const EditCourseForm = ({ course }) => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
-    console.log(course.form);
-
     useEffect(() => {
         api.courses.forms.questions
             .list(course.form)
@@ -49,21 +47,21 @@ export const EditCourseForm = ({ course }) => {
 
     return (
         <Container>
-            <PageTitle>Cours</PageTitle>
+            <PageTitle>
+                Cours
 
-            <FetchQuestionsModal course={course} />
+                    <FetchQuestionsModal course={course} />
+            </PageTitle>
 
             <Row>
                 {questions && questions.map(question =>
-                    <Col sm={6}>
+                    <Col sm={6} id={"Col" + question.id}>
                         <QuestionEditor question={question} />
                     </Col>
                 )}
             </Row>
 
-            <Button
-                onClick={addQuestion}
-            >
+            <Button onClick={addQuestion}>
                 Ajouter une question
             </Button>
 
@@ -184,7 +182,7 @@ const FetchQuestionsModal = ({ course }) => {
                             >
                                 <option selected value={-1}> -- Formulaire -- </option>
                                 {forms.map((form) =>
-                                    <option value={form.id}>{form.name}</option>
+                                    <option value={form.id} id={"option_form" + form.id}>{form.name}</option>
                                 )}
                             </Form.Control>
 
@@ -203,7 +201,7 @@ const FetchQuestionsModal = ({ course }) => {
                             </ListGroup>
                         </Modal.Body>
 
-                        <Modal.Footer>
+                        <Modal.Footer className="d-flex justify-content-around">
                             <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Ajouter</Button>
                             <Button variant="secondary" onClick={() => setIsFetching(false)}>Fermer</Button>
                         </Modal.Footer>
@@ -280,7 +278,7 @@ export const QuestionEditor = ({ question }) => {
                         onSubmit={props.handleSubmit}
                         border={status}
                     >
-                        <Card.Title>
+                        <Card.Header>
                             <Form.Group>
                                 <Form.Control
                                     placeholder="Intitulé"
@@ -294,19 +292,18 @@ export const QuestionEditor = ({ question }) => {
                                     <Form.Control.Feedback type="invalid">{props.errors.label}</Form.Control.Feedback>
                                 }
                             </Form.Group>
-                        </Card.Title>
+                        </Card.Header>
 
                         <Card.Body>
-                            {/* {question.id &&
+                            {!question.id &&
                                 <MyRadioField
                                     label="Catégorie"
                                     id={"category" + question.id}
                                     name="category"
                                     mapping={{ "Commentaire": "C", "Notation": "R" }}
-                                    value={props.values.category}
                                     {...props}
                                 />
-                            } */}
+                            }
 
                             <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>
@@ -315,23 +312,24 @@ export const QuestionEditor = ({ question }) => {
                                     label="Obligatoire"
                                     id={"required" + question.id}
                                     name="required"
-                                    value={String(props.values.required)}
                                     onBlur={props.handleBlur}
                                     onChange={props.handleChange}
+                                    checked={props.values.required}
                                 />
+                                <br />
                                 <Form.Check
                                     type="switch"
                                     label="Activer"
                                     id={"archived" + question.id}
                                     name="archived"
-                                    value={String(props.values.archived)}
                                     onBlur={props.handleBlur}
                                     onChange={props.handleChange}
+                                    checked={props.values.archived}
                                 />
                             </Form.Group>
                         </Card.Body>
 
-                        <Card.Footer>
+                        <Card.Footer className="d-flex justify-content-around">
                             <Button type="submit" disabled={props.isSubmitting}>
                                 Valider
                                 {props.isSubmitting &&
@@ -369,7 +367,6 @@ const MyRadioField = ({ label, mapping, ...props }) => {
                     value={mapping[key]}
                     checked={field.value === mapping[key]}
                     onChange={() => helper.setValue(mapping[key])}
-                    onBlur={helper.setTouched(true)}
                 />
             )}
         </Form.Group>
