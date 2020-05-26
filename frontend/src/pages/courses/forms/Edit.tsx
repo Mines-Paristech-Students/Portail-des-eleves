@@ -97,6 +97,10 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             })
     }, [])
 
+    useEffect(() => {
+        /* Check value */
+    }, [formFormik.values.idForm])
+
     return (
         <>
             <Button
