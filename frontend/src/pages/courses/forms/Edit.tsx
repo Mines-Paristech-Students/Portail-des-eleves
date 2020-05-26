@@ -31,6 +31,7 @@ export const EditCourseForm = ({ course }) => {
 
     const addQuestion = () => {
         const newQuestion: Question = {
+            id: -1,
             label: "",
             required: true,
             archived: false,
@@ -70,77 +71,89 @@ export const EditCourseForm = ({ course }) => {
 
 enum QuestionStatus {
     Clear = "light",
-    Modified = "warning", 
-    Submitting = "danger", 
-    Failed = "primary",
+    Modified = "primary",
+    Error = "danger",
+    NotValid = "warning",
+    Submitting = "info",
+    Success = "success",
 }
 
 export const QuestionEditor = ({ question }) => {
     const [status, setStatus] = useState<QuestionStatus>(QuestionStatus.Clear);
+    const newToast = useContext(ToastContext);
 
-    const onSubmit = (values, {setSubmitting}) => {
+    const onSubmit = (question, { setSubmitting }) => {
+        setStatus(QuestionStatus.Submitting);
+
         api.courses
-            .save(values)
+            .save(question)
             .then(res => {
                 newToast({
-                    message: "A voté !",
+                    message: `Updated questions ${question.label}`,
                     level: ToastLevel.Success,
                 });
 
                 setSubmitting(false);
-                setHasVoted(true);
+                setStatus(QuestionStatus.Success);
             })
             .catch(err => {
                 newToast({
                     message: err.response.status + " " + err.response.data,
                     level: ToastLevel.Error,
                 });
+                setStatus(QuestionStatus.Error);
             });
+    }
+
+    const validate = (question) => {
+        if (question.label === "") return {label: "Ne peut pas etre vide"};
+        return {};
     }
 
     return (
         <Formik
-            initialValues={question}   
-            onSubmit={(values, actions) => { }}
+            initialValues={question}
+            validate={validate}
+            onSubmit={onSubmit}
         >
             {(props: FormikProps<Question>) => {
                 let isTouched = false;
                 Object.keys(props.touched).forEach((key) => {
-                    if (props.touched[key]) isTouched=true;
+                    if (props.touched[key]) isTouched = true;
                 });
-                if (isTouched && status!=QuestionStatus.Submitting) setStatus(QuestionStatus.Modified);
+                if (isTouched && status != QuestionStatus.Submitting) setStatus(QuestionStatus.Modified);
 
                 return (
-                <Card
-                    as={Form}
-                    onSubmit={props.handleSubmit}
-                    border={status}
-                >
-                    <Card.Title>
-                        <Form.Group>
-                            <Form.Control
-                                placeholder="Intitulé"
-                                id="label"
-                                name="label"
-                                value={props.values.label}
-                                onChange={props.handleChange}
-                            />
-                        </Form.Group>
-                    </Card.Title>
+                    <Card
+                        as={Form}
+                        onSubmit={props.handleSubmit}
+                        border={status}
+                    >
+                        <Card.Title>
+                            <Form.Group>
+                                <Form.Control
+                                    placeholder="Intitulé"
+                                    id="label"
+                                    name="label"
+                                    value={props.values.label}
+                                    onChange={props.handleChange}
+                                />
+                            </Form.Group>
+                        </Card.Title>
 
-                    <Card.Body>
-                        {question.id &&
-                        <MyRadioField
-                            label="Catégorie"
-                            id="category"
-                            name="category"
-                            mapping={{ "Commentaire": "C", "Notation": "R" }}
-                            value={props.values.category}
-                            {...props}
-                        />
-                        }
+                        <Card.Body>
+                            {question.id == -1 &&
+                                <MyRadioField
+                                    label="Catégorie"
+                                    id="category"
+                                    name="category"
+                                    mapping={{ "Commentaire": "C", "Notation": "R" }}
+                                    value={props.values.category}
+                                    {...props}
+                                />
+                            }
 
-                        <Form.Group>
+                            <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>
                                 <Form.Check
                                     type="switch"
@@ -158,15 +171,16 @@ export const QuestionEditor = ({ question }) => {
                                     value={String(props.values.archived)}
                                     onChange={props.handleChange}
                                 />
-                        </Form.Group>
-                    </Card.Body>
+                            </Form.Group>
+                        </Card.Body>
 
-                    <Card.Footer>
-                        <Button type="submit">Valider</Button>
-                        <Button >Reset</Button>
-                    </Card.Footer>
-                </Card>
-                )}}
+                        <Card.Footer>
+                            <Button type="submit">Valider</Button>
+                            <Button >Reset</Button>
+                        </Card.Footer>
+                    </Card>
+                )
+            }}
         </Formik >
     )
 };

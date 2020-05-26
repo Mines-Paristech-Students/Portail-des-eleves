@@ -46,6 +46,7 @@ export const QuestionsForm = ({ questions, course }) => {
         };
         for (let i in questions) {
             let question: Question = questions[i];
+            if 
             if (question.category === 'R') {
                 base.ratings[question.id] = -1;
             } else if (question.category === 'C') {
