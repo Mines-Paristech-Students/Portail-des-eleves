@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Modal, Container, Card, Spinner } from "react-b
 import { Form as FormModel } from "../../../models/courses/form"
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Formik, useFormik, useField, FormikProps } from "formik";
+import { Field, Formik, useFormik, useField, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { useParams } from "react-router-dom";
 import { Question } from "../../../models/courses/question";
@@ -70,20 +70,20 @@ export const EditCourseForm = ({ course }) => {
 }
 
 const FetchQuestionsModal = ({ questions, setQuestions }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFetching, setIsFetching] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [forms, setForms] = useState<FormModel[]>([]);
     const [questionsForm, setQuestionsForm] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
     const formFormik = useFormik({
-        initialValues: { idForm: -1},
+        initialValues: { idForm: -1 },
         validate: (values) => { return (values.idForm == -1 ? { idForm: "Obligatoire" } : {}) },
         onSubmit: (values, { setSubmitting }) => {
             api.courses.forms
                 .questions.list(values.idForm)
-                .then(forms => {
-                    setForms(forms);
+                .then(_questions => {
+                    setQuestionsForm(_questions);
                     setSubmitting(false);
                 })
                 .catch(err => {
@@ -100,6 +100,7 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             .list()
             .then(forms => {
                 setForms(forms);
+                setIsLoading(false);
             })
             .catch(err => {
                 newToast({
@@ -125,7 +126,7 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             >
                 <Modal.Header>
                     <Modal.Title>Récupération</Modal.Title>
-                    {isLoading &&
+                    {isLoading || formFormik.isSubmitting &&
                         <Spinner
                             as="span"
                             animation="border"
@@ -146,17 +147,58 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
                             onChange={formFormik.handleChange}
                             value={formFormik.values.idForm}
                         >
-                            <option disabled selected> -- Formulaire -- </option>
-                            {forms.map((form) => {
+                            <option disabled selected value={-1}> -- Formulaire -- </option>
+                            {forms.map((form) =>
                                 <option value={form.id}>{form.name}</option>
-                            })}
+                            )}
                         </Form.Control>
+                        <Button type="submit" disabled={formFormik.isSubmitting}>Choisir</Button>
                     </Form>
-                    <Button type="submit" disabled={formFormik.isSubmitting}></Button>
+
+                    <QuestionPicker questions={questions} />
+
                 </Modal.Body>
 
             </Modal>
         </>
+    )
+}
+
+const QuestionPicker = ({ questions }) => {
+    return (
+        <Formik
+            initialValues={{ questions: questions, }}
+            onSubmit={(values) => {  }}
+            render={({ values, setFieldValue }) => (
+                <Form>
+                    <Field
+                        component="select"
+                        name="names"
+                        // You need to set the new field value
+                        onChange={evt =>
+                            setFieldValue(
+                                "names",
+                                [].slice
+                                    .call(evt.target.selectedOptions)
+                                    // @ts-ignore
+                                    .map(option => option.value)
+                            )
+                        }
+                        multiple={true}
+                    >
+                        {questions.map(question => (
+                            <option key={question.id} value={question}>
+                                {question.label}
+                            </option>
+                        ))}
+                    </Field>
+
+                    {/* just printing out the values */}
+                    <hr />
+                    <strong>{JSON.stringify(values)}</strong>
+                </Form>
+            )}
+        />
     )
 }
 
