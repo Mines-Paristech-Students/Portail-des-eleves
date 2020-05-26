@@ -49,6 +49,7 @@ export const EditCourseForm = ({ course }) => {
         <Container>
             <PageTitle>Cours</PageTitle>
 
+            <FetchQuestionsModal questions={questions} setQuestions={setQuestions} />
 
             <Row>
                 {questions && questions.map(question =>
@@ -68,8 +69,16 @@ export const EditCourseForm = ({ course }) => {
     );
 }
 
-const FetchQuestionsModal = ({ questions }) => {
+const FetchQuestionsModal = ({ questions, setQuestions }) => {
     const [isFetching, setIsFetching] = useState<boolean>(true);
+    const newToast = useContext(ToastContext);
+
+    const formFormik = useFormik({
+        initialValues: { idForm: undefined },
+        validate: (values) => { return (values.idForm ? {} : { idForm: "Obligatoire" }) },
+        onSubmit: (values) => {
+        }
+    });
 
     return (
         <>
@@ -80,11 +89,33 @@ const FetchQuestionsModal = ({ questions }) => {
                 Récupérer d'un autre formulaire
             </Button>
 
-            {isFetching &&
-                <Modal>
+            <Modal
+                show={isFetching}
+                onHide={() => setIsFetching(false)}
+            >
+                <Modal.Header>
+                    <Modal.Title>Récupération</Modal.Title>
+                    <Form onSubmit={formFormik.handleSubmit}>
+                        <Form.Label>Source</Form.Label>
+                        <Form.Control
+                            as="select"
+                            id="idForm"
+                            name="idForm"
+                            onChange={formFormik.handleChange}
+                            value={formFormik.values.idForm}
+                        >
+                            <option disabled selected> -- Formulaire -- </option>
+                            <option value="plop">plop</option>
+                            <option value="plip">plip</option>
+                        </Form.Control>
+                    </Form>
+                </Modal.Header>
 
-                </Modal>
-            }
+                <Modal.Body>
+                    <p>{formFormik.values.idForm}</p>
+                </Modal.Body>
+
+            </Modal>
         </>
     )
 }
