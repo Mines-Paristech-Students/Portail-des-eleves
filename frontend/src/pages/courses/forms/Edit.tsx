@@ -106,12 +106,16 @@ export const QuestionEditor = ({ question }) => {
     }
 
     const validate = (question) => {
-        if (question.label === "") return {label: "Ne peut pas etre vide"};
+        if (question.label === "") {
+            setStatus(QuestionStatus.NotValid);
+            return { label: "Ne peut pas etre vide" };
+        }
         return {};
     }
 
     return (
         <Formik
+            id={"formik" + question.id}
             initialValues={question}
             validate={validate}
             onSubmit={onSubmit}
@@ -121,7 +125,8 @@ export const QuestionEditor = ({ question }) => {
                 Object.keys(props.touched).forEach((key) => {
                     if (props.touched[key]) isTouched = true;
                 });
-                if (isTouched && status != QuestionStatus.Submitting) setStatus(QuestionStatus.Modified);
+                if (isTouched && status == QuestionStatus.Clear)
+                    setStatus(QuestionStatus.Modified);
 
                 return (
                     <Card
@@ -136,8 +141,12 @@ export const QuestionEditor = ({ question }) => {
                                     id="label"
                                     name="label"
                                     value={props.values.label}
+                                    onBlur={props.handleBlur}
                                     onChange={props.handleChange}
                                 />
+                                {props.touched.label && props.errors.label &&
+                                    <Form.Control.Feedback type="invalid">{props.errors.label}</Form.Control.Feedback>
+                                }
                             </Form.Group>
                         </Card.Title>
 
@@ -145,7 +154,7 @@ export const QuestionEditor = ({ question }) => {
                             {question.id == -1 &&
                                 <MyRadioField
                                     label="Catégorie"
-                                    id="category"
+                                    id={"category" + question.id}
                                     name="category"
                                     mapping={{ "Commentaire": "C", "Notation": "R" }}
                                     value={props.values.category}
@@ -158,25 +167,27 @@ export const QuestionEditor = ({ question }) => {
                                 <Form.Check
                                     type="switch"
                                     label="Obligatoire"
-                                    id="required"
+                                    id={"required" + question.id}
                                     name="required"
                                     value={String(props.values.required)}
+                                    onBlur={props.handleBlur}
                                     onChange={props.handleChange}
                                 />
                                 <Form.Check
                                     type="switch"
                                     label="Activer"
-                                    id="archived"
+                                    id={"archived" + question.id}
                                     name="archived"
                                     value={String(props.values.archived)}
+                                    onBlur={props.handleBlur}
                                     onChange={props.handleChange}
                                 />
                             </Form.Group>
                         </Card.Body>
 
                         <Card.Footer>
-                            <Button type="submit">Valider</Button>
-                            <Button >Reset</Button>
+                            <Button type="submit" disabled={props.isSubmitting}>Valider</Button>
+                            <Button onClick={props.handleReset}>Reset</Button>
                         </Card.Footer>
                     </Card>
                 )
@@ -189,11 +200,6 @@ const MyRadioField = ({ label, mapping, ...props }) => {
     // @ts-ignore
     const [field, meta, helper] = useField(props);
 
-    const setValue = (value) => {
-        helper.setValue(value);
-        helper.setTouched(true);
-    };
-
     if (meta.touched && meta.error) return <p>{meta.error}</p>
     return (
         <Form.Group>
@@ -205,7 +211,8 @@ const MyRadioField = ({ label, mapping, ...props }) => {
                     label={key}
                     value={mapping[key]}
                     checked={field.value === mapping[key]}
-                    onChange={() => setValue(mapping[key])}
+                    onChange={() => helper.setValue(mapping[key])}
+                    onBlur={helper.setTouched(true)}
                 />
             )}
         </Form.Group>
