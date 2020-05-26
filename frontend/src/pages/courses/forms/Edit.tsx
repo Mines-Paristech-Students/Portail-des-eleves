@@ -78,7 +78,8 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
     const formFormik = useFormik({
         initialValues: { idForm: undefined },
         validate: (values) => { return (values.idForm ? {} : { idForm: "Obligatoire" }) },
-        onSubmit: (values) => {
+        onSubmit: (values, {setSubmitting}) => {
+
         }
     });
 
@@ -97,9 +98,6 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             })
     }, [])
 
-    useEffect(() => {
-        /* Check value */
-    }, [formFormik.values.idForm])
 
     return (
         <>
@@ -142,7 +140,7 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
                             <option value="plip">plip</option>
                         </Form.Control>
                     </Form>
-                    <p>{formFormik.values.idForm}</p>
+                    <Button type="submit" disabled={formFormik.isSubmitting}></Button>
                 </Modal.Body>
 
             </Modal>

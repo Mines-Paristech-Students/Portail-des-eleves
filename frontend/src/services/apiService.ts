@@ -218,7 +218,7 @@ export const api = {
                 `/courses/courses/${courseId}/submit`,
                 data,
             ),
-        has_voted: (courseId, user) =>
+        has_voted: (courseId) =>
             apiService.get(
                 `/courses/courses/${courseId}/has_voted`,
             ).then(res => {
