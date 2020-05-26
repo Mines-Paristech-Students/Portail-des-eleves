@@ -16,7 +16,7 @@ export const EditCourseForm = ({ course }) => {
 
     useEffect(() => {
         api.courses
-            .questions(course.id)
+            .list_questions(course.id)
             .then(questions => {
                 setQuestions(questions);
                 setIsLoading(false);
@@ -31,7 +31,6 @@ export const EditCourseForm = ({ course }) => {
 
     const addQuestion = () => {
         const newQuestion: Question = {
-            id: -1,
             label: "",
             required: true,
             archived: false,
@@ -69,17 +68,53 @@ export const EditCourseForm = ({ course }) => {
     );
 }
 
+enum QuestionStatus {
+    Clear = "light",
+    Modified = "warning", 
+    Submitting = "danger", 
+    Failed = "primary",
+}
+
 export const QuestionEditor = ({ question }) => {
+    const [status, setStatus] = useState<QuestionStatus>(QuestionStatus.Clear);
+
+    const onSubmit = (values, {setSubmitting}) => {
+        api.courses
+            .save(values)
+            .then(res => {
+                newToast({
+                    message: "A voté !",
+                    level: ToastLevel.Success,
+                });
+
+                setSubmitting(false);
+                setHasVoted(true);
+            })
+            .catch(err => {
+                newToast({
+                    message: err.response.status + " " + err.response.data,
+                    level: ToastLevel.Error,
+                });
+            });
+    }
 
     return (
         <Formik
-            initialValues={question}
+            initialValues={question}   
             onSubmit={(values, actions) => { }}
         >
-            {(props: FormikProps<Question>) =>
+            {(props: FormikProps<Question>) => {
+                let isTouched = false;
+                Object.keys(props.touched).forEach((key) => {
+                    if (props.touched[key]) isTouched=true;
+                });
+                if (isTouched && status!=QuestionStatus.Submitting) setStatus(QuestionStatus.Modified);
+
+                return (
                 <Card
                     as={Form}
                     onSubmit={props.handleSubmit}
+                    border={status}
                 >
                     <Card.Title>
                         <Form.Group>
@@ -94,6 +129,7 @@ export const QuestionEditor = ({ question }) => {
                     </Card.Title>
 
                     <Card.Body>
+                        {question.id &&
                         <MyRadioField
                             label="Catégorie"
                             id="category"
@@ -102,12 +138,10 @@ export const QuestionEditor = ({ question }) => {
                             value={props.values.category}
                             {...props}
                         />
+                        }
 
-                        <Form.Group className="d-flex justify-content-between">
-                            <Row>
+                        <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>
-                            </Row>
-                            <Row>
                                 <Form.Check
                                     type="switch"
                                     label="Obligatoire"
@@ -124,15 +158,15 @@ export const QuestionEditor = ({ question }) => {
                                     value={String(props.values.archived)}
                                     onChange={props.handleChange}
                                 />
-                            </Row>
                         </Form.Group>
                     </Card.Body>
 
                     <Card.Footer>
                         <Button type="submit">Valider</Button>
+                        <Button >Reset</Button>
                     </Card.Footer>
                 </Card>
-            }
+                )}}
         </Formik >
     )
 };
@@ -143,6 +177,7 @@ const MyRadioField = ({ label, mapping, ...props }) => {
 
     const setValue = (value) => {
         helper.setValue(value);
+        helper.setTouched(true);
     };
 
     if (meta.touched && meta.error) return <p>{meta.error}</p>

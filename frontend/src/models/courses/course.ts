@@ -1,7 +1,7 @@
 import { Form } from "./form"
 
 export interface Course {
-    id: number;
+    id?: number;
     name: string;
     form: Form;
 }

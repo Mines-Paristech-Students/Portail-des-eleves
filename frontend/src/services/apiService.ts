@@ -207,7 +207,7 @@ export const api = {
                 apiService.patch(`/courses/courses/${course.id}/`, course)
             );
         },
-        questions: courseId =>
+        list_questions: courseId =>
             unwrap<Question[]>(
                 apiService.get(
                     `/courses/courses/${courseId}/questions`
