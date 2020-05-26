@@ -246,7 +246,7 @@ export const api = {
                 ),
             questions: {
                 save: (question: Question) => {
-                    if (question.id == -1) {
+                    if (question.id) {
                         return unwrap<Page>(
                             apiService.post(`/courses/questions/`, question)
                         );
