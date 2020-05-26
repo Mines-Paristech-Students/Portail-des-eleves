@@ -72,7 +72,8 @@ export const EditCourseForm = ({ course }) => {
 const FetchQuestionsModal = ({ questions, setQuestions }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFetching, setIsFetching] = useState<boolean>(true);
-    const [forms, setForms] = useState<FormModel[]>(true);
+    const [forms, setForms] = useState<FormModel[]>([]);
+    const [questionsForm, setQuestionsForm] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
     const formFormik = useFormik({
@@ -136,8 +137,9 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
                             value={formFormik.values.idForm}
                         >
                             <option disabled selected> -- Formulaire -- </option>
-                            <option value="plop">plop</option>
-                            <option value="plip">plip</option>
+                            {forms.map((form) => {
+                                <option value={form.id}>{form.name}</option>
+                            })}
                         </Form.Control>
                     </Form>
                     <Button type="submit" disabled={formFormik.isSubmitting}></Button>
