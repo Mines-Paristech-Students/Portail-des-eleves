@@ -207,7 +207,7 @@ export const api = {
                 apiService.patch(`/courses/courses/${course.id}/`, course)
             );
         },
-        questions: courseId => 
+        questions: courseId =>
             unwrap<Question[]>(
                 apiService.get(
                     `/courses/courses/${courseId}/questions`
@@ -215,12 +215,12 @@ export const api = {
             ),
         submit: (courseId, data) =>
             apiService.post(
-                `/courses/courses/${courseId}/submit`, 
+                `/courses/courses/${courseId}/submit`,
                 data,
             ),
         has_voted: (courseId, user) =>
             apiService.get(
-                `/courses/courses/${courseId}/has_voted`, 
+                `/courses/courses/${courseId}/has_voted`,
             ).then(res => {
                 return res.data.hasVoted;
             }),
@@ -231,7 +231,7 @@ export const api = {
                 )
             ),
         forms: {
-            list: () => 
+            list: () =>
                 unwrap<Form[]>(
                     apiService.get(
                         `/courses/forms`
@@ -241,9 +241,22 @@ export const api = {
                 unwrap<Form>(
                     apiService.post(
                         `courses/forms/`,
-                        {"name" : name},
+                        { "name": name },
                     )
-                )
+                ),
+        questions: {
+                save: (question: Question) => {
+                    if (!question.id) {
+                        return unwrap<Page>(
+                            apiService.post(`/courses/questions/`, question)
+                        );
+                    }
+
+                    return unwrap<Page>(
+                        apiService.patch(`/courses/questions/${question.id}/`, question)
+                    );
+                }
+            }
         },
     },
 };
