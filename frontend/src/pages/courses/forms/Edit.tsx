@@ -15,9 +15,11 @@ export const EditCourseForm = ({ course }) => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
+    console.log(course.form);
+
     useEffect(() => {
-        api.courses
-            .list_questions(course.id)
+        api.courses.forms.questions
+            .list(course.form)
             .then(questions => {
                 setQuestions(questions);
                 setIsLoading(false);
@@ -32,7 +34,6 @@ export const EditCourseForm = ({ course }) => {
 
     const addQuestion = () => {
         const newQuestion: Question = {
-            id: -1,
             label: "",
             required: true,
             archived: false,
@@ -50,7 +51,7 @@ export const EditCourseForm = ({ course }) => {
         <Container>
             <PageTitle>Cours</PageTitle>
 
-            <FetchQuestionsModal addQuestion={addQuestion} course={course} />
+            <FetchQuestionsModal course={course} />
 
             <Row>
                 {questions && questions.map(question =>
@@ -70,7 +71,7 @@ export const EditCourseForm = ({ course }) => {
     );
 }
 
-const FetchQuestionsModal = ({ addQuestion, course }) => {
+const FetchQuestionsModal = ({ course }) => {
     const [isFetching, setIsFetching] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [forms, setForms] = useState<FormModel[]>([]);
@@ -153,60 +154,62 @@ const FetchQuestionsModal = ({ addQuestion, course }) => {
                 Récupérer d'un autre formulaire
             </Button>
 
-            <Modal
-                show={isFetching}
-                onHide={() => setIsFetching(false)}
-            >
-                <Form onSubmit={formik.handleSubmit}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Récupération</Modal.Title>
-                        {isLoading || formik.isSubmitting &&
-                            <Spinner
-                                as="span"
-                                animation="border"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                            />
-                        }
-                    </Modal.Header>
+            {isFetching &&
+                <Modal
+                    show={isFetching}
+                    onHide={() => setIsFetching(false)}
+                >
+                    <Form onSubmit={formik.handleSubmit}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Récupération</Modal.Title>
+                            {isLoading || formik.isSubmitting &&
+                                <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                            }
+                        </Modal.Header>
 
-                    <Modal.Body>
-                        <Form.Label>Source</Form.Label>
-                        <Form.Control
-                            as="select"
-                            id="idForm"
-                            name="idForm"
-                            onChange={formik.handleChange}
-                            value={formik.values.idForm}
-                        >
-                            <option selected value={-1}> -- Formulaire -- </option>
-                            {forms.map((form) =>
-                                <option value={form.id}>{form.name}</option>
-                            )}
-                        </Form.Control>
+                        <Modal.Body>
+                            <Form.Label>Source</Form.Label>
+                            <Form.Control
+                                as="select"
+                                id="idForm"
+                                name="idForm"
+                                onChange={formik.handleChange}
+                                value={formik.values.idForm}
+                            >
+                                <option selected value={-1}> -- Formulaire -- </option>
+                                {forms.map((form) =>
+                                    <option value={form.id}>{form.name}</option>
+                                )}
+                            </Form.Control>
 
-                        <br />
+                            <br />
 
-                        <ListGroup as="ul" className="overflow-auto">
-                            <ListGroup.Item active>
-                                Détails des questions
+                            <ListGroup as="ul" className="overflow-auto">
+                                <ListGroup.Item active>
+                                    Détails des questions
                         </ListGroup.Item>
-                            {formik.values.questions.map((question: Question) => (
-                                <ListGroup.Item>
-                                    <Badge variant="info">{question.category}</Badge>
-                                    {question.label}
-                                </ListGroup.Item>
-                            ))}
-                        </ListGroup>
-                    </Modal.Body>
+                                {formik.values.questions.map((question: Question) => (
+                                    <ListGroup.Item>
+                                        <Badge variant="info">{question.category}</Badge>
+                                        {question.label}
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Ajouter</Button>
-                        <Button variant="secondary" onClick={() => setIsFetching(false)}>Fermer</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
+                        <Modal.Footer>
+                            <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Ajouter</Button>
+                            <Button variant="secondary" onClick={() => setIsFetching(false)}>Fermer</Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal>
+            }
         </>
     )
 }
@@ -227,14 +230,14 @@ export const QuestionEditor = ({ question }) => {
     const onSubmit = (question, { setSubmitting }) => {
         setStatus(QuestionStatus.Submitting);
 
-        api.courses
+        api.courses.forms.questions
             .save(question)
             .then(res => {
+                console.log("plop" + question.form)
                 newToast({
-                    message: `Updated questions ${question.label}`,
+                    message: `Updated questions ${res.label} for ${res.form}`,
                     level: ToastLevel.Success,
                 });
-
                 setSubmitting(false);
                 setStatus(QuestionStatus.Success);
             })
@@ -243,6 +246,7 @@ export const QuestionEditor = ({ question }) => {
                     message: err.response.status + " " + err.response.data,
                     level: ToastLevel.Error,
                 });
+                setSubmitting(false);
                 setStatus(QuestionStatus.Error);
             });
     }
@@ -293,7 +297,7 @@ export const QuestionEditor = ({ question }) => {
                         </Card.Title>
 
                         <Card.Body>
-                            {question.id == -1 &&
+                            {/* {question.id &&
                                 <MyRadioField
                                     label="Catégorie"
                                     id={"category" + question.id}
@@ -302,7 +306,7 @@ export const QuestionEditor = ({ question }) => {
                                     value={props.values.category}
                                     {...props}
                                 />
-                            }
+                            } */}
 
                             <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>

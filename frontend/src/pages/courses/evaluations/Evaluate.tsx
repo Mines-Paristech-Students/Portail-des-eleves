@@ -46,12 +46,14 @@ export const QuestionsForm = ({ questions, course }) => {
         };
         for (let i in questions) {
             let question: Question = questions[i];
-            if (question.category === 'R') {
-                base.ratings[question.id] = -1;
-            } else if (question.category === 'C') {
-                base.comments[question.id] = "";
-            } else {
-                console.log("Got unexpected");
+            if (question.id) {
+                if (question.category === 'R') {
+                    base.ratings[question.id] = -1;
+                } else if (question.category === 'C') {
+                    base.comments[question.id] = "";
+                } else {
+                    console.log("Got unexpected");
+                }
             }
         }
 
@@ -175,7 +177,7 @@ export const QuestionsForm = ({ questions, course }) => {
                             };
 
                             let bg = 'light';
-                            if (props.errors[question.id] != undefined) bg = 'danger';
+                            if (question.id) if (props.errors[question.id] != undefined) bg = 'danger';
 
                             return (
                                 <Col md={8} key={question.id}>

@@ -246,13 +246,14 @@ export const api = {
                 ),
             questions: {
                 save: (question: Question) => {
-                    if (question.id) {
-                        return unwrap<Page>(
+                    console.log("Begore " + question.form)
+                    if (! question.id) {
+                        return unwrap<Question>(
                             apiService.post(`/courses/questions/`, question)
                         );
                     }
 
-                    return unwrap<Page>(
+                    return unwrap<Question>(
                         apiService.patch(`/courses/questions/${question.id}/`, question)
                     );
                 },

@@ -22,6 +22,13 @@ class FormViewSet(viewsets.ModelViewSet):
     serializer_class = FormSerializer
     permission_classes = [FormPermission]
 
+    @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
+    def questions(self, request, pk=None):
+        form = self.get_object()
+        questions = form.question
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -30,7 +37,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def result(self, request, pk=None):
-        question = self.get_object()
+        form = self.get_object()
         return Response(data={'plop': question.average}, status=status.HTTP_200_OK)
 
     # TODO

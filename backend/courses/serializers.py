@@ -16,8 +16,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        read_only_fields = ('id', 'category', 'form')
-        fields = read_only_fields + ('label', 'required', 'archived')
+        read_only_fields = ('id', 'category')
+        fields = read_only_fields + ('label', 'required', 'archived', 'form')
 
 
 class FormSerializer(serializers.ModelSerializer):

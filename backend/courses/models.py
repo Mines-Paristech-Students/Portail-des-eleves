@@ -128,7 +128,6 @@ class Question(models.Model):
         Form,
         related_name="question",
         on_delete=models.CASCADE,
-        null=True,
     )
 
     @cached_property
