@@ -70,7 +70,9 @@ export const EditCourseForm = ({ course }) => {
 }
 
 const FetchQuestionsModal = ({ questions, setQuestions }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFetching, setIsFetching] = useState<boolean>(true);
+    const [forms, setForms] = useState<FormModel[]>(true);
     const newToast = useContext(ToastContext);
 
     const formFormik = useFormik({
@@ -79,6 +81,21 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
         onSubmit: (values) => {
         }
     });
+
+    useEffect(() => {
+        api.courses.forms
+            .list()
+            .then(forms => {
+                setForms(forms);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                newToast({
+                    message: "Could not fetch questions...",
+                    level: ToastLevel.Error,
+                })
+            })
+    }, [])
 
     return (
         <>
@@ -95,6 +112,18 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
             >
                 <Modal.Header>
                     <Modal.Title>Récupération</Modal.Title>
+                    {isLoading &&
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        />
+                    }
+                </Modal.Header>
+
+                <Modal.Body>
                     <Form onSubmit={formFormik.handleSubmit}>
                         <Form.Label>Source</Form.Label>
                         <Form.Control
@@ -109,9 +138,6 @@ const FetchQuestionsModal = ({ questions, setQuestions }) => {
                             <option value="plip">plip</option>
                         </Form.Control>
                     </Form>
-                </Modal.Header>
-
-                <Modal.Body>
                     <p>{formFormik.values.idForm}</p>
                 </Modal.Body>
 
