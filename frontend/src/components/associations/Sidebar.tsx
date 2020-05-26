@@ -65,27 +65,26 @@ const ListPagesItem = ({ pages, association }) =>
     pages.map((page) => (
         <SidebarItem
             icon={"book"}
-            to={`/associations/${association.id}/pages/${page.id}`}
+            to={
+                page.title === "Accueil"
+                    ? `/associations/${association.id}`
+                    : `/associations/${association.id}/pages/${page.id}`
+            }
             key={page.id}
         >
             {page.title}
         </SidebarItem>
     ));
 
-const AddPageItem = ({ association }) => {
-    if (!association.myRole.pagePermission) {
-        return null;
-    }
-
-    return (
+const AddPageItem = ({ association }) =>
+    association.myRole.permissions.includes("page") ? (
         <SidebarItem
             icon={"plus"}
             to={`/associations/${association.id}/pages/new`}
         >
             Ajouter une page
         </SidebarItem>
-    );
-};
+    ) : null;
 
 const MarketSubNavbar = ({ association }) => {
     const location = useLocation();
