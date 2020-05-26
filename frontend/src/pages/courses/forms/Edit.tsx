@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Form, Row, Col, Button, Modal, Container, Card } from "react-bootstrap";
+import { Form, Row, Col, Button, Modal, Container, Card, Spinner } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form"
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
@@ -49,7 +49,6 @@ export const EditCourseForm = ({ course }) => {
         <Container>
             <PageTitle>Cours</PageTitle>
 
-            {/* Fetch from another form */}
 
             <Row>
                 {questions && questions.map(question =>
@@ -67,6 +66,27 @@ export const EditCourseForm = ({ course }) => {
 
         </Container>
     );
+}
+
+const FetchQuestionsModal = ({ questions }) => {
+    const [isFetching, setIsFetching] = useState<boolean>(true);
+
+    return (
+        <>
+            <Button
+                onClick={(e) => setIsFetching(true)}
+                disabled={isFetching}
+            >
+                Récupérer d'un autre formulaire
+            </Button>
+
+            {isFetching &&
+                <Modal>
+
+                </Modal>
+            }
+        </>
+    )
 }
 
 enum QuestionStatus {
@@ -186,7 +206,18 @@ export const QuestionEditor = ({ question }) => {
                         </Card.Body>
 
                         <Card.Footer>
-                            <Button type="submit" disabled={props.isSubmitting}>Valider</Button>
+                            <Button type="submit" disabled={props.isSubmitting}>
+                                Valider
+                                {props.isSubmitting &&
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    />
+                                }
+                            </Button>
                             <Button onClick={props.handleReset}>Reset</Button>
                         </Card.Footer>
                     </Card>
