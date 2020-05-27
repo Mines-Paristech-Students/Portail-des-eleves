@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import { dayPickerLocalisationProps } from "./DatePickerField";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
-import { formatDate } from "../../../utils/format";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import { parseDate } from "../../../utils/parse";
-import { dayPickerLocalisationProps } from "./DatePickerField";
+
+dayjs.extend(require("dayjs/plugin/customParseFormat"));
 
 /**
  * This component encapsulates a `DayPickerInput` component and two inputs (one for the hours, one for the minutes)
@@ -40,11 +41,29 @@ export const DateTimePickerInputField = ({
     const handleDayChange = (selectedDay) => {
         setFieldTouched(field.name as never, true);
         setFieldValue(field.name as never, selectedDay);
+
+        // Sync the input field.
+        if (selectedDay) {
+            setDayInputValue(selectedDay);
+        }
     };
 
     const handleTimeChange = (e) => {
-        console.log(e.target.value);
+        setFieldTouched(field.name as never, true);
+
+        // Parse the time.
+        const d = dayjs(e.target.value, "H:m");
+
+        if (d.isValid()) {
+            // If it's valid, get the current date, change the hours and the minutes, and save it as the new date.
+            setFieldValue(
+                field.name as never,
+                dayjs(field.value).hour(d.hour()).minute(d.minute()).toDate()
+            );
+        }
     };
+
+    useEffect(() => console.log(field.value), [field.value]);
 
     return (
         <Form.Group>
@@ -52,12 +71,12 @@ export const DateTimePickerInputField = ({
             <DayPickerInput
                 value={dayInputValue}
                 onDayChange={handleDayChange}
-                formatDate={formatDate}
-                parseDate={
-                    // The component will pass extra parameters to this anonymous function, but `parseDate` does not
-                    // need them AND defines a second parameter which would be overwritten otherwise.
-                    (dateString) => parseDate(dateString, "/")
-                }
+                format={"DD/MM/YYYY"}
+                formatDate={(date, format) => dayjs(date).format(format)}
+                parseDate={(dateString) => {
+                    const d = dayjs(dateString, "D/M/YYYY");
+                    return d.isValid() ? d.toDate() : undefined;
+                }}
                 dayPickerProps={{
                     ...field,
                     month: field.value,

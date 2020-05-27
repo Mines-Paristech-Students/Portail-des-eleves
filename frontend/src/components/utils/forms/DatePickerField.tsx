@@ -16,6 +16,7 @@ export const dayPickerLocalisationProps = (todayButton = false) => ({
     firstDayOfWeek: 1,
 });
 
+// TODO: rename it to `DatePickerFormGroup`, and maybe put the field-related code to `DatePickerField`.
 /**
  * This component encapsulates a `DayPicker` component into a `Form.Group` component, using the Formik logic and
  * including a label and a feedback. Use it like this:
