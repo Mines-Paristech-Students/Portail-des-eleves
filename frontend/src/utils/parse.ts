@@ -33,8 +33,3 @@ export const parseDate = (
 
     return isNaN(date.getTime()) ? undefined : date;
 };
-
-export const parseTime = (
-    timeString: string,
-    separator=":"
-):

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FieldHookConfig, useField, useFormikContext } from "formik";
+import React from "react";
+import { FieldHookConfig, useField } from "formik";
 import dayjs from "dayjs";
 import { dayPickerLocalisationProps } from "./DatePickerField";
 import DayPickerInput from "react-day-picker/DayPickerInput";
@@ -42,7 +42,9 @@ export const DayPickerInputField = ({
 }: DayPickerInputFieldProps) => {
     const [field, meta, helper] = useField<Date | undefined>({
         validate: (value) =>
-            value === undefined ? "Date invalide" : undefined,
+            value === undefined
+                ? "Veuillez entrer une date au format JJ/MM/YYYY"
+                : undefined,
         ...fieldProps,
         name: name,
     });
@@ -86,7 +88,9 @@ export const DayPickerInputField = ({
                         feedback && meta.error ? "is-invalid" : ""
                     }`,
                     placeholder: "JJ/MM/YYYY",
-                    ...field,
+                    // Adding Formik's `onChange` will make everything buggy, because Formik will sometimes set
+                    // `field.value` to the _string_ value of the input, bypassing `react-day-picker`'s flow.
+                    onBlur: field.onBlur,
                 }}
             />
         </>

@@ -1,107 +1,81 @@
 import { dayPickerLocalisationProps } from "./DatePickerField";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
-import { useField, useFormikContext } from "formik";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
+import React from "react";
+import { useField } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import { DayPickerInputFieldProps } from "./DayPickerInputField";
 
 dayjs.extend(require("dayjs/plugin/customParseFormat"));
 
 /**
- * This component encapsulates a `DayPickerInput` component and two inputs (one for the hours, one for the minutes)
- * into a `Form.Group` component, using the Formik logic and including a label and a feedback. Use it like this:
+ * This component builds a bridge between `DayPickerInput` and Formik, and make `DayPickerInput` accepts time.
  *
- * ```
- * <DateTimePickerInputField
- *     label="Date de publication"
- *     name="publicationDate"
- * />
- * ```
- *
- * Then, use `values.publicationDate` to access the value of this control. Please note that `values.publicationDate` is
- * a JavaScript `Date` object, and you may have to serialize it to a string manually for the backend to understand it.
+ * You may also be interested in `DayTimePickerInputFormGroup` which puts this component in a `FormGroup`.
  *
  * Props:
- *     - label: the label to display.
- *     - todayButton: optional. The string to display as a “Today” button.
- *     - props: passed to Formik's `useField`.
+ *     - name: the name of the control, used to access its value in Formik.
+ *     - feedback: defaults to true. If `true`, the `is-invalid` class is given to the input component when needed.
+ *     - parseFormats: defaults to `["DD/MM/YYYY HH:mm"]`. The formats used to parse the date time.
+ *     - displayFormat: defaults to `"DD/MM/YYYY HH:mm"`. The format used to display the date time.
+ *     - todayButton: defaults to `false`. If `true`, a `todayButton` will be displayed in the day picker.
+ *     - fieldProps: passed to Formik's `useField`.
  */
-export const DateTimePickerInputField = ({
-    label,
+export const DayTimePickerInputField = ({
+    name,
+    feedback = true,
+    parseFormats = ["DD/MM/YYYY HH:mm"],
+    displayFormat = "DD/MM/YYYY HH:mm",
     todayButton = false,
-    ...props
-}: any) => {
-    const { setFieldValue, setFieldTouched } = useFormikContext();
-    const [field, meta] = useField<Date>(props);
+    ...fieldProps
+}: DayPickerInputFieldProps) => {
+    const [field, meta, helper] = useField<Date | undefined>({
+        validate: (value) =>
+            value === undefined
+                ? "Veuillez entrer une date et une heure au format JJ/MM/YYYY hh:mm"
+                : undefined,
+        ...fieldProps,
+        name: name,
+    });
 
-    // This field is required for setting a default value to the input.
-    const [dayInputValue, setDayInputValue] = useState(field.value);
-
-    const handleDayChange = (selectedDay) => {
-        setFieldTouched(field.name as never, true);
-        setFieldValue(field.name as never, selectedDay);
-
-        // Sync the input field.
-        if (selectedDay) {
-            setDayInputValue(selectedDay);
-        }
-    };
-
-    const handleTimeChange = (e) => {
-        setFieldTouched(field.name as never, true);
-
-        // Parse the time.
-        const d = dayjs(e.target.value, "H:m");
-
-        if (d.isValid()) {
-            // If it's valid, get the current date, change the hours and the minutes, and save it as the new date.
-            setFieldValue(
-                field.name as never,
-                dayjs(field.value).hour(d.hour()).minute(d.minute()).toDate()
-            );
-        }
-    };
-
-    useEffect(() => console.log(field.value), [field.value]);
+    // Format a date to display in the input.
+    const formatDate = (date) => dayjs(date).format(displayFormat);
 
     return (
-        <Form.Group>
-            <Form.Label>{label}</Form.Label>
+        <>
             <DayPickerInput
-                value={dayInputValue}
-                onDayChange={handleDayChange}
-                format={"DD/MM/YYYY"}
-                formatDate={(date, format) => dayjs(date).format(format)}
-                parseDate={(dateString) => {
-                    const d = dayjs(dateString, "D/M/YYYY");
-                    return d.isValid() ? d.toDate() : undefined;
-                }}
+                value={field.value}
+                formatDate={formatDate}
                 dayPickerProps={{
-                    ...field,
+                    ...dayPickerLocalisationProps(todayButton),
                     month: field.value,
                     selectedDays: field.value,
-                    ...dayPickerLocalisationProps(todayButton),
+                    onDayClick: (date) =>
+                        helper.setValue(
+                            dayjs(date)
+                                .hour(field.value ? field.value.getHours() : 0)
+                                .minute(
+                                    field.value ? field.value.getMinutes() : 0
+                                )
+                                .toDate()
+                        ),
                 }}
                 inputProps={{
-                    className: `form-control ${meta.error ? "is-invalid" : ""}`,
-                    placeholder: "JJ/MM/YYYY",
-                    onChange: (e) => setDayInputValue(e.target.value),
+                    className: `form-control ${
+                        feedback && meta.error ? "is-invalid" : ""
+                    }`,
+                    placeholder: "JJ/MM/YYYY hh:mm",
+                    // Adding Formik's `onChange` will make everything buggy, because Formik will sometimes set
+                    // `field.value` to the _string_ value of the input, bypassing `react-day-picker`'s flow.
+                    onBlur: field.onBlur,
+                    onChange: (event) => {
+                        // @ts-ignore: the ability to use a `string[]` as `format` was introduced in 1.8.27 and the types
+                        // have not been updated yet. Also, the third parameter actually deals with the strict mode if
+                        // it's a boolean.
+                        const d = dayjs(event.target.value, parseFormats, true);
+                        helper.setValue(d.isValid() ? d.toDate() : undefined);
+                    },
                 }}
             />
-            <Form.Control
-                type="time"
-                onChange={handleTimeChange}
-                isInvalid={meta.touched && !!meta.error}
-            />
-            {meta.touched && meta.error ? (
-                <FormControl.Feedback
-                    type="invalid"
-                    className="date-picker-feedback"
-                >
-                    {meta.error}
-                </FormControl.Feedback>
-            ) : null}
-        </Form.Group>
+        </>
     );
 };
