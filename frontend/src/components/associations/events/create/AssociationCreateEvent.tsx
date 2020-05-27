@@ -9,7 +9,8 @@ import * as Yup from "yup";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
 import { getRandom } from "../../../../utils/random";
-import { DayTimePickerInputField } from "../../../utils/forms/DayTimePickerInputField";
+import { DayTimePickerInputFormGroup } from "../../../utils/forms/DayTimePickerFormGroup";
+import dayjs from "dayjs";
 
 const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
     ["Passace", "Et glou, et glou, et glou", "Place du village"],
@@ -36,8 +37,8 @@ export const AssociationCreateEvent = ({
                     initialValues={{
                         name: "",
                         description: "",
-                        startsAt: new Date(),
-                        endsAt: new Date(),
+                        startsAt: dayjs().toDate(),
+                        endsAt: dayjs().add(4, "hour").toDate(),
                         place: "",
                     }}
                     validationSchema={Yup.object({
@@ -50,7 +51,9 @@ export const AssociationCreateEvent = ({
                                 minStartDate,
                                 "L’événement doit commencer aujourd’hui ou dans le futur."
                             )
-                            .required("Date invalide."),
+                            .required(
+                                "Veuillez entrer une date au format JJ/MM/YYYY HH:mm."
+                            ),
                         endsAt: Yup.date()
                             .when(
                                 "startsAt",
@@ -61,7 +64,9 @@ export const AssociationCreateEvent = ({
                                         "La date de fin doit être après la date de début."
                                     )
                             )
-                            .required("Date invalide."),
+                            .required(
+                                "Veuillez entrer une date au format JJ/MM/YYYY HH:mm."
+                            ),
                         place: Yup.string().required("Ce champ est requis."),
                     })}
                     onSubmit={(values) => console.log(values)}
@@ -88,7 +93,18 @@ export const AssociationCreateEvent = ({
                             />
 
                             <Row>
-                                <Col xs={12} md={6}></Col>
+                                <Col xs={12} md={6}>
+                                    <DayTimePickerInputFormGroup
+                                        label="Début de l’événement"
+                                        name="startsAt"
+                                    />
+                                </Col>
+                                <Col xs={12} md={6}>
+                                    <DayTimePickerInputFormGroup
+                                        label="Fin de l’événement"
+                                        name="endsAt"
+                                    />
+                                </Col>
                             </Row>
                         </Card.Body>
 

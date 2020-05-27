@@ -3,7 +3,6 @@ import { AssociationList } from "../components/associations/List";
 import { AssociationRouter } from "../components/associations/Router";
 import { routes as pollsRoutes } from "./polls";
 import { routes as usersRoutes } from "./users";
-import { Test } from "../components/Test";
 
 export type Route = {
     path: string;
@@ -12,7 +11,6 @@ export type Route = {
 };
 
 export const routes = [
-    { path: "/test", component: Test, exact: true},
     { path: "/", component: Homepage, exact: true },
     { path: "/associations", component: AssociationList, exact: true },
     {
