@@ -243,13 +243,6 @@ export const api = {
                         `/courses/forms`
                     )
                 ),
-            create: (name: string) =>
-                unwrap<Form>(
-                    apiService.post(
-                        `courses/forms/`,
-                        { "name": name },
-                    )
-                ),
             save: (form: Form) => {
                 if (form.id)
                     return (

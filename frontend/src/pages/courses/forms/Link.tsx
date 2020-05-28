@@ -30,9 +30,10 @@ export const CreateCourseForm = ({ course }) => {
         },
 
         onSubmit: (values) => {
+            const form : FormModel = {name : values.name};
 
             api.courses.forms
-                .create(values.name)
+                .save(form)
                 .then(form => {
                     setForm(form);
                     newToast({
