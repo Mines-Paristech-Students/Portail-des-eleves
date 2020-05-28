@@ -126,6 +126,6 @@ class CommentsPaginatedList(generics.ListAPIView):
         queryset = Comment.objects.all()
 
         return queryset.\
-            filter(question__achived=False).\
+            filter(question__archived=False).\
             filter(**filter_params)\
             .order_by('date').reverse()
