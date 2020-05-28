@@ -231,6 +231,13 @@ export const api = {
                 )
             ),
         forms: {
+            get: (id: number) => {
+                unwrap<Form>(
+                    apiService.get(
+                        `/courses/forms/${id}`
+                    )
+                )
+            },
             list: () =>
                 unwrap<Form[]>(
                     apiService.get(
