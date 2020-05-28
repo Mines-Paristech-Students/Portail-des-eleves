@@ -48,6 +48,12 @@ export const EditCourseForm = ({ course }) => {
         setQuestions(copy);
     }
 
+    const { data: form, error: errorForm, status: statusForm } = useBetterQuery<FormModel>(
+        "courses.forms.get",
+        api.courses.forms.get,
+        course.form,
+    );
+
     if (isLoading) return <p>Chargement des cours</p>;
 
     return (
@@ -57,10 +63,12 @@ export const EditCourseForm = ({ course }) => {
             </PageTitle>
 
             <Row>
-                <FormEditor formId={course.form} />
+                {form &&
+                    <FormEditor form={form} />
+                }
             </Row>
 
-            <FetchQuestionsModal course={course} />
+            <br />
 
             <Row>
                 {questions && questions.map(question =>
@@ -70,47 +78,78 @@ export const EditCourseForm = ({ course }) => {
                 )}
             </Row>
 
-            <Button onClick={addQuestion}>
-                Ajouter une question
-            </Button>
+            <br />
+
+            <Row className="w-100 d-flex justify-space-between">
+
+                <Button onClick={addQuestion}>
+                    Ajouter une question
+                </Button>
+
+                <FetchQuestionsModal course={course} />
+
+            </Row>
+
 
         </Container>
     );
 }
 
-const FormEditor = ({ formId }) => {
-    const { data: form, error, status } = useBetterQuery<FormModel>(
-        "courses.forms.list",
-        api.courses.forms.get,
-        formId,
-    );
+const FormEditor = ({ form }) => {
+    const newToast = useContext(ToastContext);
 
     const formik = useFormik({
-        initialValues: { name: form?.name },
-        onSubmit: (values, { setSubmitting }) => { },
-    })
-
-    if (status == "loading") return <p>Chargement</p>;
-    if (status == "error") return <p>Erreur</p>;
+        initialValues: { name: form.name },
+        validate: (values) => (values.name == "") ? { errors: "Cannot be empty" } : {},
+        onSubmit: (values, { setSubmitting }) => {
+            form.name = values.name;
+            api.courses.forms
+                .save(form)
+                .then((res) => {
+                    newToast({
+                        message: `Updated ${form.name}`,
+                        level: ToastLevel.Success,
+                    });
+                    setSubmitting(false);
+                })
+                .catch((err) => {
+                    newToast({
+                        message: "Could not update form...",
+                        level: ToastLevel.Error,
+                    });
+                    setSubmitting(false);
+                })
+        },
+    });
 
     return (
-        <Form
+        < Form
             onSubmit={formik.handleSubmit}
         >
-            <Form.Label>Nom: </Form.Label>
-            <Form.Control
-                id="name"
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-            ></Form.Control>
-            <Button
-                type="submit"
-            >
-                Modifier
-            </Button>
-        </Form>
+            <Row>
+                <Col>
+                    <Form.Label>Nom: </Form.Label>
+                </Col>
+                <Col>
+                    <Form.Control
+                        id="name"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        isInvalid={!!formik.errors.name}
+                    ></Form.Control>
+                    {formik.errors.name &&
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.name}
+                        </Form.Control.Feedback>
+                    }
+                </Col>
+                <Col>
+                    <Button type="submit" disabled={formik.isSubmitting}>Modifier</Button>
+                </Col>
+            </Row>
+        </Form >
     )
 
 }

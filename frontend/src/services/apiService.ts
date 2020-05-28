@@ -231,13 +231,12 @@ export const api = {
                 )
             ),
         forms: {
-            get: (id: number) => {
+            get: (formId: number) =>
                 unwrap<Form>(
                     apiService.get(
-                        `/courses/forms/${id}`
+                        `/courses/forms/${formId}`
                     )
-                )
-            },
+                ),
             list: () =>
                 unwrap<Form[]>(
                     apiService.get(
@@ -251,10 +250,29 @@ export const api = {
                         { "name": name },
                     )
                 ),
+            save: (form: Form) => {
+                if (form.id)
+                    return (
+                        unwrap<Form>(
+                            apiService.patch(
+                                `/courses/forms/${form.id}/`,
+                                form,
+                            )
+                        )
+                    )
+                return (
+                    unwrap<Form>(
+                        apiService.post(
+                            `/courses/forms/`,
+                            form,
+                        )
+                    )
+                )
+            },
             questions: {
                 save: (question: Question) => {
                     console.log("Begore " + question.form)
-                    if (! question.id) {
+                    if (!question.id) {
                         return unwrap<Question>(
                             apiService.post(`/courses/questions/`, question)
                         );
