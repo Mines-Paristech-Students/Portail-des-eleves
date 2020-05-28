@@ -41,6 +41,7 @@ export function unwrap<T>(promise): Promise<T> {
 }
 
 type UrlParam =
+    | undefined
     | boolean
     | number
     | string
@@ -90,7 +91,9 @@ const toUrlParamsAux = (
         .map((key) => {
             const value = parameters[key];
 
-            return Array.isArray(value)
+            return value === undefined
+                ? ""
+                : Array.isArray(value)
                 ? // Iterate through the array.
                   value.map((v) => `${keyPrefix + key}=${v}`).join("&")
                 : typeof value === "object"
