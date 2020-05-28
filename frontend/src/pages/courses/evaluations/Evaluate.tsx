@@ -10,8 +10,8 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
         "courses.questions",
-        api.courses.list_questions,
-        course.id,
+        api.courses.forms.questions.list,
+        course.form,
     );
 
     if (status === "loading") return <p>Chargement des cours</p>;

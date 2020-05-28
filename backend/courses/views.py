@@ -120,25 +120,6 @@ def submit(request, course_pk):
 
     return Response(f"User {current_user.id} has voted", status.HTTP_201_CREATED)
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def list_course_questions(request, course_pk):
-    try:
-        course = Course.objects.get(id=course_pk)
-    except ObjectDoesNotExist:
-        return Response(f"Course with id: {course_pk} does not exist", status.HTTP_400_BAD_REQUEST)
-
-    form = course.form;
-    if not form:
-        return Response(f"Course with name {course.name} is not binded to any form", status.HTTP_400_BAD_REQUEST)
-
-    questions = Question.objects.filter(form__course__id=course_pk).all()
-
-    serializer = QuestionSerializer(questions, many=True)
-
-    return JsonResponse(serializer.data, safe=False)
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def has_voted(request, course_pk):

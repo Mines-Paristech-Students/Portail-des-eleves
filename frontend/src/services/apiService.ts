@@ -207,12 +207,6 @@ export const api = {
                 apiService.patch(`/courses/courses/${course.id}/`, course)
             );
         },
-        list_questions: courseId =>
-            unwrap<Question[]>(
-                apiService.get(
-                    `/courses/courses/${courseId}/questions`
-                )
-            ),
         submit: (courseId, data) =>
             apiService.post(
                 `/courses/courses/${courseId}/submit`,
