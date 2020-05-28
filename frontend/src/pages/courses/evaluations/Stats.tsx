@@ -86,19 +86,20 @@ export const PaginatedCardComment = ({ question, course }) => {
     };
 
     useEffect(() => {
-        if (next)
-            api.courses
-                .comments_page(course.id, question.id, next, PAGE_SIZE)
-                .then((page: CommentsPage) => {
-                    disectCommentsPage(page);
-                    setIsFetching(false);
+        if (isFetching || !next) return;
+
+        api.courses
+            .comments_page(course.id, question.id, next, PAGE_SIZE)
+            .then((page: CommentsPage) => {
+                disectCommentsPage(page);
+                setIsFetching(false);
+            })
+            .catch(err => {
+                newToast({
+                    message: "Could not fetch next message",
+                    level: ToastLevel.Error,
                 })
-                .catch(err => {
-                    newToast({
-                        message: "Could not fetch next message",
-                        level: ToastLevel.Error,
-                    })
-                })
+            })
     }, [index])
 
     const disectCommentsPage = (page: CommentsPage) => {
