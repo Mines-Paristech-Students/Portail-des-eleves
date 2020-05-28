@@ -123,8 +123,19 @@ export const PaginatedCardComment = ({ question, course }) => {
                     {question.label}
                 </Card.Title>
                 <Card.Body>
-                    <Carousel activeIndex={index} onSelect={handleSelect}>
-
+                    <Carousel 
+                        as={Row}
+                        activeIndex={index}
+                        onSelect={handleSelect} 
+                        interval={null}
+                        nextIcon={<span aria-hidden="true" className="fe fe-right-circle" />}
+                        prevIcon={<span aria-hidden="true" className="fe fe-left-circle" />}
+                    >
+                        {comments.map(comment => 
+                            <Carousel.Item>
+                                <Col md={8}></Col>
+                            </Carousel.Item>    
+                        )}
                     </Carousel>
                 </Card.Body>
             </Card>
