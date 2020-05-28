@@ -25,7 +25,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Response(course.stats, status.HTTP_200_OK)
 
     @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
-    def has_voted(self, request, course_pk):
+    def has_voted(self, request, pk=None):
         current_user = request.user
         course = self.get_object()
 
@@ -34,7 +34,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return JsonResponse({"has_voted": has_voted}, safe=False)
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
-    def submit(self, request, course_pk):
+    def submit(self, request, pk=None):
         """Defined outside CourseViewSet to simplify permissions"""
         data = request.data
         current_user = request.user
@@ -126,5 +126,6 @@ class CommentsPaginatedList(generics.ListAPIView):
         queryset = Comment.objects.all()
 
         return queryset.\
+            .filter(achived=false)\
             filter(**filter_params)\
             .order_by('date').reverse()

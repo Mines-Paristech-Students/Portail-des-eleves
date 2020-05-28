@@ -31,7 +31,3 @@ class QuestionViewSet(viewsets.ModelViewSet):
     def result(self, request, pk=None):
         question = self.get_object()
         return Response(data={'plop': question.average}, status=status.HTTP_200_OK)
-
-    # TODO
-    # 1. List for a form
-
