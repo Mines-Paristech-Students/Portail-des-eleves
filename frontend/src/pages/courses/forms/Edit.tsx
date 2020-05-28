@@ -80,7 +80,7 @@ export const EditCourseForm = ({ course }) => {
 
             <br />
 
-            <Row className="w-100 d-flex justify-space-between">
+            <Row className="w-100 d-flex justify-content-around">
 
                 <Button onClick={addQuestion}>
                     Ajouter une question
