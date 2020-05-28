@@ -15,6 +15,11 @@ export const EditCourseForm = ({ course }) => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
+
+    /* 
+    We don't want the questions to reload, as it could change our components!
+    This causes an issue because the components are loaded from a list, which we don't want to change
+    */
     useEffect(() => {
         api.courses.forms.questions
             .list(course.form)
@@ -48,10 +53,14 @@ export const EditCourseForm = ({ course }) => {
     return (
         <Container>
             <PageTitle>
-                Cours
-
-                    <FetchQuestionsModal course={course} />
+                Modification de formulaire
             </PageTitle>
+
+            <Row>
+                <FormEditor formId={course.form} />
+            </Row>
+
+            <FetchQuestionsModal course={course} />
 
             <Row>
                 {questions && questions.map(question =>
@@ -67,6 +76,43 @@ export const EditCourseForm = ({ course }) => {
 
         </Container>
     );
+}
+
+const FormEditor = ({ formId }) => {
+    const { data: form, error, status } = useBetterQuery<FormModel>(
+        "courses.forms.list",
+        api.courses.forms.get,
+        formId,
+    );
+
+    const formik = useFormik({
+        initialValues: { name: form?.name },
+        onSubmit: (values, { setSubmitting }) => { },
+    })
+
+    if (status == "loading") return <p>Chargement</p>;
+    if (status == "error") return <p>Erreur</p>;
+
+    return (
+        <Form
+            onSubmit={formik.handleSubmit}
+        >
+            <Form.Label>Nom: </Form.Label>
+            <Form.Control
+                id="name"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            ></Form.Control>
+            <Button
+                type="submit"
+            >
+                Modifier
+            </Button>
+        </Form>
+    )
+
 }
 
 const FetchQuestionsModal = ({ course }) => {
