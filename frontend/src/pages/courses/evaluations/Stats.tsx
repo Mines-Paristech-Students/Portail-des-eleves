@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Card, Container, Row, Accordion, Col, Carousel } from "react-bootstrap";
-import { QuestionCategory, Question, CommentsPage, Comment } from "../../../models/courses/question";
-import { StatsQuestion } from "../../../models/courses/requests";
+import { QuestionCategory, Question } from "../../../models/courses/question";
+import { StatsQuestion, CommentsPage, Comment } from "../../../models/courses/requests";
 import { ColumnChart } from 'react-chartkick'
+import { ToastContext, ToastLevel } from "../../../utils/Toast"
 import 'chart.js';
 
 const DigitToStar = (num: number) => {
@@ -71,12 +72,48 @@ const StatsCourse = ({ course }) => {
 };
 
 export const PaginatedCardComment = ({ question, course }) => {
+    const PAGE_SIZE = 5;
+    const AUTO_FETCH_DIFF = 2;
+
+    const newToast = useContext(ToastContext);
     const [index, setIndex] = useState<number>(0);
+    const [next, setNext] = useState<number | null>(1);
+    const [isFetching, setIsFetching] = useState<boolean>(true);
     const [comments, setComments] = useState<string[]>([])
 
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
     };
+
+    useEffect(() => {
+        if (next)
+            api.courses
+                .comments_page(course.id, question.id, next, PAGE_SIZE)
+                .then((page: CommentsPage) => {
+                    disectCommentsPage(page);
+                    setIsFetching(false);
+                })
+                .catch(err => {
+                    newToast({
+                        message: "Could not fetch next message",
+                        level: ToastLevel.Error,
+                    })
+                })
+    }, [index])
+
+    const disectCommentsPage = (page: CommentsPage) => {
+        if (!page.next) setNext(null);
+        else {
+            const url = new URL(page.next);
+            const next = url.searchParams.get("next");
+            if (next) setNext(Number(next));
+            else setNext(null);
+        }
+
+        let copy = comments.slice();
+        copy = copy.concat(page.results.map(comment => comment.content));
+        setComments(copy);
+    }
 
     return (
         <Col md={8} key={question.id}>

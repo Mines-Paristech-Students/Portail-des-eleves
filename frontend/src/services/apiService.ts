@@ -224,7 +224,7 @@ export const api = {
                     `/courses/courses/${courseId}/stats`
                 )
             ),
-        comments_page: (courseId: number, questionId: number, page = 1, page_size = 5 ) => (
+        comments_page: (courseId: number, questionId: number, page : number, page_size : number ) => (
             unwrap<CommentsPage>(
                 apiService.get(
                     `/courses/comments`,
