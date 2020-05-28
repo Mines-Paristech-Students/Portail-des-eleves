@@ -47,7 +47,7 @@ const EvaluationSidebar = ({ course }) => {
                     icon="x-circle"
                     to={`/cours/${course.id}`}
                 >
-                    {error}
+                    Error
                 </SidebarItem>
             }
 
@@ -63,7 +63,7 @@ const EvaluationSidebar = ({ course }) => {
             {(status === "success" && has_voted) &&
                 <SidebarItem
                     icon="pie-chart"
-                    to={`/cours/${course.id}/stats`}
+                    to={`/cours/${course.id}/resultats`}
                 >
                     Statistiques
             </SidebarItem>

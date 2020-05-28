@@ -2,7 +2,7 @@ import { CourseHome } from "../pages/courses/Home";
 import { EditCourseForm } from "../pages/courses/forms/Edit";
 import { CreateCourseForm, LinkCourseForm } from "../pages/courses/forms/Link";
 import { EvaluateCourse } from "../pages/courses/evaluations/Evaluate";
-import { StatsCourse } from "../pages/courses/evaluations/Stats";
+import { ResultsCourse } from "../pages/courses/evaluations/Stats";
 import { Link } from "react-bootstrap/lib/Navbar";
 
 export const routes = course => [
@@ -37,8 +37,8 @@ export const routes = course => [
         props: { course : course }
     },
     {
-        path: `/stats`,
-        component: StatsCourse,
+        path: `/resultats`,
+        component: ResultsCourse,
         exact: true,
         props: { course : course }
     },

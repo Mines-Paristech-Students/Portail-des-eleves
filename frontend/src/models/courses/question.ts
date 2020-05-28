@@ -1,8 +1,13 @@
+export enum QuestionCategory {
+    Comment = "C",
+    Rating = "R",
+}
+
 export interface Question {
     id?: number;
     label: string;
     required: boolean;
     archived: boolean;
-    category: string;
+    category: QuestionCategory;
     form: number;
 }

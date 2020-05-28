@@ -6,7 +6,7 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Field, Formik, useFormik, useField, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { useParams } from "react-router-dom";
-import { Question } from "../../../models/courses/question";
+import { Question, QuestionCategory } from "../../../models/courses/question";
 import { Badge } from "reactstrap";
 
 
@@ -40,7 +40,7 @@ export const EditCourseForm = ({ course }) => {
             label: "",
             required: true,
             archived: false,
-            category: "R",
+            category: QuestionCategory.Rating,
             form: course.form,
         };
         let copy = questions.slice();
