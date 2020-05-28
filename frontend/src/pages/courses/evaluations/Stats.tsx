@@ -70,13 +70,21 @@ const StatsCourse = ({ course }) => {
     return null;
 };
 
-export const PaginatedComments = ({ question, course }) => {
-    return <p>{question.category}</p>
+export const PaginatedCardComment = ({ question, course }) => {
+    console.log(question)
+    return (
+        <Col md={8} key={question.id}>
+            <Card>
+                <Card.Title>
+                    {question.category}
+                </Card.Title></Card>
+        </Col>
+    )
 }
 
 const PaginatedComments = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
-        "courses.stats",
+        "courses.forms.question.list",
         api.courses.forms.questions.list,
         course.form,
     );
@@ -88,9 +96,7 @@ const PaginatedComments = ({ course }) => {
         return (
             <Row>
                 {questions
-                    .filter((question) =>
-                        question.category == QuestionCategory.Comment
-                    ).map(question =>
+                    .map(question =>
                         <PaginatedCardComment question={question} course={course} />
                     )}
             </Row>

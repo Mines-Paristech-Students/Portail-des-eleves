@@ -5,9 +5,9 @@ export enum QuestionCategory {
 
 export interface Question {
     id?: number;
+    category: QuestionCategory;
     label: string;
     required: boolean;
     archived: boolean;
-    category: QuestionCategory;
     form: number;
 }
