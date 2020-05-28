@@ -1,9 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { PageTitle } from "../../../utils/common";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Card, Container, Row, Accordion, Col } from "react-bootstrap";
-import { QuestionCategory, Question } from "../../../models/courses/question";
+import { Card, Container, Row, Accordion, Col, Carousel } from "react-bootstrap";
+import { QuestionCategory, Question, CommentsPage, Comment } from "../../../models/courses/question";
 import { StatsQuestion } from "../../../models/courses/requests";
 import { ColumnChart } from 'react-chartkick'
 import 'chart.js';
@@ -71,13 +71,25 @@ const StatsCourse = ({ course }) => {
 };
 
 export const PaginatedCardComment = ({ question, course }) => {
-    console.log(question)
+    const [index, setIndex] = useState<number>(0);
+    const [comments, setComments] = useState<string[]>([])
+
+    const handleSelect = (selectedIndex, e) => {
+        setIndex(selectedIndex);
+    };
+
     return (
         <Col md={8} key={question.id}>
             <Card>
                 <Card.Title>
-                    {question.category}
-                </Card.Title></Card>
+                    {question.label}
+                </Card.Title>
+                <Card.Body>
+                    <Carousel activeIndex={index} onSelect={handleSelect}>
+
+                    </Carousel>
+                </Card.Body>
+            </Card>
         </Col>
     )
 }
@@ -96,9 +108,9 @@ const PaginatedComments = ({ course }) => {
         return (
             <Row>
                 {questions
-                    .map(question =>
-                        <PaginatedCardComment question={question} course={course} />
-                    )}
+                    .filter(question => question.category == QuestionCategory.Comment)
+                    .map(question => <PaginatedCardComment question={question} course={course} />)
+                }
             </Row>
         );
     }

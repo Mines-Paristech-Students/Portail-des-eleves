@@ -10,7 +10,7 @@ import { User } from "../models/user";
 import { Course } from "../models/courses/course"
 import { Form } from "../models/courses/form"
 import { Question } from "../models/courses/question"
-import { StatsQuestion } from "../models/courses/requests";
+import { StatsQuestion, CommentsPage } from "../models/courses/requests";
 
 
 const baseApi = "http://localhost:8000/api/v1";
@@ -224,6 +224,21 @@ export const api = {
                     `/courses/courses/${courseId}/stats`
                 )
             ),
+        comments_page: (courseId: number, questionId: number, page = 1, page_size = 5 ) => (
+            unwrap<CommentsPage>(
+                apiService.get(
+                    `/courses/comments`,
+                    {
+                        params: {
+                            course: courseId,
+                            question: questionId,
+                            page: page,
+                            page_size: page_size,
+                        }
+                    }
+                )
+            )
+        ),
         forms: {
             get: (formId: number) =>
                 unwrap<Form>(
