@@ -88,6 +88,8 @@ export const PaginatedCardComment = ({ question, course }) => {
     useEffect(() => {
         if (isFetching || !next) return;
 
+        if (next % PAGE_SIZE > 1) return;
+
         api.courses
             .comments_page(course.id, question.id, next, PAGE_SIZE)
             .then((page: CommentsPage) => {
