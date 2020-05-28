@@ -35,7 +35,7 @@ export const EventCard = ({
     userId?: string;
     canEdit?: boolean;
 }) => {
-    const isOver = () => event.endsAt > new Date();
+    const isOver = () => new Date() > event.endsAt;
 
     const newToast = useContext(ToastContext);
     const [showModal, setShowModal] = useState(false);
