@@ -17,7 +17,6 @@ export const AssociationFilesystemList = ({ association }) => {
     const history = useHistory();
 
     const [tagParams, setTagParams] = useState({});
-
     return (
         <AssociationLayout
             association={association}
@@ -37,7 +36,8 @@ export const AssociationFilesystemList = ({ association }) => {
             }
         >
             <Pagination
-                apiKey={["medias.list", associationId, tagParams]}
+                apiKey={["medias.list", associationId]}
+                apiParameters={tagParams}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
                     <>
@@ -101,6 +101,12 @@ export const AssociationFilesystemList = ({ association }) => {
                             )}
                         </Row>
                         {paginationControl}
+
+                        {medias.length === 0 && (
+                            <Card className="text-center lead">
+                                <Card.Body>Aucun fichier trouvé</Card.Body>
+                            </Card>
+                        )}
                     </>
                 )}
             />
