@@ -31,11 +31,19 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
     );
 };
 
-export const SidebarSeparator = (props: { size?: number }) => {
+/**
+ * A vertical space. Its height can be configured with the `size` props.
+ */
+export const SidebarSpace = (props: { size?: number }) => {
     let size = props.size ? props.size : 2;
 
     return <div className={`pb-${size} pt-${size}`} />;
 };
+
+/**
+ * A horizontal separator line.
+ */
+export const SidebarSeparator = () => <hr className="w-100" />;
 
 export const Sidebar = ({ title, children, ...rest }) => {
     return (
