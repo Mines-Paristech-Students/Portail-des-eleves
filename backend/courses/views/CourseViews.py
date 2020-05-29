@@ -40,7 +40,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         current_user = request.user
         course = self.get_object()
 
-        if Course.objects.filter(have_voted=current_user, id=course_pk).exists():
+        if Course.objects.filter(have_voted=current_user, id=course.id).exists():
             return Response("Has already voted!", status.HTTP_405_METHOD_NOT_ALLOWED)
 
         # Check course ID
@@ -57,11 +57,11 @@ class CourseViewSet(viewsets.ModelViewSet):
             if ratings_data:
                 for rating in ratings_data:
                     ratings_questions.append(rating["question"])
-                    rating["course"] = course_pk
+                    rating["course"] = course.id
             if comments_data:
                 for comment in comments_data:
                     comments_questions.append(comment["question"])
-                    comment["course"] = course_pk
+                    comment["course"] = course.id 
         except KeyError:
             return Response("Missing question id", status.HTTP_400_BAD_REQUEST)
 

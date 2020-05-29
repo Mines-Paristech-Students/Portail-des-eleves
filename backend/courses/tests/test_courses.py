@@ -48,11 +48,11 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     def destroy(self, pk, data="", courseat=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk))
 
-    def endpoint_avg_ratings(self, pk):
-        return f"/courses/courses/{pk}/avg_ratings/"
+    def endpoint_stats(self, pk):
+        return f"/courses/courses/{pk}/stats/"
 
-    def avg_ratings(self, pk):
-        return self.get(self.endpoint_avg_ratings(pk))
+    def stats(self, pk):
+        return self.get(self.endpoint_stats(pk))
 
     ########
     # LIST #
@@ -166,35 +166,40 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
 
     # Doesnt work yet
 
-    avg_ratings_course =  [
-        {
-            "id": 1,
-            "label": "3+3?",
-            "avg": 2.5,
-        },
-        {
-            "id": 2,
-            "label": "1?",
-            "avg": 5.0,
-        },
-    ]
+    stats_rating_1 = {
+        "id": 1,
+        "label": "3+3?",
+        "average": 2.5,
+        "histogram": {
+            1: 0,
+            2: 1,
+            3: 1,
+            4: 0,
+            5: 0,
+        }
+    }
 
-    def test_if_not_logged_in_then_cannot_get_avg_ratings(self):
-        res = self.avg_ratings(pk=1)
+    num_not_archvied = 2
+
+    def test_if_not_logged_in_then_cannot_get_stats(self):
+        res = self.stats(pk=1)
         self.assertStatusCode(res, 401)
 
-    def test_if_logged_in_then_can_get_avg_ratings(self):
+    def test_if_logged_in_then_can_get_stats(self):
         self.login("17simple")
-        res = self.avg_ratings(pk=1)
+        res = self.stats(pk=1)
         self.assertStatusCode(res, 200)
 
         # Does not contain archived questions
-        self.assertEqual(len(res.data), len(self.avg_ratings_course))
+        self.assertEqual(len(res.data), self.num_not_archvied)
 
-        # Zip fine, ordered by if
-        for org, recv in zip(self.avg_ratings_course, res.data):
-            self.assertEqual(org["id"], recv["id"])
-            self.assertEqual(org["label"], recv["label"])
-            self.assertEqual(org["avg"], recv["avg"])
+        # We only check the first one
+        stats_1 = res.data[0]
+        for key, value in self.stats_rating_1.items():
+            value_returned = stats_1[key]
+            self.assertIsNotNone(value_returned)
 
-    # TODO -> test comments
+            if isinstance(value, dict):
+                self.assertDictEqual(value, value_returned)
+            else:
+                self.assertEqual(value, value)
