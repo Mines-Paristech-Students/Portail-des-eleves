@@ -21,16 +21,19 @@ export enum TaggableModel {
  * @param model the `TaggableModel` value of the model we want the tag for.
  * @param id the id of the model
  * @param collapsed true if we want the tags to take less space
+ * @param props additional props for the React component
  * @constructor
  */
 export const TagList = ({
     model,
     id,
     collapsed = false,
+    ...props
 }: {
     model: TaggableModel;
     id: string;
     collapsed?: boolean;
+    [key: string]: any;
 }) => {
     const { data: tags, status, error } = useBetterQuery<
         PaginatedResponse<Tag[]>
@@ -43,7 +46,7 @@ export const TagList = ({
             Erreur lors du chargement des tags: {(error as any).toString()}
         </p>
     ) : tags ? (
-        <>
+        <div {...props}>
             {tags.results.map((tag) => (
                 <TagComponent
                     tag={tag.namespace.name}
@@ -52,6 +55,6 @@ export const TagList = ({
                     collapsed={collapsed}
                 />
             ))}
-        </>
+        </div>
     ) : null;
 };

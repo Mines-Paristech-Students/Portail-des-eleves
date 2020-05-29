@@ -18,7 +18,12 @@ export const medias = {
             )
         ),
     get: (fileId) =>
-        unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
+        unwrap<Media>(apiService.get(`/associations/media/${fileId}`)).then(
+            (media) => ({
+                ...media,
+                uploadedOn: new Date(media.uploadedOn),
+            })
+        ),
     patch: (file) =>
         unwrap<Media>(
             apiService.patch(`/associations/media/${file.id}/`, file)
