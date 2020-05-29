@@ -44,18 +44,20 @@ export const courses = {
                 `/courses/courses/${courseId}/stats`
             )
         ),
-    commentsPage: (courseId: number, questionId: number, page: number, page_size: number) => (
-        unwrap<PaginatedResponse<Comment[]>>(
-            apiService.get(
-                `/courses/comments/${toUrlParams({
-                    course: courseId,
-                    question: questionId,
-                    page: page,
-                    page_size: page_size,
-                })}`
+    comments: {
+        list: (courseId: number, questionId: number, page: number, page_size: number) => (
+            unwrap<PaginatedResponse<Comment[]>>(
+                apiService.get(
+                    `/courses/comments${toUrlParams({
+                        course: courseId,
+                        question: questionId,
+                        page: page,
+                        page_size: page_size,
+                    })}`
+                )
             )
-        )
-    ),
+        ),
+    },
 
     forms: forms,
 }

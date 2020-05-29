@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PageTitle } from "../../utils/PageTitle";
-import { api, useBetterQuery  } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import { Card, Container, Row, Accordion, Col, Button } from "react-bootstrap";
 import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion } from "../../../models/courses/requests";
@@ -30,15 +30,11 @@ const StatsCardQuestion = ({ statsQuestion }) => {
             <Accordion>
                 <Card className="text-center" >
                     <Accordion.Toggle as={Card.Body} eventKey="0">
-                        <Card.Header>
-                            <Card.Title>{statsQuestion.label}</Card.Title>
-                            <Card.Subtitle>{DigitToStar(Number(statsQuestion.average))}</Card.Subtitle>
-                        </Card.Header>
-                        <Card.Body>
-                            <Card.Text>
-                                Histograme <i className="fe fe-arrow-down" />
-                            </Card.Text>
-                        </Card.Body>
+                        <Card.Title>{statsQuestion.label}</Card.Title>
+                        <Card.Subtitle>{DigitToStar(Number(statsQuestion.average))}</Card.Subtitle>
+                        <Card.Text>
+                            Histograme <i className="fe fe-arrow-down" />
+                        </Card.Text>
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Card.Footer>
@@ -78,22 +74,15 @@ export const PaginatedCardComment = ({ question, course }) => {
 
     return (
         <Col md={8} key={question.id}>
-            <Card>
-                <Card.Header>
+            <Card className="text-center">
+                <Card.Body>
                     <Card.Title>
                         {question.label}
                     </Card.Title>
-                </Card.Header>
-                <Card.Footer
-                    as={Button}
-                    onClick={(e) => setShow(!show)}
-                >
-                    <Card.Text>
-                        Détails <i className="fe fe-list" />
-                    </Card.Text>
-                </Card.Footer>
+                </Card.Body>
 
-                <PaginatedModalComment question={question} course={course} show={show} />
+                <PaginatedModalComment question={question} course={course} />
+
             </Card>
         </Col>
     )
