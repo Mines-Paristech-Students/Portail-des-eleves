@@ -64,14 +64,12 @@ class ElectionSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(), many=True, read_only=False
     )
     choices = ChoiceSerializer(many=True, read_only=False)
-    has_voted = serializers.SerializerMethodField(read_only=True)
-    is_registered = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Election
 
         # The 'voters' and 'ballots' fields are on purpose not included.
-        read_only_fields = ("id", "has_voted", "is_registered")
+        read_only_fields = ("id",)
         fields = read_only_fields + (
             "association",
             "name",
@@ -81,14 +79,6 @@ class ElectionSerializer(serializers.ModelSerializer):
             "ends_at",
             "max_choices_per_ballot",
         )
-
-    def get_has_voted(self, obj):
-        idi = self.context["request"].user.id
-        return (idi,) in obj.voters.values_list("id")
-
-    def get_is_registered(self, obj):
-        idi = self.context["request"].user.id
-        return (idi,) in obj.registered_voters.values_list("id")
 
     def is_valid(self, raise_exception=False):
         """Check if the dates are consistent."""
@@ -103,13 +93,13 @@ class ElectionSerializer(serializers.ModelSerializer):
 
         if self._errors and raise_exception:
             raise ValidationError(self._errors)
+
         return super(ElectionSerializer, self).is_valid(raise_exception)
 
     @classmethod
     def validate_against_instance(cls, instance, validated_data):
         # If the data is in validated_data, return it; otherwise, if the field is in instance, return it; otherwise,
         # return None.
-
         starts_at = validated_data.get(
             "starts_at", getattr(instance, "starts_at", None)
         )
@@ -122,7 +112,6 @@ class ElectionSerializer(serializers.ModelSerializer):
                 )
 
     def update(self, election, validated_data):
-
         self.validate_against_instance(election, validated_data)
 
         if "association" in validated_data:
