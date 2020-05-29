@@ -78,7 +78,7 @@ export const PaginatedCardComment = ({ question, course }) => {
     const newToast = useContext(ToastContext);
     const [index, setIndex] = useState<number>(0);
     const [next, setNext] = useState<number | null>(1);
-    const [isFetching, setIsFetching] = useState<boolean>(true);
+    const [isFetching, setIsFetching] = useState<boolean>(false);
     const [comments, setComments] = useState<string[]>([])
 
     const handleSelect = (selectedIndex, e) => {
@@ -88,7 +88,7 @@ export const PaginatedCardComment = ({ question, course }) => {
     useEffect(() => {
         if (isFetching || !next) return;
 
-        if (next % PAGE_SIZE > 1) return;
+        if (Math.abs(next % PAGE_SIZE) > 1) return;
 
         api.courses
             .comments_page(course.id, question.id, next, PAGE_SIZE)
@@ -134,8 +134,8 @@ export const PaginatedCardComment = ({ question, course }) => {
                         prevIcon={<span aria-hidden="true" className="fe fe-left-circle" />}
                     >
                         {comments.map(comment => 
-                            <Carousel.Item>
-                                <Col md={8}></Col>
+                            <Carousel.Item className="overflow-auto">
+                                <p>{comment}</p>
                             </Carousel.Item>    
                         )}
                     </Carousel>
