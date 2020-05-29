@@ -54,6 +54,12 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     def stats(self, pk):
         return self.get(self.endpoint_stats(pk))
 
+    def endpoint_has_voted(self, pk):
+        return f"/courses/courses/{pk}/has_voted/"
+
+    def has_voted(self, pk):
+        return self.get(self.endpoint_has_voted(pk))
+
     ########
     # LIST #
     ########
@@ -164,8 +170,6 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     # AVG_RATINGS #
     ###############
 
-    # Doesnt work yet
-
     stats_rating_1 = {
         "id": 1,
         "label": "3+3?",
@@ -203,3 +207,27 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
                 self.assertDictEqual(value, value_returned)
             else:
                 self.assertEqual(value, value)
+
+    ##############
+    # HAVE_VOTED #
+    ##############
+
+    def test_if_not_logged_in_then_cannot_check_has_voted(self):
+        res = self.has_voted(pk=1)
+        self.assertStatusCode(res, 401)
+
+    def test_if_logged_in_then_can_check_has_already_voted(self):
+        self.login("17simple")
+
+        res = self.has_voted(pk=1)
+        self.assertStatusCode(res, 200)
+
+        self.assertEqual(res.data["has_voted"], True)
+
+    def test_if_logged_in_then_can_check_has_not(self):
+        self.login("17bocquet")
+
+        res = self.has_voted(pk=1)
+        self.assertStatusCode(res, 200)
+
+        self.assertEqual(res.data["has_voted"], False)

@@ -31,7 +31,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         has_voted = Course.objects.filter(id=course.id, have_voted=current_user).exists()
 
-        return JsonResponse({"has_voted": has_voted}, safe=False)
+        return Response({"has_voted": has_voted}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
     def submit(self, request, pk=None):
