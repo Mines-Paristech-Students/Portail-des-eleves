@@ -125,6 +125,7 @@ class Question(models.Model):
         Form,
         related_name="question",
         on_delete=models.CASCADE,
+        blank=True, null=True,
     )
 
 class Rating(models.Model):
