@@ -110,6 +110,15 @@ export const EventCard = ({
                 </Card.Title>
 
                 <div className="card-options">
+                    {canEdit && (
+                        <Link
+                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
+                            className={"btn btn-secondary btn-sm mr-2"}
+                        >
+                            Modifier
+                        </Link>
+                    )}
+
                     {isNotOver() && (
                         <>
                             {userId &&
@@ -133,15 +142,6 @@ export const EventCard = ({
                                 </Button>
                             )}
                         </>
-                    )}
-
-                    {canEdit && (
-                        <Link
-                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
-                            className={"btn btn-secondary btn-sm"}
-                        >
-                            Modifier
-                        </Link>
                     )}
                 </div>
             </Card.Header>

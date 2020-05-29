@@ -16,6 +16,7 @@ import {
     ListEventsSidebar,
     ListEventsSidebarParameters,
 } from "./ListEventsSidebar";
+import { useParams } from "react-router";
 
 /**
  * The API parameters are a bit different of the sidebar parameters and thus need to be transformed.
@@ -107,6 +108,9 @@ export const AssociationListEvents = ({
                                             event={event}
                                             association={association}
                                             userId={user ? user.id : undefined}
+                                            canEdit={association.myRole?.permissions?.includes(
+                                                "event"
+                                            )}
                                         />
                                     </Col>
                                 ))
