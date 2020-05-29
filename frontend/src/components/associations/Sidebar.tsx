@@ -43,7 +43,7 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
-                {association.myRole.permissions.includes("administration") && (
+                {association.myRole.permissions?.includes("administration") && (
                     <SidebarItem
                         icon={"settings"}
                         to={`/associations/${association.id}/parametres`}
@@ -51,7 +51,7 @@ export const AssociationSidebar = ({ association }) => {
                         Paramètres
                     </SidebarItem>
                 )}
-                {association.myRole.permissions.includes("marketplace") && (
+                {association.myRole.permissions?.includes("marketplace") && (
                     <MarketSubNavbar association={association} />
                 )}
             </Sidebar>
@@ -77,7 +77,7 @@ const ListPagesItem = ({ pages, association }) =>
     ));
 
 const AddPageItem = ({ association }) =>
-    association.myRole.permissions.includes("page") ? (
+    association.myRole.permissions?.includes("page") ? (
         <SidebarItem
             icon={"plus"}
             to={`/associations/${association.id}/pages/new`}

@@ -23,7 +23,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
     const history = useHistory();
     const newToast = useContext(ToastContext);
 
-    if (!association.myRole.permissions.includes("media")) {
+    if (!association.myRole.permissions?.includes("media")) {
         return <ForbiddenError />;
     }
 

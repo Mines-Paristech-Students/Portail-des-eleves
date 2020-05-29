@@ -29,7 +29,7 @@ export const AssociationPageRenderer = ({ association, page }) => (
             <Link
                 to={`/associations/${association.id}/pages/${page.id}/modifier`}
             >
-                Editer
+                Modifier
             </Link>
         </p>
         <p>{page.text}</p>

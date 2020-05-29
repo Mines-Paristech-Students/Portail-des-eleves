@@ -1,5 +1,4 @@
 import React from "react";
-import { PageTitle } from "../utils/PageTitle";
 import Container from "react-bootstrap/Container";
 import { Loading } from "../utils/Loading";
 import { api, useBetterPaginatedQuery } from "../../services/apiService";
@@ -23,13 +22,18 @@ export const AssociationHome = ({ association }) => {
     ) : data.count === 0 ? (
         <Container className={"text-center"}>
             <p style={{ fontSize: "10em" }} className={"m-0"}>
-                🏡
+                <span
+                    role="img"
+                    aria-label="Une sylmpatique demeure au jardin accueillant"
+                >
+                    🏡
+                </span>
             </p>
             <h1>
                 Accueil <br />
                 <br />
                 <small className="text-muted">
-                    Pour définir une page d'accueil, créez une page appellée
+                    Pour définir une page d'accueil, créez une page appelée
                     « Accueil ». C'est aussi simple que ça !
                 </small>
             </h1>
