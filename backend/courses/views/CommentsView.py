@@ -4,6 +4,7 @@ from rest_framework import pagination
 
 from courses.models import Course, Form, Question, Comment, Rating
 from courses.serializers import CommentSerializer
+from courses.permissions import FormPermission
 
 
 class CommentPagination(pagination.PageNumberPagination):
@@ -15,7 +16,7 @@ class CommentPagination(pagination.PageNumberPagination):
 class CommentsPaginatedList(generics.ListAPIView):
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
-    authentication_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     mapping_params = {
         "course": "course__id",
