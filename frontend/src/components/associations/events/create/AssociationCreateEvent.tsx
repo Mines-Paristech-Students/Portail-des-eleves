@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Association } from "../../../../models/associations/association";
 import { PageTitle } from "../../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
@@ -11,6 +11,10 @@ import Button from "react-bootstrap/Button";
 import { getRandom } from "../../../../utils/random";
 import { DayTimePickerInputFormGroup } from "../../../utils/forms/DayTimePickerFormGroup";
 import dayjs from "dayjs";
+import { queryCache, useMutation } from "react-query";
+import { api } from "../../../../services/apiService";
+import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { AxiosError } from "axios";
 
 const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
     ["Passace", "Et glou, et glou, et glou", "Place du village"],
@@ -26,8 +30,33 @@ export const AssociationCreateEvent = ({
 }: {
     association: Association;
 }) => {
-    // Today - 1.
-    let minStartDate = new Date();
+    const newToast = useContext(ToastContext);
+    const [create] = useMutation(api.events.create, {
+        onSuccess: (response) => {
+            queryCache.refetchQueries(["events.list"]);
+
+            if (response.status === 201) {
+                newToast({
+                    message: "Événement créé.",
+                    level: ToastLevel.Success,
+                });
+            }
+        },
+        onError: (errorAsUnknown) => {
+            const error = errorAsUnknown as AxiosError;
+
+            console.log(error.response);
+
+            newToast({
+                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+                    error.response === undefined
+                        ? ""
+                        : "Détails : " + JSON.stringify(error.response.data)
+                }`,
+                level: ToastLevel.Error,
+            });
+        },
+    });
 
     return (
         <>
@@ -37,7 +66,7 @@ export const AssociationCreateEvent = ({
                     initialValues={{
                         name: "",
                         description: "",
-                        startsAt: dayjs().toDate(),
+                        startsAt: dayjs().add(1, "hour").toDate(),
                         endsAt: dayjs().add(4, "hour").toDate(),
                         place: "",
                     }}
@@ -48,7 +77,7 @@ export const AssociationCreateEvent = ({
                         ),
                         startsAt: Yup.date()
                             .min(
-                                minStartDate,
+                                new Date(),
                                 "L’événement doit commencer aujourd’hui ou dans le futur."
                             )
                             .required(
@@ -69,7 +98,14 @@ export const AssociationCreateEvent = ({
                             ),
                         place: Yup.string().required("Ce champ est requis."),
                     })}
-                    onSubmit={(values) => console.log(values)}
+                    onSubmit={(values) =>
+                        create({
+                            data: {
+                                association: association.id,
+                                ...values,
+                            },
+                        })
+                    }
                 >
                     <Form>
                         <Card.Body>

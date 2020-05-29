@@ -5,6 +5,7 @@ import {
     toUrlParams,
 } from "../apiService";
 import { Event } from "../../models/associations/event";
+import dayjs from "dayjs";
 
 export const events = {
     list: (
@@ -36,6 +37,23 @@ export const events = {
         apiService.put(`/associations/events/${eventId}/join/`),
     leave: ({ eventId }) =>
         apiService.put(`/associations/events/${eventId}/leave/`),
+    create: ({
+        data,
+    }: {
+        data: {
+            association: string;
+            name: string;
+            description: string;
+            startsAt: Date;
+            endsAt: Date;
+            place: string;
+        };
+    }) =>
+        apiService.post(`/associations/events/`, {
+            ...data,
+            startsAt: dayjs(data.startsAt).format("YYYY-MM-DDTHH:mm:ss"),
+            endsAt: dayjs(data.endsAt).format("YYYY-MM-DDTHH:mm:ss"),
+        }),
     save: (event) => {
         if (!event.id) {
             return unwrap<Event>(

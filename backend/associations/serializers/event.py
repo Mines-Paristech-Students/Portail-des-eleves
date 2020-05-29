@@ -32,7 +32,7 @@ class EventSerializer(serializers.ModelSerializer):
         queryset=Association.objects.all(), read_only=False
     )
     participants = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), many=True, read_only=False
+        queryset=User.objects.all(), many=True, read_only=False, default=[]
     )
 
     class Meta:
