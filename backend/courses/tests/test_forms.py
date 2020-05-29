@@ -1,3 +1,4 @@
+from courses.models import Form, Question
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 
