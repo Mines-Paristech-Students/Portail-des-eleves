@@ -1,12 +1,8 @@
-from associations.serializers.association import (
-    AssociationShortSerializer,
-    AssociationSerializer,
-    RoleSerializer,
-    RoleShortSerializer,
-    WriteRoleSerializer,
-)
+from associations.serializers.association import AssociationSerializer
+from associations.serializers.association_short import AssociationShortSerializer
+from associations.serializers.role import RoleSerializer, WriteRoleSerializer
 from associations.serializers.election import ElectionSerializer, BallotSerializer
-from associations.serializers.event import EventSerializer
+from associations.serializers.event import EventSerializer, ReadOnlyEventSerializer
 from associations.serializers.library import (
     CreateLoanSerializer,
     UpdateLoanSerializer,

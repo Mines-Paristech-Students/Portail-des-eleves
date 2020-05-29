@@ -1,6 +1,10 @@
 from typing import List
 
-from scipy.optimize import linear_sum_assignment
+# lapsolver is quite hard to install on Windows. Fortunately, scipy offers a similar, albeit slower, function.
+try:
+    from lapsolver import solve_dense as solver
+except ImportError:
+    from scipy.optimize import linear_sum_assignment as solver
 
 from authentication.models import User
 from repartitions.models import (
@@ -18,10 +22,8 @@ import numpy as np
 The repartition algorithm is based on Munkres algorithm, or "Hungarian" algorithm, which, given a cost matrix, 
 returns a pairing between lines and columns that minimises the cost.
 
-The implementation we use here is scipy's
-https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
-(note : some C/C++ based implementation with  python binding exist and are way faster than this one, but maybe a bit
-more difficult to use. Perhaps it could be interesting to use one of them)
+The implementation we use here is lapsolver's
+https://github.com/cheind/py-lapsolver
 
 However it does more than simply calling Munkres algorithm because we have two additional constraints : 
 - we have  "categories" of users ie subsets that have to be mixed inside of each group. For instance if we have 10 users
@@ -152,7 +154,7 @@ def make_repartition_for_category(
             while len(cost_matrix) < len(cost_matrix[0]):
                 cost_matrix.append([0] * len(cost_matrix[0]))
 
-            links = linear_sum_assignment(cost_matrix)
+            links = solver(cost_matrix)
 
             for user_index, place_index in zip(links[0], links[1]):
                 if user_index >= len(user_campaigns):
@@ -168,8 +170,8 @@ def make_repartition_for_category(
             penalty[np.argmax(repartition_size)] += 1
         else:
             repartition_cardinal_diff = (
-                0
-            )  # there is nothing to do, avoid being stuck in an infinite loop
+                0  # there is nothing to do, avoid being stuck in an infinite loop
+            )
 
     return repartition
 

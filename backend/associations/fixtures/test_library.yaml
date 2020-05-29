@@ -77,8 +77,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -86,6 +87,7 @@
     user: 17admin_bd-tek
     association: bd-tek
     role: Admin no library
+    start_date: "2017-01-01"
     administration_permission: true
     library_permission: false
 
@@ -96,8 +98,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -105,6 +108,7 @@
     user: 17library_bd-tek
     association: bd-tek
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -115,8 +119,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BD-Tek
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -124,6 +129,7 @@
     user: 17member_bd-tek
     association: bd-tek
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: false
 
@@ -134,8 +140,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biero
     last_name: Manager
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -143,6 +150,7 @@
     user: 17admin_biero
     association: biero
     role: Admin no library
+    start_date: "2017-01-01"
     administration_permission: true
     library_permission: false
 
@@ -153,8 +161,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: Biéro
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -162,6 +171,7 @@
     user: 17library_biero
     association: biero
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -172,8 +182,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Library administrator
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -181,6 +192,7 @@
     user: 17library_bde
     association: bde
     role: Library administrator
+    start_date: "2017-01-01"
     administration_permission: false
     library_permission: true
 
@@ -191,8 +203,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: BDE
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 6
@@ -200,6 +213,7 @@
     user: 17admin_bde
     association: bde
     role: Admin no library
+    start_date: "2017-01-01"
     administration_permission: true
     library_permission: false
 
@@ -208,9 +222,9 @@
   fields:
     loanable: 1
     user: 17library_bd-tek
-    loan_date: '2019-01-01T00:00:00+00:00'
-    expected_return_date: '2019-01-07T00:00:00+00:00'
-    real_return_date: '2019-01-02T00:00:00+00:00'
+    loan_date: "2019-01-01T00:00:00+00:00"
+    expected_return_date: "2019-01-07T00:00:00+00:00"
+    real_return_date: "2019-01-02T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -218,9 +232,9 @@
   fields:
     loanable: 1
     user: 17admin_bd-tek
-    loan_date: '2019-01-03T00:00:00+00:00'
-    expected_return_date: '2019-01-09T00:00:00+00:00'
-    real_return_date: '2019-01-04T00:00:00+00:00'
+    loan_date: "2019-01-03T00:00:00+00:00"
+    expected_return_date: "2019-01-09T00:00:00+00:00"
+    real_return_date: "2019-01-04T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -228,9 +242,9 @@
   fields:
     loanable: 1
     user: 17admin
-    loan_date: '2019-01-05T00:00:00+00:00'
-    expected_return_date: '2019-01-11T00:00:00+00:00'
-    real_return_date: '2019-01-06T00:00:00+00:00'
+    loan_date: "2019-01-05T00:00:00+00:00"
+    expected_return_date: "2019-01-11T00:00:00+00:00"
+    real_return_date: "2019-01-06T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -238,9 +252,9 @@
   fields:
     loanable: 1
     user: 17member_bd-tek
-    loan_date: '2019-01-07T00:00:00+00:00'
-    expected_return_date: '2019-01-13T00:00:00+00:00'
-    real_return_date: '2019-01-08T00:00:00+00:00'
+    loan_date: "2019-01-07T00:00:00+00:00"
+    expected_return_date: "2019-01-13T00:00:00+00:00"
+    real_return_date: "2019-01-08T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -255,9 +269,9 @@
   fields:
     loanable: 4
     user: 17admin_bd-tek
-    loan_date: '2019-01-03T00:00:00+00:00'
-    expected_return_date: '2019-01-09T00:00:00+00:00'
-    real_return_date: '2019-01-04T00:00:00+00:00'
+    loan_date: "2019-01-03T00:00:00+00:00"
+    expected_return_date: "2019-01-09T00:00:00+00:00"
+    real_return_date: "2019-01-04T00:00:00+00:00"
     status: PENDING
 
 - model: associations.loan
@@ -279,9 +293,9 @@
   fields:
     loanable: 1
     user: 17simple
-    loan_date: '2018-03-04T00:00:00+00:00'
-    expected_return_date: '2018-03-11T00:00:00+00:00'
-    real_return_date: '2018-03-07T00:00:00+00:00'
+    loan_date: "2018-03-04T00:00:00+00:00"
+    expected_return_date: "2018-03-11T00:00:00+00:00"
+    real_return_date: "2018-03-07T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -289,9 +303,9 @@
   fields:
     loanable: 3
     user: 17simple
-    loan_date: '2018-03-04T00:00:00+00:00'
-    expected_return_date: '2018-03-11T00:00:00+00:00'
-    real_return_date: '2018-03-07T00:00:00+00:00'
+    loan_date: "2018-03-04T00:00:00+00:00"
+    expected_return_date: "2018-03-11T00:00:00+00:00"
+    real_return_date: "2018-03-07T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -313,8 +327,8 @@
   fields:
     loanable: 4
     user: 17wan-fat
-    loan_date: '2018-03-04T00:00:00+00:00'
-    expected_return_date: '2018-03-11T00:00:00+00:00'
+    loan_date: "2018-03-04T00:00:00+00:00"
+    expected_return_date: "2018-03-11T00:00:00+00:00"
     status: BORROWED
 
 - model: associations.loan
@@ -343,7 +357,7 @@
   fields:
     loanable: 3
     user: 17wan-fat
-    expected_return_date: '2018-03-11T00:00:00+00:00'
+    expected_return_date: "2018-03-11T00:00:00+00:00"
     status: ACCEPTED
 
 - model: associations.loan
@@ -358,9 +372,9 @@
   fields:
     loanable: 4
     user: 17wan-fat
-    loan_date: '2018-02-04T00:00:00+00:00'
-    expected_return_date: '2018-02-11T00:00:00+00:00'
-    real_return_date: '2018-02-09T00:00:00+00:00'
+    loan_date: "2018-02-04T00:00:00+00:00"
+    expected_return_date: "2018-02-11T00:00:00+00:00"
+    real_return_date: "2018-02-09T00:00:00+00:00"
     status: RETURNED
 
 - model: associations.loan
@@ -368,7 +382,7 @@
   fields:
     loanable: 1
     user: 17wan-fat
-    expected_return_date: '2018-03-11T00:00:00+00:00'
+    expected_return_date: "2018-03-11T00:00:00+00:00"
     status: ACCEPTED
 
 - model: associations.loan
@@ -383,6 +397,6 @@
   fields:
     loanable: 2
     user: 17wan-fat
-    loan_date: '2018-03-04T00:00:00+00:00'
-    expected_return_date: '2018-03-11T00:00:00+00:00'
+    loan_date: "2018-03-04T00:00:00+00:00"
+    expected_return_date: "2018-03-11T00:00:00+00:00"
     status: BORROWED

@@ -19,3 +19,6 @@ class Media(models.Model):
 
     uploaded_on = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["name"]

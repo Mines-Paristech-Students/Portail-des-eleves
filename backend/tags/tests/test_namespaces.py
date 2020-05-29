@@ -36,29 +36,34 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         # Try to get all namespaces
         res = self.get("/tags/namespaces/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 2)
-        self.assertSetEqual({n["name"] for n in res.data}, {"users", "farine"})
+        self.assertEqual(len(res.data["results"]), 2)
+        self.assertSetEqual(
+            {n["name"] for n in res.data["results"]}, {"users", "farine"}
+        )
 
-        # Try to get only the namespaces for the association
-        res = self.get("/tags/namespaces/?scoped_to_model=association&scoped_to_pk=pdm")
+        # Try to get only the namespaces for the association + globals
+        res = self.get("/tags/namespaces/association/pdm/")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 1)
-        self.assertSetEqual({n["name"] for n in res.data}, {"farine"})
+        self.assertEqual(len(res.data["namespaces"]), 2)
+        self.assertSetEqual(
+            {n["name"] for n in res.data["namespaces"]}, {"farine", "users"}
+        )
 
         # Try to get namespace forgetting the scope
         res = self.post(
             "/tags/namespaces/", {"scoped_to_model": "association", "name": "test_v"}
         )
-        self.assertStatusCode(res, 400)
+        self.assertStatusCode(res, 403)
 
         res = self.post("/tags/namespaces/", {"scoped_to_pk": "pdm", "name": "test_w"})
-        self.assertStatusCode(res, 400)
+        self.assertStatusCode(res, 403)
+        # self.assertStatusCode(res, 400)
 
         # Try to get global namespace
         res = self.get("/tags/namespaces/?scoped_to_model=global")
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 1)
-        self.assertSetEqual({n["name"] for n in res.data}, {"users"})
+        self.assertEqual(len(res.data["results"]), 1)
+        self.assertSetEqual({n["name"] for n in res.data["results"]}, {"users"})
 
         #######################################
         # Creation without proper authorization
@@ -141,3 +146,24 @@ class TagNamespaceTestCase(TagsBaseTestCase):
             {"scoped_to_model": "association", "scoped_to_pk": "biero"},
         )
         self.assertStatusCode(res, 400)
+
+    def test_get_namespace_for_object(self):
+        self.login("17admin_pdm")
+        res = self.post(
+            "/tags/namespaces/",
+            {"scoped_to_model": "association", "scoped_to_pk": "pdm", "name": "farine"},
+        )
+        self.assertStatusCode(res, 201)
+
+        namespace_id = res.data["id"]
+
+        results = self.get("/tags/namespaces/?product=4").data[
+            "results"
+        ]  # get namespaces for a pdm product
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["id"], namespace_id)
+
+        results = self.get("/tags/namespaces/?product=3").data[
+            "results"
+        ]  # get namespaces for a biero product
+        self.assertEqual(len(results), 0)

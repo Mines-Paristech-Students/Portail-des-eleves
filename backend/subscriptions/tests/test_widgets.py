@@ -1,10 +1,6 @@
-import datetime
-
-from django.db.models import Count, Q
-
-from associations.models import Election, Event, Library, Marketplace, Page
-from associations.views.marketplace import compute_balance, BalanceView
-from authentication.views import get_birthdays
+from associations.models import Marketplace
+from associations.views.marketplace import compute_balance
+from authentication.views.birthdays import birthdays_to_json
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 ALL_USERS = ["17simple", "18simple", "17admin"]
@@ -12,20 +8,7 @@ ALL_USERS = ["17simple", "18simple", "17admin"]
 
 
 class BaseWidgetsTestCase(WeakAuthenticationBaseTestCase):
-    # TODO: maybe fixtures are a bad approach because of pk collisions and it would be better to dynamically generate
-    # these.
-    # Or, create a "giant" fixture which would contain everything without collisions.
-    fixtures = [
-        "test_authentication.yaml",
-        "test_marketplace.yaml",
-        "test_birthdays.json",
-        "test_library.yaml",
-        "test_polls.yaml",
-        "test_repartition_api.yaml",
-        #        "test_event.yaml",
-        "test_page.yaml",
-        "test_election.yaml",
-    ]
+    fixtures = ["test_widgets.yaml", "test_birthdays.json"]
 
     def endpoint_list_widgets(self):
         return f"/subscriptions/"
@@ -142,23 +125,25 @@ class WidgetsTestCase(BaseWidgetsTestCase):
         for user in ALL_USERS:
             self.login(user)
             res = self.list_widgets()
-            self.assertEqual(
-                res.data,
-                {
-                    "main": self.endpoint_timeline(),
-                    "mandatory": [
-                        self.endpoint_balance(),
-                        self.endpoint_birthday(),
-                        self.endpoint_poll(),
-                        self.endpoint_repartition(),
-                        self.endpoint_vote(),
-                    ],
-                    "optional": [
-                        self.endpoint_library_bd_tek(),
-                        self.endpoint_marketplace_pdm(),
-                    ],
-                },
-            )
+            self.assertStatusCode(res, 200)
+
+            self.assertSetEqual({"widgets"}, set(res.data.keys()))
+            self.assertEqual(len(res.data["widgets"]), 10)
+
+            for widget in res.data["widgets"]:
+                self.assertSetEqual({"type", "mandatory", "url"}, set(widget.keys()))
+
+                if widget["type"] in (
+                    "timeline",
+                    "birthday",
+                    "poll",
+                    "vote",
+                    "repartition",
+                    "balance",
+                ):
+                    self.assertTrue(widget["mandatory"], msg=widget)
+                else:
+                    self.assertFalse(widget["mandatory"], msg=widget)
 
     def test_balance_widget(self):
         for user in ALL_USERS:
@@ -166,7 +151,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             res = self.balance_widget()
             self.assertStatusCode(res, 200)
             self.assertEqual(
-                res.data,
+                res.data["balances"],
                 [
                     {
                         "balance": compute_balance(user, marketplace.id),
@@ -182,44 +167,25 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.login(user)
             res = self.birthday_widget()
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data, get_birthdays(None, 7))
+            self.assertEqual(res.data, birthdays_to_json(7))
 
     def test_library_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.library_widget("bd-tek")
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                res.data,
-                {
-                    "suggested_loanables": Library.objects.get(pk="bd-tek")
-                    .loanables.annotate(
-                        number_of_borrow=Count("loans", filter=Q(user=user))
-                    )
-                    .order_by("-number_of_borrow")
-                    .filter(loans_real_return_date__is_null=False)[0:5]
-                    .all()
-                },
-            )
+        self.login("17simple")
+        res = self.library_widget("bd-tek")
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("suggested_loanables" in res.data)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(len(res.data["suggested_loanables"]), 2)
 
     def test_marketplace_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.marketplace_widget("pdm")
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                res.data,
-                {
-                    "balance": BalanceView.get_balance_in_json("pdm", user),
-                    "suggested_products": Marketplace.objects.get(pk="pdm")
-                    .products.annotate(
-                        number_of_purchases=Count("transaction", filter=Q(buyer=user))
-                    )
-                    .order_by("-number_of_purchases")
-                    .exclude(number_left=0)[0:5]
-                    .all(),
-                },
-            )
+        self.login("17simple")
+        res = self.marketplace_widget("pdm")
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("suggested_products" in res.data and "balance" in res.data)
+        self.assertEqual(len(res.data), 2)
+        self.assertEqual(len(res.data["suggested_products"]), 2)
 
     def test_poll_widget(self):
         for user in ALL_USERS:
@@ -229,35 +195,24 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.assertEqual(res.data, {})
 
     def test_repartition_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.repartition_widget()
-            self.assertStatusCode(res, 200)
-            self.assertEqual(res.data, {})  # TODO once repartition widget is written.
+        # TODO once repartition widget is written.
+        pass
 
     def test_timeline_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.timeline_widget()
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                len(res.data),
-                Event.objects.filter(
-                    ends_at__lt=datetime.datetime.now(),
-                    starts_at__gt=datetime.datetime.now(),
-                    participants__in=user,
-                )
-                .order_by("-starts_at")
-                .count()
-                + Page.objects.order_by("-last_update_date")[0:10].count(),
-            )
+        self.login("17simple")
+        res = self.timeline_widget()
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("events" in res.data and "pages" in res.data)
+        self.assertEqual(len(res.data), 2)
+        self.assertEqual(len(res.data["events"]), 2)
+        self.assertEqual(len(res.data["pages"]), 3)
 
     def test_vote_widget(self):
-        for user in ALL_USERS:
-            self.login(user)
-            res = self.vote_widget()
-            self.assertStatusCode(res, 200)
-            self.assertEqual(
-                len(res.data),
-                Election.objects.filter(registered_voters__id=user).count(),
-            )
+        self.login("17simple")
+        res = self.vote_widget()
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue("elections" in res.data)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(len(res.data["elections"]), 1)

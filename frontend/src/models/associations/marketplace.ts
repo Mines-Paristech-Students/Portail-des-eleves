@@ -26,7 +26,7 @@ export enum TransactionStatus {
     Rejected = "REJECTED",
     Validated = "VALIDATED",
     Delivered = "DELIVERED",
-    Refunded = "REFUNDED"
+    Refunded = "REFUNDED",
 }
 
 export interface Transaction {
@@ -38,4 +38,18 @@ export interface Transaction {
     date: Date;
     status: TransactionStatus;
     marketplace: Marketplace;
+}
+
+export enum FundingStatus {
+    Funded = "FUNDED",
+    Refunded = "REFUNDED",
+}
+
+export interface Funding {
+    id: string;
+    user: User;
+    value: number;
+    date: Date;
+    marketplace: Marketplace;
+    status: FundingStatus;
 }

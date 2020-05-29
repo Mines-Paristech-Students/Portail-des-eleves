@@ -1,34 +1,73 @@
+import django_filters
+from django.db import IntegrityError
+from django.db.models import Q
 from django.http import HttpResponseBadRequest
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django_filters import rest_framework as filters
 from rest_framework import mixins
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
+from tags.filters.related_to import RelatedToFilter
 from tags.models import Namespace, Tag
 from tags.permissions import (
     NamespacePermission,
     user_can_link_tag_to,
     ManageTagPermission,
+    get_parent_object,
 )
 from tags.serializers import NamespaceSerializer, TagSerializer
 
-"""
 
+class NamespaceFilter(filters.FilterSet):
+    # theses props should be listed automatically but because of drf-filter magics
+    # it's hard to do so.
+    association = django_filters.CharFilter(method="filter_child_of_related")
+    loanable = django_filters.CharFilter(method="filter_child_of_related")
+    media = django_filters.CharFilter(method="filter_child_of_related")
+    page = django_filters.CharFilter(method="filter_child_of_related")
+    product = django_filters.CharFilter(method="filter_child_of_related")
+    role = django_filters.CharFilter(method="filter_child_of_related")
+
+    def filter_child_of_related(self, queryset, value, *args, **kwargs):
+        model = Tag.LINKED_TO_MODEL.get(value, None)
+        if model is None:
+            return queryset
+
+        try:
+            instance = model.objects.get(pk=args[0])
+            parent = get_parent_object(instance)
+            queryset = queryset.filter(
+                Q(scoped_to_model="global")
+                | Q(
+                    scoped_to_model=Namespace.SCOPED_TO_MODELS_REV[parent.__class__],
+                    scoped_to_pk=parent.id,
+                )
+            )
+        except model.DoesNotExist:
+            pass
+
+        return queryset
+
+    class Meta:
+        model = Namespace
+        fields = ("scoped_to_model", "scoped_to_pk")
+
+
+"""
 To create a namespace : 
 - either be an admin and create a global scope
 - either specify a scope and a scoped_to and have permissions on the scoped_to object
-
 """
 
 
 class NamespaceViewSet(viewsets.ModelViewSet):
     queryset = Namespace.objects.all()
     serializer_class = NamespaceSerializer
-
-    filterset_fields = ("scoped_to_model", "scoped_to_pk")
+    filterset_class = NamespaceFilter
     permission_classes = (NamespacePermission,)
 
     def create(self, request, *args, **kwargs):
@@ -45,6 +84,16 @@ class NamespaceViewSet(viewsets.ModelViewSet):
         return super(NamespaceViewSet, self).update(request, *args, **kwargs)
 
 
+class TagFilter(RelatedToFilter):
+    class Meta:
+        model = Tag
+        fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
+            "namespace__scoped_to_model",
+            "namespace__scoped_to_pk",
+            "namespace",
+        )
+
+
 class TagViewSet(
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
@@ -55,18 +104,8 @@ class TagViewSet(
     permission_classes = (ManageTagPermission,)
     queryset = Tag.objects.all()
 
-    def get_queryset(self):
-        queryset = self.queryset
-
-        scope_model = self.request.query_params.get("scoped_to_model", None)
-        scope_id = self.request.query_params.get("scope_id", None)
-
-        if scope_model is not None and scope_id is not None:
-            queryset = queryset.filter(
-                namespace__scoped_to_model=scope_model, namespace__scoped_to_pk=scope_id
-            )
-
-        return queryset
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = TagFilter
 
     def create(self, request, *args, **kwargs):
         if "namespace" in request.data and "value" in request.data:
@@ -98,8 +137,11 @@ class TagLinkView(APIView):
 
     def post(self, request, model, instance_pk, tag_pk):
         tag = self.get_tag(request, tag_pk)
-        getattr(tag, model).add(instance_pk)
-        tag.save()
+        try:
+            getattr(tag, model).add(instance_pk)
+            tag.save()
+        except IntegrityError:
+            return Response(status=200, data="Tag is already linked")
 
         return Response(status=201)
 
@@ -108,12 +150,27 @@ class TagLinkView(APIView):
         getattr(tag, model).remove(instance_pk)
         tag.save()
 
+        count_links = 0
+        for model in Tag.LINKED_TO_MODEL:
+            count_links += getattr(tag, model).count()
+            break
+        if count_links == 0:
+            tag.delete()
+
         return Response(status=204)
 
 
 @api_view(["GET"])
-def get_tags_for_scope(request, model, instance_pk):
-    tags = Tag.objects.filter(
-        namespace__scoped_to_model=model, namespace__scoped_to_pk=instance_pk
+def get_namespaces_for_object(request, model, instance_pk):
+    """ Returns the namespaces that the object of type `model` and id `instance_pk` can get tags from """
+
+    instance = Tag.LINKED_TO_MODEL[model].objects.get(pk=instance_pk)
+    parent = get_parent_object(instance)
+
+    namespaces = Namespace.objects.filter(
+        Q(scoped_to_model=parent.__class__.__name__.lower(), scoped_to_pk=parent.id)
+        | Q(scoped_to_model="global")
     ).all()
-    return Response({"tags": TagSerializer(many=True).to_representation(tags)})
+    return Response(
+        {"namespaces": NamespaceSerializer(many=True).to_representation(namespaces)}
+    )

@@ -1,5 +1,5 @@
 import { User } from "../user";
-import {Association} from "./association";
+import { Association } from "./association";
 
 export interface Choice {
     id: number;

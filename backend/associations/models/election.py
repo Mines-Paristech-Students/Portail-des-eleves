@@ -21,6 +21,9 @@ class Election(models.Model):
 
     name = models.CharField(max_length=200)
 
+    class Meta:
+        ordering = ["-id"]
+
     registered_voters = models.ManyToManyField(
         User,
         related_name="allowed_elections",

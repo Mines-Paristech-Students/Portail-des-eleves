@@ -1,0 +1,91 @@
+# association + 1 product + 1 media + 1 user
+
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 1
+    marketplace: bde
+    library: bde
+
+- model: associations.marketplace
+  pk: bde
+  fields:
+    enabled: true
+
+- model: associations.library
+  pk: bde
+  fields:
+    enabled: true
+
+- model: associations.product
+  pk: 1
+  fields:
+    name: Grenadine
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: bde
+
+- model: associations.media
+  pk: 1
+  fields:
+    name: Lorem Ipsum
+    description: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+    file: lorem-ipsum.pdf
+    uploaded_on: "2017-08-24T17:41:28+00:00"
+    uploaded_by: 17bocquet
+    association: bde
+
+- model: authentication.user
+  pk: 17bocquet
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Adrien
+    last_name: Bocquet
+    email: 17bocquet@mpt.fr
+    birthday: '1997-01-08'
+    is_active: true
+    is_staff: true
+    is_superuser: true
+    nickname: the roc
+    city_of_origin: Gotham
+    room: '1234'
+    phone: "+33456789012"
+    year_of_entry: 2017
+
+# tags and namespaces
+- model: tags.namespace
+  pk: 1
+  fields:
+    name: langue
+    scoped_to_model: association
+    scoped_to_pk: bde
+
+- model: tags.tag
+  pk: 1
+  fields:
+    value: "Francais"
+    namespace: 1
+    media: [1]
+
+- model: tags.tag
+  pk: 2
+  fields:
+    value: "Latin"
+    namespace: 1
+    product: [1]
+
+- model: tags.tag
+  pk: 3
+  fields:
+    value: "Anglais"
+    namespace: 1
+    product: [1]
+    media: [1]
+
+- model: tags.tag
+  pk: 4
+  fields:
+    value: "Italien"
+    namespace: 1

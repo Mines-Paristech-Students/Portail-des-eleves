@@ -1,3 +1,5 @@
+from datetime import date
+
 from associations.models import Role
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
@@ -57,20 +59,17 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
         return self.delete(self.endpoint_destroy(pk))
 
     SERIALIZED_FIELDS = (
-        ("id", "user", "association", "role", "rank", "is_archived")
-        + Role.PERMISSION_NAMES
-        + tuple(
-            f"{permission_name}_permission" for permission_name in Role.PERMISSION_NAMES
-        )
-    )
-    GLOBAL_ADMIN_ALLOWED_FIELDS = ("user", "association", "administration_permission")
-    ASSOCIATION_ADMIN_ALLOWED_FIELDS = (
+        "id",
         "user",
         "association",
-        "is_archived",
         "role",
         "rank",
-    ) + tuple(
+        "start_date",
+        "permissions",
+        "end_date",
+    )
+    GLOBAL_ADMIN_ALLOWED_FIELDS = ("user", "association", "administration_permission")
+    ASSOCIATION_ADMIN_ALLOWED_FIELDS = ("user", "association", "role", "rank") + tuple(
         f"{permission_name}_permission" for permission_name in Role.PERMISSION_NAMES
     )
 
@@ -83,10 +82,11 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
     global_admin_create_role_invalid_data = {
         "user": "17admin_pdm",
         "association": "biero",
-        "administration_permission": True,
-        "is_archived": True,
         "role": "Nouveau dictateur",
+        "start_date": date(2019, 1, 1),
+        "end_date": date(2020, 1, 1),
         "rank": 5,
+        "administration_permission": True,
         "election_permission": True,
         "event_permission": True,
         "media_permission": True,
@@ -98,10 +98,11 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
     association_admin_create_role_data = {
         "user": "17admin_pdm",
         "association": "biero",
-        "administration_permission": True,
-        "is_archived": True,
         "role": "Nouveau dictateur",
+        "start_date": date(2019, 1, 1),
+        "end_date": date(2020, 1, 1),
         "rank": 5,
+        "administration_permission": True,
         "election_permission": True,
         "event_permission": True,
         "media_permission": True,

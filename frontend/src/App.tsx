@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import "tabler-ui/dist/assets/css/dashboard.css";
 import { AuthService } from "./services/authService";
-import { CommonPrivateRoute } from "./utils/route";
-import { PageNotFoundError } from "./pages/ErrorPage";
-import { Login } from "./pages/Login";
+import { CommonPrivateRoute } from "./components/utils/Route";
+import { PageNotFoundError } from "./components/utils/ErrorPage";
+import { Login } from "./components/Login";
 import { routes } from "./routing/global";
-import { ToastProvider } from "./utils/Toast";
+import { ToastProvider } from "./components/utils/Toast";
+import { Loading } from "./components/utils/Loading";
 
 export const authService = new AuthService();
 
@@ -24,7 +25,7 @@ const App: React.FC = () => {
     // Check the authentication then render the page
     let [checkedAuth, setCheckedAuth] = useState(false);
     useEffect(() => {
-        authService.checkAuth().then(() => {
+        authService.checkUser().then(() => {
             setCheckedAuth(true);
         });
     });
@@ -46,7 +47,7 @@ const App: React.FC = () => {
             </ToastProvider>
         );
     } else {
-        return <p>Loading...</p>;
+        return <Loading className="mt-9" />;
     }
 };
 

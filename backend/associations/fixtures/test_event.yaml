@@ -19,8 +19,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 0
@@ -28,6 +29,7 @@
     user: 17admin_biero
     association: biero
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     event_permission: false
 
@@ -38,8 +40,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 1
@@ -47,6 +50,7 @@
     user: 17member_biero
     association: biero
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: false
 
@@ -57,8 +61,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: biero
     last_name: Events
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 2
@@ -66,6 +71,7 @@
     user: 17event_biero
     association: biero
     role: Events admin
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: true
 
@@ -109,8 +115,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Admin
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 3
@@ -118,6 +125,7 @@
     user: 17admin_pdm
     association: pdm
     role: Admin
+    start_date: "2017-01-01"
     administration_permission: true
     event_permission: false
 
@@ -128,8 +136,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Member
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 4
@@ -137,6 +146,7 @@
     user: 17member_pdm
     association: pdm
     role: Simple member
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: false
 
@@ -147,8 +157,9 @@
     password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
     first_name: pdm
     last_name: Events
-    is_admin: false
+    is_staff: false
     year_of_entry: 2017
+    promotion: P17
 
 - model: associations.role
   pk: 5
@@ -156,6 +167,7 @@
     user: 17event_pdm
     association: pdm
     role: Events admin
+    start_date: "2017-01-01"
     administration_permission: false
     event_permission: true
 

@@ -1,7 +1,11 @@
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import (
+    BaseUserManager,
+    AbstractBaseUser,
+    PermissionsMixin,
+)
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.functional import cached_property
@@ -67,12 +71,12 @@ class UserManager(BaseUserManager):
 
         user.set_password(password)
         if is_admin:
-            user.is_admin = True
+            user.is_staff = True
         user.save(using=self._db)
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     STUDENT_TYPES = (
         ("AST", "AST"),
         ("ISUPFERE", "ISUPFERE"),
@@ -80,7 +84,13 @@ class User(AbstractBaseUser):
         ("IC", "IC"),
     )
 
-    ACADEMIC_YEARS = (("1A", "1A"), ("2A", "2A"), ("GAP YEAR", "CÉSURE"), ("3A", "3A"))
+    ACADEMIC_YEARS = (
+        ("1A", "1A"),
+        ("2A", "2A"),
+        ("GAP YEAR", "césure"),
+        ("3A", "3A"),
+        ("GRADUATE", "diplômé(e)"),
+    )
 
     id = models.CharField(primary_key=True, max_length=30)
 
@@ -92,16 +102,10 @@ class User(AbstractBaseUser):
     year_of_entry = models.IntegerField(
         validators=(MinValueValidator(1783),)
     )  # The year MINES ParisTech was created.
+    promotion = models.CharField(max_length=50)
 
     phone = models.CharField(max_length=15, blank=True)
-    room = models.CharField(
-        max_length=128, blank=True, help_text="Blank if the User is PAM."
-    )
-    address = models.CharField(
-        max_length=512,
-        blank=True,
-        help_text="Address outside the Meuh. Blank if the User is not PAM.",
-    )
+    room = models.CharField(max_length=128, blank=True)
     city_of_origin = models.CharField(max_length=128, blank=True)
 
     # Education.
@@ -110,7 +114,6 @@ class User(AbstractBaseUser):
     current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
 
     # Life at school.
-    sports = models.CharField(max_length=512, blank=True)
     roommate = models.ManyToManyField("self", symmetrical=True, default=None)
     minesparent = models.ManyToManyField(
         "self", related_name="fillots", symmetrical=False, default=None
@@ -118,7 +121,7 @@ class User(AbstractBaseUser):
 
     # Life on portail.
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -132,18 +135,13 @@ class User(AbstractBaseUser):
         return self.id
 
     @cached_property
-    def is_staff(self):
-        return self.is_admin
+    def is_admin(self):
+        return self.is_staff
 
     @cached_property
     def is_in_first_year(self):
         """Return True iff the User is in their first year at the school, depending on their year of entry."""
         return self.years_since_entry <= 0
-
-    @cached_property
-    def promotion(self):
-        """The last two digits of the User's entrance year at school."""
-        return self.year_of_entry % 100
 
     @cached_property
     def show(self):
@@ -176,9 +174,4 @@ class User(AbstractBaseUser):
             return today.year - self.year_of_entry - 1
 
     def get_role(self, association=None):
-        q = self.roles.filter(association_id=association)
-
-        if q.exists():
-            return q[0]
-
-        return None
+        return self.roles.filter(association_id=association.id).first()

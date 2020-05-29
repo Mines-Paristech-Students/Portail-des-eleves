@@ -1,0 +1,38 @@
+name: Build frontend
+
+on:
+  pull_request:
+      branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-:
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Build
+        run: npm run build
+        working-directory: frontend
+
+      - name: Test
+        run: npm test
+        working-directory: frontend

@@ -1,5 +1,5 @@
-from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from associations.models import Marketplace
 from associations.views import BalanceView
@@ -7,10 +7,15 @@ from associations.views import BalanceView
 
 @api_view(["GET"])
 def widget_balance_view(request):
-    marketplaces = Marketplace.objects.all()
-    balances = []
+    """
+    :return: A JSON object with one key, `balances`, which is a list of objects `{"balance", "marketplace", "user"}`.
+    """
 
-    for marketplace in marketplaces:
-        balances.append(BalanceView.get_balance_in_json(marketplace, request.user))
-
-    return JsonResponse(balances)
+    return Response(
+        {
+            "balances": [
+                BalanceView.get_balance_in_json(request.user, marketplace)
+                for marketplace in Marketplace.objects.all()
+            ]
+        }
+    )

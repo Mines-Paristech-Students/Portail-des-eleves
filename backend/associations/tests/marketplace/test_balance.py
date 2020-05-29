@@ -23,7 +23,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         content = json.loads(res.content)
         self.assertEqual(
-            Decimal(content[0]["balance"]),
+            Decimal(content["balance"]),
             compute_balance(
                 User.objects.get(pk="17simple"), Marketplace.objects.get(pk="biero")
             ),
@@ -36,14 +36,14 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         content = json.loads(res.content)
         self.assertEqual(
-            Decimal(content[0]["balance"]),
+            Decimal(content["balance"]),
             compute_balance(
                 User.objects.get(pk="17simple"), Marketplace.objects.get(pk="biero")
             ),
         )
 
     def test_if_not_marketplace_admin_then_cannot_retrieve_balance_of_another_user(
-        self
+        self,
     ):
         for user in ALL_USERS_EXCEPT_MARKET_BIERO:
             if user != "17simple":
@@ -61,8 +61,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         self.assertStatusCode(res, 200)
 
         content = json.loads(res.content)
-
-        for market_balance in content:
+        for market_balance in content["balances"]:
             self.assertEqual(
                 Decimal(market_balance["balance"]),
                 compute_balance(
@@ -76,7 +75,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         res = self.get("/associations/marketplace/biero/balance/")
         self.assertStatusCode(res, 200)
 
-        content = json.loads(res.content)
+        content = json.loads(res.content)["balances"]
 
         for market_balance in content:
             self.assertEqual(market_balance["marketplace"], "biero")
@@ -107,8 +106,9 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
                     f"/associations/marketplace/biero/balance/{consumer.id}/"
                 ).content
             )
+
             biero_balance = (
-                0 if biero_content == [] else Decimal(biero_content[0]["balance"])
+                0 if biero_content == [] else Decimal(biero_content["balance"])
             )
             self.assertEqual(biero_balance, biero_funding)
 
@@ -129,7 +129,9 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         # Refund the last biero funding.
         self.login(market_biero.id)
-        funding_id = Funding.objects.filter(marketplace="biero").last().id
+        funding_id = (
+            Funding.objects.filter(marketplace="biero").order_by("id").last().id
+        )
         self.patch(f"/associations/fundings/{funding_id}/", data={"status": "REFUNDED"})
         check_funding(10)
 
@@ -147,7 +149,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
             data={"buyer": consumer.id, "product": 3, "quantity": 1},
         )
         self.patch(
-            f"/associations/transactions/{Transaction.objects.last().id}/",
+            f"/associations/transactions/{Transaction.objects.order_by('id').last().id}/",
             {"status": "CANCELLED"},
         )
         check_funding(0)
@@ -159,7 +161,7 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
         )
         self.login(market_biero.id)
         self.patch(
-            f"/associations/transactions/{Transaction.objects.last().id}/",
+            f"/associations/transactions/{Transaction.objects.order_by('id').last().id}/",
             {"status": "REJECTED"},
         )
         check_funding(0)
@@ -173,21 +175,21 @@ class BalanceTestCase(BaseMarketPlaceTestCase):
 
         self.login(market_biero.id)
         self.patch(
-            f"/associations/transactions/{Transaction.objects.last().id}/",
+            f"/associations/transactions/{Transaction.objects.order_by('id').last().id}/",
             {"status": "ACCEPTED"},
         )
         check_funding(-5)
 
         self.login(market_biero.id)
         self.patch(
-            f"/associations/transactions/{Transaction.objects.last().id}/",
+            f"/associations/transactions/{Transaction.objects.order_by('id').last().id}/",
             {"status": "DELIVERED"},
         )
         check_funding(-5)
 
         self.login(market_biero.id)
         self.patch(
-            f"/associations/transactions/{Transaction.objects.last().id}/",
+            f"/associations/transactions/{Transaction.objects.order_by('id').last().id}/",
             {"status": "REFUNDED"},
         )
         check_funding(0)

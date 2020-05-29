@@ -11,5 +11,5 @@ export interface Media {
     description: string;
     association: Association;
     type: string;
-    media: string
+    media: string;
 }

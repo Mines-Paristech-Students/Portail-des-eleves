@@ -1,0 +1,107 @@
+#######
+# BDE #
+#######
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17bocquet
+    role: Grand Chef
+    association: bde
+    start_date: "2019-05-01"
+    administration_permission: true
+    election_permission: true
+    event_permission: true
+    library_permission: true
+    marketplace_permission: true
+    media_permission: true
+    page_permission: true
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17wan-fat
+    role: Chef
+    association: bde
+    start_date: "2018-05-01"
+    end_date: "2018-09-01"
+    library_permission: true
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 19bde
+    role: CEO
+    association: bde
+    start_date: "2020-05-01"
+    administration_permission: true
+    election_permission: true
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 19library-bde
+    role: Archiviste
+    association: bde
+    start_date: "2020-05-01"
+    library_permission: true
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 19membre-bde
+    role: Éditeur en chef
+    association: bde
+    start_date: "2020-05-01"
+    event_permission: true
+    media_permission: true
+    page_permission: true
+
+#########
+# Biéro #
+#########
+
+- model: associations.role
+  pk: 101
+  fields:
+    user: 17bocquet
+    role: Propriétaire
+    association: biero
+    start_date: "2018-01-01"
+    administration_permission: true
+    election_permission: true
+    event_permission: true
+    library_permission: true
+    marketplace_permission: true
+    media_permission: true
+    page_permission: true
+
+- model: associations.role
+  pk: 102
+  fields:
+    user: 19biero
+    role: Manager
+    association: biero
+    start_date: "2020-05-01"
+    administration_permission: true
+    election_permission: true
+
+- model: associations.role
+  pk: 103
+  fields:
+    user: 19market-biero
+    role: Caissière
+    association: biero
+    start_date: "2020-05-01"
+    marketplace_permission: true
+
+- model: associations.role
+  pk: 104
+  fields:
+    user: 19membre-biero
+    role: Éditrice en chef
+    association: biero
+    start_date: "2020-05-01"
+    event_permission: true
+    media_permission: true
+    page_permission: true

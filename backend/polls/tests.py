@@ -71,9 +71,10 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
             for poll in Poll.objects.all()
             if poll.user.id == "17simple" or poll.has_been_published
         ]
-        self.assertEqual(len(polls), len(res.data))
+        self.assertEqual(len(polls), len(res.data["results"]))
         self.assertSetEqual(
-            set(poll.id for poll in polls), set(poll["id"] for poll in res.data)
+            set(poll.id for poll in polls),
+            set(poll["id"] for poll in res.data["results"]),
         )
 
     def test_if_admin_then_can_list_every_poll(self):
@@ -81,9 +82,10 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
         res = self.list()
 
         polls = Poll.objects.all()
-        self.assertEqual(polls.count(), len(res.data))
+        self.assertEqual(polls.count(), len(res.data["results"]))
         self.assertSetEqual(
-            set(poll.id for poll in polls), set(poll["id"] for poll in res.data)
+            set(poll.id for poll in polls),
+            set(poll["id"] for poll in res.data["results"]),
         )
 
     ############
@@ -149,6 +151,9 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
                     "admin_comment",
                     "question",
                     "choices",
+                    "user_has_voted",
+                    "is_active",
+                    "has_been_published",
                 },
             )
 
@@ -183,7 +188,22 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
         for poll in polls:
             res = self.retrieve(poll.id)
             self.assertStatusCode(res, 200),
-            self.assertSetEqual(set(res.data.keys()), {"id", "question", "choices"})
+            self.assertSetEqual(
+                set(res.data.keys()),
+                {
+                    "id",
+                    "question",
+                    "choices",
+                    "has_been_published",
+                    "state",
+                    "user_has_voted",
+                    "publication_date",
+                    "is_active",
+                    "user",
+                    "admin_comment",
+                },
+            )
+            self.assertEqual(res.data["user"], "")
 
     ##########
     # CREATE #

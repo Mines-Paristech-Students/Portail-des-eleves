@@ -68,7 +68,6 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
             self.login(user)
             res = self.list()
             self.assertStatusCode(res, 200)
-
             self.assertSetEqual(
                 set(q.id for q in ProfileQuestion.objects.all()),
                 set(q["id"] for q in res.data),
@@ -96,7 +95,7 @@ class TestProfileQuestion(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 201)
         self.assertEqual(length_before + 1, len(ProfileQuestion.objects.all()))
         self.assertEqual(
-            ProfileQuestion.objects.last().text,
+            ProfileQuestion.objects.order_by("id").last().text,
             self.profile_question_create_data["text"],
         )
 

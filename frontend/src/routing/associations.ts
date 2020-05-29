@@ -1,113 +1,164 @@
-import { AssociationHome } from "../pages/associations/Home";
-import { AssociationShowPage } from "../pages/associations/page/Show";
+import { AssociationHome } from "../components/associations/Home";
+import { AssociationShowPage } from "../components/associations/page/Show";
 import {
     AssociationCreatePage,
-    AssociationEditPage
-} from "../pages/associations/page/Edit";
-import { AssociationMarketplaceHome } from "../pages/associations/marketplace/Home";
-import { AssociationMarketplaceHistory } from "../pages/associations/marketplace/History";
-import { AssociationFilesystemList } from "../pages/associations/medias/List";
-import { AssociationFilesystemDetail } from "../pages/associations/medias/Detail";
-import { AssociationFilesystemEdit } from "../pages/associations/medias/Edit";
-import { AssociationFilesystemUpload } from "../pages/associations/medias/Upload";
-import { AssociationElectionActiveList } from "../pages/associations/elections/ActiveList";
-import { AssociationElectionResultsList } from "../pages/associations/elections/ResultsList";
-import { AssociationElectionUpcomingList } from "../pages/associations/elections/UpcomingList";
-import {AssociationCreateElection, AssociationEditElection} from "../pages/associations/elections/Edit";
+    AssociationEditPage,
+} from "../components/associations/page/Edit";
+import { AssociationMarketplaceHome } from "../components/associations/marketplace/Home";
+import { AssociationMarketplaceHistory } from "../components/associations/marketplace/History";
+import { AssociationFilesystemList } from "../components/associations/medias/List";
+import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
+import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
+import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
+import { AssociationListEvents } from "../components/associations/events/list/AssociationListEvents";
+import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
+import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
+import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
+import { AssociationMarketplaceCounter } from "../components/associations/marketplace/Counter";
+import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
+import { Association } from "../models/associations/association";
+import { Route } from "./global";
+import { AssociationCreateEvent } from "../components/associations/events/create/AssociationCreateEvent";
 
+type AssociationRoute = Route & {
+    props: object;
+    defaultLayout: boolean;
+};
 
-export const routes = association => [
+/**
+ * Association routes are like common routes, with  one additional parameter,
+ * which is `defaultLayout`. If `defaultLayout` is `true`, the `component` will
+ * be automatically be wrapped in an `AssociationLayout`, which includes a sidebar
+ * by default. If it's `false` it will not.
+ * You may want to take advantage of it if :
+ * - you want a custom sidebar, in that case you'll wrap your component with
+ * `AssociationLayout` manually
+ * - you don't want a sidebar at all, in that case you can organise your code as
+ * usual
+ */
+export const routes: (association: Association) => AssociationRoute[] = (
+    association
+) => [
     {
         path: `/`,
         component: AssociationHome,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/pages/new`,
+        path: `/evenements`,
+        component: AssociationListEvents,
+        exact: true,
+        props: { association: association },
+        defaultLayout: false,
+    },
+    {
+        path: `/evenements/nouveau`,
+        component: AssociationCreateEvent,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/pages/nouvelle`,
         component: AssociationCreatePage,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
     {
         path: `/pages/:pageId`,
         component: AssociationShowPage,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/pages/:pageId/edit`,
+        path: `/pages/:pageId/modifier`,
         component: AssociationEditPage,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
-
     {
-        path: `/files`,
+        path: `/fichiers`,
         component: AssociationFilesystemList,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: false,
     },
     {
-        path: `/files/upload`,
+        path: `/fichiers/upload`,
         component: AssociationFilesystemUpload,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/files/:fileId`,
+        path: `/fichiers/:fileId`,
         component: AssociationFilesystemDetail,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
     {
-        path: `/files/:fileId/edit`,
+        path: `/fichiers/:fileId/modifier`,
         component: AssociationFilesystemEdit,
         exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/elections-en-cours`,
-        component: AssociationElectionActiveList,
-        exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/elections-passees`,
-        component: AssociationElectionResultsList,
-        exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/elections-a-venir`,
-        component: AssociationElectionUpcomingList,
-        exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/elections/nouvelle`,
-        component: AssociationCreateElection,
-        exact: true,
-        props: { association: association }
-    },
-    {
-        path: `/elections/:electionId/modifier`,
-        component: AssociationEditElection,
-        exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
     },
 
     {
-        path: `/marketplace`,
+        path: `/magasin`,
         component: AssociationMarketplaceHome,
         exact: true,
-        props: { association: association }
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/historique`,
+        component: AssociationMarketplaceHistory,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
     },
 
     {
-        path: `/marketplace/history`,
-        component: AssociationMarketplaceHistory,
+        path: `/magasin/commandes`,
+        component: AssociationMarketplaceOrders,
         exact: true,
-        props: { association: association }
-    }
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/comptoir`,
+        component: AssociationMarketplaceCounter,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/produits`,
+        component: AssociationMarketplaceProductAdministration,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/magasin/produits/:productId/modifier`,
+        component: AssociationMarketplaceProductEdit,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+
+    {
+        path: `/parametres`,
+        component: AssociationSettings,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
 ];

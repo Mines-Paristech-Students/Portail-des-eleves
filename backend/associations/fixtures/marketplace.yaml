@@ -1,0 +1,178 @@
+#######
+# BDE #
+#######
+
+- model: associations.marketplace
+  pk: bde
+  fields:
+    enabled: true
+
+
+- model: associations.product
+  pk: 101
+  fields:
+    name: Grenadine
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: bde
+
+- model: associations.product
+  pk: 102
+  fields:
+    name: Jus de tomate
+    description: Bon pour le corps et l'esprit, le jus de tomate saura ravir vos
+      papilles et votre portefeuille
+    price: 1.5
+    marketplace: bde
+    number_left: 18956
+
+- model: associations.product
+  pk: 103
+  fields:
+    name: Jus de pomme
+    description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
+      y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
+      déjeuner
+    price: 12.4
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 104
+  fields:
+    name: Item numéro 4
+    description: Pour remplir et tester un peu la pagination
+    price: 42
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 105
+  fields:
+    name: Item numéro 5
+    description: Pour remplir et tester un peu la pagination
+    price: 52
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 106
+  fields:
+    name: Item numéro 6
+    description: Pour remplir et tester un peu la pagination
+    price: 62
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 107
+  fields:
+    name: Item numéro 7
+    description: Pour remplir et tester un peu la pagination
+    price: 72
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 108
+  fields:
+    name: Item numéro 8
+    description: Pour remplir et tester un peu la pagination
+    price: 82
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 109
+  fields:
+    name: Item numéro 9
+    description: Pour remplir et tester un peu la pagination
+    price: 92
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 110
+  fields:
+    name: Item numéro 10
+    description: Pour remplir et tester un peu la pagination
+    price: 102
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 111
+  fields:
+    name: Item numéro 11
+    description: Pour remplir et tester un peu la pagination
+    price: 411
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 112
+  fields:
+    name: Item numéro 12
+    description: Pour remplir et tester un peu la pagination
+    price: 412
+    marketplace: bde
+    number_left: 24
+
+- model: associations.product
+  pk: 113
+  fields:
+    name: Item numéro 13
+    description: Pour remplir et tester un peu la pagination
+    price: 413
+    marketplace: bde
+    number_left: 24
+
+
+#########
+# Biéro #
+#########
+
+- model: associations.marketplace
+  pk: biero
+  fields:
+    enabled: true
+
+- model: associations.product
+  pk: 201
+  fields:
+    name: Jus de tomate
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 202
+  fields:
+    name: Jus de pomme
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 203
+  fields:
+    name: Jus d'ananas
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 204
+  fields:
+    name: Jus de pamplemousse
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 205
+  fields:
+    name: Jus de raisin
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal
+    price: 3.5
+    marketplace: biero

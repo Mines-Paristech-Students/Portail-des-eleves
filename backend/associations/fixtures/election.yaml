@@ -1,0 +1,49 @@
+#######
+# BDE #
+#######
+
+- model: associations.election
+  pk: 1
+  fields:
+    association: bde
+    name: 'Élections BDE'
+    registered_voters: [17bocquet, 17wan-fat]
+    starts_at: '2019-09-10T17:41:28+00:00'
+    ends_at: '2020-09-10T17:41:28+00:00'
+    max_choices_per_ballot: 1
+
+- model: associations.choice
+  pk: 1
+  fields:
+    election: 1
+    name: Pichalaya
+
+- model: associations.choice
+  pk: 2
+  fields:
+    election: 1
+    name: Adrénapiche
+
+- model: associations.ballot
+  pk: 1
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.ballot
+  pk: 2
+  fields:
+    election: 1
+    choices: [1]
+
+- model: associations.ballot
+  pk: 3
+  fields:
+    election: 1
+    choices: [2]
+
+- model: associations.ballot
+  pk: 4
+  fields:
+    election: 1
+    choices: [2]

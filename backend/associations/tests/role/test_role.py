@@ -1,4 +1,6 @@
-from associations.models import Role
+from datetime import date
+
+from associations.models import Role, Association
 from associations.tests.role.base_test_role import (
     BaseRoleTestCase,
     ALL_USERS,
@@ -116,7 +118,11 @@ class RoleTestCase(BaseRoleTestCase):
                 if hasattr(getattr(last_role, field), "id")
                 else getattr(last_role, field)
             )
-            self.assertEqual(value, compare_to, msg=f"Field {field} not equal.")
+            self.assertEqual(
+                value,
+                compare_to,
+                msg=f"Field {field} not equal: {value} vs {compare_to}.",
+            )
 
     def test_if_association_admin_then_cannot_create_role_with_invalid_data(self):
         self.login("17admin_biero")
@@ -131,7 +137,11 @@ class RoleTestCase(BaseRoleTestCase):
                     if hasattr(getattr(last_role, field), "id")
                     else getattr(last_role, field)
                 )
-                self.assertEqual(value, compare_to, msg=f"Field {field} not equal.")
+                self.assertEqual(
+                    value,
+                    compare_to,
+                    msg=f"Field {field} not equal: {value} vs {compare_to}.",
+                )
             else:
                 compare_to = (
                     getattr(last_role, field).id
@@ -178,7 +188,8 @@ class RoleTestCase(BaseRoleTestCase):
         "id": 0,
         "role": "Piche",
         "rank": 42,
-        "is_archived": True,
+        "start_date": date(2014, 1, 1),
+        "end_date": date(2021, 1, 1),
         "administration_permission": False,
         "election_permission": True,
         "event_permission": True,
@@ -209,7 +220,11 @@ class RoleTestCase(BaseRoleTestCase):
                     if hasattr(getattr(role, field), "id")
                     else getattr(role, field)
                 )
-                self.assertEqual(value, compare_to, msg=f"Field {field} not equal.")
+                self.assertEqual(
+                    value,
+                    compare_to,
+                    msg=f"Field {field} not equal: {value} vs {compare_to}.",
+                )
 
     def test_if_global_admin_then_can_limited_update(self):
         self.login("17admin")
@@ -293,7 +308,8 @@ class RoleTestCase(BaseRoleTestCase):
         self.assertStatusCode(res, 200)
 
         simple = User.objects.get(pk="17member_biero")
-        role = simple.get_role("biero")
+        biero = Association.objects.get(pk="biero")
+        role = simple.get_role(biero)
         for permission_name in Role.PERMISSION_NAMES:
             self.assertTrue(getattr(role, permission_name))
 
@@ -305,7 +321,7 @@ class RoleTestCase(BaseRoleTestCase):
         )
         self.assertStatusCode(res, 200)
         self.assertFalse(
-            User.objects.get(pk="17admin_biero").get_role("biero").administration
+            User.objects.get(pk="17admin_biero").get_role(biero).administration
         )
 
         # 17admin saves 17admin_biero.
@@ -313,7 +329,7 @@ class RoleTestCase(BaseRoleTestCase):
         res = self.update(0, {"administration_permission": True})
         self.assertStatusCode(res, 200)
         self.assertTrue(
-            User.objects.get(pk="17admin_biero").get_role("biero").administration
+            User.objects.get(pk="17admin_biero").get_role(biero).administration
         )
 
         # 17admin_biero revenges.
@@ -325,12 +341,14 @@ class RoleTestCase(BaseRoleTestCase):
                 "role": "TRAÎTRE",
                 "rank": 0,
                 "administration_permission": False,
-                "is_archived": True,
+                "end_date": date(1900, 1, 1),
             },
         )
         self.assertStatusCode(res, 200)
 
         simple = User.objects.get(pk="17member_biero")
-        role = simple.get_role("biero")
+        role = simple.get_role(biero)
         for permission_name in Role.PERMISSION_NAMES:
-            self.assertFalse(getattr(role, permission_name))
+            self.assertFalse(
+                getattr(role, permission_name), msg=f"Permission: {permission_name}"
+            )

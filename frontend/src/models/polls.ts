@@ -1,31 +1,25 @@
-import { User } from "./user";
-
 export enum PollState {
     Accepted = "ACCEPTED",
     Rejected = "REJECTED",
-    Reviewing = "REVIEWING"
+    Reviewing = "REVIEWING",
 }
 
 export interface Poll {
-    // TODO: a field `author` is missing for the administrative part (but not public!).
     id: string;
-    choices: Choice[];
     question: string;
-    state: PollState;
+    user?: string;
     creationDateTime: Date;
-    publicationDate: Date;
-    adminComment: string;
+    state: PollState;
+    publicationDate?: Date;
+    adminComment?: string;
+    hasBeenPublished: boolean;
     isActive: boolean;
+    userHasVoted?: boolean;
+    choices: Choice[];
 }
 
 export interface Choice {
     id: string;
     text: string;
     numberOfVotes?: number;
-}
-
-export interface Vote {
-    user: User;
-    choice: Choice;
-    poll: Poll;
 }

@@ -3,7 +3,7 @@ import { User } from "./user";
 export enum CampaignStatus {
     Closed = "CLOSED",
     Open = "OPEN",
-    Results = "RESULTS"
+    Results = "RESULTS",
 }
 
 export interface Campaign {
@@ -38,5 +38,5 @@ export interface Wish {
 export interface UserCampaign {
     user: User;
     category: Category;
-    fixedTo: Proposition
+    fixedTo: Proposition;
 }

@@ -1,0 +1,15 @@
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 1
+    marketplace: bde
+    library: bde
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 2
+    marketplace: biero
+    library: biero

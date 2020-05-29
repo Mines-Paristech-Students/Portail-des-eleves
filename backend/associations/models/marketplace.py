@@ -13,6 +13,9 @@ class Marketplace(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     enabled = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["-id"]
+
 
 class Product(models.Model):
     """
@@ -43,6 +46,9 @@ class Product(models.Model):
     # Can someone buy it on the site ? Ex : YES for Pain de Mine / NO for BDA
     orderable_online = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ["-id"]
+
     def __str__(self):
         return "{} ({})".format(self.name, self.marketplace.id)
 
@@ -65,7 +71,7 @@ class Transaction(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     # Total value is remembered because the price might change, the product might be deleted, etc.
-    value = models.DecimalField(max_digits=5, decimal_places=2)
+    value = models.DecimalField(max_digits=9, decimal_places=2)
     date = models.DateTimeField(auto_now=True)
 
     #           --- CANCELLED
@@ -93,9 +99,12 @@ class Transaction(models.Model):
     @cached_property
     def value_in_balance(self):
         """
-            :return True iff the value of the transaction must be removed from their balance.
+            :return True if the value of the transaction must be removed from their balance.
         """
         return self.status in ("ORDERED", "VALIDATED", "DELIVERED")
+
+    class Meta:
+        ordering = ["-id"]
 
 
 class Funding(models.Model):
@@ -120,9 +129,12 @@ class Funding(models.Model):
     STATUS = (("FUNDED", "Versé"), ("REFUNDED", "Remboursé"))
     status = models.CharField(choices=STATUS, max_length=200, default="FUNDED")
 
+    class Meta:
+        ordering = ["-id"]
+
     @cached_property
     def value_in_balance(self):
         """
-            :return True iff the value of the funding must be added to their balance.
+            :return True if the value of the funding must be added to their balance.
         """
-        return self.status in ("FUNDED")
+        return self.status == "FUNDED"

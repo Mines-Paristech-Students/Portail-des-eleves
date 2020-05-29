@@ -3,47 +3,49 @@ import { User } from "../models/user";
 import { apiService } from "./apiService";
 import React, { createContext, useState } from "react";
 import { authService } from "../App";
+import { Loading } from "../components/utils/Loading";
 
 export const UserContext = createContext<User | null>(null);
 
 export const UserProvider: React.FunctionComponent = ({ children }) => {
-    let [user, setUser] = useState<User|null>(null);
+    let [user, setUser] = useState<User | null>(null);
 
-    authService.getUser().then(u => {
+    authService.getUser().then((u) => {
         setUser(u);
     });
 
     if (user != null) {
         return (
-            <>
-                <UserContext.Provider value={user}>
-                    {children}
-                </UserContext.Provider>
-            </>
+            <UserContext.Provider value={user}>{children}</UserContext.Provider>
         );
     }
 
-    return <p>"Loading"</p>;
+    return <Loading />;
 };
 
 export class AuthService {
     isAuthenticated = false;
+    isStaff = false;
     user: User | null = null;
 
-    checkAuth(): Promise<User | null> {
+    checkUser(): Promise<User | null> {
         return new Promise((resolve, reject) => {
             apiService
                 .get<User>("/auth/check")
                 .then((response: AxiosResponse) => {
                     if (response.data.userId) {
-                        this.isAuthenticated = true;
-                        const user: User = {
+                        this.user = {
                             id: response.data.userId,
+                            firstName: response.data.firstName,
                             lastName: response.data.lastName,
-                            firstName: response.data.firstName
+                            promotion: response.data.promotion,
+                            isStaff: response.data.isStaff,
                         };
-                        this.user = user;
-                        resolve(user);
+
+                        this.isAuthenticated = true;
+                        this.isStaff = this.user.isStaff;
+
+                        resolve(this.user);
                     } else {
                         reject("not authenticated");
                     }
@@ -61,25 +63,28 @@ export class AuthService {
     getUser(): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             if (this.user != null) {
-                resolve(this.user);
+                return resolve(this.user);
             }
 
-            this.checkAuth()
-                .then(user => {
+            this.checkUser()
+                .then((user) => {
                     if (user == null) {
-                        reject("Not logged in");
+                        return reject("Not logged in");
                     } else {
-                        resolve(user);
+                        return resolve(user);
                     }
                 })
-                .catch(err => {
-                    reject(err);
+                .catch((err) => {
+                    return reject(err);
                 });
         });
     }
 
     signOut() {
         this.isAuthenticated = false;
+        this.isStaff = false;
+        this.user = null;
+
         return apiService.get<User>("/auth/logout");
     }
 }

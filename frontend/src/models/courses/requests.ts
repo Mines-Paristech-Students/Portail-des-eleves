@@ -15,10 +15,3 @@ export interface Comment {
     question: number;
     content: string;
 }
-
-export interface CommentsPage {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: Comment[];
-}

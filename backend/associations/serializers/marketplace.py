@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
-from associations.serializers.association import AssociationShortSerializer
+from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
 
@@ -22,8 +22,9 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
         # Compute the value of the transaction.
         product = Product.objects.get(pk=validated_data["product"].id)
-        validated_data["value"] = product.price * validated_data["quantity"]
-        validated_data["status"] = "ORDERED"
+        validated_data["value"] = round(product.price * validated_data["quantity"], 2)
+        if not validated_data.get("status", False):
+            validated_data["status"] = "ORDERED"
 
         return Transaction.objects.create(**validated_data)
 
@@ -71,7 +72,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        read_only_fields = ("id", "tags")
+        read_only_fields = ("id", "tags", "marketplace")
         fields = read_only_fields + (
             "name",
             "description",
@@ -170,7 +171,7 @@ class MarketplaceWriteSerializer(serializers.ModelSerializer):
 
         # A new Marketplace is linked to an existing association.
         association_data = validated_data.pop("association")
-        association = Association.objects.get(pk=association_data)
+        association = Association.objects.get(pk=association_data.id)
 
         # A new Marketplace may come with new products.
         products_data = validated_data.pop("products")

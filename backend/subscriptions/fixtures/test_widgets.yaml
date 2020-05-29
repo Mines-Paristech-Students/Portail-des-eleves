@@ -1,0 +1,1517 @@
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17event_xxx is an events admin of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx.
+
+#########
+# BIERO #
+#########
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 1
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17member_biero
+    association: biero
+    role: Simple member
+    start_date: "2017-01-01"
+    administration_permission: false
+    event_permission: false
+
+- model: authentication.user
+  pk: 17event_biero
+  fields:
+    email: 17event_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Events
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17event_biero
+    association: biero
+    role: Events admin
+    start_date: "2017-01-01"
+    administration_permission: false
+    event_permission: true
+
+- model: associations.event
+  pk: 0
+  fields:
+    association: biero
+    name: Fête de la bière
+    description: Glou glou glou
+    participants: [17event_biero, 17simple]
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2119-06-02T02:00:00+00:00'
+    place: Paris
+
+- model: associations.event
+  pk: 1
+  fields:
+    association: biero
+    name: Biéro
+    description: Menu à 5 €
+    participants: [17event_biero, 17admin_pdm]
+    starts_at: '2019-03-01T22:00:00+00:00'
+    ends_at: '2019-03-02T02:00:00+00:00'
+    place: Octo
+
+
+- model: associations.election
+  pk: 0
+  fields:
+    association: biero
+    name: Les prochaines boissons de la biéro
+    registered_voters: ['17simple', '17admin', '17admin_biero']
+    starts_at: '2019-06-01T20:00:00+00:00'
+    ends_at: '2100-06-02T02:00:00+00:00'
+    max_choices_per_ballot: 2
+
+- model: associations.election
+  pk: 10
+  fields:
+    association: biero
+    name: Cette élection est close
+    registered_voters: ['17simple', '17admin', '17admin_biero', '17member_biero', '17admin_pdm', '17member_pdm']
+    starts_at: '2017-06-01T20:00:00+00:00'
+    ends_at: '2017-06-02T02:00:00+00:00'
+    max_choices_per_ballot: 1
+
+
+#######
+# PDM #
+#######
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin
+    start_date: "2017-01-01"
+    administration_permission: true
+    event_permission: false
+
+- model: authentication.user
+  pk: 17member_pdm
+  fields:
+    email: 17member_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17member_pdm
+    association: pdm
+    role: Simple member
+    start_date: "2017-01-01"
+    administration_permission: false
+    event_permission: false
+
+- model: authentication.user
+  pk: 17event_pdm
+  fields:
+    email: 17event_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Events
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17event_pdm
+    association: pdm
+    role: Events admin
+    start_date: "2017-01-01"
+    administration_permission: false
+    event_permission: true
+
+- model: associations.event
+  pk: 2
+  fields:
+    association: pdm
+    name: BALM PDM
+    description: Menu…
+    participants: [17simple, 17event_pdm, 17member_biero]
+    starts_at: '2019-06-01T12:00:00+00:00'
+    ends_at: '2119-06-01T14:00:00+00:00'
+    place: Mines
+
+# Some explanations about the three associations here (bd-tek, biero and bde).
+#
+# * bd-tek is an enabled library with some loanables.
+# * biero is a disabled library with some loanables.
+# * bde's library does not exist and thus has no loanables.
+#
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17library_xxx is a library administrator of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx but NOT a library manager of this association.
+
+- model: associations.association
+  pk: bd-tek
+  fields:
+    name: BD-tek
+    rank: 1
+    library: bd-tek
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 2
+    library: biero
+
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 3
+
+- model: associations.library
+  pk: biero
+  fields:
+    enabled: false
+
+- model: associations.library
+  pk: bd-tek
+  fields:
+    enabled: true
+
+- model: associations.loanable
+  pk: 1
+  fields:
+    name: Écocup
+    description: Toujours pas dépassé la flemme d’aller chercher un verre au A2Pas ? La biéro t’assure.
+    comment: 17chabert a peut-être pissé dedans, lave-la bien d’abord.
+    library: biero
+
+- model: associations.loanable
+  pk: 2
+  fields:
+    name: Clés de l’Octo
+    description: Pour pouvoir profiter de la cuisine du -2 !
+    comment: Les cafards sont inclus.
+    library: biero
+
+- model: associations.loanable
+  pk: 3
+  fields:
+    name: BD-primé
+    description: Pour les soirs de pluie, les veilles de vacances ou les lendemains de pâle de maths.
+    comment: Dis-toi qu’il y a toujours un AST plus dans la merde que toi.
+    library: bd-tek
+
+- model: associations.loanable
+  pk: 4
+  fields:
+    name: BD-bile
+    description: Un recueil des blagues de 17bocquet.
+    comment: Oui c’est moi... git blame associations/fixtures/test_library.yaml
+    library: bd-tek
+
+- model: authentication.user
+  pk: 17admin_bd-tek
+  fields:
+    email: 17admin_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_bd-tek
+    association: bd-tek
+    role: Admin no library
+    start_date: "2017-01-01"
+    administration_permission: true
+    library_permission: false
+
+- model: authentication.user
+  pk: 17library_bd-tek
+  fields:
+    email: 17library_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Library administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17library_bd-tek
+    association: bd-tek
+    role: Library administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    library_permission: true
+
+- model: authentication.user
+  pk: 17member_bd-tek
+  fields:
+    email: 17member_bd-tek@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BD-Tek
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17member_bd-tek
+    association: bd-tek
+    role: Simple member
+    start_date: "2017-01-01"
+    administration_permission: false
+    library_permission: false
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biero
+    last_name: Manager
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 17library_biero
+  fields:
+    email: 17library_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Library administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17library_biero
+    association: biero
+    role: Library administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    library_permission: true
+
+- model: authentication.user
+  pk: 17library_bde
+  fields:
+    email: 17library_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Library administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17library_bde
+    association: bde
+    role: Library administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    library_permission: true
+
+- model: authentication.user
+  pk: 17admin_bde
+  fields:
+    email: 17admin_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 6
+  fields:
+    user: 17admin_bde
+    association: bde
+    role: Admin no library
+    start_date: "2017-01-01"
+    administration_permission: true
+    library_permission: false
+
+- model: associations.loan
+  pk: 0
+  fields:
+    loanable: 1
+    user: 17library_bd-tek
+    loan_date: '2019-01-01T00:00:00+00:00'
+    expected_return_date: '2019-01-07T00:00:00+00:00'
+    real_return_date: '2019-01-02T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 1
+  fields:
+    loanable: 1
+    user: 17admin_bd-tek
+    loan_date: '2019-01-03T00:00:00+00:00'
+    expected_return_date: '2019-01-09T00:00:00+00:00'
+    real_return_date: '2019-01-04T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 2
+  fields:
+    loanable: 1
+    user: 17admin
+    loan_date: '2019-01-05T00:00:00+00:00'
+    expected_return_date: '2019-01-11T00:00:00+00:00'
+    real_return_date: '2019-01-06T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 3
+  fields:
+    loanable: 1
+    user: 17member_bd-tek
+    loan_date: '2019-01-07T00:00:00+00:00'
+    expected_return_date: '2019-01-13T00:00:00+00:00'
+    real_return_date: '2019-01-08T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 4
+  fields:
+    loanable: 3
+    user: 17member_bd-tek
+    status: PENDING
+
+- model: associations.loan
+  pk: 5
+  fields:
+    loanable: 4
+    user: 17admin_bd-tek
+    loan_date: '2019-01-03T00:00:00+00:00'
+    expected_return_date: '2019-01-09T00:00:00+00:00'
+    real_return_date: '2019-01-04T00:00:00+00:00'
+    status: PENDING
+
+- model: associations.loan
+  pk: 6
+  fields:
+    loanable: 3
+    user: 17library_biero
+    status: PENDING
+
+- model: associations.loan
+  pk: 7
+  fields:
+    loanable: 3
+    user: 17admin
+    status: PENDING
+
+- model: associations.loan
+  pk: 10
+  fields:
+    loanable: 1
+    user: 17simple
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    real_return_date: '2018-03-07T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 11
+  fields:
+    loanable: 3
+    user: 17simple
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    real_return_date: '2018-03-07T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 12
+  fields:
+    loanable: 4
+    user: 17simple
+    status: PENDING
+
+- model: associations.loan
+  pk: 13
+  fields:
+    loanable: 1
+    user: 17simple
+    status: CANCELLED
+
+- model: associations.loan
+  pk: 20
+  fields:
+    loanable: 4
+    user: 17wan-fat
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: BORROWED
+
+- model: associations.loan
+  pk: 21
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    status: PENDING
+
+- model: associations.loan
+  pk: 22
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: PENDING
+
+- model: associations.loan
+  pk: 23
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: CANCELLED
+
+- model: associations.loan
+  pk: 24
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: ACCEPTED
+
+- model: associations.loan
+  pk: 25
+  fields:
+    loanable: 3
+    user: 17wan-fat
+    status: REJECTED
+
+- model: associations.loan
+  pk: 26
+  fields:
+    loanable: 4
+    user: 17wan-fat
+    loan_date: '2018-02-04T00:00:00+00:00'
+    expected_return_date: '2018-02-11T00:00:00+00:00'
+    real_return_date: '2018-02-09T00:00:00+00:00'
+    status: RETURNED
+
+- model: associations.loan
+  pk: 27
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: ACCEPTED
+
+- model: associations.loan
+  pk: 28
+  fields:
+    loanable: 1
+    user: 17wan-fat
+    status: REJECTED
+
+- model: associations.loan
+  pk: 29
+  fields:
+    loanable: 2
+    user: 17wan-fat
+    loan_date: '2018-03-04T00:00:00+00:00'
+    expected_return_date: '2018-03-11T00:00:00+00:00'
+    status: BORROWED
+
+# Some explanations about the three associations here (biero, bde and pdm).
+#
+# * biero is an enabled marketplace with some products.
+# * pdm is a disabled marketplace with some products.
+# * bde's marketplace does not exist and thus has no products.
+#
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17market_xxx is a marketplace administrator of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx but NOT a marketplace administrator of this association.
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 1
+    marketplace: biero
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+    marketplace: pdm
+
+- model: associations.association
+  pk: bde
+  fields:
+    name: BDE
+    rank: 3
+
+- model: associations.marketplace
+  pk: biero
+  fields:
+    enabled: true
+
+- model: associations.marketplace
+  pk: pdm
+  fields:
+    enabled: false
+
+- model: associations.product
+  pk: 1
+  fields:
+    name: Grenadine
+    description: Mélange subtil de fruits des bois pour un rafraichissement sans égal.
+    price: 3.5
+    marketplace: biero
+
+- model: associations.product
+  pk: 2
+  fields:
+    name: Jus de tomate
+    description: Bon pour le corps et l'esprit, le jus de tomate saura ravir vos papilles et votre portefeuille.
+    price: 1.5
+    marketplace: biero
+    number_left: 180
+
+- model: associations.product
+  pk: 3
+  fields:
+    name: Jus de pomme
+    description: Pressade de fruits bio pour être en pleine forme. Rassurez vous,
+      y'a pas que de la pomme. J'ai même connu une polonaise qui en prenait au petit
+      déjeuner.
+    price: 5.0
+    marketplace: biero
+    number_left: 24
+
+- model: associations.product
+  pk: 4
+  fields:
+    name: Baguette
+    description: Croustillante à l’extérieur, mœlleuse à l’intérieur.
+    price: 1.0
+    marketplace: pdm
+    number_left: 24
+
+- model: associations.product
+  pk: 5
+  fields:
+    name: Pain au chocolat
+    description: 😊😋😋😋
+    price: 1.5
+    marketplace: pdm
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin no marketplace
+    start_date: "2017-01-01"
+    administration_permission: true
+    marketplace_permission: false
+
+- model: authentication.user
+  pk: 17market_biero
+  fields:
+    email: 17market_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Marketplace administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17market_biero
+    association: biero
+    role: Marketplace administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    marketplace_permission: true
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Biéro
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Pain de Mine
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin no marketplace
+    start_date: "2017-01-01"
+    administration_permission: true
+    marketplace_permission: false
+
+- model: authentication.user
+  pk: 17market_pdm
+  fields:
+    email: 17market_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Pain de Mine
+    last_name: Marketplace administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17market_pdm
+    association: pdm
+    role: Marketplace administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    marketplace_permission: true
+
+- model: authentication.user
+  pk: 17market_bde
+  fields:
+    email: 17market_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Marketplace administrator
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17market_bde
+    association: bde
+    role: Marketplace administrator
+    start_date: "2017-01-01"
+    administration_permission: false
+    marketplace_permission: true
+
+- model: authentication.user
+  pk: 17admin_bde
+  fields:
+    email: 17admin_bde@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: BDE
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 6
+  fields:
+    user: 17admin_bde
+    association: bde
+    role: Admin no marketplace
+    start_date: "2017-01-01"
+    administration_permission: true
+    marketplace_permission: false
+
+- model: authentication.user
+  pk: 17consumer
+  fields:
+    email: 17consumer@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Consumer
+    last_name: Consumer
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.transaction
+  pk: 0
+  fields:
+    product: 1
+    buyer: 17admin_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 1
+  fields:
+    product: 1
+    buyer: 17market_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 2
+  fields:
+    product: 1
+    buyer: 17member_biero
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 3
+  fields:
+    product: 1
+    buyer: 17admin_pdm
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 4
+  fields:
+    product: 1
+    buyer: 17market_pdm
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 5
+  fields:
+    product: 1
+    buyer: 17market_bde
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 6
+  fields:
+    product: 1
+    buyer: 17admin_bde
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 7
+  fields:
+    product: 1
+    buyer: 17admin
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 10
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 3.5
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 11
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 12
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: CANCELLED
+
+- model: associations.transaction
+  pk: 13
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: CANCELLED
+
+- model: associations.transaction
+  pk: 14
+  fields:
+    product: 1
+    buyer: 17member_biero
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 15
+  fields:
+    product: 1
+    buyer: 17admin_biero
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: ORDERED
+
+- model: associations.transaction
+  pk: 16
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: VALIDATED
+
+- model: associations.transaction
+  pk: 17
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: VALIDATED
+
+- model: associations.transaction
+  pk: 18
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REJECTED
+
+- model: associations.transaction
+  pk: 19
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REJECTED
+
+- model: associations.transaction
+  pk: 20
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: DELIVERED
+
+- model: associations.transaction
+  pk: 21
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: DELIVERED
+
+- model: associations.transaction
+  pk: 22
+  fields:
+    product: 1
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REFUNDED
+
+- model: associations.transaction
+  pk: 23
+  fields:
+    product: 4
+    buyer: 17simple
+    quantity: 1
+    value: 10
+    date: '2019-01-01T00:00:00+00:00'
+    status: REFUNDED
+
+- model: associations.funding
+  pk: 0
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: biero
+    status: FUNDED
+
+- model: associations.funding
+  pk: 1
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: pdm
+    status: FUNDED
+
+- model: associations.funding
+  pk: 2
+  fields:
+    user: 17simple
+    value: 500
+    date: '2019-01-01T00:00:00+00:00'
+    marketplace: biero
+    status: REFUNDED
+
+# An user called 17member_xxx is a simple member of the association xxx.
+# An user called 17page_xxx is a page admin of the association xxx.
+# An user called 17admin_xxx is an admin of the association xxx.
+
+#########
+# BIERO #
+#########
+
+- model: associations.association
+  pk: biero
+  fields:
+    name: Biéro
+    rank: 1
+
+- model: authentication.user
+  pk: 17admin_biero
+  fields:
+    email: 17admin_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 0
+  fields:
+    user: 17admin_biero
+    association: biero
+    role: Admin
+    start_date: "2017-01-01"
+    administration_permission: true
+    page_permission: false
+
+- model: authentication.user
+  pk: 17member_biero
+  fields:
+    email: 17member_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 1
+  fields:
+    user: 17member_biero
+    association: biero
+    role: Simple member
+    start_date: "2017-01-01"
+    administration_permission: false
+    page_permission: false
+
+- model: authentication.user
+  pk: 17page_biero
+  fields:
+    email: 17page_biero@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: biero
+    last_name: page
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 2
+  fields:
+    user: 17page_biero
+    association: biero
+    role: page admin
+    start_date: "2017-01-01"
+    administration_permission: false
+    page_permission: true
+
+- model: associations.page
+  pk: 0
+  fields:
+    association: biero
+    title: 'L’équipe'
+    text: 'Un président psychopathe qui écrit des mails hilarants.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
+
+- model: associations.page
+  pk: 1
+  fields:
+    association: biero
+    title: 'Le concept'
+    text: 'Se bourrer la gueule. Pour 5 €.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
+
+#######
+# PDM #
+#######
+
+- model: associations.association
+  pk: pdm
+  fields:
+    name: Pain de Mine
+    rank: 2
+
+- model: authentication.user
+  pk: 17admin_pdm
+  fields:
+    email: 17admin_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Admin
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 3
+  fields:
+    user: 17admin_pdm
+    association: pdm
+    role: Admin
+    start_date: "2017-01-01"
+    administration_permission: true
+    page_permission: false
+
+- model: authentication.user
+  pk: 17member_pdm
+  fields:
+    email: 17member_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: Member
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17member_pdm
+    association: pdm
+    role: Simple member
+    start_date: "2017-01-01"
+    administration_permission: false
+    page_permission: false
+
+- model: authentication.user
+  pk: 17page_pdm
+  fields:
+    email: 17page_pdm@mpt.fr
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: pdm
+    last_name: page
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 17page_pdm
+    association: pdm
+    role: page admin
+    start_date: "2017-01-01"
+    administration_permission: false
+    page_permission: true
+
+- model: associations.page
+  pk: 2
+  fields:
+    association: pdm
+    title: 'Le concept'
+    text: 'Soit tu payes. Soit tu voles.'
+    creation_date: '2019-06-01T12:00:00+00:00'
+    last_update_date: '2019-06-01T12:00:00+00:00'
+
+
+- model: authentication.user
+  pk: 17admin
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Admin
+    last_name: Admin
+    email: admin@mpt.fr
+    is_staff: true
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 17simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Simple
+    last_name: Simple
+    email: simple@mpt.fr
+    is_staff: false
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 18simple
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    first_name: Simple
+    last_name: Simple
+    email: 18simple@mpt.fr
+    is_staff: false
+    year_of_entry: 2018
+    promotion: P18
+
+- model: authentication.user
+  pk: 17bocquet
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Adrien
+    last_name: Bocquet
+    email: 17bocquet@mpt.fr
+    birthday: '1997-01-08'
+    is_active: true
+    is_staff: true
+    nickname: the roc
+    city_of_origin: Gotham
+    room: '1234'
+    phone: "+33456789012"
+    year_of_entry: 2017
+    promotion: P17
+
+- model: authentication.user
+  pk: 17wan-fat
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Pierre
+    last_name: Wan-Fat
+    email: 17wan-fat@mpt.fr
+    birthday: '1998-06-26'
+    is_active: true
+    is_staff: false
+    nickname: Le Rocher
+    city_of_origin: Le Tampon
+    room: '802'
+    phone: ''
+    year_of_entry: 2017
+    promotion: P17
+
+
+- model: authentication.user
+  pk: 17wan-fat
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Pierre
+    last_name: Wan-Fat
+    email: 17wan-fat@mpt.fr
+    birthday: '1998-06-26'
+    is_active: true
+    is_staff: false
+    nickname: Le Rocher
+    city_of_origin: Le Tampon
+    room: '802'
+    phone: ''
+    year_of_entry: 2017
+    promotion: P17
+
+- model: polls.Poll
+  pk: 1
+  fields:
+    question: "Ton plat préféré ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 1
+  fields:
+    text: "Pâtes et fromage"
+    poll: 1
+
+- model: polls.Choice
+  pk: 2
+  fields:
+    text: "Baguette et pâté"
+    poll: 1
+
+- model: polls.Poll
+  pk: 2
+  fields:
+    question: "Ton cours préféré ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est nul."
+
+- model: polls.Choice
+  pk: 3
+  fields:
+    text: "Maths 1"
+    poll: 2
+
+- model: polls.Choice
+  pk: 4
+  fields:
+    text: "Maths 2"
+    poll: 2
+
+- model: polls.Poll
+  pk: 3
+  fields:
+    question: "Le plus beauf ?"
+    user: "17simple"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 5
+  fields:
+    text: "17payre"
+    poll: 3
+
+- model: polls.Choice
+  pk: 6
+  fields:
+    text: "17chabert"
+    poll: 3
+
+- model: polls.Poll
+  pk: 4
+  fields:
+    question: "Il n’y a pas de sondage…"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2019-08-01"
+
+- model: polls.Choice
+  pk: 7
+  fields:
+    text: "Parce que tu te claques"
+    poll: 4
+
+- model: polls.Choice
+  pk: 8
+  fields:
+    text: "Parce que je me claque"
+    poll: 4
+
+- model: polls.Poll
+  pk: 5
+  fields:
+    question: "Les plus fragiles ?"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REJECTED"
+    admin_comment: "C’est vraiment d’la merde."
+
+- model: polls.Choice
+  pk: 9
+  fields:
+    text: "Les P18"
+    poll: 5
+
+- model: polls.Choice
+  pk: 10
+  fields:
+    text: "Les P19"
+    poll: 5
+
+- model: polls.Poll
+  pk: 6
+  fields:
+    question: "Pendant ton stage de césure, tu préfères…"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "REVIEWING"
+
+- model: polls.Choice
+  pk: 11
+  fields:
+    text: "Faire le portail des élèves"
+    poll: 6
+
+- model: polls.Choice
+  pk: 12
+  fields:
+    text: "Faire du machine learning pour le CSI"
+    poll: 6
+
+
+- model: polls.Poll
+  pk: 7
+  fields:
+    question: "Is this the future?"
+    user: "17admin"
+    creation_date_time: "2019-06-01T20:00:00+00:00"
+    state: "ACCEPTED"
+    publication_date: "2119-08-01"
+
+- model: polls.Choice
+  pk: 13
+  fields:
+    text: "Oui"
+    poll: 7
+
+- model: polls.Choice
+  pk: 14
+  fields:
+    text: "Non"
+    poll: 7
+
+
+- model: repartitions.campaign
+  pk: 1
+  fields:
+    name: Material science groups
+    manager: 17bocquet
+
+- model: repartitions.category
+  pk: 1
+  fields:
+    name: Everyone
+    campaign: 1
+
+- model: repartitions.proposition
+  pk: 1
+  fields:
+    campaign: 1
+    name: Metals
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+- model: repartitions.proposition
+  pk: 2
+  fields:
+    campaign: 1
+    name: Polymers
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+- model: repartitions.proposition
+  pk: 3
+  fields:
+    campaign: 1
+    name: Bio-materials
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+
+- model: repartitions.usercampaign
+  fields:
+    user: 17bocquet
+    campaign: 1
+    category: 1
