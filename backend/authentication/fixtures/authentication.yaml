@@ -277,13 +277,24 @@
     email: 19membre-biero@mpt.fr
     birthday: "1999-05-14"
     is_active: true
-<<<<<<< HEAD
+    is_staff: false
+    nickname: "Seize"
+    city_of_origin: Murge-sur-Seine
+    room: Octo
+    phone: "+330011223383"
+    year_of_entry: 2019
+    promotion: P19
+    student_type: IC
+    current_academic_year: 1A
+    minesparent: [17bocquet]
+    roommate: [19biero, 19market-biero]
     is_admin: true
     nickname: ''
     city_of_origin: Paris
     room: ''
     phone: "+33623149119"
     year_of_entry: 2014
+
 - model: authentication.user
   pk: 17vialard
   fields:
@@ -300,16 +311,3 @@
     room: ''
     phone: "+33698895042"
     year_of_entry: 2017
-=======
-    is_staff: false
-    nickname: "Seize"
-    city_of_origin: Murge-sur-Seine
-    room: Octo
-    phone: "+330011223383"
-    year_of_entry: 2019
-    promotion: P19
-    student_type: IC
-    current_academic_year: 1A
-    minesparent: [17bocquet]
-    roommate: [19biero, 19market-biero]
->>>>>>> master
