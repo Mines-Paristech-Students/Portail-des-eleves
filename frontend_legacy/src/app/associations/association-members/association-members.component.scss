@@ -1,8 +1,0 @@
-.members-grid {
-    display: grid;
-    overflow: hidden;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-    grid-auto-rows: 1fr;
-    grid-column-gap: 15px;
-    grid-row-gap: 15px;
-}
