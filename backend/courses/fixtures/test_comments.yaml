@@ -11,6 +11,13 @@
     name: Maths diff
     form: 1
     have_voted: [17simple]
+
+- model: courses.course
+  pk: 2
+  fields:
+    name: Maths diff
+    form: 1
+    have_voted: [17simple]
   
 - model: courses.question
   pk: 1
@@ -56,7 +63,7 @@
   pk: 4
   fields:
     question: 2
-    course: 1
+    course: 2
     content: "d"
     date: '2020-04-20T22:10:57.577Z'
     
