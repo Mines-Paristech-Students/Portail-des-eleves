@@ -7,6 +7,9 @@ import "./TagEdition.css";
 import Fuse from "fuse.js";
 import { ToastContext, ToastLevel } from "../Toast";
 import Select from "react-select";
+import axios from "axios";
+
+const CancelToken = axios.CancelToken;
 
 /**
  * An intermediary component to manage tags for objects. Will be used to build
@@ -17,8 +20,15 @@ import Select from "react-select";
  * @param id same with the ID
  * @param onBind callback called every time a tag is added
  * @param onUnbind callback called when a tag is removed
+ * @param placeholder
  */
-export const TagSelector = ({ model, id, onBind, onUnbind }) => {
+export const TagSelector = ({
+    model,
+    id,
+    onBind,
+    onUnbind,
+    placeholder = "Sélectionner des tags",
+}) => {
     const newToast = useContext(ToastContext);
 
     const bindTag = (newTag) => {
@@ -59,10 +69,16 @@ export const TagSelector = ({ model, id, onBind, onUnbind }) => {
 
     // Load namespaces and set them as suggestion
     useEffect(() => {
+        // Prepare to cancel the request, in case the component is unmounted
+        // before the request finishes
+        const source = CancelToken.source();
         api.namespaces
-            .list({
-                [model]: id,
-            })
+            .list(
+                {
+                    [model]: id,
+                },
+                { cancelToken: source.token }
+            )
             .then((res) => {
                 let namespaces = res.results;
                 setFuseNamespace(
@@ -76,11 +92,18 @@ export const TagSelector = ({ model, id, onBind, onUnbind }) => {
                 setStatus("success");
             })
             .catch((error) => {
+                if (axios.isCancel(error)) {
+                    return;
+                }
+
                 setStatus("error");
                 setInputValue(
                     `Erreur durant le chargement : ${error.toString()}`
                 );
             });
+
+        // Cancel the request on unmount
+        return () => source.cancel();
 
         // avoid infinite loop with tags :
         // namespaces changes -> useEffect changes namespaces -> tag changes ...
@@ -89,19 +112,29 @@ export const TagSelector = ({ model, id, onBind, onUnbind }) => {
 
     // Give the tags related to the namespace
     useEffect(() => {
+        const source = CancelToken.source();
+
         if (selectedNamespace !== null) {
-            api.tags.list({ namespace: selectedNamespace.id }).then((res) => {
-                let tags = res.results;
-                setSuggestionsTag(tags);
-                setFuseTag(
-                    new Fuse(tags, {
-                        keys: ["value"],
-                    })
-                );
-            });
+            api.tags
+                .list(
+                    { namespace: selectedNamespace.id },
+                    { cancelToken: source.token }
+                )
+                .then((res) => {
+                    let tags = res.results;
+                    setSuggestionsTag(tags);
+                    setFuseTag(
+                        new Fuse(tags, {
+                            keys: ["value"],
+                        })
+                    );
+                });
         } else {
             setFuseTag(null);
         }
+
+        return () => source.cancel();
+
         // avoid infinite loop with tags :
         // tags changes -> useEffect changes tags -> tag changes ...
         // eslint-disable-next-line
@@ -109,13 +142,21 @@ export const TagSelector = ({ model, id, onBind, onUnbind }) => {
 
     // Get all tags of the model
     useEffect(() => {
+        const source = CancelToken.source();
+
         api.tags
-            .list({
-                [model]: id,
-            })
+            .list(
+                {
+                    [model]: id,
+                },
+                { cancelToken: source.token }
+            )
             .then((data) => {
                 setTags(data.results);
-            });
+            })
+            .catch(() => {}); // "handle" the cancellation
+
+        return () => source.cancel();
 
         // avoid infinite loop with tags :
         // tags changes -> useEffect changes tags -> tag changes ...
@@ -240,7 +281,7 @@ export const TagSelector = ({ model, id, onBind, onUnbind }) => {
             filterOption={filterOption}
             styles={colourStyles}
             isDisabled={status === "error"}
-            placeholder={"Sélectionner des tags"}
+            placeholder={placeholder}
             options={
                 // All possible suggestions
                 selectedNamespace === null

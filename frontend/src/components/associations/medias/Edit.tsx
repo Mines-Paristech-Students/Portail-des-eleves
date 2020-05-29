@@ -68,9 +68,9 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 message: "Sauvegardé : " + res.name,
                                 level: ToastLevel.Success,
                             });
-                            history.push(
-                                `/associations/${association.id}/fichiers/${media.id}/`
-                            );
+                            // history.push(
+                            //     `/associations/${association.id}/fichiers/${media.id}/`
+                            // );
                         })
                         .catch((err) =>
                             newToast({
@@ -117,7 +117,7 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 className={"form-control border-0"}
                                 placeholder={"Description"}
                                 onChange={formik.handleChange}
-                                value={formik.values.description}
+                                value={formik.values.description || ""}
                             />
                             <Card.Footer>
                                 Mis en ligne le {media.uploadedOn}

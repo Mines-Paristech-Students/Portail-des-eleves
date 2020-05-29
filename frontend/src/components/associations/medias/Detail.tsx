@@ -21,32 +21,27 @@ export const AssociationFilesystemDetail = ({ association }) => {
             <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
         );
     else if (media) {
-        let preview;
-        if (media.type.startsWith("image")) {
-            preview = (
-                <img
-                    src={media.media}
-                    alt={media.name}
-                    className={"mb-2 rounded"}
-                />
-            );
-        }
-
-        let editButton;
-        if (association.myRole.permissions.includes("media")) {
-            editButton = (
-                <Link
-                    to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
-                    className={"btn btn-primary float-right"}
-                >
-                    Editer
-                </Link>
-            );
-        }
+        // let preview;
+        // if (media.type.startsWith("image")) {
+        //     preview = (
+        //         <img
+        //             src={media.media}
+        //             alt={media.name}
+        //             className={"mb-2 rounded"}
+        //         />
+        //     );
+        // }
 
         return (
             <div>
-                {editButton}
+                {association.myRole.permissions.includes("media") && (
+                    <Link
+                        to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
+                        className={"btn btn-primary float-right"}
+                    >
+                        Editer
+                    </Link>
+                )}
                 <PageTitle>
                     <Link
                         to={`/associations/${association.id}/fichiers`}
@@ -58,7 +53,6 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 </PageTitle>
 
                 <TagList model={TaggableModel.Media} id={media.id} />
-                {preview}
 
                 <Card>
                     <Card.Body>

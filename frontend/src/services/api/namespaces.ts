@@ -7,10 +7,13 @@ import {
 import { Namespace } from "../../models/tag";
 
 export const namespaces = {
-    list: (params) => {
+    list: (params, axiosConfig = {}) => {
         params["page_size"] = 1000;
         return unwrap<PaginatedResponse<Namespace[]>>(
-            apiService.get("/tags/namespaces/" + toUrlParams(params))
+            apiService.get(
+                "/tags/namespaces/" + toUrlParams(params),
+                axiosConfig
+            )
         );
     },
     create: ({ name, scoped_to_model, scoped_to_pk }) =>

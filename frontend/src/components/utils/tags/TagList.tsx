@@ -32,11 +32,9 @@ export const TagList = ({
     id: string;
     collapsed?: boolean;
 }) => {
-    let params: any = {};
-    params[model] = id;
     const { data: tags, status, error } = useBetterQuery<
         PaginatedResponse<Tag[]>
-    >(["tags.list", params], api.tags.list);
+    >(["tags.list", { [model]: id }], api.tags.list);
 
     return status === "loading" ? (
         <Loading />
