@@ -17,7 +17,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         return self.post(self.endpoint_submit(pk), data, format)
 
     def endpoint_submit(self, pk):
-        return f"/courses/courses/{pk}/submit"
+        return f"/courses/courses/{pk}/submit/"
 
     course = 1
 
