@@ -26,7 +26,7 @@ const promiseOptions = (inputValue) =>
  * The value of search after "something" was typed is :
  * {buyer: something}
  */
-export const SidebarUserSearch = ({ setParams, paramKey = "", ...props }) => (
+export const SidebarUserSearch = ({ setParams, paramKey = "user", ...props }) => (
     <AsyncSelect
         cacheOptions
         defaultOptions
