@@ -102,6 +102,7 @@ class CommentPagination(pagination.PageNumberPagination):
 class CommentsPaginatedList(generics.ListAPIView):
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
+    authentication_classes = [IsAuthenticated]
 
     mapping_params = {
         "course": "course__id",
