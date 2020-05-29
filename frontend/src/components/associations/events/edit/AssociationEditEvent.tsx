@@ -12,6 +12,8 @@ import { LoadingAssociation } from "../../Loading";
 import { Error } from "../../../utils/Error";
 import { MutateEventForm } from "../MutateEventForm";
 import { Button, Modal } from "react-bootstrap";
+import { authService } from "../../../../App";
+import { ForbiddenError } from "../../../utils/ErrorPage";
 
 export const AssociationEditEvent = ({
     association,
@@ -82,6 +84,10 @@ export const AssociationEditEvent = ({
             });
         },
     });
+
+    if (!authService.isStaff) {
+        return <ForbiddenError />;
+    }
 
     if (status === "loading") {
         return <LoadingAssociation />;

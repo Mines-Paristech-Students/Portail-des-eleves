@@ -9,6 +9,8 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { MutateEventForm } from "../MutateEventForm";
+import { authService } from "../../../../App";
+import { ForbiddenError } from "../../../utils/ErrorPage";
 
 export const AssociationCreateEvent = ({
     association,
@@ -40,6 +42,10 @@ export const AssociationCreateEvent = ({
             });
         },
     });
+
+    if (!authService.isStaff) {
+        return <ForbiddenError />;
+    }
 
     return (
         <>
