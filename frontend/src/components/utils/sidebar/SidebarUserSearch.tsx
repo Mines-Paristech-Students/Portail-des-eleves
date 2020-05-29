@@ -22,7 +22,7 @@ export const SidebarUserSearch = ({ setParams, userName = "", ...props }) => (
         isClearable={true}
         {...props}
         onChange={(value) => {
-            let user = (value as { label: string; value: User })?.value;
+            const user = (value as { label: string; value: User })?.value;
             setParams(user ? { [userName || "user"]: user.id } : {});
         }}
     />
