@@ -1,6 +1,3 @@
-from courses.models import Form, Question
-from courses.serializers import FormSerializer
-
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 
