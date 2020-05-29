@@ -67,7 +67,7 @@ export const Pagination = ({
     // prevApiKey !== ""
     const [prevApiKey, setPrevApiKey] = useState("");
     useEffect(() => {
-        let apiKeyJSON = JSON.stringify(apiKey);
+        const apiKeyJSON = JSON.stringify(apiKey);
         if (apiKeyJSON !== prevApiKey) {
             if (prevApiKey !== "") {
                 setPage(1);
