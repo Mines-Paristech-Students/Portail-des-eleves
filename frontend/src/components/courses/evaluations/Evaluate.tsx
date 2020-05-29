@@ -1,17 +1,16 @@
 import React, { useContext, useState } from "react";
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Redirect } from "react-router-dom";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Question } from "../../../models/courses/question"
 import { useField, Formik, FormikProps } from "formik";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
-        "courses.questions",
+        ["courses.questions", course.form],
         api.courses.forms.questions.list,
-        course.form,
     );
 
     if (status === "loading") return <p>Chargement des cours</p>;

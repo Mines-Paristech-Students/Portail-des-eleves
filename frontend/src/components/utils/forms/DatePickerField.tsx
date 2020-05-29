@@ -1,16 +1,12 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
 import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-<<<<<<< HEAD
-import { MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT, HOURS, MINUTES } from "../../../utils/format";
-import {Col} from "react-bootstrap";
-=======
-import { MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } from "../../../utils/format";
+import { MINUTES, HOURS, MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } from "../../../utils/format";
 import "./date-picker-field.css";
->>>>>>> master
 
 /**
  * This component encapsulates a `DayPicker` component into a `Form.Group` component, using the Formik logic and

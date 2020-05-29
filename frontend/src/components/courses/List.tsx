@@ -1,5 +1,5 @@
 import React from "react";
-import { PageTitle } from "../../utils/common";
+import { PageTitle } from "../utils/PageTitle";
 import { api, useBetterQuery } from "../../services/apiService";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
@@ -9,7 +9,7 @@ import { Course } from "../../models/courses/course";
 
 export const CourseList = () => {
     const { data: courses, error, status } = useBetterQuery<Course[]>(
-        "courses.list",
+        ["courses.list"],
         api.courses.list
     );
 

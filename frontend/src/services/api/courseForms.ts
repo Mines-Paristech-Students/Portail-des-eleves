@@ -1,8 +1,6 @@
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
-import { Course } from "../../models/courses/course";
+import { apiService, unwrap } from "../apiService";
 import { Question } from "../../models/courses/question";
 import { Form } from "../../models/courses/form";
-import { Comment, StatsQuestion } from "../../models/courses/requests";
 
 
 export const forms = {
@@ -58,4 +56,4 @@ export const forms = {
                 )
             ),
     }
-},
+}

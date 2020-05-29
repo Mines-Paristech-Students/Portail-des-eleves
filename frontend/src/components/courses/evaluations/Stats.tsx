@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useContext } from "react";
-import { PageTitle } from "../../../components/utils/PageTitle";
+import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery, PaginatedResponse } from "../../../services/apiService";
 import { Card, Container, Row, Accordion, Col, Carousel } from "react-bootstrap";
 import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion, Comment } from "../../../models/courses/requests";
 import { ColumnChart } from 'react-chartkick';
-import { ToastContext, ToastLevel } from "../../../components/utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import 'chart.js';
 
 const DigitToStar = (num: number) => {
@@ -50,9 +50,8 @@ const StatsCardQuestion = ({ statsQuestion }) => {
 
 const StatsCourse = ({ course }) => {
     const { data: stats, error, status } = useBetterQuery<StatsQuestion[]>(
-        "courses.stats",
+        ["courses.stats", course.id],
         api.courses.stats,
-        course.id,
     );
 
     if (status === "loading") return <p>Chargement des cours</p>;
@@ -147,9 +146,8 @@ export const PaginatedCardComment = ({ question, course }) => {
 
 const PaginatedComments = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
-        "courses.forms.question.list",
+        ["courses.forms.question.list", course.form],
         api.courses.forms.questions.list,
-        course.form,
     );
 
     if (status === "loading") return <p>Chargement des cours</p>;

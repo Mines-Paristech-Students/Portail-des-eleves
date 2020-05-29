@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Form, Row, Col, Button, Modal, Container, Card, Spinner, ListGroup } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form"
-import { PageTitle } from "../../../utils/common";
+import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Field, Formik, useFormik, useField, FormikProps } from "formik";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { useParams } from "react-router-dom";
 import { Question, QuestionCategory } from "../../../models/courses/question";
 import { Badge } from "reactstrap";
@@ -49,9 +49,8 @@ export const EditCourseForm = ({ course }) => {
     }
 
     const { data: form, error: errorForm, status: statusForm } = useBetterQuery<FormModel>(
-        "courses.forms.get",
+        ["courses.forms.get", course.form],
         api.courses.forms.get,
-        course.form,
     );
 
     if (isLoading) return <p>Chargement des cours</p>;

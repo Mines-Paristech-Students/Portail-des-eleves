@@ -4,7 +4,7 @@ import { Form, Row, Col, Button, Modal, Card } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form"
 import { api, useBetterQuery } from "../../../services/apiService";
 import { useFormik } from "formik";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
 import { setServers } from "dns";
 
@@ -92,7 +92,7 @@ export const LinkCourseForm = ({ course }) => {
     const [redirect, setRedirect] = useState<boolean>(false);
 
     const { data: forms, error, status } = useBetterQuery<FormModel[]>(
-        "courses.forms.list",
+        ["courses.forms.list"],
         api.courses.forms.list,
     );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import { api, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarCategory, SidebarItem } from "../../utils/Sidebar";
 import { User } from "../../models/user";
@@ -34,9 +34,8 @@ export const CourseSidebar = ({ course }) => {
 
 const EvaluationSidebar = ({ course }) => {
     const { data: has_voted, error, status } = useBetterQuery<boolean>(
-        "courses.has_voted",
+        ["courses.has_voted", course.id],
         api.courses.has_voted,
-        course.id,
     );
 
     return (

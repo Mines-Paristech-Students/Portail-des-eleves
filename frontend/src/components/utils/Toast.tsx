@@ -63,11 +63,7 @@ export const Toast = ({ message: msg, type, flip, delay }) => {
                 zIndex: 9999,
             }}
             autohide
-<<<<<<< HEAD:frontend/src/utils/Toast.tsx
-            delay={delay ? delay : 1000}
-=======
             delay={5000}
->>>>>>> master:frontend/src/components/utils/Toast.tsx
             onClose={() => {
                 setShow(false);
             }}

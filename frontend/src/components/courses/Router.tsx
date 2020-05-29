@@ -8,22 +8,21 @@ import {
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";
-import { PrivateRoute } from "../../utils/route";
+import { PrivateRoute } from "../utils/Route";
 import { CourseSidebar } from "./Sidebar";
 import { routes } from "../../routing/courses";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import { PageNotFoundError } from "../ErrorPage";
+import { PageNotFoundError } from "../utils/ErrorPage";
 import { Course } from "../../models/courses/course";
 
 export const CourseRouter = ({ match }) => {
     let { courseId } = useParams<{ courseId: string }>();
 
     const { data: course, error, status } = useBetterQuery<Course>(
-        "course.get",
+        ["course.get", courseId],
         api.courses.get,
-        courseId
     );
 
     // Generate the routes
