@@ -12,7 +12,21 @@ const promiseOptions = (inputValue) =>
         }))
     );
 
-export const SidebarUserSearch = ({ setParams, userName = "", ...props }) => (
+/**
+ * Debounced input field for the sidebar
+ * @param setParams the useState function to update the `search` param
+ * @param paramKey the name of the parameter in the API query. "user" by default
+ * @param props Props to give to the Input field
+ * @constructor
+ *
+ * Usage example :
+ * [search, setSearch] = useState({});
+ * return <SidebarInputSearch setParams={setSearch} paramKey="buyer"/>
+ *
+ * The value of search after "something" was typed is :
+ * {buyer: something}
+ */
+export const SidebarUserSearch = ({ setParams, paramKey = "", ...props }) => (
     <AsyncSelect
         cacheOptions
         defaultOptions
@@ -23,7 +37,7 @@ export const SidebarUserSearch = ({ setParams, userName = "", ...props }) => (
         {...props}
         onChange={(value) => {
             const user = (value as { label: string; value: User })?.value;
-            setParams(user ? { [userName || "user"]: user.id } : {});
+            setParams(user ? { [paramKey || "user"]: user.id } : {});
         }}
     />
 );
