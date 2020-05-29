@@ -5,6 +5,7 @@ import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { ErrorMessage } from "../utils/ErrorPage";
 import { AssociationPageRenderer } from "./page/Show";
 import { Instructions } from "../utils/Instructions";
+import { Link } from "react-router-dom";
 
 export const AssociationHome = ({ association }) => {
     const { resolvedData: data, error, status } = useBetterPaginatedQuery<any>(
@@ -27,8 +28,11 @@ export const AssociationHome = ({ association }) => {
                 emoji={"🏡"}
                 emojiAriaLabel="Une sympatique demeure au jardin accueillant"
             >
-                Pour définir une page d'accueil, créez une page appelée
-                « Accueil ». C'est aussi simple que ça !
+                Pour définir une page d'accueil,{" "}
+                <Link to={`/associations/${association.id}/pages/nouvelle`}>
+                    créez une page
+                </Link>{" "}
+                appelée « Accueil ». C'est aussi simple que ça !
             </Instructions>
         </Container>
     ) : (

@@ -8,10 +8,9 @@ export const Instructions = ({ title, children, emoji, emojiAriaLabel }) => (
                 {emoji}
             </span>
         </p>
-        <h1>
-            {title} <br />
-            <br />
+        <h1 className={"my-2"}>{title}</h1>
+        <p style={{fontSize: "2em"}}>
             <small className="text-muted">{children}</small>
-        </h1>
+        </p>
     </Container>
 );

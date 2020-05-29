@@ -9,6 +9,7 @@ import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
 import { Instructions } from "../../utils/Instructions";
+import { Link } from "react-router-dom";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -85,7 +86,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
                                     Le magasin est vide pour l'instant.
                                     {association.myRole.permissions?.includes(
                                         "media"
-                                    )
+                                    ) // No link for now because there is no production addition page, TODO: create it
                                         ? "Ajoutez des produits dans les pages d'administration"
                                         : "Revenez quand les responsables de l'association l'auront garni !"}
                                 </Instructions>

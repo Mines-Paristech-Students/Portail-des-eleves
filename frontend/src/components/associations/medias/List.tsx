@@ -81,12 +81,18 @@ export const AssociationFilesystemList = ({ association }) => {
                                     emoji={"🗂️"}
                                     emojiAriaLabel="Des fiches cartonnées"
                                 >
-                                    Aucun fichier pour l'instant.
+                                    Aucun fichier pour l'instant. {" "}
                                     {association.myRole.permissions?.includes(
                                         "media"
-                                    )
-                                        ? "Pour ajouter des fichiers, cliquez sur le bouton 'Ajouter des fichiers'."
-                                        : "Revenez quand les responsables de l'association en auront ajouté !"}
+                                    ) ? (
+                                        <Link
+                                            to={`/associations/${association.id}/fichiers/televerser`}
+                                        >
+                                            Ajoutez des fichiers pour débuter.
+                                        </Link>
+                                    ) : (
+                                        "Revenez quand les responsables de l'association en auront ajouté !"
+                                    )}
                                 </Instructions>
                             )}
                         </Row>
