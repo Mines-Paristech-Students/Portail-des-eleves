@@ -1,4 +1,4 @@
-import { apiService, unwrap } from "../apiService";
+import { apiService, PaginatedResponse, unwrap, toUrlParams } from "../apiService";
 import { Question } from "../../models/courses/question";
 import { Form } from "../../models/courses/form";
 
@@ -11,7 +11,7 @@ export const forms = {
             )
         ),
     list: () =>
-        unwrap<Form[]>(
+        unwrap<PaginatedResponse<Form[]>>(
             apiService.get(
                 `/courses/forms`
             )

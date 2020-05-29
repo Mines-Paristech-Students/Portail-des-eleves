@@ -6,7 +6,7 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { useFormik } from "formik";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
-import { setServers } from "dns";
+import { Pagination } from "../../utils/Pagination";
 
 export const CreateCourseForm = ({ course }) => {
     const [form, setForm] = useState<FormModel | null>(null);
@@ -30,7 +30,7 @@ export const CreateCourseForm = ({ course }) => {
         },
 
         onSubmit: (values) => {
-            const form : FormModel = {name : values.name};
+            const form: FormModel = { name: values.name };
 
             api.courses.forms
                 .save(form)
@@ -91,11 +91,6 @@ export const LinkCourseForm = ({ course }) => {
     const [form, setForm] = useState<FormModel | null>(null);
     const [redirect, setRedirect] = useState<boolean>(false);
 
-    const { data: forms, error, status } = useBetterQuery<FormModel[]>(
-        ["courses.forms.list"],
-        api.courses.forms.list,
-    );
-
     const updateCourseForm = (form) => {
         const data = {
             "id": course.id,
@@ -121,40 +116,48 @@ export const LinkCourseForm = ({ course }) => {
 
     if (redirect) return <Redirect to={`/cours/${course.id}`} />;
 
-    if (status == "loading") return <p>Loading</p>
-    if (status == "error") return <p>Erreur</p>
-
     return (
         <>
             <Row>
-                {forms &&
-                    forms.map((form) => {
-                        let bg = "light";
-                        if (form.id == course.form) bg = "info";
 
-                        return (
-                            <Col
-                                md={4}
-                                bg={bg}
-                                as={Card}
-                                className="m-2"
-                            >
-                                <Card.Header>
-                                    <Card.Title>{form.name}</Card.Title>
-                                </Card.Header>
-                                <Card.Footer>
-                                    <Button 
-                                        variant="primary"
-                                        onClick={() => { setShowConfirm(true); setForm(form); }} 
-                                    >
-                                        Choisir
+                <Pagination
+                    apiKey={["api.courses.forms.list"]}
+                    apiMethod={api.courses.forms.list}
+                    render={
+                        (forms, paginationControl) => (
+                            forms.map((form) => {
+                                let bg = "light";
+                                if (form.id == course.form) bg = "info";
+                                console.log(form);
+
+                                return (
+                                    <>
+                                        <Col
+                                            md={4}
+                                            bg={bg}
+                                            as={Card}
+                                            className="m-2"
+                                        >
+                                            <Card.Header>
+                                                <Card.Title>{form.name}</Card.Title>
+                                            </Card.Header>
+                                            <Card.Footer>
+                                                <Button
+                                                    variant="primary"
+                                                    onClick={() => { setShowConfirm(true); setForm(form); }}
+                                                >
+                                                    Choisir
                                     </Button>
-                                </Card.Footer>
-                                
-                            </Col>
+                                            </Card.Footer>
+
+                                        </Col>
+                                        {paginationControl}
+                                    </>
+                                )
+                            })
                         )
                     }
-                    )}
+                />
             </Row >
 
             <Modal

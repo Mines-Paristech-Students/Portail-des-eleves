@@ -6,9 +6,9 @@ import { forms } from "./courseForms";
 
 export const courses = {
     list: () =>
-        unwrap<Course[]>(
+        unwrap<PaginatedResponse<Course[]>>(
             apiService.get(
-                '/courses/courses'
+                '/courses/courses/'
             )
         ),
     get: courseId =>
@@ -48,10 +48,10 @@ export const courses = {
         unwrap<PaginatedResponse<Comment[]>>(
             apiService.get(
                 `/courses/comments/${toUrlParams({
-                        course: courseId,
-                        question: questionId,
-                        page: page,
-                        page_size: page_size,
+                    course: courseId,
+                    question: questionId,
+                    page: page,
+                    page_size: page_size,
                 })}`
             )
         )

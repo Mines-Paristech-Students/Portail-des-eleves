@@ -154,7 +154,7 @@ const FormEditor = ({ form }) => {
 }
 
 const FetchQuestionsModal = ({ course }) => {
-    const [isFetching, setIsFetching] = useState<boolean>(true);
+    const [isFetching, setIsFetching] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [forms, setForms] = useState<FormModel[]>([]);
     const newToast = useContext(ToastContext);
@@ -194,8 +194,8 @@ const FetchQuestionsModal = ({ course }) => {
     useEffect(() => {
         api.courses.forms
             .list()
-            .then(forms => {
-                setForms(forms);
+            .then(res => {
+                setForms(res.results);
                 setIsLoading(false);
             })
             .catch(err => {

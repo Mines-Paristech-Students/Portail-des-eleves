@@ -9,7 +9,7 @@
   fields:
     name: Maths diff
     form: 1
-    have_voted: [17thomas]
+    have_voted: [17bocquet]
   
 - model: courses.coursemedia
   pk: 1 
