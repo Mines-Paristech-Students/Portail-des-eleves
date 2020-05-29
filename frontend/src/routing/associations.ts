@@ -123,7 +123,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/historique`,
@@ -138,7 +138,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/comptoir`,
@@ -152,7 +152,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/produits/:productId/modifier`,

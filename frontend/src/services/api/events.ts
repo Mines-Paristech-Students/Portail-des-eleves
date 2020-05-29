@@ -7,18 +7,41 @@ import {
 import { Event } from "../../models/associations/event";
 import dayjs from "dayjs";
 
+export type EventsListParameters = {
+    association: string;
+    time: ("NOW" | "BEFORE" | "AFTER")[];
+    starts_at_before?: Date;
+    starts_at_after?: Date;
+    ends_at_before?: Date;
+    ends_at_after?: Date;
+};
+
 export const events = {
-    list: (
-        parameters: {
-            association: string;
-            time: ("NOW" | "BEFORE" | "AFTER")[];
-        },
-        page: number
-    ) =>
+    list: (parameters: EventsListParameters, page: number) =>
         unwrap<PaginatedResponse<Event[]>>(
             apiService.get(
                 `/associations/events/${toUrlParams({
                     ...parameters,
+                    starts_at_before: parameters.starts_at_before
+                        ? dayjs(parameters.starts_at_before).format(
+                              "YYYY-MM-DD%20HH:mm:ss"
+                          )
+                        : undefined,
+                    starts_at_after: parameters.starts_at_after
+                        ? dayjs(parameters.starts_at_after).format(
+                              "YYYY-MM-DD%20HH:mm:ss"
+                          )
+                        : undefined,
+                    ends_at_before: parameters.ends_at_before
+                        ? dayjs(parameters.ends_at_before).format(
+                              "YYYY-MM-DD%20HH:mm:ss"
+                          )
+                        : undefined,
+                    ends_at_after: parameters.ends_at_after
+                        ? dayjs(parameters.ends_at_after).format(
+                              "YYYY-MM-DD%20HH:mm:ss"
+                          )
+                        : undefined,
                     page: page,
                     page_size: 10,
                 })}`
