@@ -10,7 +10,6 @@ import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { Instructions } from "../../utils/Instructions";
-import Container from "react-bootstrap/Container";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -83,7 +82,9 @@ export const AssociationFilesystemList = ({ association }) => {
                                     emojiAriaLabel="Des fiches cartonées"
                                 >
                                     Aucun fichier pour l'instant.
-                                    {association.myRole.permissions?.includes("media")
+                                    {association.myRole.permissions?.includes(
+                                        "media"
+                                    )
                                         ? "Pour ajouter des fichiers, cliquez sur le bouton 'Ajouter des fichiers'."
                                         : "Revenez quand les responsables de l'association en auront ajouté !"}
                                 </Instructions>
