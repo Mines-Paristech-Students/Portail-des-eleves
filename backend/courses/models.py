@@ -108,9 +108,6 @@ class Question(models.Model):
 
     id = models.AutoField(primary_key=True, unique=True)
 
-    # TODO
-    # order = models.SmallIntegerField()
-
     label = models.CharField(max_length=64)
 
     required = models.BooleanField(default=False)
@@ -121,7 +118,7 @@ class Question(models.Model):
     category = models.CharField(
         max_length=1,
         choices=QUESTION_CATEGORY,
-        default='C'
+        default="C"
     )
 
     form = models.ForeignKey(

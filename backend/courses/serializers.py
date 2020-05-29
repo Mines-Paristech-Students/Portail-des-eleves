@@ -50,19 +50,3 @@ class CommentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Comment must refer to a 'C' category question")
 
         return question
-
-
-class MediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CourseMedia
-        read_only_fields = ('id', 'uploaded_on', 'file', 'uploaded_by', 'course')
-        fields = ('name', 'category') + read_only_fields
-
-    def create(self, validated_data):
-        validated_data["uploaded_by"] = self.context["request"].user
-
-        # Create the new file
-        file = CourseMedia.objects.create(**validated_data)
-        file.save()
-
-        return file
