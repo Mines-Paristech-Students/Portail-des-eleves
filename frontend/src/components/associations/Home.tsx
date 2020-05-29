@@ -28,11 +28,19 @@ export const AssociationHome = ({ association }) => {
                 emoji={"🏡"}
                 emojiAriaLabel="Une sympatique demeure au jardin accueillant"
             >
-                Pour définir une page d'accueil,{" "}
-                <Link to={`/associations/${association.id}/pages/nouvelle`}>
-                    créez une page
-                </Link>{" "}
-                appelée « Accueil ». C'est aussi simple que ça !
+                {association.myRole.permissions?.includes("page") ? (
+                    <>
+                        Pour définir une page d'accueil,{" "}
+                        <Link
+                            to={`/associations/${association.id}/pages/nouvelle`}
+                        >
+                            créez une page
+                        </Link>{" "}
+                        appelée « Accueil ». C'est aussi simple que ça !
+                    </>
+                ) : (
+                    "Rien à voir ici pour le moment mais  vous pouvez regarder les différentes rubriques dans la barre de navigation à gauche."
+                )}
             </Instructions>
         </Container>
     ) : (
