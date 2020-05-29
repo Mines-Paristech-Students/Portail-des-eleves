@@ -130,22 +130,6 @@ class Question(models.Model):
         on_delete=models.CASCADE,
     )
 
-    @cached_property
-    def average(self):
-        query = self.rating.values('question__id').annotate(Avg('value'))
-        return query[0]["value__avg"]
-
-    @cached_property
-    def histogram(self):
-        # values doesn't group correctly for integers
-        values = dict()
-        for value in range(1, 6):
-            count = self.rating\
-                .filter(value=value)\
-                .count()
-            values[value] = count
-        return values
-
 class Rating(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
 

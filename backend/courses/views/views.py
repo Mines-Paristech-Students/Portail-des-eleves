@@ -26,8 +26,3 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     permission_classes = [FormPermission]
-
-    @action(detail=True, methods=['get'], permission_classes=[IsAuthenticated])
-    def result(self, request, pk=None):
-        question = self.get_object()
-        return Response(data={'plop': question.average}, status=status.HTTP_200_OK)
