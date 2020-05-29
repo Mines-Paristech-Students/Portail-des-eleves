@@ -79,7 +79,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
-                                    emojiAriaLabel="Des fiches cartonées"
+                                    emojiAriaLabel="Des fiches cartonnées"
                                 >
                                     Aucun fichier pour l'instant.
                                     {association.myRole.permissions?.includes(
