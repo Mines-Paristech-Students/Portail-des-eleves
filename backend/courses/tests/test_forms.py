@@ -44,6 +44,12 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
 
     def destroy(self, pk, data="", format=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk))
+    
+    def endpoint_questions(self, pk):
+        return f"/courses/forms/{pk}/questions/"
+    
+    def questions(self, pk):
+        return self.get(self.endpoint_questions(pk))
 
     ########
     # LIST #
@@ -149,3 +155,21 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 204)
         self.assertFalse(Form.objects.filter(pk="1").exists())
         self.assertFalse(Question.objects.filter(pk="1").exists())
+
+    #############
+    # QUESTIONS #
+    #############
+
+    def test_if_not_logged_in_then_cannot_list_questions(self):
+        res = self.questions(pk=1)
+        self.assertStatusCode(res, 401)
+
+    def test_if_logged_in_then_can_list_questions(self):
+        self.login("17simple")
+        res = self.questions(pk=1)
+
+        self.assertStatusCode(res, 200)
+
+        # Just check the length
+        # The rest (i.e. serializers is tested in test_questions)
+        self.assertEqual(len(res.data), 2)

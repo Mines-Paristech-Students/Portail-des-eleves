@@ -53,7 +53,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class MediaSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CourseMedia
         read_only_fields = ('id', 'uploaded_on', 'file', 'uploaded_by', 'course')
