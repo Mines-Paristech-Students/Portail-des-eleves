@@ -4,6 +4,7 @@ import { Loading } from "../utils/Loading";
 import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { ErrorMessage } from "../utils/ErrorPage";
 import { AssociationPageRenderer } from "./page/Show";
+import { Instructions } from "../utils/Instructions";
 
 export const AssociationHome = ({ association }) => {
     const { resolvedData: data, error, status } = useBetterPaginatedQuery<any>(
@@ -21,22 +22,14 @@ export const AssociationHome = ({ association }) => {
         <ErrorMessage>{error}</ErrorMessage>
     ) : data.count === 0 ? (
         <Container className={"text-center"}>
-            <p style={{ fontSize: "10em" }} className={"m-0"}>
-                <span
-                    role="img"
-                    aria-label="Une sylmpatique demeure au jardin accueillant"
-                >
-                    🏡
-                </span>
-            </p>
-            <h1>
-                Accueil <br />
-                <br />
-                <small className="text-muted">
-                    Pour définir une page d'accueil, créez une page appelée
-                    « Accueil ». C'est aussi simple que ça !
-                </small>
-            </h1>
+            <Instructions
+                title={"Accueil"}
+                emoji={"🏡"}
+                emojiAriaLabel="Une sympatique demeure au jardin accueillant"
+            >
+                Pour définir une page d'accueil, créez une page appelée
+                « Accueil ». C'est aussi simple que ça !
+            </Instructions>
         </Container>
     ) : (
         <AssociationPageRenderer

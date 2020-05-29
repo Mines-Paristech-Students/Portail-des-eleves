@@ -8,6 +8,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
+import { Instructions } from "../../utils/Instructions";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -74,6 +75,21 @@ export const AssociationMarketplaceHome = ({ association }) => {
                                 ))}
                             </Row>
                             {controlbar}
+
+                            {products.length === 0 && (
+                                <Instructions
+                                    title={"Magasin"}
+                                    emoji={"🛍️"}
+                                    emojiAriaLabel="Des sacs de shopping"
+                                >
+                                    Le magasin est vide pour l'instant.
+                                    {association.myRole.permissions?.includes(
+                                        "media"
+                                    )
+                                        ? "Ajoutez des produits dans les pages d'administration"
+                                        : "Revenez quand les responsables de l'association l'auront garni !"}
+                                </Instructions>
+                            )}
                         </>
                     )}
                 />
