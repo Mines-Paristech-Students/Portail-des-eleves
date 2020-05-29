@@ -9,7 +9,7 @@ class EventsPermission(BasePermission):
         Events admin | CRUD        |
         Simple       | R           |
 
-        The customized actions 'join' and 'leave' rely on a GET (R).
+        The customized actions 'join' and 'leave' rely on a different permission.
     """
 
     message = "You are not allowed to edit this event."
@@ -27,3 +27,14 @@ class EventsPermission(BasePermission):
             return True
         else:
             return request.method in SAFE_METHODS
+
+
+class JoinEventPermission(BasePermission):
+    """
+        Only PUT is allowed
+    """
+
+    message = "You are not allowed to edit this event."
+
+    def has_permission(self, request, view):
+        return request.method == "PUT"
