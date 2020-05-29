@@ -9,7 +9,6 @@ import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
 import { Instructions } from "../../utils/Instructions";
-import { Link } from "react-router-dom";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
