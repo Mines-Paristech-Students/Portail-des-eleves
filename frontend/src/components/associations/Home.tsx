@@ -30,7 +30,7 @@ export const AssociationHome = ({ association }) => {
                 <br />
                 <small className="text-muted">
                     Pour définir une page d'accueil, créez une page appellée
-                    "Accueil". C'est aussi simple que ça !
+                    « Accueil ». C'est aussi simple que ça !
                 </small>
             </h1>
         </Container>
