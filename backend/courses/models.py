@@ -156,7 +156,7 @@ class Comment(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
 
-    content = models.CharField(max_length=64)
+    content = models.CharField(max_length=512)
 
     question = models.ForeignKey(
         Question,

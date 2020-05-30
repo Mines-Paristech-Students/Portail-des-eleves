@@ -37,11 +37,17 @@ export const PaginatedModalComment = ({ question, course }) => {
                     apiKey={["api.comments.list", course.id, question.id]}
                     apiMethod={api.courses.comments.list}
                     render={(comments: Comment[], paginationControl) => (
-                        <Modal.Body>
+                        <Modal.Body className="overflow-auto">
 
-                            {comments.map(comment =>
-                                <p>{comment.content}</p>
-                            )}
+                            <Col>
+                                {comments.map(comment => (
+                                    <Card as={Row} className="p-2 b-2 overflow-auto">
+                                        <Card.Text>
+                                            {comment.content}
+                                        </Card.Text>
+                                    </Card>
+                                ))}
+                            </Col>
 
                             {paginationControl}
 
