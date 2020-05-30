@@ -91,9 +91,7 @@ export const EventCard = ({
             />
 
             <Card.Header>
-                <Card.Title className={isOver() ? "text-muted" : ""}>
-                    {event.name}
-                </Card.Title>
+                <Card.Title>{event.name}</Card.Title>
 
                 <div className="card-options">
                     {canEdit && (

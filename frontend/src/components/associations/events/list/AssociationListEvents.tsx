@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 
 import { api } from "../../../../services/apiService";
 import Card from "react-bootstrap/Card";
@@ -11,14 +11,26 @@ import { Pagination } from "../../../utils/Pagination";
 import { Association } from "../../../../models/associations/association";
 import { EventCard } from "./EventCard";
 
+/**
+ * Display a list of `EventCard` filtered by `time` and ordered by either `-starts_at` or `starts_at`.
+ * The whole component is placed in a `Container`.
+ *
+ * @param association the related association.
+ * @param title displayed in a `PageTitle` component at the top.
+ * @param time an array which elements are to choose between "NOW", "BEFORE" and "AFTER" used to filter the events out.
+ * The empty array is equivalent to an empty filter (all the events are displayed).
+ * @param ordering choose between `-starts_at` and `starts_at`.
+ */
 export const AssociationListEvents = ({
     association,
     title,
     time,
+    ordering,
 }: {
     association: Association;
     title: string;
     time: ("NOW" | "BEFORE" | "AFTER")[];
+    ordering: "-starts_at" | "starts_at";
 }) => (
     <Pagination
         apiKey={[
@@ -26,6 +38,7 @@ export const AssociationListEvents = ({
             {
                 association: association.id,
                 time: time,
+                ordering: ordering,
             },
         ]}
         apiMethod={api.events.list}
