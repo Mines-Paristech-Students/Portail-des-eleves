@@ -137,7 +137,11 @@ class EventsTestCase(BaseEventsTestCase):
         self.login("17event_biero")
         data = {"pk": 0, "participants": ["17event_biero", "17member_biero"]}
         res = self.update(data["pk"], "biero", data=data)
+
+        # Still returning 200 because, as `participants` is not a serializer field, it's as if we just sent a PATCH with
+        # an empty payload.
         self.assertStatusCode(res, 200)
+
         self.assertSetEqual(
             set(
                 [
