@@ -5,7 +5,7 @@ import { api } from "../../../services/apiService";
 import Row from "react-bootstrap/Row";
 import { Product } from "./common/Product";
 import { Link } from "react-router-dom";
-import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
+import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
@@ -25,6 +25,7 @@ export const AssociationMarketplaceProductAdministration = ({
                 <>
                     <SidebarSeparator />
                     <SidebarInputSearch setParams={setSearchParams} />
+                    <SidebarSpace />
                     <TagSearch
                         setTagParams={setTagParams}
                         tagsQueryParams={{

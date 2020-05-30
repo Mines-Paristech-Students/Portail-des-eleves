@@ -9,6 +9,7 @@ import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
+import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -20,15 +21,18 @@ export const AssociationFilesystemList = ({ association }) => {
         <AssociationLayout
             association={association}
             additionalSidebar={
-                <TagSearch
-                    tagsQueryParams={{
-                        page_size: 1000,
-                        namespace__scoped_to_model: "association",
-                        namespace__scoped_to_pk: associationId,
-                        related_to: "media",
-                    }}
-                    setTagParams={setTagParams}
-                />
+                <>
+                    <SidebarSpace />
+                    <TagSearch
+                        tagsQueryParams={{
+                            page_size: 1000,
+                            namespace__scoped_to_model: "association",
+                            namespace__scoped_to_pk: associationId,
+                            related_to: "media",
+                        }}
+                        setTagParams={setTagParams}
+                    />
+                </>
             }
         >
             <Pagination

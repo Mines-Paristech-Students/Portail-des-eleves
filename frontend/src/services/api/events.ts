@@ -55,11 +55,11 @@ export const events = {
         }),
     get: ({ eventId }) =>
         unwrap<Event>(apiService.get(`/associations/events/${eventId}/`)).then(
-            (event) => {
-                event.startsAt = new Date(event.startsAt);
-                event.endsAt = new Date(event.endsAt);
-                return event;
-            }
+            (event) => ({
+                ...event,
+                startsAt: new Date(event.startsAt),
+                endsAt: new Date(event.endsAt),
+            })
         ),
     join: ({ eventId }) =>
         apiService.put(`/associations/events/${eventId}/join/`),

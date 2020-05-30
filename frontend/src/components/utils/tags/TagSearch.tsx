@@ -5,7 +5,6 @@ import { Loading } from "../Loading";
 import { ErrorMessage } from "../ErrorPage";
 import { SidebarSection } from "../sidebar/SidebarSection";
 import { CheckboxField } from "../sidebar/CheckboxField";
-import { SidebarSpace } from "../sidebar/Sidebar";
 import Fuse from "fuse.js";
 import { Form } from "react-bootstrap";
 
@@ -94,7 +93,6 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
         <ErrorMessage>Une erreur est survenue {error}</ErrorMessage>
     ) : tags ? (
         <>
-            <SidebarSpace />
             <div className="input-icon mb-3">
                 <Form.Control
                     placeholder="Rechercher un tag"

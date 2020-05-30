@@ -5,9 +5,10 @@ import Card from "react-bootstrap/Card";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { DayTimePickerInputFormGroup } from "../../utils/forms/DayTimePickerFormGroup";
+import { DayTimePickerInputFormGroup } from "../../utils/forms/DayTimePickerInputFormGroup";
 import Button from "react-bootstrap/Button";
 import { getRandom } from "../../../utils/random";
+import { TextAreaFormGroup } from "../../utils/forms/TextAreaFormGroup";
 
 const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
     ["Passace", "Et glou, et glou, et glou", "Place du village"],
@@ -25,7 +26,6 @@ const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
  * @param initialValues The initialValues to populate the form with.
  * @param onSubmit Called when the Submit button is hit. It is passed Formik's `values`, `resetForm` and `setSubmitting`.
  * @param onDelete Optional. If provided, display a Delete button and call this function when the button is clicked.
- *
  */
 export const MutateEventForm = ({
     initialValues,
@@ -82,7 +82,7 @@ export const MutateEventForm = ({
                     type="text"
                     placeholder={namePlaceholder}
                 />
-                <TextFormGroup
+                <TextAreaFormGroup
                     label="Description"
                     name="description"
                     type="text"

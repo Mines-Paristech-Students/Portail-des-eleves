@@ -11,7 +11,7 @@ import { Product } from "./common/Product";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
-import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
+import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Card } from "react-bootstrap";
 
 export const AssociationMarketplaceHome = ({ association }) => {
@@ -46,6 +46,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
                 <>
                     <SidebarSeparator />
                     <SidebarInputSearch setParams={setSearchParams} />
+                    <SidebarSpace />
                     <TagSearch
                         setTagParams={setTagParams}
                         tagsQueryParams={{

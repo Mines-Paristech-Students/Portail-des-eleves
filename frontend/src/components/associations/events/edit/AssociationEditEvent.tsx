@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Association } from "../../../../models/associations/association";
 import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
@@ -11,8 +11,6 @@ import { Event } from "../../../../models/associations/event";
 import { LoadingAssociation } from "../../Loading";
 import { Error } from "../../../utils/Error";
 import { MutateEventForm } from "../MutateEventForm";
-import { Button, Modal } from "react-bootstrap";
-import { authService } from "../../../../App";
 import { ForbiddenError } from "../../../utils/ErrorPage";
 
 export const AssociationEditEvent = ({
@@ -24,8 +22,6 @@ export const AssociationEditEvent = ({
 
     const history = useHistory();
     const newToast = useContext(ToastContext);
-
-    const [showModal, setShowModal] = useState(false);
 
     const { data: event, error, status } = useBetterQuery<Event>(
         ["events.get", { eventId }],
@@ -85,7 +81,7 @@ export const AssociationEditEvent = ({
         },
     });
 
-    if (!authService.isStaff) {
+    if (!association.myRole?.permissions?.includes("event")) {
         return <ForbiddenError />;
     }
 
@@ -106,11 +102,6 @@ export const AssociationEditEvent = ({
                     </Link>{" "}
                     Modifier l’événement
                 </PageTitle>
-                <DeleteConfirmationModal
-                    show={showModal}
-                    handleHide={() => setShowModal(false)}
-                    handleDelete={() => remove({ eventId: event.id })}
-                />
                 <Card className="text-left">
                     <MutateEventForm
                         initialValues={event}
@@ -128,7 +119,15 @@ export const AssociationEditEvent = ({
                                 }
                             )
                         }
-                        onDelete={() => setShowModal(true)}
+                        onDelete={() => {
+                            if (
+                                window.confirm(
+                                    "Êtes-vous sûr(e) de vouloir supprimer cet événement ? Cette opération ne peut pas être annulée."
+                                )
+                            ) {
+                                remove({ eventId: event.id });
+                            }
+                        }}
                     />
                 </Card>
             </>
@@ -137,23 +136,3 @@ export const AssociationEditEvent = ({
 
     return null;
 };
-
-const DeleteConfirmationModal = ({ show, handleHide, handleDelete }) => (
-    <Modal show={show} onHide={handleHide}>
-        <Modal.Header closeButton>
-            <Modal.Title>Supprimer l’événement ?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            Êtes-vous sûr(e) de vouloir supprimer cet événement ? Cette action
-            ne peut pas être annulée.
-        </Modal.Body>
-        <Modal.Footer>
-            <Button variant="secondary" onClick={handleHide}>
-                Annuler
-            </Button>
-            <Button variant="danger" onClick={handleDelete}>
-                Supprimer
-            </Button>
-        </Modal.Footer>
-    </Modal>
-);

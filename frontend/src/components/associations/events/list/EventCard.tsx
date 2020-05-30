@@ -177,7 +177,14 @@ export const EventCard = ({
                     </p>
                 )}
 
-                <p>{event.description}</p>
+                <p>
+                    {event.description.split("\n").map((item, key) => (
+                        <React.Fragment key={key}>
+                            {item}
+                            <br />
+                        </React.Fragment>
+                    ))}
+                </p>
             </Card.Body>
         </Card>
     );

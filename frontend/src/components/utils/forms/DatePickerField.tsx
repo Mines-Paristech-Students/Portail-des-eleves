@@ -31,10 +31,9 @@ export const dayPickerLocalisationProps = (todayButton = false) => ({
  * Then, use `values.publicationDate` to access the value of this control. Please note that `values.publicationDate` is
  * a JavaScript `Date` object, and you may have to serialize it to a string manually for the backend to understand it.
  *
- * Props:
- *     - label: the label to display.
- *     - todayButton: defaults to false. If true, a “Today” button is displayed.
- *     - props: passed to Formik's `useField`.
+ * @param label the label to display.
+ * @param todayButton defaults to false. If true, a “Today” button is displayed.
+ * @param props passed to Formik's `useField`.
  */
 export const DatePickerField = ({
     label,

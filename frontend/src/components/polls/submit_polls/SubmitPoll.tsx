@@ -65,8 +65,8 @@ export const SubmitPoll = () => {
         create(
             { data },
             {
-                onSuccess: resetForm(),
-                onSettled: setSubmitting(false),
+                onSuccess: resetForm,
+                onSettled: () => setSubmitting(false),
             }
         );
     };

@@ -11,13 +11,12 @@ import { DayTimePickerInputField } from "./DayTimePickerInputField";
  * Please note that due to an unexplained behaviour of Formik when clicking on Submit several times in a row, the
  * condition for showing the feedback is that `errors[name]` is set and `feedback` is true (touched has thus no effect).
  *
- * Props:
- *     - name: the name of the control, used to access its value in Formik.
- *     - label: optional, the label to display.
- *     - feedback: defaults to true. If `true`, a `FormControl.Feedback` is added at the bottom of the `Form.Group`.
- *     `DayTimePickerInputField`'s `feedback` props is set to the same value, unless overridden in
- *     `dayTimePickerInputFieldProps`.
- *     - dayTimePickerInputFieldProps: passed to `DayTimePickerInputField`.
+ * @param name the name of the control, used to access its value in Formik.
+ * @param label optional, the label to display.
+ * @param feedbackdefaults to true. If `true`, a `FormControl.Feedback` is added at the bottom of the `Form.Group`.
+ * `DayTimePickerInputField`'s `feedback` props is set to the same value, unless overridden in
+ * `dayTimePickerInputFieldProps`.
+ * @param dayTimePickerInputFieldProps passed to `DayTimePickerInputField`.
  */
 export const DayTimePickerInputFormGroup = ({
     name,

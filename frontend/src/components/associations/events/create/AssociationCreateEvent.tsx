@@ -9,7 +9,6 @@ import { ToastContext, ToastLevel } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { MutateEventForm } from "../MutateEventForm";
-import { authService } from "../../../../App";
 import { ForbiddenError } from "../../../utils/ErrorPage";
 
 export const AssociationCreateEvent = ({
@@ -43,7 +42,7 @@ export const AssociationCreateEvent = ({
         },
     });
 
-    if (!authService.isStaff) {
+    if (!association.myRole?.permissions?.includes("event")) {
         return <ForbiddenError />;
     }
 
@@ -53,7 +52,6 @@ export const AssociationCreateEvent = ({
                 <Link
                     className="text-decoration-none"
                     to={`/associations/${association.id}/evenements`}
-                    style={{ verticalAlign: "middle" }}
                 >
                     <i className="fe fe-arrow-left" />
                 </Link>{" "}
@@ -77,8 +75,8 @@ export const AssociationCreateEvent = ({
                                 },
                             },
                             {
-                                onSuccess: resetForm(),
-                                onSettled: setSubmitting(false),
+                                onSuccess: resetForm,
+                                onSettled: () => setSubmitting(false),
                             }
                         )
                     }

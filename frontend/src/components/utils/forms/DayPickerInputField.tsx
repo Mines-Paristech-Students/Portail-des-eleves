@@ -24,13 +24,12 @@ export type DayPickerInputFieldProps = {
  *
  * You may also be interested in `DayPickerInputFormGroup` which puts this component in a `FormGroup`.
  *
- * Props:
- *     - name: the name of the control, used to access its value in Formik.
- *     - feedback: defaults to true. If `true`, the `is-invalid` class is given to the input component when needed.
- *     - parseFormats: defaults to `["DD/MM/YYYY"]`. The formats used to parse the date.
- *     - displayFormat: defaults to `"DD/MM/YYYY"`. The format used to display the date.
- *     - todayButton: defaults to `false`. If `true`, a `todayButton` will be displayed in the day picker.
- *     - fieldProps: passed to Formik's `useField`.
+ * @param name the name of the control, used to access its value in Formik.
+ * @param feedback defaults to true. If `true`, the `is-invalid` class is given to the input component when needed.
+ * @param parseFormats defaults to `["DD/MM/YYYY"]`. The formats used to parse the date.
+ * @param displayFormat defaults to `"DD/MM/YYYY"`. The format used to display the date.
+ * @param todayButton defaults to `false`. If `true`, a `todayButton` will be displayed in the day picker.
+ * @param fieldProps passed to Formik's `useField`.
  */
 export const DayPickerInputField = ({
     name,
