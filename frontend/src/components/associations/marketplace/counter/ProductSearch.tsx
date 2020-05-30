@@ -26,35 +26,38 @@ export const ProductSearch = ({
                 minLength={2}
             />
             <Container>
-                <Pagination
-                    apiKey={[
-                        "marketplace.products.search",
-                        marketplaceId,
-                        { search: searchValue, page_size: 12 },
-                    ]}
-                    apiMethod={api.products.list}
-                    render={(products, paginationControl) => (
-                        <>
-                            <Row>
-                                {products.length > 0 ? (
-                                    products.map((product) => (
-                                        <Col
+                <Row>
+                    <Pagination
+                        apiKey={[
+                            "marketplace.products.search",
+                            marketplaceId,
+                            { search: searchValue, page_size: 12 },
+                        ]}
+                        apiMethod={api.products.list}
+                        paginationControlProps={{
+                            className: "justify-content-center mb-5",
+                        }}
+                        render={(products, paginationControl) => (
+                            <>
+                                {products.map((product) => (
+                                    <Col
+                                        key={product.id}
+                                        lg={compressed ? 6 : 3}
+                                        sm={compressed ? 6 : 4}
+                                        xs={6}
+                                    >
+                                        <ProductCard
                                             key={product.id}
-                                            lg={compressed ? 6 : 3}
-                                            sm={compressed ? 6 : 4}
-                                            xs={6}
-                                        >
-                                            <ProductCard
-                                                key={product.id}
-                                                product={product}
-                                                addToBasket={addToBasket}
-                                                quantityOrdered={
-                                                    basket[product.id]?.quantity
-                                                }
-                                            />
-                                        </Col>
-                                    ))
-                                ) : (
+                                            product={product}
+                                            addToBasket={addToBasket}
+                                            quantityOrdered={
+                                                basket[product.id]?.quantity
+                                            }
+                                        />
+                                    </Col>
+                                ))}
+
+                                {products.length > 0 && (
                                     <Card>
                                         <Card.Body
                                             className={"text-center text-muted"}
@@ -63,14 +66,11 @@ export const ProductSearch = ({
                                         </Card.Body>
                                     </Card>
                                 )}
-                            </Row>
-
-                            <div className="d-flex justify-content-center mt-4">
-                                <div>{paginationControl}</div>
-                            </div>
-                        </>
-                    )}
-                />
+                                {paginationControl}
+                            </>
+                        )}
+                    />
+                </Row>
             </Container>
         </>
     );

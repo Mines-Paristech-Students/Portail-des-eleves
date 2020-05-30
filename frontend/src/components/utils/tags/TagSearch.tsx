@@ -5,11 +5,10 @@ import { Loading } from "../Loading";
 import { ErrorMessage } from "../ErrorPage";
 import { SidebarSection } from "../sidebar/SidebarSection";
 import { CheckboxField } from "../sidebar/CheckboxField";
-import { SidebarSeparator } from "../sidebar/Sidebar";
 import Fuse from "fuse.js";
 import { Form } from "react-bootstrap";
 
-export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
+export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     const { resolvedData: tags, status, error } = useBetterPaginatedQuery<any>(
         ["tags.list", tagsQueryParams],
         api.tags.list
@@ -27,13 +26,12 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
     };
 
     const onSearchChange = (params) => {
-        // TODO: update with the new toUrlParams function
         const ids = Object.entries(params) // [ [namespace.tag_id, is_selected] ]
             .map(([key, value]) => value && key)
             .filter(Boolean)
             .join(",");
 
-        setTagParams(ids.length > 0 ? { tags__are: ids } : {});
+        setParams(ids.length > 0 ? { tags__are: ids } : {});
     };
 
     useEffect(() => {
@@ -95,7 +93,6 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
         <ErrorMessage>Une erreur est survenue {error}</ErrorMessage>
     ) : tags ? (
         <>
-            <SidebarSeparator />
             <div className="input-icon mb-3">
                 <Form.Control
                     placeholder="Rechercher un tag"

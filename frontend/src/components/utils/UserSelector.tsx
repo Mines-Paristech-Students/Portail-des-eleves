@@ -12,6 +12,9 @@ export const UserSelector = ({ setUser }) => {
     return (
         <>
             <PageTitle>Comptoir</PageTitle>
+            <p className="text-muted text-center">
+                Cliquez pour ouvrir un compte
+            </p>
             <Pagination
                 apiKey={[
                     "users.list.search",
@@ -53,9 +56,6 @@ export const UserSelector = ({ setUser }) => {
                     </>
                 )}
             />
-            <p className="text-muted text-center">
-                Cliquez pour ouvrir un compte
-            </p>
         </>
     );
 };

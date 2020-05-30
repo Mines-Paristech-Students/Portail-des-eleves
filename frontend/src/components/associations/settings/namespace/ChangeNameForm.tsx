@@ -3,10 +3,10 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import { Formik } from "formik";
 import React, { useContext } from "react";
 import { api } from "../../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 
 export const ChangeNameForm = ({ namespace }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     return (
         <Formik
@@ -14,16 +14,10 @@ export const ChangeNameForm = ({ namespace }) => {
                 api.namespaces
                     .save({ id: namespace.id, name: values.name })
                     .then((res) => {
-                        newToast({
-                            message: "Namespace sauvegardé.",
-                            level: ToastLevel.Success,
-                        });
+                        sendSuccessToast("Namespace sauvegardé.");
                     })
                     .catch(() => {
-                        newToast({
-                            message: "Erreur lors de la sauvegarde.",
-                            level: ToastLevel.Error,
-                        });
+                        sendErrorToast("Erreur lors de la sauvegarde.");
                     });
             }}
             initialValues={{ name: namespace.name }}

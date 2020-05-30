@@ -5,6 +5,6 @@ export interface User {
     id: string;
     firstName: string;
     lastName: string;
-    promotion: number;
+    promotion: string;
     isStaff: boolean;
 }

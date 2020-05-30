@@ -4,11 +4,7 @@ import {
     PaginatedResponse,
     useBetterQuery,
 } from "../../services/apiService";
-import {
-    Sidebar,
-    SidebarItem,
-    SidebarSeparator,
-} from "../utils/sidebar/Sidebar";
+import { Sidebar, SidebarItem, SidebarSpace } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
@@ -31,6 +27,12 @@ export const AssociationSidebar = ({ association }) => {
                 />
                 <AddPageItem association={association} />
                 <SidebarItem
+                    icon={"calendar"}
+                    to={`/associations/${association.id}/evenements`}
+                >
+                    Événements
+                </SidebarItem>
+                <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/fichiers`}
                 >
@@ -43,7 +45,7 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
-                {association.myRole.permissions.includes("administration") && (
+                {association.myRole.permissions?.includes("administration") && (
                     <SidebarItem
                         icon={"settings"}
                         to={`/associations/${association.id}/parametres`}
@@ -51,7 +53,7 @@ export const AssociationSidebar = ({ association }) => {
                         Paramètres
                     </SidebarItem>
                 )}
-                {association.myRole.permissions.includes("marketplace") && (
+                {association.myRole.permissions?.includes("marketplace") && (
                     <MarketSubNavbar association={association} />
                 )}
             </Sidebar>
@@ -65,27 +67,26 @@ const ListPagesItem = ({ pages, association }) =>
     pages.map((page) => (
         <SidebarItem
             icon={"book"}
-            to={`/associations/${association.id}/pages/${page.id}`}
+            to={
+                page.title === "Accueil"
+                    ? `/associations/${association.id}`
+                    : `/associations/${association.id}/pages/${page.id}`
+            }
             key={page.id}
         >
             {page.title}
         </SidebarItem>
     ));
 
-const AddPageItem = ({ association }) => {
-    if (!association.myRole.pagePermission) {
-        return null;
-    }
-
-    return (
+const AddPageItem = ({ association }) =>
+    association.myRole.permissions?.includes("page") ? (
         <SidebarItem
             icon={"plus"}
-            to={`/associations/${association.id}/pages/new`}
+            to={`/associations/${association.id}/pages/nouvelle`}
         >
             Ajouter une page
         </SidebarItem>
-    );
-};
+    ) : null;
 
 const MarketSubNavbar = ({ association }) => {
     const location = useLocation();
@@ -93,7 +94,7 @@ const MarketSubNavbar = ({ association }) => {
         `/associations/${association.id}/magasin`
     ) ? (
         <>
-            <SidebarSeparator />
+            <SidebarSpace />
             <SidebarItem
                 icon={"home"}
                 to={`/associations/${association.id}/magasin`}

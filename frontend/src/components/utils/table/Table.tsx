@@ -16,21 +16,28 @@ import { Sorting } from "./sorting";
  * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
  * @param data a list of objects (one item per row) which will be used to fill the table.
  * @param props props to apply to the  table
+ * @param dataTable if true (by default), the table will be a datatable.
  */
 export const Table = ({
     columns,
     data,
     showHeaders = true,
+    dataTable = true,
 }: {
     columns: Column[];
     data: object[];
     showHeaders?: boolean;
+    dataTable?: boolean;
 }) => {
     return (
         <div className="table-responsive">
-            <div className="dataTables_wrapper no-footer">
+            <div
+                className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}
+            >
                 <table
-                    className="table card-table table-vcenter datatable dataTable no-footer table-striped"
+                    className={`table card-table table-vcenter ${
+                        dataTable ? "datatable dataTable" : ""
+                    } no-footer table-striped`}
                     role="grid"
                 >
                     {showHeaders && <TableHeader columns={columns} />}

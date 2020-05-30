@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { AxiosError } from "axios";
@@ -8,22 +8,18 @@ import * as Yup from "yup";
 import { Button, Form, InputGroup } from "react-bootstrap";
 
 export const CreateNamespaceForm = ({ association }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const [createNamespace] = useMutation(api.namespaces.create, {
         onSuccess: (response) => {
             queryCache.refetchQueries(["association.namespaces.list"]);
-            newToast({
-                message: "Namespace ajouté",
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast("Namespace ajouté");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`,
-                level: ToastLevel.Error,
-            });
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`
+            );
         },
     });
 

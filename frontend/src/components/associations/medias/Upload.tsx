@@ -54,7 +54,7 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
                 )}
             </div>
 
-            {uploadingFiles.map((file: any, i) => (
+            {uploadingFiles.map((file: any) => (
                 <FileUpload
                     key={file.name}
                     file={file}
@@ -141,33 +141,27 @@ const FileUpload = ({ file, association }) => {
 // Sub-component used to edit information on a file once its upload is done
 const FileUploadDone = ({ file }) => {
     let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-    const newToast = useContext(ToastContext);
+    const { sendToast, sendSuccessToast, sendErrorToast } = useContext(
+        ToastContext
+    );
 
     const formik = useFormik({
         // Use a form to edit name and description
         initialValues: file,
         onSubmit: (values) => {
-            newToast({
-                message: "Sauvegarde en cours",
-                level: ToastLevel.Success,
-            });
+            sendToast("Sauvegarde en cours", ToastLevel.Info);
+
             api.medias
                 .patch({
                     id: values.id,
                     name: values.name,
                     description: values.description,
                 })
-                .then((res) => {
-                    newToast({
-                        message: "Fichier sauvegardé !",
-                        level: ToastLevel.Success,
-                    });
+                .then(() => {
+                    sendSuccessToast("Fichier sauvegardé !");
                 })
                 .catch((err) => {
-                    newToast({
-                        message: err.message,
-                        level: ToastLevel.Error,
-                    });
+                    sendErrorToast(err.message);
                 });
         },
     });

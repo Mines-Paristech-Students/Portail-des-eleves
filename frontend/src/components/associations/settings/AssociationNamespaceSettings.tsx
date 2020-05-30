@@ -8,40 +8,36 @@ import { TagList } from "./namespace/TagList";
 import { CreateNamespaceForm } from "./namespace/CreateNamespaceForm";
 import { ChangeNameForm } from "./namespace/ChangeNameForm";
 
-export const AssociationNamespaceSettings = ({ association }) => {
-    return (
-        <>
-            <Card>
-                <Card.Header>
-                    <Card.Title>Tags</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                    <CreateNamespaceForm association={association} />
-                </Card.Body>
-                <Pagination
-                    apiKey={[
-                        "association.namespaces.list",
-                        { association: association.id },
-                    ]}
-                    apiMethod={api.namespaces.list}
-                    paginationControlProps={{
-                        className: "justify-content-center mt-5",
-                    }}
-                    render={(namespaces, paginationControl) => (
-                        <div className={"mt-3"}>
-                            <Table
-                                columns={columns}
-                                data={namespaces}
-                                showHeaders={false}
-                            />
-                            {paginationControl}
-                        </div>
-                    )}
-                />
-            </Card>
-        </>
-    );
-};
+export const AssociationNamespaceSettings = ({ association }) => (
+    <Card>
+        <Card.Header>
+            <Card.Title>Tags</Card.Title>
+        </Card.Header>
+        <Card.Body>
+            <CreateNamespaceForm association={association} />
+        </Card.Body>
+        <Pagination
+            apiKey={[
+                "association.namespaces.list",
+                { association: association.id },
+            ]}
+            apiMethod={api.namespaces.list}
+            paginationControlProps={{
+                className: "justify-content-center mt-5",
+            }}
+            render={(namespaces, paginationControl) => (
+                <div className={"mt-3"}>
+                    <Table
+                        columns={columns}
+                        data={namespaces}
+                        showHeaders={false}
+                    />
+                    {paginationControl}
+                </div>
+            )}
+        />
+    </Card>
+);
 
 const columns = [
     {

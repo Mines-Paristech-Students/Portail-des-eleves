@@ -12,13 +12,13 @@ import * as Yup from "yup";
 import Col from "react-bootstrap/Col";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { queryCache } from "react-query";
 import { SwitchCheckbox } from "../../utils/forms/SwitchCheckbox";
 
 export const AssociationMarketplaceProductEdit = ({ association }) => {
     const { productId } = useParams<{ productId: string }>();
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const history = useHistory();
 
     const { data: product, status, error } = useBetterQuery<Product>(
@@ -53,21 +53,17 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
                         .min(3, "Un nom doit avoir au minimum 3 caractères"),
                     price: Yup.number().min(0.0, "Un prix est positif askip"),
                 })}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values) => {
                     api.products
                         .update(values)
-                        .then((res) => {
-                            newToast({
-                                message: "Modifications enregistrées",
-                                level: ToastLevel.Success,
-                            });
+                        .then(() => {
                             queryCache.refetchQueries("products.list");
+                            sendSuccessToast("Modifications enregistrées");
                         })
                         .catch((err) => {
-                            newToast({
-                                message: `Erreur lors de l'enregistrement : ${err}`,
-                                level: ToastLevel.Error,
-                            });
+                            sendErrorToast(
+                                `Erreur lors de l'enregistrement : ${err}`
+                            );
                         });
                 }}
                 render={({ setFieldValue, values, errors, getFieldProps }) => (

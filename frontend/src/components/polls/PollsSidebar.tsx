@@ -3,6 +3,7 @@ import {
     Sidebar,
     SidebarItem,
     SidebarSeparator,
+    SidebarSpace,
 } from "../utils/sidebar/Sidebar";
 
 export const PollsSidebar = ({
@@ -19,19 +20,23 @@ export const PollsSidebar = ({
         <SidebarItem icon="inbox" to="/sondages/anciens">
             Anciens
         </SidebarItem>
-        <SidebarSeparator />
+        <SidebarSpace />
         <SidebarItem icon="check-square" to="/sondages/mes-sondages">
             Mes sondages
         </SidebarItem>
         <SidebarItem icon="plus" to="/sondages/proposer">
             Proposer
         </SidebarItem>
-        <SidebarSeparator />
+        <SidebarSpace />
         {isStaff ? (
             <SidebarItem icon="shield" to="/sondages/administration">
                 Administration
             </SidebarItem>
         ) : null}
-        {actions && <div className="mt-5 pt-5 border-top">{actions}</div>}
+        {actions && (
+            <>
+                <SidebarSeparator /> {actions}
+            </>
+        )}
     </Sidebar>
 );
