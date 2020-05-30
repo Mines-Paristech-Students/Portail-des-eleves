@@ -8,38 +8,31 @@ import Container from "react-bootstrap/Container";
 import { LoadingAssociation } from "../../Loading";
 import { PageTitle } from "../../../utils/PageTitle";
 import { Pagination } from "../../../utils/Pagination";
-import { Association } from "../../../../models/associations/association";
 import { EventCard } from "./EventCard";
+import { EventsListParameters } from "../../../../services/api/events";
+import { Association } from "../../../../models/associations/association";
 
 /**
- * Display a list of `EventCard` filtered by `time` and ordered by either `-starts_at` or `starts_at`.
- * The whole component is placed in a `Container`.
+ * Display a list of `EventCard`. The whole component is placed in a `Container`.
  *
  * @param association the related association.
  * @param title displayed in a `PageTitle` component at the top.
- * @param time an array which elements are to choose between "NOW", "BEFORE" and "AFTER" used to filter the events out.
- * The empty array is equivalent to an empty filter (all the events are displayed).
- * @param ordering choose between `-starts_at` and `starts_at`.
+ * @param apiParameters see `EventsListParameters` for the available filters and ordering. The key `association` is
+ * omitted, given that it's already available with the `association` props.
  */
 export const AssociationListEvents = ({
     association,
     title,
-    time,
-    ordering,
+    apiParameters,
 }: {
     association: Association;
     title: string;
-    time: ("NOW" | "BEFORE" | "AFTER")[];
-    ordering: "-starts_at" | "starts_at";
+    apiParameters: Omit<EventsListParameters, "association">;
 }) => (
     <Pagination
         apiKey={[
             "events.list",
-            {
-                association: association.id,
-                time: time,
-                ordering: ordering,
-            },
+            { ...apiParameters, association: association.id },
         ]}
         apiMethod={api.events.list}
         loadingElement={LoadingAssociation}

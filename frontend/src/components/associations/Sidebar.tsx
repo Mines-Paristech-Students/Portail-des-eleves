@@ -107,9 +107,9 @@ const EventSubSidebar = ({ association }: { association: Association }) => {
             </SidebarItem>
             <SidebarItem
                 icon={"inbox"}
-                to={`/associations/${association.id}/evenements/termines`}
+                to={`/associations/${association.id}/evenements/passes`}
             >
-                Terminés
+                Passés
             </SidebarItem>
             {association.myRole?.permissions?.includes("event") && (
                 <SidebarItem

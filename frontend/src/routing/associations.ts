@@ -54,20 +54,24 @@ export const routes: (association: Association) => AssociationRoute[] = (
         props: {
             association: association,
             title: "Événements à venir",
-            time: ["NOW", "AFTER"],
-            ordering: "starts_at",
+            apiParameters: {
+                time: ["NOW", "AFTER"],
+                ordering: "starts_at",
+            },
         },
         defaultLayout: true,
     },
     {
-        path: `/evenements/termines`,
+        path: `/evenements/passes`,
         component: AssociationListEvents,
         exact: true,
         props: {
             association: association,
-            title: "Événements terminés",
-            time: ["BEFORE"],
-            ordering: "-starts_at",
+            title: "Événements passés",
+            apiParameters: {
+                time: ["BEFORE"],
+                ordering: "-starts_at",
+            },
         },
         defaultLayout: true,
     },
