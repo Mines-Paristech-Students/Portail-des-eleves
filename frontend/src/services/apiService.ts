@@ -26,9 +26,9 @@ import { courses } from "./api/courses";
 const baseApi = "http://localhost:8000/api/v1";
 
 export enum electionActiveStatus {
-    Past = 'PAST',
-    Active = 'ACTIVE',
-    Upcoming = 'UPCOMING'
+    Past = "PAST",
+    Active = "ACTIVE",
+    Upcoming = "UPCOMING",
 }
 
 export const apiService = applyConverters(

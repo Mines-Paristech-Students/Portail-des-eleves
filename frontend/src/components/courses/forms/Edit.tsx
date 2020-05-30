@@ -1,6 +1,16 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Form, Row, Col, Button, Modal, Container, Card, Spinner, ListGroup } from "react-bootstrap";
-import { Form as FormModel } from "../../../models/courses/form"
+import {
+    Form,
+    Row,
+    Col,
+    Button,
+    Modal,
+    Container,
+    Card,
+    Spinner,
+    ListGroup,
+} from "react-bootstrap";
+import { Form as FormModel } from "../../../models/courses/form";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Formik, useFormik, useField, FormikProps } from "formik";
@@ -8,33 +18,33 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { Question, QuestionCategory } from "../../../models/courses/question";
 import { Badge } from "reactstrap";
 
-
 export const EditCourseForm = ({ course }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [questions, setQuestions] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
 
-
     /* 
     We don't want the questions to reload, as it could change our components!
     This causes an issue because the components are loaded from a list, which we don't want to change
     */
-    useEffect(() => {
-        api.courses.forms.questions
-            .list(course.form)
-            .then(questions => {
-                setQuestions(questions);
-                setIsLoading(false);
-            })
-            .catch(err => {
-                newToast({
-                    message: "Could not fetch questions...",
-                    level: ToastLevel.Error,
+    useEffect(
+        () => {
+            api.courses.forms.questions
+                .list(course.form)
+                .then((questions) => {
+                    setQuestions(questions);
+                    setIsLoading(false);
                 })
-            })
-    }, 
-    // eslint-disable-next-line 
-    [])
+                .catch((err) => {
+                    newToast({
+                        message: "Could not fetch questions...",
+                        level: ToastLevel.Error,
+                    });
+                });
+        },
+        // eslint-disable-next-line
+        []
+    );
 
     const addQuestion = () => {
         const newQuestion: Question = {
@@ -47,60 +57,50 @@ export const EditCourseForm = ({ course }) => {
         let copy = questions.slice();
         copy.push(newQuestion);
         setQuestions(copy);
-    }
+    };
 
     const { data: form } = useBetterQuery<FormModel>(
         ["courses.forms.get", course.form],
-        api.courses.forms.get,
+        api.courses.forms.get
     );
 
     if (isLoading) return <p>Chargement des cours</p>;
 
     return (
         <Container>
-            <PageTitle>
-                Modification de formulaire
-            </PageTitle>
+            <PageTitle>Modification de formulaire</PageTitle>
 
-            <Row>
-                {form &&
-                    <FormEditor form={form} />
-                }
-            </Row>
+            <Row>{form && <FormEditor form={form} />}</Row>
 
             <br />
 
             <Row>
-                {questions && questions.map(question =>
-                    <Col sm={6} id={"Col" + question.id}>
-                        <QuestionEditor question={question} />
-                    </Col>
-                )}
+                {questions &&
+                    questions.map((question) => (
+                        <Col sm={6} id={"Col" + question.id}>
+                            <QuestionEditor question={question} />
+                        </Col>
+                    ))}
             </Row>
 
             <br />
 
             <Row className="w-100 d-flex justify-content-around">
-
-                <Button onClick={addQuestion}>
-                    Ajouter une question
-                </Button>
+                <Button onClick={addQuestion}>Ajouter une question</Button>
 
                 <FetchQuestionsModal course={course} />
-
             </Row>
-
-
         </Container>
     );
-}
+};
 
 const FormEditor = ({ form }) => {
     const newToast = useContext(ToastContext);
 
     const formik = useFormik({
         initialValues: { name: form.name },
-        validate: (values) => (values.name === "") ? { errors: "Cannot be empty" } : {},
+        validate: (values) =>
+            values.name === "" ? { errors: "Cannot be empty" } : {},
         onSubmit: (values, { setSubmitting }) => {
             form.name = values.name;
             api.courses.forms
@@ -118,14 +118,12 @@ const FormEditor = ({ form }) => {
                         level: ToastLevel.Error,
                     });
                     setSubmitting(false);
-                })
+                });
         },
     });
 
     return (
-        < Form
-            onSubmit={formik.handleSubmit}
-        >
+        <Form onSubmit={formik.handleSubmit}>
             <Row>
                 <Col>
                     <Form.Label>Nom: </Form.Label>
@@ -139,20 +137,21 @@ const FormEditor = ({ form }) => {
                         onBlur={formik.handleBlur}
                         isInvalid={!!formik.errors.name}
                     ></Form.Control>
-                    {formik.errors.name &&
+                    {formik.errors.name && (
                         <Form.Control.Feedback type="invalid">
                             {formik.errors.name}
                         </Form.Control.Feedback>
-                    }
+                    )}
                 </Col>
                 <Col>
-                    <Button type="submit" disabled={formik.isSubmitting}>Modifier</Button>
+                    <Button type="submit" disabled={formik.isSubmitting}>
+                        Modifier
+                    </Button>
                 </Col>
             </Row>
-        </Form >
-    )
-
-}
+        </Form>
+    );
+};
 
 const FetchQuestionsModal = ({ course }) => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -162,14 +161,16 @@ const FetchQuestionsModal = ({ course }) => {
 
     const formik = useFormik({
         initialValues: { idForm: -1, questions: [] },
-        validate: (values) => { return (values.questions.length === 0 ? { questions: "Empty" } : {}) },
+        validate: (values) => {
+            return values.questions.length === 0 ? { questions: "Empty" } : {};
+        },
         onSubmit: (values, { setSubmitting }) => {
-            Promise.all(values.questions.map((question: Question) => {
-                question.id = undefined;
-                question.form = course.form;
-                console.log(question.id);
-                return (
-                    api.courses.forms.questions
+            Promise.all(
+                values.questions.map((question: Question) => {
+                    question.id = undefined;
+                    question.form = course.form;
+                    console.log(question.id);
+                    return api.courses.forms.questions
                         .save(question)
                         .then((question) => {
                             newToast({
@@ -182,74 +183,70 @@ const FetchQuestionsModal = ({ course }) => {
                                 message: `Could not insert question ${question.label}`,
                                 level: ToastLevel.Error,
                             });
-                        })
-                )
-            }))
-                .then((data) => {
-                    setSubmitting(false);
-                    setIsFetching(false);
+                        });
                 })
-        }
+            ).then((data) => {
+                setSubmitting(false);
+                setIsFetching(false);
+            });
+        },
     });
 
-    useEffect(() => {
-        api.courses.forms
-            .list()
-            .then(res => {
-                setForms(res.results);
-                setIsLoading(false);
-            })
-            .catch(err => {
-                newToast({
-                    message: "Could not fetch questions...",
-                    level: ToastLevel.Error,
+    useEffect(
+        () => {
+            api.courses.forms
+                .list()
+                .then((res) => {
+                    setForms(res.results);
+                    setIsLoading(false);
                 })
-            })
-    }, 
-    // eslint-disable-next-line
-    [])
+                .catch((err) => {
+                    newToast({
+                        message: "Could not fetch questions...",
+                        level: ToastLevel.Error,
+                    });
+                });
+        },
+        // eslint-disable-next-line
+        []
+    );
 
-    useEffect(() => {
-        setIsLoading(true);
-        api.courses.forms
-            .questions.list(formik.values.idForm)
-            .then(questions => {
-                formik.setErrors({})
-                formik.setFieldValue("questions", questions)
-                setIsLoading(false);
-            })
-            .catch(err => {
-                formik.setErrors({ questions: "Could not fetch" })
-                formik.setFieldValue("questions", [])
-                setIsLoading(false);
-                newToast({
-                    message: "Could not fetch questions...",
-                    level: ToastLevel.Error,
+    useEffect(
+        () => {
+            setIsLoading(true);
+            api.courses.forms.questions
+                .list(formik.values.idForm)
+                .then((questions) => {
+                    formik.setErrors({});
+                    formik.setFieldValue("questions", questions);
+                    setIsLoading(false);
                 })
-            })
-    }, 
-    // eslint-disable-next-line
-    [formik.values.idForm])
-
+                .catch((err) => {
+                    formik.setErrors({ questions: "Could not fetch" });
+                    formik.setFieldValue("questions", []);
+                    setIsLoading(false);
+                    newToast({
+                        message: "Could not fetch questions...",
+                        level: ToastLevel.Error,
+                    });
+                });
+        },
+        // eslint-disable-next-line
+        [formik.values.idForm]
+    );
 
     return (
         <>
-            <Button
-                onClick={(e) => setIsFetching(true)}
-                disabled={isFetching}
-            >
+            <Button onClick={(e) => setIsFetching(true)} disabled={isFetching}>
                 Récupérer d'un autre formulaire
             </Button>
 
-            {isFetching &&
-                <Modal
-                    show={isFetching}
-                    onHide={() => setIsFetching(false)}
-                >
+            {isFetching && (
+                <Modal show={isFetching} onHide={() => setIsFetching(false)}>
                     <Form onSubmit={formik.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Récupération</Modal.Title>
-                            {(isLoading || formik.isSubmitting) &&
+                            {(isLoading || formik.isSubmitting) && (
                                 <Spinner
                                     as="span"
                                     animation="border"
@@ -257,7 +254,7 @@ const FetchQuestionsModal = ({ course }) => {
                                     role="status"
                                     aria-hidden="true"
                                 />
-                            }
+                            )}
                         </Modal.Header>
 
                         <Modal.Body>
@@ -269,10 +266,18 @@ const FetchQuestionsModal = ({ course }) => {
                                 onChange={formik.handleChange}
                                 value={formik.values.idForm}
                             >
-                                <option selected value={-1}> -- Formulaire -- </option>
-                                {forms.map((form) =>
-                                    <option value={form.id} id={"option_form" + form.id}>{form.name}</option>
-                                )}
+                                <option selected value={-1}>
+                                    {" "}
+                                    -- Formulaire --{" "}
+                                </option>
+                                {forms.map((form) => (
+                                    <option
+                                        value={form.id}
+                                        id={"option_form" + form.id}
+                                    >
+                                        {form.name}
+                                    </option>
+                                ))}
                             </Form.Control>
 
                             <br />
@@ -280,26 +285,41 @@ const FetchQuestionsModal = ({ course }) => {
                             <ListGroup as="ul" className="overflow-auto">
                                 <ListGroup.Item active>
                                     Détails des questions
-                        </ListGroup.Item>
-                                {formik.values.questions.map((question: Question) => (
-                                    <ListGroup.Item>
-                                        <Badge variant="info">{question.category}</Badge>
-                                        {question.label}
-                                    </ListGroup.Item>
-                                ))}
+                                </ListGroup.Item>
+                                {formik.values.questions.map(
+                                    (question: Question) => (
+                                        <ListGroup.Item>
+                                            <Badge variant="info">
+                                                {question.category}
+                                            </Badge>
+                                            {question.label}
+                                        </ListGroup.Item>
+                                    )
+                                )}
                             </ListGroup>
                         </Modal.Body>
 
                         <Modal.Footer className="d-flex justify-content-around">
-                            <Button variant="primary" type="submit" disabled={formik.isSubmitting}>Ajouter</Button>
-                            <Button variant="secondary" onClick={() => setIsFetching(false)}>Fermer</Button>
+                            <Button
+                                variant="primary"
+                                type="submit"
+                                disabled={formik.isSubmitting}
+                            >
+                                Ajouter
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setIsFetching(false)}
+                            >
+                                Fermer
+                            </Button>
                         </Modal.Footer>
                     </Form>
                 </Modal>
-            }
+            )}
         </>
-    )
-}
+    );
+};
 
 enum QuestionStatus {
     Clear = "light",
@@ -319,8 +339,8 @@ export const QuestionEditor = ({ question }) => {
 
         api.courses.forms.questions
             .save(question)
-            .then(res => {
-                console.log("plop" + question.form)
+            .then((res) => {
+                console.log("plop" + question.form);
                 newToast({
                     message: `Updated questions ${res.label} for ${res.form}`,
                     level: ToastLevel.Success,
@@ -328,7 +348,7 @@ export const QuestionEditor = ({ question }) => {
                 setSubmitting(false);
                 setStatus(QuestionStatus.Success);
             })
-            .catch(err => {
+            .catch((err) => {
                 newToast({
                     message: err.response.status + " " + err.response.data,
                     level: ToastLevel.Error,
@@ -336,7 +356,7 @@ export const QuestionEditor = ({ question }) => {
                 setSubmitting(false);
                 setStatus(QuestionStatus.Error);
             });
-    }
+    };
 
     const validate = (question) => {
         if (question.label === "") {
@@ -344,7 +364,7 @@ export const QuestionEditor = ({ question }) => {
             return { label: "Ne peut pas etre vide" };
         }
         return {};
-    }
+    };
 
     return (
         <Formik
@@ -377,22 +397,27 @@ export const QuestionEditor = ({ question }) => {
                                     onBlur={props.handleBlur}
                                     onChange={props.handleChange}
                                 />
-                                {props.touched.label && props.errors.label &&
-                                    <Form.Control.Feedback type="invalid">{props.errors.label}</Form.Control.Feedback>
-                                }
+                                {props.touched.label && props.errors.label && (
+                                    <Form.Control.Feedback type="invalid">
+                                        {props.errors.label}
+                                    </Form.Control.Feedback>
+                                )}
                             </Form.Group>
                         </Card.Header>
 
                         <Card.Body>
-                            {!question.id &&
+                            {!question.id && (
                                 <MyRadioField
                                     label="Catégorie"
                                     id={"category" + question.id}
                                     name="category"
-                                    mapping={{ "Commentaire": "C", "Notation": "R" }}
+                                    mapping={{
+                                        Commentaire: "C",
+                                        Notation: "R",
+                                    }}
                                     {...props}
                                 />
-                            }
+                            )}
 
                             <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>
@@ -421,7 +446,7 @@ export const QuestionEditor = ({ question }) => {
                         <Card.Footer className="d-flex justify-content-around">
                             <Button type="submit" disabled={props.isSubmitting}>
                                 Valider
-                                {props.isSubmitting &&
+                                {props.isSubmitting && (
                                     <Spinner
                                         as="span"
                                         animation="border"
@@ -429,26 +454,26 @@ export const QuestionEditor = ({ question }) => {
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                }
+                                )}
                             </Button>
                             <Button onClick={props.handleReset}>Reset</Button>
                         </Card.Footer>
                     </Card>
-                )
+                );
             }}
-        </Formik >
-    )
+        </Formik>
+    );
 };
 
 const MyRadioField = ({ label, mapping, ...props }) => {
     // @ts-ignore
     const [field, meta, helper] = useField(props);
 
-    if (meta.touched && meta.error) return <p>{meta.error}</p>
+    if (meta.touched && meta.error) return <p>{meta.error}</p>;
     return (
         <Form.Group>
             <Form.Label>{label}</Form.Label>
-            {Object.keys(mapping).map((key, value) =>
+            {Object.keys(mapping).map((key, value) => (
                 <Form.Check
                     type="radio"
                     id={key + value}
@@ -457,7 +482,7 @@ const MyRadioField = ({ label, mapping, ...props }) => {
                     checked={field.value === mapping[key]}
                     onChange={() => helper.setValue(mapping[key])}
                 />
-            )}
+            ))}
         </Form.Group>
     );
 };

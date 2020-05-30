@@ -5,7 +5,13 @@ import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
-import { MINUTES, HOURS, MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } from "../../../utils/format";
+import {
+    MINUTES,
+    HOURS,
+    MONTHS,
+    WEEKDAYS_LONG,
+    WEEKDAYS_SHORT,
+} from "../../../utils/format";
 import "./date-picker-field.css";
 
 /**
@@ -52,7 +58,7 @@ export function DatePickerField({ label, ...props }: any) {
     );
 }
 
-export function DateTimePickerField( { label, ...props } :any) {
+export function DateTimePickerField({ label, ...props }: any) {
     const { setFieldValue } = useFormikContext();
     const [field, meta] = useField<Date>(props);
     return (
@@ -62,52 +68,64 @@ export function DateTimePickerField( { label, ...props } :any) {
                 {...field}
                 initialMonth={field.value}
                 selectedDays={field.value}
-                onDayClick={day => {
-                    const newDate = new Date(field.value)
-                    newDate.setFullYear(day.getFullYear(), day.getMonth(), day.getDate())
-                    setFieldValue(field.name, newDate)
+                onDayClick={(day) => {
+                    const newDate = new Date(field.value);
+                    newDate.setFullYear(
+                        day.getFullYear(),
+                        day.getMonth(),
+                        day.getDate()
+                    );
+                    setFieldValue(field.name, newDate);
                 }}
                 locale="fr"
                 months={MONTHS}
                 weekdaysLong={WEEKDAYS_LONG}
                 weekdaysShort={WEEKDAYS_SHORT}
                 firstDayOfWeek={1}
-                disabledDays={props.fromNow ? { before: new Date() }:{before: new Date(0)}}
+                disabledDays={
+                    props.fromNow
+                        ? { before: new Date() }
+                        : { before: new Date(0) }
+                }
             />
             <Form.Row>
                 <Col>
                     <Form.Control
-                        as={'select'}
+                        as={"select"}
                         custom
-                        size={'sm'}
+                        size={"sm"}
                         value={field.value.getHours().toString()}
                         onChange={(e) => {
                             const newDate = new Date(field.value);
                             newDate.setHours(parseInt(e.currentTarget.value));
-                            setFieldValue(field.name, newDate)
+                            setFieldValue(field.name, newDate);
                         }}
                     >
-                        {HOURS.map((i) =>
-                            <option key={i} value={i}>{i.toString().padStart(2, '0')}</option>)
-                        }
+                        {HOURS.map((i) => (
+                            <option key={i} value={i}>
+                                {i.toString().padStart(2, "0")}
+                            </option>
+                        ))}
                     </Form.Control>
                 </Col>
                 :
                 <Col>
                     <Form.Control
-                        as={'select'}
+                        as={"select"}
                         custom
-                        size={'sm'}
+                        size={"sm"}
                         value={field.value.getMinutes().toString()}
                         onChange={(e) => {
                             const newDate = new Date(field.value);
                             newDate.setMinutes(parseInt(e.currentTarget.value));
-                            setFieldValue(field.name, newDate)
+                            setFieldValue(field.name, newDate);
                         }}
                     >
-                        {MINUTES.map((i) =>
-                            <option key={i} value={i}>{i.toString().padStart(2, '0')}</option>)
-                        }
+                        {MINUTES.map((i) => (
+                            <option key={i} value={i}>
+                                {i.toString().padStart(2, "0")}
+                            </option>
+                        ))}
                     </Form.Control>
                 </Col>
             </Form.Row>
@@ -117,5 +135,5 @@ export function DateTimePickerField( { label, ...props } :any) {
                 </Form.Control.Feedback>
             ) : null}
         </Form.Group>
-    )
+    );
 }

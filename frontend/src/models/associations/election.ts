@@ -10,8 +10,8 @@ export interface Choice {
 export interface Result {
     id: string;
     result: string;
-    numberOfVoters:string;
-    numberOfRegistered:string;
+    numberOfVoters: string;
+    numberOfRegistered: string;
 }
 
 export interface Ballot {
@@ -29,6 +29,6 @@ export interface Election {
     startsAt: Date;
     endsAt: Date;
     maxChoicesPerBallot: number;
-    hasVoted?: boolean
-    isRegistered?: boolean
+    hasVoted?: boolean;
+    isRegistered?: boolean;
 }

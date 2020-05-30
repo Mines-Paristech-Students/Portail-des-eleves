@@ -1,4 +1,4 @@
-import { Form } from "./form"
+import { Form } from "./form";
 
 export interface Course {
     id?: number;

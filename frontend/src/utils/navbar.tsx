@@ -10,7 +10,7 @@ import {
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem
+    DropdownItem,
 } from "reactstrap";
 import { authService } from "../App";
 
@@ -119,6 +119,6 @@ export const Navbar = () => {
             </div>
         </>
     );
-}
+};
 
 export default Navbar;

@@ -28,7 +28,12 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
     return (
         <>
             {toast && (
-                <Toast message={toast.message} type={toast.level} flip={flip} delay={toast.delay}/>
+                <Toast
+                    message={toast.message}
+                    type={toast.level}
+                    flip={flip}
+                    delay={toast.delay}
+                />
             )}
             <ToastContext.Provider
                 value={(value) => {

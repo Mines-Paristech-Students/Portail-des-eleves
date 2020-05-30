@@ -18,13 +18,13 @@ export const routes = [
     {
         path: "/associations/:associationId",
         component: AssociationRouter,
-        exact: false
+        exact: false,
     },
     { path: "/cours", component: CourseList, exact: true },
     {
         path: "/cours/:courseId",
         component: CourseRouter,
-        exact: false
+        exact: false,
     },
 ]
     .concat(pollsRoutes)

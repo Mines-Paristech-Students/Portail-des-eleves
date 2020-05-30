@@ -12,16 +12,12 @@ export const CourseSidebar = ({ course }) => {
     } else if (course) {
         return (
             <Sidebar title={course.name}>
-
                 {/* {user?.isAdmin && */}
-                {true &&
-                    <FormSidebar course={course} />
-                }
+                {true && <FormSidebar course={course} />}
 
                 <EvaluationSidebar course={course} />
 
                 {/* TODO: Files */}
-
             </Sidebar>
         );
     }
@@ -32,51 +28,40 @@ export const CourseSidebar = ({ course }) => {
 const EvaluationSidebar = ({ course }) => {
     const { data: has_voted, error, status } = useBetterQuery<boolean>(
         ["courses.has_voted", course.id],
-        api.courses.has_voted,
+        api.courses.has_voted
     );
 
     return (
         <SidebarCategory title={"Évaluations"}>
-
-            {status === "error" &&
-                <SidebarItem
-                    icon="x-circle"
-                    to={`/cours/${course.id}`}
-                >
+            {status === "error" && (
+                <SidebarItem icon="x-circle" to={`/cours/${course.id}`}>
                     {`${error}`}
                 </SidebarItem>
-            }
+            )}
 
-            {status === "loading" &&
-                <SidebarItem
-                    icon="loader"
-                    to={`/cours/${course.id}`}
-                >
+            {status === "loading" && (
+                <SidebarItem icon="loader" to={`/cours/${course.id}`}>
                     Loading
                 </SidebarItem>
-            }
+            )}
 
-            {(status === "success" && has_voted) &&
+            {status === "success" && has_voted && (
                 <SidebarItem
                     icon="pie-chart"
                     to={`/cours/${course.id}/resultats`}
                 >
                     Statistiques
-            </SidebarItem>
-            }
+                </SidebarItem>
+            )}
 
-            {(status === "success" && !has_voted) &&
-                <SidebarItem
-                    icon="edit-3"
-                    to={`/cours/${course.id}/evaluer`}
-                >
+            {status === "success" && !has_voted && (
+                <SidebarItem icon="edit-3" to={`/cours/${course.id}/evaluer`}>
                     Évaluer
                 </SidebarItem>
-            }
-
+            )}
         </SidebarCategory>
-    )
-}
+    );
+};
 
 const FormSidebar = ({ course }) => {
     return (
@@ -94,14 +79,14 @@ const FormSidebar = ({ course }) => {
                 Lier un formulaire
             </SidebarItem>
 
-            {course.form &&
+            {course.form && (
                 <SidebarItem
                     icon={"file-text"}
                     to={`/cours/${course.id}/formulaires/editer`}
                 >
                     Modifier le formulaire
                 </SidebarItem>
-            }
+            )}
         </SidebarCategory>
-    )
-}
+    );
+};

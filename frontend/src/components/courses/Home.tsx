@@ -10,5 +10,5 @@ export const CourseHome = ({ course }) => {
         <Container>
             <p>Home page !!!</p>
         </Container>
-    )
+    );
 };

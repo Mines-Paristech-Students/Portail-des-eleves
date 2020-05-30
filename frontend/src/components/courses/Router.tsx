@@ -1,10 +1,9 @@
-
 import React from "react";
 import {
     BrowserRouter as Router,
     Route,
     Switch,
-    useParams
+    useParams,
 } from "react-router-dom";
 
 import { api, useBetterQuery } from "../../services/apiService";
@@ -22,7 +21,7 @@ export const CourseRouter = ({ match }) => {
 
     const { data: course, error, status } = useBetterQuery<Course>(
         ["course.get", courseId],
-        api.courses.get,
+        api.courses.get
     );
 
     // Generate the routes

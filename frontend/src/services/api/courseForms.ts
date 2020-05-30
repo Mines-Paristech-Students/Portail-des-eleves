@@ -2,43 +2,22 @@ import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Question } from "../../models/courses/question";
 import { Form } from "../../models/courses/form";
 
-
 export const forms = {
     get: (formId: number) =>
-        unwrap<Form>(
-            apiService.get(
-                `/courses/forms/${formId}`
-            )
-        ),
+        unwrap<Form>(apiService.get(`/courses/forms/${formId}`)),
     list: () =>
-        unwrap<PaginatedResponse<Form[]>>(
-            apiService.get(
-                `/courses/forms`
-            )
-        ),
+        unwrap<PaginatedResponse<Form[]>>(apiService.get(`/courses/forms`)),
     save: (form: Form) => {
         if (form.id)
-            return (
-                unwrap<Form>(
-                    apiService.patch(
-                        `/courses/forms/${form.id}/`,
-                        form,
-                    )
-                )
-            )
-        return (
-            unwrap<Form>(
-                apiService.post(
-                    `/courses/forms/`,
-                    form,
-                )
-            )
-        )
+            return unwrap<Form>(
+                apiService.patch(`/courses/forms/${form.id}/`, form)
+            );
+        return unwrap<Form>(apiService.post(`/courses/forms/`, form));
     },
 
     questions: {
         save: (question: Question) => {
-            console.log("Begore " + question.form)
+            console.log("Begore " + question.form);
             if (!question.id) {
                 return unwrap<Question>(
                     apiService.post(`/courses/questions/`, question)
@@ -50,10 +29,6 @@ export const forms = {
             );
         },
         list: (id: number) =>
-            unwrap<Question[]>(
-                apiService.get(
-                    `courses/forms/${id}/questions`,
-                )
-            ),
-    }
-}
+            unwrap<Question[]>(apiService.get(`courses/forms/${id}/questions`)),
+    },
+};
