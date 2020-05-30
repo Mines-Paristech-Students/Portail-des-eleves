@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import "./QuantitySelect.css";
+import { queryCache } from "react-query";
 
 export const QuantitySelect = ({ order }) => {
     const [quantity, setQuantity] = useState(0);
@@ -14,6 +16,7 @@ export const QuantitySelect = ({ order }) => {
     const onOrder = () => {
         order(quantity);
         setQuantity(0);
+        queryCache.refetchQueries(["marketplace.balance"]);
     };
 
     return quantity === 0 ? (

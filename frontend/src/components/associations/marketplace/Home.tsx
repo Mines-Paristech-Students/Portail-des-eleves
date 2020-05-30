@@ -14,6 +14,8 @@ import { ToastContext } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Product } from "./Product";
 import { QuantitySelect } from "./QuantitySelect";
+import { Link } from "react-router-dom";
+import { Balance } from "./Balance";
 
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
@@ -56,18 +58,21 @@ export const AssociationMarketplaceHome = ({ association }) => {
         >
             <Container>
                 <div className="d-flex align-items-center">
-                    <PageTitle>Magasin</PageTitle>
+                    <PageTitle>Magasin </PageTitle>
                     <div className={"ml-auto"}>
-                        <a
-                            href={
-                                "/associations/" +
-                                marketplaceId +
-                                "/magasin/historique/"
-                            }
+                        <span className="tag align-middle mr-2">
+                            Mon solde :{" "}
+                            <Balance
+                                marketplaceId={marketplaceId}
+                                user={user}
+                            />
+                        </span>
+                        <Link
+                            to={`/associations/${marketplaceId}/magasin/historique/`}
                             className={"btn btn-primary btn-sm"}
                         >
-                            <i className={"fe fe-book-open"} /> Historique
-                        </a>
+                            <span className={"fe fe-book-open"} /> Historique
+                        </Link>
                     </div>
                 </div>
 

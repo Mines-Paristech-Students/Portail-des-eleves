@@ -4,13 +4,9 @@ import { Card, Row, Container, Col } from "react-bootstrap";
 import { Pagination } from "../../../utils/Pagination";
 import { api } from "../../../../services/apiService";
 import { ProductCard } from "./ProductCard";
+import "./product-search.css";
 
-export const ProductSearch = ({
-    marketplaceId,
-    basket,
-    addToBasket,
-    compressed,
-}) => {
+export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
     const [searchValue, setSearchValue] = useState("");
 
     return (
@@ -35,21 +31,17 @@ export const ProductSearch = ({
                         ]}
                         apiMethod={api.products.list}
                         paginationControlProps={{
-                            className: "justify-content-center mb-5",
+                            className: "justify-content-center mt-2 mb-5",
                         }}
                         render={(products, paginationControl) => (
-                            <>
+                            <Row>
                                 {products.map((product) => (
-                                    <Col
-                                        key={product.id}
-                                        lg={compressed ? 6 : 3}
-                                        sm={compressed ? 6 : 4}
-                                        xs={6}
-                                    >
+                                    <Col key={product.id} xs={6}>
                                         <ProductCard
                                             key={product.id}
                                             product={product}
                                             addToBasket={addToBasket}
+                                            className={"cursor-pointer"}
                                             quantityOrdered={
                                                 basket[product.id]?.quantity
                                             }
@@ -57,7 +49,7 @@ export const ProductSearch = ({
                                     </Col>
                                 ))}
 
-                                {products.length > 0 && (
+                                {products.length === 0 && (
                                     <Card>
                                         <Card.Body
                                             className={"text-center text-muted"}
@@ -66,8 +58,11 @@ export const ProductSearch = ({
                                         </Card.Body>
                                     </Card>
                                 )}
-                                {paginationControl}
-                            </>
+
+                                <Col>
+                                    {paginationControl}
+                                </Col>
+                            </Row>
                         )}
                     />
                 </Row>

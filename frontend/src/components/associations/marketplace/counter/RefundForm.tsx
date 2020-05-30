@@ -94,7 +94,7 @@ export const RefundForm = ({ customer, marketplaceId, ...props }) => {
                                                     setFieldValue("refund", val)
                                                 }
                                             >
-                                                {val}€
+                                                {val} €
                                             </Button>
                                         ))}
                                     </div>

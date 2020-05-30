@@ -1,4 +1,4 @@
-import { api, useBetterQuery } from "../../../../services/apiService";
+import { api } from "../../../../services/apiService";
 import React, { useContext, useState } from "react";
 import { ToastContext } from "../../../utils/Toast";
 import { TransactionStatus } from "../../../../models/associations/marketplace";
@@ -7,21 +7,13 @@ import { Card, Col, Row } from "react-bootstrap";
 import { RefundForm } from "./RefundForm";
 import { ProductSearch } from "./ProductSearch";
 import { OrderSummary } from "./OrderSummary";
+import { Balance } from "../Balance";
 
 export const CounterOrderMaker = ({
     marketplaceId,
     customer,
     resetCustomer,
 }) => {
-    const {
-        data: balance,
-        status: balanceStatus,
-        error: balanceError,
-    } = useBetterQuery(
-        ["marketplace.balance", marketplaceId, customer.id],
-        api.marketplace.balance.get
-    );
-
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [basket, setBasket] = useState<object>({});
 
@@ -100,8 +92,6 @@ export const CounterOrderMaker = ({
         await queryCache.refetchQueries("marketplace.transactions.list");
     };
 
-    const basketIsEmpty = Object.keys(basket).length === 0;
-
     return (
         <>
             <RefundForm
@@ -115,42 +105,34 @@ export const CounterOrderMaker = ({
                     <Card>
                         <Card.Body className="text-center">
                             <h5>{customer.id}</h5>
-                            <div className="display-2 font-weight-bold">
-                                {balanceStatus === "loading" ? (
-                                    <em>Chargement</em>
-                                ) : balanceStatus === "error" ? (
-                                    <em>Erreur {balanceError} : balance</em>
-                                ) : (
-                                    `${
-                                        (balance as { balance: number }).balance
-                                    }€`
-                                )}
-                            </div>
+                            <p className="h1 font-weight-bold">
+                                <Balance
+                                    marketplaceId={marketplaceId}
+                                    user={customer}
+                                />
+                            </p>
                         </Card.Body>
                     </Card>
                 </Col>
             </div>
 
             <Row>
-                <Col md={basketIsEmpty ? 12 : 6}>
+                <Col md={6}>
                     <ProductSearch
                         basket={basket}
                         addToBasket={addToBasket}
                         marketplaceId={marketplaceId}
-                        compressed={Object.keys(basket).length > 0}
                     />
                 </Col>
 
                 {/* Show order summary */}
-                {!basketIsEmpty && (
-                    <Col md={6}>
-                        <OrderSummary
-                            basket={basket}
-                            removeFromBasket={removeFromBasket}
-                            makeOrder={makeOrder}
-                        />
-                    </Col>
-                )}
+                <Col md={6}>
+                    <OrderSummary
+                        basket={basket}
+                        removeFromBasket={removeFromBasket}
+                        makeOrder={makeOrder}
+                    />
+                </Col>
             </Row>
         </>
     );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import { decidePlural } from "../../../utils/format";
+import { decidePlural, formatNewLines, formatPrice } from "../../../utils/format";
 
 export const Product = ({ product, additionalContent }) => (
     <Col xs={12} md={6}>
@@ -21,11 +21,11 @@ export const Product = ({ product, additionalContent }) => (
                           )
                         : ""}
                 </Card.Subtitle>
-                <p>{product.description}</p>
+                <p>{formatNewLines(product.description)}</p>
 
                 <div className="mt-5 d-flex align-items-center">
                     <div className={"product-price mr-3"}>
-                        <strong>{product.price}€</strong>
+                        <strong>{formatPrice(product.price)}</strong>
                     </div>
                     <div className="ml-auto">{additionalContent}</div>
                 </div>

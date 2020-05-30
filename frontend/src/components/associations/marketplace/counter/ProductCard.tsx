@@ -1,14 +1,22 @@
 import { Card } from "react-bootstrap";
 import React from "react";
-import { decidePlural } from "../../../../utils/format";
+import { decidePlural, formatPrice } from "../../../../utils/format";
 
-export const ProductCard = ({ product, addToBasket, quantityOrdered }) => (
-    <Card className={"mx-0 my-1"} onClick={() => addToBasket(product)}>
+export const ProductCard = ({
+    product,
+    addToBasket,
+    quantityOrdered,
+    className = "",
+}) => (
+    <Card
+        className={`mx-0 my-1 ${className}`}
+        onClick={() => addToBasket(product)}
+    >
         <Card.Body className={"p-3 text-center"}>
             {product.name}
             <br />
             <small className="text-muted">
-                {product.price}€
+                {formatPrice(product.price)}
                 {product.numberLeft > -1
                     ? ` / ${
                           product.numberLeft - (quantityOrdered || 0)

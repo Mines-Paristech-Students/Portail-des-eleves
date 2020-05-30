@@ -13,6 +13,7 @@ import {
 } from "../../../models/associations/marketplace";
 import { Table } from "../../utils/table/Table";
 import { Link } from "react-router-dom";
+import { Balance } from "./Balance";
 
 export const AssociationMarketplaceHistory = ({ association }) => {
     const user = useContext(UserContext);
@@ -21,11 +22,15 @@ export const AssociationMarketplaceHistory = ({ association }) => {
     return (
         <Container>
             <div className={"float-right mt-2 mr-3"}>
+                <span className="tag align-middle mr-2">
+                    Mon solde :{" "}
+                    <Balance marketplaceId={marketplaceId} user={user} />
+                </span>
                 <Link
                     to={"/associations/" + marketplaceId + "/magasin"}
                     className={"btn btn-primary btn-sm"}
                 >
-                    <i className={"fe fe-book-open"} /> Magasin
+                    <span className={"fe fe-book-open"} /> Magasin
                 </Link>
             </div>
             <TransactionHistory marketplaceId={marketplaceId} user={user} />
@@ -42,13 +47,13 @@ const TransactionHistory = ({ marketplaceId, user }) => {
             render: (transaction) => (
                 <>
                     <strong>{transaction.product.name}</strong>{" "}
-                    <span className="text-muted">x{transaction.quantity}</span>
+                    <span className="text-muted">x {transaction.quantity}</span>
                 </>
             ),
         },
         {
             key: "value",
-            header: "Valeur",
+            header: "Montant",
             render: (transaction) => <strong>{transaction.value} €</strong>,
             headerClassName: "text-center",
             cellClassName: "text-center",
@@ -62,7 +67,7 @@ const TransactionHistory = ({ marketplaceId, user }) => {
         },
         {
             key: "status",
-            header: "Status",
+            header: "Statut",
             render: (transaction) => {
                 let status = {};
 
@@ -144,7 +149,7 @@ const FundingHistory = ({ marketplaceId, user }) => {
         },
         {
             key: "value",
-            header: "Valeur",
+            header: "Montant",
             render: (funding) => funding.value + " €",
             headerClassName: "text-center",
             cellClassName: "text-center",
@@ -157,8 +162,8 @@ const FundingHistory = ({ marketplaceId, user }) => {
             cellClassName: "text-center",
         },
         {
-            key: "value",
-            header: "Valeur",
+            key: "status",
+            header: "Statut",
             render: (funding: Funding) =>
                 funding.status === FundingStatus.Funded ? (
                     <span className="tag tag-blue">Versé</span>

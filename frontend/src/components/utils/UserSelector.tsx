@@ -5,6 +5,7 @@ import { Row } from "react-bootstrap";
 import { UserAvatarCard } from "./avatar/UserAvatarCard";
 import { Pagination } from "./Pagination";
 import { PageTitle } from "./PageTitle";
+import "../utils/avatar/user_avatar.css";
 
 export const UserSelector = ({ setUser }) => {
     const [searchValue, setSearchValue] = useState("");
@@ -40,7 +41,7 @@ export const UserSelector = ({ setUser }) => {
                                 >
                                     <UserAvatarCard
                                         userId={user.id}
-                                        className="h-100"
+                                        className="h-100 cursor-pointer"
                                         link={false}
                                     >
                                         <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">

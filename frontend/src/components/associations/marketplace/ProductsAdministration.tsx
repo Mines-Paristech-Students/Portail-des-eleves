@@ -3,7 +3,7 @@ import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { api } from "../../../services/apiService";
 import { Link } from "react-router-dom";
-import { decidePlural } from "../../../utils/format";
+import { decidePlural, formatNewLines, formatPrice } from "../../../utils/format";
 import { Table } from "../../utils/table/Table";
 import { Card } from "react-bootstrap";
 import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
@@ -77,11 +77,12 @@ const columns = (marketplaceId) => [
         key: "price",
         header: "Prix",
         cellClassName: "text-muted",
-        render: (product) => product.price + "€",
+        render: (product) => formatPrice(product.price),
     },
     {
         key: "description",
         header: "Description",
+        render: (product) => formatNewLines(product.description),
         cellClassName: "flex-shrink-1",
     },
     {
@@ -104,7 +105,7 @@ const columns = (marketplaceId) => [
             <Link
                 to={`/associations/${marketplaceId}/magasin/produits/${product.id}/modifier`}
             >
-                Modifier
+                <span className="fe fe-edit-2" /> Modifier
             </Link>
         ),
         headerClassName: "text-right",
