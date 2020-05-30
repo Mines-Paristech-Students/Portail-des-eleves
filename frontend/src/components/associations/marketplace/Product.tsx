@@ -1,7 +1,11 @@
 import React from "react";
 import { Col } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
-import { decidePlural, formatNewLines, formatPrice } from "../../../utils/format";
+import {
+    decidePlural,
+    formatNewLines,
+    formatPrice,
+} from "../../../utils/format";
 
 export const Product = ({ product, additionalContent }) => (
     <Col xs={12} md={6}>

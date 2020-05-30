@@ -59,9 +59,7 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                                     </Card>
                                 )}
 
-                                <Col>
-                                    {paginationControl}
-                                </Col>
+                                <Col>{paginationControl}</Col>
                             </Row>
                         )}
                     />

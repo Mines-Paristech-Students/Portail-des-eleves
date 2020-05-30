@@ -3,7 +3,11 @@ import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { api } from "../../../services/apiService";
 import { Link } from "react-router-dom";
-import { decidePlural, formatNewLines, formatPrice } from "../../../utils/format";
+import {
+    decidePlural,
+    formatNewLines,
+    formatPrice,
+} from "../../../utils/format";
 import { Table } from "../../utils/table/Table";
 import { Card } from "react-bootstrap";
 import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
