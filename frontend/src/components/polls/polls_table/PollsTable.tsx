@@ -15,6 +15,7 @@ import { UserContext } from "../../../services/authService";
 import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
 import { Column } from "../../utils/table/TableHeader";
+import { PageTitle } from "../../utils/PageTitle";
 
 export const PollsTable = ({
     adminVersion,
@@ -59,11 +60,9 @@ export const PollsTable = ({
                 />
             }
         >
-            <div className="page-header mt-0 mb-5">
-                <h1 className="page-title">
-                    {adminVersion ? "Administration" : "Mes sondages"}
-                </h1>
-            </div>
+            <PageTitle>
+                {adminVersion ? "Administration" : "Mes sondages"}
+            </PageTitle>
 
             <Card>
                 <Pagination
