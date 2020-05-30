@@ -110,6 +110,15 @@ export const EventCard = ({
                 </Card.Title>
 
                 <div className="card-options">
+                    {canEdit && (
+                        <Link
+                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
+                            className={"btn btn-secondary btn-sm mr-2"}
+                        >
+                            Modifier
+                        </Link>
+                    )}
+
                     {!isOver() && (
                         <>
                             {userId &&
@@ -133,15 +142,6 @@ export const EventCard = ({
                                 </Button>
                             )}
                         </>
-                    )}
-
-                    {canEdit && (
-                        <Link
-                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
-                            className={"btn btn-secondary btn-sm"}
-                        >
-                            Modifier
-                        </Link>
                     )}
                 </div>
             </Card.Header>
@@ -177,7 +177,14 @@ export const EventCard = ({
                     </p>
                 )}
 
-                <p>{event.description}</p>
+                <p>
+                    {event.description.split("\n").map((item, key) => (
+                        <React.Fragment key={key}>
+                            {item}
+                            <br />
+                        </React.Fragment>
+                    ))}
+                </p>
             </Card.Body>
         </Card>
     );

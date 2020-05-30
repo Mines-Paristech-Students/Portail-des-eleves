@@ -3,11 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { PageTitle } from "../PageTitle";
 
 /**
- * A link displayed in the sidebar. It has three props:
- *   * `icon`: the Bootstrap icon to display besides the sidebar item. It's the
- *   part after `fe-` in the class name of the icon.
- *   * `to`: the URL of the link.
- *   * `children`: the children to render for the link.
+ * A link displayed in the sidebar.
+ *
+ * @param icon the Bootstrap icon to display besides the sidebar item. It's the part after `fe-` in the class name of
+ * the icon.
+ * @param to the URL of the link.
+ * @param children the children to render for the link.
+ * @param exact defaults to `true`. If `true`, the link will be marked as `active` only if the location equals `to`.
+ * Otherwise, it just needs to start with `to`.
  */
 export const SidebarItem = ({ icon, to, children, exact = true }) => {
     const location = useLocation();

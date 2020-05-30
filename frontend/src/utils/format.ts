@@ -1,10 +1,3 @@
-/*
- * This file mainly contains helper functions useful for formatting dates.
- * One could think using a library like `moment.js` would be better. However, such a library may cover way too many
- * features for our needs, introducing a loading overhead. This is why we'd rather stay with those "artisanal" functions
- * for now.
- */
-
 export const MONTHS: string[] = [
     "Janvier",
     "Février",
@@ -73,12 +66,6 @@ export const formatDate = (date?: Date) =>
           "/" +
           date.getFullYear().toString().padStart(4, "0")
         : "";
-
-/**
- * Return the last two digits of a year (the return value always has two digits).
- */
-export const formatShortYear = (year: number) =>
-    (year % 100).toString().padStart(2, "0");
 
 /**
  * Format a date as `HH:mm`.
