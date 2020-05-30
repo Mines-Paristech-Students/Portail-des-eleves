@@ -30,6 +30,9 @@ export function useURLState<T>(
     useEffect(() => {
         let params = new URLSearchParams(location.search);
 
+        // Convert the object to a string using JSON because we don't know
+        // what type of data we're working with in advance. Also helps to
+        // cast non string value. For instance, "2" will become the number 2
         const paramJSONValue = params.get(paramToWatch);
         if (paramJSONValue !== null) {
             setParamValue(JSON.parse(paramJSONValue) as T);
