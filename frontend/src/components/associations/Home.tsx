@@ -39,7 +39,7 @@ export const AssociationHome = ({ association }) => {
                         appelée « Accueil ». C'est aussi simple que ça !
                     </>
                 ) : (
-                    "Rien à voir ici pour le moment mais  vous pouvez regarder les différentes rubriques dans la barre de navigation à gauche."
+                    "Rien à voir ici pour le moment mais vous pouvez accéder aux différentes rubriques grâce à la barre de navigation à gauche."
                 )}
             </Instructions>
         </Container>
