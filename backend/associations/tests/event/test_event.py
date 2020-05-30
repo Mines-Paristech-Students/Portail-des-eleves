@@ -126,12 +126,28 @@ class EventsTestCase(BaseEventsTestCase):
         event_after = Event.objects.get(pk=0)
         self.assertEqual(event_before, event_after)
 
-    def test_if_event_admin_then_can_update_participants(self):
+    def test_if_event_admin_then_cannot_update_participants(self):
+        participants_before = set(
+            [
+                x["participants"]
+                for x in Event.objects.filter(pk=0).values("participants")
+            ]
+        )
+
         self.login("17event_biero")
         data = {"pk": 0, "participants": ["17event_biero", "17member_biero"]}
         res = self.update(data["pk"], "biero", data=data)
         self.assertStatusCode(res, 200)
         self.assertSetEqual(
+            set(
+                [
+                    x["participants"]
+                    for x in Event.objects.filter(pk=0).values("participants")
+                ]
+            ),
+            participants_before,
+        )
+        self.assertNotEqual(
             set(
                 [
                     x["participants"]
