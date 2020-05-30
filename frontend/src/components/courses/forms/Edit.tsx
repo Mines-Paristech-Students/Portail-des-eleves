@@ -3,9 +3,8 @@ import { Form, Row, Col, Button, Modal, Container, Card, Spinner, ListGroup } fr
 import { Form as FormModel } from "../../../models/courses/form"
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Field, Formik, useFormik, useField, FormikProps } from "formik";
+import { Formik, useFormik, useField, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { useParams } from "react-router-dom";
 import { Question, QuestionCategory } from "../../../models/courses/question";
 import { Badge } from "reactstrap";
 
@@ -33,7 +32,9 @@ export const EditCourseForm = ({ course }) => {
                     level: ToastLevel.Error,
                 })
             })
-    }, [])
+    }, 
+    // eslint-disable-next-line 
+    [])
 
     const addQuestion = () => {
         const newQuestion: Question = {
@@ -48,7 +49,7 @@ export const EditCourseForm = ({ course }) => {
         setQuestions(copy);
     }
 
-    const { data: form, error: errorForm, status: statusForm } = useBetterQuery<FormModel>(
+    const { data: form } = useBetterQuery<FormModel>(
         ["courses.forms.get", course.form],
         api.courses.forms.get,
     );
@@ -99,7 +100,7 @@ const FormEditor = ({ form }) => {
 
     const formik = useFormik({
         initialValues: { name: form.name },
-        validate: (values) => (values.name == "") ? { errors: "Cannot be empty" } : {},
+        validate: (values) => (values.name === "") ? { errors: "Cannot be empty" } : {},
         onSubmit: (values, { setSubmitting }) => {
             form.name = values.name;
             api.courses.forms
@@ -161,7 +162,7 @@ const FetchQuestionsModal = ({ course }) => {
 
     const formik = useFormik({
         initialValues: { idForm: -1, questions: [] },
-        validate: (values) => { return (values.questions.length == 0 ? { questions: "Empty" } : {}) },
+        validate: (values) => { return (values.questions.length === 0 ? { questions: "Empty" } : {}) },
         onSubmit: (values, { setSubmitting }) => {
             Promise.all(values.questions.map((question: Question) => {
                 question.id = undefined;
@@ -204,7 +205,9 @@ const FetchQuestionsModal = ({ course }) => {
                     level: ToastLevel.Error,
                 })
             })
-    }, [])
+    }, 
+    // eslint-disable-next-line
+    [])
 
     useEffect(() => {
         setIsLoading(true);
@@ -224,7 +227,9 @@ const FetchQuestionsModal = ({ course }) => {
                     level: ToastLevel.Error,
                 })
             })
-    }, [formik.values.idForm])
+    }, 
+    // eslint-disable-next-line
+    [formik.values.idForm])
 
 
     return (
@@ -244,7 +249,7 @@ const FetchQuestionsModal = ({ course }) => {
                     <Form onSubmit={formik.handleSubmit}>
                         <Modal.Header closeButton>
                             <Modal.Title>Récupération</Modal.Title>
-                            {isLoading || formik.isSubmitting &&
+                            {(isLoading || formik.isSubmitting) &&
                                 <Spinner
                                     as="span"
                                     animation="border"
@@ -353,7 +358,7 @@ export const QuestionEditor = ({ question }) => {
                 Object.keys(props.touched).forEach((key) => {
                     if (props.touched[key]) isTouched = true;
                 });
-                if (isTouched && status == QuestionStatus.Clear)
+                if (isTouched && status === QuestionStatus.Clear)
                     setStatus(QuestionStatus.Modified);
 
                 return (

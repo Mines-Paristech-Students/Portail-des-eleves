@@ -1,12 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { api, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarCategory, SidebarItem } from "../../utils/Sidebar";
-import { User } from "../../models/user";
-import { UserContext } from "../../services/authService";
 
 export const CourseSidebar = ({ course }) => {
     let status = "plop";
-    const user: User | null = useContext(UserContext);
 
     if (status === "loading") {
         return <p>Chargement...</p>;
@@ -46,7 +43,7 @@ const EvaluationSidebar = ({ course }) => {
                     icon="x-circle"
                     to={`/cours/${course.id}`}
                 >
-                    Error
+                    {`${error}`}
                 </SidebarItem>
             }
 

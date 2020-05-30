@@ -1,13 +1,9 @@
 
 
-import React, { useState, useEffect, useContext } from "react";
-import { PageTitle } from "../../utils/PageTitle";
-import { api, useBetterQuery, PaginatedResponse } from "../../../services/apiService";
-import { Card, Container, Row, Accordion, Col, Carousel, Button, Modal } from "react-bootstrap";
-import { QuestionCategory, Question } from "../../../models/courses/question";
-import { StatsQuestion, Comment } from "../../../models/courses/requests";
-import { ColumnChart } from 'react-chartkick';
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import React, { useState } from "react";
+import { api } from "../../../services/apiService";
+import { Card, Row, Col, Button, Modal } from "react-bootstrap";
+import { Comment } from "../../../models/courses/requests";
 import { Pagination } from "../../utils/Pagination";
 import 'chart.js';
 

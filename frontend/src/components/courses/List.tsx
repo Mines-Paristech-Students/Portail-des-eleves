@@ -1,6 +1,6 @@
 import React from "react";
 import { PageTitle } from "../utils/PageTitle";
-import { api, useBetterQuery } from "../../services/apiService";
+import { api } from "../../services/apiService";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";

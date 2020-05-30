@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Card, Container, Row, Accordion, Col, Button } from "react-bootstrap";
+import { Card, Container, Row, Accordion, Col } from "react-bootstrap";
 import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion } from "../../../models/courses/requests";
 import { ColumnChart } from 'react-chartkick';
@@ -69,24 +69,20 @@ const StatsCourse = ({ course }) => {
     return null;
 };
 
-export const PaginatedCardComment = ({ question, course }) => {
-    const [show, setShow] = useState<boolean>(false);
+export const PaginatedCardComment = ({ question, course }) => (
+    <Col md={8} key={question.id}>
+        <Card className="text-center">
+            <Card.Body>
+                <Card.Title>
+                    {question.label}
+                </Card.Title>
+            </Card.Body>
 
-    return (
-        <Col md={8} key={question.id}>
-            <Card className="text-center">
-                <Card.Body>
-                    <Card.Title>
-                        {question.label}
-                    </Card.Title>
-                </Card.Body>
+            <PaginatedModalComment question={question} course={course} />
 
-                <PaginatedModalComment question={question} course={course} />
-
-            </Card>
-        </Col>
-    )
-}
+        </Card>
+    </Col>
+)
 
 const PaginatedComments = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -101,7 +97,7 @@ const PaginatedComments = ({ course }) => {
         return (
             <Row>
                 {questions
-                    .filter(question => question.category == QuestionCategory.Comment)
+                    .filter(question => question.category === QuestionCategory.Comment)
                     .map(question => <PaginatedCardComment question={question} course={course} />)
                 }
             </Row>

@@ -81,7 +81,7 @@ export const QuestionsForm = ({ questions, course }) => {
 
         // Already checked by validation
         for (let id in values.comments) {
-            if (values.comments[id] != "") {
+            if (values.comments[id] !== "") {
                 const comment_data = {
                     question: id,
                     content: values.comments[id],
@@ -90,7 +90,7 @@ export const QuestionsForm = ({ questions, course }) => {
             }
         }
         for (let id in values.ratings) {
-            if (values.ratings[id] != -1) {
+            if (values.ratings[id] !== -1) {
                 const rating_data = {
                     question: id,
                     value: values.ratings[id],
@@ -147,7 +147,6 @@ export const QuestionsForm = ({ questions, course }) => {
     }
 
     const validate = (values) => {
-        {/* Validate the data */ }
         const errors = {};
         validateRatings(values.ratings, errors);
         validateComments(values.comments, errors);
@@ -176,7 +175,7 @@ export const QuestionsForm = ({ questions, course }) => {
                             };
 
                             let bg = 'light';
-                            if (question.id) if (props.errors[question.id] != undefined) bg = 'danger';
+                            if (question.id) if (props.errors[question.id] !== undefined) bg = 'danger';
 
                             return (
                                 <Col md={8} key={question.id}>

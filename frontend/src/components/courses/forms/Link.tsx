@@ -2,7 +2,7 @@
 import React, { useContext, useState } from "react";
 import { Form, Row, Col, Button, Modal, Card } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form"
-import { api, useBetterQuery } from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import { useFormik } from "formik";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
@@ -127,7 +127,7 @@ export const LinkCourseForm = ({ course }) => {
                         (forms, paginationControl) => (
                             forms.map((form) => {
                                 let bg = "light";
-                                if (form.id == course.form) bg = "info";
+                                if (form.id === course.form) bg = "info";
                                 console.log(form);
 
                                 return (
