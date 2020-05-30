@@ -54,7 +54,7 @@ export const UserSelector = ({ setUser }) => {
                 )}
             />
             <p className="text-muted text-center">
-                Cliquez sur une carte pour séléctionner un élève
+                Cliquez pour ouvrir un compte
             </p>
         </>
     );
