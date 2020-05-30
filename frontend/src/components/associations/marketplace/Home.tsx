@@ -8,6 +8,7 @@ import { ToastContext, ToastLevel } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
+import { Instructions } from "../../utils/Instructions";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
@@ -62,11 +63,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
             <Container>
                 <div className={"float-right"}>
                     <a
-                        href={
-                            "/associations/" +
-                            marketplaceId +
-                            "/magasin/historique/"
-                        }
+                        href={`/associations/${marketplaceId}/magasin/historique/`}
                         className={"btn btn-primary"}
                     >
                         <i className={"fe fe-book-open"} /> Historique
@@ -75,7 +72,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
                 <PageTitle>Magasin</PageTitle>
 
                 <ProductsPagination
-                    marketplaceId={marketplaceId}
+                    association={association}
                     queryParams={{ ...tagParams, ...searchParams }}
                     makeOrder={makeOrder}
                 />
@@ -84,11 +81,11 @@ export const AssociationMarketplaceHome = ({ association }) => {
     );
 };
 
-const ProductsPagination = ({ marketplaceId, queryParams, makeOrder }) => (
+const ProductsPagination = ({ association, queryParams, makeOrder }) => (
     <Pagination
         apiKey={[
-            "associations.list",
-            marketplaceId,
+            "products.list",
+            association.id,
             { ...queryParams, page_size: 8 },
         ]}
         apiMethod={api.products.list}
@@ -121,6 +118,18 @@ const ProductsPagination = ({ marketplaceId, queryParams, makeOrder }) => (
                     )}
                 </Row>
                 {paginationControl}
+                {products.length === 0 && (
+                    <Instructions
+                        title={"Magasin"}
+                        emoji={"🛍️"}
+                        emojiAriaLabel="Des sacs de shopping"
+                    >
+                        Le magasin est vide pour l'instant.
+                        {association.myRole.permissions?.includes("media") // No link for now because there is no production addition page, TODO: create it
+                            ? "Ajoutez des produits dans les pages d'administration"
+                            : "Revenez quand les responsables de l'association l'auront garni !"}
+                    </Instructions>
+                )}
             </>
         )}
     />

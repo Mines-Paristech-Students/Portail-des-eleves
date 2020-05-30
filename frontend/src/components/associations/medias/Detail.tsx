@@ -33,7 +33,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         }
 
         let editButton;
-        if (association.myRole.permissions.includes("media")) {
+        if (association.myRole.permissions?.includes("media")) {
             editButton = (
                 <Link
                     to={`/associations/${association.id}/fichiers/${media.id}/modifier`}

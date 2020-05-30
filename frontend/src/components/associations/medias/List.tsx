@@ -10,6 +10,7 @@ import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
+import { Instructions } from "../../utils/Instructions";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -40,7 +41,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
                     <>
-                        {association.myRole.mediaPermission && (
+                        {association.myRole.permissions?.includes("media") && (
                             <Link
                                 to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-5"}
@@ -77,6 +78,27 @@ export const AssociationFilesystemList = ({ association }) => {
                                     </Col>
                                 );
                             })}
+
+                            {medias.length === 0 && (
+                                <Instructions
+                                    title={"Gestion des médias"}
+                                    emoji={"🗂️"}
+                                    emojiAriaLabel="Des fiches cartonnées"
+                                >
+                                    Aucun fichier pour l'instant.{" "}
+                                    {association.myRole.permissions?.includes(
+                                        "media"
+                                    ) ? (
+                                        <Link
+                                            to={`/associations/${association.id}/fichiers/televerser`}
+                                        >
+                                            Ajoutez des fichiers pour débuter.
+                                        </Link>
+                                    ) : (
+                                        "Revenez quand les responsables de l'association en auront ajouté !"
+                                    )}
+                                </Instructions>
+                            )}
                         </Row>
                         {paginationControl}
                     </>
