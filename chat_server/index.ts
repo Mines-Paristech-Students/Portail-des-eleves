@@ -4,7 +4,6 @@ import { createServer } from "http";
 
 const dotenv = require("dotenv");
 dotenv.config();
-
 const db = require("./db");
 
 class Message {
@@ -48,7 +47,10 @@ io.use(socketio_jwt.authorize(jwtOption));
 
 // Main Socket
 io.sockets.on("connection", (socket) => {
+  console.log("New user connected !");
+
   socket.on("message", async (request: any) => {
+    console.log("Received new message : %s", request.message);
     if (request.message === undefined) {
       return;
     }
@@ -58,14 +60,18 @@ io.sockets.on("connection", (socket) => {
     }
 
     let model = new Message(
-      socket.decoded_token.username,
+      socket.decoded_token.user,
       request.message,
       new Date()
     );
     await db.add(model.username, model.message);
 
     // The message is sended to everyone (including sender)
-    io.sockets.emit("broadcast", model);
+    io.sockets.emit("broadcast", {
+      username: model.username,
+      message: model.message,
+      posted_on: model.posted_on.toISOString(),
+    });
   });
 
   socket.on("fetch", async (request: any) => {
