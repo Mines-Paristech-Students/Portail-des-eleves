@@ -10,6 +10,8 @@ class PageViewSet(viewsets.ModelViewSet):
     serializer_class = PageSerializer
     permission_classes = (PagePermission,)
 
+    filter_fields = ("title", "association_id")
+
     def perform_create(self, serializer):
         # Send the current user to the serializer so they can be added to the authors.
         serializer.save(author=self.request.user)

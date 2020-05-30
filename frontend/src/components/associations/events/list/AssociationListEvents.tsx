@@ -73,7 +73,7 @@ export const AssociationListEvents = ({
                     setParameters={setSidebarParameters}
                     adminVersion={
                         !!association.myRole &&
-                        association.myRole.permissions.includes("event")
+                        association.myRole.permissions?.includes("event")
                     }
                 />
             }
@@ -105,6 +105,9 @@ export const AssociationListEvents = ({
                                             event={event}
                                             association={association}
                                             userId={user ? user.id : undefined}
+                                            canEdit={association.myRole?.permissions?.includes(
+                                                "event"
+                                            )}
                                         />
                                     </Col>
                                 ))
