@@ -1,4 +1,3 @@
-
 from courses.models import Comment
 
 from backend.tests_utils import WeakAuthenticationBaseTestCase
@@ -14,7 +13,7 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
         "results",
     ]
 
-    EXPECTED_FIELDS_COMMENT =[
+    EXPECTED_FIELDS_COMMENT = [
         "id",
         "question",
         "course",
@@ -44,7 +43,7 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
 
     # All these should return 1 results as in test_comments.yaml
 
-    filter_date = '2100-04-20T22:10:57.577Z'
+    filter_date = "2100-04-20T22:10:57.577Z"
     filter_question = 1
     filter_course = 2
 
@@ -58,9 +57,9 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
 
         for key in self.EXPECTED_FIELDS:
             self.assertIsNotNone(res.data[key])
-        
+
         # Because of the ordering, we should get the most recent first
-        last_comment = res.data["results"][0]        
+        last_comment = res.data["results"][0]
 
         for key in self.EXPECTED_FIELDS_COMMENT:
             self.assertIsNotNone(last_comment[key])

@@ -9,7 +9,7 @@ from courses.permissions import FormPermission
 
 class CommentPagination(pagination.PageNumberPagination):
     page_size = 5
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100
 
 
@@ -40,7 +40,9 @@ class CommentsPaginatedList(generics.ListAPIView):
         filter_params = self.set_query_params_if_not_none(self.request.query_params)
         queryset = Comment.objects.all()
 
-        return queryset.\
-            filter(question__archived=False).\
-            filter(**filter_params)\
-            .order_by('date').reverse()
+        return (
+            queryset.filter(question__archived=False)
+            .filter(**filter_params)
+            .order_by("date")
+            .reverse()
+        )

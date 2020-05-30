@@ -104,7 +104,7 @@ class QuestionTestCase(WeakAuthenticationBaseTestCase):
 
     ##########
     # UPDATE #
-    ##########  
+    ##########
 
     update_question_data = {
         "id": 1,
@@ -114,7 +114,7 @@ class QuestionTestCase(WeakAuthenticationBaseTestCase):
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.update("1", self.update_question_data)
         self.assertStatusCode(res, 403)
 
@@ -135,13 +135,13 @@ class QuestionTestCase(WeakAuthenticationBaseTestCase):
 
         self.assertStatusCode(res, 200)
         self.assertEqual(res.data["category"], "R")
-    
+
     ###########
     # DESTROY #
     ###########
 
     def test_if_not_global_admin_then_cannot_destroy(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.destroy("1")
         self.assertStatusCode(res, 403)
         self.assertTrue(Question.objects.filter(pk="1").exists())

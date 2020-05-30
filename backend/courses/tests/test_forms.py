@@ -42,10 +42,10 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
 
     def destroy(self, pk, data="", format=None, content_type=None):
         return self.delete(self.endpoint_destroy(pk))
-    
+
     def endpoint_questions(self, pk):
         return f"/courses/forms/{pk}/questions/"
-    
+
     def questions(self, pk):
         return self.get(self.endpoint_questions(pk))
 
@@ -91,9 +91,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
         res = self.create(self.create_form_data)
         self.assertStatusCode(res, 403)
         self.assertFalse(
-            Form.objects.filter(
-                name=self.create_form_data["name"]
-            ).exists()
+            Form.objects.filter(name=self.create_form_data["name"]).exists()
         )
 
     def test_if_global_admin_then_can_create(self):
@@ -109,39 +107,37 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
 
     ##########
     # UPDATE #
-    ##########  
+    ##########
 
     update_form_data = {
         "id": 1,
-        "date": '2020-04-20T22:10:57.577Z',
+        "date": "2020-04-20T22:10:57.577Z",
         "name": "maths 2",
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 403)
         self.assertTrue(Form.objects.filter(pk="1").exists())
 
-    # This function shouldn't change the questions 
+    # This function shouldn't change the questions
     def test_if_global_admin_then_can_update(self):
         self.login("17admin")
         res = self.update("1", self.update_form_data)
         self.assertStatusCode(res, 200)
 
-        self.assertTrue(
-            Form.objects.filter(pk=self.update_form_data["id"]).exists()
-        )
+        self.assertTrue(Form.objects.filter(pk=self.update_form_data["id"]).exists())
         form = Form.objects.get(pk=1)
         self.assertEqual(form.name, self.update_form_data["name"])
         self.assertNotEqual(form.date, self.update_form_data["date"])
-    
+
     ###########
     # DESTROY #
     ###########
 
     def test_if_not_global_admin_then_cannot_destroy(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.destroy("1")
         self.assertStatusCode(res, 403)
         self.assertTrue(Form.objects.filter(pk="1").exists())

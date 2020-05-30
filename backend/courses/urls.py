@@ -6,13 +6,13 @@ from courses.views.CommentsView import CommentsPaginatedList
 
 router = DefaultRouter()
 
-router.register(r'courses', CourseViewSet)
+router.register(r"courses", CourseViewSet)
 
-router.register(r'forms', views.FormViewSet)
+router.register(r"forms", views.FormViewSet)
 
-router.register(r'questions', views.QuestionViewSet)
+router.register(r"questions", views.QuestionViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('comments', CommentsPaginatedList.as_view())
+    path("", include(router.urls)),
+    path("comments", CommentsPaginatedList.as_view()),
 ]

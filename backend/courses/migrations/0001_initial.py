@@ -15,80 +15,168 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Course',
+            name="Course",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=128)),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("name", models.CharField(max_length=128)),
             ],
         ),
         migrations.CreateModel(
-            name='Form',
+            name="Form",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('name', models.CharField(max_length=64)),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("name", models.CharField(max_length=64)),
             ],
         ),
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('label', models.CharField(max_length=64)),
-                ('required', models.BooleanField(default=False)),
-                ('archived', models.BooleanField(default=False)),
-                ('category', models.CharField(choices=[('C', 'COMMENT'), ('R', 'RATING')], default='C', max_length=1)),
-                ('form', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='question', to='courses.Form')),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("label", models.CharField(max_length=64)),
+                ("required", models.BooleanField(default=False)),
+                ("archived", models.BooleanField(default=False)),
+                (
+                    "category",
+                    models.CharField(
+                        choices=[("C", "COMMENT"), ("R", "RATING")],
+                        default="C",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "form",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="question",
+                        to="courses.Form",
+                    ),
+                ),
             ],
-            options={
-                'unique_together': {('form', 'label')},
-            },
+            options={"unique_together": {("form", "label")},},
         ),
         migrations.CreateModel(
-            name='Rating',
+            name="Rating",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('value', models.SmallIntegerField(choices=[(1, 'VERY_UNSATISFIED'), (2, 'UNSATISFIED'), (3, 'NEUTRAL'), (4, 'SATISFIED'), (5, 'VERY_SATISFIED')])),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rating', to='courses.Course')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rating', to='courses.Question')),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "value",
+                    models.SmallIntegerField(
+                        choices=[
+                            (1, "VERY_UNSATISFIED"),
+                            (2, "UNSATISFIED"),
+                            (3, "NEUTRAL"),
+                            (4, "SATISFIED"),
+                            (5, "VERY_SATISFIED"),
+                        ]
+                    ),
+                ),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rating",
+                        to="courses.Course",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rating",
+                        to="courses.Question",
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['-date'],
-            },
+            options={"ordering": ["-date"],},
         ),
         migrations.CreateModel(
-            name='CourseMedia',
+            name="CourseMedia",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('name', models.CharField(max_length=128)),
-                ('uploaded_on', models.DateTimeField(auto_now_add=True)),
-                ('category', models.CharField(max_length=64)),
-                ('file', models.FileField(upload_to='courses/')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='coursemedia', to='courses.Course')),
-                ('uploaded_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='coursemedia', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("name", models.CharField(max_length=128)),
+                ("uploaded_on", models.DateTimeField(auto_now_add=True)),
+                ("category", models.CharField(max_length=64)),
+                ("file", models.FileField(upload_to="courses/")),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="coursemedia",
+                        to="courses.Course",
+                    ),
+                ),
+                (
+                    "uploaded_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="coursemedia",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='course',
-            name='form',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='course', to='courses.Form'),
+            model_name="course",
+            name="form",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="course",
+                to="courses.Form",
+            ),
         ),
         migrations.AddField(
-            model_name='course',
-            name='have_voted',
-            field=models.ManyToManyField(blank=True, related_name='course', to=settings.AUTH_USER_MODEL),
+            model_name="course",
+            name="have_voted",
+            field=models.ManyToManyField(
+                blank=True, related_name="course", to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.CreateModel(
-            name='Comment',
+            name="Comment",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, unique=True)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('content', models.CharField(max_length=64)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment', to='courses.Course')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comment', to='courses.Question')),
+                (
+                    "id",
+                    models.AutoField(primary_key=True, serialize=False, unique=True),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("content", models.CharField(max_length=64)),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="comment",
+                        to="courses.Course",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="comment",
+                        to="courses.Question",
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['-date'],
-            },
+            options={"ordering": ["-date"],},
         ),
     ]

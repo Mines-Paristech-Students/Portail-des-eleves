@@ -1,4 +1,3 @@
-
 import copy
 
 from courses.models import Course
@@ -104,9 +103,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
         res = self.create(self.create_course_data)
         self.assertStatusCode(res, 403)
         self.assertFalse(
-            Course.objects.filter(
-                pk=self.create_course_data["id"]
-            ).exists()
+            Course.objects.filter(pk=self.create_course_data["id"]).exists()
         )
 
     def test_if_global_admin_then_can_create(self):
@@ -132,7 +129,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     }
 
     def test_if_not_global_admin_then_cannot_update(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.update("1", self.update_course_data)
         self.assertStatusCode(res, 403)
         self.assertTrue(Course.objects.filter(pk="1").exists())
@@ -155,7 +152,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     ###########
 
     def test_if_not_global_admin_then_cannot_destroy(self):
-        self.login('17simple')
+        self.login("17simple")
         res = self.destroy("1")
         self.assertStatusCode(res, 403)
         self.assertTrue(Course.objects.filter(pk="1").exists())
@@ -174,13 +171,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
         "id": 1,
         "label": "3+3?",
         "average": 2.5,
-        "histogram": {
-            1: 0,
-            2: 1,
-            3: 1,
-            4: 0,
-            5: 0,
-        }
+        "histogram": {1: 0, 2: 1, 3: 1, 4: 0, 5: 0,},
     }
 
     num_not_archvied = 2

@@ -5,7 +5,13 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action, api_view, permission_classes
 
 from courses.models import Course, Form, Question, Comment, Rating
-from courses.serializers import CourseSerializer, FormSerializer, QuestionSerializer, CommentSerializer, RatingSerializer
+from courses.serializers import (
+    CourseSerializer,
+    FormSerializer,
+    QuestionSerializer,
+    CommentSerializer,
+    RatingSerializer,
+)
 from courses.permissions import CoursePermission, FormPermission
 
 

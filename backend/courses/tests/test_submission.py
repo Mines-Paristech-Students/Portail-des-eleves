@@ -22,18 +22,8 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
     course = 1
 
     submission_data = {
-        "ratings": [
-            {
-                "question": 1,
-                "value": 2,
-            }
-        ],
-        "comments": [
-            {
-                "question": 3,
-                "content": "plop",
-            }
-        ]
+        "ratings": [{"question": 1, "value": 2,}],
+        "comments": [{"question": 3, "content": "plop",}],
     }
 
     ########
@@ -51,22 +41,21 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.assertFalse(Rating.objects.all().exists())
 
     def test_if_logged_in_can_submit_once(self):
-        self.login('17bocquet')
+        self.login("17bocquet")
         res = self.submit(self.course, data=self.submission_data)
         self.assertStatusCode(res, 201)
 
         self.assertTrue(
-            Course.objects.filter(have_voted='17bocquet').exists(),
-            True,
+            Course.objects.filter(have_voted="17bocquet").exists(), True,
         )
 
-        new_rating = Rating.objects.latest('date')
+        new_rating = Rating.objects.latest("date")
         data_rating = self.submission_data["ratings"][0]
         self.assertEqual(new_rating.value, data_rating["value"])
         self.assertEqual(new_rating.question.id, data_rating["question"])
         self.assertEqual(new_rating.course.id, self.course)
 
-        new_comment = Comment.objects.latest('date')
+        new_comment = Comment.objects.latest("date")
         data_comment = self.submission_data["comments"][0]
         self.assertEqual(new_comment.content, data_comment["content"])
         self.assertEqual(new_comment.question.id, data_comment["question"])
@@ -82,10 +71,9 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["ratings"].append({
-            "question": 4,
-            "value": "plip",
-        })
+        fake_data["ratings"].append(
+            {"question": 4, "value": "plip",}
+        )
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
@@ -94,10 +82,9 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["comments"].append({
-            "question": 2,
-            "content": "plip",
-        })
+        fake_data["comments"].append(
+            {"question": 2, "content": "plip",}
+        )
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
@@ -108,14 +95,13 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["ratings"].append({
-            "question": 5,
-            "value": 3,
-        })
+        fake_data["ratings"].append(
+            {"question": 5, "value": 3,}
+        )
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
-    
+
     # COURSE WITHOUT FORM #
 
     def test_if_logged_in_cannot_submit_if_course_has_no_form(self):
@@ -130,7 +116,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data.pop('ratings')
+        fake_data.pop("ratings")
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)

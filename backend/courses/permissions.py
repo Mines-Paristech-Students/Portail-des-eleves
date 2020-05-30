@@ -15,7 +15,6 @@ class CoursePermission(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS or request.user.is_staff
 
 
-
 class FormPermission(permissions.BasePermission):
     """
                              | Association |
