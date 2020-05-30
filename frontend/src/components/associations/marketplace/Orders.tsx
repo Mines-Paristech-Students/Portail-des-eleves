@@ -9,7 +9,7 @@ import {
     TransactionStatus,
 } from "../../../models/associations/marketplace";
 import { OverlayTrigger, Tooltip, Overlay } from "react-bootstrap";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { formatDate } from "../../../utils/format";
 import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
@@ -127,7 +127,7 @@ const TransactionStatusSelector = ({
         (item) => item[0] === transaction.status
     )[0];
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [isOpen, setIsOpen] = useState(false);
     const target = useRef(null);
 
@@ -137,16 +137,10 @@ const TransactionStatusSelector = ({
         api.transactions
             .patch({ id: transaction.id, status: status })
             .then((_) => {
-                newToast({
-                    message: "Le statut a bien été modifié",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("Le statut a bien été modifié");
             })
             .catch((err) => {
-                newToast({
-                    message: "Erreur durant la modification : " + err,
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast("Erreur durant la modification : " + err);
             });
     };
 

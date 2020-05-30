@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import dayjs from "dayjs";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 import { MutateEventForm } from "../MutateEventForm";
@@ -16,29 +16,22 @@ export const AssociationCreateEvent = ({
 }: {
     association: Association;
 }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [create] = useMutation(api.events.create, {
         onSuccess: (response) => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 201) {
-                newToast({
-                    message: "Événement créé.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Événement créé.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails : " + JSON.stringify(error.response.data)
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 

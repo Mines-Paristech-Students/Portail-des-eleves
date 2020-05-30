@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import * as Yup from "yup";
@@ -8,21 +8,15 @@ import { Form, Formik } from "formik";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 
 export const RefundForm = ({ customer, marketplaceId }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const [createFunding] = useMutation(api.fundings.create, {
         onSuccess: () => {
-            newToast({
-                message: `Solde mis à jour`,
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast(`Solde mis à jour`);
             queryCache.refetchQueries("marketplace.balance");
         },
         onError: (err) => {
-            newToast({
-                message: `Erreur lors du passage de la commande : ${err}`,
-                level: ToastLevel.Error,
-            });
+            sendErrorToast(`Erreur lors du passage de la commande : ${err}`);
         },
     });
 

@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import { api } from "../../../services/apiService";
 import Row from "react-bootstrap/Row";
 import { QuantitySelect } from "./QuantitySelect";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { UserContext } from "../../../services/authService";
 import { Pagination } from "../../utils/Pagination";
 import { Product } from "./common/Product";
@@ -18,23 +18,17 @@ import { Card } from "react-bootstrap";
 export const AssociationMarketplaceHome = ({ association }) => {
     const marketplaceId = association.id;
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const user = useContext(UserContext);
 
     const makeOrder = (product, quantity) => {
         api.transactions
             .create(product, quantity, user)
             .then((_) => {
-                newToast({
-                    message: "La commande a bien été passée",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("La commande a bien été passée");
             })
             .catch((err) => {
-                newToast({
-                    message: "Erreur durant la commande : " + err,
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast("Erreur durant la commande : " + err);
             });
     };
 
