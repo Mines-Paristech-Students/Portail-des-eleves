@@ -28,7 +28,7 @@ export function useURLState<T>(
     };
 
     useEffect(() => {
-        let params = new URLSearchParams(location.search);
+        const params = new URLSearchParams(location.search);
 
         // Convert the object to a string using JSON because we don't know
         // what type of data we're working with in advance. Also helps to
