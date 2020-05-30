@@ -93,7 +93,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams }) => {
         <Loading />
     ) : status === "error" ? (
         <ErrorMessage>Une erreur est survenue {error}</ErrorMessage>
-    ) : tags ? (
+    ) : tags && tags.results.length > 0 ? (
         <>
             <SidebarSeparator />
             <div className="input-icon mb-3">

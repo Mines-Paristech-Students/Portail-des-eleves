@@ -17,6 +17,10 @@ export function useURLState<T>(
     const [paramValue, setParamValue] = useState<T | null>();
 
     const changeParam = (value) => {
+        if (value === paramValue) {
+            return;
+        }
+
         setParamValue(value);
 
         const params = new URL(window.location.href).searchParams;

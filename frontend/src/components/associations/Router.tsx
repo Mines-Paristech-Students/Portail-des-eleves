@@ -22,6 +22,10 @@ export const AssociationRouter = ({ match }) => {
         api.associations.get
     );
 
+    if (association === undefined) {
+        return null;
+    }
+
     // Generate the routes
     const privateRoutes = association
         ? routes(association).map(

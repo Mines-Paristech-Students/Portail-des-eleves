@@ -27,6 +27,7 @@ import { useURLState } from "../../utils/useURLState";
  * @param render a closure that takes the fetched data and the pagination
  * control bar as parameters.
  * @param apiKey The request key. Should be a non-empty array which first element is a string. The `page` last element required by `usePaginatedQuery` is added by the component and should not be included. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `apiMethod` will never be called.
+ * @param apiParameters
  * @param apiMethod The function to call. It will be given the elements of `apiKey` (except its first) as arguments.
  * @param config An optional object to configure `usePaginatedQuery`.
  * @param paginationControlProps Optional props to be passed to `PaginationControl`.
@@ -36,6 +37,7 @@ import { useURLState } from "../../utils/useURLState";
 export const Pagination = ({
     render,
     apiKey,
+    apiParameters = {},
     apiMethod,
     config,
     paginationControlProps,
@@ -44,6 +46,7 @@ export const Pagination = ({
 }: {
     render: any;
     apiKey: any[];
+    apiParameters?: object;
     apiMethod: (...params: any) => any;
     config?: any;
     paginationControlProps?: object;
@@ -53,8 +56,30 @@ export const Pagination = ({
     const [page, setPage] = useURLState("page", 1);
     const [maxPage, setMaxPage] = useState(1);
 
+    // We have to use this "temporized" field to make sure we always update the
+    // page before the parameters, in  order to avoid unnecessary requests
+    // which might end up in 404
+    const [temporizedApiParameters, setTemporizedApiParameters] = useState({});
+    const [isInitialized, setIsInitialized] = useState(false);
+    useEffect(() => {
+        setTemporizedApiParameters(apiParameters);
+
+        // Don't change the page the first time the component is updated
+        if (!isInitialized) {
+            setIsInitialized(true);
+            return;
+        }
+
+        setPage(1);
+        // Use stringify because an object isn't equal to itself in JS
+        // We want to trigger an action only when the apiParameters (most of
+        // the time additional search  fields) are changed, and don't depend
+        // on other variables, hence :
+        // eslint-disable-next-line
+    }, [JSON.stringify(apiParameters)]);
+
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
-        [...apiKey, page],
+        [...apiKey, temporizedApiParameters, page],
         apiMethod,
         config
     );
@@ -73,11 +98,11 @@ export const Pagination = ({
             React.createElement(loadingElement as any)
         );
     else if (status === "error") {
-        if (errorElement === undefined) {
-            return <Error detail={error} />;
-        } else {
-            return React.createElement(errorElement as any);
-        }
+        return errorElement === undefined ? (
+            <Error detail={error} />
+        ) : (
+            React.createElement(errorElement as any)
+        );
     }
 
     return render(
