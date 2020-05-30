@@ -28,7 +28,7 @@ export function useURLState<T>(
     };
 
     useEffect(() => {
-        let params = new URLSearchParams(location.search);
+        const params = new URLSearchParams(location.search);
 
         const paramJSONValue = params.get(paramToWatch);
         if (paramJSONValue !== null) {
