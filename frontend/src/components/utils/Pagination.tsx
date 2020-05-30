@@ -7,7 +7,7 @@ import { useURLState } from "../../utils/useURLState";
 
 /**
  * Pagination is a component that handles the pagination on the API level + the
- * rendering of the page bar for you.
+ * rendering of the page for you.
  *
  * To use it, simply do:
  * ```
