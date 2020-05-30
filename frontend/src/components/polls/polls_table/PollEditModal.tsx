@@ -3,7 +3,7 @@ import { Poll } from "../../../models/polls";
 import Modal from "react-bootstrap/Modal";
 import { PollEditModalAdminForm } from "./PollEditModalAdminForm";
 import { PollEditModalUserForm } from "./PollEditModalUserForm";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../services/apiService";
 import { AxiosError } from "axios";
@@ -19,33 +19,25 @@ export const PollEditModal = ({
     poll: Poll | null;
     adminVersion: boolean;
 }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const [update] = useMutation(api.polls.update, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["polls.list"]);
-
-            if (response.status === 200) {
-                newToast({
-                    message: "Sondage modifié.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Sondage modifié.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
-
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response
                         ? "Détails : " +
                           (error.response.status === 403
                               ? "vous n’avez pas le droit de modifier ce sondage."
                               : error.response.data.detail)
                         : ""
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 

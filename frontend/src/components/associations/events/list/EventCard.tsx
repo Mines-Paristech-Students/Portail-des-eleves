@@ -12,7 +12,7 @@ import { Avatar } from "../../../utils/avatar/Avatar";
 import { EventCardModal } from "./EventCardModal";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import { CardStatus } from "../../../utils/CardStatus";
 import { TablerColor } from "../../../../utils/colors";
@@ -37,56 +37,42 @@ export const EventCard = ({
 }) => {
     const isOver = () => new Date() > event.endsAt;
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [showModal, setShowModal] = useState(false);
 
     const [join] = useMutation(api.events.join, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 200) {
-                newToast({
-                    message: "Inscription effectuée.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Inscription effectuée.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails :" + error.response.data.detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
     const [leave] = useMutation(api.events.leave, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 200) {
-                newToast({
-                    message: "Désinscription effectuée.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Désinscription effectuée.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails :" + error.response.data.detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 

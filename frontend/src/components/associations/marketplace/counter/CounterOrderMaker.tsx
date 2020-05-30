@@ -1,6 +1,6 @@
 import { api, useBetterQuery } from "../../../../services/apiService";
 import React, { useContext, useState } from "react";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { TransactionStatus } from "../../../../models/associations/marketplace";
 import { queryCache } from "react-query";
 import { Card } from "react-bootstrap";
@@ -22,7 +22,7 @@ export const CounterOrderMaker = ({
         api.marketplace.balance.get
     );
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [basket, setBasket] = useState<object>({});
 
     const addToBasket = (product) => {
@@ -85,10 +85,7 @@ export const CounterOrderMaker = ({
                 newBasket[product.id].status = "error";
                 setBasket(newBasket);
 
-                newToast({
-                    message: `Erreur lors du passage de la commande : ${e}`,
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast(`Erreur lors du passage de la commande : ${e}`);
 
                 error = true;
             }
@@ -97,10 +94,7 @@ export const CounterOrderMaker = ({
         if (!error) {
             setBasket({});
             resetCustomer();
-            newToast({
-                message: "Commande passée avec succès",
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast("Commande passée avec succès");
         }
 
         queryCache.refetchQueries("marketplace.transactions.list");

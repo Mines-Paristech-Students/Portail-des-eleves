@@ -26,6 +26,16 @@ type ToastSenders = {
  * The default `ToastLevel` is `ToastLevel.Success`.
  *
  * It also gives access to two shortcuts, `sendSuccessToast` and `sendErrorToast`.
+ *
+ * Examples:
+ * ```
+ * { sendToast, sendSuccessToast, sendErrorToast } = useContext(ToastContext);
+ *
+ * sendToast("Piche."); // ToasLevel.Success by default.
+ * sendToast("Poche.", ToastLevel.Error);
+ * sendSuccessToast("Biche.");
+ * sendErrorToast("Bûche.");
+ * ```
  */
 export const ToastContext = createContext<ToastSenders>({
     sendToast: () => {},

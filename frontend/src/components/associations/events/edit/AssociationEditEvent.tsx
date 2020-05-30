@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Association } from "../../../../models/associations/association";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api, useBetterQuery } from "../../../../services/apiService";
 import { AxiosError } from "axios";
@@ -21,7 +21,7 @@ export const AssociationEditEvent = ({
     const { eventId } = useParams<{ eventId: string }>();
 
     const history = useHistory();
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const { data: event, error, status } = useBetterQuery<Event>(
         ["events.get", { eventId }],
@@ -34,50 +34,39 @@ export const AssociationEditEvent = ({
             queryCache.refetchQueries(["events.get"]);
 
             if (response.status === 200) {
-                newToast({
-                    message: "Événement modifié.",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("Événement modifié.");
             }
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails : " + JSON.stringify(error.response.data)
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
     const [remove] = useMutation(api.events.delete, {
         onSuccess: (response) => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 204) {
-                newToast({
-                    message: "Événement supprimé.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Événement supprimé.");
 
             history.push(`/associations/${association.id}/evenements`);
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails : " + JSON.stringify(error.response.data)
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
