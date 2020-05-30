@@ -4,11 +4,7 @@ import {
     PaginatedResponse,
     useBetterQuery,
 } from "../../services/apiService";
-import {
-    Sidebar,
-    SidebarItem,
-    SidebarSeparator,
-} from "../utils/sidebar/Sidebar";
+import { Sidebar, SidebarItem, SidebarSpace } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
@@ -30,6 +26,12 @@ export const AssociationSidebar = ({ association }) => {
                     pages={pages.results}
                 />
                 <AddPageItem association={association} />
+                <SidebarItem
+                    icon={"calendar"}
+                    to={`/associations/${association.id}/evenements`}
+                >
+                    Événements
+                </SidebarItem>
                 <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/fichiers`}
@@ -92,7 +94,7 @@ const MarketSubNavbar = ({ association }) => {
         `/associations/${association.id}/magasin`
     ) ? (
         <>
-            <SidebarSeparator />
+            <SidebarSpace />
             <SidebarItem
                 icon={"home"}
                 to={`/associations/${association.id}/magasin`}

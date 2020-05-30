@@ -29,6 +29,9 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                             { search: searchValue, page_size: 12 },
                         ]}
                         apiMethod={api.products.list}
+                        paginationControlProps={{
+                            className: "justify-content-center mb-5",
+                        }}
                         render={(products, paginationControl) => (
                             <>
                                 {products.length > 0 ? (
@@ -52,9 +55,7 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                                     </Card>
                                 )}
 
-                                <div className="col-12">
-                                    {paginationControl}
-                                </div>
+                                {paginationControl}
                             </>
                         )}
                     />

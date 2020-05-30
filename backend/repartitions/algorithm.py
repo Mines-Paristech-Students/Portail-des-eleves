@@ -1,6 +1,10 @@
 from typing import List
 
-from lapsolver import solve_dense
+# lapsolver is quite hard to install on Windows. Fortunately, scipy offers a similar, albeit slower, function.
+try:
+    from lapsolver import solve_dense as solver
+except ImportError:
+    from scipy.optimize import linear_sum_assignment as solver
 
 from authentication.models import User
 from repartitions.models import (
@@ -150,7 +154,7 @@ def make_repartition_for_category(
             while len(cost_matrix) < len(cost_matrix[0]):
                 cost_matrix.append([0] * len(cost_matrix[0]))
 
-            links = solve_dense(cost_matrix)
+            links = solver(cost_matrix)
 
             for user_index, place_index in zip(links[0], links[1]):
                 if user_index >= len(user_campaigns):
