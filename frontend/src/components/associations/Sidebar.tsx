@@ -8,6 +8,7 @@ import { Sidebar, SidebarItem, SidebarSpace } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
+import { Association } from "../../models/associations/association";
 
 export const AssociationSidebar = ({ association }) => {
     const { data: pages, status, error } = useBetterQuery<
@@ -29,12 +30,14 @@ export const AssociationSidebar = ({ association }) => {
                 <SidebarItem
                     icon={"calendar"}
                     to={`/associations/${association.id}/evenements`}
+                    exact={false}
                 >
                     Événements
                 </SidebarItem>
                 <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/fichiers`}
+                    exact={false}
                 >
                     Fichiers
                 </SidebarItem>
@@ -56,6 +59,7 @@ export const AssociationSidebar = ({ association }) => {
                 {association.myRole.permissions?.includes("marketplace") && (
                     <MarketSubNavbar association={association} />
                 )}
+                <EventSubSidebar association={association} />
             </Sidebar>
         );
     }
@@ -87,6 +91,37 @@ const AddPageItem = ({ association }) =>
             Ajouter une page
         </SidebarItem>
     ) : null;
+
+const EventSubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/evenements`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"calendar"}
+                to={`/associations/${association.id}/evenements`}
+            >
+                À venir
+            </SidebarItem>
+            <SidebarItem
+                icon={"inbox"}
+                to={`/associations/${association.id}/evenements/termines`}
+            >
+                Terminés
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("event") && (
+                <SidebarItem
+                    icon={"plus"}
+                    to={`/associations/${association.id}/evenements/creer`}
+                >
+                    Nouveau
+                </SidebarItem>
+            )}
+        </>
+    ) : null;
+};
 
 const MarketSubNavbar = ({ association }) => {
     const location = useLocation();
