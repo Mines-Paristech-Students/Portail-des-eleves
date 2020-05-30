@@ -40,7 +40,7 @@ export const AssociationMarketplaceProductAdministration = ({
 const columns = (marketplaceId) => [
     {
         key: "product",
-        header: "Product",
+        header: "Produit",
         render: (product) => product.name,
     },
     {
