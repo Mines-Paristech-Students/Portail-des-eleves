@@ -54,6 +54,7 @@ export const Pagination = ({
     const location = useLocation();
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
+    const [parsedLocation, setParsedLocation] = useState(false);
 
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
         [...apiKey, page],
@@ -94,6 +95,9 @@ export const Pagination = ({
         // the component is mounted.
         const pageParam = new URLSearchParams(location.search).get("page");
         setPage(parseInt(pageParam || "") || 1);
+        setParsedLocation(true);
+
+        // This effect should only be  called when the page is loaded
         // eslint-disable-next-line
     }, []);
 
@@ -101,7 +105,7 @@ export const Pagination = ({
         // If the "page" parameter changes, change the url so when we reload,
         // the first useEffect can take action to change the page param
         let params = new URLSearchParams(location.search);
-        if (page.toString() !== params.get("page")) {
+        if (page.toString() !== params.get("page") && parsedLocation) {
             params.delete("page");
             params.append("page", page.toString());
             history.push(location.pathname + "?" + params.toString());

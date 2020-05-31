@@ -98,6 +98,7 @@ export const Trombi = () => {
                                                 <UserAvatarCard
                                                     userId={user.id}
                                                     className="h-100"
+                                                    link={true}
                                                 >
                                                     <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
                                                         <Link

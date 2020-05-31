@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { DebounceInput } from "react-debounce-input";
-import { Card, Container, Row } from "react-bootstrap";
+import { Card, Row, Container, Col } from "react-bootstrap";
 import { Pagination } from "../../../utils/Pagination";
 import { api } from "../../../../services/apiService";
 import { ProductCard } from "./ProductCard";
+import "./product-search.css";
 
 export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
     const [searchValue, setSearchValue] = useState("");
@@ -30,22 +31,25 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                         ]}
                         apiMethod={api.products.list}
                         paginationControlProps={{
-                            className: "justify-content-center mb-5",
+                            className: "justify-content-center mt-2 mb-5",
                         }}
                         render={(products, paginationControl) => (
-                            <>
-                                {products.length > 0 ? (
-                                    products.map((product) => (
+                            <Row>
+                                {products.map((product) => (
+                                    <Col key={product.id} xs={6}>
                                         <ProductCard
                                             key={product.id}
                                             product={product}
                                             addToBasket={addToBasket}
+                                            className={"cursor-pointer"}
                                             quantityOrdered={
                                                 basket[product.id]?.quantity
                                             }
                                         />
-                                    ))
-                                ) : (
+                                    </Col>
+                                ))}
+
+                                {products.length === 0 && (
                                     <Card>
                                         <Card.Body
                                             className={"text-center text-muted"}
@@ -55,8 +59,8 @@ export const ProductSearch = ({ marketplaceId, basket, addToBasket }) => {
                                     </Card>
                                 )}
 
-                                {paginationControl}
-                            </>
+                                <Col>{paginationControl}</Col>
+                            </Row>
                         )}
                     />
                 </Row>

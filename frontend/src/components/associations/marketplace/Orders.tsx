@@ -10,7 +10,7 @@ import {
 } from "../../../models/associations/marketplace";
 import { OverlayTrigger, Tooltip, Overlay } from "react-bootstrap";
 import { ToastContext } from "../../utils/Toast";
-import { formatDate } from "../../../utils/format";
+import { formatDate, formatPrice } from "../../../utils/format";
 import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { AssociationLayout } from "../Layout";
@@ -88,10 +88,10 @@ const columns = [
     },
     {
         key: "value",
-        header: "Valeur",
+        header: "Montant",
         headerClassName: "text-right",
         cellClassName: "text-right",
-        render: (transaction) => transaction.value + "€",
+        render: (transaction) => formatPrice(transaction.value),
     },
     {
         key: "buyer",
@@ -102,7 +102,7 @@ const columns = [
     },
     {
         key: "status",
-        header: "Status",
+        header: "Statut",
         render: (transaction) => (
             <TransactionStatusSelector transaction={transaction} />
         ),

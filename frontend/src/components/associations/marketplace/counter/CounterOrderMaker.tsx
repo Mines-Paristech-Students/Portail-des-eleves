@@ -1,27 +1,19 @@
-import { api, useBetterQuery } from "../../../../services/apiService";
+import { api } from "../../../../services/apiService";
 import React, { useContext, useState } from "react";
 import { ToastContext } from "../../../utils/Toast";
 import { TransactionStatus } from "../../../../models/associations/marketplace";
 import { queryCache } from "react-query";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { RefundForm } from "./RefundForm";
 import { ProductSearch } from "./ProductSearch";
 import { OrderSummary } from "./OrderSummary";
+import { Balance } from "../Balance";
 
 export const CounterOrderMaker = ({
     marketplaceId,
     customer,
     resetCustomer,
 }) => {
-    const {
-        data: balance,
-        status: balanceStatus,
-        error: balanceError,
-    } = useBetterQuery(
-        ["marketplace.balance", marketplaceId, customer.id],
-        api.marketplace.balance.get
-    );
-
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [basket, setBasket] = useState<object>({});
 
@@ -97,38 +89,51 @@ export const CounterOrderMaker = ({
             sendSuccessToast("Commande passée avec succès");
         }
 
-        queryCache.refetchQueries("marketplace.transactions.list");
+        await queryCache.refetchQueries("marketplace.transactions.list");
     };
 
     return (
         <>
-            <Card>
-                <Card.Header>
-                    Solde :{" "}
-                    {balanceStatus === "loading" ? (
-                        <em>Chargement</em>
-                    ) : balanceStatus === "error" ? (
-                        <em>Erreur {balanceError} : balance</em>
-                    ) : (
-                        `${(balance as { balance: number }).balance}€`
-                    )}
-                </Card.Header>
-            </Card>
-
-            <RefundForm customer={customer} marketplaceId={marketplaceId} />
-
-            <ProductSearch
-                basket={basket}
-                addToBasket={addToBasket}
+            <RefundForm
+                customer={customer}
                 marketplaceId={marketplaceId}
+                className={"float-right mt-2"}
             />
 
-            {/* Show order summary */}
-            <OrderSummary
-                basket={basket}
-                removeFromBasket={removeFromBasket}
-                makeOrder={makeOrder}
-            />
+            <div className="d-flex justify-content-center mt-4">
+                <Col md={"6"}>
+                    <Card>
+                        <Card.Body className="text-center">
+                            <h5>{customer.id}</h5>
+                            <p className="h1 font-weight-bold">
+                                <Balance
+                                    marketplaceId={marketplaceId}
+                                    user={customer}
+                                />
+                            </p>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </div>
+
+            <Row>
+                <Col md={6}>
+                    <ProductSearch
+                        basket={basket}
+                        addToBasket={addToBasket}
+                        marketplaceId={marketplaceId}
+                    />
+                </Col>
+
+                {/* Show order summary */}
+                <Col md={6}>
+                    <OrderSummary
+                        basket={basket}
+                        removeFromBasket={removeFromBasket}
+                        makeOrder={makeOrder}
+                    />
+                </Col>
+            </Row>
         </>
     );
 };

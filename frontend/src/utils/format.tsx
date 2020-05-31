@@ -1,3 +1,6 @@
+import { Fragment } from "react";
+import React from "react";
+
 export const MONTHS: string[] = [
     "Janvier",
     "Février",
@@ -86,3 +89,26 @@ export const decidePlural = (
     singularForm: string,
     pluralForm: string
 ) => (Math.abs(decider) < 2 ? singularForm : pluralForm);
+
+/**
+ * Formats a price with nice decimals and the euro sign
+ * @param price the value to format
+ */
+export const formatPrice = (price) =>
+    Number(price).toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        currency: "EUR",
+        style: "currency",
+    });
+
+/**
+ * Converts plain text to React fragment to display newlines as <br/>
+ * @param text
+ */
+export const formatNewLines = (text) =>
+    text.split("\n").map((item, key) => (
+        <Fragment key={key}>
+            {item}
+            <br />
+        </Fragment>
+    ));
