@@ -91,7 +91,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
         <Loading />
     ) : status === "error" ? (
         <ErrorMessage>Une erreur est survenue {error}</ErrorMessage>
-    ) : tags ? (
+    ) : tags && tags.results.length > 0 ? (
         <>
             <div className="input-icon mb-3">
                 <Form.Control
