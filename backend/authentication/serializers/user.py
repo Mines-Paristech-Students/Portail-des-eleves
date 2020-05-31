@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from associations.serializers import RoleSerializer
+from associations.serializers.role import RoleSerializer
 from authentication.models import User, ProfileAnswer
 from authentication.serializers.questions_short import (
     ProfileAnswerShortSerializer,

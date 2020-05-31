@@ -20,6 +20,7 @@ import { Association } from "../models/associations/association";
 import { Route } from "./global";
 import { AssociationCreateEvent } from "../components/associations/events/create/AssociationCreateEvent";
 import { AssociationEditEvent } from "../components/associations/events/edit/AssociationEditEvent";
+import { AssociationRolesAdministration } from "../components/associations/roles/administration/AssociationRolesAdministration";
 
 type AssociationRoute = Route & {
     props: object;
@@ -51,11 +52,32 @@ export const routes: (association: Association) => AssociationRoute[] = (
         path: `/evenements`,
         component: AssociationListEvents,
         exact: true,
-        props: { association: association },
-        defaultLayout: false,
+        props: {
+            association: association,
+            title: "Événements à venir",
+            apiParameters: {
+                time: ["NOW", "AFTER"],
+                ordering: "starts_at",
+            },
+        },
+        defaultLayout: true,
     },
     {
-        path: `/evenements/nouveau`,
+        path: `/evenements/passes`,
+        component: AssociationListEvents,
+        exact: true,
+        props: {
+            association: association,
+            title: "Événements passés",
+            apiParameters: {
+                time: ["BEFORE"],
+                ordering: "-starts_at",
+            },
+        },
+        defaultLayout: true,
+    },
+    {
+        path: `/evenements/creer`,
         component: AssociationCreateEvent,
         exact: true,
         props: { association: association },
@@ -97,7 +119,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: false,
     },
     {
-        path: `/fichiers/upload`,
+        path: `/fichiers/televerser`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association },
@@ -161,7 +183,27 @@ export const routes: (association: Association) => AssociationRoute[] = (
         props: { association: association },
         defaultLayout: true,
     },
-
+    {
+        path: "/membres/",
+        component: (...props) => null,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: "/membres/anciens",
+        component: (...props) => null,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: "/membres/administration",
+        component: AssociationRolesAdministration,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
     {
         path: `/parametres`,
         component: AssociationSettings,

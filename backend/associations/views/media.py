@@ -1,12 +1,9 @@
-import django_filters
-from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.parsers import MultiPartParser
-from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, JSONParser
 
-from associations.models import Media
+from associations.models import Media, Association
 from associations.permissions import CanEditMedia
-from associations.serializers.media import MediaSerializer, SubmitMediaSerializer
+from associations.serializers.media import MediaSerializer
 from tags.filters.taggable import TaggableFilter
 
 
@@ -21,17 +18,13 @@ class MediaViewSet(viewsets.ModelViewSet):
     serializer_class = MediaSerializer
 
     filter_class = MediaFilter
-    parser_classes = (MultiPartParser,)
+    parser_classes = (MultiPartParser, JSONParser)
     permission_classes = (CanEditMedia,)
 
-    def create(self, request, *args, **kwargs):
-        serializer = SubmitMediaSerializer(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+    def perform_create(self, serializer):
+        association = Association.objects.get(pk=self.request.data["association"])
+        serializer.save(
+            uploaded_by=self.request.user,
+            association=association,
+            file=self.request.data["file"],
         )

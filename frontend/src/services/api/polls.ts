@@ -58,16 +58,12 @@ export const polls = {
                     "page_size=10",
                     userFilter !== "" ? `user=${userFilter}` : "",
                     pollStateFilterToApiParameter(stateFilter, "state"),
-                    sortingToApiParameter(
-                        sorting,
-                        {
-                            question: "question",
-                            publicationDate: "publication_date",
-                            user: "user__pk",
-                            state: "state",
-                        },
-                        `ordering`
-                    ),
+                    sortingToApiParameter(sorting, {
+                        question: "question",
+                        publicationDate: "publication_date",
+                        user: "user__pk",
+                        state: "state",
+                    }),
                 ],
                 "&"
             )

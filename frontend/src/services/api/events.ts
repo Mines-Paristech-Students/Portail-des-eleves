@@ -9,11 +9,12 @@ import dayjs from "dayjs";
 
 export type EventsListParameters = {
     association: string;
-    time: ("NOW" | "BEFORE" | "AFTER")[];
+    time?: ("NOW" | "BEFORE" | "AFTER")[];
     starts_at_before?: Date;
     starts_at_after?: Date;
     ends_at_before?: Date;
     ends_at_after?: Date;
+    ordering?: "starts_at" | "-starts_at";
 };
 
 export const events = {

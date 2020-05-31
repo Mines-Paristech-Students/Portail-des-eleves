@@ -20,7 +20,9 @@ export const AssociationRouter = ({ match }) => {
     const { data: association, error, status } = useBetterQuery<Association>(
         ["association.get", associationId],
         api.associations.get,
-        { refetchOnWindowFocus: false }
+        {
+            refetchOnWindowFocus: false,
+        }
     );
 
     if (association === undefined) {

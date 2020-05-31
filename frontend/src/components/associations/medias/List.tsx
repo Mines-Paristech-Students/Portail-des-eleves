@@ -39,7 +39,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    { ...tagParams, page_size: 2 },
+                    { page_size: 30, ...tagParams },
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
@@ -47,7 +47,7 @@ export const AssociationFilesystemList = ({ association }) => {
                         {association.myRole.permissions?.includes("media") && (
                             <Link
                                 to={`/associations/${association.id}/fichiers/televerser`}
-                                className={"btn btn-success float-right mt-5"}
+                                className={"btn btn-success float-right mt-3"}
                             >
                                 <i className="fe fe-upload" />
                                 Ajouter des fichiers
