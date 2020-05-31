@@ -97,7 +97,7 @@ export const Pagination = ({
             }
             setPrevApiKey(apiKeyJSON);
         }
-    }, [apiKey, prevApiKey]);
+    }, [apiKey, prevApiKey, setPrevApiKey, setPage]);
 
     useEffect(() => {
         if (data && data.totalPages) {
