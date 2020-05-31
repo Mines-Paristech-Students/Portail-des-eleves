@@ -35,25 +35,19 @@ export const PollsTable = ({
     const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
 
     // By default, show all the polls to the simple users and only the polls to be reviewed to the admins.
-    const defaultStateFilter: PollStateFilter = {
+    const [stateFilter, setStateFilter] = useState<PollStateFilter>({
         accepted: !adminVersion,
         rejected: !adminVersion,
         reviewing: true,
-    };
+    });
 
-    const [stateFilter, setStateFilter] = useState<PollStateFilter>(
-        defaultStateFilter
-    );
-
-    if (!authService.isStaff && adminVersion) {
-        return <ForbiddenError />;
-    }
-
-    return (
+    return !authService.isStaff && adminVersion ? (
+        <ForbiddenError />
+    ) : (
         <PollsBase
             sidebarActions={
                 <PollsTableFilter
-                    defaultStateFilter={defaultStateFilter}
+                    stateFilter={stateFilter}
                     setStateFilter={setStateFilter}
                     formGroupProps={{ className: "mb-0" }}
                 />

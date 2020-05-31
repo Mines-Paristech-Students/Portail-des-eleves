@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
@@ -39,7 +39,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    tagParams,
+                    { ...tagParams, page_size: 2 },
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (

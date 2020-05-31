@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     BrowserRouter as Router,
     Route,
@@ -22,6 +22,10 @@ export const AssociationRouter = ({ match }) => {
         api.associations.get,
         { refetchOnWindowFocus: false }
     );
+
+    useEffect(() => {
+        console.log("bip");
+    });
 
     if (association === undefined) {
         return null;
