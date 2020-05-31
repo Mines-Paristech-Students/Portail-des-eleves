@@ -9,13 +9,7 @@ import { CounterOrderMaker } from "./counter/CounterOrderMaker";
  * transactions at once.
  */
 export const AssociationMarketplaceCounter = ({ association }) => {
-    const [customer, setCustomer] = useState<User | null>({
-        firstName: "",
-        isStaff: false,
-        lastName: "",
-        promotion: "",
-        id: "17bocquet",
-    });
+    const [customer, setCustomer] = useState<User | null>(null);
     return (
         <>
             <p className={"h1 m-0 mt-2 float-left"}>
