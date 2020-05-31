@@ -54,10 +54,10 @@ export const AssociationFilesystemList = ({ association }) => {
                             </Link>
                         )}
                         <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-                        <Row>
+                        <div className={"card-columns"}>
                             {medias.map((media) => {
                                 return (
-                                    <Col md={4} key={media.id}>
+                                    <Col key={media.id}>
                                         <Card
                                             onClick={() =>
                                                 history.push(
@@ -102,7 +102,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                     )}
                                 </Instructions>
                             )}
-                        </Row>
+                        </div>
                         {paginationControl}
 
                         {medias.length === 0 && (
