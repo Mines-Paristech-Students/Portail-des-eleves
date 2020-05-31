@@ -1,8 +1,8 @@
-import { ListPolls } from "../components/polls/list_polls/ListPolls";
-import { SubmitPoll } from "../components/polls/submit_polls/SubmitPoll";
+import { ListPolls } from "../components/polls/list/ListPolls";
+import { SubmitPoll } from "../components/polls/submit/SubmitPoll";
 import { Route } from "./global";
-import { PollsTableAdmin } from "../components/polls/polls_table/PollsTableAdmin";
-import { PollsTableUser } from "../components/polls/polls_table/PollsTableUser";
+import { PollsTableAdmin } from "../components/polls/table/PollsTableAdmin";
+import { PollsTableUser } from "../components/polls/table/PollsTableUser";
 
 export const routes: Route[] = [
     {

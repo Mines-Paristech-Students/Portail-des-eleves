@@ -5,7 +5,7 @@ import { sortingToApiParameter } from "../../components/utils/table/sorting";
 import {
     PollStateFilter,
     pollStateFilterToApiParameter,
-} from "../../components/polls/polls_table/PollsTableFilter";
+} from "../../components/polls/table/PollsTableFilter";
 import { joinNonEmpty } from "../../utils/parameter";
 
 /**
