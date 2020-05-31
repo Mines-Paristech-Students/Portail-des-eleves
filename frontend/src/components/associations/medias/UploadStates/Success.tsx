@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { useFormik } from "formik";
 import { api } from "../../../../services/apiService";
 import Card from "react-bootstrap/Card";
@@ -9,16 +9,13 @@ import { TaggableModel, TagList } from "../../../utils/tags/TagList";
 // Sub-component used to edit information on a media once its upload is done
 export const FileUploadSuccess = ({ media, onDelete }) => {
     let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const formik = useFormik({
         // Use a form to edit name and description
         initialValues: media,
         onSubmit: (values) => {
-            newToast({
-                message: "Sauvegarde en cours",
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast("Sauvegarde en cours");
             api.medias
                 .patch({
                     id: values.id,
@@ -26,16 +23,10 @@ export const FileUploadSuccess = ({ media, onDelete }) => {
                     description: values.description,
                 })
                 .then((res) => {
-                    newToast({
-                        message: "Fichier sauvegardé !",
-                        level: ToastLevel.Success,
-                    });
+                    sendSuccessToast("Fichier sauvegardé !");
                 })
                 .catch((err) => {
-                    newToast({
-                        message: err.message,
-                        level: ToastLevel.Error,
-                    });
+                    sendErrorToast(err.message);
                 });
         },
     });

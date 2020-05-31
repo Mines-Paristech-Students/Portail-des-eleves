@@ -5,7 +5,7 @@ import { tablerColors, tablerColorsHex } from "../../../utils/colors";
 import { hashCode } from "../../../utils/hashcode";
 import "./TagEdition.css";
 import Fuse from "fuse.js";
-import { ToastContext, ToastLevel } from "../Toast";
+import { ToastContext } from "../Toast";
 import Select from "react-select";
 import axios from "axios";
 
@@ -29,7 +29,7 @@ export const TagSelector = ({
     onUnbind,
     placeholder = "Sélectionner des tags",
 }) => {
-    const newToast = useContext(ToastContext);
+    const { sendErrorToast } = useContext(ToastContext);
 
     const bindTag = (newTag) => {
         onBind(newTag);
@@ -188,10 +188,7 @@ export const TagSelector = ({
                         bindTag(createdTag);
                     })
                     .catch(() => {
-                        newToast({
-                            message: "Erreur lors de l'ajout du tag.",
-                            level: ToastLevel.Error,
-                        });
+                        sendErrorToast("Erreur lors de l'ajout du tag.");
                     });
 
                 setSelectedNamespace(null);

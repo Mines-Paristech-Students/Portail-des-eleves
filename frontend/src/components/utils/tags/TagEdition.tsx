@@ -1,14 +1,8 @@
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../Toast";
+import { ToastContext } from "../Toast";
 import React, { useContext } from "react";
 import { TagSelector } from "./TagSelector";
-import { Namespace, Tag } from "../../../models/tag";
-import { tablerColors, tablerColorsHex } from "../../../utils/colors";
-import { hashCode } from "../../../utils/hashcode";
 import "./TagEdition.css";
-import Fuse from "fuse.js";
-import { ToastContext } from "../Toast";
-import Select from "react-select";
 
 /**
  * Generic component to manage the tags of one object
