@@ -71,7 +71,7 @@ export function useColumns<T = any>(
         headerClassName?: any;
         cellClassName?: any;
     }[]
-): { columns: Column[]; sorting: object } {
+): { columns: Column[]; sorting: {[key: string]: Sorting} } {
     // Build an initial sorting object filled with `Sorting.Unsorted`.
     let initialSorting = {};
 

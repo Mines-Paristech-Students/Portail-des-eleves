@@ -1,12 +1,11 @@
 import { Poll } from "../../models/polls";
 import { AxiosResponse } from "axios";
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
-import { sortingToApiParameter } from "../../components/utils/table/sorting";
 import {
-    PollStateFilter,
-    pollStateFilterToApiParameter,
-} from "../../components/polls/polls_table/PollsTableFilter";
-import { joinNonEmpty } from "../../utils/parameter";
+    apiService,
+    PaginatedResponse,
+    toUrlParams,
+    unwrap,
+} from "../apiService";
 
 /**
  * Parse the `publicationDate` and `creationDateTime` JSON field.
@@ -25,67 +24,43 @@ const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
 };
 
 export type ListPollsApiParameters = {
-    user: string;
-    state: "ACCEPTED" | "REJECTED" | "REVIEWING";
-    ordering: string;
+    user?: string;
+    state?: "ACCEPTED" | "REJECTED" | "REVIEWING"[];
+    ordering?: string;
+    is_active?: boolean;
+    is_published?: boolean;
+    page?: number;
+    page_size?: number;
 };
 
-const listGeneric = (parameters: string = "") => (page = 1) =>
+const list = (parameters: ListPollsApiParameters, page = 1) =>
     unwrap<PaginatedResponse<Poll[]>>(
         apiService
             .get<PaginatedResponse<Poll[]>>(
-                `/polls/?page=${page}${
-                    parameters === undefined ? "" : "&"
-                }${parameters}`
+                `/polls/${toUrlParams({ ...parameters, page: page })}`
             )
             .then(parseDates)
     );
 
 export const polls = {
-    /**
-     * List all the polls.
-     * @param userFilter if different from "", only list the polls created by `userFilter`; otherwise, list all the polls.
-     * @param stateFilter given to `pollStateFilterToApiParameter` to create a `state` parameter.
-     * @param sorting given to `sortingToApiParameter` to create an `ordering` parameter.
-     * @param page the page to load.
-     */
-    listAll: (
-        {
-            userFilter,
-            stateFilter,
-            sorting,
-        }: { userFilter: string; stateFilter: PollStateFilter; sorting: any },
-        page = 1
-    ) =>
-        listGeneric(
-            // Put all the parameters into an array, then join them with `&`.
-            joinNonEmpty(
-                [
-                    "page_size=10",
-                    userFilter !== "" ? `user=${userFilter}` : "",
-                    pollStateFilterToApiParameter(stateFilter, "state"),
-                    sortingToApiParameter(
-                        sorting,
-                        {
-                            question: "question",
-                            publicationDate: "publication_date",
-                            user: "user__pk",
-                            state: "state",
-                        },
-                        `ordering`
-                    ),
-                ],
-                "&"
-            )
-        )(page),
+    list: list,
     /**
      * List the polls which are still open (to which people can vote).
      */
-    listCurrent: listGeneric("is_active=true"),
+    listCurrent: (page = 1) =>
+        list({
+            is_active: true,
+            page: page,
+        }),
     /**
      * List the polls which are now closed (but were published before).
      */
-    listOld: listGeneric("is_published=true&is_active=false"),
+    listOld: (page = 1) =>
+        list({
+            is_active: false,
+            is_published: true,
+            page: page,
+        }),
     get: (pollId) => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
     create: ({
         data,

@@ -16,6 +16,7 @@ import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
 import { Column } from "../../utils/table/TableHeader";
 import { PageTitle } from "../../utils/PageTitle";
+import { sortingToApiParameter } from "../../utils/table/sorting";
 
 export const PollsTable = ({
     adminVersion,
@@ -27,7 +28,7 @@ export const PollsTable = ({
     const user = useContext(UserContext);
 
     // Only filter by user for the non admin version.
-    const userFilter = () => (!adminVersion && user ? user.id : "");
+    const userFilter = () => (!adminVersion && user ? user.id : undefined);
 
     // Contains the poll currently edited in the modal.
     const [editPoll, setEditPoll] = useState<Poll | null>(null);
@@ -45,6 +46,25 @@ export const PollsTable = ({
     const [stateFilter, setStateFilter] = useState<PollStateFilter>(
         defaultStateFilter
     );
+
+    // `stateFilter` has to be transformed to an API parameter.
+    const stateFilterToApiParameter = (stateFilter: PollStateFilter) => {
+        const r: ("ACCEPTED" | "REJECTED" | "REVIEWING")[] = [];
+
+        if (stateFilter.accepted) {
+            r.push("ACCEPTED");
+        }
+
+        if (stateFilter.rejected) {
+            r.push("REJECTED");
+        }
+
+        if (stateFilter.reviewing) {
+            r.push("REVIEWING");
+        }
+
+        return r;
+    };
 
     if (!authService.isStaff && adminVersion) {
         return <ForbiddenError />;
@@ -81,12 +101,17 @@ export const PollsTable = ({
                     apiKey={[
                         "polls.list",
                         {
-                            userFilter: userFilter(),
-                            stateFilter: stateFilter,
-                            sorting: sorting,
+                            user: userFilter(),
+                            state: stateFilterToApiParameter(stateFilter),
+                            ordering: sortingToApiParameter(sorting, {
+                                question: "question",
+                                publicationDate: "publication_date",
+                                user: "user__pk",
+                                state: "state",
+                            }),
                         },
                     ]}
-                    apiMethod={api.polls.listAll}
+                    apiMethod={api.polls.list}
                     config={{ refetchOnWindowFocus: false }}
                     loadingElement={PollsLoading}
                     errorElement={PollsError}
