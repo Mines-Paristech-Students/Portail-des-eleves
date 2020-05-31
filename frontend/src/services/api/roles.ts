@@ -34,7 +34,8 @@ export const roles = {
             return data;
         }),
     get: (roleId) =>
-        unwrap<Role>(apiService.get(`/associations/roles/${roleId}`)).then(
+        unwrap<Role>(apiService.get(`/associations/roles/${roleId}/`)).then(
             parseRoleDates
         ),
+    delete: (roleId) => apiService.delete(`/associations/roles/${roleId}/`),
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Table, useColumns } from "../../../utils/table/Table";
 import { Role } from "../../../../models/associations/role";
 import { Pagination } from "../../../utils/Pagination";
@@ -13,6 +13,8 @@ import Card from "react-bootstrap/Card";
 import { sortingToApiParameter } from "../../../utils/table/sorting";
 import Button from "react-bootstrap/Button";
 import { RolePermissionIcon } from "./RolePermissionIcon";
+import { ToastContext } from "../../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     <OverlayTrigger
@@ -48,7 +50,10 @@ const DeleteRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     </OverlayTrigger>
 );
 
-const columnData = (setEditRole) => [
+const columnData = (
+    setEditRole: (role: Role) => void,
+    remove: (roleId: number) => void
+) => [
     {
         key: "member",
         header: "Membre",
@@ -95,7 +100,17 @@ const columnData = (setEditRole) => [
         render: (role: Role) => (
             <>
                 <EditRoleButton handleClick={() => setEditRole(role)} />
-                <DeleteRoleButton handleClick={() => console.log("delete")} />
+                <DeleteRoleButton
+                    handleClick={() => {
+                        if (
+                            window.confirm(
+                                "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
+                            )
+                        ) {
+                            remove(role.id);
+                        }
+                    }}
+                />
             </>
         ),
     },
@@ -106,16 +121,31 @@ export const AssociationRolesAdministration = ({
 }: {
     association: Association;
 }) => {
-    // The Role currently edited in the modal.
-    const [, setEditRole] = useState<Role | null>(null);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    const { columns, sorting } = useColumns<Role>(columnData(setEditRole));
+    // The Role currently edited in the modal.
+    const [editRole, setEditRole] = useState<Role | null>(null);
+
+    const [remove] = useMutation(api.roles.delete, {
+        onSuccess: () => sendSuccessToast("Rôle supprimé."),
+        onError: (response) =>
+            sendErrorToast(
+                `Une erreur est survenue: ${JSON.stringify(
+                    (response as any).data
+                )}.`
+            ),
+        onSettled: () => queryCache.refetchQueries("roles.list"),
+    });
+
+    const { columns, sorting } = useColumns<Role>(
+        columnData(setEditRole, remove)
+    );
 
     return (
         <>
             <Pagination
                 apiKey={[
-                    "associations.roles.list",
+                    "roles.list",
                     {
                         association: association.id,
                         ordering: sortingToApiParameter(sorting, {
