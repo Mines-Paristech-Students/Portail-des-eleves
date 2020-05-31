@@ -37,5 +37,6 @@ class MediaViewSet(viewsets.ModelViewSet):
             mime = magic.Magic(mime=True)
             media.mimetype = mime.from_file(media.file.path)
             media.save()
-        except FileNotFoundError:
-            pass
+        except FileNotFoundError as e:
+            media.delete()
+            raise e
