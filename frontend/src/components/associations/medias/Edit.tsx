@@ -68,9 +68,6 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 message: "Sauvegardé : " + res.name,
                                 level: ToastLevel.Success,
                             });
-                            // history.push(
-                            //     `/associations/${association.id}/fichiers/${media.id}/`
-                            // );
                         })
                         .catch((err) =>
                             newToast({
