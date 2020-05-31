@@ -23,6 +23,10 @@ export const AssociationRouter = ({ match }) => {
         { refetchOnWindowFocus: false }
     );
 
+    if (association === undefined) {
+        return null;
+    }
+
     // Generate the routes
     const privateRoutes = association
         ? routes(association).map(
