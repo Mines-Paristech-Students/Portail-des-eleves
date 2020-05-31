@@ -39,7 +39,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    { ...tagParams, page_size: 2 },
+                    tagParams,
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
