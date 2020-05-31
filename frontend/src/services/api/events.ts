@@ -9,11 +9,12 @@ import dayjs from "dayjs";
 
 export type EventsListParameters = {
     association: string;
-    time: ("NOW" | "BEFORE" | "AFTER")[];
+    time?: ("NOW" | "BEFORE" | "AFTER")[];
     starts_at_before?: Date;
     starts_at_after?: Date;
     ends_at_before?: Date;
     ends_at_after?: Date;
+    ordering?: "starts_at" | "-starts_at";
 };
 
 export const events = {
@@ -51,29 +52,50 @@ export const events = {
                 event.startsAt = new Date(event.startsAt);
                 event.endsAt = new Date(event.endsAt);
             });
-
             return data;
         }),
     get: ({ eventId }) =>
-        unwrap<Event>(apiService.get(`/associations/events/${eventId}`)),
+        unwrap<Event>(apiService.get(`/associations/events/${eventId}/`)).then(
+            (event) => ({
+                ...event,
+                startsAt: new Date(event.startsAt),
+                endsAt: new Date(event.endsAt),
+            })
+        ),
     join: ({ eventId }) =>
         apiService.put(`/associations/events/${eventId}/join/`),
     leave: ({ eventId }) =>
         apiService.put(`/associations/events/${eventId}/leave/`),
-    save: (event) => {
-        if (!event.id) {
-            return unwrap<Event>(
-                apiService.post(`/associations/events/`, event)
-            );
-        }
-
-        return unwrap<Event>(
-            apiService.patch(`/associations/events/${event.id}/`, event)
-        );
-    },
-    delete: (event) => {
-        return unwrap<Event>(
-            apiService.delete(`/associations/events/${event.id}/`)
-        );
-    },
+    create: ({
+        data,
+    }: {
+        data: {
+            association: string;
+            name: string;
+            description: string;
+            startsAt: Date;
+            endsAt: Date;
+            place: string;
+        };
+    }) =>
+        apiService.post(`/associations/events/`, {
+            ...data,
+            startsAt: dayjs(data.startsAt).format("YYYY-MM-DDTHH:mm:ss"),
+            endsAt: dayjs(data.endsAt).format("YYYY-MM-DDTHH:mm:ss"),
+        }),
+    update: ({
+        eventId,
+        data,
+    }: {
+        eventId: string;
+        data: {
+            name: string;
+            description: string;
+            startsAt: Date;
+            endsAt: Date;
+            place: string;
+        };
+    }) => apiService.patch(`/associations/events/${eventId}/`, data),
+    delete: ({ eventId }: { eventId: string }) =>
+        apiService.delete(`/associations/events/${eventId}/`),
 };

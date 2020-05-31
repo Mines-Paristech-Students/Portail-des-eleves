@@ -1,5 +1,5 @@
 from authentication.models import User
-from authentication.serializers import ReadOnlyUserSerializer
+from authentication.serializers.user import ReadOnlyUserSerializer
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 from rest_framework.renderers import JSONRenderer

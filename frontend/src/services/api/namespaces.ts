@@ -28,4 +28,9 @@ export const namespaces = {
         unwrap<Namespace>(
             apiService.delete(`/tags/namespaces/${namespaceId}/`)
         ),
+
+    save: (namespace) =>
+        unwrap<Namespace>(
+            apiService.patch(`/tags/namespaces/${namespace.id}/`, namespace)
+        ),
 };

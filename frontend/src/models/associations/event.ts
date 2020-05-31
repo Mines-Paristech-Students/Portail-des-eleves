@@ -2,7 +2,7 @@ import { Association } from "./association";
 import { User } from "../user";
 
 export interface Event {
-    id?: Number;
+    id: string;
     association: Association;
     name: string;
     description: string;

@@ -12,11 +12,12 @@ import { Avatar } from "../../../utils/avatar/Avatar";
 import { EventCardModal } from "./EventCardModal";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../../utils/Toast";
+import { ToastContext } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import { CardStatus } from "../../../utils/CardStatus";
 import { TablerColor } from "../../../../utils/colors";
 import { EventDate } from "./EventDate";
+import { UserContext } from "../../../../services/authService";
 
 /**
  * Display an Event in a Card, as well as a link to join / leave the event.
@@ -27,66 +28,51 @@ import { EventDate } from "./EventDate";
 export const EventCard = ({
     association,
     event,
-    userId,
     canEdit = false,
 }: {
     association: Association;
     event: Event;
-    userId?: string;
     canEdit?: boolean;
 }) => {
+    const user = useContext(UserContext);
     const isOver = () => new Date() > event.endsAt;
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [showModal, setShowModal] = useState(false);
 
     const [join] = useMutation(api.events.join, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 200) {
-                newToast({
-                    message: "Inscription effectuée.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Inscription effectuée.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails :" + error.response.data.detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
     const [leave] = useMutation(api.events.leave, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
-
-            if (response.status === 200) {
-                newToast({
-                    message: "Désinscription effectuée.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Désinscription effectuée.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails :" + error.response.data.detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
@@ -105,17 +91,24 @@ export const EventCard = ({
             />
 
             <Card.Header>
-                <Card.Title className={isOver() ? "text-muted" : ""}>
-                    {event.name}
-                </Card.Title>
+                <Card.Title>{event.name}</Card.Title>
 
                 <div className="card-options">
+                    {canEdit && (
+                        <Link
+                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
+                            className={"btn btn-secondary btn-sm mr-2"}
+                        >
+                            Modifier
+                        </Link>
+                    )}
+
                     {!isOver() && (
                         <>
-                            {userId &&
+                            {user &&
                             event.participants
                                 .map((participant) => participant.id)
-                                .includes(userId) ? (
+                                .includes(user.id) ? (
                                 <Button
                                     className="btn-sm"
                                     variant="secondary"
@@ -133,15 +126,6 @@ export const EventCard = ({
                                 </Button>
                             )}
                         </>
-                    )}
-
-                    {canEdit && (
-                        <Link
-                            to={`/associations/${association.id}/evenements/${event.id}/modifier`}
-                            className={"btn btn-secondary btn-sm"}
-                        >
-                            Modifier
-                        </Link>
                     )}
                 </div>
             </Card.Header>
@@ -177,7 +161,14 @@ export const EventCard = ({
                     </p>
                 )}
 
-                <p>{event.description}</p>
+                <p>
+                    {event.description.split("\n").map((item, key) => (
+                        <React.Fragment key={key}>
+                            {item}
+                            <br />
+                        </React.Fragment>
+                    ))}
+                </p>
             </Card.Body>
         </Card>
     );

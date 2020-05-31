@@ -6,7 +6,7 @@ import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { PageTitle } from "../../utils/PageTitle";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { LoadingAssociation } from "../Loading";
 import { Media } from "../../../models/associations/media";
@@ -21,9 +21,9 @@ export const AssociationFilesystemEdit = ({ association }) => {
     );
 
     const history = useHistory();
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    if (!association.myRole.permissions.includes("media")) {
+    if (!association.myRole.permissions?.includes("media")) {
         return <ForbiddenError />;
     }
 
@@ -35,17 +35,11 @@ export const AssociationFilesystemEdit = ({ association }) => {
         api.medias
             .delete(media)
             .then((res) => {
-                newToast({
-                    message: "Fichier supprimé ",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("Fichier supprimé ");
                 history.push(`/associations/${association.id}/fichiers/`);
             })
             .catch((err) => {
-                newToast({
-                    message: err.statusCode + " " + err.message,
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast(err.statusCode + " " + err.message);
             });
     };
 
@@ -64,19 +58,13 @@ export const AssociationFilesystemEdit = ({ association }) => {
                             description: values.description,
                         })
                         .then((res) => {
-                            newToast({
-                                message: "Sauvegardé : " + res.name,
-                                level: ToastLevel.Success,
-                            });
-                            // history.push(
-                            //     `/associations/${association.id}/fichiers/${media.id}/`
-                            // );
+                            sendSuccessToast("Sauvegardé : " + res.name);
+                            history.push(
+                                `/associations/${association.id}/fichiers/${media.id}/`
+                            );
                         })
                         .catch((err) =>
-                            newToast({
-                                message: err.statusCode + " " + err.message,
-                                level: ToastLevel.Error,
-                            })
+                            sendErrorToast(err.statusCode + " " + err.message)
                         );
                 }}
             >

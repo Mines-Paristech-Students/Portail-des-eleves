@@ -31,9 +31,6 @@ class EventSerializer(serializers.ModelSerializer):
     association = serializers.PrimaryKeyRelatedField(
         queryset=Association.objects.all(), read_only=False
     )
-    participants = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), many=True, read_only=False
-    )
 
     class Meta:
         model = Event
@@ -42,7 +39,6 @@ class EventSerializer(serializers.ModelSerializer):
             "association",
             "name",
             "description",
-            "participants",
             "starts_at",
             "ends_at",
             "place",

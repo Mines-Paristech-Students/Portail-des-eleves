@@ -7,23 +7,17 @@ import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 
 export const PollVotingForm = ({ poll }: { poll: Poll }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const user = useContext(UserContext);
     const [vote] = useMutation(api.polls.vote, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["polls.list"]);
-
-            if (response.status === 201) {
-                newToast({
-                    message: "Vous avez voté.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Vous avez voté.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
@@ -44,12 +38,11 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
                     break;
             }
 
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     detail === "" ? "" : "Détails : " + detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 

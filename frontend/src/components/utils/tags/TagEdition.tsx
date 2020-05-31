@@ -2,6 +2,13 @@ import { api } from "../../../services/apiService";
 import { ToastContext, ToastLevel } from "../Toast";
 import React, { useContext } from "react";
 import { TagSelector } from "./TagSelector";
+import { Namespace, Tag } from "../../../models/tag";
+import { tablerColors, tablerColorsHex } from "../../../utils/colors";
+import { hashCode } from "../../../utils/hashcode";
+import "./TagEdition.css";
+import Fuse from "fuse.js";
+import { ToastContext } from "../Toast";
+import Select from "react-select";
 
 /**
  * Generic component to manage the tags of one object
@@ -9,7 +16,7 @@ import { TagSelector } from "./TagSelector";
  * @param id the id of the object ("bde", 1, 2...)
  */
 export const TagEdition = ({ model, id }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     // API Helpers to bind and remove tags
     const bindTag = (newTag) => {
@@ -17,17 +24,11 @@ export const TagEdition = ({ model, id }) => {
             .bind(model, id, newTag.id)
             .then((res) => {
                 if (res !== "Tag is already linked") {
-                    newToast({
-                        message: "Tag ajouté.",
-                        level: ToastLevel.Success,
-                    });
+                    sendSuccessToast("Tag ajouté.");
                 }
             })
             .catch(() => {
-                newToast({
-                    message: "Erreur lors de l'ajout du tag.",
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast("Erreur lors de l'ajout du tag.");
             });
     };
 
@@ -35,16 +36,10 @@ export const TagEdition = ({ model, id }) => {
         api.tags
             .unbind(model, id, tag.id)
             .then((_) => {
-                newToast({
-                    message: "Tag retiré.",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("Tag retiré.");
             })
             .catch(() => {
-                newToast({
-                    message: "Erreur lors du retrait du tag.",
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast("Erreur lors du retrait du tag.");
             });
     };
 

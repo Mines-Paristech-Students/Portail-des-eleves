@@ -1,9 +1,5 @@
-/*
- * This file mainly contains helper functions useful for formatting dates.
- * One could think using a library like `moment.js` would be better. However, such a library may cover way too many
- * features for our needs, introducing a loading overhead. This is why we'd rather stay with those "artisanal" functions
- * for now.
- */
+import { Fragment } from "react";
+import React from "react";
 
 export const MONTHS: string[] = [
     "Janvier",
@@ -75,12 +71,6 @@ export const formatDate = (date?: Date) =>
         : "";
 
 /**
- * Return the last two digits of a year (the return value always has two digits).
- */
-export const formatShortYear = (year: number) =>
-    (year % 100).toString().padStart(2, "0");
-
-/**
  * Format a date as `HH:mm`.
  * The hours and the minutes are left-padded with "0" until reaching two digits.
  */
@@ -99,3 +89,26 @@ export const decidePlural = (
     singularForm: string,
     pluralForm: string
 ) => (Math.abs(decider) < 2 ? singularForm : pluralForm);
+
+/**
+ * Formats a price with nice decimals and the euro sign
+ * @param price the value to format
+ */
+export const formatPrice = (price) =>
+    Number(price).toLocaleString("fr-FR", {
+        minimumFractionDigits: 2,
+        currency: "EUR",
+        style: "currency",
+    });
+
+/**
+ * Converts plain text to React fragment to display newlines as <br/>
+ * @param text
+ */
+export const formatNewLines = (text) =>
+    text.split("\n").map((item, key) => (
+        <Fragment key={key}>
+            {item}
+            <br />
+        </Fragment>
+    ));

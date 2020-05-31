@@ -1,7 +1,5 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
-from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
 from authentication.models import ProfileQuestion, ProfileAnswer

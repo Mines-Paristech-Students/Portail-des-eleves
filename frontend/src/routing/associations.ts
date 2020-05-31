@@ -19,6 +19,8 @@ import { AssociationMarketplaceProductEdit } from "../components/associations/ma
 import { Association } from "../models/associations/association";
 import { Route } from "./global";
 import { AssociationCreateEvent } from "../components/associations/events/create/AssociationCreateEvent";
+import { AssociationEditEvent } from "../components/associations/events/edit/AssociationEditEvent";
+import { AssociationRolesAdministration } from "../components/associations/roles/administration/AssociationRolesAdministration";
 
 type AssociationRoute = Route & {
     props: object;
@@ -50,12 +52,40 @@ export const routes: (association: Association) => AssociationRoute[] = (
         path: `/evenements`,
         component: AssociationListEvents,
         exact: true,
-        props: { association: association },
-        defaultLayout: false,
+        props: {
+            association: association,
+            title: "Événements à venir",
+            apiParameters: {
+                time: ["NOW", "AFTER"],
+                ordering: "starts_at",
+            },
+        },
+        defaultLayout: true,
     },
     {
-        path: `/evenements/nouveau`,
+        path: `/evenements/passes`,
+        component: AssociationListEvents,
+        exact: true,
+        props: {
+            association: association,
+            title: "Événements passés",
+            apiParameters: {
+                time: ["BEFORE"],
+                ordering: "-starts_at",
+            },
+        },
+        defaultLayout: true,
+    },
+    {
+        path: `/evenements/creer`,
         component: AssociationCreateEvent,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/evenements/:eventId/modifier`,
+        component: AssociationEditEvent,
         exact: true,
         props: { association: association },
         defaultLayout: true,
@@ -115,7 +145,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/historique`,
@@ -130,7 +160,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/comptoir`,
@@ -144,7 +174,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/produits/:productId/modifier`,
@@ -153,7 +183,27 @@ export const routes: (association: Association) => AssociationRoute[] = (
         props: { association: association },
         defaultLayout: true,
     },
-
+    {
+        path: "/membres/",
+        component: (...props) => null,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: "/membres/anciens",
+        component: (...props) => null,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: "/membres/administration",
+        component: AssociationRolesAdministration,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
     {
         path: `/parametres`,
         component: AssociationSettings,
