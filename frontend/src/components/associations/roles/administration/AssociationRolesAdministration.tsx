@@ -48,6 +48,59 @@ const DeleteRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     </OverlayTrigger>
 );
 
+const columnData = (setEditRole) => [
+    {
+        key: "member",
+        header: "Membre",
+        render: (role: Role) =>
+            [role.user.firstName, role.user.lastName].join(" "),
+        canSort: true,
+    },
+    {
+        key: "role",
+        header: "Rôle",
+        canSort: true,
+    },
+    {
+        key: "startDate",
+        header: "Début",
+        render: (role: Role) => dayjs(role.startDate).format("DD/MM/YYYY"),
+        canSort: true,
+    },
+    {
+        key: "endDate",
+        header: "Fin",
+        render: (role: Role) =>
+            role.endDate ? dayjs(role.endDate).format("DD/MM/YYYY") : "",
+        canSort: true,
+    },
+    {
+        key: "permissions",
+        header: "Permissions",
+        render: (role: Role) => (
+            <>
+                {role.permissions.map((permission) => (
+                    <RolePermissionIcon
+                        key={permission}
+                        permission={permission}
+                        className="mr-1"
+                    />
+                ))}
+            </>
+        ),
+    },
+    {
+        key: "actions",
+        header: "Actions",
+        render: (role: Role) => (
+            <>
+                <EditRoleButton handleClick={() => setEditRole(role)} />
+                <DeleteRoleButton handleClick={() => console.log("delete")} />
+            </>
+        ),
+    },
+];
+
 export const AssociationRolesAdministration = ({
     association,
 }: {
@@ -56,62 +109,7 @@ export const AssociationRolesAdministration = ({
     // The Role currently edited in the modal.
     const [, setEditRole] = useState<Role | null>(null);
 
-    const columnData = [
-        {
-            key: "member",
-            header: "Membre",
-            render: (role: Role) =>
-                [role.user.firstName, role.user.lastName].join(" "),
-            canSort: true,
-        },
-        {
-            key: "role",
-            header: "Rôle",
-            canSort: true,
-        },
-        {
-            key: "startDate",
-            header: "Début",
-            render: (role: Role) => dayjs(role.startDate).format("DD/MM/YYYY"),
-            canSort: true,
-        },
-        {
-            key: "endDate",
-            header: "Fin",
-            render: (role: Role) =>
-                role.endDate ? dayjs(role.endDate).format("DD/MM/YYYY") : "",
-            canSort: true,
-        },
-        {
-            key: "permissions",
-            header: "Permissions",
-            render: (role: Role) => (
-                <>
-                    {role.permissions.map((permission) => (
-                        <RolePermissionIcon
-                            key={permission}
-                            permission={permission}
-                            className="mr-1"
-                        />
-                    ))}
-                </>
-            ),
-        },
-        {
-            key: "actions",
-            header: "Actions",
-            render: (role: Role) => (
-                <>
-                    <EditRoleButton handleClick={() => setEditRole(role)} />
-                    <DeleteRoleButton
-                        handleClick={() => console.log("delete")}
-                    />
-                </>
-            ),
-        },
-    ];
-
-    const { columns, sorting } = useColumns<Role>(columnData);
+    const { columns, sorting } = useColumns<Role>(columnData(setEditRole));
 
     return (
         <>
