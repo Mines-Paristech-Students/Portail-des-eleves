@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Association } from "../../../../models/associations/association";
 import { PageTitle } from "../../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/Container";
 import dayjs from "dayjs";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
@@ -40,7 +41,7 @@ export const AssociationCreateEvent = ({
     }
 
     return (
-        <>
+        <Container className="mt-5">
             <PageTitle>
                 <Link
                     className="text-decoration-none"
@@ -75,6 +76,6 @@ export const AssociationCreateEvent = ({
                     }
                 />
             </Card>
-        </>
+        </Container>
     );
 };

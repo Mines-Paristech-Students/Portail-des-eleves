@@ -17,6 +17,7 @@ import { AxiosError } from "axios";
 import { CardStatus } from "../../../utils/CardStatus";
 import { TablerColor } from "../../../../utils/colors";
 import { EventDate } from "./EventDate";
+import { UserContext } from "../../../../services/authService";
 
 /**
  * Display an Event in a Card, as well as a link to join / leave the event.
@@ -27,14 +28,13 @@ import { EventDate } from "./EventDate";
 export const EventCard = ({
     association,
     event,
-    userId,
     canEdit = false,
 }: {
     association: Association;
     event: Event;
-    userId?: string;
     canEdit?: boolean;
 }) => {
+    const user = useContext(UserContext);
     const isOver = () => new Date() > event.endsAt;
 
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
@@ -91,9 +91,7 @@ export const EventCard = ({
             />
 
             <Card.Header>
-                <Card.Title className={isOver() ? "text-muted" : ""}>
-                    {event.name}
-                </Card.Title>
+                <Card.Title>{event.name}</Card.Title>
 
                 <div className="card-options">
                     {canEdit && (
@@ -107,10 +105,10 @@ export const EventCard = ({
 
                     {!isOver() && (
                         <>
-                            {userId &&
+                            {user &&
                             event.participants
                                 .map((participant) => participant.id)
-                                .includes(userId) ? (
+                                .includes(user.id) ? (
                                 <Button
                                     className="btn-sm"
                                     variant="secondary"
