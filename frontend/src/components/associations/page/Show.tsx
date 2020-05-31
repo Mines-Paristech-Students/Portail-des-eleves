@@ -13,26 +13,25 @@ export const AssociationShowPage = ({ association }) => {
         api.pages.get
     );
 
-    if (status === "loading") return <LoadingAssociation />;
-    else if (status === "error")
-        return (
-            <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
-        );
-    else if (data) {
-        return (
-            <div>
-                <PageTitle>{data.title}</PageTitle>
-                <p>
-                    <Link
-                        to={`/associations/${association.id}/pages/${pageId}/modifier`}
-                    >
-                        Editer
-                    </Link>
-                </p>
-                <p>{data.text}</p>
-            </div>
-        );
-    }
-
-    return null;
+    return status === "loading" ? (
+        <LoadingAssociation />
+    ) : status === "error" ? (
+        <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
+    ) : data ? (
+        <AssociationPageRenderer association={association} page={data} />
+    ) : null;
 };
+
+export const AssociationPageRenderer = ({ association, page }) => (
+    <>
+        <PageTitle>{page.title}</PageTitle>
+        <p>
+            <Link
+                to={`/associations/${association.id}/pages/${page.id}/modifier`}
+            >
+                Modifier
+            </Link>
+        </p>
+        <p>{page.text}</p>
+    </>
+);

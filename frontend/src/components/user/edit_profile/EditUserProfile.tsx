@@ -15,7 +15,7 @@ import { SelectGroup } from "../../utils/forms/SelectGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { queryCache, useMutation } from "react-query";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { AxiosError } from "axios";
 import * as Yup from "yup";
 import { SelectUsers } from "../../utils/forms/SelectUsers";
@@ -138,7 +138,7 @@ export const getData = (values: { [key: string]: any }) => {
  * A form which allows the user to edit its profile.
  */
 export const EditUserProfile = () => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const user = useContext(UserContext);
 
     // The profile data.
@@ -173,22 +173,17 @@ export const EditUserProfile = () => {
             {
                 onSuccess: () => {
                     queryCache.refetchQueries(["profile.get"]);
-                    newToast({
-                        message: "Profil mis à jour.",
-                        level: ToastLevel.Success,
-                    });
+                    sendSuccessToast("Profil mis à jour.");
                 },
                 onError: (errorAsUnknown) => {
                     const error = errorAsUnknown as AxiosError;
-
-                    newToast({
-                        message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+                    sendErrorToast(
+                        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                             error.response === undefined
                                 ? ""
                                 : "Détails :" + error.response.data.detail
-                        }`,
-                        level: ToastLevel.Error,
-                    });
+                        }`
+                    );
                 },
                 onSettled: setSubmitting(false),
             }

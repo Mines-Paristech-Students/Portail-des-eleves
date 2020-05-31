@@ -20,7 +20,6 @@ class MediaViewSet(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
 
-    # filterset_fields = ("association", "tags", "tags__id", "id")
     filter_class = MediaFilter
     parser_classes = (MultiPartParser,)
     permission_classes = (CanEditMedia,)

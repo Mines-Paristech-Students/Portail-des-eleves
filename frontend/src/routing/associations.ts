@@ -10,6 +10,7 @@ import { AssociationFilesystemList } from "../components/associations/medias/Lis
 import { AssociationFilesystemDetail } from "../components/associations/medias/Detail";
 import { AssociationFilesystemEdit } from "../components/associations/medias/Edit";
 import { AssociationFilesystemUpload } from "../components/associations/medias/Upload";
+import { AssociationListEvents } from "../components/associations/events/list/AssociationListEvents";
 import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
 import { AssociationMarketplaceProductAdministration } from "../components/associations/marketplace/ProductsAdministration";
 import { AssociationMarketplaceOrders } from "../components/associations/marketplace/Orders";
@@ -17,6 +18,8 @@ import { AssociationMarketplaceCounter } from "../components/associations/market
 import { AssociationMarketplaceProductEdit } from "../components/associations/marketplace/ProductEdit";
 import { Association } from "../models/associations/association";
 import { Route } from "./global";
+import { AssociationCreateEvent } from "../components/associations/events/create/AssociationCreateEvent";
+import { AssociationEditEvent } from "../components/associations/events/edit/AssociationEditEvent";
 
 type AssociationRoute = Route & {
     props: object;
@@ -45,6 +48,27 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: true,
     },
     {
+        path: `/evenements`,
+        component: AssociationListEvents,
+        exact: true,
+        props: { association: association },
+        defaultLayout: false,
+    },
+    {
+        path: `/evenements/nouveau`,
+        component: AssociationCreateEvent,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
+        path: `/evenements/:eventId/modifier`,
+        component: AssociationEditEvent,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+    {
         path: `/pages/nouvelle`,
         component: AssociationCreatePage,
         exact: true,
@@ -65,7 +89,6 @@ export const routes: (association: Association) => AssociationRoute[] = (
         props: { association: association },
         defaultLayout: true,
     },
-
     {
         path: `/fichiers`,
         component: AssociationFilesystemList,
@@ -100,7 +123,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceHome,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/historique`,
@@ -115,7 +138,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceOrders,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/comptoir`,
@@ -129,7 +152,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         component: AssociationMarketplaceProductAdministration,
         exact: true,
         props: { association: association },
-        defaultLayout: true,
+        defaultLayout: false,
     },
     {
         path: `/magasin/produits/:productId/modifier`,

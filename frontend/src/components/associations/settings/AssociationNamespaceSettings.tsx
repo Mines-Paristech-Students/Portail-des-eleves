@@ -22,13 +22,13 @@ import { Tag as TagModel } from "../../../models/tag";
 import { tablerColors } from "../../../utils/colors";
 import { hashCode } from "../../../utils/hashcode";
 import { queryCache, useMutation } from "react-query";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { AxiosError } from "axios";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 export const AssociationNamespaceSettings = ({ association }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const [
         selectedNamespace,
@@ -36,19 +36,15 @@ export const AssociationNamespaceSettings = ({ association }) => {
     ] = useState<Namespace | null>(null);
 
     const [createNamespace] = useMutation(api.namespaces.create, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries("association.namespaces.list");
-            newToast({
-                message: "Namespace ajouté",
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast("Namespace ajouté");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`,
-                level: ToastLevel.Error,
-            });
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`
+            );
         },
     });
 
@@ -163,7 +159,7 @@ const ListNamespaceTags = ({ namespace, setSelectedNamespace }) => {
 };
 
 const NamespaceTagsModal = ({ namespace, closeModal }) => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
     const { data, status, error } = useBetterQuery<
         PaginatedResponse<TagModel[]>
@@ -173,19 +169,15 @@ const NamespaceTagsModal = ({ namespace, closeModal }) => {
     );
 
     const [mutate] = useMutation(api.namespaces.delete, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries("association.namespaces.list");
-            newToast({
-                message: "Namespace supprimé",
-                level: ToastLevel.Success,
-            });
+            sendSuccessToast("Namespace supprimé");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`,
-                level: ToastLevel.Error,
-            });
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`
+            );
         },
     });
 

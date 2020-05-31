@@ -8,34 +8,26 @@ import * as Yup from "yup";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { PageTitle } from "../../utils/PageTitle";
 import { api } from "../../../services/apiService";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 
 export const SubmitPoll = () => {
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [create] = useMutation(api.polls.create, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["polls.list"]);
-
-            if (response.status === 201) {
-                newToast({
-                    message: "Sondage envoyé.",
-                    level: ToastLevel.Success,
-                });
-            }
+            sendSuccessToast("Sondage envoyé.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
-
-            newToast({
-                message: `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+            sendErrorToast(
+                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
                     error.response === undefined
                         ? ""
                         : "Détails :" + error.response.data.detail
-                }`,
-                level: ToastLevel.Error,
-            });
+                }`
+            );
         },
     });
 
@@ -65,8 +57,8 @@ export const SubmitPoll = () => {
         create(
             { data },
             {
-                onSuccess: resetForm(),
-                onSettled: setSubmitting(false),
+                onSuccess: resetForm,
+                onSettled: () => setSubmitting(false),
             }
         );
     };

@@ -9,55 +9,33 @@ import {
     TransactionStatus,
 } from "../../../models/associations/marketplace";
 import { OverlayTrigger, Tooltip, Overlay } from "react-bootstrap";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { formatDate } from "../../../utils/format";
+import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
+import { AssociationLayout } from "../Layout";
+import { SidebarUserSearch } from "../../utils/sidebar/SidebarUserSearch";
 
 export const AssociationMarketplaceOrders = ({ association }) => {
     const marketplaceId = association.id;
-    const columns = [
-        {
-            key: "product",
-            header: "Produit",
-            render: (transaction) => transaction.product.name,
-        },
-        {
-            key: "quantity",
-            header: "Quantité",
-            headerClassName: "text-center",
-            cellClassName: "text-center",
-        },
-        {
-            key: "date",
-            header: "Date",
-            render: (transaction) => formatDate(new Date(transaction.date)),
-            headerClassName: "text-center",
-            cellClassName: "text-center",
-        },
-        {
-            key: "value",
-            header: "Valeur",
-            headerClassName: "text-right",
-            cellClassName: "text-right",
-            render: (transaction) => transaction.value + "€",
-        },
-        {
-            key: "buyer",
-            header: "Utilisateur",
-            render: (transaction) => transaction.buyer,
-            headerClassName: "text-center",
-            cellClassName: "text-center",
-        },
-        {
-            key: "status",
-            header: "Status",
-            render: (transaction) => (
-                <TransactionStatusSelector transaction={transaction} />
-            ),
-        },
-    ];
+
+    const [searchParams, setSearchParams] = useState({});
+    const [userParams, setUserParams] = useState({});
 
     return (
-        <>
+        <AssociationLayout
+            association={association}
+            additionalSidebar={
+                <>
+                    <SidebarSeparator />
+                    <SidebarUserSearch
+                        setParams={setUserParams}
+                        userName={"buyer"}
+                    />
+                    <SidebarInputSearch setParams={setSearchParams} />
+                </>
+            }
+        >
             <PageTitle>Commandes</PageTitle>
 
             <Pagination
@@ -72,7 +50,12 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                 apiKey={[
                     "transactions.list.admin",
                     marketplaceId,
-                    { page_size: 10, ordering: "-date" },
+                    {
+                        page_size: 10,
+                        ordering: "-date",
+                        ...searchParams,
+                        ...userParams,
+                    },
                 ]}
                 apiMethod={api.transactions.list}
                 config={{ refetchOnWindowFocus: false }}
@@ -80,9 +63,51 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                     className: "justify-content-center mt-5",
                 }}
             />
-        </>
+        </AssociationLayout>
     );
 };
+
+const columns = [
+    {
+        key: "product",
+        header: "Produit",
+        render: (transaction) => transaction.product.name,
+    },
+    {
+        key: "quantity",
+        header: "Quantité",
+        headerClassName: "text-center",
+        cellClassName: "text-center",
+    },
+    {
+        key: "date",
+        header: "Date",
+        render: (transaction) => formatDate(new Date(transaction.date)),
+        headerClassName: "text-center",
+        cellClassName: "text-center",
+    },
+    {
+        key: "value",
+        header: "Valeur",
+        headerClassName: "text-right",
+        cellClassName: "text-right",
+        render: (transaction) => transaction.value + "€",
+    },
+    {
+        key: "buyer",
+        header: "Utilisateur",
+        render: (transaction) => transaction.buyer,
+        headerClassName: "text-center",
+        cellClassName: "text-center",
+    },
+    {
+        key: "status",
+        header: "Status",
+        render: (transaction) => (
+            <TransactionStatusSelector transaction={transaction} />
+        ),
+    },
+];
 
 const TransactionStatusSelector = ({
     transaction,
@@ -102,7 +127,7 @@ const TransactionStatusSelector = ({
         (item) => item[0] === transaction.status
     )[0];
 
-    const newToast = useContext(ToastContext);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const [isOpen, setIsOpen] = useState(false);
     const target = useRef(null);
 
@@ -112,16 +137,10 @@ const TransactionStatusSelector = ({
         api.transactions
             .patch({ id: transaction.id, status: status })
             .then((_) => {
-                newToast({
-                    message: "Le statut a bien été modifié",
-                    level: ToastLevel.Success,
-                });
+                sendSuccessToast("Le statut a bien été modifié");
             })
             .catch((err) => {
-                newToast({
-                    message: "Erreur durant la modification : " + err,
-                    level: ToastLevel.Error,
-                });
+                sendErrorToast("Erreur durant la modification : " + err);
             });
     };
 

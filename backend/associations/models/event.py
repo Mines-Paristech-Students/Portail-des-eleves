@@ -12,7 +12,7 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
 
-    participants = models.ManyToManyField(User, related_name="events")
+    participants = models.ManyToManyField(User, related_name="events", default=[])
 
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()

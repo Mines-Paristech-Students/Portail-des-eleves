@@ -4,7 +4,7 @@ from associations.permissions.election import (
     ResultsPermission,
     BallotPermission,
 )
-from associations.permissions.event import EventsPermission
+from associations.permissions.event import EventsPermission, JoinEventPermission
 from associations.permissions.media import CanEditMedia
 from associations.permissions.library import (
     LibraryPermission,
