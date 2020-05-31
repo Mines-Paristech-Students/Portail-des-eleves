@@ -54,9 +54,13 @@ export const Pagination = ({
     const [page, setPage] = useURLState("page", 1);
     const [maxPage, setMaxPage] = useState(1);
 
-    // We have to use this "temporized" field to make sure we always update the
-    // page before the parameters, in  order to avoid unnecessary requests
-    // which might end up in 404
+    // Before propagating a change of `apiKey`, we reset the page to 1.
+    // Indeed, if the `apiKey` induces a change of the maximum available page
+    // (e.g. if `apiKey` contains a filter), we don't want the “old” page prop
+    // to exceed this maximum.
+    // However, changing the page may trigger a rerendering of the component
+    // using `Pagination`, which, in turn, may change the `apiKey` prop, losing the
+    // initial key. Hence we save this “initial” key in `temporizedApiKey`.
     const [temporizedApiKey, setTemporizedApiKey] = useState<any[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
     useEffect(() => {
