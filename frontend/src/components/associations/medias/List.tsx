@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";

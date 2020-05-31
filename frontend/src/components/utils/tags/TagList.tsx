@@ -1,12 +1,7 @@
-import {
-    api,
-    PaginatedResponse,
-    useBetterQuery,
-} from "../../../services/apiService";
+import { api } from "../../../services/apiService";
 import React, { useEffect, useState } from "react";
 import { Tag as TagComponent } from "./Tag";
 import { Tag } from "../../../models/tag";
-import { Loading } from "../Loading";
 
 export enum TaggableModel {
     Association = "association",
@@ -45,7 +40,7 @@ export const TagList = ({
                 setTags(response.results);
             });
         }
-    });
+    }, [instance.tags, instance.id, model]);
 
     return (
         <div {...props}>
