@@ -6,7 +6,7 @@ import { ProgressBar } from "react-bootstrap";
 
 // Sub-component used to upload a media
 export const FileUpload = ({ media, association, onComplete }) => {
-    let [progress, setProgress] = useState<number>(0);
+    const [progress, setProgress] = useState<number>(0);
 
     useEffect(() => {
         // Use effect to submit the media only once
