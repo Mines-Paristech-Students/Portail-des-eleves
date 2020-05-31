@@ -49,8 +49,8 @@ export const AssociationFilesystemList = ({ association }) => {
                                 to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-3"}
                             >
-                                <span className="fe fe-upload" />{" "}
-                                Ajouter des fichiers
+                                <span className="fe fe-upload" /> Ajouter des
+                                fichiers
                             </Link>
                         )}
                         <PageTitle className={"mt-6"}>Fichiers</PageTitle>
@@ -82,7 +82,8 @@ export const AssociationFilesystemList = ({ association }) => {
                                 );
                             })}
                         </div>
-                        {medias.length === 0 && Object.entries(tagParams).length === 0 && (
+                        {medias.length === 0 &&
+                            Object.entries(tagParams).length === 0 && (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
@@ -105,11 +106,12 @@ export const AssociationFilesystemList = ({ association }) => {
 
                         {paginationControl}
 
-                        {medias.length === 0 && Object.entries(tagParams).length > 0 && (
-                            <Card className="text-center lead">
-                                <Card.Body>Aucun fichier trouvé</Card.Body>
-                            </Card>
-                        )}
+                        {medias.length === 0 &&
+                            Object.entries(tagParams).length > 0 && (
+                                <Card className="text-center lead">
+                                    <Card.Body>Aucun fichier trouvé</Card.Body>
+                                </Card>
+                            )}
                     </>
                 )}
             />
