@@ -16,16 +16,6 @@ export const AssociationFilesystemDetail = ({ association }) => {
         api.medias.get
     );
 
-    // let preview;
-    // if (media.type.startsWith("image")) {
-    //     preview = (
-    //         <img
-    //             src={media.media}
-    //             alt={media.name}
-    //             className={"mb-2 rounded"}
-    //         />
-    //     );
-    // }
 
     return status === "loading" ? (
         <Loading />
