@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
 import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
@@ -49,15 +48,15 @@ export const AssociationFilesystemList = ({ association }) => {
                                 to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-3"}
                             >
-                                <i className="fe fe-upload" />
-                                Ajouter des fichiers
+                                <span className="fe fe-upload" /> Ajouter des
+                                fichiers
                             </Link>
                         )}
                         <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-                        <Row>
+                        <div className={"card-columns"}>
                             {medias.map((media) => {
                                 return (
-                                    <Col md={4} key={media.id}>
+                                    <Col key={media.id}>
                                         <Card
                                             onClick={() =>
                                                 history.push(
@@ -73,7 +72,7 @@ export const AssociationFilesystemList = ({ association }) => {
 
                                                 <TagList
                                                     model={TaggableModel.Media}
-                                                    id={media.id}
+                                                    instance={media}
                                                     collapsed={true}
                                                 />
                                             </Card.Body>
@@ -81,8 +80,9 @@ export const AssociationFilesystemList = ({ association }) => {
                                     </Col>
                                 );
                             })}
-
-                            {medias.length === 0 && (
+                        </div>
+                        {medias.length === 0 &&
+                            Object.entries(tagParams).length === 0 && (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
@@ -102,14 +102,15 @@ export const AssociationFilesystemList = ({ association }) => {
                                     )}
                                 </Instructions>
                             )}
-                        </Row>
+
                         {paginationControl}
 
-                        {medias.length === 0 && (
-                            <Card className="text-center lead">
-                                <Card.Body>Aucun fichier trouvé</Card.Body>
-                            </Card>
-                        )}
+                        {medias.length === 0 &&
+                            Object.entries(tagParams).length > 0 && (
+                                <Card className="text-center lead">
+                                    <Card.Body>Aucun fichier trouvé</Card.Body>
+                                </Card>
+                            )}
                     </>
                 )}
             />
