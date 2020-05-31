@@ -20,9 +20,15 @@ class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = (RolePermission,)
-    serializer_class = RoleSerializer
-
     filter_fields = ("user", "association")
+    ordering_fields = (
+        "user__first_name",
+        "user__last_name",
+        "role",
+        "rank",
+        "start_date",
+        "end_date",
+    )
 
     def get_write_role_serializer(self, association, *args, **kwargs):
         """Given an association, return the good WriteRoleSerializer, depending on the permissions of the user."""

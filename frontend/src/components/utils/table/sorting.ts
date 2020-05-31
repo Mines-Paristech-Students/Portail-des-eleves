@@ -41,7 +41,6 @@ export const cycleSorting = (current?: Sorting) =>
 export const sortingToApiParameter = (
     sorting: any,
     mapping?: any,
-    parameterName: string = "ordering"
 ) => {
     if (sorting === undefined) {
         return "";
@@ -50,9 +49,9 @@ export const sortingToApiParameter = (
     for (let key of Object.getOwnPropertyNames(sorting)) {
         switch (sorting[key]) {
             case Sorting.Ascending:
-                return `${parameterName}=${mapping ? mapping[key] : key}`;
+                return `${mapping ? mapping[key] : key}`;
             case Sorting.Descending:
-                return `${parameterName}=-${mapping ? mapping[key] : key}`;
+                return `-${mapping ? mapping[key] : key}`;
         }
     }
 

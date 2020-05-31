@@ -1,3 +1,5 @@
+import { User } from "../user";
+
 export type RolePermission =
     | "administration"
     | "election"
@@ -10,6 +12,7 @@ export type RolePermission =
 export interface Role {
     id: number;
     association: { id: string; name: string; logo?: string };
+    user: User;
     role: string;
     rank: number;
     startDate: Date;

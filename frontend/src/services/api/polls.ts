@@ -66,7 +66,6 @@ export const polls = {
                             user: "user__pk",
                             state: "state",
                         },
-                        `ordering`
                     ),
                 ],
                 "&"

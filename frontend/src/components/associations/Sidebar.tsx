@@ -48,6 +48,13 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
+                <SidebarItem
+                    icon={"users"}
+                    to={`/associations/${association.id}/membres`}
+                    exact={false}
+                >
+                    Membres
+                </SidebarItem>
                 {association.myRole.permissions?.includes("administration") && (
                     <SidebarItem
                         icon={"settings"}
@@ -60,6 +67,7 @@ export const AssociationSidebar = ({ association }) => {
                     <MarketSubNavbar association={association} />
                 )}
                 <EventSubSidebar association={association} />
+                <RolesSubSidebar association={association} />
             </Sidebar>
         );
     }
@@ -154,6 +162,37 @@ const MarketSubNavbar = ({ association }) => {
             >
                 Produits
             </SidebarItem>
+        </>
+    ) : null;
+};
+
+const RolesSubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/membres`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"users"}
+                to={`/associations/${association.id}/membres`}
+            >
+                Actuels
+            </SidebarItem>
+            <SidebarItem
+                icon={"inbox"}
+                to={`/associations/${association.id}/membres/anciens`}
+            >
+                Anciens
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("administration") && (
+                <SidebarItem
+                    icon={"settings"}
+                    to={`/associations/${association.id}/membres/administration`}
+                >
+                    Gestion
+                </SidebarItem>
+            )}
         </>
     ) : null;
 };
