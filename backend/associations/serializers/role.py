@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from associations.models import Role
 from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
+from authentication.serializers.user_short import UserShortSerializer
 
 
 class WriteRoleSerializer(serializers.ModelSerializer):
@@ -84,7 +85,7 @@ class WriteRoleSerializer(serializers.ModelSerializer):
 
 class RoleSerializer(serializers.ModelSerializer):
     association = AssociationShortSerializer(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = UserShortSerializer(read_only=True)
     permissions = serializers.SerializerMethodField()
 
     class Meta:
