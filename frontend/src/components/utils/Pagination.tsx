@@ -37,7 +37,6 @@ import { useURLState } from "../../utils/useURLState";
 export const Pagination = ({
     render,
     apiKey,
-    apiParameters = {},
     apiMethod,
     config,
     paginationControlProps,
@@ -46,7 +45,6 @@ export const Pagination = ({
 }: {
     render: any;
     apiKey: any[];
-    apiParameters?: object;
     apiMethod: (...params: any) => any;
     config?: any;
     paginationControlProps?: object;
@@ -59,10 +57,10 @@ export const Pagination = ({
     // We have to use this "temporized" field to make sure we always update the
     // page before the parameters, in  order to avoid unnecessary requests
     // which might end up in 404
-    const [temporizedApiParameters, setTemporizedApiParameters] = useState({});
+    const [temporizedApiKey, setTemporizedApiKey] = useState<any[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
     useEffect(() => {
-        setTemporizedApiParameters(apiParameters);
+        setTemporizedApiKey(apiKey);
 
         // Don't change the page the first time the component is updated
         if (!isInitialized) {
@@ -72,14 +70,14 @@ export const Pagination = ({
 
         setPage(1);
         // Use stringify because an object isn't equal to itself in JS
-        // We want to trigger an action only when the apiParameters (most of
+        // We want to trigger an action only when the apiKey (most of
         // the time additional search  fields) are changed, and don't depend
         // on other variables, hence :
         // eslint-disable-next-line
-    }, [JSON.stringify(apiParameters)]);
+    }, [JSON.stringify(apiKey)]);
 
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
-        [...apiKey, temporizedApiParameters, page],
+        [...temporizedApiKey, page],
         apiMethod,
         config
     );
@@ -97,7 +95,7 @@ export const Pagination = ({
             }
             setPrevApiKey(apiKeyJSON);
         }
-    }, [apiKey, prevApiKey]);
+    }, [apiKey, prevApiKey, setPrevApiKey, setPage]);
 
     useEffect(() => {
         if (data && data.totalPages) {
