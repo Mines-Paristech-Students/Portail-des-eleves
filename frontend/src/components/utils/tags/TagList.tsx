@@ -3,7 +3,7 @@ import {
     PaginatedResponse,
     useBetterQuery,
 } from "../../../services/apiService";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tag as TagComponent } from "./Tag";
 import { Tag } from "../../../models/tag";
 import { Loading } from "../Loading";
@@ -26,28 +26,30 @@ export enum TaggableModel {
  */
 export const TagList = ({
     model,
-    id,
+    instance,
     collapsed = false,
     ...props
 }: {
     model: TaggableModel;
-    id: string;
+    instance: any;
     collapsed?: boolean;
     [key: string]: any;
 }) => {
-    const { data: tags, status, error } = useBetterQuery<
-        PaginatedResponse<Tag[]>
-    >(["tags.list", { [model]: id }], api.tags.list);
+    const [tags, setTags] = useState<Tag[]>([]);
 
-    return status === "loading" ? (
-        <Loading />
-    ) : status === "error" ? (
-        <p className={"text-danger"}>
-            Erreur lors du chargement des tags: {(error as any).toString()}
-        </p>
-    ) : tags ? (
+    useEffect(() => {
+        if (instance.tags) {
+            setTags(instance.tags);
+        } else {
+            api.tags.list({ [model]: instance.id }).then((response) => {
+                setTags(response.results);
+            });
+        }
+    });
+
+    return (
         <div {...props}>
-            {tags.results.map((tag) => (
+            {tags.map((tag) => (
                 <TagComponent
                     tag={tag.namespace.name}
                     addon={tag.value}
@@ -56,5 +58,5 @@ export const TagList = ({
                 />
             ))}
         </div>
-    ) : null;
+    );
 };

@@ -49,7 +49,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                 to={`/associations/${association.id}/fichiers/televerser`}
                                 className={"btn btn-success float-right mt-3"}
                             >
-                                <i className="fe fe-upload" />
+                                <span className="fe fe-upload" />{" "}
                                 Ajouter des fichiers
                             </Link>
                         )}
@@ -73,7 +73,7 @@ export const AssociationFilesystemList = ({ association }) => {
 
                                                 <TagList
                                                     model={TaggableModel.Media}
-                                                    id={media.id}
+                                                    instance={media}
                                                     collapsed={true}
                                                 />
                                             </Card.Body>
@@ -81,8 +81,8 @@ export const AssociationFilesystemList = ({ association }) => {
                                     </Col>
                                 );
                             })}
-
-                            {medias.length === 0 && (
+                        </div>
+                        {medias.length === 0 && Object.entries(tagParams).length === 0 && (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
@@ -102,10 +102,10 @@ export const AssociationFilesystemList = ({ association }) => {
                                     )}
                                 </Instructions>
                             )}
-                        </div>
+
                         {paginationControl}
 
-                        {medias.length === 0 && (
+                        {medias.length === 0 && Object.entries(tagParams).length > 0 && (
                             <Card className="text-center lead">
                                 <Card.Body>Aucun fichier trouvé</Card.Body>
                             </Card>

@@ -42,7 +42,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
 
             <TagList
                 model={TaggableModel.Media}
-                id={media.id}
+                instance={media}
                 className={"my-2"}
             />
 

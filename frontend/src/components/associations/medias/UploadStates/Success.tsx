@@ -101,7 +101,7 @@ export const FileUploadSuccess = ({ media, onDelete }) => {
                             </Button>
                             <TagList
                                 model={TaggableModel.Media}
-                                id={media.id}
+                                instance={media}
                             />
                         </Card.Footer>
                     </>
