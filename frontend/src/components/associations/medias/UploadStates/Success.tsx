@@ -8,8 +8,8 @@ import { TaggableModel, TagList } from "../../../utils/tags/TagList";
 
 // Sub-component used to edit information on a media once its upload is done
 export const FileUploadSuccess = ({ media, onDelete }) => {
-    let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
     const formik = useFormik({
         // Use a form to edit name and description
