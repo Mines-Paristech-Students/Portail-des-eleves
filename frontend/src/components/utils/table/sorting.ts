@@ -38,10 +38,7 @@ export const cycleSorting = (current?: Sorting) =>
  * converting camelCase into snake_case.
  * @param parameterName the name of the URL parameter. Defaults to `ordering`.
  */
-export const sortingToApiParameter = (
-    sorting: any,
-    mapping?: any,
-) => {
+export const sortingToApiParameter = (sorting: any, mapping?: any) => {
     if (sorting === undefined) {
         return "";
     }

@@ -54,7 +54,7 @@ export const AssociationRolesAdministration = ({
     association: Association;
 }) => {
     // The Role currently edited in the modal.
-    const [editRole, setEditRole] = useState<Role | null>(null);
+    const [, setEditRole] = useState<Role | null>(null);
 
     const columnData = [
         {

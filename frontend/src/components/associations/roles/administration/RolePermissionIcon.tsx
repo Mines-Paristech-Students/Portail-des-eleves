@@ -2,7 +2,6 @@ import React from "react";
 import { RolePermission } from "../../../../models/associations/role";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import Button from "react-bootstrap/Button";
 
 const icons = {
     administration: "settings",
