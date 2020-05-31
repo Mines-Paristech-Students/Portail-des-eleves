@@ -16,7 +16,7 @@ import {
     ListEventsSidebar,
     ListEventsSidebarParameters,
 } from "./ListEventsSidebar";
-import { EventsListParameters } from "../../../../services/api/events";
+import { ListEventsApiParameters } from "../../../../services/api/events";
 
 /**
  * The API parameters are a bit different of the sidebar parameters and thus need to be transformed.
@@ -24,7 +24,7 @@ import { EventsListParameters } from "../../../../services/api/events";
 const getParameters = (
     association: Association,
     sidebarParameters: ListEventsSidebarParameters
-): EventsListParameters => {
+): ListEventsApiParameters => {
     const newTime: ("NOW" | "BEFORE" | "AFTER")[] = [];
 
     if (sidebarParameters.time.before) {

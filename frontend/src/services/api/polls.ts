@@ -11,7 +11,7 @@ import { joinNonEmpty } from "../../utils/parameter";
 /**
  * Parse the `publicationDate` and `creationDateTime` JSON field.
  *
- * Should be called in a `then` after an `apiService.get("/polls/...")`.
+ * Should be called in a `then` after an `unwrap<PaginatedResponse<Poll[]>>`.
  */
 const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
     response.data.results.forEach((poll) => {
@@ -22,6 +22,12 @@ const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
     });
 
     return response;
+};
+
+export type ListPollsApiParameters = {
+    user: string;
+    state: "ACCEPTED" | "REJECTED" | "REVIEWING";
+    ordering: string;
 };
 
 const listGeneric = (parameters: string = "") => (page = 1) =>

@@ -7,7 +7,7 @@ import {
 import { Event } from "../../models/associations/event";
 import dayjs from "dayjs";
 
-export type EventsListParameters = {
+export type ListEventsApiParameters = {
     association: string;
     time: ("NOW" | "BEFORE" | "AFTER")[];
     starts_at_before?: Date;
@@ -17,7 +17,7 @@ export type EventsListParameters = {
 };
 
 export const events = {
-    list: (parameters: EventsListParameters, page: number) =>
+    list: (parameters: ListEventsApiParameters, page: number) =>
         unwrap<PaginatedResponse<Event[]>>(
             apiService.get(
                 `/associations/events/${toUrlParams({
