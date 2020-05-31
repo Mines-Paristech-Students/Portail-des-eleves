@@ -6,27 +6,27 @@ import { PollsTableUser } from "../components/polls/table/PollsTableUser";
 
 export const routes: Route[] = [
     {
-        path: "/sondages",
+        path: "",
         component: () => ListPolls({ current: true }),
         exact: true,
     },
     {
-        path: "/sondages/anciens",
+        path: "/anciens",
         component: () => ListPolls({ current: false }),
         exact: true,
     },
     {
-        path: "/sondages/administration",
+        path: "/administration",
         component: PollsTableAdmin,
         exact: true,
     },
     {
-        path: "/sondages/mes-sondages",
+        path: "/mes-sondages",
         component: PollsTableUser,
         exact: true,
     },
     {
-        path: "/sondages/proposer",
+        path: "/proposer",
         component: SubmitPoll,
         exact: true,
     },

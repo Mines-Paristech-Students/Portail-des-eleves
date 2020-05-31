@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React  from "react";
 import {
     BrowserRouter as Router,
     Route,
@@ -23,16 +23,28 @@ export const AssociationRouter = ({ match }) => {
         { refetchOnWindowFocus: false }
     );
 
-    useEffect(() => {
-        console.log("bip");
-    });
-
     if (association === undefined) {
         return null;
     }
 
-    // Generate the routes
-    const privateRoutes = association
+    // Render
+    return status === "loading" ? (
+        <Loading />
+    ) : status === "error" ? (
+        <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
+    ) : status === "success" ? (
+        <Router>
+            <Switch>
+                {privateRoutes(association, match)}
+                <Route component={PageNotFoundError} />
+            </Switch>
+        </Router>
+    ) : null;
+};
+
+// Generate the routes
+const privateRoutes = (association, match) =>
+    association
         ? routes(association).map(
               ({
                   path,
@@ -66,21 +78,3 @@ export const AssociationRouter = ({ match }) => {
               }
           )
         : [];
-
-    // Render
-    if (status === "loading") return <Loading />;
-    if (status === "error")
-        return <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>;
-    if (status === "success") {
-        return (
-            <Router>
-                <Switch>
-                    {privateRoutes}
-                    <Route component={PageNotFoundError} />
-                </Switch>
-            </Router>
-        );
-    }
-
-    return null;
-};
