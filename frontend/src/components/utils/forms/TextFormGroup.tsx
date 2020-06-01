@@ -14,26 +14,47 @@ import Form from "react-bootstrap/Form";
  *         />
  *     </Formik.Form>
  * ```
+ *
+ * @param name The name of the input.
+ * @param label Optional. The label of the form group.
+ * @param help Optional. A help text displayed below the input.
+ * @param iconLeft Optional. The Feather icon to display on the left.
+ * @param iconRight Optional. The Feather icon to display on the right.
+ * @param textRight Optional. Some text to display on the right.
+ * @param props Passed to `useField` and `Form.Control`.
  */
 export function TextFormGroup({
+    name,
     label,
+    help,
     iconLeft = null,
     iconRight = null,
     textRight = null,
     ...props
-}: any) {
-    const [field, meta] = useField(props);
+}: {
+    name: string;
+    label?: string;
+    help?: string;
+    iconLeft?: string | null;
+    iconRight?: string | null;
+    textRight?: string | null;
+    [key: string]: any;
+}) {
+    const [field, meta] = useField({
+        name: name,
+        ...props,
+    });
     const control = (
         <Form.Control
             {...field}
             {...props}
-            isInvalid={meta.touched && meta.error}
+            isInvalid={meta.touched && !!meta.error}
         />
     );
 
     return (
         <Form.Group controlId={props.id || props.name}>
-            <Form.Label>{label}</Form.Label>
+            {label && <Form.Label>{label}</Form.Label>}
 
             {iconLeft || iconRight ? (
                 <div className={"input-icon"}>
@@ -59,6 +80,8 @@ export function TextFormGroup({
             ) : (
                 control
             )}
+
+            {help && <p className="form-text text-muted small">{help}</p>}
 
             {meta.touched && meta.error ? (
                 // Display block is required to show it with an icon

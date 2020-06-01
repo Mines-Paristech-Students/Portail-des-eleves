@@ -15,6 +15,8 @@ import Button from "react-bootstrap/Button";
 import { RolePermissionIcon } from "./RolePermissionIcon";
 import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
+import { ForbiddenError } from "../../../utils/ErrorPage";
+import { EditRoleModal } from "./EditRoleModal";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     <OverlayTrigger
@@ -141,8 +143,13 @@ export const AssociationRolesAdministration = ({
         columnData(setEditRole, remove)
     );
 
-    return (
+    return association.myRole?.permissions?.includes("administration") ? (
         <>
+            <EditRoleModal
+                show={editRole !== null}
+                onHide={() => setEditRole(null)}
+                role={editRole}
+            />
             <Pagination
                 apiKey={[
                     "roles.list",
@@ -172,5 +179,7 @@ export const AssociationRolesAdministration = ({
                 }}
             />
         </>
+    ) : (
+        <ForbiddenError />
     );
 };

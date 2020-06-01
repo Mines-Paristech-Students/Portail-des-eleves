@@ -37,5 +37,17 @@ export const roles = {
         unwrap<Role>(apiService.get(`/associations/roles/${roleId}/`)).then(
             parseRoleDates
         ),
+    update: ({
+        roleId,
+        role,
+    }: {
+        roleId: number;
+        role: Partial<
+            Pick<
+                Role,
+                "role" | "rank" | "startDate" | "endDate" | "permissions"
+            >
+        >;
+    }) => apiService.patch(`/associations/roles/${roleId}/`, role),
     delete: (roleId) => apiService.delete(`/associations/roles/${roleId}/`),
 };

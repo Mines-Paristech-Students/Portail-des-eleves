@@ -15,32 +15,44 @@ import {
  *
  * @param name the name of the control, used to access its value in Formik.
  * @param label optional, the label to display.
+ * @param help Optional. A help text displayed below the input.
  * @param feedback defaults to true. If `true`, a `FormControl.Feedback` is added at the bottom of the `Form.Group`.
  * `DayPickerInputField`'s `feedback` props is set to the same value, unless overridden in `dayPickerInputFieldProps`.
+ * @param disabled defaults to false. If `true`, the input is disabled, the errors are emptied and the value is set to
+ * undefined.
  * @param dayPickerInputFieldProps passed to `DayPickerInputField`.
  */
 export const DayPickerInputFormGroup = ({
     name,
-    label = "",
+    label,
+    help,
     feedback = true,
+    disabled = false,
     dayPickerInputFieldProps,
 }: {
     name: string;
-    label?: string;
+    label?: string | JSX.Element;
+    help?: string;
     feedback?: boolean;
-    dayPickerInputFieldProps?: DayPickerInputFieldProps;
+    disabled?: boolean;
+    dayPickerInputFieldProps?: Partial<DayPickerInputFieldProps>;
 }) => {
     const { errors } = useFormikContext();
 
     return (
         <Form.Group>
             {label && <Form.Label>{label}</Form.Label>}
+
             <DayPickerInputField
                 name={name}
                 feedback={feedback}
+                disabled={disabled}
                 {...dayPickerInputFieldProps}
             />
-            {feedback && errors[name] && (
+
+            {help && <p className="form-text text-muted small">{help}</p>}
+
+            {!disabled && feedback && errors[name] && (
                 <FormControl.Feedback
                     type="invalid"
                     className="date-picker-feedback"
