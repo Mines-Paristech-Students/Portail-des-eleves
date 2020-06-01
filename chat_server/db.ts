@@ -12,7 +12,7 @@ const create_schema_query = `CREATE TABLE IF NOT EXISTS messages (
   CREATE UNIQUE INDEX IF NOT EXISTS index ON messages(posted_on DESC)`;
 
 const add_query =
-  "INSERT INTO messages (username, message, posted_on) VALUES ($1, $2, NOW())";
+  "INSERT INTO messages (username, message, posted_on) VALUES ($1, $2, timezone('utc', now()))";
 
 const get_query =
   "SELECT * FROM messages WHERE posted_on <= $1 ORDER BY posted_on DESC LIMIT $2";

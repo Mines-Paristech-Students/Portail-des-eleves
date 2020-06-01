@@ -3,6 +3,7 @@ const io = require("socket.io-client");
 const dotenv = require("dotenv");
 import { assert } from "chai";
 import { index } from "./index";
+import e from "express";
 
 // Parsing environnement configuration
 dotenv.config();
@@ -96,17 +97,33 @@ describe("Testing the messages service", () => {
     socket.on("fetch_response", function (rows) {
       assert.strictEqual(rows.length, limit, "Correct number of rows");
       let row = rows[rows.length - 1];
+
       assert.strictEqual(
         row.username,
         token_user,
         "Last message username is correct"
       );
+
       assert.strictEqual(
         row.message,
         "licorne",
         "Last message content is correct"
       );
-      assert.exists(row.posted_on);
+
+      // The date doesn't depend on the client
+      const current_time = new Date().getTime();
+      const received_time = new Date(row.posted_on).getTime();
+      console.log(current_time);
+      console.log(received_time);
+      console.log(row.posted_on);
+      console.log(new Date(row.posted_on).toString());
+      console.log(new Date().toString());
+      assert.isBelow(
+        Math.abs(current_time - received_time),
+        10000,
+        "Dates should differ by a few seconds"
+      );
+
       done();
     });
 

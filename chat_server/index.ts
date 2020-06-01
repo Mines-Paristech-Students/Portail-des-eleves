@@ -62,7 +62,7 @@ io.sockets.on("connection", (socket) => {
     let model = new Message(
       socket.decoded_token.user,
       request.message,
-      new Date()
+      new Date(),
     );
     await db.add(model.username, model.message);
 
@@ -79,8 +79,9 @@ io.sockets.on("connection", (socket) => {
       return;
     }
 
-    let messages = await db.get(request.from, request.limit);
-    socket.emit("fetch_response", messages.rows);
+    const response = await db.get(request.from, request.limit);
+
+    socket.emit("fetch_response", response.rows);
   });
 });
 
