@@ -11,6 +11,69 @@ import Button from "react-bootstrap/Button";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import { DayPickerInputFormGroup } from "../../../utils/forms/DayPickerInputFormGroup";
 import { SwitchCheckbox } from "../../../utils/forms/SwitchCheckbox";
+import { SelectGroup } from "../../../utils/forms/SelectGroup";
+import { RolePermissionIcon } from "./RolePermissionIcon";
+import { RolePermissionTooltip } from "./RolePermissionTooltip";
+import "./edit_role_modal.css";
+
+const permissionItems = new Map([
+    [
+        "administration",
+        <RolePermissionTooltip permission="administration">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"administration"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "election",
+        <RolePermissionTooltip permission="election">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"election"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "event",
+        <RolePermissionTooltip permission="event">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"event"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "media",
+        <RolePermissionTooltip permission="media">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"media"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "library",
+        <RolePermissionTooltip permission="library">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"library"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "marketplace",
+        <RolePermissionTooltip permission="marketplace">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"marketplace"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+    [
+        "page",
+        <RolePermissionTooltip permission="page">
+            <span className="selectgroup-button selectgroup-button-icon">
+                <RolePermissionIcon permission={"page"} />
+            </span>
+        </RolePermissionTooltip>,
+    ],
+]);
 
 export const EditRoleModal = ({
     show,
@@ -59,6 +122,7 @@ export const EditRoleModal = ({
                     startDate: role.startDate,
                     endDate: role.endDate ? role.endDate : undefined,
                     endDateEnabled: !!role.endDate,
+                    permissions: role.permissions,
                 }}
                 validationSchema={Yup.object({
                     role: Yup.string().required("Ce champ est requis."),
@@ -127,6 +191,13 @@ export const EditRoleModal = ({
                                 }
                                 help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
                                 disabled={!values.endDateEnabled}
+                            />
+                            <SelectGroup
+                                name="permissions"
+                                type="pills"
+                                inputType="checkbox"
+                                label="Permissions"
+                                items={permissionItems}
                             />
                         </Modal.Body>
 

@@ -12,11 +12,11 @@ import { PageTitle } from "../../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
 import { sortingToApiParameter } from "../../../utils/table/sorting";
 import Button from "react-bootstrap/Button";
-import { RolePermissionIcon } from "./RolePermissionIcon";
 import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { ForbiddenError } from "../../../utils/ErrorPage";
 import { EditRoleModal } from "./EditRoleModal";
+import { RolePermissionIconTooltip } from "./RolePermissionIconTooltip";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     <OverlayTrigger
@@ -87,10 +87,10 @@ const columnData = (
         render: (role: Role) => (
             <>
                 {role.permissions.map((permission) => (
-                    <RolePermissionIcon
+                    <RolePermissionIconTooltip
                         key={permission}
                         permission={permission}
-                        className="mr-1"
+                        iconProps={{ className: "mr-1" }}
                     />
                 ))}
             </>
@@ -119,8 +119,8 @@ const columnData = (
 ];
 
 export const AssociationRolesAdministration = ({
-    association,
-}: {
+                                                   association,
+                                               }: {
     association: Association;
 }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
