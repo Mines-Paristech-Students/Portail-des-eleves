@@ -1,30 +1,78 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useState } from "react";
+import Dropzone from "react-dropzone";
 import { PageTitle } from "../../utils/PageTitle";
 import { Link } from "react-router-dom";
-import Card from "react-bootstrap/Card";
 import { api } from "../../../services/apiService";
-import { useFormik } from "formik";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
-import { Button, Form, ProgressBar } from "react-bootstrap";
-import { Media } from "../../../models/associations/media";
+import { TagAdder } from "../../utils/tags/TagAdder";
+import { AxiosError } from "axios";
+import { Tag } from "../../../models/tag";
+import { FileUploadSuccess } from "./UploadStates/Success";
+import { FileUploadError } from "./UploadStates/Error";
+import { FileUpload } from "./UploadStates/Uploading";
 
-// Main page container for file upload
-export const AssociationFilesystemUpload = ({ association, ...props }) => {
+enum UploadState {
+    Uploading,
+    Success,
+    Fail,
+}
+
+export const AssociationFilesystemUpload = ({ association }) => {
     // Subcomponents that will be used to upload the medias
-    let [uploadingFiles, setUploadingFiles] = useState<{}[]>([]);
+    const [medias, setMedias] = useState<
+        { media: any; status: UploadState; error: AxiosError | null }[]
+    >([]);
+
+    const [tagsToBind, setTagsToBind] = useState<Tag[]>([]);
 
     // Create and handle drop zone
-    const onDrop = useCallback(
-        (acceptedFiles) => {
-            setUploadingFiles([...uploadingFiles, ...acceptedFiles]);
-        },
-        [uploadingFiles]
-    );
+    const onDrop = (mediasToAdd) => {
+        setMedias((medias) => [
+            ...medias,
+            ...mediasToAdd.map((media) => ({
+                media: media,
+                status: UploadState.Uploading,
+                error: null,
+            })),
+        ]);
+    };
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-    });
+    const markAsCompleted = (i, media, error) => {
+        let newUploadingFiles = [...medias];
+
+        if (error !== null) {
+            newUploadingFiles[i].error = error;
+            setMedias(newUploadingFiles);
+            return;
+        }
+
+        // Ih there is no that, mark it as done immediately
+        if (tagsToBind.length === 0) {
+            newUploadingFiles[i].media = media;
+            newUploadingFiles[i].status = UploadState.Success;
+            setMedias(newUploadingFiles);
+        }
+
+        // Bind the created object to all necessary tags and THEN mark it
+        // as done
+        Promise.allSettled(
+            tagsToBind.map((tag) => api.tags.bind("media", media.id, tag.id))
+        )
+            .then((_) => {
+                newUploadingFiles[i].media = media;
+                newUploadingFiles[i].status = UploadState.Success;
+            })
+            .catch((error) => {
+                newUploadingFiles[i].error = error;
+                newUploadingFiles[i].status = UploadState.Fail;
+            })
+            .finally(() => setMedias(newUploadingFiles));
+    };
+
+    const deleteMedia = (media) => {
+        api.medias.delete(media).then((_) => {
+            setMedias(medias.filter((m) => m.media.id !== media));
+        });
+    };
 
     return (
         <>
@@ -37,196 +85,60 @@ export const AssociationFilesystemUpload = ({ association, ...props }) => {
                 </Link>
                 Envoi de fichiers
             </PageTitle>
-            <div
-                {...getRootProps()}
-                className={"border border-secondary rounded p-7 mt-4"}
-            >
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                    <p className={"lead text-center m-0"}>
-                        Déposez les fichiers ici ...
-                    </p>
-                ) : (
-                    <p className={"lead text-center m-0"}>
-                        Glisser-déposez les fichiers sur cette zone ou cliquez
-                        dessus pour envoyer un fichier
-                    </p>
-                )}
-            </div>
-
-            {uploadingFiles.map((file: any) => (
-                <FileUpload
-                    key={file.name}
-                    file={file}
-                    association={association}
+            <div className="py-2">
+                <p className="lead">Etape 1</p>
+                <TagAdder
+                    parent={"association"}
+                    parentId={association.id}
+                    onChange={setTagsToBind}
                 />
-            ))}
-        </>
-    );
-};
-
-enum UploadState {
-    Uploading,
-    Success,
-    Fail,
-}
-
-// Sub-component used to upload a file
-const FileUpload = ({ file, association }) => {
-    let [state, setState] = useState<UploadState>(UploadState.Uploading);
-    let [progress, setProgress] = useState<number>(0);
-    let [error, setError] = useState<string>("");
-    let [uploadedFile, setUploadedFile] = useState<Media | null>(null);
-
-    useEffect(() => {
-        // Use effect to submit the file only once
-        const upload = api.medias.upload(file, association, (progressEvent) => {
-            let { loaded, total } = progressEvent;
-            setProgress(Math.round((loaded * 100) / total));
-        });
-
-        upload
-            .then((res) => {
-                setState(UploadState.Success);
-                let resData: Media = res.data;
-                if (resData.description === null) {
-                    resData.description = "";
-                }
-                setUploadedFile(resData);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setState(UploadState.Fail);
-            });
-        /* eslint-disable */
-    }, []);
-
-    let icon;
-    let details; // Information in the card body
-
-    if (state === UploadState.Uploading) {
-        icon = (
-            <div
-                className="spinner-border spinner-border-sm mr-2"
-                role="status"
-            >
-                <span className="sr-only">Loading...</span>
             </div>
-        );
-
-        details = <ProgressBar now={progress} label={`${progress}%`} />;
-    } else {
-        icon = "❌";
-        details = (
-            <Card.Body>
-                <p className={"text-danger"}>{error}</p>
-            </Card.Body>
-        );
-    }
-
-    if (state === UploadState.Success && uploadedFile) {
-        return <FileUploadDone file={uploadedFile} />;
-    }
-
-    return (
-        <Card className={"mt-3"}>
-            <Card.Header>
-                {icon} {file.name}
-            </Card.Header>
-            {details}
-        </Card>
-    );
-};
-
-// Sub-component used to edit information on a file once its upload is done
-const FileUploadDone = ({ file }) => {
-    let [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-    const { sendToast, sendSuccessToast, sendErrorToast } = useContext(
-        ToastContext
-    );
-
-    const formik = useFormik({
-        // Use a form to edit name and description
-        initialValues: file,
-        onSubmit: (values) => {
-            sendToast("Sauvegarde en cours", ToastLevel.Info);
-
-            api.medias
-                .patch({
-                    id: values.id,
-                    name: values.name,
-                    description: values.description,
-                })
-                .then(() => {
-                    sendSuccessToast("Fichier sauvegardé !");
-                })
-                .catch((err) => {
-                    sendErrorToast(err.message);
-                });
-        },
-    });
-
-    let details;
-    if (!isCollapsed) {
-        details = (
-            <div>
-                <textarea
-                    id={"description"}
-                    name={"description"}
-                    className={"form-control border-0"}
-                    placeholder={"Description"}
-                    onChange={formik.handleChange}
-                    value={formik.values.description}
-                />
-                <Button
-                    size="sm"
-                    variant="success"
-                    style={{
-                        position: "absolute",
-                        bottom: "10px",
-                        right: "10px",
-                        width: "100px",
-                    }}
-                    type="submit"
-                >
-                    Sauvegarder
-                </Button>
+            <div className="py-2">
+                <p className="lead">Etape 2</p>
+                <Dropzone onDrop={onDrop}>
+                    {({ getInputProps, getRootProps, isDragActive }) => (
+                        <div
+                            {...getRootProps()}
+                            className={
+                                "border border-secondary rounded p-7 mt-4"
+                            }
+                        >
+                            <input {...getInputProps()} />
+                            {isDragActive ? (
+                                <p className={"lead text-center m-0"}>
+                                    Déposez les fichiers ici ...
+                                </p>
+                            ) : (
+                                <p className={"lead text-center m-0"}>
+                                    Glisser-déposez les fichiers sur cette zone
+                                    ou cliquez dessus pour envoyer un fichier
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </Dropzone>
             </div>
-        );
-    }
 
-    return (
-        <form onSubmit={formik.handleSubmit}>
-            <Card className={"mt-3"}>
-                <Card.Header>
-                    <span role={"img"} aria-label={"check"}>
-                        ✅
-                    </span>{" "}
-                    <Form.Control
-                        id="name"
-                        name="name"
-                        type="text"
-                        className={"border-0"}
-                        placeholder="Nom du fichier"
-                        onChange={formik.handleChange}
-                        value={formik.values.name}
+            {medias.map(({ media, status, error }, i) =>
+                status === UploadState.Success ? (
+                    <FileUploadSuccess
+                        media={media}
+                        key={i}
+                        onDelete={() => deleteMedia(media)}
                     />
-                    <div className={"card-options"}>
-                        {isCollapsed ? (
-                            <i
-                                className="fe fe-chevron-down"
-                                onClick={() => setIsCollapsed(false)}
-                            />
-                        ) : (
-                            <i
-                                className="fe fe-chevron-up"
-                                onClick={() => setIsCollapsed(true)}
-                            />
-                        )}
-                    </div>
-                </Card.Header>
-                {!isCollapsed ? details : null}
-            </Card>
-        </form>
+                ) : status === UploadState.Fail ? (
+                    <FileUploadError media={media} error={error} key={i} />
+                ) : (
+                    <FileUpload
+                        key={i}
+                        media={media}
+                        association={association}
+                        onComplete={(newFile, status) =>
+                            markAsCompleted(i, newFile, status)
+                        }
+                    />
+                )
+            )}
+        </>
     );
 };

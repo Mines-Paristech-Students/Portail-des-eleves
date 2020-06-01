@@ -20,11 +20,33 @@ export const AssociationRouter = ({ match }) => {
     const { data: association, error, status } = useBetterQuery<Association>(
         ["association.get", associationId],
         api.associations.get,
-        { refetchOnWindowFocus: false }
+        {
+            refetchOnWindowFocus: false,
+        }
     );
 
-    // Generate the routes
-    const privateRoutes = association
+    if (association === undefined) {
+        return null;
+    }
+
+    // Render
+    return status === "loading" ? (
+        <Loading />
+    ) : status === "error" ? (
+        <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
+    ) : status === "success" ? (
+        <Router>
+            <Switch>
+                {privateRoutes(association, match)}
+                <Route component={PageNotFoundError} />
+            </Switch>
+        </Router>
+    ) : null;
+};
+
+// Generate the routes
+const privateRoutes = (association, match) =>
+    association
         ? routes(association).map(
               ({
                   path,
@@ -58,21 +80,3 @@ export const AssociationRouter = ({ match }) => {
               }
           )
         : [];
-
-    // Render
-    if (status === "loading") return <Loading />;
-    if (status === "error")
-        return <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>;
-    if (status === "success") {
-        return (
-            <Router>
-                <Switch>
-                    {privateRoutes}
-                    <Route component={PageNotFoundError} />
-                </Switch>
-            </Router>
-        );
-    }
-
-    return null;
-};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import { joinNonEmpty } from "../../../utils/parameter";
 
@@ -28,11 +28,11 @@ export const pollStateFilterToApiParameter = (
     )}`;
 
 export const PollsTableFilter = ({
-    defaultStateFilter,
+    stateFilter,
     setStateFilter,
     formGroupProps,
 }: {
-    defaultStateFilter: PollStateFilter;
+    stateFilter: PollStateFilter;
     setStateFilter: (
         value:
             | ((prevState: PollStateFilter) => PollStateFilter)
@@ -40,19 +40,6 @@ export const PollsTableFilter = ({
     ) => void;
     formGroupProps?: any;
 }) => {
-    const [accepted, setAccepted] = useState(defaultStateFilter.accepted);
-    const [rejected, setRejected] = useState(defaultStateFilter.rejected);
-    const [reviewing, setReviewing] = useState(defaultStateFilter.reviewing);
-
-    useEffect(() => {
-        setStateFilter({
-            accepted: accepted,
-            rejected: rejected,
-            reviewing: reviewing,
-        });
-        /* eslint-disable */
-    }, [accepted, rejected, reviewing]);
-
     return (
         <Form.Group {...formGroupProps}>
             <Form.Label className="text-uppercase">Statut</Form.Label>
@@ -62,8 +49,13 @@ export const PollsTableFilter = ({
                     <input
                         className="custom-control-input"
                         type="checkbox"
-                        checked={accepted}
-                        onChange={() => setAccepted(!accepted)}
+                        checked={stateFilter.accepted}
+                        onChange={() =>
+                            setStateFilter({
+                                ...stateFilter,
+                                accepted: !stateFilter.accepted,
+                            })
+                        }
                     />
                     <span className="custom-control-label">Accepté</span>
                 </label>
@@ -71,8 +63,13 @@ export const PollsTableFilter = ({
                     <input
                         className="custom-control-input"
                         type="checkbox"
-                        checked={rejected}
-                        onChange={() => setRejected(!rejected)}
+                        checked={stateFilter.rejected}
+                        onChange={() =>
+                            setStateFilter({
+                                ...stateFilter,
+                                rejected: !stateFilter.rejected,
+                            })
+                        }
                     />
                     <span className="custom-control-label">Refusé</span>
                 </label>
@@ -80,8 +77,13 @@ export const PollsTableFilter = ({
                     <input
                         className="custom-control-input"
                         type="checkbox"
-                        checked={reviewing}
-                        onChange={() => setReviewing(!reviewing)}
+                        checked={stateFilter.reviewing}
+                        onChange={() =>
+                            setStateFilter({
+                                ...stateFilter,
+                                reviewing: !stateFilter.reviewing,
+                            })
+                        }
                     />
                     <span className="custom-control-label">En attente</span>
                 </label>

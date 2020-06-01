@@ -119,7 +119,7 @@ export const routes: (association: Association) => AssociationRoute[] = (
         defaultLayout: false,
     },
     {
-        path: `/fichiers/upload`,
+        path: `/fichiers/televerser`,
         component: AssociationFilesystemUpload,
         exact: true,
         props: { association: association },
