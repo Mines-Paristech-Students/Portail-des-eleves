@@ -24,7 +24,6 @@ describe("Testing Django public key integration", () => {
   });
 });
 
-// Tests
 describe("Testing the messages service", () => {
   // These variables shouldn't be initialize yet, unless they launch a timeout while testing
   var server, socket_options, socket;
@@ -109,14 +108,11 @@ describe("Testing the messages service", () => {
         "Last message content is correct"
       );
 
-      // The date doesn't depend on the client
+      // Check if there are any issues with time stamps
+
       const current_time = new Date().getTime();
       const received_time = new Date(row.posted_on).getTime();
-      console.log(current_time);
-      console.log(received_time);
-      console.log(row.posted_on);
-      console.log(new Date(row.posted_on).toString());
-      console.log(new Date().toString());
+
       assert.isBelow(
         Math.abs(current_time - received_time),
         10000,
