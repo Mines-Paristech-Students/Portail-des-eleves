@@ -3,7 +3,6 @@ const io = require("socket.io-client");
 const dotenv = require("dotenv");
 import { assert } from "chai";
 import { index } from "./index";
-import e from "express";
 
 // Parsing environnement configuration
 dotenv.config();

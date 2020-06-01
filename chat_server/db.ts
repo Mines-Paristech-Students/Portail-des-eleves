@@ -3,16 +3,22 @@ import { Pool } from "pg";
 // All infos for pools are passed while starting the container
 const pool = new Pool();
 
+console.log(process.env.TZ);
+
 // Queries
-const create_schema_query = `CREATE TABLE IF NOT EXISTS messages (
+const create_schema_query = `
+  DROP TABLE messages;
+
+  CREATE TABLE IF NOT EXISTS messages (
     username VARCHAR(50) NOT NULL,
-    posted_on TIMESTAMP NOT NULL,
+    posted_on TIMESTAMP,
     message TEXT NOT NULL
   ) ;
+
   CREATE UNIQUE INDEX IF NOT EXISTS index ON messages(posted_on DESC)`;
 
 const add_query =
-  "INSERT INTO messages (username, message, posted_on) VALUES ($1, $2, timezone('utc', now()))";
+  "INSERT INTO messages (username, message, posted_on) VALUES ($1, $2, $3)";
 
 const get_query =
   "SELECT * FROM messages WHERE posted_on <= $1 ORDER BY posted_on DESC LIMIT $2";
@@ -35,7 +41,7 @@ pool
 
 // Query functions
 const add = async function add(username: string, message: string) {
-  await pool.query(add_query, [username, message]);
+  await pool.query(add_query, [username, message, new Date()]);
 };
 
 let get = async function get(from: Date, limit: number) {
