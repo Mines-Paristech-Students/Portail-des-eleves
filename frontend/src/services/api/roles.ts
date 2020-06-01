@@ -4,7 +4,8 @@ import {
     toUrlParams,
     unwrap,
 } from "../apiService";
-import { Role } from "../../models/associations/role";
+import { Role, RolePermission } from "../../models/associations/role";
+import dayjs from "dayjs";
 
 export const parseRoleDates = (role: Role) => {
     role.startDate = new Date(role.startDate);
@@ -48,6 +49,23 @@ export const roles = {
                 "role" | "rank" | "startDate" | "endDate" | "permissions"
             >
         >;
-    }) => apiService.patch(`/associations/roles/${roleId}/`, role),
+    }) => {
+        // An `undefined` field will not be sent in the payload (it means “do
+        // not update this field”). However, `endDate` may also be `null` (when
+        // the role has no `endDate`. In both cases, `role.endDate` should not
+        // be parsed.
+        let data: any = {
+            ...role,
+            startDate: role.startDate
+                ? dayjs(role.startDate).format("YYYY-MM-DD")
+                : undefined,
+            endDate:
+                role.endDate === null || role.endDate === undefined
+                    ? role.endDate
+                    : dayjs(role.endDate).format("YYYY-MM-DD"),
+        };
+
+        return apiService.patch(`/associations/roles/${roleId}/`, data);
+    },
     delete: (roleId) => apiService.delete(`/associations/roles/${roleId}/`),
 };

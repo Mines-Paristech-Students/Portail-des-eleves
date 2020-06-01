@@ -85,7 +85,10 @@ const columnData = (
         key: "permissions",
         header: "Permissions",
         render: (role: Role) => (
-            <>
+                role.endDate && role.endDate <= new Date() ?
+                    <span className="text-muted small">Permissions désactivées</span>
+                    :
+                <>
                 {role.permissions.map((permission) => (
                     <RolePermissionIconTooltip
                         key={permission}
@@ -119,8 +122,8 @@ const columnData = (
 ];
 
 export const AssociationRolesAdministration = ({
-                                                   association,
-                                               }: {
+    association,
+}: {
     association: Association;
 }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);

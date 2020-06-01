@@ -16,6 +16,6 @@ export interface Role {
     role: string;
     rank: number;
     startDate: Date;
-    endDate: Date;
+    endDate: Date | null;
     permissions: RolePermission[];
 }

@@ -149,10 +149,18 @@ export const EditRoleModal = ({
                     ),
                 })}
                 onSubmit={(values, { setSubmitting }) => {
-                    /*update(
+                    update(
                         {
                             roleId: role.id,
-                            data: values,
+                            role: {
+                                role: values.role,
+                                rank: values.rank,
+                                startDate: values.startDate,
+                                endDate: values.endDateEnabled
+                                    ? values.endDate
+                                    : null,
+                                permissions: values.permissions,
+                            },
                         },
                         {
                             onSettled: () => {
@@ -160,8 +168,7 @@ export const EditRoleModal = ({
                                 onHide();
                             },
                         }
-                    );*/
-                    console.log(values);
+                    );
                 }}
                 component={({ values }) => (
                     <Form>
