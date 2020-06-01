@@ -85,9 +85,13 @@ const columnData = (
         key: "permissions",
         header: "Permissions",
         render: (role: Role) =>
-            role.endDate && role.endDate <= new Date() ? (
+            role.startDate > new Date() ? (
                 <span className="text-muted small">
-                    Permissions désactivées
+                    Pas encore activées
+                </span>
+            ) : role.endDate && role.endDate <= new Date() ? (
+                <span className="text-muted small">
+                    Expirées
                 </span>
             ) : (
                 <>
@@ -171,7 +175,7 @@ export const AssociationRolesAdministration = ({
                 apiMethod={api.roles.list}
                 render={(roles, paginationControl) => (
                     <Container className="mt-4">
-                        <PageTitle>Gestion des membres</PageTitle>
+                        <PageTitle>Gestion des rôles</PageTitle>
 
                         <Card>
                             <Table columns={columns} data={roles} />
