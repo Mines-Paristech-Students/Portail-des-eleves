@@ -91,7 +91,12 @@ export const ProductForm: ({
                 name: Yup.string()
                     .required("Le produit doit avoir un nom")
                     .min(3, "Un nom doit avoir au minimum 3 caractères"),
-                price: Yup.number().min(0.0, "Un prix est positif askip"),
+                price: Yup.number()
+                    .required("Veuillez indiquer le prix")
+                    .min(0.0, "Un prix est positif askip"),
+                numberLeft: Yup.number()
+                    .required("Veuillez entrer une quantité")
+                    .min(0, "Un stock est positif askip"),
             })}
             onSubmit={onSubmit}
             render={({ setFieldValue, values }) => (
@@ -113,7 +118,8 @@ export const ProductForm: ({
                                         name="price"
                                         type="number"
                                         step="0.01"
-                                        iconLeft="dollar-sign"
+                                        className={"text-right"}
+                                        textRight={"€"}
                                     />
                                 </Col>
                                 <Col md={6}>
