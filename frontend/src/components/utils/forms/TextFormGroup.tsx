@@ -75,6 +75,8 @@ export const TextFormGroup = ({
     >
         <TextField
             name={name}
+            feedback={feedback}
+            feedbackOnTouchedOnly={feedbackOnTouchedOnly}
             iconLeft={iconLeft}
             iconRight={iconRight}
             textLeft={textLeft}

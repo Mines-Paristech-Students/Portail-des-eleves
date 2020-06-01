@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 
 export type TextFieldProps = {
     name: string;
-    label?: string;
     feedback?: boolean;
     feedbackOnTouchedOnly?: boolean;
     iconLeft?: string;
