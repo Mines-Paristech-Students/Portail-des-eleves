@@ -87,7 +87,7 @@ class CourseMedia(models.Model):
     uploaded_on = models.DateTimeField(auto_now_add=True)
 
     # Type of the file
-    category = models.CharField(max_length=1, choices=COURSE_CATEGORY, default="O")
+    category = models.CharField(max_length=1, choices=FILE_CATEGORY, default="O")
 
     file = models.FileField(upload_to="courses/")
 
