@@ -10,7 +10,7 @@ import { TagSearch } from "../../utils/tags/TagSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
 import { isImageMime } from "../../../utils/mime";
-import "./list.css"
+import "./list.css";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -72,10 +72,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                     }
                                 >
                                     {isImageMime(media.mimetype) && (
-                                        <img
-                                            src={media.url}
-                                            alt={media.name}
-                                        />
+                                        <img src={media.url} alt={media.name} />
                                     )}
                                     <Card.Body>
                                         <h4 className={"m-0"}>{media.name}</h4>
