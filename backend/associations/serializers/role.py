@@ -42,10 +42,19 @@ class WriteRoleSerializer(serializers.ModelSerializer):
         if not self.used_by_association_admin:
             if "permissions" in self.validated_data:
                 self.validated_data["permissions"] = (
-                    ["administration"]
+                    {"administration"}
                     if "administration" in self.validated_data["permissions"]
-                    else []
+                    else {}
                 )
+
+            if "role" in self.validated_data:
+                self.validated_data.pop("role")
+            if "rank" in self.validated_data:
+                self.validated_data.pop("rank")
+            if "start_date" in self.validated_data:
+                self.validated_data.pop("start_date")
+            if "end_date" in self.validated_data:
+                self.validated_data.pop("end_date")
 
         # Update the permissions: `{permission_name}_permission` is True if and only if `permission_name` is present
         # in the provided `permissions` list.
