@@ -3,7 +3,7 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 import { Error } from "../../utils/Error";
 import { Product } from "../../../models/associations/marketplace";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ProductForm } from "./ProductForm";
 import { PageTitle } from "../../utils/PageTitle";
 import { Container } from "react-bootstrap";

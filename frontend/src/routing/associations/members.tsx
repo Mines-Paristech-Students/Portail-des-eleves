@@ -2,8 +2,10 @@ import { Association } from "../../models/associations/association";
 import { AssociationRoute } from "../associations";
 import { AssociationRolesAdministration } from "../../components/associations/roles/administration/AssociationRolesAdministration";
 
-export const routes: (association: Association) => AssociationRoute[] = (association) => [
-  {
+export const routes: (association: Association) => AssociationRoute[] = (
+    association
+) => [
+    {
         path: "/membres/",
         component: (...props) => null,
         exact: true,
