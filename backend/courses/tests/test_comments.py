@@ -29,7 +29,9 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
         return "/courses/comments/"
 
     def list(self, query_string=None):
-        return self.get(self.endpoint_list() + ("?" + query_string if query_string else ""))
+        return self.get(
+            self.endpoint_list() + ("?" + query_string if query_string else "")
+        )
 
     ########
     # LIST #
@@ -47,7 +49,7 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
 
     filter_date = "2100-04-20T22:10:57.577Z"
     filter_question = 1
-    filter_course = 2
+    filter_course = 1
     filter_many = {
         "question": 2,
         "course": 1,
@@ -82,26 +84,26 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
 
     def if_logged_in_then_can_list_comments_by_date(self):
         self.login("17simple")
-        res=self.list(query_string=f"?date={self.filter_date}")
+        res = self.list(query_string=f"?date={self.filter_date}")
 
         self.assertStatusCode(res, 200)
         self.assertEqual(len(res.data), 1)
 
     def if_logged_in_then_can_list_comments_by_course(self):
         self.login("17simple")
-        res=self.list(query_string=f"?course={self.filter_course}")
+        res = self.list(query_string=f"?course={self.filter_course}")
 
         self.assertStatusCode(res, 200)
-        self.assertEqual(len(res.data), 1)
+        self.assertEqual(len(res.data), 4)
 
     def if_logged_in_then_can_list_comments_by_many_filters(self):
         self.login("17simple")
 
-        q=QueryDict(mutable=True)
+        q = QueryDict(mutable=True)
         for key, value in self.filter_many:
-            q[key]=value
+            q[key] = value
 
-        res=self.list(query_string=q.urlencode())
+        res = self.list(query_string=q.urlencode())
 
         self.assertStatusCode(res, 200)
         self.assertEqual(len(res.data), 1)

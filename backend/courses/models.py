@@ -101,7 +101,6 @@ class CourseMedia(models.Model):
 
 
 class Question(models.Model):
-
     class Meta:
         unique_together = [["form", "label"]]
 
