@@ -7,13 +7,17 @@ import {
 import { Product } from "../../models/associations/marketplace";
 
 export const products = {
-    list: (associationId, params = {}, page = 1) => {
-        params["marketplace"] = associationId;
-        params["page"] = page;
-        return unwrap<PaginatedResponse<Product[]>>(
-            apiService.get(`/associations/products/${toUrlParams(params)}`)
-        );
-    },
+    list: (associationId, params = {}, page = 1) =>
+        unwrap<PaginatedResponse<Product[]>>(
+            apiService.get(
+                `/associations/products/${toUrlParams({
+                    ...params,
+                    marketplace: associationId,
+                    page: page,
+                })}`
+            )
+        ),
+
     get: (productId) =>
         unwrap<Product>(
             apiService.get(`/associations/products/${productId}/`)
@@ -22,6 +26,9 @@ export const products = {
             comment: product.comment || "",
             description: product.description || "",
         })),
+
+    create: (product) =>
+        unwrap<Product>(apiService.post(`/associations/products/`, product)),
 
     update: (product) =>
         unwrap<Product>(

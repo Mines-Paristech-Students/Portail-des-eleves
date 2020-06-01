@@ -6,8 +6,11 @@ import { AssociationMarketplaceProductAdministration } from "../../components/as
 import { AssociationMarketplaceProductEdit } from "../../components/associations/marketplace/Edit";
 import { Association } from "../../models/associations/association";
 import { AssociationRoute } from "../associations";
+import { AssociationMarketplaceProductCreate } from "../../components/associations/marketplace/Create";
 
-export const routes: (association: Association) => AssociationRoute[] = (association) => [
+export const routes: (association: Association) => AssociationRoute[] = (
+    association
+) => [
     {
         path: `/magasin`,
         component: AssociationMarketplaceHome,
@@ -44,6 +47,15 @@ export const routes: (association: Association) => AssociationRoute[] = (associa
         props: { association: association },
         defaultLayout: false,
     },
+
+    {
+        path: `/magasin/produits/nouveau`,
+        component: AssociationMarketplaceProductCreate,
+        exact: true,
+        props: { association: association },
+        defaultLayout: true,
+    },
+
     {
         path: `/magasin/produits/:productId/modifier`,
         component: AssociationMarketplaceProductEdit,
