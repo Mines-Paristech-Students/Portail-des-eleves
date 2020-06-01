@@ -19,3 +19,17 @@ class MediaSerializer(serializers.ModelSerializer):
             "tags",
         )
         fields = read_only_fields + ("name", "description")
+
+    def to_representation(self, instance):
+        res = super(MediaSerializer, self).to_representation(instance)
+
+        # Convert the server URI to an absolute URL
+        # ie /media/file.txt -> https://domain.name/media.file.txt
+        request = self.context["request"]
+        if request:
+            host = request.get_host()
+            res["url"] = "{}://{}{}".format(
+                "https" if request.is_secure() else "http", host, res["url"]
+            )
+
+        return res

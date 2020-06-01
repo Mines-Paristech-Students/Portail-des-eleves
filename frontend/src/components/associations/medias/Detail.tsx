@@ -8,6 +8,7 @@ import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { Loading } from "../../utils/Loading";
 import { ErrorMessage } from "../../utils/ErrorPage";
 import { formatDate, formatTime } from "../../../utils/format";
+import { isImageMime } from "../../../utils/mime";
 
 export const AssociationFilesystemDetail = ({ association }) => {
     const { fileId } = useParams<{ fileId: string }>();
@@ -23,12 +24,21 @@ export const AssociationFilesystemDetail = ({ association }) => {
     ) : media ? (
         <div>
             {association.myRole.permissions?.includes("media") && (
-                <Link
-                    to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
-                    className={"btn btn-primary float-right"}
-                >
-                    Editer
-                </Link>
+                <div className={"float-right mt-2"}>
+                    <a
+                        href={media.url}
+                        download
+                        className={"btn btn-sm btn-success mr-2"}
+                    >
+                        <span className="fe fe-download" /> Télécharger
+                    </a>
+                    <Link
+                        to={`/associations/${association.id}/fichiers/${media.id}/modifier`}
+                        className={"btn btn-primary btn-sm"}
+                    >
+                        <span className="fe fe-edit-2" /> Editer
+                    </Link>
+                </div>
             )}
             <PageTitle>
                 <Link
@@ -39,6 +49,14 @@ export const AssociationFilesystemDetail = ({ association }) => {
                 </Link>
                 {media.name}
             </PageTitle>
+
+            {isImageMime(media.mimetype) && (
+                <img
+                    src={media.url}
+                    alt={media.name}
+                    className={"rounded mt-3"}
+                />
+            )}
 
             <TagList
                 model={TaggableModel.Media}
@@ -59,9 +77,6 @@ export const AssociationFilesystemDetail = ({ association }) => {
                     {formatTime(media.uploadedOn)}
                 </Card.Footer>
             </Card>
-            <a href={media.file} download className={"btn btn-primary"}>
-                <i className="fe fe-download" /> Télécharger
-            </a>
         </div>
     ) : null;
 };
