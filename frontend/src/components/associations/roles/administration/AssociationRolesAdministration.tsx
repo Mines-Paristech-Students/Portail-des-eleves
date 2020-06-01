@@ -102,8 +102,8 @@ const columnData = (setEditRole) => [
 ];
 
 export const AssociationRolesAdministration = ({
-                                                   association,
-                                               }: {
+    association,
+}: {
     association: Association;
 }) => {
     // The Role currently edited in the modal.
