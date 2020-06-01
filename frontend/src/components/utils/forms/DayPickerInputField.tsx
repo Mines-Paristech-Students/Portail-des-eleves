@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { FieldHookConfig, useField } from "formik";
 import dayjs from "dayjs";
 import { dayPickerLocalisationProps } from "./DatePickerField";

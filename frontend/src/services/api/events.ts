@@ -77,8 +77,7 @@ export const events = {
             endsAt: Date;
             place: string;
         };
-    }) =>
-        apiService.post(`/associations/events/`, data),
+    }) => apiService.post(`/associations/events/`, data),
     update: ({
         eventId,
         data,

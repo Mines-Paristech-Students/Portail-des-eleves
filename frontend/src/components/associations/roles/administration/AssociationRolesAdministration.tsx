@@ -84,20 +84,22 @@ const columnData = (
     {
         key: "permissions",
         header: "Permissions",
-        render: (role: Role) => (
-                role.endDate && role.endDate <= new Date() ?
-                    <span className="text-muted small">Permissions désactivées</span>
-                    :
+        render: (role: Role) =>
+            role.endDate && role.endDate <= new Date() ? (
+                <span className="text-muted small">
+                    Permissions désactivées
+                </span>
+            ) : (
                 <>
-                {role.permissions.map((permission) => (
-                    <RolePermissionIconTooltip
-                        key={permission}
-                        permission={permission}
-                        iconProps={{ className: "mr-1" }}
-                    />
-                ))}
-            </>
-        ),
+                    {role.permissions.map((permission) => (
+                        <RolePermissionIconTooltip
+                            key={permission}
+                            permission={permission}
+                            iconProps={{ className: "mr-1" }}
+                        />
+                    ))}
+                </>
+            ),
     },
     {
         key: "actions",
