@@ -33,7 +33,7 @@ class RatingSerializer(serializers.ModelSerializer):
     def validate_question(self, question):
         if question.category != "R":
             raise serializers.ValidationError(
-                "Comment must refer to a 'C' category question"
+                "Rating must refer to a 'R' category question"
             )
 
         return question

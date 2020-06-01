@@ -3,9 +3,6 @@ from rest_framework import permissions
 
 class CoursePermission(permissions.BasePermission):
     """
-    TODO: Define a group of people that can add courses
-    TODO: Add endpoints for teachers to modify courses
-
                              | Association |
         Global administrator | CRUD        |
         User                 | R           |

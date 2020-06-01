@@ -7,9 +7,7 @@ from courses.views.CommentsView import CommentsPaginatedList
 router = DefaultRouter()
 
 router.register(r"courses", CourseViewSet)
-
 router.register(r"forms", views.FormViewSet)
-
 router.register(r"questions", views.QuestionViewSet)
 
 urlpatterns = [
