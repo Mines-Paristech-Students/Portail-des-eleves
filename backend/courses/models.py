@@ -21,6 +21,14 @@ QUESTION_CATEGORY = (
 )
 
 
+FILE_CATEGORY = (
+    ("P", ("PALUM")),
+    ("N", ("NOTES")),
+    ("E", ("EXERCICES")),
+    ("O", ("OTHER")),
+)
+
+
 class Form(models.Model):
     id = models.AutoField(unique=True, primary_key=True)
 
@@ -52,7 +60,8 @@ class Course(models.Model):
 
         def histogram(questionId):
             values = {}
-            for value in range(1, 6):
+            for scale in NUMERIC_SCALE:
+                value = scale[0]
                 values[value] = self.rating.filter(
                     question__id=questionId, value=value
                 ).count()
@@ -77,7 +86,8 @@ class CourseMedia(models.Model):
 
     uploaded_on = models.DateTimeField(auto_now_add=True)
 
-    category = models.CharField(max_length=64)
+    # Type of the file
+    category = models.CharField(max_length=1, choices=COURSE_CATEGORY, default="O")
 
     file = models.FileField(upload_to="courses/")
 
@@ -92,12 +102,10 @@ class CourseMedia(models.Model):
 
 class Question(models.Model):
 
-    # TODO add test
     class Meta:
         unique_together = [["form", "label"]]
 
     id = models.AutoField(primary_key=True, unique=True)
-
     label = models.CharField(max_length=64)
 
     required = models.BooleanField(default=False)
