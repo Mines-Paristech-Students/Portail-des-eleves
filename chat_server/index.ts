@@ -2,21 +2,11 @@ const express = require("express");
 const socketio_jwt = require("socketio-jwt");
 import { createServer } from "http";
 
+import { Message } from "./message";
+
 const dotenv = require("dotenv");
 dotenv.config();
 const db = require("./db");
-
-class Message {
-  constructor(
-    public username: string,
-    public message: string,
-    public posted_on: Date
-  ) {
-    this.username = username;
-    this.message = message;
-    this.posted_on = posted_on;
-  }
-}
 
 /**
  * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
@@ -59,18 +49,19 @@ io.sockets.on("connection", (socket) => {
       return;
     }
 
-    let model = new Message(
-      socket.decoded_token.user,
-      request.message,
-      new Date(),
-    );
-    await db.add(model.username, model.message);
+    let message: Message = {
+      username: String(socket.decoded_token.user),
+      message: String(request.message),
+      posted_on: new Date(),
+    };
+
+    await db.add(message);
 
     // The message is sended to everyone (including sender)
     io.sockets.emit("broadcast", {
-      username: model.username,
-      message: model.message,
-      posted_on: model.posted_on.toISOString(),
+      username: message.username,
+      message: message.message,
+      posted_on: message.posted_on.toISOString(),
     });
   });
 

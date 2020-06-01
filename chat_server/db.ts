@@ -1,21 +1,20 @@
 import { Pool } from "pg";
 
+import { Message } from "./message";
+
 // All infos for pools are passed while starting the container
 const pool = new Pool();
 
-console.log(process.env.TZ);
-
 // Queries
 const create_schema_query = `
-  DROP TABLE messages;
-
   CREATE TABLE IF NOT EXISTS messages (
     username VARCHAR(50) NOT NULL,
     posted_on TIMESTAMP,
     message TEXT NOT NULL
-  ) ;
+  );
 
-  CREATE UNIQUE INDEX IF NOT EXISTS index ON messages(posted_on DESC)`;
+  CREATE UNIQUE INDEX IF NOT EXISTS index ON messages(posted_on DESC);
+`;
 
 const add_query =
   "INSERT INTO messages (username, message, posted_on) VALUES ($1, $2, $3)";
@@ -36,12 +35,18 @@ pool
     console.info("Database schema available ✅");
   })
   .catch((err) => {
-    console.error("❌ Failed to create schema ", err);
+    console.error("Failed to create schema ❌", err);
   });
 
 // Query functions
-const add = async function add(username: string, message: string) {
-  await pool.query(add_query, [username, message, new Date()]);
+const add = async function add(message: Message) {
+  // Careful: Node-postgres converts the dates to PostgresSQL to match time zone
+  // https://node-postgres.com/features/types
+  await pool.query(add_query, [
+    message.username,
+    message.message,
+    message.posted_on,
+  ]);
 };
 
 let get = async function get(from: Date, limit: number) {
