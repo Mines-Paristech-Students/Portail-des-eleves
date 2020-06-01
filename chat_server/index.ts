@@ -8,17 +8,17 @@ const dotenv = require("dotenv");
 dotenv.config();
 const db = require("./db");
 
-/**
- * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
- */
-
 const app = express();
 let port = process.env.PORT || 3001;
 
 export let httpServer = createServer(app);
 export let io = require("socket.io")(httpServer);
 
-// Public key from django
+/**
+ * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
+ *
+ * The public key is taken from Django
+ */
 const public_key = process.env.JWT_PUBLIC_KEY;
 if (public_key === undefined) {
   throw new Error(
@@ -28,7 +28,7 @@ if (public_key === undefined) {
 
 // Authentification using handshake
 let jwtOption = {
-  secret: process.env.JWT_PUBLIC_KEY, // We use the public key
+  secret: process.env.JWT_PUBLIC_KEY,
   handshake: true,
 };
 
