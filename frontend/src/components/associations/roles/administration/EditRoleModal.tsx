@@ -62,7 +62,9 @@ export const EditRoleModal = ({
                 }}
                 validationSchema={Yup.object({
                     role: Yup.string().required("Ce champ est requis."),
-                    rank: Yup.number().required("Ce champ est requis."),
+                    rank: Yup.number()
+                        .required("Ce champ est requis.")
+                        .min(0, "Veuillez entrer un nombre positif"),
                     startDate: Yup.date().required(
                         "Veuillez entrer une date au format JJ/MM/YYYY."
                     ),

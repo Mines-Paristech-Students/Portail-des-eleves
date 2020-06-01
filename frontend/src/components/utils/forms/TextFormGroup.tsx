@@ -81,7 +81,7 @@ export function TextFormGroup({
                 control
             )}
 
-            {help && <p className="form-text text-muted small">{help}</p>}
+            {help && <p className="form-text text-muted small mb-0">{help}</p>}
 
             {meta.touched && meta.error ? (
                 // Display block is required to show it with an icon

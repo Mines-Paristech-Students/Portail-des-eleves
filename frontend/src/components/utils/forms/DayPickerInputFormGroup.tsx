@@ -50,7 +50,7 @@ export const DayPickerInputFormGroup = ({
                 {...dayPickerInputFieldProps}
             />
 
-            {help && <p className="form-text text-muted small">{help}</p>}
+            {help && <p className="form-text text-muted small mb-0">{help}</p>}
 
             {!disabled && feedback && errors[name] && (
                 <FormControl.Feedback
