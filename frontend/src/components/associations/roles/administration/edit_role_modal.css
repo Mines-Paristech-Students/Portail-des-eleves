@@ -1,0 +1,6 @@
+/**
+Without this, the react-day-picker wrapper comes below the checked buttons.
+ */
+.selectgroup-input:checked + .selectgroup-button {
+    z-index: auto !important;
+}
