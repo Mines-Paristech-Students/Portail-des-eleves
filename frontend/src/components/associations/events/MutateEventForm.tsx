@@ -8,7 +8,6 @@ import Col from "react-bootstrap/Col";
 import { DayTimePickerInputFormGroup } from "../../utils/forms/DayTimePickerInputFormGroup";
 import Button from "react-bootstrap/Button";
 import { getRandom } from "../../../utils/random";
-import { TextAreaFormGroup } from "../../utils/forms/TextAreaFormGroup";
 
 const [namePlaceholder, descriptionPlaceholder, placePlaceholder] = getRandom([
     ["Passace", "Et glou, et glou, et glou", "Place du village"],
@@ -82,11 +81,12 @@ export const MutateEventForm = ({
                     type="text"
                     placeholder={namePlaceholder}
                 />
-                <TextAreaFormGroup
+                <TextFormGroup
                     label="Description"
                     name="description"
                     type="text"
                     placeholder={descriptionPlaceholder}
+                    as="textarea"
                 />
                 <TextFormGroup
                     label="Endroit"
