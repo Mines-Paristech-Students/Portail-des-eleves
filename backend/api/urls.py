@@ -7,6 +7,7 @@ import polls.urls
 import repartitions.urls
 import subscriptions.urls
 import tags.urls
+import tutorings.urls
 
 urlpatterns = [
     path("associations/", include(associations.urls)),
@@ -15,4 +16,5 @@ urlpatterns = [
     path("repartitions/", include(repartitions.urls)),
     path("subscriptions/", include(subscriptions.urls)),
     path("tags/", include(tags.urls)),
+    path("tutorings/", include(tutorings.urls)),
 ]

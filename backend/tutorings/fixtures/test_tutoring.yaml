@@ -1,0 +1,75 @@
+- model: tutorings.Tutoring
+  pk: 1
+  fields:
+    publication_date : "2019-06-01T20:00:00+00:00"
+    name: "Thomas"
+    contact: "06"
+    place: "Paname"
+    subject: "Maths"
+    level : "Terminale"
+    time_availability : "Lundi"
+    frequency: "3 fois par semaine"
+    description: "Je suis en difficultés"
+    state: "ACCEPTED"
+
+- model: tutorings.ApplyTutor
+  pk: 1
+  fields:
+    tutoring: 1
+    user: "17simple"
+    paps_time : "2019-06-01T20:00:10+00:00"
+    state : "ACCEPTED"
+
+- model: tutorings.Tutoring
+  pk: 2
+  fields:
+    name: "Thomas"
+    publication_date: "2019-06-01T20:00:00+00:00"
+    contact: "mail@example.com"
+    place: "Vincennes"
+    subject: "Chimie"
+    level: "PCSI"
+    time_availability: "Mardi"
+    state: "REVIEWING"
+    frequency: "3 fois par semaine"
+    description: "Je veux intégrer les Mines"
+
+
+- model: tutorings.ApplyTutor
+  pk: 2
+  fields:
+    user: "17simple"
+    tutoring: 2
+    paps_time : "2020-06-01T20:00:20+00:00"
+    state : "REVIEWING"
+
+- model: tutorings.Tutoring
+  pk: 3
+  fields:
+    name: "Thomas"
+    publication_date: "2019-06-01T20:00:00+00:00"
+    contact: "mail@example.com"
+    place: "Vincennes"
+    subject: "Chimie"
+    level: "PCSI"
+    time_availability: "Mardi"
+    state: "ACCEPTED"
+    frequency: "3 fois par semaine"
+    description: "Je veux intégrer les Mines"
+
+
+- model: tutorings.ApplyTutor
+  pk: 3
+  fields:
+    user: "17simple"
+    tutoring: 3
+    paps_time : "2020-06-01T20:00:20+00:00"
+    state : "REVIEWING"
+
+- model: tutorings.ApplyTutor
+  pk: 4
+  fields:
+    user: "17admin"
+    tutoring: 3
+    paps_time : "2020-06-01T20:00:20+00:20"
+    state : "REVIEWING"

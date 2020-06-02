@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "polls",
     "subscriptions",
     "tags",
+    "tutorings",
     "repartitions",
 ]
 
