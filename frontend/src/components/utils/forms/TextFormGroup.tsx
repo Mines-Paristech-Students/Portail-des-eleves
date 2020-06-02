@@ -48,7 +48,7 @@ import { TextField, TextFieldProps } from "./TextField";
  * @param formGroupProps passed to the `Form.Group` component.
  * @param labelProps passed to the `Form.Label` component.
  * @param feedbackProps passed to the `Form.Control.Feedback` component.
- * @param props passed to `useField` and `Form.Control`.
+ * @param props passed to `TextField`.
  */
 export const TextFormGroup = ({
     name,

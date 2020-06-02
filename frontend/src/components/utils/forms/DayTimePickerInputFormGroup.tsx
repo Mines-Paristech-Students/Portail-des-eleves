@@ -40,10 +40,7 @@ export const DayTimePickerInputFormGroup = ({
                 {...dayTimePickerInputFieldProps}
             />
             {feedback && errors[name] && (
-                <FormControl.Feedback
-                    type="invalid"
-                    className="date-picker-feedback"
-                >
+                <FormControl.Feedback type="invalid">
                     {errors[name]}
                 </FormControl.Feedback>
             )}
