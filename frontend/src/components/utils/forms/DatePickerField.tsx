@@ -3,7 +3,6 @@ import { FieldAttributes, useField } from "formik";
 import DayPicker from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import { MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } from "../../../utils/format";
-import "./date-picker-field.css";
 
 export const dayPickerLocalisationProps = (todayButton = false) => ({
     todayButton: todayButton ? "Aujourd’hui" : "",
