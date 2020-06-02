@@ -6,6 +6,7 @@ import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Question } from "../../../models/courses/question";
 import { useField, Formik, FormikProps } from "formik";
 import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { Loading } from "../../utils/Loading";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -13,7 +14,7 @@ export const EvaluateCourse = ({ course }) => {
         api.courses.forms.questions.list
     );
 
-    if (status === "loading") return <p>Chargement des cours</p>;
+    if (status === "loading") return <Loading />;
     else if (status === "error") {
         return `Something went wrong: ${error}`;
     } else if (status === "success" && questions) {
@@ -28,17 +29,17 @@ export const EvaluateCourse = ({ course }) => {
     return null;
 };
 
-interface Values {
+interface EvalSubmission {
     ratings: { [key: number]: number };
     comments: { [key: number]: string };
 }
 
 export const QuestionsForm = ({ questions, course }) => {
     const newToast = useContext(ToastContext);
-    let [hasVoted, setHasVoted] = useState<boolean>(false);
+    let [hasVoted, setHasVoted] = useState(false);
 
     const initRating = (questions: Question[]) => {
-        let base: Values = {
+        let base: EvalSubmission = {
             ratings: {},
             comments: {},
         };
@@ -49,8 +50,6 @@ export const QuestionsForm = ({ questions, course }) => {
                     base.ratings[question.id] = -1;
                 } else if (question.category === "C") {
                     base.comments[question.id] = "";
-                } else {
-                    console.log("Got unexpected");
                 }
             }
         }
@@ -160,9 +159,9 @@ export const QuestionsForm = ({ questions, course }) => {
                 onSubmit={submitAnswers}
                 validate={validate}
             >
-                {(props: FormikProps<Values>) => (
+                {(props: FormikProps<EvalSubmission>) => (
                     <Form onSubmit={props.handleSubmit}>
-                        {questions.map((question: Question) => {
+                        {questions.map((question) => {
                             if (question.archived) return null;
 
                             let field: JSX.Element = <p>Error</p>;
@@ -188,19 +187,21 @@ export const QuestionsForm = ({ questions, course }) => {
                                 );
                             }
 
-                            let bg = "light";
-                            if (question.id)
-                                if (props.errors[question.id] !== undefined)
-                                    bg = "danger";
-
                             return (
                                 <Col md={8} key={question.id}>
                                     <Card
                                         key={questions.id}
                                         className="col-md-4 m-4"
-                                        text={bg === "light" ? "dark" : "white"}
-                                        // @ts-ignore
-                                        bg={bg}
+                                        text={
+                                            props.errors[question.id]
+                                                ? "dark"
+                                                : "white"
+                                        }
+                                        bg={
+                                            props.errors[question.id]
+                                                ? "light"
+                                                : "danger"
+                                        }
                                     >
                                         <Card.Header>
                                             {question.label}
@@ -263,7 +264,6 @@ export const CommentField = ({ question, label, ...props }) => {
         <Form.Control
             as="textarea"
             rows={3}
-            // @ts-ignore
             onChange={(e) => setValue(e.target.value)}
         />
     );

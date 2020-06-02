@@ -16,14 +16,12 @@ export const courses = {
         ),
     get: (courseId) =>
         unwrap<Course>(apiService.get(`/courses/courses/${courseId}`)),
-    save: (course) => {
-        if (!course.id) {
-            return unwrap<Course>(apiService.post(`/courses/courses/`, course));
-        }
-        return unwrap<Course>(
-            apiService.patch(`/courses/courses/${course.id}/`, course)
-        );
-    },
+    save: (course) =>
+        course.id
+            ? unwrap<Course>(apiService.post(`/courses/courses/`, course))
+            : unwrap<Course>(
+                  apiService.patch(`/courses/courses/${course.id}/`, course)
+              ),
     submit: (courseId, data) =>
         apiService.post(`/courses/courses/${courseId}/submit`, data),
     has_voted: (courseId) =>

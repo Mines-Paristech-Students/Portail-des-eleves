@@ -6,7 +6,7 @@ import { Pagination } from "../../utils/Pagination";
 import "chart.js";
 
 export const PaginatedModalComment = ({ question, course }) => {
-    const [show, setShow] = useState<boolean>(false);
+    const [show, setShow] = useState(false);
 
     return (
         <Card.Text as={Button} onClick={() => setShow(true)} variant="light">

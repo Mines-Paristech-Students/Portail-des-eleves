@@ -1,28 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { api, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarCategory, SidebarItem } from "../../utils/Sidebar";
+import { Loading } from "../utils/Loading";
+import { UserContext } from "../../services/authService";
 
 export const CourseSidebar = ({ course }) => {
-    let status = "plop";
+    const user = useContext(UserContext);
 
-    if (status === "loading") {
-        return <p>Chargement...</p>;
-        // } else if (error) {
-        //     return <p>Erreur lors du chargement</p>;
-    } else if (course) {
-        return (
-            <Sidebar title={course.name}>
-                {/* {user?.isAdmin && */}
-                {true && <FormSidebar course={course} />}
+    return (
+        <Sidebar title={course.name}>
+            {user?.isStaff && <FormSidebar course={course} />}
 
-                <EvaluationSidebar course={course} />
+            <EvaluationSidebar course={course} />
 
-                {/* TODO: Files */}
-            </Sidebar>
-        );
-    }
-
-    return null;
+            {/* TODO: Files */}
+        </Sidebar>
+    );
 };
 
 const EvaluationSidebar = ({ course }) => {
@@ -41,7 +34,7 @@ const EvaluationSidebar = ({ course }) => {
 
             {status === "loading" && (
                 <SidebarItem icon="loader" to={`/cours/${course.id}`}>
-                    Loading
+                    <Loading />
                 </SidebarItem>
             )}
 

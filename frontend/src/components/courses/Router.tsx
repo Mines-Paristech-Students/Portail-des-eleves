@@ -15,6 +15,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { PageNotFoundError } from "../utils/ErrorPage";
 import { Course } from "../../models/courses/course";
+import { Loading } from "../utils/Loading";
 
 export const CourseRouter = ({ match }) => {
     let { courseId } = useParams<{ courseId: string }>();
@@ -38,7 +39,7 @@ export const CourseRouter = ({ match }) => {
     );
 
     // Render
-    if (status === "loading") return "Chargement en cours...";
+    if (status === "loading") return <Loading />;
     if (status === "error") return `Une erreur est apparue: ${error}`;
     if (status === "success") {
         return (

@@ -6,6 +6,7 @@ import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion } from "../../../models/courses/requests";
 import { ColumnChart } from "react-chartkick";
 import { PaginatedModalComment } from "./PaginatedModalComment";
+import { Loading } from "../../utils/Loading";
 import "chart.js";
 
 const DigitToStar = (num: number) => {
@@ -58,7 +59,7 @@ const StatsCourse = ({ course }) => {
         api.courses.stats
     );
 
-    if (status === "loading") return <p>Chargement des cours</p>;
+    if (status === "loading") return <Loading />;
     if (status === "error") return <p>{`Something went wrong: ${error}`}</p>;
 
     if (status === "success" && stats) {
@@ -92,7 +93,8 @@ const PaginatedComments = ({ course }) => {
         api.courses.forms.questions.list
     );
 
-    if (status === "loading") return <p>Chargement des cours</p>;
+    if (status === "loading") return <Loading />;
+
     if (status === "error") return <p>{`Something went wrong: ${error}`}</p>;
 
     if (status === "success" && questions) {
