@@ -52,7 +52,7 @@ export const AssociationFilesystemList = ({ association }) => {
                                 <Link
                                     to={`/associations/${association.id}/fichiers/televerser`}
                                     className={
-                                        "btn btn-success  btn-sm float-right ml-auto"
+                                        "btn btn-success btn-sm float-right ml-auto"
                                     }
                                 >
                                     <span className="fe fe-upload" /> Ajouter
