@@ -43,7 +43,15 @@ export const AssociationMarketplaceProductAdministration = ({
                 </>
             }
         >
-            <PageTitle>Produits</PageTitle>
+            <div className="d-flex align-items-center">
+                <PageTitle>Produits</PageTitle>
+                <Link
+                    to={`/associations/${marketplaceId}/magasin/produits/nouveau`}
+                    className={"btn btn-success btn-sm ml-auto"}
+                >
+                    <span className={"fe fe-plus"} /> Ajouter un produit
+                </Link>
+            </div>
 
             <Pagination
                 apiKey={[
