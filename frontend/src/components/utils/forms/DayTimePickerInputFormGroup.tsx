@@ -1,7 +1,5 @@
 import React from "react";
-import {
-    DayPickerInputFieldProps,
-} from "./DayPickerInputField";
+import { DayPickerInputFieldProps } from "./DayPickerInputField";
 import { DayTimePickerInputField } from "./DayTimePickerInputField";
 import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
 
