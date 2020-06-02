@@ -4,7 +4,7 @@ import {
     toUrlParams,
     unwrap,
 } from "../apiService";
-import { Role, RolePermission } from "../../models/associations/role";
+import { Role } from "../../models/associations/role";
 import dayjs from "dayjs";
 
 export const parseRoleDates = (role: Role) => {

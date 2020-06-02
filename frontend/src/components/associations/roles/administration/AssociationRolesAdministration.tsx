@@ -86,13 +86,9 @@ const columnData = (
         header: "Permissions",
         render: (role: Role) =>
             role.startDate > new Date() ? (
-                <span className="text-muted small">
-                    Pas encore activées
-                </span>
+                <span className="text-muted small">Pas encore activées</span>
             ) : role.endDate && role.endDate <= new Date() ? (
-                <span className="text-muted small">
-                    Expirées
-                </span>
+                <span className="text-muted small">Expirées</span>
             ) : (
                 <>
                     {role.permissions.map((permission) => (
