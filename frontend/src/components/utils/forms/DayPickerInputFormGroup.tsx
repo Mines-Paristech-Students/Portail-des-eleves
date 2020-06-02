@@ -1,13 +1,9 @@
 import React from "react";
-import { useFormikContext } from "formik";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import {
     DayPickerInputField,
     DayPickerInputFieldProps,
 } from "./DayPickerInputField";
 import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
-import { DayPickerField } from "./DayPickerField";
 
 /**
  * A `DayPicker` component tied to a Formik field, wrapped in a `Form.Group`
