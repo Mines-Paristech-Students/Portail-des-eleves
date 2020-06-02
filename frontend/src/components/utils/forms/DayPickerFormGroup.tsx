@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
-import { DatePickerField, DatePickerFieldProps } from "./DatePickerField";
+import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
 
 /**
  * A `DayPicker` component tied to a Formik field, wrapped in a `Form.Group`
@@ -38,9 +38,9 @@ import { DatePickerField, DatePickerFieldProps } from "./DatePickerField";
  * @param formGroupProps passed to the `Form.Group` component.
  * @param labelProps passed to the `Form.Label` component.
  * @param feedbackProps passed to the `Form.Control.Feedback` component.
- * @param props passed to `useField` and `Form.Control`.
+ * @param props passed to `DayPickerField`.
  */
-export const DatePickerFormGroup = ({
+export const DayPickerFormGroup = ({
     name,
     label,
     feedback = true,
@@ -60,6 +60,6 @@ export const DatePickerFormGroup = ({
         labelProps={labelProps}
         feedbackProps={feedbackProps}
     >
-        <DatePickerField name={name} todayButton={todayButton} {...props} />
+        <DayPickerField name={name} todayButton={todayButton} {...props} />
     </BaseFormGroup>
 );

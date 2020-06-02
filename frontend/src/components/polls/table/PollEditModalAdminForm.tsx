@@ -11,7 +11,7 @@ import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectGroup } from "../../utils/forms/SelectGroup";
 import { formatDate } from "../../../utils/format";
-import { DatePickerFormGroup } from "../../utils/forms/DatePickerFormGroup";
+import { DayPickerFormGroup } from "../../utils/forms/DayPickerFormGroup";
 
 const StateField = () => {
     let items = new Map();
@@ -64,7 +64,7 @@ const DateField = () => {
 
     if (values.state === "ACCEPTED") {
         return (
-            <DatePickerFormGroup
+            <DayPickerFormGroup
                 label="Date de publication"
                 name="publicationDate"
             />

@@ -25,7 +25,7 @@ export type DatePickerFieldProps = {
  * @param todayButton defaults to `false`. If `true`, a “Today” button is displayed.
  * @param props passed to `useField` and `Form.Control`.
  */
-export const DatePickerField = ({
+export const DayPickerField = ({
     name,
     todayButton = false,
     ...props
