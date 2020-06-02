@@ -28,8 +28,6 @@ class MediaSerializer(serializers.ModelSerializer):
         request = self.context["request"]
         if request:
             host = request.get_host()
-            res["url"] = "{}://{}{}".format(
-                "https" if request.is_secure() else "http", host, res["url"]
-            )
+            res["url"] = f"{'https' if request.is_secure() else 'http'}://{host}{res['url']}"
 
         return res
