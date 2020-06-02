@@ -9,10 +9,10 @@ dotenv.config();
 const db = require("./db");
 
 const app = express();
-let port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001;
 
-export let httpServer = createServer(app);
-export let io = require("socket.io")(httpServer);
+export const httpServer = createServer(app);
+export const io = require("socket.io")(httpServer);
 
 /**
  * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
@@ -27,7 +27,7 @@ if (public_key === undefined) {
 }
 
 // Authentification using handshake
-let jwtOption = {
+const jwtOption = {
   secret: process.env.JWT_PUBLIC_KEY,
   handshake: true,
 };
@@ -37,10 +37,8 @@ io.use(socketio_jwt.authorize(jwtOption));
 
 // Main Socket
 io.sockets.on("connection", (socket) => {
-  console.log("New user connected !");
 
   socket.on("message", async (request: any) => {
-    console.log("Received new message : %s", request.message);
     if (request.message === undefined) {
       return;
     }
@@ -49,7 +47,7 @@ io.sockets.on("connection", (socket) => {
       return;
     }
 
-    let message: Message = {
+    const message: Message = {
       username: String(socket.decoded_token.user),
       message: String(request.message),
       posted_on: new Date(),
