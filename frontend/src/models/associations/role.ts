@@ -9,6 +9,16 @@ export type RolePermission =
     | "marketplace"
     | "page";
 
+export const PERMISSIONS: RolePermission[] = [
+    "administration",
+    "election",
+    "event",
+    "media",
+    "library",
+    "marketplace",
+    "page",
+];
+
 export interface Role {
     id: number;
     association: { id: string; name: string; logo?: string };

@@ -4,7 +4,7 @@ import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { AxiosError } from "axios";
 import Modal from "react-bootstrap/Modal";
-import { Role } from "../../../../models/associations/role";
+import { PERMISSIONS, Role } from "../../../../models/associations/role";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import Button from "react-bootstrap/Button";
@@ -16,64 +16,16 @@ import { RolePermissionIcon } from "./RolePermissionIcon";
 import { RolePermissionTooltip } from "./RolePermissionTooltip";
 import "./edit_role_modal.css";
 
-const permissionItems = new Map([
-    [
-        "administration",
-        <RolePermissionTooltip permission="administration">
+const permissionItems = new Map(
+    PERMISSIONS.map((permission) => [
+        permission,
+        <RolePermissionTooltip permission={permission}>
             <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"administration"} />
+                <RolePermissionIcon permission={permission} />
             </span>
         </RolePermissionTooltip>,
-    ],
-    [
-        "election",
-        <RolePermissionTooltip permission="election">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"election"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-    [
-        "event",
-        <RolePermissionTooltip permission="event">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"event"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-    [
-        "media",
-        <RolePermissionTooltip permission="media">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"media"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-    [
-        "library",
-        <RolePermissionTooltip permission="library">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"library"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-    [
-        "marketplace",
-        <RolePermissionTooltip permission="marketplace">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"marketplace"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-    [
-        "page",
-        <RolePermissionTooltip permission="page">
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={"page"} />
-            </span>
-        </RolePermissionTooltip>,
-    ],
-]);
+    ])
+);
 
 export const EditRoleModal = ({
     show,
@@ -106,7 +58,11 @@ export const EditRoleModal = ({
         },
     });
 
-    return role !== null ? (
+    if (role === null) {
+        return null;
+    }
+
+    return (
         <Modal size="lg" show={show} onHide={onHide}>
             <Modal.Header>
                 <Modal.Title>
@@ -228,5 +184,5 @@ export const EditRoleModal = ({
                 )}
             />
         </Modal>
-    ) : null;
+    );
 };

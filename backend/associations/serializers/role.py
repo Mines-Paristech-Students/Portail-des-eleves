@@ -47,14 +47,9 @@ class WriteRoleSerializer(serializers.ModelSerializer):
                     else {}
                 )
 
-            if "role" in self.validated_data:
-                self.validated_data.pop("role")
-            if "rank" in self.validated_data:
-                self.validated_data.pop("rank")
-            if "start_date" in self.validated_data:
-                self.validated_data.pop("start_date")
-            if "end_date" in self.validated_data:
-                self.validated_data.pop("end_date")
+            for field in ("role", "rank", "start_date", "end_date"):
+                if field in self.validated_data:
+                    self.validated_data.pop(field)
 
         # Update the permissions: `{permission_name}_permission` is True if and only if `permission_name` is present
         # in the provided `permissions` list.

@@ -90,7 +90,7 @@ export const DayPickerInputField = ({
                     ...dayPickerLocalisationProps(todayButton),
                 }}
                 inputProps={{
-                    className: `${inputProps ? inputProps : ""} form-control ${
+                    className: `${inputProps || ""} form-control ${
                         !disabled && feedback && meta.error ? "is-invalid" : ""
                     }`,
                     placeholder: "JJ/MM/YYYY",

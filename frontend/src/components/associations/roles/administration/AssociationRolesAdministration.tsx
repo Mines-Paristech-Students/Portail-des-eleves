@@ -148,7 +148,11 @@ export const AssociationRolesAdministration = ({
         columnData(setEditRole, remove)
     );
 
-    return association.myRole?.permissions?.includes("administration") ? (
+    if (!association.myRole?.permissions?.includes("administration")) {
+        return <ForbiddenError />;
+    }
+
+    return (
         <>
             <EditRoleModal
                 show={editRole !== null}
@@ -184,7 +188,5 @@ export const AssociationRolesAdministration = ({
                 }}
             />
         </>
-    ) : (
-        <ForbiddenError />
     );
 };
