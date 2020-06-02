@@ -40,8 +40,6 @@ pool
 
 // Query functions
 const add = async function add(message: Message) {
-  // Careful: Node-postgres converts the dates to PostgresSQL to match time zone
-  // https://node-postgres.com/features/types
   await pool.query(add_query, [
     message.username,
     message.message,
