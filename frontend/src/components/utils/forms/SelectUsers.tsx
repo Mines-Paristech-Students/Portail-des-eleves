@@ -45,9 +45,11 @@ const MultiValueLabel = (props) => (
 const MultiValue = components.MultiValue;
 
 export const SelectUsers = ({
+    isMulti = true,
     className = "",
     ...props
 }: {
+    isMulti?: boolean;
     name: string;
     className?: string;
     [key: string]: any;
@@ -84,8 +86,8 @@ export const SelectUsers = ({
 
     return (
         <Select
-            isMulti
-            closeMenuOnSelect={false}
+            isMulti={isMulti}
+            closeMenuOnSelect={!isMulti}
             value={value}
             options={usersOptions}
             components={{

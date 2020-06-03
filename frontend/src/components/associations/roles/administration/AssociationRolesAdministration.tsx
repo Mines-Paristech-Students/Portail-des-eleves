@@ -19,6 +19,7 @@ import { RolePermissionIconTooltip } from "./RolePermissionIconTooltip";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { EditRoleModal } from "./EditRoleModal";
+import { CreateRoleModal } from "./CreateRoleModal";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     <OverlayTrigger
@@ -163,8 +164,8 @@ export const AssociationRolesAdministration = ({
                 show={editRole !== null}
                 onHide={() => setEditRole(null)}
             />
-            <EditRoleModal
-                role={null}
+            <CreateRoleModal
+                association={association}
                 show={showAddRole}
                 onHide={() => setShowAddRole(false)}
             />

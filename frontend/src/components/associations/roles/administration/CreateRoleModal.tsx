@@ -4,23 +4,23 @@ import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { AxiosError } from "axios";
 import { MutateRoleModal } from "./MutateRoleModal";
-import { Role } from "../../../../models/associations/role";
+import { Association } from "../../../../models/associations/association";
 
-export const EditRoleModal = ({
-    role,
+export const CreateRoleModal = ({
+    association,
     show,
     onHide,
 }: {
-    role: Role | null;
+    association: Association;
     show: boolean;
     onHide: () => void;
 }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    const [update] = useMutation(api.roles.update, {
+    const [create] = useMutation(api.roles.create, {
         onSuccess: () => {
             queryCache.refetchQueries(["roles.list"]);
-            sendSuccessToast("Rôle modifié.");
+            sendSuccessToast("Rôle créé.");
         },
         onError: (errorAsUnknown) => {
             const error = errorAsUnknown as AxiosError;
@@ -29,7 +29,7 @@ export const EditRoleModal = ({
                     error.response
                         ? "Détails : " +
                           (error.response.status === 403
-                              ? "vous n’avez pas le droit de modifier ce rôle."
+                              ? "vous n’avez pas le droit de créer de rôle."
                               : error.response.data.detail)
                         : ""
                 }`
@@ -37,29 +37,26 @@ export const EditRoleModal = ({
         },
     });
 
-    if (role === null) {
-        return null;
-    }
-
     return (
         <MutateRoleModal
-            version="edit"
-            title={`Modifier le rôle de ${role.user.firstName}
-                    ${role.user.lastName}`}
+            version="create"
+            title={`Créer un rôle`}
             show={show}
             initialValues={{
-                role: role.role,
-                rank: role.rank,
-                startDate: role.startDate,
-                endDate: role.endDate ? role.endDate : undefined,
-                endDateEnabled: !!role.endDate,
-                permissions: role.permissions,
+                user: {value: "", label:""},
+                role: "",
+                rank: 0,
+                startDate: new Date(),
+                endDate: undefined,
+                endDateEnabled: false,
+                permissions: [],
             }}
             onSubmit={(values, { setSubmitting }) => {
-                update(
+                create(
                     {
-                        roleId: role.id,
                         role: {
+                            association: association.id,
+                            user: values.user && values.user.value,
                             role: values.role,
                             rank: values.rank,
                             startDate: values.startDate,
