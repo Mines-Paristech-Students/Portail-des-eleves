@@ -4,8 +4,8 @@ import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
 
 /**
  * A `DayPicker` component tied to a Formik field, wrapped in a `Form.Group`
- * component including optional `Form.Label` and `Form.Control.Feedback`
- * components.
+ * component including optional `Form.Label`, `Form.Control.Feedback` and help
+ * text components.
  *
  * Basic example:
  * ```
@@ -29,6 +29,7 @@ import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
  *
  * @param name the name of the control, given to Formik's `useField`.
  * @param label optional, the label of the form control.
+ * @param help optional, a text to display below the form control.
  * @param feedback defaults to `true`. If `true`, the input will be given the
  * `isInvalid` props when needed and a `Form.Control.Feedback` is
  * displayed and filled with the errors obtained from the Formik context.
@@ -43,6 +44,7 @@ import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
 export const DayPickerFormGroup = ({
     name,
     label,
+    help,
     feedback = true,
     feedbackOnTouchedOnly = true,
     todayButton = false,
@@ -54,6 +56,7 @@ export const DayPickerFormGroup = ({
     <BaseFormGroup
         name={name}
         label={label}
+        help={help}
         feedback={feedback}
         feedbackOnTouchedOnly={feedbackOnTouchedOnly}
         formGroupProps={formGroupProps}

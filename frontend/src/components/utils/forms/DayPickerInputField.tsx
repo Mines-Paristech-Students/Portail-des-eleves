@@ -10,6 +10,7 @@ dayjs.extend(require("dayjs/plugin/customParseFormat"));
 export type DayPickerInputFieldProps = {
     name: string;
     feedback?: boolean;
+    disabled?: boolean;
     parseFormats?: string | string[];
     displayFormat?: string;
     todayButton?: boolean;
@@ -29,6 +30,7 @@ export type DayPickerInputFieldProps = {
  * @param name the name of the control, used to access its value in Formik.
  * @param feedback defaults to true. If `true`, the `is-invalid` class is given
  * to the input component when needed.
+ * @param disabled defaults to `false`. If `true`, the input is disabled.
  * @param parseFormats defaults to `["DD/MM/YYYY"]`. The formats used to parse
  * the date.
  * @param displayFormat defaults to `"DD/MM/YYYY"`. The format used to display
@@ -40,6 +42,7 @@ export type DayPickerInputFieldProps = {
 export const DayPickerInputField = ({
     name,
     feedback = true,
+    disabled = false,
     parseFormats = ["DD/MM/YYYY"],
     displayFormat = "DD/MM/YYYY",
     todayButton = false,
@@ -96,6 +99,7 @@ export const DayPickerInputField = ({
                     // Adding Formik's `onChange` will make everything buggy, because Formik will sometimes set
                     // `field.value` to the _string_ value of the input, bypassing `react-day-picker`'s flow.
                     onBlur: field.onBlur,
+                    disabled: disabled,
                 }}
             />
         </>

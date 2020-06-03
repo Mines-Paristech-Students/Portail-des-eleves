@@ -1,7 +1,17 @@
 import { useField } from "formik";
 import React from "react";
 
-export const SwitchCheckbox = ({ children, name, ...props }) => {
+export const SwitchCheckbox = ({
+    children,
+    name,
+    labelClassName = "col mt-3",
+    ...props
+}: {
+    children?: any;
+    name: string;
+    labelClassName?: string;
+    [key: string]: any;
+}) => {
     const [field, meta] = useField({
         ...props,
         name: name,
@@ -9,7 +19,7 @@ export const SwitchCheckbox = ({ children, name, ...props }) => {
     });
     return (
         <>
-            <label className={"col mt-3"}>
+            <label className={labelClassName}>
                 <input
                     type="checkbox"
                     className="custom-switch-input"
@@ -19,6 +29,7 @@ export const SwitchCheckbox = ({ children, name, ...props }) => {
                 <span className="custom-switch-indicator" />
                 <span className="custom-switch-description">{children}</span>
             </label>
+
             {meta.touched && meta.error ? (
                 <div className="error">{meta.error}</div>
             ) : null}

@@ -22,6 +22,7 @@ dayjs.extend(require("dayjs/plugin/customParseFormat"));
  * @param name the name of the control, used to access its value in Formik.
  * @param feedback defaults to true. If `true`, the `is-invalid` class is given
  * to the input component when needed.
+ * @param disabled defaults to `false`. If `true`, the input is disabled.
  * @param parseFormats defaults to `["DD/MM/YYYY HH:mm"]`. The formats used to
  * parse the date.
  * @param displayFormat defaults to `"DD/MM/YYYY HH:mm"`. The format used to
@@ -33,6 +34,7 @@ dayjs.extend(require("dayjs/plugin/customParseFormat"));
 export const DayTimePickerInputField = ({
     name,
     feedback = true,
+    disabled = false,
     parseFormats = ["DD/MM/YYYY HH:mm"],
     displayFormat = "DD/MM/YYYY HH:mm",
     todayButton = false,
@@ -84,6 +86,7 @@ export const DayTimePickerInputField = ({
                         const d = dayjs(event.target.value, parseFormats, true);
                         helper.setValue(d.isValid() ? d.toDate() : undefined);
                     },
+                    disabled: disabled,
                 }}
             />
         </>

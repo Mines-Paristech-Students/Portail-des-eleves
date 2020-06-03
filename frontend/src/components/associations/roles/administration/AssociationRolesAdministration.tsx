@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Table, useColumns } from "../../../utils/table/Table";
 import { Role } from "../../../../models/associations/role";
 import { Pagination } from "../../../utils/Pagination";
@@ -12,6 +12,10 @@ import { PageTitle } from "../../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
 import { sortingToApiParameter } from "../../../utils/table/sorting";
 import Button from "react-bootstrap/Button";
+import { ToastContext } from "../../../utils/Toast";
+import { queryCache, useMutation } from "react-query";
+import { ForbiddenError } from "../../../utils/ErrorPage";
+import { EditRoleModal } from "./EditRoleModal";
 import { RolePermissionIconTooltip } from "./RolePermissionIconTooltip";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
@@ -48,7 +52,10 @@ const DeleteRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     </OverlayTrigger>
 );
 
-const columnData = (setEditRole) => [
+const columnData = (
+    setEditRole: (role: Role) => void,
+    remove: (roleId: number) => void
+) => [
     {
         key: "member",
         header: "Membre",
@@ -77,17 +84,22 @@ const columnData = (setEditRole) => [
     {
         key: "permissions",
         header: "Permissions",
-        render: (role: Role) => (
-            <>
-                {role.permissions.map((permission) => (
-                    <RolePermissionIconTooltip
-                        key={permission}
-                        permission={permission}
-                        iconProps={{ className: "mr-1" }}
-                    />
-                ))}
-            </>
-        ),
+        render: (role: Role) =>
+            role.startDate > new Date() ? (
+                <span className="text-muted small">Pas encore activées</span>
+            ) : role.endDate && role.endDate <= new Date() ? (
+                <span className="text-muted small">Expirées</span>
+            ) : (
+                <>
+                    {role.permissions.map((permission) => (
+                        <RolePermissionIconTooltip
+                            key={permission}
+                            permission={permission}
+                            iconProps={{ className: "mr-1" }}
+                        />
+                    ))}
+                </>
+            ),
     },
     {
         key: "actions",
@@ -95,7 +107,17 @@ const columnData = (setEditRole) => [
         render: (role: Role) => (
             <>
                 <EditRoleButton handleClick={() => setEditRole(role)} />
-                <DeleteRoleButton handleClick={() => console.log("delete")} />
+                <DeleteRoleButton
+                    handleClick={() => {
+                        if (
+                            window.confirm(
+                                "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
+                            )
+                        ) {
+                            remove(role.id);
+                        }
+                    }}
+                />
             </>
         ),
     },
@@ -106,16 +128,40 @@ export const AssociationRolesAdministration = ({
 }: {
     association: Association;
 }) => {
-    // The Role currently edited in the modal.
-    const [, setEditRole] = useState<Role | null>(null);
+    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    const { columns, sorting } = useColumns<Role>(columnData(setEditRole));
+    // The Role currently edited in the modal.
+    const [editRole, setEditRole] = useState<Role | null>(null);
+
+    const [remove] = useMutation(api.roles.delete, {
+        onSuccess: () => sendSuccessToast("Rôle supprimé."),
+        onError: (response) =>
+            sendErrorToast(
+                `Une erreur est survenue: ${JSON.stringify(
+                    (response as any).data
+                )}.`
+            ),
+        onSettled: () => queryCache.refetchQueries("roles.list"),
+    });
+
+    const { columns, sorting } = useColumns<Role>(
+        columnData(setEditRole, remove)
+    );
+
+    if (!association.myRole?.permissions?.includes("administration")) {
+        return <ForbiddenError />;
+    }
 
     return (
         <>
+            <EditRoleModal
+                show={editRole !== null}
+                onHide={() => setEditRole(null)}
+                role={editRole}
+            />
             <Pagination
                 apiKey={[
-                    "associations.roles.list",
+                    "roles.list",
                     {
                         association: association.id,
                         ordering: sortingToApiParameter(sorting, {
@@ -129,7 +175,7 @@ export const AssociationRolesAdministration = ({
                 apiMethod={api.roles.list}
                 render={(roles, paginationControl) => (
                     <Container className="mt-4">
-                        <PageTitle>Gestion des membres</PageTitle>
+                        <PageTitle>Gestion des rôles</PageTitle>
 
                         <Card>
                             <Table columns={columns} data={roles} />
