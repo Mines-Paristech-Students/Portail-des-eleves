@@ -42,8 +42,8 @@ export const DayTimePickerInputField = ({
 }: DayPickerInputFieldProps) => {
     const [field, meta, helper] = useField<Date | undefined>({
         validate: (value) =>
-            value === undefined
-                ? "Veuillez entrer une date et une heure au format JJ/MM/YYYY hh:mm"
+            value === undefined && !disabled
+                ? "Veuillez entrer une date et une heure au format JJ/MM/YYYY hh:mm."
                 : undefined,
         ...props,
         name: name,
@@ -73,7 +73,7 @@ export const DayTimePickerInputField = ({
                 }}
                 inputProps={{
                     className: `form-control ${
-                        feedback && meta.error ? "is-invalid" : ""
+                        !disabled && feedback && meta.error ? "is-invalid" : ""
                     }`,
                     placeholder: "JJ/MM/YYYY hh:mm",
                     // Adding Formik's `onChange` will make everything buggy, because Formik will sometimes set

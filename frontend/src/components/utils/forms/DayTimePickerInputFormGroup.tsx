@@ -52,7 +52,7 @@ export const DayTimePickerInputFormGroup = ({
         name={name}
         label={label}
         help={help}
-        feedback={feedback}
+        feedback={!disabled && feedback}
         feedbackOnTouchedOnly={false}
         formGroupProps={formGroupProps}
         labelProps={labelProps}
@@ -60,7 +60,7 @@ export const DayTimePickerInputFormGroup = ({
     >
         <DayTimePickerInputField
             name={name}
-            feedback={feedback}
+            feedback={!disabled && feedback}
             disabled={disabled}
             parseFormats={parseFormats}
             displayFormat={displayFormat}

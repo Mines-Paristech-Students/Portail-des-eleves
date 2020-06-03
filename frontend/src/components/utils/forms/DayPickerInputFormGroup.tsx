@@ -50,7 +50,7 @@ export const DayPickerInputFormGroup = ({
         name={name}
         label={label}
         help={help}
-        feedback={feedback}
+        feedback={!disabled && feedback}
         feedbackOnTouchedOnly={false}
         formGroupProps={formGroupProps}
         labelProps={labelProps}
@@ -58,7 +58,7 @@ export const DayPickerInputFormGroup = ({
     >
         <DayPickerInputField
             name={name}
-            feedback={feedback}
+            feedback={!disabled && feedback}
             disabled={disabled}
             parseFormats={parseFormats}
             displayFormat={displayFormat}
