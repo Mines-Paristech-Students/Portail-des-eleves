@@ -77,12 +77,7 @@ export const events = {
             endsAt: Date;
             place: string;
         };
-    }) =>
-        apiService.post(`/associations/events/`, {
-            ...data,
-            startsAt: dayjs(data.startsAt).format("YYYY-MM-DDTHH:mm:ss"),
-            endsAt: dayjs(data.endsAt).format("YYYY-MM-DDTHH:mm:ss"),
-        }),
+    }) => apiService.post(`/associations/events/`, data),
     update: ({
         eventId,
         data,

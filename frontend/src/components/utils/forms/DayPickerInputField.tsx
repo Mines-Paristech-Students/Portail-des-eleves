@@ -10,9 +10,11 @@ dayjs.extend(require("dayjs/plugin/customParseFormat"));
 export type DayPickerInputFieldProps = {
     name: string;
     feedback?: boolean;
+    disabled?: boolean;
     parseFormats?: string | string[];
     displayFormat?: string;
     todayButton?: boolean;
+    inputProps?: object;
     fieldProps?: string | FieldHookConfig<Date>;
 };
 
@@ -26,23 +28,28 @@ export type DayPickerInputFieldProps = {
  *
  * @param name the name of the control, used to access its value in Formik.
  * @param feedback defaults to true. If `true`, the `is-invalid` class is given to the input component when needed.
+ * @param disabled defaults to false. If `true`, the input is disabled, the errors are emptied and the value is set to
+ * undefined.
  * @param parseFormats defaults to `["DD/MM/YYYY"]`. The formats used to parse the date.
  * @param displayFormat defaults to `"DD/MM/YYYY"`. The format used to display the date.
  * @param todayButton defaults to `false`. If `true`, a `todayButton` will be displayed in the day picker.
+ * @param inputProps optional, passed to the underlying `input` component.
  * @param fieldProps passed to Formik's `useField`.
  */
 export const DayPickerInputField = ({
     name,
     feedback = true,
+    disabled = false,
     parseFormats = ["DD/MM/YYYY"],
     displayFormat = "DD/MM/YYYY",
     todayButton = false,
+    inputProps,
     ...fieldProps
 }: DayPickerInputFieldProps) => {
     const [field, meta, helper] = useField<Date | undefined>({
         validate: (value) =>
-            value === undefined
-                ? "Veuillez entrer une date au format JJ/MM/YYYY"
+            value === undefined && !disabled
+                ? "Veuillez entrer une date au format JJ/MM/YYYY."
                 : undefined,
         ...fieldProps,
         name: name,
@@ -83,13 +90,15 @@ export const DayPickerInputField = ({
                     ...dayPickerLocalisationProps(todayButton),
                 }}
                 inputProps={{
-                    className: `form-control ${
-                        feedback && meta.error ? "is-invalid" : ""
+                    className: `${inputProps || ""} form-control ${
+                        !disabled && feedback && meta.error ? "is-invalid" : ""
                     }`,
                     placeholder: "JJ/MM/YYYY",
                     // Adding Formik's `onChange` will make everything buggy, because Formik will sometimes set
                     // `field.value` to the _string_ value of the input, bypassing `react-day-picker`'s flow.
                     onBlur: field.onBlur,
+                    disabled: disabled,
+                    ...inputProps,
                 }}
             />
         </>

@@ -68,15 +68,19 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
         "permissions",
         "end_date",
     )
-    GLOBAL_ADMIN_ALLOWED_FIELDS = ("user", "association", "administration_permission")
-    ASSOCIATION_ADMIN_ALLOWED_FIELDS = ("user", "association", "role", "rank") + tuple(
-        f"{permission_name}_permission" for permission_name in Role.PERMISSION_NAMES
+    GLOBAL_ADMIN_ALLOWED_FIELDS = ("user", "association", "permissions")
+    ASSOCIATION_ADMIN_ALLOWED_FIELDS = (
+        "user",
+        "association",
+        "role",
+        "rank",
+        "permissions",
     )
 
     global_admin_create_role_data = {
         "user": "17admin_pdm",
         "association": "biero",
-        "administration_permission": True,
+        "permissions": ["administration"],
     }
 
     global_admin_create_role_invalid_data = {
@@ -86,13 +90,15 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
         "start_date": date(2019, 1, 1),
         "end_date": date(2020, 1, 1),
         "rank": 5,
-        "administration_permission": True,
-        "election_permission": True,
-        "event_permission": True,
-        "media_permission": True,
-        "library_permission": True,
-        "marketplace_permission": True,
-        "page_permission": True,
+        "permissions": [
+            "administration",
+            "election",
+            "event",
+            "media",
+            "library",
+            "marketplace",
+            "page",
+        ],
     }
 
     association_admin_create_role_data = {
@@ -100,35 +106,39 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
         "association": "biero",
         "role": "Nouveau dictateur",
         "start_date": date(2019, 1, 1),
-        "end_date": date(2020, 1, 1),
+        "end_date": date(2090, 1, 1),
         "rank": 5,
-        "administration_permission": True,
-        "election_permission": True,
-        "event_permission": True,
-        "media_permission": True,
-        "library_permission": True,
-        "marketplace_permission": True,
-        "page_permission": True,
+        "permissions": [
+            "administration",
+            "election",
+            "event",
+            "media",
+            "library",
+            "marketplace",
+            "page",
+        ],
     }
 
     association_admin_create_role_invalid_data = {
         "user": "17admin_pdm",
         "association": "biero",
-        "administration_permission": True,
         "is_archived": True,
         "role": "Nouveau dictateur",
         "rank": 5,
-        "election": True,
-        "event": True,
-        "media": True,
-        "library": True,
-        "marketplace": True,
-        "page": True,
+        "permissions": [
+            "administration",
+            "election",
+            "event",
+            "media",
+            "library",
+            "marketplace",
+            "page",
+        ],
     }
 
     association_admin_create_role_for_pdm = {
         "user": "17admin_biero",
         "association": "pdm",
-        "administration_permission": True,
         "role": "Nouveau dictateur",
+        "permissions": ["administration"],
     }
