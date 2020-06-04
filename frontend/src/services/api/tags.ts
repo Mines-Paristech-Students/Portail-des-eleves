@@ -1,8 +1,4 @@
-import {
-    apiService,
-    PaginatedResponse,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Tag } from "../../models/tag";
 import { toUrlParams } from "../urlParam";
 

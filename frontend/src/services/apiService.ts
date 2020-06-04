@@ -1,6 +1,11 @@
 import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
-import { PaginatedQueryResult, QueryResult, usePaginatedQuery, useQuery } from "react-query";
+import {
+    PaginatedQueryResult,
+    QueryResult,
+    usePaginatedQuery,
+    useQuery,
+} from "react-query";
 import { events } from "./api/events";
 import { pages } from "./api/pages";
 import { news } from "./api/news";
