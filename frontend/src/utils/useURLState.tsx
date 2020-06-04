@@ -15,6 +15,7 @@ export function useURLState<T>(
     const history = useHistory();
 
     const [paramValue, setParamValue] = useState<T | null>();
+    const stateIsString = typeof defaultValue === "string";
 
     const changeParam = (value) => {
         if (value === paramValue) {
@@ -26,7 +27,10 @@ export function useURLState<T>(
         const params = new URL(window.location.href).searchParams;
         value === defaultValue
             ? params.delete(paramToWatch)
-            : params.set(paramToWatch, value);
+            : params.set(
+                  paramToWatch,
+                  stateIsString ? value : JSON.stringify(value)
+              );
 
         history.push(location.pathname + "?" + params.toString());
     };
@@ -37,9 +41,13 @@ export function useURLState<T>(
         // Convert the object to a string using JSON because we don't know
         // what type of data we're working with in advance. Also helps to
         // cast non string value. For instance, "2" will become the number 2
-        const paramJSONValue = params.get(paramToWatch);
-        if (paramJSONValue !== null) {
-            setParamValue(JSON.parse(paramJSONValue) as T);
+        const urlParamValue = params.get(paramToWatch);
+        if (urlParamValue !== null) {
+            // TS isn't able to see that stateIsString true implies urlParamValue is a string
+            setParamValue(
+                // @ts-ignore
+                stateIsString ? urlParamValue : (JSON.parse(urlParamValue) as T)
+            );
         }
 
         // The param value must be taken from the URL only when the component
