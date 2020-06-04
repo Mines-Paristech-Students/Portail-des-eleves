@@ -241,9 +241,4 @@ const selectStyles = {
     }),
 };
 
-function compareUsers(u1: User, u2: User): number {
-    if (u1.id > u2.id) return 1;
-    if (u2.id > u1.id) return -1;
-
-    return 0;
-}
+const compareUsers = (u1: User, u2: User): number => u1.id.localeCompare(u2.id);
