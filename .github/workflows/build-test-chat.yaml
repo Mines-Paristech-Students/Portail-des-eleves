@@ -1,13 +1,32 @@
-name: Build chat server 
+name: "Build chat server"
 
 on:
-  pull_request:
-      branches: [ master ]
+  push
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: docker
+          POSTGRES_USER: docker
+          POSTGRES_DB: portail_message
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+        ports:
+          - 5432:5432
+
 
     steps:
       - name: Checkout
@@ -29,10 +48,17 @@ jobs:
         run: npm install
         working-directory: chat_server 
 
+      - name: Setup .env
+        run: cp docker.env .env
+        working-directory: chat_server 
+
       - name: Build
-        run: npm run build
+        run: npm test 
         working-directory: chat_server 
 
       - name: Test
         run: npm test
         working-directory: chat_server 
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
