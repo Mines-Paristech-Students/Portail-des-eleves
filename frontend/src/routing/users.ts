@@ -1,7 +1,7 @@
 import { Route } from "./global";
 import { UserProfile } from "../components/user/profile/UserProfile";
 import { Trombi } from "../components/user/trombi/Trombi";
-import { EditUserProfile } from "../components/user/edit_profile/EditUserProfile";
+import { EditUserProfile } from "../components/user/profile/edit/EditUserProfile";
 import { Redirect } from "react-router-dom";
 
 export const routes: Route[] = [
