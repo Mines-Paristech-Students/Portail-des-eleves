@@ -22,7 +22,9 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     const [searchValue, setSearchValue] = useState("");
     const [showingTags, setShowingTags] = useState({});
 
-    const [currentTags, setCurrentTags] = useURLState("tags", "");
+    // Stores the selected tags into a string to be exploitable by
+    // useURLState and to ensure a nice URL
+    const [urlParams, setUrlParams] = useURLState("tags", "");
 
     const onStateChange = (state) => {
         setFieldsState(state);
@@ -34,13 +36,13 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
             .map(([key, value]) => value && key)
             .filter(Boolean);
         setParams(ids.length > 0 ? { tags__are: ids.join(",") } : {});
-        setCurrentTags(ids.join("-"));
+        setUrlParams(ids.join("-"));
     };
 
     useEffect(() => {
         if (tags === undefined) return;
 
-        const checkedTags = currentTags.split("-");
+        const checkedTags = urlParams.split("-");
 
         let groups = {};
         let fieldsState = {};
@@ -53,8 +55,6 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
             fieldsState[tag.id] = checkedTags.includes(tag.id.toString());
         }
 
-        console.log(fieldsState);
-
         setGroups(groups);
         setFieldsState(fieldsState);
         setShowingTags(showingTags);
@@ -65,7 +65,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                 limit: 10,
             })
         );
-    }, [tags]);
+    }, [tags, urlParams]);
 
     useEffect(() => {
         if (tags === undefined) return;
