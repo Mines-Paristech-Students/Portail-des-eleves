@@ -31,7 +31,7 @@ export function useURLState<T>(
         const urlValue = toUrlConverter(value);
         urlValue === ""
             ? params.delete(paramToWatch)
-            : params.set(paramToWatch, value);
+            : params.set(paramToWatch, urlValue);
 
         history.push(location.pathname + "?" + params.toString());
     };

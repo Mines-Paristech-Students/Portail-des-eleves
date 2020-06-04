@@ -35,7 +35,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                         apiKey={"buyer"}
                     />
                     <SidebarInputSearch setParams={setSearchParams} />
-                    <SidebarStatusSelector setParams={setSearchParams} />
+                    <SidebarStatusSelector setParams={setStatusParams} />
                 </>
             }
         >
@@ -50,6 +50,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                         ordering: "-date",
                         ...searchParams,
                         ...userParams,
+                        ...statusParams
                     },
                 ]}
                 apiMethod={api.transactions.list}

@@ -4,7 +4,6 @@ import { api, useBetterPaginatedQuery } from "../../../services/apiService";
 import { User } from "../../../models/user";
 import Select from "react-select";
 import { ErrorMessage } from "../ErrorPage";
-import { setIn } from "formik";
 import { useURLState } from "../../../utils/useURLState";
 
 /**
@@ -50,15 +49,19 @@ export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
         // This effect will be called when the page is loaded, selectedUserId
         // parsed but there is not selectedUser yet
         if (!selectedUser && users && selectedUserId) {
-            const selectedUsers = users.results.filter(
-                (u) => u.id == selectedUserId
-            );
-            const selectedUser =
-                selectedUsers.length >= 1 ? selectedUsers[0] : null;
+            setSelectedUser((selectedUser) => {
+                if (!selectedUser) return selectedUser;
 
-            setSelectedUser({ value: selectedUser, label: selectedUser.id });
+                const selectedUsers = users.results.filter(
+                    (u) => u.id === selectedUserId
+                );
+                const newSelectedUser =
+                    selectedUsers.length >= 1 ? selectedUsers[0] : null;
+
+                return { value: newSelectedUser, label: newSelectedUser.id };
+            });
         }
-    }, [selectedUserId, users]);
+    }, [selectedUserId, users, selectedUser]);
 
     useEffect(() => {
         setParams(
@@ -66,7 +69,7 @@ export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
                 ? { [apiKey || "user"]: selectedUser.value.id }
                 : {}
         );
-    }, [setParams, selectedUser]);
+    }, [setParams, selectedUser, apiKey]);
 
     return status === "loading" ? null : status === "error" ? (
         <ErrorMessage>{error}</ErrorMessage>
