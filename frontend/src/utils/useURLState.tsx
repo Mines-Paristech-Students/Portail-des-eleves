@@ -6,15 +6,19 @@ import { useHistory, useLocation } from "react-router-dom";
  * value of the hook in the get parameters.
  * @param paramToWatch
  * @param defaultValue
+ * @param toUrlConverter a function to convert the data into string
+ * @param fromUrlConverter a function to convert the url string into data
  */
 export function useURLState<T>(
     paramToWatch: string,
-    defaultValue: T
+    defaultValue: T,
+    toUrlConverter: (data: T) => string = JSON.stringify,
+    fromUrlConverter: (data: string) => T = JSON.parse
 ): [T, (T) => void] {
     const location = useLocation();
     const history = useHistory();
 
-    const [paramValue, setParamValue] = useState<T | null>();
+    const [paramValue, setParamValue] = useState<T>(defaultValue);
 
     const changeParam = (value) => {
         if (value === paramValue) {
@@ -24,7 +28,8 @@ export function useURLState<T>(
         setParamValue(value);
 
         const params = new URL(window.location.href).searchParams;
-        value === defaultValue
+        const urlValue = toUrlConverter(value);
+        urlValue === ""
             ? params.delete(paramToWatch)
             : params.set(paramToWatch, value);
 
@@ -39,7 +44,7 @@ export function useURLState<T>(
         // cast non string value. For instance, "2" will become the number 2
         const paramJSONValue = params.get(paramToWatch);
         if (paramJSONValue !== null) {
-            setParamValue(JSON.parse(paramJSONValue) as T);
+            setParamValue(fromUrlConverter(paramJSONValue));
         }
 
         // The param value must be taken from the URL only when the component
