@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Question } from "../../../models/courses/question";
 import { useField, Formik, FormikProps } from "formik";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { Loading } from "../../utils/Loading";
 
 export const EvaluateCourse = ({ course }) => {
@@ -100,19 +100,15 @@ export const QuestionsForm = ({ questions, course }) => {
         api.courses
             .submit(course.id, data)
             .then((res) => {
-                newToast({
-                    message: "A voté !",
-                    level: ToastLevel.Success,
-                });
+                newToast.sendSuccessToast("A voté !");
 
                 setSubmitting(false);
                 setHasVoted(true);
             })
             .catch((err) => {
-                newToast({
-                    message: err.response.status + " " + err.response.data,
-                    level: ToastLevel.Error,
-                });
+                newToast.sendSuccessToast(
+                    err.response.status + " " + err.response.data
+                );
             });
     };
 
@@ -122,10 +118,9 @@ export const QuestionsForm = ({ questions, course }) => {
             let comment: string = comments[i];
             if (question.required && comment === "") {
                 errors[i] = `${question.label} missing required field`;
-                newToast({
-                    message: `La question intitulée : ${question.label} doit être remplit!`,
-                    level: ToastLevel.Error,
-                });
+                newToast.sendErrorToast(
+                    `La question intitulée : ${question.label} doit être remplit!`
+                );
             }
         }
     };
@@ -136,10 +131,9 @@ export const QuestionsForm = ({ questions, course }) => {
             let rating: number = ratings[i];
             if (question.required && rating === -1) {
                 errors[i] = `${question.label} missing required field`;
-                newToast({
-                    message: `La question intitulée : ${question.label} doit être remplit!`,
-                    level: ToastLevel.Error,
-                });
+                newToast.sendErrorToast(
+                    `La question intitulée : ${question.label} doit être remplit!`
+                );
             }
         }
     };

@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Modal, Card } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form";
 import { api } from "../../../services/apiService";
 import { useFormik } from "formik";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
 import { Pagination } from "../../utils/Pagination";
 
@@ -20,10 +20,7 @@ export const CreateCourseForm = ({ course }) => {
             const errors: any = {};
             if (values.name === "") {
                 errors.name = "Required";
-                newToast({
-                    message: "Le nom ne peut pas être vide !",
-                    level: ToastLevel.Error,
-                });
+                newToast.sendErrorToast("Le nom ne peut pas être vide !");
             }
             return errors;
         },
@@ -35,16 +32,12 @@ export const CreateCourseForm = ({ course }) => {
                 .save(form)
                 .then((form) => {
                     setForm(form);
-                    newToast({
-                        message: "Formulaire créé, redirection...",
-                        level: ToastLevel.Success,
-                    });
+                    newToast.sendErrorToast("Formulaire créé, redirection...");
                 })
                 .catch((err) => {
-                    newToast({
-                        message: err.response.status + " " + err.response.data,
-                        level: ToastLevel.Error,
-                    });
+                    newToast.sendErrorToast(
+                        err.response.status + " " + err.response.data
+                    );
                 });
         },
     });
@@ -103,16 +96,14 @@ export const LinkCourseForm = ({ course }) => {
             .save(data)
             .then((_) => {
                 setRedirect(true);
-                newToast({
-                    message: "Successfully updated the course " + course.name,
-                    level: ToastLevel.Success,
-                });
+                newToast.sendSuccessToast(
+                    "Successfully updated the course " + course.name
+                );
             })
             .catch((err) => {
-                newToast({
-                    message: err.response.status + " " + err.response.data,
-                    level: ToastLevel.Error,
-                });
+                newToast.sendErrorToast(
+                    err.response.status + " " + err.response.data
+                );
             });
     };
 

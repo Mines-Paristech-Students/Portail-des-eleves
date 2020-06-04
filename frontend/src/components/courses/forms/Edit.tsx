@@ -9,14 +9,14 @@ import {
     Card,
     Spinner,
     ListGroup,
+    Badge,
 } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Formik, useFormik, useField, FormikProps } from "formik";
-import { ToastContext, ToastLevel } from "../../utils/Toast";
+import { ToastContext } from "../../utils/Toast";
 import { Question, QuestionCategory } from "../../../models/courses/question";
-import { Badge } from "reactstrap";
 
 export const EditCourseForm = ({ course }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -36,10 +36,7 @@ export const EditCourseForm = ({ course }) => {
                     setIsLoading(false);
                 })
                 .catch((err) => {
-                    newToast({
-                        message: "Could not fetch questions...",
-                        level: ToastLevel.Error,
-                    });
+                    newToast.sendErrorToast("Could not fetch questions...");
                 });
         },
         // eslint-disable-next-line
@@ -106,17 +103,11 @@ const FormEditor = ({ form }) => {
             api.courses.forms
                 .save(form)
                 .then((res) => {
-                    newToast({
-                        message: `Updated ${form.name}`,
-                        level: ToastLevel.Success,
-                    });
+                    newToast.sendSuccessToast(`Updated ${form.name}`);
                     setSubmitting(false);
                 })
                 .catch((err) => {
-                    newToast({
-                        message: "Could not update form...",
-                        level: ToastLevel.Error,
-                    });
+                    newToast.sendErrorToast("Could not update form...");
                     setSubmitting(false);
                 });
         },
@@ -173,16 +164,14 @@ const FetchQuestionsModal = ({ course }) => {
                     return api.courses.forms.questions
                         .save(question)
                         .then((question) => {
-                            newToast({
-                                message: `Could not insert question ${question.label}`,
-                                level: ToastLevel.Success,
-                            });
+                            newToast.sendSuccessToast(
+                                `Could not insert question ${question.label}`
+                            );
                         })
                         .catch((err) => {
-                            newToast({
-                                message: `Could not insert question ${question.label}`,
-                                level: ToastLevel.Error,
-                            });
+                            newToast.sendErrorToast(
+                                `Could not insert question ${question.label}`
+                            );
                         });
                 })
             ).then((data) => {
@@ -201,10 +190,7 @@ const FetchQuestionsModal = ({ course }) => {
                     setIsLoading(false);
                 })
                 .catch((err) => {
-                    newToast({
-                        message: "Could not fetch questions...",
-                        level: ToastLevel.Error,
-                    });
+                    newToast.sendErrorToast("Could not fetch questions...");
                 });
         },
         // eslint-disable-next-line
@@ -225,10 +211,7 @@ const FetchQuestionsModal = ({ course }) => {
                     formik.setErrors({ questions: "Could not fetch" });
                     formik.setFieldValue("questions", []);
                     setIsLoading(false);
-                    newToast({
-                        message: "Could not fetch questions...",
-                        level: ToastLevel.Error,
-                    });
+                    newToast.sendErrorToast("Could not fetch questions...");
                 });
         },
         // eslint-disable-next-line
@@ -341,18 +324,16 @@ export const QuestionEditor = ({ question }) => {
             .save(question)
             .then((res) => {
                 console.log("plop" + question.form);
-                newToast({
-                    message: `Updated questions ${res.label} for ${res.form}`,
-                    level: ToastLevel.Success,
-                });
+                newToast.sendSuccessToast(
+                    `Updated questions ${res.label} for ${res.form}`
+                );
                 setSubmitting(false);
                 setStatus(QuestionStatus.Success);
             })
             .catch((err) => {
-                newToast({
-                    message: err.response.status + " " + err.response.data,
-                    level: ToastLevel.Error,
-                });
+                newToast.sendErrorToast(
+                    err.response.status + " " + err.response.data
+                );
                 setSubmitting(false);
                 setStatus(QuestionStatus.Error);
             });
