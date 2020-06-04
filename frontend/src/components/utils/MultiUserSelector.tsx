@@ -139,7 +139,7 @@ export const MultiUserSelector = ({ onChange }) => {
             <Col md={3} className={"p-0 border-right overflow-auto"}>
                 <Select
                     value={promotion}
-                    onChange={(v, _) => setPromotion(v)}
+                    onChange={(v) => setPromotion(v)}
                     options={
                         promotions
                             ? promotions.promotions.map((promotion) => ({
