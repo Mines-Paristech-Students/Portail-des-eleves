@@ -12,6 +12,21 @@ class WriteRoleSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(), read_only=False
     )
 
+    permissions = serializers.MultipleChoiceField(choices=Role.PERMISSION_NAMES)
+
+    class Meta:
+        model = Role
+        read_only_fields = ("id",)
+        fields = read_only_fields + (
+            "association",
+            "user",
+            "role",
+            "rank",
+            "start_date",
+            "end_date",
+            "permissions",
+        )
+
     def __init__(self, used_by_association_admin=False, *args, **kwargs):
         """
         :param used_by_association_admin: set to True if the serializer is used by an administrator of the edited
@@ -22,17 +37,29 @@ class WriteRoleSerializer(serializers.ModelSerializer):
         self.used_by_association_admin = used_by_association_admin
 
     def save(self, **kwargs):
-        """If the user is not an association admin, only give them access to the administration_permission field."""
-        if not self.used_by_association_admin:
-            forbidden_fields = tuple(
-                f"{permission_name}_permission"
-                for permission_name in Role.PERMISSION_NAMES
-                if permission_name != "administration"
-            ) + ("start_date", "end_date", "role", "rank")
+        """If the user is not an association admin, only give them access to the "administration" permission."""
 
-            for field in forbidden_fields:
+        if not self.used_by_association_admin:
+            if "permissions" in self.validated_data:
+                self.validated_data["permissions"] = (
+                    {"administration"}
+                    if "administration" in self.validated_data["permissions"]
+                    else {}
+                )
+
+            for field in ("role", "rank", "start_date", "end_date"):
                 if field in self.validated_data:
                     self.validated_data.pop(field)
+
+        # Update the permissions: `{permission_name}_permission` is True if and only if `permission_name` is present
+        # in the provided `permissions` list.
+        if "permissions" in self.validated_data:
+            for permission_name in Role.PERMISSION_NAMES:
+                self.validated_data[f"{permission_name}_permission"] = (
+                    permission_name in self.validated_data["permissions"]
+                )
+
+            self.validated_data.pop("permissions")
 
         return super(WriteRoleSerializer, self).save(**kwargs)
 
@@ -51,36 +78,32 @@ class WriteRoleSerializer(serializers.ModelSerializer):
 
         self._errors = {}
 
-        if "start_date" in self.initial_data and "end_date" in self.initial_data:
+        if (
+            "start_date" in self.initial_data
+            and "end_date" in self.initial_data
+            and self.initial_data["end_date"] is not None
+        ):
             if self.initial_data["start_date"] >= self.initial_data["end_date"]:
                 self._errors = {
                     "field_errors": "field start_date is not consistent with field end_date."
                 }
 
+        if "permissions" in self.initial_data:
+            extra_values = set(self.initial_data["permissions"]).difference(
+                set(Role.PERMISSION_NAMES)
+            )
+
+            if len(extra_values) > 0:
+                self._errors.update(
+                    {
+                        "field_errors": f"permissions contains values which are not allowed: {extra_values}."
+                    }
+                )
+
         if self._errors and raise_exception:
             raise ValidationError(self._errors)
 
         return super(WriteRoleSerializer, self).is_valid(raise_exception)
-
-    def to_representation(self, instance):
-        res = super(WriteRoleSerializer, self).to_representation(instance)
-
-        for permission_name in Role.PERMISSION_NAMES:
-            res[permission_name] = getattr(instance, permission_name)
-
-        return res
-
-    class Meta:
-        model = Role
-        read_only_fields = ("id",)
-        fields = (
-            read_only_fields
-            + ("association", "user", "role", "rank", "start_date", "end_date")
-            + tuple(
-                f"{permission_name}_permission"
-                for permission_name in Role.PERMISSION_NAMES
-            )
-        )
 
 
 class RoleSerializer(serializers.ModelSerializer):

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
-import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
@@ -10,6 +9,8 @@ import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
+import { isImageMime } from "../../../utils/mime";
+import "./list.css";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
@@ -43,46 +44,64 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
                     <>
-                        {association.myRole.permissions?.includes("media") && (
-                            <Link
-                                to={`/associations/${association.id}/fichiers/televerser`}
-                                className={"btn btn-success float-right mt-3"}
-                            >
-                                <span className="fe fe-upload" /> Ajouter des
-                                fichiers
-                            </Link>
-                        )}
-                        <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-                        <div className={"card-columns"}>
-                            {medias.map((media) => {
-                                return (
-                                    <Col key={media.id}>
-                                        <Card
-                                            onClick={() =>
-                                                history.push(
-                                                    `/associations/${association.id}/fichiers/${media.id}/`
-                                                )
-                                            }
-                                        >
-                                            <Card.Body>
-                                                <h4>{media.name}</h4>
-                                                <p className="text-muted">
-                                                    {media.description}
-                                                </p>
-
-                                                <TagList
-                                                    model={TaggableModel.Media}
-                                                    instance={media}
-                                                    collapsed={true}
-                                                />
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                );
-                            })}
+                        <div className="d-flex align-items-center">
+                            <PageTitle className={"mt-6"}>Fichiers</PageTitle>
+                            {association.myRole.permissions?.includes(
+                                "media"
+                            ) && (
+                                <Link
+                                    to={`/associations/${association.id}/fichiers/televerser`}
+                                    className={
+                                        "btn btn-success btn-sm float-right ml-auto"
+                                    }
+                                >
+                                    <span className="fe fe-upload" /> Ajouter
+                                    des fichiers
+                                </Link>
+                            )}
                         </div>
+
+                        <div className={"card-columns"}>
+                            {medias.map((media) => (
+                                <Card
+                                    key={media.id}
+                                    onClick={() =>
+                                        history.push(
+                                            `/associations/${association.id}/fichiers/${media.id}/`
+                                        )
+                                    }
+                                >
+                                    {isImageMime(media.mimetype) && (
+                                        <img src={media.url} alt={media.name} />
+                                    )}
+                                    <Card.Body>
+                                        <h4 className={"m-0"}>{media.name}</h4>
+                                        <p className="text-muted">
+                                            {media.description}
+                                        </p>
+                                    </Card.Body>
+
+                                    {media.tags.length > 0 && (
+                                        <Card.Footer
+                                            style={{
+                                                backgroundColor:
+                                                    "rgba(0, 0, 0, 0.03)",
+                                            }}
+                                        >
+                                            <TagList
+                                                model={TaggableModel.Media}
+                                                instance={media}
+                                                collapsed={true}
+                                            />
+                                        </Card.Footer>
+                                    )}
+                                </Card>
+                            ))}
+                        </div>
+                        {paginationControl}
+
                         {medias.length === 0 &&
-                            Object.entries(tagParams).length === 0 && (
+                            (Object.entries(tagParams).length === 0 ? (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
@@ -101,16 +120,11 @@ export const AssociationFilesystemList = ({ association }) => {
                                         "Revenez quand les responsables de l'association en auront ajouté !"
                                     )}
                                 </Instructions>
-                            )}
-
-                        {paginationControl}
-
-                        {medias.length === 0 &&
-                            Object.entries(tagParams).length > 0 && (
+                            ) : (
                                 <Card className="text-center lead">
                                     <Card.Body>Aucun fichier trouvé</Card.Body>
                                 </Card>
-                            )}
+                            ))}
                     </>
                 )}
             />
