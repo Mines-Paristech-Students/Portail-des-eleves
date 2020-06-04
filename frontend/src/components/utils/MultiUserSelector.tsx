@@ -250,7 +250,7 @@ export const MultiUserSelector = ({ onChange }) => {
                                     "text-center text-muted lead col mt-6"
                                 }
                             >
-                                Personne n'a été séléctionné pour l'instant
+                                Personne n'a été sélectionné pour l'instant
                             </p>
                         )}
                     </Row>
