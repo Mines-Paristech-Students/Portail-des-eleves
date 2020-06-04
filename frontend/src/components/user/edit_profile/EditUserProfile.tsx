@@ -225,9 +225,7 @@ export const EditUserProfile = () => {
                                 "Choix invalide."
                             ),
                     })}
-                    onSubmit={(values, { setSubmitting }) =>
-                        onSubmit(values, { setSubmitting })
-                    }
+                    onSubmit={onSubmit}
                 >
                     <Form>
                         <Card className="text-left">

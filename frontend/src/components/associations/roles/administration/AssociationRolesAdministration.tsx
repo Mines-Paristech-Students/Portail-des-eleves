@@ -15,8 +15,11 @@ import Button from "react-bootstrap/Button";
 import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { ForbiddenError } from "../../../utils/ErrorPage";
-import { EditRoleModal } from "./EditRoleModal";
 import { RolePermissionIconTooltip } from "./RolePermissionIconTooltip";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { EditRoleModal } from "./EditRoleModal";
+import { CreateRoleModal } from "./CreateRoleModal";
 
 const EditRoleButton = ({ handleClick }: { handleClick: () => void }) => (
     <OverlayTrigger
@@ -130,8 +133,10 @@ export const AssociationRolesAdministration = ({
 }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    // The Role currently edited in the modal.
+    // The Role currently edited in the editing modal.
     const [editRole, setEditRole] = useState<Role | null>(null);
+
+    const [showAddRole, setShowAddRole] = useState<boolean>(false);
 
     const [remove] = useMutation(api.roles.delete, {
         onSuccess: () => sendSuccessToast("Rôle supprimé."),
@@ -155,9 +160,14 @@ export const AssociationRolesAdministration = ({
     return (
         <>
             <EditRoleModal
+                role={editRole}
                 show={editRole !== null}
                 onHide={() => setEditRole(null)}
-                role={editRole}
+            />
+            <CreateRoleModal
+                association={association}
+                show={showAddRole}
+                onHide={() => setShowAddRole(false)}
             />
             <Pagination
                 apiKey={[
@@ -175,7 +185,23 @@ export const AssociationRolesAdministration = ({
                 apiMethod={api.roles.list}
                 render={(roles, paginationControl) => (
                     <Container className="mt-4">
-                        <PageTitle>Gestion des rôles</PageTitle>
+                        <Row className="align-items-center mb-2">
+                            <Col sm="12" md="10">
+                                <PageTitle className="my-0">
+                                    Gestion des rôles
+                                </PageTitle>
+                            </Col>
+                            <Col sm="12" md="2">
+                                <Button
+                                    type="button"
+                                    variant="outline-primary"
+                                    className="float-sm-none float-md-right btn-sm"
+                                    onClick={() => setShowAddRole(true)}
+                                >
+                                    Ajouter un rôle
+                                </Button>
+                            </Col>
+                        </Row>
 
                         <Card>
                             <Table columns={columns} data={roles} />
