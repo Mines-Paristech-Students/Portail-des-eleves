@@ -37,7 +37,6 @@ io.use(socketio_jwt.authorize(jwtOption));
 
 // Main Socket
 io.sockets.on("connection", (socket) => {
-
   socket.on("message", async (request: any) => {
     if (request.message === undefined) {
       return;
