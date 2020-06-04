@@ -1,29 +1,26 @@
 import React from "react";
 import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
-import { TextField, TextFieldProps } from "./TextField";
+import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
 
 /**
- * A `Form.Control` component tied to a Formik field, wrapped in a `Form.Group`
+ * A `DayPicker` component tied to a Formik field, wrapped in a `Form.Group`
  * component including optional `Form.Label`, `Form.Control.Feedback` and help
  * text components.
  *
  * Basic example:
  * ```
- * <TextFormGroup
- *     name="email"
- *     type="email"
- *     label="Courriel"
+ * <DatePickerFormGroup
+ *     name="birthday"
+ *     label="Date de naissance"
  * />
  * ```
  *
  * Some graphical additions:
  * ```
- * <TextFormGroup
- *     name="description"
- *     as="textarea"
- *     label="Description"
- *     placeholder="Ma vie super intéressante"
- *     iconLeft="edit-2"
+ * <DatePickerFormGroup
+ *     name="birthday"
+ *     label="Date de naissance"
+ *     todayButton
  *     labelProps={{
  *         className: "font-weight-normal"
  *     }}
@@ -38,34 +35,24 @@ import { TextField, TextFieldProps } from "./TextField";
  * displayed and filled with the errors obtained from the Formik context.
  * @param feedbackOnTouchedOnly defaults to `true`. If `true`, the feedback
  * is only displayed if the field is touched.
- * @param iconLeft optional, the code of a Feather icon embedded on the left
- * of the input. If this prop is specified, `textLeft` and `textRight` are
- * ignored.
- * @param iconRight optional, the code of a Feather icon embedded on the right
- * of the input. If this prop is specified, `textLeft` and `textRight` are
- * ignored.
- * @param textLeft optional, a text embedded on the left of the input.
- * @param textRight optional, a text embedded on the right of the input.
+ * @param todayButton defaults to `false`. If `true`, a “Today” button is displayed.
  * @param formGroupProps passed to the `Form.Group` component.
  * @param labelProps passed to the `Form.Label` component.
  * @param feedbackProps passed to the `Form.Control.Feedback` component.
- * @param props passed to `TextField`.
+ * @param props passed to `DayPickerField`.
  */
-export const TextFormGroup = ({
+export const DayPickerFormGroup = ({
     name,
     label,
     help,
     feedback = true,
     feedbackOnTouchedOnly = true,
-    iconLeft,
-    iconRight,
-    textLeft,
-    textRight,
+    todayButton = false,
     formGroupProps,
     labelProps,
     feedbackProps,
     ...props
-}: TextFieldProps & BaseFormGroupProps) => (
+}: DatePickerFieldProps & BaseFormGroupProps) => (
     <BaseFormGroup
         name={name}
         label={label}
@@ -76,15 +63,6 @@ export const TextFormGroup = ({
         labelProps={labelProps}
         feedbackProps={feedbackProps}
     >
-        <TextField
-            name={name}
-            feedback={feedback}
-            feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-            iconLeft={iconLeft}
-            iconRight={iconRight}
-            textLeft={textLeft}
-            textRight={textRight}
-            {...props}
-        />
+        <DayPickerField name={name} todayButton={todayButton} {...props} />
     </BaseFormGroup>
 );

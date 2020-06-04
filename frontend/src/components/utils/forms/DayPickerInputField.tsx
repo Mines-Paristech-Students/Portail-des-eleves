@@ -1,7 +1,7 @@
 import React from "react";
-import { FieldHookConfig, useField } from "formik";
+import { FieldAttributes, useField } from "formik";
 import dayjs from "dayjs";
-import { dayPickerLocalisationProps } from "./DatePickerField";
+import { dayPickerLocalisationProps } from "./DayPickerField";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 // Required for formatting and parsing the date.
@@ -14,27 +14,30 @@ export type DayPickerInputFieldProps = {
     parseFormats?: string | string[];
     displayFormat?: string;
     todayButton?: boolean;
-    inputProps?: object;
-    fieldProps?: string | FieldHookConfig<Date>;
-};
+} & FieldAttributes<any>;
 
 /**
- * This component builds a bridge between `DayPickerInput` and Formik. The date time is always set at the beginning
- * of the day (00:00).
+ * A `DayPickerInput` component tied to a Formik field.
  *
- * The value of the field (accessible in `values[name]`) is always a Date object, but it may an `Invalid Date` object.
+ * The value of the field (accessible in `values[name]`) is a `Date` object or
+ * `undefined` if the `Date` is invalid (i.e. when the input contains something
+ * which could not be parsed).
  *
- * You may also be interested in `DayPickerInputFormGroup` which puts this component in a `FormGroup`.
+ * Please note that due to an unexplained behaviour of Formik when clicking on
+ * Submit several times in a row, the condition for showing the feedback is that
+ * `errors[name]` is set and `feedback` is true (`touched` has thus no effect).
  *
  * @param name the name of the control, used to access its value in Formik.
- * @param feedback defaults to true. If `true`, the `is-invalid` class is given to the input component when needed.
- * @param disabled defaults to false. If `true`, the input is disabled, the errors are emptied and the value is set to
- * undefined.
- * @param parseFormats defaults to `["DD/MM/YYYY"]`. The formats used to parse the date.
- * @param displayFormat defaults to `"DD/MM/YYYY"`. The format used to display the date.
- * @param todayButton defaults to `false`. If `true`, a `todayButton` will be displayed in the day picker.
- * @param inputProps optional, passed to the underlying `input` component.
- * @param fieldProps passed to Formik's `useField`.
+ * @param feedback defaults to true. If `true`, the `is-invalid` class is given
+ * to the input component when needed.
+ * @param disabled defaults to `false`. If `true`, the input is disabled.
+ * @param parseFormats defaults to `["DD/MM/YYYY"]`. The formats used to parse
+ * the date.
+ * @param displayFormat defaults to `"DD/MM/YYYY"`. The format used to display
+ * the date.
+ * @param todayButton defaults to `false`. If `true`, a `todayButton` will be
+ * displayed in the day picker.
+ * @param props passed to Formik's `useField`.
  */
 export const DayPickerInputField = ({
     name,
@@ -43,15 +46,14 @@ export const DayPickerInputField = ({
     parseFormats = ["DD/MM/YYYY"],
     displayFormat = "DD/MM/YYYY",
     todayButton = false,
-    inputProps,
-    ...fieldProps
+    ...props
 }: DayPickerInputFieldProps) => {
     const [field, meta, helper] = useField<Date | undefined>({
         validate: (value) =>
             value === undefined && !disabled
                 ? "Veuillez entrer une date au format JJ/MM/YYYY."
                 : undefined,
-        ...fieldProps,
+        ...props,
         name: name,
     });
 
@@ -90,7 +92,7 @@ export const DayPickerInputField = ({
                     ...dayPickerLocalisationProps(todayButton),
                 }}
                 inputProps={{
-                    className: `${inputProps || ""} form-control ${
+                    className: `form-control ${
                         !disabled && feedback && meta.error ? "is-invalid" : ""
                     }`,
                     placeholder: "JJ/MM/YYYY",
@@ -98,7 +100,6 @@ export const DayPickerInputField = ({
                     // `field.value` to the _string_ value of the input, bypassing `react-day-picker`'s flow.
                     onBlur: field.onBlur,
                     disabled: disabled,
-                    ...inputProps,
                 }}
             />
         </>
