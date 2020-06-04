@@ -1,11 +1,6 @@
-import {
-    apiService,
-    PaginatedResponse,
-    unwrap,
-    toUrlParams,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Event } from "../../models/associations/event";
-import dayjs from "dayjs";
+import { castDatesToUrlParam, toUrlParams } from "../urlParam";
 
 export type EventsListParameters = {
     association: string;
@@ -22,27 +17,18 @@ export const events = {
         unwrap<PaginatedResponse<Event[]>>(
             apiService.get(
                 `/associations/events/${toUrlParams({
-                    ...parameters,
-                    starts_at_before: parameters.starts_at_before
-                        ? dayjs(parameters.starts_at_before).format(
-                              "YYYY-MM-DD%20HH:mm:ss"
-                          )
-                        : undefined,
-                    starts_at_after: parameters.starts_at_after
-                        ? dayjs(parameters.starts_at_after).format(
-                              "YYYY-MM-DD%20HH:mm:ss"
-                          )
-                        : undefined,
-                    ends_at_before: parameters.ends_at_before
-                        ? dayjs(parameters.ends_at_before).format(
-                              "YYYY-MM-DD%20HH:mm:ss"
-                          )
-                        : undefined,
-                    ends_at_after: parameters.ends_at_after
-                        ? dayjs(parameters.ends_at_after).format(
-                              "YYYY-MM-DD%20HH:mm:ss"
-                          )
-                        : undefined,
+                    ...castDatesToUrlParam(
+                        {
+                            starts_at_before: parameters.starts_at_before,
+                            starts_at_after: parameters.starts_at_after,
+                            ends_at_before: parameters.ends_at_before,
+                            ends_at_after: parameters.ends_at_after,
+                        },
+                        "YYYY-MM-DD%20HH:mm:ss"
+                    ),
+                    association: parameters.association,
+                    time: parameters.time,
+                    ordering: parameters.ordering,
                     page: page,
                     page_size: 10,
                 })}`

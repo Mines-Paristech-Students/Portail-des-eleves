@@ -1,5 +1,6 @@
-import { apiService, toUrlParams, unwrap } from "../apiService";
+import { apiService, unwrap } from "../apiService";
 import { Funding, FundingStatus } from "../../models/associations/marketplace";
+import { toUrlParams } from "../urlParam";
 
 export const fundings = {
     create: ({ marketplaceId, customerId, value }) =>

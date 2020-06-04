@@ -1,10 +1,10 @@
 import {
     apiService,
     PaginatedResponse,
-    toUrlParams,
     unwrap,
 } from "../apiService";
 import { Product } from "../../models/associations/marketplace";
+import { toUrlParams } from "../urlParam";
 
 export const products = {
     list: (associationId, params = {}, page = 1) =>

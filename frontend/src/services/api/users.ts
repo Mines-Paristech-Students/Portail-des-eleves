@@ -1,10 +1,10 @@
 import {
     apiService,
     PaginatedResponse,
-    toUrlParams,
     unwrap,
 } from "../apiService";
 import { User } from "../../models/user";
+import { toUrlParams } from "../urlParam";
 
 export const users = {
     list: (params, page = 1) => {

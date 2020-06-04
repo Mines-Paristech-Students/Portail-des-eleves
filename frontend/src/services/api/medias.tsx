@@ -2,9 +2,9 @@ import { Media } from "../../models/associations/media";
 import {
     apiService,
     PaginatedResponse,
-    toUrlParams,
     unwrap,
 } from "../apiService";
+import { toUrlParams } from "../urlParam";
 
 export const medias = {
     list: (associationId, params = {}, page = 1) =>
