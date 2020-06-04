@@ -53,10 +53,6 @@ jobs:
         working-directory: chat_server 
 
       - name: Build
-        run: npm test 
-        working-directory: chat_server 
-
-      - name: Test
         run: npm test
         working-directory: chat_server 
         env:
