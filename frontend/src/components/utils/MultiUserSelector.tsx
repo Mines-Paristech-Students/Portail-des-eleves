@@ -40,11 +40,11 @@ export const MultiUserSelector = ({
     >();
     const [userError, setUserError] = useState<any>();
 
-    /* As we are doing many sets-like features here (check if a user is selected,
-     * change the user from list, etc.. and we make it on a non-small sample (>100)
-     * To allow faster list switching, we add a "selected" field to say in which
-     * set a user belongs and simply switch it when we want to transfer the user.
-     * The displaying of the users is made simple by using the selectedUsers and
+    /* We are doing many set operations (check if a user is selected,
+     * change the user from list... on a non-small sample (>100).
+     * To allow faster list switching, we add a "selected" field to specify which
+     * set a user belongs to and simply switch it when we want to transfer the user.
+     * Displaying the users is made simple by using the selectedUsers and
      * unselectedUsers variables.
      */
     const [users, setUsers] = useState<{
@@ -254,7 +254,7 @@ export const MultiUserSelector = ({
                                     "text-center text-muted lead col mt-6"
                                 }
                             >
-                                Personne n'a été séléctionné pour l'instant
+                                Personne n'a été sélectionné pour l'instant
                             </p>
                         )}
                     </Row>
