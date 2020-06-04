@@ -12,15 +12,6 @@ type MutateRolePayload = Pick<
     user?: string;
 };
 
-type MutateRolePayload = Pick<
-    Role,
-    "role" | "rank" | "startDate" | "endDate" | "permissions"
-> & {
-    // Not taken from `Role` because we only need the ids, not a full object.
-    association?: string;
-    user?: string;
-};
-
 export const parseRoleDates = (role: Role) => {
     role.startDate = new Date(role.startDate);
     role.endDate = role.endDate ? new Date(role.endDate) : role.endDate;
