@@ -7,6 +7,7 @@ import { SidebarSection } from "../sidebar/SidebarSection";
 import { CheckboxField } from "../sidebar/CheckboxField";
 import Fuse from "fuse.js";
 import { Form } from "react-bootstrap";
+import { useURLState } from "../../../utils/useURLState";
 
 export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     const { resolvedData: tags, status, error } = useBetterPaginatedQuery<any>(
@@ -16,9 +17,12 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
 
     const [fieldsState, setFieldsState] = useState({});
     const [groups, setGroups] = useState({});
+
     const [fuseSearch, setFuseSearch] = useState(new Fuse([]));
     const [searchValue, setSearchValue] = useState("");
     const [showingTags, setShowingTags] = useState({});
+
+    const [currentTags, setCurrentTags] = useURLState("tags", "");
 
     const onStateChange = (state) => {
         setFieldsState(state);
@@ -28,14 +32,15 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     const onSearchChange = (params) => {
         const ids = Object.entries(params) // [ [namespace.tag_id, is_selected] ]
             .map(([key, value]) => value && key)
-            .filter(Boolean)
-            .join(",");
-
-        setParams(ids.length > 0 ? { tags__are: ids } : {});
+            .filter(Boolean);
+        setParams(ids.length > 0 ? { tags__are: ids.join(",") } : {});
+        setCurrentTags(ids.join("-"));
     };
 
     useEffect(() => {
         if (tags === undefined) return;
+
+        const checkedTags = currentTags.split("-");
 
         let groups = {};
         let fieldsState = {};
@@ -45,9 +50,10 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                 groups[tag.namespace.id] = [];
             }
             groups[tag.namespace.id].push(tag);
-
-            fieldsState[tag.id] = false;
+            fieldsState[tag.id] = checkedTags.includes(tag.id.toString());
         }
+
+        console.log(fieldsState);
 
         setGroups(groups);
         setFieldsState(fieldsState);
@@ -64,28 +70,27 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     useEffect(() => {
         if (tags === undefined) return;
 
-        let newShowingTags = { ...showingTags };
+        setShowingTags((showingTags) => {
+            let newShowingTags = { ...showingTags };
 
-        for (let tag of tags.results) {
-            if (!newShowingTags.hasOwnProperty(tag.namespace.id)) {
-                newShowingTags[tag.namespace.id] = {};
+            for (let tag of tags.results) {
+                if (!newShowingTags.hasOwnProperty(tag.namespace.id)) {
+                    newShowingTags[tag.namespace.id] = {};
+                }
+
+                delete newShowingTags[tag.namespace.id][tag.id];
             }
 
-            delete newShowingTags[tag.namespace.id][tag.id];
-        }
+            fuseSearch
+                .search(searchValue)
+                .map((res) => res.item as Tag)
+                .forEach((tag) => {
+                    newShowingTags[tag.namespace.id][tag.id] = true;
+                });
 
-        fuseSearch
-            .search(searchValue)
-            .map((res) => res.item as Tag)
-            .forEach((tag) => {
-                newShowingTags[tag.namespace.id][tag.id] = true;
-            });
-        setShowingTags(newShowingTags);
-
-        // avoid infinite looping because showingTags triggers the effect,
-        // which changes showingTags, which triggers the effect and so on
-        // eslint-disable-next-line
-    }, [searchValue, tags]);
+            return newShowingTags;
+        });
+    }, [searchValue, tags, fuseSearch]);
 
     return status === "loading" ? (
         <Loading />
