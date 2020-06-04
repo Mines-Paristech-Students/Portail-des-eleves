@@ -1,6 +1,10 @@
+from functools import reduce
+
 import django_filters
 from django.db.models import Q
 from django_filters import rest_framework as filters
+
+from tags.models import Tag
 
 """
 Taggable filter allows to filter taggable objects with an intersection of tags. If you're working with Media 
@@ -20,9 +24,18 @@ class TaggableFilter(filters.FilterSet):
         try:
             if args:
                 tag_ids = args[0].split(",")
-                for tag_id in tag_ids:
-                    new_condition = Q(**{"tags__id": tag_id})
-                    queryset = queryset & queryset.filter(new_condition)
+                tags = Tag.objects.filter(id__in=tag_ids).values("id", "namespace")
+
+                conditions = dict()
+                # regroup the tags by namespace, in a "tag id in" condition
+                for tag in tags:
+                    conditions[tag["namespace"]] = conditions.get(
+                        tag["namespace"], []
+                    ) + [tag["id"]]
+
+                # regroup the conditions in a AND condition with multiple filtering
+                for key in conditions.keys():
+                    queryset = queryset.filter(Q(**{"tags__id__in": conditions[key]}))
 
         except ValueError:
             pass
