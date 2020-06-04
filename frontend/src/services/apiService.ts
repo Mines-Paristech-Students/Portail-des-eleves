@@ -22,6 +22,7 @@ import { users } from "./api/users";
 import { fundings } from "./api/fundings";
 import { profile } from "./api/profile";
 import { courses } from "./api/courses";
+import { roles } from "./api/roles";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -116,6 +117,7 @@ export const api = {
     transactions: transactions,
     fundings: fundings,
 
+    roles: roles,
     courses: courses,
 
     polls: polls,

@@ -154,8 +154,8 @@ STATICFILES_DIRS = (join(BASE_DIR, "..", "medias", "assets"),)
 USE_DJANGO_JQUERY = True
 JQUERY_URL = False
 
-MEDIA_ROOT = join(BASE_DIR, "..", "medias", "uploads", "associations")
-MEDIA_URL = "/" + join("uploads", "associations") + "/"
+MEDIA_ROOT = join(BASE_DIR, "medias")
+MEDIA_URL = "/medias/"
 
 
 # Customized settings.

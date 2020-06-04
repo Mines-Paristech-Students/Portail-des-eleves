@@ -1,11 +1,20 @@
 import { Page } from "../../models/associations/page";
-import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import {
+    apiService,
+    PaginatedResponse,
+    toUrlParams,
+    unwrap,
+} from "../apiService";
 
 export const pages = {
-    list: (associationId) =>
+    list: (associationId, params = {}, page = 1) =>
         unwrap<PaginatedResponse<Page[]>>(
             apiService.get(
-                `/associations/pages/?association=${associationId}&page_type=STATIC`
+                `/associations/pages/${toUrlParams({
+                    association_id: associationId,
+                    page_type: "STATIC",
+                    ...params,
+                })}`
             )
         ),
     get: (pageId) =>

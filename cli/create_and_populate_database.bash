@@ -11,22 +11,22 @@ rm -Rf  repartitions/migrations/*
 rm -Rf  subscriptions/migrations/*
 rm -Rf  tags/migrations/*
 
-python manage.py reset_db --noinput
+python3 manage.py reset_db --noinput
 
-python manage.py makemigrations authentication
-python manage.py makemigrations associations
-python manage.py makemigrations polls
-python manage.py makemigrations repartitions
-python manage.py makemigrations subscriptions
-python manage.py makemigrations tags
-python manage.py makemigrations courses 
+python3 manage.py makemigrations authentication
+python3 manage.py makemigrations associations
+python3 manage.py makemigrations polls
+python3 manage.py makemigrations repartitions
+python3 manage.py makemigrations subscriptions
+python3 manage.py makemigrations tags
+python3 manage.py makemigrations courses 
 
-python manage.py migrate
+python3 manage.py migrate
 
-python manage.py loaddata authentication profile
-python manage.py loaddata association election event library marketplace media page role
-python manage.py loaddata polls
-python manage.py loaddata repartitions
-python manage.py loaddata subscriptions
-python manage.py loaddata tags
-python manage.py loaddata courses 
+python3 manage.py loaddata authentication profile
+python3 manage.py loaddata association election event library marketplace media page role
+python3 manage.py loaddata polls
+python3 manage.py loaddata repartitions
+python3 manage.py loaddata subscriptions
+python3 manage.py loaddata tags
+python3 manage.py loaddata courses 

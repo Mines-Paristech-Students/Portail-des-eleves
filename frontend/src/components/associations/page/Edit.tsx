@@ -41,31 +41,25 @@ export const AssociationEditPage = ({ association, ...props }) => {
 };
 
 const EditPage = ({ page, association, ...props }) => {
-    const newToast = useContext(ToastContext);
+    const { sendToast, sendSuccessToast, sendErrorToast } = useContext(
+        ToastContext
+    );
 
     const formik = useFormik({
         initialValues: page,
         onSubmit: (values) => {
-            newToast({
-                message: "Sauvegarde en cours",
-                level: ToastLevel.Success,
-            });
+            sendToast("Sauvegarde en cours", ToastLevel.Info);
+
             api.pages
                 .save(values)
                 .then((res) => {
-                    newToast({
-                        message: "Page sauvegardée !",
-                        level: ToastLevel.Success,
-                    });
+                    sendSuccessToast("Page sauvegardée !");
                     props.history.push(
                         `/associations/${association.id}/pages/${res.id}`
                     );
                 })
                 .catch((err) => {
-                    newToast({
-                        message: err.message,
-                        level: ToastLevel.Error,
-                    });
+                    sendErrorToast(err.message);
                 });
         },
     });
@@ -75,14 +69,11 @@ const EditPage = ({ page, association, ...props }) => {
         if (confirm("Supprimer la page ? Cette action est irréversible")) {
             api.pages
                 .delete(page)
-                .then((res) => {
+                .then(() => {
                     props.history.push(`/associations/${association.id}`);
                 })
                 .catch((err) => {
-                    newToast({
-                        message: err.message,
-                        level: ToastLevel.Error,
-                    });
+                    sendErrorToast(err.message);
                 });
         }
     };

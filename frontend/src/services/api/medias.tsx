@@ -7,22 +7,27 @@ import {
 } from "../apiService";
 
 export const medias = {
-    list: (associationId, params = {}, page = 1) => {
-        params["association"] = associationId;
-        params["page"] = page;
-        return unwrap<PaginatedResponse<Media[]>>(
-            apiService.get(`/associations/media/${toUrlParams(params)}`)
-        );
-    },
+    list: (associationId, params = {}, page = 1) =>
+        unwrap<PaginatedResponse<Media[]>>(
+            apiService.get(
+                `/associations/media/${toUrlParams({
+                    ...params,
+                    association: associationId,
+                    page: page,
+                })}`
+            )
+        ),
     get: (fileId) =>
-        unwrap<Media>(apiService.get(`/associations/media/${fileId}`)),
-    patch: (file) => {
-        return unwrap<Media>(
-            apiService.patch(`/associations/media/${file.id}/`, file, {
-                headers: { "Content-Type": "multipart/form-data" },
+        unwrap<Media>(apiService.get(`/associations/media/${fileId}`)).then(
+            (media) => ({
+                ...media,
+                uploadedOn: new Date(media.uploadedOn),
             })
-        );
-    },
+        ),
+    patch: (file) =>
+        unwrap<Media>(
+            apiService.patch(`/associations/media/${file.id}/`, file)
+        ),
     upload: (file, association, onUploadProgress) => {
         let formData = new FormData();
         formData.append("name", file.name);
@@ -35,9 +40,8 @@ export const medias = {
             onUploadProgress: onUploadProgress,
         });
     },
-    delete: (file) => {
-        return apiService.delete(`/associations/media/${file.id}`, {
+    delete: (file) =>
+        apiService.delete(`/associations/media/${file.id}`, {
             headers: { "Content-Type": "multipart/form-data" },
-        });
-    },
+        }),
 };

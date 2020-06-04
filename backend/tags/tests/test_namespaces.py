@@ -53,11 +53,10 @@ class TagNamespaceTestCase(TagsBaseTestCase):
         res = self.post(
             "/tags/namespaces/", {"scoped_to_model": "association", "name": "test_v"}
         )
-        self.assertStatusCode(res, 403)
+        self.assertStatusCode(res, 400)
 
         res = self.post("/tags/namespaces/", {"scoped_to_pk": "pdm", "name": "test_w"})
-        self.assertStatusCode(res, 403)
-        # self.assertStatusCode(res, 400)
+        self.assertStatusCode(res, 400)
 
         # Try to get global namespace
         res = self.get("/tags/namespaces/?scoped_to_model=global")

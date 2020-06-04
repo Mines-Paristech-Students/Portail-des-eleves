@@ -5,11 +5,12 @@ export interface Media {
     id: string;
     uploadedOn: Date;
     uploadedBy: Date;
-    file: string;
+    url: string;
     tags: Tag[];
     name: string;
     description: string;
     association: Association;
     type: string;
     media: string;
+    mimetype: string;
 }

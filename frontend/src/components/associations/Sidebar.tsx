@@ -8,6 +8,7 @@ import { Sidebar, SidebarItem, SidebarSpace } from "../utils/sidebar/Sidebar";
 import { Page } from "../../models/associations/page";
 import { Loading } from "../utils/Loading";
 import { useLocation } from "react-router-dom";
+import { Association } from "../../models/associations/association";
 
 export const AssociationSidebar = ({ association }) => {
     const { data: pages, status, error } = useBetterQuery<
@@ -29,12 +30,14 @@ export const AssociationSidebar = ({ association }) => {
                 <SidebarItem
                     icon={"calendar"}
                     to={`/associations/${association.id}/evenements`}
+                    exact={false}
                 >
                     Événements
                 </SidebarItem>
                 <SidebarItem
                     icon={"file"}
                     to={`/associations/${association.id}/fichiers`}
+                    exact={false}
                 >
                     Fichiers
                 </SidebarItem>
@@ -45,7 +48,14 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
-                {association.myRole.permissions.includes("administration") && (
+                <SidebarItem
+                    icon={"users"}
+                    to={`/associations/${association.id}/membres`}
+                    exact={false}
+                >
+                    Membres
+                </SidebarItem>
+                {association.myRole.permissions?.includes("administration") && (
                     <SidebarItem
                         icon={"settings"}
                         to={`/associations/${association.id}/parametres`}
@@ -53,9 +63,11 @@ export const AssociationSidebar = ({ association }) => {
                         Paramètres
                     </SidebarItem>
                 )}
-                {association.myRole.permissions.includes("marketplace") && (
+                {association.myRole.permissions?.includes("marketplace") && (
                     <MarketSubNavbar association={association} />
                 )}
+                <EventSubSidebar association={association} />
+                <RolesSubSidebar association={association} />
             </Sidebar>
         );
     }
@@ -67,26 +79,56 @@ const ListPagesItem = ({ pages, association }) =>
     pages.map((page) => (
         <SidebarItem
             icon={"book"}
-            to={`/associations/${association.id}/pages/${page.id}`}
+            to={
+                page.title === "Accueil"
+                    ? `/associations/${association.id}`
+                    : `/associations/${association.id}/pages/${page.id}`
+            }
             key={page.id}
         >
             {page.title}
         </SidebarItem>
     ));
 
-const AddPageItem = ({ association }) => {
-    if (!association.myRole.pagePermission) {
-        return null;
-    }
-
-    return (
+const AddPageItem = ({ association }) =>
+    association.myRole.permissions?.includes("page") ? (
         <SidebarItem
             icon={"plus"}
-            to={`/associations/${association.id}/pages/new`}
+            to={`/associations/${association.id}/pages/nouvelle`}
         >
             Ajouter une page
         </SidebarItem>
-    );
+    ) : null;
+
+const EventSubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/evenements`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"calendar"}
+                to={`/associations/${association.id}/evenements`}
+            >
+                À venir
+            </SidebarItem>
+            <SidebarItem
+                icon={"inbox"}
+                to={`/associations/${association.id}/evenements/passes`}
+            >
+                Passés
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("event") && (
+                <SidebarItem
+                    icon={"plus"}
+                    to={`/associations/${association.id}/evenements/creer`}
+                >
+                    Nouveau
+                </SidebarItem>
+            )}
+        </>
+    ) : null;
 };
 
 const MarketSubNavbar = ({ association }) => {
@@ -120,6 +162,37 @@ const MarketSubNavbar = ({ association }) => {
             >
                 Produits
             </SidebarItem>
+        </>
+    ) : null;
+};
+
+const RolesSubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/membres`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"users"}
+                to={`/associations/${association.id}/membres`}
+            >
+                Actuels
+            </SidebarItem>
+            <SidebarItem
+                icon={"inbox"}
+                to={`/associations/${association.id}/membres/anciens`}
+            >
+                Anciens
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("administration") && (
+                <SidebarItem
+                    icon={"settings"}
+                    to={`/associations/${association.id}/membres/administration`}
+                >
+                    Gestion
+                </SidebarItem>
+            )}
         </>
     ) : null;
 };
