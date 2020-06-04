@@ -37,6 +37,22 @@ class RoleTestCase(BaseRoleTestCase):
                 msg=f"{permission_name} property not found in Role but found in Role.PERMISSION_NAMES.",
             )
 
+    def test_expired_permission_is_not_active(self):
+        self.login("17simple")
+        res = self.retrieve(4)
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue(date.today() >= date.fromisoformat(res.data["end_date"]))
+        self.assertListEqual(res.data["permissions"], [])
+
+    def test_future_permission_is_not_active(self):
+        self.login("17simple")
+        res = self.retrieve(5)
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue(date.today() < date.fromisoformat(res.data["start_date"]))
+        self.assertListEqual(res.data["permissions"], [])
+
     ########
     # LIST #
     ########
