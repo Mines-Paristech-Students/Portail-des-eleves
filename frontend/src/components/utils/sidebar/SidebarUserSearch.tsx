@@ -48,9 +48,9 @@ export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
     useEffect(() => {
         // This effect will be called when the page is loaded, selectedUserId
         // parsed but there is not selectedUser yet
-        if (!selectedUser && users && selectedUserId) {
+        if (users && selectedUserId) {
             setSelectedUser((selectedUser) => {
-                if (!selectedUser) return selectedUser;
+                if (selectedUser) return selectedUser;
 
                 const selectedUsers = users.results.filter(
                     (u) => u.id === selectedUserId
@@ -61,7 +61,7 @@ export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
                 return { value: newSelectedUser, label: newSelectedUser.id };
             });
         }
-    }, [selectedUserId, users, selectedUser]);
+    }, [selectedUserId, users]);
 
     useEffect(() => {
         setParams(

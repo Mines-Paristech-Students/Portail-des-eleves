@@ -50,7 +50,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                         ordering: "-date",
                         ...searchParams,
                         ...userParams,
-                        ...statusParams
+                        ...statusParams,
                     },
                 ]}
                 apiMethod={api.transactions.list}
