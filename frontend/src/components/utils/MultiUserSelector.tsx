@@ -20,9 +20,13 @@ type SelectChoice = {
  * from the `SelectUsers` because it's made for dozens of users, while
  * `SelectUsers` is good for half a dozen.
  * @param onChange a callback called every time selected a user is
- * selected/unselected
+ * selected/unselected. It is given the current list of selected users
  */
-export const MultiUserSelector = ({ onChange }) => {
+export const MultiUserSelector = ({
+    onChange,
+}: {
+    onChange: (users: User[]) => void;
+}) => {
     const loggedUser = useContext(UserContext);
 
     const [searchValue, setSearchValue] = useState("");
