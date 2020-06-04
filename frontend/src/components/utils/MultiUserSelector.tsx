@@ -1,26 +1,48 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { api, useBetterQuery } from "../../services/apiService";
 import Select from "react-select";
 import { ErrorMessage } from "./ErrorPage";
 import { Loading } from "./Loading";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
 import { User } from "../../models/user";
 import { UserAvatarCard } from "./avatar/UserAvatarCard";
 import { Size } from "../../utils/size";
 import { UserContext } from "../../services/authService";
 import { DebounceInput } from "react-debounce-input";
 
+type SelectChoice = {
+    value: string;
+    label: string;
+};
+
+/**
+ * MultiUserSelector is a component used to select users by batch. It differs
+ * from the `SelectUsers` because it's made for dozens of users, while
+ * `SelectUsers` is good for half a dozen.
+ * @param onChange a callback called every time selected a user is
+ * selected/unselected
+ */
 export const MultiUserSelector = ({ onChange }) => {
     const loggedUser = useContext(UserContext);
 
     const [searchValue, setSearchValue] = useState("");
-    const [promotion, setPromotion] = useState<any>(null);
+    const [promotion, setPromotion] = useState<SelectChoice>({
+        value: loggedUser?.promotion || "",
+        label: loggedUser?.promotion || "",
+    });
 
     const [userStatus, setUserStatus] = useState<
         "loading" | "error" | "success"
     >();
     const [userError, setUserError] = useState<any>();
 
+    /* As we are doing many sets-like features here (check if a user is selected,
+     * change the user from list, etc.. and we make it on a non-small sample (>100)
+     * To allow faster list switching, we add a "selected" field to say in which
+     * set a user belongs and simply switch it when we want to transfer the user.
+     * The displaying of the users is made simple by using the selectedUsers and
+     * unselectedUsers variables.
+     */
     const [users, setUsers] = useState<{
         [key: string]: { user: User; selected: boolean };
     }>({});
@@ -30,7 +52,7 @@ export const MultiUserSelector = ({ onChange }) => {
         .map(([_, { user }]) => user)
         .sort(compareUsers);
 
-    const unSelectedUsers = Object.entries(users)
+    const unselectedUsers = Object.entries(users)
         .filter(([_, { selected }]) => !selected)
         .map(([_, { user }]) => user)
         .sort(compareUsers);
@@ -46,13 +68,6 @@ export const MultiUserSelector = ({ onChange }) => {
     });
 
     useEffect(() => {
-        setPromotion({
-            value: loggedUser?.promotion || "",
-            label: loggedUser?.promotion || "",
-        });
-    }, [loggedUser]);
-
-    useEffect(() => {
         if (!promotion) {
             return;
         }
@@ -66,22 +81,23 @@ export const MultiUserSelector = ({ onChange }) => {
             })
             .then((response) => {
                 setUserStatus("success");
-                let newUsers = { ...users };
-                for (let userId in users) {
-                    if (!users[userId].selected) {
-                        delete newUsers[userId];
+                setUsers((users) => {
+                    let newUsers = { ...users };
+                    for (let userId in users) {
+                        if (!users[userId].selected) {
+                            delete newUsers[userId];
+                        }
                     }
-                }
 
-                response.results.forEach((user) => {
-                    if (!newUsers.hasOwnProperty(user.id))
-                        newUsers[user.id] = {
-                            selected: false,
-                            user: user,
-                        };
+                    response.results.forEach((user) => {
+                        if (!newUsers.hasOwnProperty(user.id))
+                            newUsers[user.id] = {
+                                selected: false,
+                                user: user,
+                            };
+                    });
+                    return newUsers;
                 });
-
-                setUsers(newUsers);
             })
             .catch((error) => {
                 setUserStatus("error");
@@ -89,7 +105,6 @@ export const MultiUserSelector = ({ onChange }) => {
             });
 
         // Avoid to trigger infinite update by putting users as a dep
-        // eslint-disable-next-line
     }, [promotion, searchValue]);
 
     const addUser = (user) => {
@@ -135,101 +150,113 @@ export const MultiUserSelector = ({ onChange }) => {
     ) : promotionsStatus === "loading" ? (
         <Loading />
     ) : (
-        <Row className={"border bg-white"} style={{ height: "80vh" }}>
-            <Col md={3} className={"p-0 border-right overflow-auto"}>
-                <Select
-                    value={promotion}
-                    onChange={(v) => setPromotion(v)}
-                    options={
-                        promotions
-                            ? promotions.promotions.map((promotion) => ({
-                                  value: promotion,
-                                  label: promotion,
-                              }))
-                            : []
-                    }
-                    placeholder="Filtrer par promotion…"
-                    className={"rounded-0 border-bottom"}
-                    styles={selectStyles}
-                />
+        <Container fluid={true}>
+            <Row className={"border bg-white"} style={{ height: "80vh" }}>
+                <Col md={3} className={"p-0 border-right overflow-auto"}>
+                    <Select
+                        value={promotion}
+                        onChange={(v) => setPromotion(v as SelectChoice)}
+                        options={
+                            promotions
+                                ? promotions.promotions.map((promotion) => ({
+                                      value: promotion,
+                                      label: promotion,
+                                  }))
+                                : []
+                        }
+                        placeholder="Filtrer par promotion…"
+                        noOptionsMessage={() => "Aucun résultat"}
+                        className={"rounded-0 border-bottom"}
+                        styles={selectStyles}
+                    />
 
-                <DebounceInput
-                    className={
-                        "form-control rounded-0 border-top-0 border-left-0 border-right-0"
-                    }
-                    placeholder={"Rechercher quelqu'un..."}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    type="text"
-                    debounceTimeout={300}
-                    minLength={2}
-                />
+                    <DebounceInput
+                        className={
+                            "form-control rounded-0 border-top-0 border-left-0 border-right-0"
+                        }
+                        placeholder={"Rechercher quelqu'un..."}
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        type="text"
+                        debounceTimeout={300}
+                        minLength={2}
+                    />
 
-                {unSelectedUsers.length > 0 && (
-                    <p
-                        className={"text-primary p-4 m-0"}
-                        onClick={() => unSelectedUsers.forEach(addUser)}
-                    >
-                        Tout ajouter
-                    </p>
-                )}
-
-                <ul className="list-group list-group-flush">
-                    {unSelectedUsers.length > 0 ? (
-                        unSelectedUsers.map((user) => (
-                            <li
-                                className="list-group-item border-bottom"
-                                key={user.id}
-                                onClick={() => addUser(user)}
-                            >
-                                {user.firstName} {user.lastName}
-                            </li>
-                        ))
-                    ) : (
-                        <p className="text-center mt-4 text-muted">
-                            <em>Aucun utilisateur restant</em>
-                        </p>
-                    )}
-                </ul>
-            </Col>
-            <Col md={9} className={"bg-light overflow-auto"}>
-                <Row className={"pt-2 pr-2"}>
-                    {selectedUsers.length > 0 && (
-                        <p
-                            className="text-danger text-right col col-12"
-                            onClick={() => selectedUsers.forEach(removeUser)}
+                    {unselectedUsers.length > 0 && (
+                        <button
+                            className={"btn btn-link p-4 m-0"}
+                            onClick={() => unselectedUsers.forEach(addUser)}
                         >
-                            Tout retirer
-                        </p>
+                            Tout ajouter
+                        </button>
                     )}
-                    {selectedUsers.map((user) => (
-                        <Col lg={2} sm={6} key={user.id}>
-                            <UserAvatarCard
-                                userId={user.id}
-                                className={"p-2"}
-                                size={Size.Large}
-                            >
-                                <p className="text-muted text-center text-truncate mt-3 mb-0">
-                                    <span
-                                        className="btn btn-secondary btn-icon rounded-circle"
-                                        onClick={() => removeUser(user)}
-                                        style={{
-                                            position: "absolute",
-                                            top: "-18px",
-                                            right: "-18px",
-                                            transform: "scale(0.8)",
-                                        }}
-                                    >
-                                        <i className="fe fe-x" />
-                                    </span>
+
+                    <ul className="list-group list-group-flush">
+                        {unselectedUsers.length > 0 ? (
+                            unselectedUsers.map((user) => (
+                                <li
+                                    className="list-group-item border-bottom"
+                                    key={user.id}
+                                    onClick={() => addUser(user)}
+                                >
                                     {user.firstName} {user.lastName}
-                                </p>
-                            </UserAvatarCard>
-                        </Col>
-                    ))}
-                </Row>
-            </Col>
-        </Row>
+                                </li>
+                            ))
+                        ) : (
+                            <p className="text-center mt-4 text-muted">
+                                <em>Aucun utilisateur restant</em>
+                            </p>
+                        )}
+                    </ul>
+                </Col>
+                <Col md={9} className={"bg-light overflow-auto"}>
+                    <Row className={"pt-2 pr-2"}>
+                        {selectedUsers.length > 0 && (
+                            <p className={"text-right col col-12"}>
+                                <button
+                                    className="btn btn-link text-danger"
+                                    onClick={() =>
+                                        selectedUsers.forEach(removeUser)
+                                    }
+                                >
+                                    Tout retirer
+                                </button>
+                            </p>
+                        )}
+                        {selectedUsers.map((user) => (
+                            <Col lg={2} sm={6} key={user.id}>
+                                <UserAvatarCard
+                                    userId={user.id}
+                                    className={"p-2"}
+                                    size={Size.Large}
+                                >
+                                    <p className="text-muted text-center text-truncate mt-3 mb-0">
+                                        <span
+                                            className="btn btn-secondary btn-icon rounded-circle"
+                                            onClick={() => removeUser(user)}
+                                            style={avatarStyle}
+                                        >
+                                            <i className="fe fe-x" />
+                                        </span>
+                                        {user.firstName} {user.lastName}
+                                    </p>
+                                </UserAvatarCard>
+                            </Col>
+                        ))}
+
+                        {selectedUsers.length === 0 && (
+                            <p
+                                className={
+                                    "text-center text-muted lead col mt-6"
+                                }
+                            >
+                                Personne n'a été séléctionné pour l'instant
+                            </p>
+                        )}
+                    </Row>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 
@@ -241,4 +268,12 @@ const selectStyles = {
     }),
 };
 
-const compareUsers = (u1: User, u2: User): number => u1.id.localeCompare(u2.id);
+const avatarStyle: CSSProperties = {
+    position: "absolute",
+    top: "-18px",
+    right: "-18px",
+    transform: "scale(0.8)",
+};
+
+const compareUsers = (u1: User, u2: User): number =>
+    u1.lastName.localeCompare(u2.lastName);
