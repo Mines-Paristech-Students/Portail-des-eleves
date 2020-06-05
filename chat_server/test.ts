@@ -3,6 +3,7 @@ const io = require("socket.io-client");
 const dotenv = require("dotenv");
 import { assert } from "chai";
 import { index } from "./index";
+import { Client } from "pg";
 
 // Parsing environnement configuration
 dotenv.config();
@@ -23,6 +24,25 @@ describe("Testing Django public key integration", () => {
     assert.strictEqual(token_user, decoded.user);
   });
 });
+
+describe("Checking database availability", () => {
+ it("Check database availability", () => {
+        const client = new Client();
+        client
+  .connect()
+  .then(() => console.log('connected'))
+  .catch(err => console.error('connection error', err.stack))
+                const res = client.query('SELECT NOW()')
+ client
+  .query('SELECT NOW()')
+  .then(result => console.log(result))
+  .catch(e => console.error(e.stack))
+  client
+  .end()
+  .then(() => console.log('client has disconnected'))
+  .catch(err => console.error('error during disconnection', err.stack))
+ });
+})
 
 describe("Testing the messages service", () => {
   // These variables shouldn't be initialize yet, unless they launch a timeout while testing
