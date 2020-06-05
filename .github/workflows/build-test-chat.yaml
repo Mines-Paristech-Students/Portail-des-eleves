@@ -1,4 +1,4 @@
-name: "Build chat server"
+name: Build chat server
 
 on:
   push
@@ -14,8 +14,8 @@ jobs:
         image: postgres
 
         env:
-          POSTGRES_PASSWORD: docker
-          POSTGRES_USER: docker
+          POSTGRES_PASSWORD: password 
+          POSTGRES_USER: postgres 
           POSTGRES_DB: portail_message
 
         options: >-
@@ -55,6 +55,3 @@ jobs:
       - name: Build
         run: npm test
         working-directory: chat_server 
-        env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432

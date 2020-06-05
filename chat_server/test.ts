@@ -25,24 +25,31 @@ describe("Testing Django public key integration", () => {
   });
 });
 
-describe("Checking database availability", () => {
- it("Check database availability", () => {
-        const client = new Client();
-        client
-  .connect()
-  .then(() => console.log('connected'))
-  .catch(err => console.error('connection error', err.stack))
-                const res = client.query('SELECT NOW()')
- client
-  .query('SELECT NOW()')
-  .then(result => console.log(result))
-  .catch(e => console.error(e.stack))
-  client
-  .end()
-  .then(() => console.log('client has disconnected'))
-  .catch(err => console.error('error during disconnection', err.stack))
- });
-})
+describe("Checking database", () => {
+  const client = new Client();
+
+  beforeEach("Connecting client", (done) => {
+    client
+      .connect()
+      .then(() => done())
+      .catch((err) => done(err.stack));
+    const res = client.query("SELECT NOW()");
+  });
+
+  afterEach("Closing client", (done) => {
+    client
+      .end()
+      .then(() => done())
+      .catch((err) => done(err.stack));
+  });
+
+  it("Can query database", (done) => {
+    client
+      .query("SELECT NOW()")
+      .then(() => done())
+      .catch((err) => done(err.stack));
+  });
+});
 
 describe("Testing the messages service", () => {
   // These variables shouldn't be initialize yet, unless they launch a timeout while testing
