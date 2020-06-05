@@ -25,6 +25,9 @@ describe("Testing Django public key integration", () => {
   });
 });
 
+console.log(process.env.PGHOST)
+console.log(process.env.PGPORT)
+
 describe("Checking database", () => {
   const client = new Client();
 

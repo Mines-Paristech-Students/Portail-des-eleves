@@ -58,3 +58,6 @@ jobs:
         env:
           PGHOST: localhost 
           PGPORT: ${{ job.services.postgres.ports[5432] }}
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
