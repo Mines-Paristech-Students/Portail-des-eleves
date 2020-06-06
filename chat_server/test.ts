@@ -3,7 +3,7 @@ const io = require("socket.io-client");
 const dotenv = require("dotenv");
 import { assert } from "chai";
 import { index } from "./index";
-import { Client } from "pg";
+import { Pool, ClientConfig } from "pg";
 
 // Parsing environnement configuration
 dotenv.config();
@@ -25,32 +25,20 @@ describe("Testing Django public key integration", () => {
   });
 });
 
-console.log(process.env.PGHOST)
-console.log(process.env.PGPORT)
+console.log(process.env.PGHOST);
+console.log(process.env.PGPORT);
+console.log(process.env.PGDATABASE);
+console.log(process.env.PGUSER);
+console.log(process.env.PGPASSWORD);
 
 describe("Checking database", () => {
-  const client = new Client();
+  const pool = new Pool();
 
-  beforeEach("Connecting client", (done) => {
-    client
-      .connect()
-      .then(() => done())
-      .catch((err) => done(err.stack));
-    const res = client.query("SELECT NOW()");
-  });
-
-  afterEach("Closing client", (done) => {
-    client
-      .end()
-      .then(() => done())
-      .catch((err) => done(err.stack));
-  });
-
-  it("Can query database", (done) => {
-    client
+  it("Can query database", function (done) {
+    pool
       .query("SELECT NOW()")
-      .then(() => done())
-      .catch((err) => done(err.stack));
+      .then((res) => done()) // brianc
+      .catch((err) => done("Error executing query" + err.stack));
   });
 });
 
