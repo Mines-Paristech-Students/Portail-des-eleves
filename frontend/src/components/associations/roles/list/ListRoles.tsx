@@ -29,6 +29,9 @@ export const ListRoles = ({
             },
         ]}
         apiMethod={api.roles.list}
+        paginationControlProps={{
+            className: "justify-content-center mt-5",
+        }}
         render={(roles, paginationControl) => (
             <Container className="mt-4">
                 <PageTitle>{title}</PageTitle>
@@ -36,7 +39,7 @@ export const ListRoles = ({
                 <Row>
                     {roles.length > 0 ? (
                         roles
-                            // Order by decreasing alphabetical order.
+                            // Order by rank.
                             .sort((roleA, roleB) => roleA.rank - roleB.rank)
                             .map((role) => (
                                 <Col
@@ -86,8 +89,5 @@ export const ListRoles = ({
                 </Row>
             </Container>
         )}
-        paginationControlProps={{
-            className: "justify-content-center mt-5",
-        }}
     />
 );
