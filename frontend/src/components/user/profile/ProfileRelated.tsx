@@ -22,7 +22,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
     profile.minesparent.length > 0 ||
     profile.fillots.length > 0 ? (
         <Card>
-            <Card.Body className="px-7">
+            <Card.Body className="px-6">
                 {profile.roommate.length > 0 && (
                     <>
                         <Row className="mb-1">

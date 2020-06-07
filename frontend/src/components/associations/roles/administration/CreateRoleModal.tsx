@@ -43,7 +43,7 @@ export const CreateRoleModal = ({
             title={`Créer un rôle`}
             show={show}
             initialValues={{
-                user: { value: "", label: "" },
+                user: undefined,
                 role: "",
                 rank: 0,
                 startDate: new Date(),
