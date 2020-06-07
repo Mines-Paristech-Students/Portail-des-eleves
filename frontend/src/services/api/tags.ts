@@ -1,6 +1,6 @@
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Tag } from "../../models/tag";
-import { toUrlParams } from "../urlParam";
+import { toUrlParams } from "../../utils/urlParam";
 
 export const tags = {
     list: (params, axiosConfig = {}) => {

@@ -1,7 +1,7 @@
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Role } from "../../models/associations/role";
 import dayjs from "dayjs";
-import { castDatesToUrlParam, toUrlParams } from "../urlParam";
+import { castDatesToUrlParam, toUrlParams } from "../../utils/urlParam";
 
 type MutateRolePayload = Pick<
     Role,

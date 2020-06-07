@@ -3,7 +3,7 @@ import {
     TransactionStatus,
 } from "../../models/associations/marketplace";
 import { apiService, unwrap } from "../apiService";
-import { toUrlParams } from "../urlParam";
+import { toUrlParams } from "../../utils/urlParam";
 
 export const transactions = {
     create: (product, quantity, buyer, status = TransactionStatus.Ordered) =>

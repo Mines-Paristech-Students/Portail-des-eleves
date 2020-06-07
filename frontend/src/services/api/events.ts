@@ -1,6 +1,6 @@
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Event } from "../../models/associations/event";
-import { castDatesToUrlParam, toUrlParams } from "../urlParam";
+import { castDatesToUrlParam, toUrlParams } from "../../utils/urlParam";
 
 export type EventsListParameters = {
     association: string;
