@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import { DayPickerInputFormGroup } from "../../../utils/forms/DayPickerInputFormGroup";
 import { SwitchCheckbox } from "../../../utils/forms/SwitchCheckbox";
-import { SelectGroup } from "../../../utils/forms/SelectGroup";
+import { SelectFormGroup } from "../../../utils/forms/SelectFormGroup";
 import { RolePermissionIcon } from "./RolePermissionIcon";
 import { RolePermissionTooltip } from "./RolePermissionTooltip";
 import "./mutate_role_modal.css";
@@ -29,16 +29,16 @@ const rolePlaceholder = getRandom([
     "VP Aigreur",
 ]);
 
-const permissionItems = new Map(
-    PERMISSIONS.map((permission) => [
-        permission,
+const permissionItems = PERMISSIONS.map((permission) => ({
+    value: permission,
+    children: (
         <RolePermissionTooltip permission={permission}>
             <span className="selectgroup-button selectgroup-button-icon">
                 <RolePermissionIcon permission={permission} />
             </span>
-        </RolePermissionTooltip>,
-    ])
-);
+        </RolePermissionTooltip>
+    ),
+}));
 
 export type MutateRoleModalValues = {
     association?: string;
@@ -158,10 +158,10 @@ export const MutateRoleModal = ({
                             help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
                             disabled={!values.endDateEnabled}
                         />
-                        <SelectGroup
+                        <SelectFormGroup
                             name="permissions"
-                            type="pills"
-                            inputType="checkbox"
+                            selectType="pills"
+                            type="checkbox"
                             label="Permissions"
                             items={permissionItems}
                         />
