@@ -10,23 +10,18 @@ export const pages = {
                     association_id: associationId,
                     page_type: "STATIC",
                     ...params,
-                })}`
+                })}/`
             )
         ),
     get: (pageId) =>
-        unwrap<Page>(apiService.get(`/associations/pages/${pageId}`)),
-    save: (page) => {
-        if (!page.id) {
-            return unwrap<Page>(apiService.post(`/associations/pages/`, page));
-        }
-
+        unwrap<Page>(apiService.get(`/associations/pages/${pageId}/`)),
+    create: (page: Pick<Page, "title" | "text"> & { association: string }) =>
+        apiService.post(`/associations/pages/`, page),
+    edit: (page: Pick<Page, "id" | "title" | "text">) =>
+        apiService.patch(`/associations/pages/${page.id}/`, page),
+    delete: (pageId: string) => {
         return unwrap<Page>(
-            apiService.patch(`/associations/pages/${page.id}/`, page)
-        );
-    },
-    delete: (page) => {
-        return unwrap<Page>(
-            apiService.delete(`/associations/pages/${page.id}/`)
+            apiService.delete(`/associations/pages/${pageId}/`)
         );
     },
 };

@@ -94,7 +94,7 @@ const AddPageItem = ({ association }) =>
     association.myRole.permissions?.includes("page") ? (
         <SidebarItem
             icon={"plus"}
-            to={`/associations/${association.id}/pages/nouvelle`}
+            to={`/associations/${association.id}/pages/creer`}
         >
             Ajouter une page
         </SidebarItem>

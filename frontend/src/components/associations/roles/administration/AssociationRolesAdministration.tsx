@@ -111,15 +111,11 @@ const columnData = (
             <>
                 <EditRoleButton handleClick={() => setEditRole(role)} />
                 <DeleteRoleButton
-                    handleClick={() => {
-                        if (
-                            window.confirm(
-                                "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
-                            )
-                        ) {
-                            remove(role.id);
-                        }
-                    }}
+                    handleClick={() =>
+                        window.confirm(
+                            "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
+                        ) && remove(role.id)
+                    }
                 />
             </>
         ),
