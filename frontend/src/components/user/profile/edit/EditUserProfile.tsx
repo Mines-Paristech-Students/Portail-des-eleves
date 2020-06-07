@@ -18,8 +18,8 @@ import { queryCache, useMutation } from "react-query";
 import { ToastContext } from "../../../utils/Toast";
 import { AxiosError } from "axios";
 import * as Yup from "yup";
-import { SelectUsers } from "../../../utils/forms/SelectUsers";
 import { Link } from "react-router-dom";
+import { SelectUserFormGroup } from "../../../utils/forms/SelectUserFormGroup";
 
 // The items in the select.
 const currentAcademicYearItems = [
@@ -307,29 +307,19 @@ export const EditUserProfile = () => {
                                 </Row>
                                 <Row className="mt-5">
                                     <Col md={6}>
-                                        <ReactBootstrapForm.Group>
-                                            <ReactBootstrapForm.Label>
-                                                Cos
-                                            </ReactBootstrapForm.Label>
-
-                                            <SelectUsers
-                                                className="mt-5"
-                                                name="roommate"
-                                            />
-                                        </ReactBootstrapForm.Group>
+                                        <SelectUserFormGroup
+                                            name="roommate"
+                                            label="Cos"
+                                            isMulti
+                                        />
                                     </Col>
 
                                     <Col md={6}>
-                                        <ReactBootstrapForm.Group>
-                                            <ReactBootstrapForm.Label>
-                                                Marrain(e)s
-                                            </ReactBootstrapForm.Label>
-
-                                            <SelectUsers
-                                                className="mt-5"
-                                                name="minesparent"
-                                            />
-                                        </ReactBootstrapForm.Group>
+                                        <SelectUserFormGroup
+                                            name="minesparent"
+                                            label="Marrain(e)s"
+                                            isMulti
+                                        />
                                     </Col>
                                 </Row>
                             </Card.Body>

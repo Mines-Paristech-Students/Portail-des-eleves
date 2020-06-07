@@ -15,8 +15,7 @@ import { RolePermissionIcon } from "./RolePermissionIcon";
 import { RolePermissionTooltip } from "./RolePermissionTooltip";
 import "./mutate_role_modal.css";
 import { getRandom } from "../../../../utils/random";
-import { SelectUsers } from "../../../utils/forms/SelectUsers";
-import { Form as ReactBootstrapForm } from "react-bootstrap";
+import { SelectUserFormGroup } from "../../../utils/forms/SelectUserFormGroup";
 
 const rolePlaceholder = getRandom([
     "Dictateur",
@@ -121,12 +120,11 @@ export const MutateRoleModal = ({
                 <Form>
                     <Modal.Body>
                         {version === "create" && (
-                            <ReactBootstrapForm.Group>
-                                <ReactBootstrapForm.Label>
-                                    Membre
-                                </ReactBootstrapForm.Label>
-                                <SelectUsers name="user" isMulti={false} />
-                            </ReactBootstrapForm.Group>
+                            <SelectUserFormGroup
+                                name="user"
+                                label="Membre"
+                                className="text-capitalize"
+                            />
                         )}
                         <TextFormGroup
                             name="role"
