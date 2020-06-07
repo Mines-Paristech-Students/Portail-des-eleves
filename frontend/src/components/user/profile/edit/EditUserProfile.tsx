@@ -11,7 +11,7 @@ import Card from "react-bootstrap/Card";
 import { Form as ReactBootstrapForm } from "react-bootstrap";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
-import { SelectGroup } from "../../../utils/forms/SelectGroup";
+import { SelectFormGroup } from "../../../utils/forms/SelectFormGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { queryCache, useMutation } from "react-query";
@@ -22,13 +22,28 @@ import { SelectUsers } from "../../../utils/forms/SelectUsers";
 import { Link } from "react-router-dom";
 
 // The items in the select.
-const currentAcademicYearItems = new Map([
-    ["1A", <span className="selectgroup-button">1A</span>],
-    ["2A", <span className="selectgroup-button">2A</span>],
-    ["GAP YEAR", <span className="selectgroup-button">Césure</span>],
-    ["3A", <span className="selectgroup-button">3A</span>],
-    ["GRADUATE", <span className="selectgroup-button">Alumni</span>],
-]);
+const currentAcademicYearItems = [
+    {
+        value: "1A",
+        text: "1A",
+    },
+    {
+        value: "2A",
+        text: "2A",
+    },
+    {
+        value: "GAP YEAR",
+        text: "Césure",
+    },
+    {
+        value: "3A",
+        text: "3A",
+    },
+    {
+        value: "GRADUATE",
+        text: "Alumni",
+    },
+];
 
 // Useful for data validation.
 const currentAcademicYearValues: string[] = [
@@ -251,8 +266,9 @@ export const EditUserProfile = () => {
                                             type="text"
                                             iconLeft="phone"
                                         />
-                                        <SelectGroup
-                                            type="inline"
+                                        <SelectFormGroup
+                                            selectType="inline"
+                                            type="radio"
                                             label="Année actuelle"
                                             name="currentAcademicYear"
                                             items={currentAcademicYearItems}
