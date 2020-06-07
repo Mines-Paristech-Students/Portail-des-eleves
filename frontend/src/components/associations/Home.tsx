@@ -36,7 +36,9 @@ export const AssociationHome = ({ association }) => {
                         >
                             créez une page
                         </Link>{" "}
-                        appelée « Accueil ».<br />C'est aussi simple que ça !
+                        appelée « Accueil ».
+                        <br />
+                        C'est aussi simple que ça !
                     </>
                 ) : (
                     "Rien à voir ici pour le moment mais vous pouvez accéder aux différentes rubriques grâce à la barre de navigation à gauche."
@@ -44,9 +46,6 @@ export const AssociationHome = ({ association }) => {
             </Instructions>
         </Container>
     ) : (
-        <AssociationPageCard
-            association={association}
-            page={data.results[0]}
-        />
+        <AssociationPageCard association={association} page={data.results[0]} />
     );
 };
