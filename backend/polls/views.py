@@ -16,7 +16,7 @@ from polls.models import Poll, Vote
 from polls.permissions import PollPermission, ResultsPermission, VotePermission
 
 
-class IsActiveFilter(FilterSet):
+class PollFilter(FilterSet):
     """
     This class is needed because Django does not allow to filter on properties.
 
@@ -58,7 +58,7 @@ class PollViewSet(viewsets.ModelViewSet):
     serializer_class = ReadOnlyPollSerializer
     permission_classes = (PollPermission,)
     pagination_class = SmallResultsSetPagination
-    filterset_class = IsActiveFilter
+    filterset_class = PollFilter
     ordering_fields = ["question", "user__pk", "state", "publication_date"]
 
     def get_queryset(self):

@@ -5,7 +5,7 @@ import { Route } from "./global";
 import { routes as eventsRoutes } from "./associations/events";
 import { routes as marketplaceRoutes } from "./associations/marketplace";
 import { routes as mediasRoutes } from "./associations/medias";
-import { routes as membersRoutes } from "./associations/members";
+import { routes as rolesRoutes } from "./associations/roles";
 import { routes as pagesRoutes } from "./associations/pages";
 
 export type AssociationRoute = Route & {
@@ -45,6 +45,6 @@ export const routes: (association: Association) => AssociationRoute[] = (
     ...eventsRoutes(association),
     ...marketplaceRoutes(association),
     ...mediasRoutes(association),
-    ...membersRoutes(association),
+    ...rolesRoutes(association),
     ...pagesRoutes(association),
 ];

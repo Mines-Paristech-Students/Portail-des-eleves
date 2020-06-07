@@ -1,11 +1,7 @@
-import {
-    apiService,
-    PaginatedResponse,
-    toUrlParams,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Role } from "../../models/associations/role";
 import dayjs from "dayjs";
+import { castDatesToUrlParam, toUrlParams } from "../../utils/urlParam";
 
 type MutateRolePayload = Pick<
     Role,
@@ -44,8 +40,12 @@ const formatRoleDates = (role: Partial<MutateRolePayload>) =>
 export type RolesListApiParameters = {
     association: string;
     user?: string;
+    is_active?: boolean;
+    start_date_before?: Date;
+    start_date_after?: Date;
+    end_date_before?: Date;
+    end_date_after?: Date;
     ordering?: string;
-    page?: number;
     page_size?: number;
 };
 
@@ -54,7 +54,19 @@ export const roles = {
         unwrap<PaginatedResponse<Role[]>>(
             apiService.get(
                 `/associations/roles/${toUrlParams({
-                    ...parameters,
+                    ...castDatesToUrlParam(
+                        {
+                            start_date_before: parameters.start_date_before,
+                            start_date_after: parameters.start_date_after,
+                            end_date_before: parameters.end_date_before,
+                            end_date_after: parameters.end_date_after,
+                        },
+                        "YYYY-MM-DD"
+                    ),
+                    association: parameters.association,
+                    user: parameters.user,
+                    is_active: parameters.is_active,
+                    page_size: parameters.page_size,
                     page: page,
                 })}`
             )
