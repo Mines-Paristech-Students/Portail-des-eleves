@@ -29,9 +29,7 @@ class TaggableFilter(filters.FilterSet):
                 conditions = dict()
                 # regroup the tags by namespace, in a "tag id in" condition
                 for tag in tags:
-                    conditions[tag["namespace"]] = conditions.get(
-                        tag["namespace"], []
-                    ) + [tag["id"]]
+                    conditions.setdefault(tag["namespace"], []).append(tag["id"])
 
                 # regroup the conditions in a AND condition with multiple filtering
                 for key in conditions.keys():
