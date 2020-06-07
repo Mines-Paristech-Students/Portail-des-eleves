@@ -1,9 +1,9 @@
-import React, { ReactElement, useContext } from "react";
+import React, { useContext } from "react";
 import { Choice, Poll } from "../../../models/polls";
 import { formatDate } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { SelectGroup } from "../../utils/forms/SelectGroup";
+import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
 import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
@@ -100,15 +100,15 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     );
 };
 
-const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
-    let items: Map<string, ReactElement> = new Map();
-
-    choices.forEach((choice) => {
-        items.set(
-            choice.id.toString(),
-            <span className="selectgroup-button">{choice.text}</span>
-        );
-    });
-
-    return <SelectGroup type="vertical" label="" items={items} name="choice" />;
-};
+const ChoiceFields = ({ choices }: { choices: Choice[] }) => (
+    <SelectFormGroup
+        selectType="vertical"
+        type="radio"
+        label=""
+        items={choices.map((choice) => ({
+            value: choice.id.toString(),
+            text: choice.text,
+        }))}
+        name="choice"
+    />
+);
