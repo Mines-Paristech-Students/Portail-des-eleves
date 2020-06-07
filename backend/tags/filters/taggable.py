@@ -1,5 +1,3 @@
-from functools import reduce
-
 import django_filters
 from django.db.models import Q
 from django_filters import rest_framework as filters
