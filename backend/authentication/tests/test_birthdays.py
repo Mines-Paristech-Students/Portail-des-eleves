@@ -8,7 +8,7 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
     """Test the birthdays endpoint logic."""
 
-    fixtures = ("test_authentication.yaml",)
+    # Do not load the regular authentication fixtures, it messes with the birthdays and so the tests sometimes fail.
 
     def load_birthdays(self):
         date = datetime(1996, 1, 1, 12, 00, 00)
@@ -40,7 +40,7 @@ class BirthdaysTestCase(WeakAuthenticationBaseTestCase):
 
     def test_birthdays(self):
         self.load_birthdays()
-        self.login("17simple")
+        self.login("user0")
 
         number_of_days = 20
         res = self.get(f"/users/birthdays/{number_of_days}/")
