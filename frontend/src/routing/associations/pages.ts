@@ -4,7 +4,7 @@ import {
     AssociationCreatePage,
     AssociationEditPage,
 } from "../../components/associations/page/Edit";
-import { AssociationShowPage } from "../../components/associations/page/Show";
+import { AssociationShowPage } from "../../components/associations/page/show/AssociationShowPage";
 
 export const routes: (association: Association) => AssociationRoute[] = (
     association

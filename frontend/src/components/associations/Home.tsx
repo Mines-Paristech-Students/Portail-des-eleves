@@ -3,9 +3,9 @@ import Container from "react-bootstrap/Container";
 import { Loading } from "../utils/Loading";
 import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { ErrorMessage } from "../utils/ErrorPage";
-import { AssociationPageRenderer } from "./page/Show";
 import { Instructions } from "../utils/Instructions";
 import { Link } from "react-router-dom";
+import { AssociationPageCard } from "./page/show/AssociationPageCard";
 
 export const AssociationHome = ({ association }) => {
     const { resolvedData: data, error, status } = useBetterPaginatedQuery<any>(
@@ -26,7 +26,7 @@ export const AssociationHome = ({ association }) => {
             <Instructions
                 title={"Accueil"}
                 emoji={"🏡"}
-                emojiAriaLabel="Une sympatique demeure au jardin accueillant"
+                emojiAriaLabel="Une sympathique demeure au jardin accueillant"
             >
                 {association.myRole.permissions?.includes("page") ? (
                     <>
@@ -36,7 +36,7 @@ export const AssociationHome = ({ association }) => {
                         >
                             créez une page
                         </Link>{" "}
-                        appelée « Accueil ». C'est aussi simple que ça !
+                        appelée « Accueil ».<br />C'est aussi simple que ça !
                     </>
                 ) : (
                     "Rien à voir ici pour le moment mais vous pouvez accéder aux différentes rubriques grâce à la barre de navigation à gauche."
@@ -44,7 +44,7 @@ export const AssociationHome = ({ association }) => {
             </Instructions>
         </Container>
     ) : (
-        <AssociationPageRenderer
+        <AssociationPageCard
             association={association}
             page={data.results[0]}
         />

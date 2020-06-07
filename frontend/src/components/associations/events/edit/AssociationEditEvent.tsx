@@ -51,7 +51,7 @@ export const AssociationEditEvent = ({
     });
 
     const [remove] = useMutation(api.events.delete, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
             sendSuccessToast("Événement supprimé.");
 
