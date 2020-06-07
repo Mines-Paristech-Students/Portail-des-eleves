@@ -5,7 +5,7 @@ import { useFormikContext } from "formik";
 export type BaseFormGroupProps = {
     name: string;
     label?: string;
-    help?: string;
+    help?: string | JSX.Element;
     feedback?: boolean;
     feedbackOnTouchedOnly?: boolean;
     formGroupProps?: any;

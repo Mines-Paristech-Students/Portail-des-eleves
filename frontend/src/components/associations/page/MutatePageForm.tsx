@@ -5,6 +5,7 @@ import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
 import React from "react";
 import { getRandom } from "../../../utils/random";
+import { MarkdownFormGroup } from "../../utils/forms/MarkdownFormGroup";
 
 const titlePlaceholder = getRandom([
     "Exclusif : les comptes cachés du BDE",
@@ -62,8 +63,8 @@ export const MutatePageForm = ({
                         name="title"
                         placeholder={titlePlaceholder}
                     />
-                    <TextFormGroup
-                        label="Description"
+                    <MarkdownFormGroup
+                        label="Texte"
                         name="text"
                         placeholder="Votre article ici…"
                         as="textarea"
