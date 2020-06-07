@@ -102,3 +102,23 @@
     start_date: "2017-01-01"
     administration_permission: false
     election_permission: false
+
+- model: associations.role
+  pk: 4
+  fields:
+    user: 17simple
+    association: pdm
+    role: Expired permission
+    start_date: "2017-01-01"
+    end_date: "2017-01-01"
+    administration_permission: true
+
+- model: associations.role
+  pk: 5
+  fields:
+    user: 18simple
+    association: pdm
+    role: Future permission
+    start_date: "2100-01-01"
+    end_date: "2200-01-01"
+    administration_permission: true
