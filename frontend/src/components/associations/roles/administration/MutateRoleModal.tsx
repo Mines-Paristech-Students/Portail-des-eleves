@@ -120,7 +120,11 @@ export const MutateRoleModal = ({
                 <Form>
                     <Modal.Body>
                         {version === "create" && (
-                            <SelectUserFormGroup name="user" label="Membre" className="text-capitalize" />
+                            <SelectUserFormGroup
+                                name="user"
+                                label="Membre"
+                                className="text-capitalize"
+                            />
                         )}
                         <TextFormGroup
                             name="role"
