@@ -7,6 +7,12 @@ import { Question } from "../../../models/courses/question";
 import { useField, Formik, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Loading } from "../../utils/Loading";
+import {
+    Submission,
+    EvalData,
+    CommentSubmission,
+    RatingSubmission,
+} from "../../../models/courses/submission";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -29,17 +35,12 @@ export const EvaluateCourse = ({ course }) => {
     return null;
 };
 
-interface EvalSubmission {
-    ratings: { [key: number]: number };
-    comments: { [key: number]: string };
-}
-
 export const QuestionsForm = ({ questions, course }) => {
     const newToast = useContext(ToastContext);
     let [hasVoted, setHasVoted] = useState(false);
 
     const initRating = (questions: Question[]) => {
-        let base: EvalSubmission = {
+        let base: EvalData = {
             ratings: {},
             comments: {},
         };
@@ -65,12 +66,6 @@ export const QuestionsForm = ({ questions, course }) => {
     };
 
     const submitAnswers = (values, { setSubmitting }) => {
-        interface Submission {
-            course: any;
-            ratings: any[];
-            comments: any[];
-        }
-
         let data: Submission = {
             course: course.id,
             ratings: [],
@@ -80,8 +75,8 @@ export const QuestionsForm = ({ questions, course }) => {
         // Already checked by validation
         for (let id in values.comments) {
             if (values.comments[id] !== "") {
-                const comment_data = {
-                    question: id,
+                const comment_data: CommentSubmission = {
+                    question: parseInt(id),
                     content: values.comments[id],
                 };
                 data.comments.push(comment_data);
@@ -89,8 +84,8 @@ export const QuestionsForm = ({ questions, course }) => {
         }
         for (let id in values.ratings) {
             if (values.ratings[id] !== -1) {
-                const rating_data = {
-                    question: id,
+                const rating_data: RatingSubmission = {
+                    question: parseInt(id),
                     value: values.ratings[id],
                 };
                 data.ratings.push(rating_data);
@@ -153,7 +148,7 @@ export const QuestionsForm = ({ questions, course }) => {
                 onSubmit={submitAnswers}
                 validate={validate}
             >
-                {(props: FormikProps<EvalSubmission>) => (
+                {(props: FormikProps<EvalData>) => (
                     <Form onSubmit={props.handleSubmit}>
                         {questions.map((question) => {
                             if (question.archived) return null;

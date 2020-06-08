@@ -32,7 +32,9 @@ export const CreateCourseForm = ({ course }) => {
                 .save(form)
                 .then((form) => {
                     setForm(form);
-                    newToast.sendErrorToast("Formulaire créé, redirection...");
+                    newToast.sendSuccessToast(
+                        "Formulaire créé, redirection..."
+                    );
                 })
                 .catch((err) => {
                     newToast.sendErrorToast(
@@ -42,12 +44,7 @@ export const CreateCourseForm = ({ course }) => {
         },
     });
 
-    if (form)
-        return (
-            <Redirect
-                to={`/cours/${course.id}/formulaires/${form.id}/editer`}
-            />
-        );
+    if (form) return <Redirect to={`/cours/${course.id}/formulaires/lier`} />;
     if (closed) return <Redirect to={`/cours/${course.id}`} />;
     return (
         <Modal
@@ -87,13 +84,10 @@ export const LinkCourseForm = ({ course }) => {
     const [redirect, setRedirect] = useState<boolean>(false);
 
     const updateCourseForm = (form) => {
-        const data = {
-            id: course.id,
-            form: form.id,
-        };
+        course.form = form.id;
 
         api.courses
-            .save(data)
+            .save(course)
             .then((_) => {
                 setRedirect(true);
                 newToast.sendSuccessToast(
@@ -119,7 +113,6 @@ export const LinkCourseForm = ({ course }) => {
                         forms.map((form) => {
                             let bg = "light";
                             if (form.id === course.form) bg = "info";
-                            console.log(form);
 
                             return (
                                 <>

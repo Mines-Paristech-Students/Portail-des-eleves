@@ -12,8 +12,6 @@ export const CourseSidebar = ({ course }) => {
             {user?.isStaff && <FormSidebar course={course} />}
 
             <EvaluationSidebar course={course} />
-
-            {/* TODO: Files */}
         </Sidebar>
     );
 };
