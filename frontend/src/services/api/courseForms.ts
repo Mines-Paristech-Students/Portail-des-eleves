@@ -17,13 +17,13 @@ export const forms = {
         save: (question: Question) => {
             return question.id
                 ? unwrap<Question>(
-                      apiService.post(`/courses/questions/`, question)
-                  )
-                : unwrap<Question>(
                       apiService.patch(
                           `/courses/questions/${question.id}/`,
                           question
                       )
+                  )
+                : unwrap<Question>(
+                      apiService.post(`/courses/questions/`, question)
                   );
         },
         list: (id: number) =>

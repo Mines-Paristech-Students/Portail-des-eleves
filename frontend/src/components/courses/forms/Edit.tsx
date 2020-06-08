@@ -199,6 +199,9 @@ const FetchQuestionsModal = ({ course }) => {
 
     useEffect(
         () => {
+            // idForm is positive in django model
+            if (formik.values.idForm === -1) return;
+
             setIsLoading(true);
             api.courses.forms.questions
                 .list(formik.values.idForm)
@@ -249,7 +252,7 @@ const FetchQuestionsModal = ({ course }) => {
                                 onChange={formik.handleChange}
                                 value={formik.values.idForm}
                             >
-                                <option selected value={-1}>
+                                <option selected value={undefined}>
                                     {" "}
                                     -- Formulaire --{" "}
                                 </option>
@@ -323,7 +326,6 @@ export const QuestionEditor = ({ question }) => {
         api.courses.forms.questions
             .save(question)
             .then((res) => {
-                console.log("plop" + question.form);
                 newToast.sendSuccessToast(
                     `Updated questions ${res.label} for ${res.form}`
                 );
@@ -437,7 +439,9 @@ export const QuestionEditor = ({ question }) => {
                                     />
                                 )}
                             </Button>
-                            <Button onClick={props.handleReset}>Reset</Button>
+                            <Button onClick={props.handleReset}>
+                                Ré-initialiser
+                            </Button>
                         </Card.Footer>
                     </Card>
                 );
