@@ -1,13 +1,14 @@
 import React from "react";
 import { PageTitle } from "./utils/PageTitle";
 import Container from "react-bootstrap/Container";
-import { Chat } from "../chat/Chat";
+import { MultiUserSelector } from "./utils/MultiUserSelector";
 
 export const Homepage = () => {
     return (
         <Container>
             <PageTitle>Homepage</PageTitle>
-            <Chat />
+            {/*<Chat />*/}
+            <MultiUserSelector onChange={() => {}} />
         </Container>
     );
 };

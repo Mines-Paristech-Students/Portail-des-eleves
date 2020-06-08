@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import "./QuantitySelect.css";
+import { queryCache } from "react-query";
 
 export const QuantitySelect = ({ order }) => {
-    let [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(0);
 
-    let increase = () => {
+    const increase = () => {
         setQuantity(quantity + 1);
     };
-    let decrease = () => {
+    const decrease = () => {
         setQuantity(quantity - 1);
     };
 
-    let onOrder = () => {
+    const onOrder = () => {
         order(quantity);
         setQuantity(0);
+        queryCache.refetchQueries(["marketplace.balance"]);
     };
 
-    if (quantity === 0) {
-        return (
-            <Button variant="primary" onClick={increase}>
-                <i className="fe fe-plus" />
-                Commander
-            </Button>
-        );
-    }
-
-    return (
+    return quantity === 0 ? (
+        <Button variant="outline-primary" onClick={increase}>
+            <i className="fe fe-plus" />
+            Commander
+        </Button>
+    ) : (
         <>
             <div className="input-group">
                 <span className="input-group-prepend">

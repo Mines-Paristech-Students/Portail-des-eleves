@@ -1,12 +1,7 @@
-import {
-    api,
-    PaginatedResponse,
-    useBetterQuery,
-} from "../../../services/apiService";
-import React from "react";
+import { api } from "../../../services/apiService";
+import React, { useEffect, useState } from "react";
 import { Tag as TagComponent } from "./Tag";
 import { Tag } from "../../../models/tag";
-import { Loading } from "../Loading";
 
 export enum TaggableModel {
     Association = "association",
@@ -21,32 +16,35 @@ export enum TaggableModel {
  * @param model the `TaggableModel` value of the model we want the tag for.
  * @param id the id of the model
  * @param collapsed true if we want the tags to take less space
+ * @param props additional props for the React component
  * @constructor
  */
 export const TagList = ({
     model,
-    id,
+    instance,
     collapsed = false,
+    ...props
 }: {
     model: TaggableModel;
-    id: string;
+    instance: any;
     collapsed?: boolean;
+    [key: string]: any;
 }) => {
-    let params: any = {};
-    params[model] = id;
-    const { data: tags, status, error } = useBetterQuery<
-        PaginatedResponse<Tag[]>
-    >(["tags.list", params], api.tags.list);
+    const [tags, setTags] = useState<Tag[]>([]);
 
-    return status === "loading" ? (
-        <Loading />
-    ) : status === "error" ? (
-        <p className={"text-danger"}>
-            Erreur lors du chargement des tags: {(error as any).toString()}
-        </p>
-    ) : tags ? (
-        <>
-            {tags.results.map((tag) => (
+    useEffect(() => {
+        if (instance.tags) {
+            setTags(instance.tags);
+        } else {
+            api.tags.list({ [model]: instance.id }).then((response) => {
+                setTags(response.results);
+            });
+        }
+    }, [instance.tags, instance.id, model]);
+
+    return (
+        <div {...props}>
+            {tags.map((tag) => (
                 <TagComponent
                     tag={tag.namespace.name}
                     addon={tag.value}
@@ -54,6 +52,6 @@ export const TagList = ({
                     collapsed={collapsed}
                 />
             ))}
-        </>
-    ) : null;
+        </div>
+    );
 };

@@ -13,6 +13,7 @@ const mapToUserAvatar = (userList) =>
             key={user.id}
             userId={user.id}
             tooltip={`${user.firstName} ${user.lastName}`}
+            link={true}
         />
     ));
 

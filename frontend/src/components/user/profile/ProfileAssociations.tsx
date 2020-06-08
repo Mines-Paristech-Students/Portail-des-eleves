@@ -50,7 +50,7 @@ export const ProfileAssociations = ({ profile }: { profile: Profile }) => (
                                     </span>
                                 }
                                 startDate={role.startDate}
-                                endDate={role.endDate}
+                                endDate={role.endDate || undefined}
                             />
                         ))}
                 </Timeline>

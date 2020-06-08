@@ -3,11 +3,11 @@ import { useBetterPaginatedQuery } from "../../services/apiService";
 import { Pagination as BoostrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
 import { Error } from "./Error";
-import { useHistory, useLocation } from "react-router-dom";
+import { useURLState } from "../../utils/useURLState";
 
 /**
  * Pagination is a component that handles the pagination on the API level + the
- * rendering of the page bar for you.
+ * rendering of the page for you.
  *
  * To use it, simply do:
  * ```
@@ -27,6 +27,7 @@ import { useHistory, useLocation } from "react-router-dom";
  * @param render a closure that takes the fetched data and the pagination
  * control bar as parameters.
  * @param apiKey The request key. Should be a non-empty array which first element is a string. The `page` last element required by `usePaginatedQuery` is added by the component and should not be included. Because of the behaviour of `usePaginatedQuery`, if any element of this array is falsy, then `apiMethod` will never be called.
+ * @param apiParameters
  * @param apiMethod The function to call. It will be given the elements of `apiKey` (except its first) as arguments.
  * @param config An optional object to configure `usePaginatedQuery`.
  * @param paginationControlProps Optional props to be passed to `PaginationControl`.
@@ -50,16 +51,55 @@ export const Pagination = ({
     loadingElement?: React.ComponentType<{}> | React.ReactNode;
     errorElement?: React.ComponentType<{ detail: any }> | React.ReactNode;
 }) => {
-    const history = useHistory();
-    const location = useLocation();
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useURLState("page", 1);
     const [maxPage, setMaxPage] = useState(1);
 
+    // Before propagating a change of `apiKey`, we reset the page to 1.
+    // Indeed, if the `apiKey` induces a change of the maximum available page
+    // (e.g. if `apiKey` contains a filter), we don't want the “old” page prop
+    // to exceed this maximum.
+    // However, changing the page may trigger a rerendering of the component
+    // using `Pagination`, which, in turn, may change the `apiKey` prop, losing the
+    // initial key. Hence we save this “initial” key in `temporizedApiKey`.
+    const [temporizedApiKey, setTemporizedApiKey] = useState<any[]>([]);
+    const [isInitialized, setIsInitialized] = useState(false);
+    useEffect(() => {
+        setTemporizedApiKey(apiKey);
+
+        // Don't change the page the first time the component is updated
+        if (!isInitialized) {
+            setIsInitialized(true);
+            return;
+        }
+
+        setPage(1);
+        // Use stringify because an object isn't equal to itself in JS
+        // We want to trigger an action only when the apiKey (most of
+        // the time additional search  fields) are changed, and don't depend
+        // on other variables, hence :
+        // eslint-disable-next-line
+    }, [JSON.stringify(apiKey)]);
+
     const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
-        [...apiKey, page],
+        [...temporizedApiKey, page],
         apiMethod,
         config
     );
+
+    // When we change the query params there may be a different number of
+    // results. Thus we need when the key change, to reset the page to 1.
+    // However we shouldn't do it before the key is initialized, hence the
+    // prevApiKey !== ""
+    const [prevApiKey, setPrevApiKey] = useState("");
+    useEffect(() => {
+        const apiKeyJSON = JSON.stringify(apiKey);
+        if (apiKeyJSON !== prevApiKey) {
+            if (prevApiKey !== "") {
+                setPage(1);
+            }
+            setPrevApiKey(apiKeyJSON);
+        }
+    }, [apiKey, prevApiKey, setPrevApiKey, setPage]);
 
     useEffect(() => {
         if (data && data.totalPages) {
@@ -68,31 +108,6 @@ export const Pagination = ({
         // eslint-disable-next-line
     }, [page, data]);
 
-    // Handle get parameters, ie when we take a page, we add the parameter
-    // in the URL, and exploit it when the page is loaded
-    // Example : we're on page 1, we go on page 2, the url is now on
-    // /associations/biero/magasin?page=2
-    // when we reload the page, the "page" parameter will be on 2
-    useEffect(() => {
-        // When the page loads, check if the "page" param is defined in the url
-        // and if so, use the setPage method. This will be called only when
-        // the component is mounted.
-        const pageParam = new URLSearchParams(location.search).get("page");
-        setPage(parseInt(pageParam || "") || 1);
-        // eslint-disable-next-line
-    }, []);
-
-    useEffect(() => {
-        // If the "page" parameter changes, change the url so when we reload,
-        // the first useEffect can take action to change the page param
-        let params = new URLSearchParams(location.search);
-        if (page.toString() !== params.get("page")) {
-            params.delete("page");
-            params.append("page", page.toString());
-            history.push(location.pathname + "?" + params.toString());
-        }
-    });
-
     if (status === "loading")
         return loadingElement === undefined ? (
             <Loading />
@@ -100,11 +115,11 @@ export const Pagination = ({
             React.createElement(loadingElement as any)
         );
     else if (status === "error") {
-        if (errorElement === undefined) {
-            return <Error detail={error} />;
-        } else {
-            return React.createElement(errorElement as any);
-        }
+        return errorElement === undefined ? (
+            <Error detail={error} />
+        ) : (
+            React.createElement(errorElement as any)
+        );
     }
 
     return render(
