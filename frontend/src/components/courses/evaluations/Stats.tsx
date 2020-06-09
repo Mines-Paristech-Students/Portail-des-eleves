@@ -1,13 +1,18 @@
 import React from "react";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
-import { Card, Container, Row, Accordion, Col } from "react-bootstrap";
+import {
+    Card,
+    Container,
+    Row,
+    Accordion,
+    Col,
+    ProgressBar,
+} from "react-bootstrap";
 import { QuestionCategory, Question } from "../../../models/courses/question";
-import { StatsQuestion } from "../../../models/courses/requests";
-import { ColumnChart } from "react-chartkick";
+import { StatsQuestion, Histogram } from "../../../models/courses/requests";
 import { PaginatedModalComment } from "./PaginatedModalComment";
 import { Loading } from "../../utils/Loading";
-import "chart.js";
 
 const DigitToStar = (num: number) => {
     let ceil = Math.ceil(num);
@@ -23,6 +28,38 @@ const DigitToStar = (num: number) => {
     }
 
     return result;
+};
+
+const DictToHistogram = (histogram: Histogram) => {
+    let sum = 0;
+    Object.keys(histogram)
+        .map((e) => parseInt(e))
+        .forEach((key) => {
+            sum += histogram[key];
+        });
+
+    return (
+        <Col>
+            {Object.keys(histogram)
+                .sort()
+                .reverse()
+                .map((key) => (
+                    <Row>
+                        <Col sm={1}>
+                            <p>{key}</p>
+                        </Col>
+                        <Col sm={10}>
+                            <ProgressBar
+                                now={(histogram[key] / sum) * 100}
+                                key={"hist" + key}
+                                label={key}
+                                srOnly
+                            />
+                        </Col>
+                    </Row>
+                ))}
+        </Col>
+    );
 };
 
 const StatsCardQuestion = ({ statsQuestion }) => {
@@ -41,10 +78,7 @@ const StatsCardQuestion = ({ statsQuestion }) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Card.Footer>
-                            <ColumnChart
-                                data={statsQuestion.histogram}
-                                stacked={true}
-                            />
+                            {DictToHistogram(statsQuestion.histogram)}
                         </Card.Footer>
                     </Accordion.Collapse>
                 </Card>

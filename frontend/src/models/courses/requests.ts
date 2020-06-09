@@ -1,4 +1,4 @@
-interface Histogram {
+export interface Histogram {
     [keys: number]: number;
 }
 

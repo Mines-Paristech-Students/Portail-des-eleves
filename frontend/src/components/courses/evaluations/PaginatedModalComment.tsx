@@ -3,14 +3,20 @@ import { api } from "../../../services/apiService";
 import { Card, Row, Col, Button, Modal } from "react-bootstrap";
 import { Comment } from "../../../models/courses/requests";
 import { Pagination } from "../../utils/Pagination";
-import "chart.js";
 
 export const PaginatedModalComment = ({ question, course }) => {
     const [show, setShow] = useState(false);
 
     return (
-        <Card.Text as={Button} onClick={() => setShow(true)} variant="light">
-            Détails <i className="fe fe-list" />
+        <>
+            <Card.Text
+                as={Button}
+                onClick={() => setShow(true)}
+                variant="light"
+            >
+                Détails <i className="fe fe-list" />
+            </Card.Text>
+
             <Modal show={show} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -39,6 +45,6 @@ export const PaginatedModalComment = ({ question, course }) => {
                     )}
                 />
             </Modal>
-        </Card.Text>
+        </>
     );
 };

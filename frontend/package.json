@@ -23,7 +23,6 @@
         "reactstrap": "^8.4.1",
         "socket.io-client": "^2.3.0",
         "tabler-ui": "^0.0.34",
-        "react-chartkick": "^0.4.0",
         "chart.js": "^2.9.3",
         "yup": "^0.28.4"
     },
