@@ -1,4 +1,5 @@
 import { CourseHome } from "../components/courses/Home";
+import { FormList } from "../components/courses/List";
 import { EditCourseForm } from "../components/courses/forms/Edit";
 import {
     CreateCourseForm,

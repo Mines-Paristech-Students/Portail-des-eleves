@@ -8,7 +8,7 @@ import {
 
 import { api, useBetterQuery } from "../../services/apiService";
 import { PrivateRoute } from "../utils/Route";
-import { CourseSidebar } from "./Sidebar";
+import { MainSidebar } from "./Sidebar";
 import { routes } from "../../routing/courses";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -46,7 +46,7 @@ export const CourseRouter = ({ match }) => {
             <Container>
                 <Row>
                     <Col md={3}>
-                        <CourseSidebar course={course} />
+                        <MainSidebar />
                     </Col>
                     <Col md={9}>
                         <Router>

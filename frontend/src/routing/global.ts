@@ -2,7 +2,7 @@ import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
 import { AssociationRouter } from "../components/associations/Router";
 import { routes as usersRoutes } from "./users";
-import { CourseList } from "../components/courses/List";
+import { CourseList, FormList } from "../components/courses/List";
 import { CourseRouter } from "../components/courses/Router";
 import { PollsRouter } from "../components/polls/Router";
 
@@ -26,6 +26,7 @@ export const routes = [
         component: CourseRouter,
         exact: false,
     },
+    { path: "/cours/formulaires", component: FormList, exact: true },
     {
         path: "/sondages",
         component: PollsRouter,

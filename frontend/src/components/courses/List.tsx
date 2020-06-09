@@ -3,12 +3,20 @@ import { PageTitle } from "../utils/PageTitle";
 import { api } from "../../services/apiService";
 import { Link } from "react-router-dom";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { Pagination } from "../utils/Pagination";
+import { MainSidebar } from "./Sidebar";
+
 
 export const CourseList = () => (
-    <Container>
+            <Container>
+                <Row>
+                    <Col md={3}>
+                        <MainSidebar />
+                    </Col>
+                    <Col md={9}>
         <PageTitle>Cours</PageTitle>
         <Pagination
             apiKey={["api.courses.list"]}
@@ -30,5 +38,41 @@ export const CourseList = () => (
                 </>
             )}
         />
-    </Container>
+        </Col>
+                </Row>
+            </Container>
+);
+
+
+export const FormList = () => (
+            <Container>
+                <Row>
+                    <Col md={3}>
+                        <MainSidebar />
+                    </Col>
+                    <Col md={9}>
+        <PageTitle>Cours</PageTitle>
+        <Pagination
+            apiKey={["api.courses.forms.list"]}
+            apiMethod={api.courses.forms.list}
+            render={(forms, paginationControl) => (
+                <>
+                    <Row>
+                        {forms.map((form) => (
+                            <Card key={form.id} className={"col-md-3 m-4"}>
+                                <Link to={`/cours/${form.id}/`}>
+                                    <Card.Body>
+                                        <Card.Title>{form.name}</Card.Title>
+                                    </Card.Body>
+                                </Link>
+                            </Card>
+                        ))}
+                    </Row>
+                    {paginationControl}
+                </>
+            )}
+        />
+        </Col>
+                </Row>
+            </Container>
 );

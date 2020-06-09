@@ -3,35 +3,81 @@ import { api, useBetterQuery } from "../../services/apiService";
 import { Sidebar, SidebarCategory, SidebarItem } from "../../utils/Sidebar";
 import { Loading } from "../utils/Loading";
 import { UserContext } from "../../services/authService";
+import { SidebarSpace, SidebarSeparator } from "../utils/sidebar/Sidebar";
+import { useLocation } from "react-router-dom";
 
-export const CourseSidebar = ({ course }) => {
-    const user = useContext(UserContext);
+const extractCourseIdfromLoc = () => {
+
+}
+
+export const MainSidebar = () => {
+    const location = useLocation();
+
+    // Extracting the course from the URL
+    const regCourse = new RegExp('^/cours/([0-9])/');
+    const match = regCourse.exec(location.pathname);
 
     return (
-        <Sidebar title={course.name}>
-            {user?.isStaff && <FormSidebar course={course} />}
+    <Sidebar title="Cours">
+        <SidebarItem
+            icon={"book"}
+            to={"/cours/"}
+        >
+            Cours
+        </SidebarItem>
 
-            <EvaluationSidebar course={course} />
-        </Sidebar>
+
+        <SidebarItem
+            icon={"edit-3"}
+            to={"/cours/formulaires"}
+        >
+            Formulaires
+        </SidebarItem>
+
+        {match &&
+            <CourseSidebar courseId={match[1]} />
+        }
+
+        {location.pathname.startsWith("/cours/formulaires") &&
+            <FormSidebar />
+        }
+    </Sidebar>
+)}
+
+const CourseSidebar = ({ courseId }) => {
+    return (
+        <>
+            <SidebarSeparator />
+            <EvaluationSidebar courseId={courseId} />
+
+            <SidebarSpace />
+
+            <SidebarItem
+                icon={"plus-circle"}
+                to={`/cours/${courseId}/formulaires/lier`}
+            >
+                Lier un formulaire
+            </SidebarItem>
+        </>
     );
 };
 
-const EvaluationSidebar = ({ course }) => {
+const EvaluationSidebar = ({ courseId }) => {
     const { data: has_voted, error, status } = useBetterQuery<boolean>(
-        ["courses.has_voted", course.id],
+        ["courses.has_voted", courseId],
         api.courses.has_voted
     );
 
     return (
-        <SidebarCategory title={"Évaluations"}>
+        <>
             {status === "error" && (
-                <SidebarItem icon="x-circle" to={`/cours/${course.id}`}>
+                <SidebarItem icon="x-circle" to={`/cours/${courseId}`}>
                     {`${error}`}
                 </SidebarItem>
             )}
 
             {status === "loading" && (
-                <SidebarItem icon="loader" to={`/cours/${course.id}`}>
+                <SidebarItem icon="loader" to={`/cours/${courseId}`}>
                     <Loading />
                 </SidebarItem>
             )}
@@ -39,45 +85,46 @@ const EvaluationSidebar = ({ course }) => {
             {status === "success" && has_voted && (
                 <SidebarItem
                     icon="pie-chart"
-                    to={`/cours/${course.id}/resultats`}
+                    to={`/cours/${courseId}/resultats`}
                 >
                     Statistiques
                 </SidebarItem>
             )}
 
             {status === "success" && !has_voted && (
-                <SidebarItem icon="edit-3" to={`/cours/${course.id}/evaluer`}>
+                <SidebarItem icon="edit-3" to={`/cours/${courseId}/evaluer`}>
                     Évaluer
                 </SidebarItem>
             )}
-        </SidebarCategory>
+        </>
     );
 };
 
-const FormSidebar = ({ course }) => {
-    return (
-        <SidebarCategory title={"Formulaires"}>
+const FormSidebar = () => {
+    const user = useContext(UserContext);
+
+    return user?.isStaff 
+      ? (<SidebarCategory title={"Formulaires"}>
             <SidebarItem
                 icon={"file-plus"}
-                to={`/cours/${course.id}/formulaires/nouveau`}
+                to={`/cours/formulaires/nouveau`}
             >
                 Creer un formulaire
             </SidebarItem>
-            <SidebarItem
-                icon={"plus-circle"}
-                to={`/cours/${course.id}/formulaires/lier`}
-            >
-                Lier un formulaire
-            </SidebarItem>
 
-            {course.form && (
                 <SidebarItem
                     icon={"file-text"}
-                    to={`/cours/${course.id}/formulaires/editer`}
+                    to={`/cours/formulaires/editer`}
                 >
                     Modifier le formulaire
                 </SidebarItem>
-            )}
-        </SidebarCategory>
-    );
+
+                <SidebarItem
+                    icon={"list"}
+                    to={`/cours/formulaires/liste`}
+                >
+                    Lister les formulaires
+                </SidebarItem>
+        </SidebarCategory>)
+      : null;
 };

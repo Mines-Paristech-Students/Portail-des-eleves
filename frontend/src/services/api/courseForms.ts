@@ -6,7 +6,7 @@ export const forms = {
     get: (formId: number) =>
         unwrap<Form>(apiService.get(`/courses/forms/${formId}`)),
     list: () =>
-        unwrap<PaginatedResponse<Form[]>>(apiService.get(`/courses/forms`)),
+        unwrap<PaginatedResponse<Form[]>>(apiService.get(`/courses/forms/`)),
     save: (form: Form) => {
         return form.id
             ? unwrap<Form>(apiService.patch(`/courses/forms/${form.id}/`, form))
