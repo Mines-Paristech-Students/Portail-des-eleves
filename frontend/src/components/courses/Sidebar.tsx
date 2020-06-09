@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { api, useBetterQuery } from "../../services/apiService";
-import { Sidebar, SidebarCategory, SidebarItem } from "../../utils/Sidebar";
+import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { Loading } from "../utils/Loading";
 import { UserContext } from "../../services/authService";
 import { SidebarSpace, SidebarSeparator } from "../utils/sidebar/Sidebar";

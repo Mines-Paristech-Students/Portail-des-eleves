@@ -1,14 +1,7 @@
 import React from "react";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
-import {
-    Card,
-    Container,
-    Row,
-    Accordion,
-    Col,
-    ProgressBar,
-} from "react-bootstrap";
+import { Card, Container, Row, Col, ProgressBar } from "react-bootstrap";
 import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion, Histogram } from "../../../models/courses/requests";
 import { PaginatedModalComment } from "./PaginatedModalComment";

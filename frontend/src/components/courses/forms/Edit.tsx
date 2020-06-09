@@ -281,7 +281,7 @@ const FetchQuestionsModal = ({ formId }) => {
                                     (question: Question) => (
                                         <ListGroup.Item>
                                             <Badge variant="info">
-                                                {question.category ==
+                                                {question.category ===
                                                 QuestionCategory.Comment ? (
                                                     <i className="fe fe-star" />
                                                 ) : (
@@ -319,7 +319,6 @@ const FetchQuestionsModal = ({ formId }) => {
 
 export const QuestionEditor = ({ question }) => {
     const [status, setStatus] = useState<TablerColor>(TablerColor.Blue);
-    const [popover, setPopover] = useState<boolean>(false);
     const newToast = useContext(ToastContext);
 
     const onSubmit = (question, { setSubmitting, setFieldTouched }) => {
