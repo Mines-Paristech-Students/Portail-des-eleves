@@ -10,8 +10,8 @@ import * as Yup from "yup";
 import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
 import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
-import { formatDate } from "../../../utils/format";
 import { DayPickerFormGroup } from "../../utils/forms/DayPickerFormGroup";
+import dayjs from "dayjs";
 
 const StateField = () => (
     <SelectFormGroup
@@ -139,8 +139,9 @@ export const PollEditModalAdminForm = ({
                                         <Card.Subtitle>
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
-                                                {formatDate(
-                                                    poll.creationDateTime
+                                                {dayjs(
+                                                    poll.creationDateTime,
+                                                    "DD/MM/YYYY"
                                                 )}
                                                 .
                                             </em>
