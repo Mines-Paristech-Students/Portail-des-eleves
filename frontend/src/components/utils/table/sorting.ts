@@ -39,7 +39,7 @@ export const cycleSorting = (current?: Sorting) =>
  */
 export const sortingToApiParameter = (sorting: any, mapping?: any) => {
     if (sorting === undefined) {
-        return "";
+        return undefined;
     }
 
     for (let key of Object.getOwnPropertyNames(sorting)) {
@@ -51,5 +51,5 @@ export const sortingToApiParameter = (sorting: any, mapping?: any) => {
         }
     }
 
-    return "";
+    return undefined;
 };
