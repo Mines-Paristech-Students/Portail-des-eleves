@@ -9,70 +9,40 @@ import Container from "react-bootstrap/Container";
 import { Pagination } from "../utils/Pagination";
 import { MainSidebar } from "./Sidebar";
 
-
 export const CourseList = () => (
-            <Container>
-                <Row>
-                    <Col md={3}>
-                        <MainSidebar />
-                    </Col>
-                    <Col md={9}>
-        <PageTitle>Cours</PageTitle>
-        <Pagination
-            apiKey={["api.courses.list"]}
-            apiMethod={api.courses.list}
-            render={(courses, paginationControl) => (
-                <>
-                    <Row>
-                        {courses.map((course) => (
-                            <Card key={course.id} className={"col-md-3 m-4"}>
-                                <Link to={`/cours/${course.id}/`}>
-                                    <Card.Body>
-                                        <Card.Title>{course.name}</Card.Title>
-                                    </Card.Body>
-                                </Link>
-                            </Card>
-                        ))}
-                    </Row>
-                    {paginationControl}
-                </>
-            )}
-        />
-        </Col>
-                </Row>
-            </Container>
-);
-
-
-export const FormList = () => (
-            <Container>
-                <Row>
-                    <Col md={3}>
-                        <MainSidebar />
-                    </Col>
-                    <Col md={9}>
-        <PageTitle>Cours</PageTitle>
-        <Pagination
-            apiKey={["api.courses.forms.list"]}
-            apiMethod={api.courses.forms.list}
-            render={(forms, paginationControl) => (
-                <>
-                    <Row>
-                        {forms.map((form) => (
-                            <Card key={form.id} className={"col-md-3 m-4"}>
-                                <Link to={`/cours/${form.id}/`}>
-                                    <Card.Body>
-                                        <Card.Title>{form.name}</Card.Title>
-                                    </Card.Body>
-                                </Link>
-                            </Card>
-                        ))}
-                    </Row>
-                    {paginationControl}
-                </>
-            )}
-        />
-        </Col>
-                </Row>
-            </Container>
+    <Container>
+        <Row>
+            <Col md={3}>
+                <MainSidebar />
+            </Col>
+            <Col md={9}>
+                <PageTitle>Cours</PageTitle>
+                <Pagination
+                    apiKey={["api.courses.list"]}
+                    apiMethod={api.courses.list}
+                    render={(courses, paginationControl) => (
+                        <>
+                            <Row>
+                                {courses.map((course) => (
+                                    <Card
+                                        key={course.id}
+                                        className={"col-md-3 m-4"}
+                                    >
+                                        <Link to={`/cours/${course.id}/`}>
+                                            <Card.Body>
+                                                <Card.Title>
+                                                    {course.name}
+                                                </Card.Title>
+                                            </Card.Body>
+                                        </Link>
+                                    </Card>
+                                ))}
+                            </Row>
+                            {paginationControl}
+                        </>
+                    )}
+                />
+            </Col>
+        </Row>
+    </Container>
 );

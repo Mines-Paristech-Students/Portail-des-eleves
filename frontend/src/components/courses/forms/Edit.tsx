@@ -17,8 +17,11 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Formik, useFormik, useField, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Question, QuestionCategory } from "../../../models/courses/question";
+import { useParams } from "react-router-dom";
 
-export const EditCourseForm = ({ course }) => {
+export const EditCourseForm = () => {
+    const formId = parseInt(useParams<{ formId: string }>().formId);
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [questions, setQuestions] = useState<Question[]>([]);
     const newToast = useContext(ToastContext);
@@ -30,7 +33,7 @@ export const EditCourseForm = ({ course }) => {
     useEffect(
         () => {
             api.courses.forms.questions
-                .list(course.form)
+                .list(formId)
                 .then((questions) => {
                     setQuestions(questions);
                     setIsLoading(false);
@@ -49,7 +52,7 @@ export const EditCourseForm = ({ course }) => {
             required: true,
             archived: false,
             category: QuestionCategory.Rating,
-            form: course.form,
+            form: formId,
         };
         let copy = questions.slice();
         copy.push(newQuestion);
@@ -57,7 +60,7 @@ export const EditCourseForm = ({ course }) => {
     };
 
     const { data: form } = useBetterQuery<FormModel>(
-        ["courses.forms.get", course.form],
+        ["courses.forms.get", formId],
         api.courses.forms.get
     );
 
@@ -85,7 +88,7 @@ export const EditCourseForm = ({ course }) => {
             <Row className="w-100 d-flex justify-content-around">
                 <Button onClick={addQuestion}>Ajouter une question</Button>
 
-                <FetchQuestionsModal course={course} />
+                <FetchQuestionsModal formId={formId} />
             </Row>
         </Container>
     );
@@ -144,7 +147,7 @@ const FormEditor = ({ form }) => {
     );
 };
 
-const FetchQuestionsModal = ({ course }) => {
+const FetchQuestionsModal = ({ formId }) => {
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [forms, setForms] = useState<FormModel[]>([]);
@@ -159,7 +162,7 @@ const FetchQuestionsModal = ({ course }) => {
             Promise.all(
                 values.questions.map((question: Question) => {
                     question.id = undefined;
-                    question.form = course.form;
+                    question.form = formId;
                     console.log(question.id);
                     return api.courses.forms.questions
                         .save(question)

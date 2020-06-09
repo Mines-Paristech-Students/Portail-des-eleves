@@ -1,8 +1,5 @@
 import { CourseHome } from "../components/courses/Home";
-import { FormList } from "../components/courses/List";
-import { EditCourseForm } from "../components/courses/forms/Edit";
 import {
-    CreateCourseForm,
     LinkCourseForm,
 } from "../components/courses/forms/Link";
 import { EvaluateCourse } from "../components/courses/evaluations/Evaluate";
@@ -12,18 +9,6 @@ export const routes = (course) => [
     {
         path: `/`,
         component: CourseHome,
-        exact: true,
-        props: { course: course },
-    },
-    {
-        path: `/formulaires/nouveau`,
-        component: CreateCourseForm,
-        exact: true,
-        props: { course: course },
-    },
-    {
-        path: `/formulaires/editer`,
-        component: EditCourseForm,
         exact: true,
         props: { course: course },
     },

@@ -6,10 +6,6 @@ import { UserContext } from "../../services/authService";
 import { SidebarSpace, SidebarSeparator } from "../utils/sidebar/Sidebar";
 import { useLocation } from "react-router-dom";
 
-const extractCourseIdfromLoc = () => {
-
-}
-
 export const MainSidebar = () => {
     const location = useLocation();
 
@@ -104,27 +100,14 @@ const FormSidebar = () => {
     const user = useContext(UserContext);
 
     return user?.isStaff 
-      ? (<SidebarCategory title={"Formulaires"}>
+      ? (<>
+            <SidebarSeparator />
             <SidebarItem
                 icon={"file-plus"}
                 to={`/cours/formulaires/nouveau`}
             >
                 Creer un formulaire
             </SidebarItem>
-
-                <SidebarItem
-                    icon={"file-text"}
-                    to={`/cours/formulaires/editer`}
-                >
-                    Modifier le formulaire
-                </SidebarItem>
-
-                <SidebarItem
-                    icon={"list"}
-                    to={`/cours/formulaires/liste`}
-                >
-                    Lister les formulaires
-                </SidebarItem>
-        </SidebarCategory>)
+        </>)
       : null;
 };
