@@ -30,59 +30,59 @@ const DigitToStar = (num: number) => {
     return result;
 };
 
-const DictToHistogram = (histogram: Histogram) => {
+const DictToHistogram = (histogram: Histogram, sum: number) => (
+    <Col>
+        {Object.keys(histogram)
+            .sort()
+            .reverse()
+            .map((key) => (
+                <Row>
+                    <Col sm={1}>
+                        <p>{key}</p>
+                    </Col>
+                    <Col sm={10}>
+                        <ProgressBar
+                            now={(histogram[key] / sum) * 100}
+                            key={"hist" + key}
+                            label={key}
+                            srOnly
+                        />
+                    </Col>
+                </Row>
+            ))}
+    </Col>
+);
+
+const StatsCardQuestion = ({ statsQuestion }) => {
     let sum = 0;
-    Object.keys(histogram)
+    Object.keys(statsQuestion.histogram)
         .map((e) => parseInt(e))
         .forEach((key) => {
-            sum += histogram[key];
+            sum += statsQuestion.histogram[key];
         });
 
     return (
-        <Col>
-            {Object.keys(histogram)
-                .sort()
-                .reverse()
-                .map((key) => (
-                    <Row>
-                        <Col sm={1}>
-                            <p>{key}</p>
-                        </Col>
-                        <Col sm={10}>
-                            <ProgressBar
-                                now={(histogram[key] / sum) * 100}
-                                key={"hist" + key}
-                                label={key}
-                                srOnly
-                            />
-                        </Col>
-                    </Row>
-                ))}
-        </Col>
-    );
-};
-
-const StatsCardQuestion = ({ statsQuestion }) => {
-    return (
-        <Col md={8} key={statsQuestion.id}>
-            <Accordion>
-                <Card className="text-center">
-                    <Accordion.Toggle as={Card.Body} eventKey="0">
-                        <Card.Title>{statsQuestion.label}</Card.Title>
-                        <Card.Subtitle>
+        <Col md={12} key={statsQuestion.id}>
+            <Card className="text-center">
+                <Card.Header as={Row} className="d-flex justify-content-center">
+                    <Card.Title>{statsQuestion.label}</Card.Title>
+                </Card.Header>
+                <Card.Body as={Row}>
+                    <Col sm={4}>
+                        <Row className="d-flex justify-content-center">
+                            <h1>{statsQuestion.average}</h1>
+                            <br/> / 5
+                        </Row>
+                        <h2 className="text-warning">
                             {DigitToStar(Number(statsQuestion.average))}
-                        </Card.Subtitle>
-                        <Card.Text>
-                            Histograme <i className="fe fe-arrow-down" />
-                        </Card.Text>
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <Card.Footer>
-                            {DictToHistogram(statsQuestion.histogram)}
-                        </Card.Footer>
-                    </Accordion.Collapse>
-                </Card>
-            </Accordion>
+                        </h2>
+                        {sum} avis
+                    </Col>
+                    <Col sm={8}>
+                        {DictToHistogram(statsQuestion.histogram, sum)}
+                    </Col>
+                </Card.Body>
+            </Card>
         </Col>
     );
 };
@@ -110,7 +110,7 @@ const StatsCourse = ({ course }) => {
 };
 
 export const PaginatedCardComment = ({ question, course }) => (
-    <Col md={8} key={question.id}>
+    <Col md={12} key={question.id}>
         <Card className="text-center">
             <Card.Body>
                 <Card.Title>{question.label}</Card.Title>

@@ -9,7 +9,7 @@ import {
 import { api, useBetterQuery } from "../../services/apiService";
 import { PrivateRoute } from "../utils/Route";
 import { MainSidebar } from "./Sidebar";
-import { routes } from "../../routing/courses";
+import { routes } from "../../routing/courses/courses";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";

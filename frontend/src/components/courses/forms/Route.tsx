@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import { MainSidebar } from "./../Sidebar";
-import { routes } from "../../../routing/forms";
+import { routes } from "../../../routing/courses/forms";
 import { PrivateRoute } from "../../utils/Route";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PageNotFoundError } from "../../utils/ErrorPage";
