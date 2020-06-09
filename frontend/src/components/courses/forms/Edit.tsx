@@ -18,6 +18,8 @@ import { Formik, useFormik, useField, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Question, QuestionCategory } from "../../../models/courses/question";
 import { useParams } from "react-router-dom";
+import { CardStatus } from "../../utils/CardStatus";
+import { TablerColor } from "../../../utils/colors";
 
 export const EditCourseForm = () => {
     const formId = parseInt(useParams<{ formId: string }>().formId);
@@ -77,7 +79,7 @@ export const EditCourseForm = () => {
             <Row>
                 {questions &&
                     questions.map((question) => (
-                        <Col sm={6} id={"Col" + question.id}>
+                        <Col sm={11} id={"Col" + question.id}>
                             <QuestionEditor question={question} />
                         </Col>
                     ))}
@@ -279,7 +281,12 @@ const FetchQuestionsModal = ({ formId }) => {
                                     (question: Question) => (
                                         <ListGroup.Item>
                                             <Badge variant="info">
-                                                {question.category}
+                                                {question.category ==
+                                                QuestionCategory.Comment ? (
+                                                    <i className="fe fe-star" />
+                                                ) : (
+                                                    <i className="fe fe-edit" />
+                                                )}
                                             </Badge>
                                             {question.label}
                                         </ListGroup.Item>
@@ -310,21 +317,13 @@ const FetchQuestionsModal = ({ formId }) => {
     );
 };
 
-enum QuestionStatus {
-    Clear = "light",
-    Modified = "primary",
-    Error = "danger",
-    NotValid = "warning",
-    Submitting = "info",
-    Success = "success",
-}
-
 export const QuestionEditor = ({ question }) => {
-    const [status, setStatus] = useState<QuestionStatus>(QuestionStatus.Clear);
+    const [status, setStatus] = useState<TablerColor>(TablerColor.Blue);
+    const [popover, setPopover] = useState<boolean>(false);
     const newToast = useContext(ToastContext);
 
-    const onSubmit = (question, { setSubmitting }) => {
-        setStatus(QuestionStatus.Submitting);
+    const onSubmit = (question, { setSubmitting, setFieldTouched }) => {
+        setStatus(TablerColor.Orange);
 
         api.courses.forms.questions
             .save(question)
@@ -332,21 +331,29 @@ export const QuestionEditor = ({ question }) => {
                 newToast.sendSuccessToast(
                     `Updated questions ${res.label} for ${res.form}`
                 );
+
+                // Re-initialization
                 setSubmitting(false);
-                setStatus(QuestionStatus.Success);
+                setStatus(TablerColor.Green);
+                for (let key in question) {
+                    setFieldTouched(key, false);
+                }
+
+                // Resets to normal after user has a chance to see success
+                setTimeout(() => setStatus(TablerColor.Blue), 2000);
             })
             .catch((err) => {
                 newToast.sendErrorToast(
                     err.response.status + " " + err.response.data
                 );
                 setSubmitting(false);
-                setStatus(QuestionStatus.Error);
+                setStatus(TablerColor.Red);
             });
     };
 
     const validate = (question) => {
         if (question.label === "") {
-            setStatus(QuestionStatus.NotValid);
+            setStatus(TablerColor.Pink);
             return { label: "Ne peut pas etre vide" };
         }
         return {};
@@ -364,17 +371,15 @@ export const QuestionEditor = ({ question }) => {
                 Object.keys(props.touched).forEach((key) => {
                     if (props.touched[key]) isTouched = true;
                 });
-                if (isTouched && status === QuestionStatus.Clear)
-                    setStatus(QuestionStatus.Modified);
+                if (isTouched && status === TablerColor.Blue)
+                    setStatus(TablerColor.Cyan);
 
                 return (
-                    <Card
-                        as={Form}
-                        onSubmit={props.handleSubmit}
-                        border={status}
-                    >
+                    <Card as={Form} onSubmit={props.handleSubmit}>
+                        <CardStatus color={status} />
+
                         <Card.Header>
-                            <Form.Group>
+                            <Card as={Form.Group}>
                                 <Form.Control
                                     placeholder="Intitulé"
                                     id="label"
@@ -383,27 +388,38 @@ export const QuestionEditor = ({ question }) => {
                                     onBlur={props.handleBlur}
                                     onChange={props.handleChange}
                                 />
+
                                 {props.touched.label && props.errors.label && (
                                     <Form.Control.Feedback type="invalid">
                                         {props.errors.label}
                                     </Form.Control.Feedback>
                                 )}
-                            </Form.Group>
+
+                                <CardStatus
+                                    position="left"
+                                    color={
+                                        props.touched.label
+                                            ? props.errors.label
+                                                ? TablerColor.Red
+                                                : TablerColor.Cyan
+                                            : TablerColor.Blue
+                                    }
+                                />
+                            </Card>
                         </Card.Header>
 
                         <Card.Body>
-                            {!question.id && (
-                                <MyRadioField
-                                    label="Catégorie"
-                                    id={"category" + question.id}
-                                    name="category"
-                                    mapping={{
-                                        Commentaire: "C",
-                                        Notation: "R",
-                                    }}
-                                    {...props}
-                                />
-                            )}
+                            <MyRadioField
+                                label="Catégorie"
+                                id={"category" + question.id}
+                                name="category"
+                                mapping={{
+                                    Commentaire: "C",
+                                    Notation: "R",
+                                }}
+                                disabled={question.id ? false : true}
+                                {...props}
+                            />
 
                             <Form.Group>
                                 <Form.Label>Paramètres</Form.Label>
@@ -442,9 +458,18 @@ export const QuestionEditor = ({ question }) => {
                                     />
                                 )}
                             </Button>
-                            <Button onClick={props.handleReset}>
+                            {/* <Button
+                                onClick={() => {
+                                    console.log("reset");
+                                    for (let key in question) {
+                                        props.setFieldTouched(key, false);
+                                    }
+                                    setStatus(TablerColor.Blue);
+                                    props.handleReset();
+                                }}
+                            >
                                 Ré-initialiser
-                            </Button>
+                            </Button> */}
                         </Card.Footer>
                     </Card>
                 );
@@ -453,7 +478,7 @@ export const QuestionEditor = ({ question }) => {
     );
 };
 
-const MyRadioField = ({ label, mapping, ...props }) => {
+const MyRadioField = ({ label, mapping, disabled, ...props }) => {
     // @ts-ignore
     const [field, meta, helper] = useField(props);
 
@@ -469,6 +494,7 @@ const MyRadioField = ({ label, mapping, ...props }) => {
                     value={mapping[key]}
                     checked={field.value === mapping[key]}
                     onChange={() => helper.setValue(mapping[key])}
+                    disabled
                 />
             ))}
         </Form.Group>

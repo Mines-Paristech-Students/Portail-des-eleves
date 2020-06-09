@@ -10,7 +10,7 @@ export const CourseHome = ({ course }) => {
 
     return (
         <Container>
-                <ResultsCourse course={course} />
+            <ResultsCourse course={course} />
         </Container>
     );
 };

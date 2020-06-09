@@ -6,7 +6,6 @@ import { ToastContext } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
 import { Pagination } from "../../utils/Pagination";
 
-
 export const LinkCourseForm = ({ course }) => {
     const newToast = useContext(ToastContext);
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
@@ -40,32 +39,36 @@ export const LinkCourseForm = ({ course }) => {
                     apiKey={["api.courses.forms.list"]}
                     apiMethod={api.courses.forms.list}
                     render={(forms, paginationControl) =>
-                        forms.map((form) =>  (
-                                <>
-                                    <Card
-                                        md={4}
-                                        border={form.id === course.form ? "info" : "light"}
-                                        as={Col}
-                                        className="m-2"
-                                    >
-                                        <Card.Header>
-                                            <Card.Title>{form.name}</Card.Title>
-                                        </Card.Header>
-                                        <Card.Footer>
-                                            <Button
-                                                variant="primary"
-                                                onClick={() => {
-                                                    setShowConfirm(true);
-                                                    setForm(form);
-                                                }}
-                                            >
-                                                Choisir
-                                            </Button>
-                                        </Card.Footer>
-                                    </Card>
-                                    {paginationControl}
-                                </>
-                            ))
+                        forms.map((form) => (
+                            <>
+                                <Card
+                                    md={4}
+                                    border={
+                                        form.id === course.form
+                                            ? "info"
+                                            : "light"
+                                    }
+                                    as={Col}
+                                    className="m-2"
+                                >
+                                    <Card.Header>
+                                        <Card.Title>{form.name}</Card.Title>
+                                    </Card.Header>
+                                    <Card.Footer>
+                                        <Button
+                                            variant="primary"
+                                            onClick={() => {
+                                                setShowConfirm(true);
+                                                setForm(form);
+                                            }}
+                                        >
+                                            Choisir
+                                        </Button>
+                                    </Card.Footer>
+                                </Card>
+                                {paginationControl}
+                            </>
+                        ))
                     }
                 />
             </Row>

@@ -71,7 +71,7 @@ const StatsCardQuestion = ({ statsQuestion }) => {
                     <Col sm={4}>
                         <Row className="d-flex justify-content-center">
                             <h1>{statsQuestion.average}</h1>
-                            <br/> / 5
+                            <br /> / 5
                         </Row>
                         <h2 className="text-warning">
                             {DigitToStar(Number(statsQuestion.average))}

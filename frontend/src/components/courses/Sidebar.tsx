@@ -10,35 +10,27 @@ export const MainSidebar = () => {
     const location = useLocation();
 
     // Extracting the course from the URL
-    const regCourse = new RegExp('^/cours/([0-9])/');
+    const regCourse = new RegExp("^/cours/([0-9])/");
     const match = regCourse.exec(location.pathname);
 
     return (
-    <Sidebar title="Cours">
-        <SidebarItem
-            icon={"book"}
-            to={"/cours/"}
-        >
-            Cours
-        </SidebarItem>
+        <Sidebar title="Cours">
+            <SidebarItem icon={"book"} to={"/cours/"}>
+                Cours
+            </SidebarItem>
 
+            <SidebarItem icon={"edit-3"} to={"/cours/formulaires"}>
+                Formulaires
+            </SidebarItem>
 
-        <SidebarItem
-            icon={"edit-3"}
-            to={"/cours/formulaires"}
-        >
-            Formulaires
-        </SidebarItem>
+            {match && <CourseSidebar courseId={match[1]} />}
 
-        {match &&
-            <CourseSidebar courseId={match[1]} />
-        }
-
-        {location.pathname.startsWith("/cours/formulaires") &&
-            <FormSidebar />
-        }
-    </Sidebar>
-)}
+            {location.pathname.startsWith("/cours/formulaires") && (
+                <FormSidebar />
+            )}
+        </Sidebar>
+    );
+};
 
 const CourseSidebar = ({ courseId }) => {
     return (
@@ -99,15 +91,12 @@ const EvaluationSidebar = ({ courseId }) => {
 const FormSidebar = () => {
     const user = useContext(UserContext);
 
-    return user?.isStaff 
-      ? (<>
+    return user?.isStaff ? (
+        <>
             <SidebarSeparator />
-            <SidebarItem
-                icon={"file-plus"}
-                to={`/cours/formulaires/nouveau`}
-            >
+            <SidebarItem icon={"file-plus"} to={`/cours/formulaires/nouveau`}>
                 Creer un formulaire
             </SidebarItem>
-        </>)
-      : null;
+        </>
+    ) : null;
 };

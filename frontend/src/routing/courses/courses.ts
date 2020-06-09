@@ -1,7 +1,5 @@
 import { CourseHome } from "../../components/courses/Home";
-import {
-    LinkCourseForm,
-} from "../../components/courses/forms/Link";
+import { LinkCourseForm } from "../../components/courses/forms/Link";
 import { EvaluateCourse } from "../../components/courses/evaluations/Evaluate";
 import { ResultsCourse } from "../../components/courses/evaluations/Stats";
 

@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Form, Button, Modal} from "react-bootstrap";
+import { Form, Button, Modal } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form";
 import { api } from "../../../services/apiService";
 import { useFormik } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Redirect } from "react-router-dom";
-
 
 export const CreateCourseForm = ({ course }) => {
     const [form, setForm] = useState<FormModel | null>(null);
