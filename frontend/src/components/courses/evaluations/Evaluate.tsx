@@ -13,6 +13,8 @@ import {
     CommentSubmission,
     RatingSubmission,
 } from "../../../models/courses/submission";
+import { TablerColor } from "../../../utils/colors";
+import { CardStatus } from "../../utils/CardStatus";
 
 export const EvaluateCourse = ({ course }) => {
     const { data: questions, error, status } = useBetterQuery<Question[]>(
@@ -149,7 +151,11 @@ export const QuestionsForm = ({ questions, course }) => {
                 validate={validate}
             >
                 {(props: FormikProps<EvalData>) => (
-                    <Form onSubmit={props.handleSubmit}>
+                    <Form
+                        className="d-flex justify-content-center"
+                        onSubmit={props.handleSubmit}
+                        as={Card}
+                    >
                         {questions.map((question) => {
                             if (question.archived) return null;
 
@@ -177,27 +183,26 @@ export const QuestionsForm = ({ questions, course }) => {
                             }
 
                             return (
-                                <Col md={8} key={question.id}>
-                                    <Card
-                                        key={questions.id}
-                                        className="col-md-4 m-4"
-                                        text={
-                                            props.errors[question.id]
-                                                ? "dark"
-                                                : "white"
-                                        }
-                                        bg={
-                                            props.errors[question.id]
-                                                ? "light"
-                                                : "danger"
-                                        }
-                                    >
-                                        <Card.Header>
-                                            {question.label}
-                                        </Card.Header>
-                                        <Card.Body>{field}</Card.Body>
-                                    </Card>
-                                </Col>
+                                <Form.Group className="p-3 text-center">
+                                    <Form.Label>
+                                        <h4>{question.label}</h4>
+                                    </Form.Label>
+
+                                    <Col sm={12} key={question.id}>
+                                        <Card key={questions.id}>
+                                            <CardStatus
+                                                color={
+                                                    props.errors[question.id]
+                                                        ? TablerColor.Red
+                                                        : question.required
+                                                        ? TablerColor.Lime
+                                                        : TablerColor.Gray
+                                                }
+                                            />
+                                            {field}
+                                        </Card>
+                                    </Col>
+                                </Form.Group>
                             );
                         })}
                         <Button type="submit" disabled={props.isSubmitting}>
