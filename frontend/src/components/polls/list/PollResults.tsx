@@ -39,7 +39,9 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
         <Card.Body>
             <Card.Subtitle className="text-left">
                 <em>
-                    {poll.publicationDate && dayjs(poll.publicationDate).format("DD/MM/YYYY")} (
+                    {poll.publicationDate &&
+                        dayjs(poll.publicationDate).format("DD/MM/YYYY")}{" "}
+                    (
                     {`${totalNumberOfVotes(poll)} ${decidePlural(
                         totalNumberOfVotes(poll),
                         "vote",
