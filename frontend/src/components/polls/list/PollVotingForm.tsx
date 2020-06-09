@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Choice, Poll } from "../../../models/polls";
-import { formatDate } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
@@ -10,7 +9,11 @@ import { api } from "../../../services/apiService";
 import { ToastContext } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
+/**
+ * Display a form allowing to vote for a Poll in a Card.
+ */
 export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const user = useContext(UserContext);
@@ -64,10 +67,10 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
             </Card.Header>
 
             <Card.Body>
-                <Card.Subtitle className="poll-date">
+                <Card.Subtitle className="text-left">
                     <em>
                         {poll.publicationDate &&
-                            formatDate(poll.publicationDate)}
+                            dayjs(poll.publicationDate).format("DD/MM/YYYY")}
                     </em>
                 </Card.Subtitle>
 

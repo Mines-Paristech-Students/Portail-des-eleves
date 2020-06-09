@@ -1,12 +1,12 @@
 import React from "react";
 import { Poll } from "../../../models/polls";
-import "./list_polls.css";
-import { formatDate, decidePlural } from "../../../utils/format";
+import { decidePlural } from "../../../utils/format";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
+import dayjs from "dayjs";
 
-const totalVotes = (poll) =>
+const totalNumberOfVotes = (poll) =>
     poll.choices.reduce(
         (total, choice) =>
             choice.numberOfVotes ? total + choice.numberOfVotes : total,
@@ -25,17 +25,23 @@ const getColor = (
     return "danger";
 };
 
+/**
+ * Display the results of a Poll in a `Card`.
+ * The question is the title of the card.
+ * The results are displayed as progress bars, with colours depending on the
+ * rank of the choice.
+ */
 export const PollResults = ({ poll }: { poll: Poll }) => (
     <Card>
         <Card.Header>
             <Card.Title as="h3">{poll.question}</Card.Title>
         </Card.Header>
         <Card.Body>
-            <Card.Subtitle className="poll-date">
+            <Card.Subtitle className="text-left">
                 <em>
-                    {poll.publicationDate && formatDate(poll.publicationDate)} (
-                    {`${totalVotes(poll)} ${decidePlural(
-                        totalVotes(poll),
+                    {poll.publicationDate && dayjs(poll.publicationDate).format("DD/MM/YYYY")} (
+                    {`${totalNumberOfVotes(poll)} ${decidePlural(
+                        totalNumberOfVotes(poll),
                         "vote",
                         "votes"
                     )}`}
@@ -66,7 +72,7 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                                                 {Number(
                                                     (100 *
                                                         choice.numberOfVotes) /
-                                                        totalVotes(poll)
+                                                        totalNumberOfVotes(poll)
                                                 ).toFixed(1)}{" "}
                                                 %
                                             </small>
@@ -76,10 +82,10 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                                         className="progress-sm"
                                         now={choice.numberOfVotes}
                                         min={0}
-                                        max={totalVotes(poll)}
+                                        max={totalNumberOfVotes(poll)}
                                         variant={getColor(
                                             choice.numberOfVotes,
-                                            totalVotes(poll)
+                                            totalNumberOfVotes(poll)
                                         )}
                                     />
                                 </ListGroup.Item>

@@ -36,7 +36,6 @@ export const cycleSorting = (current?: Sorting) =>
  * @param sorting an object (like those given by `useColumns`) mapping `Sorting` objects to keys.
  * @param mapping an optional object which maps the key used by `sorting` to the keys used by the backend. Useful for
  * converting camelCase into snake_case.
- * @param parameterName the name of the URL parameter. Defaults to `ordering`.
  */
 export const sortingToApiParameter = (sorting: any, mapping?: any) => {
     if (sorting === undefined) {
