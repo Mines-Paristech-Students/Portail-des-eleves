@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import { Loading } from "../utils/Loading";
+import { ResultsCourse } from "./evaluations/Stats";
 
 export const CourseHome = ({ course }) => {
     if (!course) {
@@ -9,7 +10,7 @@ export const CourseHome = ({ course }) => {
 
     return (
         <Container>
-            <p>Home page !!!</p>
+                <ResultsCourse course={course} />
         </Container>
     );
 };

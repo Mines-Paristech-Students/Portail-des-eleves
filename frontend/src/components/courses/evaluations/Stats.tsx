@@ -154,7 +154,7 @@ const PaginatedComments = ({ course }) => {
 
 export const ResultsCourse = ({ course }) => (
     <Container>
-        <PageTitle>{course.name}</PageTitle>
+        <PageTitle>Résumé des avis</PageTitle>
 
         <PaginatedComments course={course} />
 
