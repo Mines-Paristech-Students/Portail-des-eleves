@@ -20,6 +20,7 @@ import { Table, useColumns } from "../../utils/table/Table";
 import { PollEditModal } from "./PollEditModal";
 import { Column } from "../../utils/table/TableHeader";
 import { sortingToApiParameter } from "../../utils/table/sorting";
+import { PageTitle } from "../../utils/PageTitle";
 
 /**
  * Display a table (either for an administrator or a simple user).
@@ -63,11 +64,9 @@ export const PollsTable = ({
                 />
             }
         >
-            <div className="page-header mt-0 mb-5">
-                <h1 className="page-title">
-                    {adminVersion ? "Administration" : "Mes sondages"}
-                </h1>
-            </div>
+            <PageTitle>
+                {adminVersion ? "Administration" : "Mes sondages"}
+            </PageTitle>
 
             <Card>
                 <Pagination
