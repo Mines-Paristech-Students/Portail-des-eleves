@@ -75,11 +75,11 @@ export const QuestionsForm = ({ questions, course }) => {
         // Already checked by validation
         for (let id in values.comments) {
             if (values.comments[id] !== "") {
-                const comment_data: CommentSubmission = {
+                const commentData: CommentSubmission = {
                     question: parseInt(id),
                     content: values.comments[id],
                 };
-                data.comments.push(comment_data);
+                data.comments.push(commentData);
             }
         }
         for (let id in values.ratings) {

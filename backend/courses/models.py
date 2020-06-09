@@ -30,7 +30,7 @@ FILE_CATEGORY = (
 
 
 class Form(models.Model):
-    id = models.BigAutoField(unique=True, primary_key=True)
+    id = models.AutoField(unique=True, primary_key=True)
 
     date = models.DateTimeField(auto_now_add=True)
 
