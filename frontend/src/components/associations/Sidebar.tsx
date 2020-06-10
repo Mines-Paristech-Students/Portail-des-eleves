@@ -147,10 +147,10 @@ const LibrarySubSidebar = ({ association }: { association: Association }) => {
         <>
             <SidebarSpace />
             <SidebarItem
-                icon={"book"}
+                icon={"home"}
                 to={`/associations/${association.id}/bibliotheque`}
             >
-                Objets
+                Accueil
             </SidebarItem>
             {association.myRole?.permissions?.includes("library") && (
                 <SidebarItem
