@@ -28,6 +28,13 @@ export const AssociationSidebar = ({ association }) => {
                 />
                 <AddPageItem association={association} />
                 <SidebarItem
+                    icon={"book"}
+                    to={`/associations/${association.id}/bibliotheque`}
+                    exact={false}
+                >
+                    Bibliothèque
+                </SidebarItem>
+                <SidebarItem
                     icon={"calendar"}
                     to={`/associations/${association.id}/evenements`}
                     exact={false}
@@ -67,6 +74,7 @@ export const AssociationSidebar = ({ association }) => {
                     <MarketSubNavbar association={association} />
                 )}
                 <EventSubSidebar association={association} />
+                <LibrarySubSidebar association={association} />
                 <RolesSubSidebar association={association} />
             </Sidebar>
         );
@@ -125,6 +133,31 @@ const EventSubSidebar = ({ association }: { association: Association }) => {
                     to={`/associations/${association.id}/evenements/creer`}
                 >
                     Nouveau
+                </SidebarItem>
+            )}
+        </>
+    ) : null;
+};
+
+const LibrarySubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/bibliotheque`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"book"}
+                to={`/associations/${association.id}/bibliotheque`}
+            >
+                Objets
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("library") && (
+                <SidebarItem
+                    icon={"settings"}
+                    to={`/associations/${association.id}/bibliotheque/gerer`}
+                >
+                    Gestion
                 </SidebarItem>
             )}
         </>
