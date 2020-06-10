@@ -66,6 +66,7 @@ export const roles = {
                     association: parameters.association,
                     user: parameters.user,
                     is_active: parameters.is_active,
+                    ordering: parameters.ordering,
                     page_size: parameters.page_size,
                     page: page,
                 })}`

@@ -166,6 +166,7 @@ export const AssociationRolesAdministration = ({
                 onHide={() => setShowAddRole(false)}
             />
             <Pagination
+                apiMethod={api.roles.list}
                 apiKey={[
                     "roles.list",
                     {
@@ -178,7 +179,9 @@ export const AssociationRolesAdministration = ({
                         }),
                     },
                 ]}
-                apiMethod={api.roles.list}
+                paginationControlProps={{
+                    className: "justify-content-center mt-5",
+                }}
                 render={(roles, paginationControl) => (
                     <Container className="mt-4">
                         <Row className="align-items-center mb-2">
@@ -205,9 +208,6 @@ export const AssociationRolesAdministration = ({
                         </Card>
                     </Container>
                 )}
-                paginationControlProps={{
-                    className: "justify-content-center mt-5",
-                }}
             />
         </>
     );
