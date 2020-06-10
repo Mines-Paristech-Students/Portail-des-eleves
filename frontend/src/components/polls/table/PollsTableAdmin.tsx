@@ -1,9 +1,9 @@
 import React from "react";
-import { formatDate } from "../../../utils/format";
 import { PollStateIcon } from "./PollStateIcon";
 import Button from "react-bootstrap/Button";
 import { PollsTable } from "./PollsTable";
 import { Column } from "../../utils/table/TableHeader";
+import dayjs from "dayjs";
 
 export const PollsTableAdmin = () => (
     <PollsTable adminVersion={true} columnData={columnData} />
@@ -31,7 +31,7 @@ const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
     },
     {
         key: "publicationDate",
-        render: (poll) => formatDate(poll.publicationDate),
+        render: (poll) => dayjs(poll.publicationDate, "DD/MM/YYYY"),
         header: "Publication",
         canSort: true,
     },

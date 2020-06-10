@@ -2,7 +2,7 @@ import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
 import { AssociationRouter } from "../components/associations/Router";
 import { routes as usersRoutes } from "./users";
-import { PollsRouter } from "../components/polls/Router";
+import { PollsRouter } from "../components/polls/PollsRouter";
 
 export type Route = {
     path: string;

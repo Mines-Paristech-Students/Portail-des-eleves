@@ -12,7 +12,7 @@ export const PollsBase = ({
     children: any;
     sidebarActions?: any;
 }) => (
-    <Container className="mt-5">
+    <Container className="mt-4">
         <Row>
             <Col md="3">
                 <PollsSidebar
