@@ -2,12 +2,13 @@ import { AssociationHome } from "../components/associations/Home";
 import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
 import { Route } from "./global";
 import { routes as eventsRoutes } from "./associations/events";
+import { routes as libraryRoutes } from "./associations/library";
 import { routes as marketplaceRoutes } from "./associations/marketplace";
 import { routes as mediasRoutes } from "./associations/medias";
-import { routes as rolesRoutes } from "./associations/roles";
 import { routes as pagesRoutes } from "./associations/pages";
-import { AssociationBoostrap } from "../components/associations/Boostrap";
 import React from "react";
+import { routes as rolesRoutes } from "./associations/roles";
+import { AssociationBoostrap } from "../components/associations/Boostrap";
 
 export type AssociationRoute = Route & {
     props?: object;
@@ -40,6 +41,7 @@ export const routes: AssociationRoute[] = [
     },
 
     ...eventsRoutes,
+    ...libraryRoutes,
     ...marketplaceRoutes,
     ...mediasRoutes,
     ...rolesRoutes,
