@@ -30,25 +30,23 @@ const App: React.FC = () => {
         });
     });
 
-    if (checkedAuth) {
-        return (
-            <ToastProvider>
-                <Router>
-                    {/* Switch imposes that only the first route to match the url will be rendered.
+    return checkedAuth ? (
+        <ToastProvider>
+            <Router>
+                {/* Switch imposes that only the first route to match the url will be rendered.
                 It avoids rendering PageNotFoundError on each page */}
-                    <Switch>
-                        {/* A PrivateRoute is a route that requires to be authenticated to be accessible.
+                <Switch>
+                    {/* A PrivateRoute is a route that requires to be authenticated to be accessible.
                      If the user is a public one, they'll be redirected to the login page. */}
-                        {privateRoutes}
-                        <Route path="/login" component={Login} />
-                        <Route component={PageNotFoundError} />
-                    </Switch>
-                </Router>
-            </ToastProvider>
-        );
-    } else {
-        return <Loading className="mt-9" />;
-    }
+                    {privateRoutes}
+                    <Route path="/login" component={Login} />
+                    <Route component={PageNotFoundError} />
+                </Switch>
+            </Router>
+        </ToastProvider>
+    ) : (
+        <Loading className="mt-9" />
+    );
 };
 
 export default App;
