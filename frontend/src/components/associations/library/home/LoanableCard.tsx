@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import dayjs from "dayjs";
 
 export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
-    const isAvailable = () => loanable.status === "AVAILABLE";
+    const isAvailable = loanable.status === "AVAILABLE";
 
     return (
         <Card>
