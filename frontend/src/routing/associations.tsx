@@ -8,7 +8,7 @@ import { routes as mediasRoutes } from "./associations/medias";
 import { routes as pagesRoutes } from "./associations/pages";
 import React from "react";
 import { routes as rolesRoutes } from "./associations/roles";
-import { AssociationBootstrap } from "../components/associations/Boostrap";
+import { AssociationBootstrap } from "../components/associations/Bootstrap";
 
 export type AssociationRoute = Route & {
     props?: object;
