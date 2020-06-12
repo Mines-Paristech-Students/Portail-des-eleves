@@ -1,4 +1,4 @@
-import { toUrlParams } from "./apiService";
+import { toUrlParams } from "./urlParam";
 
 test("converts scalar values to correct GET parameter", () => {
     expect(

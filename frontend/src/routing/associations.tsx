@@ -1,15 +1,17 @@
 import { AssociationHome } from "../components/associations/Home";
 import { AssociationSettings } from "../components/associations/settings/AssociationSettings";
-import { Association } from "../models/associations/association";
 import { Route } from "./global";
 import { routes as eventsRoutes } from "./associations/events";
+import { routes as libraryRoutes } from "./associations/library";
 import { routes as marketplaceRoutes } from "./associations/marketplace";
 import { routes as mediasRoutes } from "./associations/medias";
-import { routes as membersRoutes } from "./associations/members";
 import { routes as pagesRoutes } from "./associations/pages";
+import React from "react";
+import { routes as rolesRoutes } from "./associations/roles";
+import { AssociationBootstrap } from "../components/associations/Bootstrap";
 
 export type AssociationRoute = Route & {
-    props: object;
+    props?: object;
     defaultLayout: boolean;
 };
 
@@ -24,27 +26,38 @@ export type AssociationRoute = Route & {
  * - you don't want a sidebar at all, in that case you can organise your code as
  * usual
  */
-export const routes: (association: Association) => AssociationRoute[] = (
-    association
-) => [
+export const routes: AssociationRoute[] = [
     {
-        path: `/`,
+        path: ``,
         component: AssociationHome,
         exact: true,
-        props: { association: association },
         defaultLayout: true,
     },
     {
         path: `/parametres`,
         component: AssociationSettings,
         exact: true,
-        props: { association: association },
         defaultLayout: true,
     },
 
-    ...eventsRoutes(association),
-    ...marketplaceRoutes(association),
-    ...mediasRoutes(association),
-    ...membersRoutes(association),
-    ...pagesRoutes(association),
+    ...eventsRoutes,
+    ...libraryRoutes,
+    ...marketplaceRoutes,
+    ...mediasRoutes,
+    ...rolesRoutes,
+    ...pagesRoutes,
 ];
+
+export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>
+    routes.map((route) => ({
+        path: `/:associationId${route.path}`,
+        component: (match) => (
+            <AssociationBootstrap
+                match={match}
+                render={route.component}
+                useDefaultLayout={route.defaultLayout}
+                {...route.props}
+            />
+        ),
+        exact: route.exact,
+    }));

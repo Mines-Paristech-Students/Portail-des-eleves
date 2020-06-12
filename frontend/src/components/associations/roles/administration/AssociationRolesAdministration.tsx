@@ -111,15 +111,11 @@ const columnData = (
             <>
                 <EditRoleButton handleClick={() => setEditRole(role)} />
                 <DeleteRoleButton
-                    handleClick={() => {
-                        if (
-                            window.confirm(
-                                "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
-                            )
-                        ) {
-                            remove(role.id);
-                        }
-                    }}
+                    handleClick={() =>
+                        window.confirm(
+                            "Êtes-vous sûr(e) de supprimer ce rôle ? Cette opération ne peut pas être annulée !"
+                        ) && remove(role.id)
+                    }
                 />
             </>
         ),
@@ -170,6 +166,7 @@ export const AssociationRolesAdministration = ({
                 onHide={() => setShowAddRole(false)}
             />
             <Pagination
+                apiMethod={api.roles.list}
                 apiKey={[
                     "roles.list",
                     {
@@ -182,7 +179,9 @@ export const AssociationRolesAdministration = ({
                         }),
                     },
                 ]}
-                apiMethod={api.roles.list}
+                paginationControlProps={{
+                    className: "justify-content-center mt-5",
+                }}
                 render={(roles, paginationControl) => (
                     <Container className="mt-4">
                         <Row className="align-items-center mb-2">
@@ -209,9 +208,6 @@ export const AssociationRolesAdministration = ({
                         </Card>
                     </Container>
                 )}
-                paginationControlProps={{
-                    className: "justify-content-center mt-5",
-                }}
             />
         </>
     );

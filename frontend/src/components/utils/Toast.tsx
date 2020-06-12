@@ -17,15 +17,18 @@ export type ToastInfo = {
 
 type ToastSenders = {
     sendToast: (message: string, level?: ToastLevel) => void;
-    sendSuccessToast: (message: string) => void;
     sendErrorToast: (message: string) => void;
+    sendInfoToast: (message: string) => void;
+    sendSuccessToast: (message: string) => void;
 };
 
 /**
- * This context gives access to `sendToast`, a function taking a `message` and a `ToastLevel`.
+ * This context gives access to `sendToast`, a function taking a `message` and a
+ * `ToastLevel`.
  * The default `ToastLevel` is `ToastLevel.Success`.
  *
- * It also gives access to two shortcuts, `sendSuccessToast` and `sendErrorToast`.
+ * It also gives access to some shortcuts: `sendSuccessToast`, `sendInfoToast`,
+ * and `sendErrorToast`.
  *
  * Examples:
  * ```
@@ -39,8 +42,9 @@ type ToastSenders = {
  */
 export const ToastContext = createContext<ToastSenders>({
     sendToast: () => {},
-    sendSuccessToast: () => {},
     sendErrorToast: () => {},
+    sendInfoToast: () => {},
+    sendSuccessToast: () => {},
 });
 
 /* Two calls to the "newToast" function with the same parameters won't
@@ -68,6 +72,14 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
         setFlip(!flip);
     };
 
+    const sendInfoToast = (message: string) => {
+        setToast({
+            message,
+            level: ToastLevel.Info,
+        });
+        setFlip(!flip);
+    };
+
     const sendErrorToast = (message: string) => {
         setToast({
             message,
@@ -82,7 +94,12 @@ export const ToastProvider: React.FunctionComponent = ({ children }) => {
                 <Toast message={toast.message} type={toast.level} flip={flip} />
             )}
             <ToastContext.Provider
-                value={{ sendToast, sendSuccessToast, sendErrorToast }}
+                value={{
+                    sendToast,
+                    sendSuccessToast,
+                    sendInfoToast,
+                    sendErrorToast,
+                }}
             >
                 {children}
             </ToastContext.Provider>

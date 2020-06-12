@@ -1,10 +1,6 @@
-import {
-    apiService,
-    PaginatedResponse,
-    toUrlParams,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Namespace } from "../../models/tag";
+import { toUrlParams } from "../../utils/urlParam";
 
 export const namespaces = {
     list: (params, axiosConfig = {}) => {

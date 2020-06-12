@@ -51,7 +51,7 @@ export const AssociationEditEvent = ({
     });
 
     const [remove] = useMutation(api.events.delete, {
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryCache.refetchQueries(["events.list"]);
             sendSuccessToast("Événement supprimé.");
 
@@ -108,15 +108,11 @@ export const AssociationEditEvent = ({
                                 }
                             )
                         }
-                        onDelete={() => {
-                            if (
-                                window.confirm(
-                                    "Êtes-vous sûr(e) de vouloir supprimer cet événement ? Cette opération ne peut pas être annulée."
-                                )
-                            ) {
-                                remove({ eventId: event.id });
-                            }
-                        }}
+                        onDelete={() =>
+                            window.confirm(
+                                "Êtes-vous sûr(e) de vouloir supprimer cet événement ? Cette opération ne peut pas être annulée."
+                            ) && remove({ eventId: event.id })
+                        }
                     />
                 </Card>
             </>

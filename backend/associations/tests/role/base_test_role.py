@@ -122,7 +122,7 @@ class BaseRoleTestCase(WeakAuthenticationBaseTestCase):
     association_admin_create_role_invalid_data = {
         "user": "17admin_pdm",
         "association": "biero",
-        "is_archived": True,
+        "is_active": False,
         "role": "Nouveau dictateur",
         "rank": 5,
         "permissions": [

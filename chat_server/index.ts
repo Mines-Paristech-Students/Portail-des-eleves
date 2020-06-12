@@ -2,34 +2,23 @@ const express = require("express");
 const socketio_jwt = require("socketio-jwt");
 import { createServer } from "http";
 
+import { Message } from "./message";
+
 const dotenv = require("dotenv");
 dotenv.config();
-
 const db = require("./db");
 
-class Message {
-  constructor(
-    public username: string,
-    public message: string,
-    public posted_on: Date
-  ) {
-    this.username = username;
-    this.message = message;
-    this.posted_on = posted_on;
-  }
-}
+const app = express();
+const port = process.env.PORT || 3001;
+
+export const httpServer = createServer(app);
+export const io = require("socket.io")(httpServer);
 
 /**
  * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
+ *
+ * The public key is taken from Django
  */
-
-const app = express();
-let port = process.env.PORT || 3001;
-
-export let httpServer = createServer(app);
-export let io = require("socket.io")(httpServer);
-
-// Public key from django
 const public_key = process.env.JWT_PUBLIC_KEY;
 if (public_key === undefined) {
   throw new Error(
@@ -38,8 +27,8 @@ if (public_key === undefined) {
 }
 
 // Authentification using handshake
-let jwtOption = {
-  secret: process.env.JWT_PUBLIC_KEY, // We use the public key
+const jwtOption = {
+  secret: process.env.JWT_PUBLIC_KEY,
   handshake: true,
 };
 
@@ -57,15 +46,20 @@ io.sockets.on("connection", (socket) => {
       return;
     }
 
-    let model = new Message(
-      socket.decoded_token.username,
-      request.message,
-      new Date()
-    );
-    await db.add(model.username, model.message);
+    const message: Message = {
+      username: String(socket.decoded_token.user),
+      message: String(request.message),
+      posted_on: new Date(),
+    };
+
+    await db.add(message);
 
     // The message is sended to everyone (including sender)
-    io.sockets.emit("broadcast", model);
+    io.sockets.emit("broadcast", {
+      username: message.username,
+      message: message.message,
+      posted_on: message.posted_on.toISOString(),
+    });
   });
 
   socket.on("fetch", async (request: any) => {
@@ -73,8 +67,9 @@ io.sockets.on("connection", (socket) => {
       return;
     }
 
-    let messages = await db.get(request.from, request.limit);
-    socket.emit("fetch_response", messages.rows);
+    const response = await db.get(request.from, request.limit);
+
+    socket.emit("fetch_response", response.rows);
   });
 });
 

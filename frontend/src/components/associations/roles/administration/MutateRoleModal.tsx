@@ -10,13 +10,12 @@ import Button from "react-bootstrap/Button";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import { DayPickerInputFormGroup } from "../../../utils/forms/DayPickerInputFormGroup";
 import { SwitchCheckbox } from "../../../utils/forms/SwitchCheckbox";
-import { SelectGroup } from "../../../utils/forms/SelectGroup";
+import { SelectFormGroup } from "../../../utils/forms/SelectFormGroup";
 import { RolePermissionIcon } from "./RolePermissionIcon";
 import { RolePermissionTooltip } from "./RolePermissionTooltip";
 import "./mutate_role_modal.css";
 import { getRandom } from "../../../../utils/random";
-import { SelectUsers } from "../../../utils/forms/SelectUsers";
-import { Form as ReactBootstrapForm } from "react-bootstrap";
+import { SelectUserFormGroup } from "../../../utils/forms/SelectUserFormGroup";
 
 const rolePlaceholder = getRandom([
     "Dictateur",
@@ -29,16 +28,16 @@ const rolePlaceholder = getRandom([
     "VP Aigreur",
 ]);
 
-const permissionItems = new Map(
-    PERMISSIONS.map((permission) => [
-        permission,
+const permissionItems = PERMISSIONS.map((permission) => ({
+    value: permission,
+    children: (
         <RolePermissionTooltip permission={permission}>
             <span className="selectgroup-button selectgroup-button-icon">
                 <RolePermissionIcon permission={permission} />
             </span>
-        </RolePermissionTooltip>,
-    ])
-);
+        </RolePermissionTooltip>
+    ),
+}));
 
 export type MutateRoleModalValues = {
     association?: string;
@@ -121,12 +120,11 @@ export const MutateRoleModal = ({
                 <Form>
                     <Modal.Body>
                         {version === "create" && (
-                            <ReactBootstrapForm.Group>
-                                <ReactBootstrapForm.Label>
-                                    Membre
-                                </ReactBootstrapForm.Label>
-                                <SelectUsers name="user" isMulti={false} />
-                            </ReactBootstrapForm.Group>
+                            <SelectUserFormGroup
+                                name="user"
+                                label="Membre"
+                                className="text-capitalize"
+                            />
                         )}
                         <TextFormGroup
                             name="role"
@@ -158,10 +156,10 @@ export const MutateRoleModal = ({
                             help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
                             disabled={!values.endDateEnabled}
                         />
-                        <SelectGroup
+                        <SelectFormGroup
                             name="permissions"
-                            type="pills"
-                            inputType="checkbox"
+                            selectType="pills"
+                            type="checkbox"
                             label="Permissions"
                             items={permissionItems}
                         />
