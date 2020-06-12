@@ -14,7 +14,7 @@ import { AssociationLayout } from "./Layout";
  * @param match React-router match object
  * @param props any additional prop
  */
-export const AssociationBoostrap = ({
+export const AssociationBootstrap = ({
     render: Render,
     useDefaultLayout,
     match,

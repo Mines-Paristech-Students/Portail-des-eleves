@@ -8,7 +8,7 @@ import { routes as mediasRoutes } from "./associations/medias";
 import { routes as pagesRoutes } from "./associations/pages";
 import React from "react";
 import { routes as rolesRoutes } from "./associations/roles";
-import { AssociationBoostrap } from "../components/associations/Boostrap";
+import { AssociationBootstrap } from "../components/associations/Boostrap";
 
 export type AssociationRoute = Route & {
     props?: object;
@@ -52,7 +52,7 @@ export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>
     routes.map((route) => ({
         path: `/:associationId${route.path}`,
         component: (match) => (
-            <AssociationBoostrap
+            <AssociationBootstrap
                 match={match}
                 render={route.component}
                 useDefaultLayout={route.defaultLayout}
