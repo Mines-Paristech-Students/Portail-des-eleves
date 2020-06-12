@@ -46,12 +46,9 @@ export const routes: AssociationRoute[] = [
     ...pagesRoutes,
 ];
 
-export const compileAssociationRoutes = (
-    prefix,
-    routes: AssociationRoute[]
-): Route[] =>
+export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>
     routes.map((route) => ({
-        path: `${prefix}/:associationId${route.path}`,
+        path: `/:associationId${route.path}`,
         component: (match) => (
             <AssociationBoostrap
                 match={match}
@@ -60,5 +57,5 @@ export const compileAssociationRoutes = (
                 {...route.props}
             />
         ),
-        exact: true,
+        exact: route.exact,
     }));

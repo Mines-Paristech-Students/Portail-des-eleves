@@ -1,11 +1,17 @@
 import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
 import { routes as usersRoutes } from "./users";
+import { routes as pollsRoutes } from "./polls";
 import {
     compileAssociationRoutes,
     routes as associationsRoutes,
 } from "./associations";
-import { PollsRouter } from "../components/polls/PollsRouter";
+
+export const addRoutePrefix = (prefix: string, routes: Route[]): Route[] =>
+    routes.map((route) => ({
+        ...route,
+        path: prefix + route.path,
+    }));
 
 export type Route = {
     path: string;
@@ -16,13 +22,14 @@ export type Route = {
 export const routes = [
     { path: "/", component: Homepage, exact: true },
     { path: "/associations", component: AssociationList, exact: true },
-    {
-        path: "/sondages",
-        component: PollsRouter,
-        exact: false,
-    },
 ]
-    .concat(compileAssociationRoutes("/associations", associationsRoutes))
+    .concat(
+        addRoutePrefix(
+            "/associations",
+            compileAssociationRoutes(associationsRoutes)
+        )
+    )
+    .concat(addRoutePrefix("/sondages", pollsRoutes))
     .concat(usersRoutes);
 
-console.log(routes);
+routes.forEach((r) => console.log(r.path));
