@@ -13,14 +13,14 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
     return (
         <Card>
             <CardStatus
-                color={isAvailable() ? TablerColor.Blue : TablerColor.Gray}
+                color={isAvailable ? TablerColor.Blue : TablerColor.Gray}
             />
 
             <Card.Header>
                 <Card.Title>{loanable.name}</Card.Title>
 
                 <div className="card-options">
-                    {isAvailable() && (
+                    {isAvailable && (
                         <>
                             {
                                 <Button
@@ -37,7 +37,7 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
             </Card.Header>
 
             <Card.Body className="pt-3">
-                {!isAvailable() && (
+                {!isAvailable && (
                     <p className="text-muted mb-4">
                         Retour attendu avant le{" "}
                         {dayjs(loanable.expectedReturnDate).format(
