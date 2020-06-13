@@ -70,7 +70,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                 limit: 10,
             })
         );
-    }, [tags, checkedTags]);
+    }, [tags, checkedTags, setParams]);
 
     useEffect(() => {
         if (tags === undefined) return;
