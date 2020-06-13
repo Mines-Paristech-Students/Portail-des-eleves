@@ -58,7 +58,11 @@ export const SidebarDateSelector = ({ association, setParams }) => {
     useEffect(() => {
         setParams({
             ...(selectedMonths.length > 0
-                ? { uploaded_on__month__in: selectedMonths.map(m => MONTHS.indexOf(m) + 1) }
+                ? {
+                      uploaded_on__month__in: selectedMonths.map(
+                          (m) => MONTHS.indexOf(m) + 1
+                      ),
+                  }
                 : {}),
             ...(selectedYears.length > 0
                 ? { uploaded_on__year__in: selectedYears }
