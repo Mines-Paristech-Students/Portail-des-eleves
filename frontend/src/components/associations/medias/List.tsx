@@ -7,16 +7,19 @@ import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
-import { SidebarSpace } from "../../utils/sidebar/Sidebar";
+import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
 import { isImageMime } from "../../../utils/mime";
 import "./list.css";
+import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
     const history = useHistory();
 
     const [tagParams, setTagParams] = useState({});
+    const [dateParams, setDateParams] = useState({});
+
     return (
         <AssociationLayout
             association={association}
@@ -32,6 +35,11 @@ export const AssociationFilesystemList = ({ association }) => {
                         }}
                         setTagParams={setTagParams}
                     />
+                    <SidebarSeparator />
+                    <SidebarDateSelector
+                        association={association}
+                        setParams={setDateParams}
+                    />
                 </>
             }
         >
@@ -39,7 +47,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    { page_size: 30, ...tagParams },
+                    { page_size: 30, ...tagParams, ...dateParams },
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
@@ -101,7 +109,8 @@ export const AssociationFilesystemList = ({ association }) => {
                         {paginationControl}
 
                         {medias.length === 0 &&
-                            (Object.entries(tagParams).length === 0 ? (
+                            (Object.entries(tagParams).length === 0 &&
+                            Object.entries(dateParams).length === 0 ? (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}

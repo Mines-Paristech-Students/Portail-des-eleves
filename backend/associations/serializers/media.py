@@ -24,7 +24,7 @@ class MediaSerializer(serializers.ModelSerializer):
         res = super(MediaSerializer, self).to_representation(instance)
 
         # Convert the server URI to an absolute URL
-        # ie /media/file.txt -> https://domain.name/media.file.txt
+        # ie /media/file.txt -> https://domain.name/media/file.txt
         request = self.context["request"]
         if request:
             host = request.get_host()

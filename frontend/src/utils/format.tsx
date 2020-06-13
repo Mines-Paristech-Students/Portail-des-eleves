@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import React from "react";
 
-export const MONTHS: string[] = [
+export const MONTHS = [
     "Janvier",
     "Février",
     "Mars",
@@ -16,7 +16,22 @@ export const MONTHS: string[] = [
     "Décembre",
 ];
 
-export const WEEKDAYS_LONG: string[] = [
+export const MONTHS_SHORT = [
+    "jan",
+    "fev",
+    "mar",
+    "avr",
+    "mai",
+    "juin",
+    "juil",
+    "aout",
+    "sept",
+    "oct",
+    "nov",
+    "dec",
+];
+
+export const WEEKDAYS_LONG = [
     "Dimanche",
     "Lundi",
     "Mardi",
@@ -26,7 +41,7 @@ export const WEEKDAYS_LONG: string[] = [
     "Samedi",
 ];
 
-export const WEEKDAYS_SHORT: string[] = [
+export const WEEKDAYS_SHORT = [
     "dim.",
     "lun.",
     "mar.",

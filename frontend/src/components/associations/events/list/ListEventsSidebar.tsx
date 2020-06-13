@@ -37,26 +37,26 @@ export const ListEventsSidebar = ({
             retractedByDefault={false}
         >
             <CheckboxField
-                id={"before"}
+                // id={"before"}
                 label={"Terminés"}
-                state={parameters.time}
-                setState={(newTime) =>
+                state={parameters.time["before"]}
+                onChange={(newTime) =>
                     setParameters({ ...parameters, time: newTime })
                 }
             />
             <CheckboxField
-                id={"now"}
+                // id={"now"}
                 label={"En cours"}
-                state={parameters.time}
-                setState={(newTime) =>
+                state={parameters.time["now"]}
+                onChange={(newTime) =>
                     setParameters({ ...parameters, time: newTime })
                 }
             />
             <CheckboxField
-                id={"after"}
+                // id={"after"}
                 label={"À venir"}
-                state={parameters.time}
-                setState={(newTime) =>
+                state={parameters.time["after"]}
+                onChange={(newTime) =>
                     setParameters({ ...parameters, time: newTime })
                 }
             />

@@ -124,9 +124,13 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                                         <CheckboxField
                                             key={tag.id}
                                             label={tag.value}
-                                            id={tag.id}
-                                            state={fieldsState}
-                                            setState={onStateChange}
+                                            state={fieldsState[tag.id]}
+                                            onChange={(state) =>
+                                                onStateChange({
+                                                    ...fieldsState,
+                                                    [tag.id]: state,
+                                                })
+                                            }
                                         />
                                     )
                             )}
