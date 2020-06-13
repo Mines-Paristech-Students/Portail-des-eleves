@@ -1,16 +1,19 @@
-import React, { ReactElement, useContext } from "react";
+import React, { useContext } from "react";
 import { Choice, Poll } from "../../../models/polls";
-import { formatDate } from "../../../utils/format";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { SelectGroup } from "../../utils/forms/SelectGroup";
+import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
 import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext } from "../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
+import dayjs from "dayjs";
 
+/**
+ * Display a form allowing to vote for a Poll in a Card.
+ */
 export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
     const user = useContext(UserContext);
@@ -64,10 +67,10 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
             </Card.Header>
 
             <Card.Body>
-                <Card.Subtitle className="poll-date">
+                <Card.Subtitle className="text-left">
                     <em>
                         {poll.publicationDate &&
-                            formatDate(poll.publicationDate)}
+                            dayjs(poll.publicationDate).format("DD/MM/YYYY")}
                     </em>
                 </Card.Subtitle>
 
@@ -100,15 +103,15 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     );
 };
 
-const ChoiceFields = ({ choices }: { choices: Choice[] }) => {
-    let items: Map<string, ReactElement> = new Map();
-
-    choices.forEach((choice) => {
-        items.set(
-            choice.id.toString(),
-            <span className="selectgroup-button">{choice.text}</span>
-        );
-    });
-
-    return <SelectGroup type="vertical" label="" items={items} name="choice" />;
-};
+const ChoiceFields = ({ choices }: { choices: Choice[] }) => (
+    <SelectFormGroup
+        selectType="vertical"
+        type="radio"
+        label=""
+        items={choices.map((choice) => ({
+            value: choice.id.toString(),
+            text: choice.text,
+        }))}
+        name="choice"
+    />
+);

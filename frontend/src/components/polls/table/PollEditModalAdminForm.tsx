@@ -9,38 +9,44 @@ import Col from "react-bootstrap/Col";
 import * as Yup from "yup";
 import { Formik, Form, useFormikContext } from "formik";
 import { TextFormGroup } from "../../utils/forms/TextFormGroup";
-import { SelectGroup } from "../../utils/forms/SelectGroup";
-import { formatDate } from "../../../utils/format";
+import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
 import { DayPickerFormGroup } from "../../utils/forms/DayPickerFormGroup";
+import dayjs from "dayjs";
 
-const StateField = () => {
-    let items = new Map();
-
-    items.set(
-        "ACCEPTED",
-        <span className="selectgroup-button selectgroup-button-icon">
-            <i className="fe fe-check text-success" /> Accepté
-        </span>
-    );
-
-    items.set(
-        "REJECTED",
-        <span className="selectgroup-button selectgroup-button-icon">
-            <i className="fe fe-x text-danger" /> Refusé
-        </span>
-    );
-
-    items.set(
-        "REVIEWING",
-        <span className="selectgroup-button selectgroup-button-icon">
-            <i className="fe fe-eye text-warning" /> En attente
-        </span>
-    );
-
-    return (
-        <SelectGroup type="pills" label="Statut" name="state" items={items} />
-    );
-};
+const StateField = () => (
+    <SelectFormGroup
+        selectType="pills"
+        type="radio"
+        label="Statut"
+        name="state"
+        items={[
+            {
+                value: "ACCEPTED",
+                children: (
+                    <span className="selectgroup-button selectgroup-button-icon">
+                        <i className="fe fe-check text-success" /> Accepté
+                    </span>
+                ),
+            },
+            {
+                value: "REJECTED",
+                children: (
+                    <span className="selectgroup-button selectgroup-button-icon">
+                        <i className="fe fe-x text-danger" /> Refusé
+                    </span>
+                ),
+            },
+            {
+                value: "REVIEWING",
+                children: (
+                    <span className="selectgroup-button selectgroup-button-icon">
+                        <i className="fe fe-eye text-warning" /> En attente
+                    </span>
+                ),
+            },
+        ]}
+    />
+);
 
 const AdminCommentField = () => {
     const { values } = useFormikContext<any>();
@@ -133,8 +139,9 @@ export const PollEditModalAdminForm = ({
                                         <Card.Subtitle>
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
-                                                {formatDate(
-                                                    poll.creationDateTime
+                                                {dayjs(
+                                                    poll.creationDateTime,
+                                                    "DD/MM/YYYY"
                                                 )}
                                                 .
                                             </em>

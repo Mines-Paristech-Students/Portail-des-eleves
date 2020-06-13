@@ -74,8 +74,13 @@ export const ListPolls = ({ current }: { current?: boolean }) => (
                     paginationControl={paginationControl}
                 />
             )}
-            apiKey={["polls.list"]}
-            apiMethod={current ? api.polls.listCurrent : api.polls.listOld}
+            apiKey={[
+                "polls.list",
+                current
+                    ? { is_active: true }
+                    : { is_published: true, is_active: false },
+            ]}
+            apiMethod={api.polls.list}
             config={{ refetchOnWindowFocus: false }}
             paginationControlProps={{
                 className: "justify-content-center mb-5",

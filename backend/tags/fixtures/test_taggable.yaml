@@ -84,6 +84,13 @@
     scoped_to_model: association
     scoped_to_pk: bde
 
+- model: tags.namespace
+  pk: 2
+  fields:
+    name: taille
+    scoped_to_model: association
+    scoped_to_pk: bde
+
 - model: tags.tag
   pk: 1
   fields:
@@ -94,8 +101,8 @@
 - model: tags.tag
   pk: 2
   fields:
-    value: "Latin"
-    namespace: 1
+    value: "Petit"
+    namespace: 2
     media: [2, 3]
 
 - model: tags.tag
@@ -103,10 +110,11 @@
   fields:
     value: "Anglais"
     namespace: 1
-    media: [2]
+    media: [1]
 
 - model: tags.tag
   pk: 4
   fields:
-    value: "Italien"
-    namespace: 1
+    value: "Grand"
+    namespace: 2
+    media: [1]

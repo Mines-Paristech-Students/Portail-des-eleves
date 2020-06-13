@@ -16,7 +16,12 @@ import { useURLState } from "../../../utils/useURLState";
  * {search: something}
  */
 export const SidebarInputSearch = ({ setParams, ...props }) => {
-    const [searchValue, setSearchValue] = useURLState("search", "");
+    const [searchValue, setSearchValue] = useURLState(
+        "q",
+        "",
+        (data) => data,
+        (data) => data
+    );
 
     useEffect(() => {
         setParams({ search: searchValue });

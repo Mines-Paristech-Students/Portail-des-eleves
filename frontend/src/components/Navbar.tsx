@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Logo from "../logo-mines.png";
-import { Link, Redirect, useLocation } from "react-router-dom";
+import { Link, NavLink, Redirect } from "react-router-dom";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -16,10 +16,10 @@ import { Size } from "../utils/size";
 /**
  * The links displayed in the navbar. It's an array of objects having three
  * properties each:
- *   * `icon`: the Bootstrap icon to display besides the navbar item. It's the
+ * @param icon the Bootstrap icon to display besides the navbar item. It's the
  *   part after `fe-` in the class name of the icon.
- *   * `url`: the URL of the link.
- *   * `label`: the text to display.
+ * @param url the URL of the link.
+ * @param label the text to display.
  */
 const links = [
     { icon: "home", url: "/", label: "Accueil" },
@@ -29,7 +29,6 @@ const links = [
 ];
 
 function Navbar() {
-    const location = useLocation();
     const user = useContext(UserContext);
     const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
 
@@ -39,35 +38,9 @@ function Navbar() {
         });
     };
 
-    if (redirectToLogin) {
-        return <Redirect to={"/login"} />;
-    }
-
-    const linksComponent = links.map(({ icon, url, label }) => {
-        let className = "";
-        if (icon) {
-            className = "fe fe-" + icon;
-        }
-
-        const isActive =
-            url === "/"
-                ? location.pathname === "/"
-                : location.pathname.startsWith(url);
-
-        return (
-            <li className="nav-item" key={url}>
-                <Link
-                    to={url}
-                    className={"nav-link" + (isActive ? " active" : "")}
-                >
-                    <i className={className} />
-                    {label}
-                </Link>
-            </li>
-        );
-    });
-
-    return user ? (
+    return redirectToLogin ? (
+        <Redirect to={"/login"} />
+    ) : user ? (
         <>
             <div className="header p-1">
                 <Container>
@@ -123,12 +96,8 @@ function Navbar() {
                                     />
                                 )}
                             >
-                                <i className="dropdown-icon fe fe-user" />{" "}
-                                Profil
-                            </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <i className="dropdown-icon fe fe-settings" />{" "}
-                                Paramètres
+                                <i className="dropdown-icon fe fe-user" /> Mon
+                                profil
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={logout}>
@@ -144,7 +113,23 @@ function Navbar() {
                     <Row className="align-items-center">
                         <Col>
                             <ul className="nav nav-tabs border-0 flex-column flex-lg-row">
-                                {linksComponent}
+                                {links.map(({ icon, url, label }) => (
+                                    <li className={`nav-item`} key={url}>
+                                        <NavLink
+                                            exact={url === "/"}
+                                            to={url}
+                                            className={"nav-link"}
+                                            activeClassName={"active"}
+                                        >
+                                            <i
+                                                className={
+                                                    icon && "fe fe-" + icon
+                                                }
+                                            />
+                                            {label}
+                                        </NavLink>
+                                    </li>
+                                ))}
                             </ul>
                         </Col>
                     </Row>

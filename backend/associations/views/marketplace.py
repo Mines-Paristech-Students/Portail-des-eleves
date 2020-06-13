@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+import django_filters
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Q
@@ -81,6 +82,17 @@ class ProductViewSet(viewsets.ModelViewSet):
         )
 
 
+class TransactionFilter(django_filters.FilterSet):
+    class Meta:
+        model = Transaction
+        fields = {
+            "product": ["exact"],
+            "status": ["exact", "in"],
+            "buyer": ["exact"],
+            "date": ["exact"],
+        }
+
+
 class TransactionViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -92,8 +104,8 @@ class TransactionViewSet(
     serializer_class = TransactionSerializer
     permission_classes = (TransactionPermission,)
 
-    filter_fields = ("product", "status", "buyer", "date")
     search_fields = ("product__name",)
+    filter_class = TransactionFilter
     filter_backends = (
         DjangoFilterBackend,
         filters.OrderingFilter,

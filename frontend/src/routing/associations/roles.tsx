@@ -1,29 +1,36 @@
-import { Association } from "../../models/associations/association";
 import { AssociationRoute } from "../associations";
 import { AssociationRolesAdministration } from "../../components/associations/roles/administration/AssociationRolesAdministration";
+import { ListRoles } from "../../components/associations/roles/list/ListRoles";
 
-export const routes: (association: Association) => AssociationRoute[] = (
-    association
-) => [
+export const routes: AssociationRoute[] = [
     {
         path: "/membres/",
-        component: (...props) => null,
+        component: ListRoles,
         exact: true,
-        props: { association: association },
+        props: {
+            title: "Membres actuels",
+            apiParameters: {
+                is_active: true,
+            },
+        },
         defaultLayout: true,
     },
     {
         path: "/membres/anciens",
-        component: (...props) => null,
+        component: ListRoles,
         exact: true,
-        props: { association: association },
+        props: {
+            title: "Anciens membres",
+            apiParameters: {
+                end_date_before: Date(),
+            },
+        },
         defaultLayout: true,
     },
     {
         path: "/membres/administration",
         component: AssociationRolesAdministration,
         exact: true,
-        props: { association: association },
         defaultLayout: true,
     },
 ];
