@@ -15,7 +15,25 @@ import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { AssociationLayout } from "../Layout";
 import { SidebarUserSearch } from "../../utils/sidebar/SidebarUserSearch";
-import { SidebarStatusSelector } from "./SidebarStatusSelector";
+import { SidebarStatusSelector } from "../../utils/sidebar/SidebarStatusSelector";
+
+const orderStatus = [
+    { value: "ORDERED", label: "Commandé" },
+    { value: "CANCELLED", label: "Annulé" },
+    { value: "REJECTED", label: "Refusé" },
+    { value: "VALIDATED", label: "Validé" },
+    { value: "DELIVERED", label: "Livrée" },
+    { value: "REFUNDED", label: "Remboursé" },
+];
+
+const defaultStatusState = {
+    ORDERED: false,
+    CANCELLED: false,
+    REJECTED: false,
+    VALIDATED: false,
+    DELIVERED: false,
+    REFUNDED: false,
+};
 
 export const AssociationMarketplaceOrders = ({ association }) => {
     const marketplaceId = association.id;
@@ -34,8 +52,15 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                         setParams={setUserParams}
                         apiKey={"buyer"}
                     />
-                    <SidebarInputSearch setParams={setSearchParams} />
-                    <SidebarStatusSelector setParams={setStatusParams} />
+                    <SidebarInputSearch
+                        setParams={setSearchParams}
+                        placeholder={"Chercher un produit"}
+                    />
+                    <SidebarStatusSelector
+                        setParams={setStatusParams}
+                        statuses={orderStatus}
+                        defaultState={defaultStatusState}
+                    />
                 </>
             }
         >

@@ -1,15 +1,30 @@
 import React, { useEffect } from "react";
-import { SidebarSection } from "../../utils/sidebar/SidebarSection";
-import { CheckboxField } from "../../utils/sidebar/CheckboxField";
+import { SidebarSection } from "./SidebarSection";
+import { CheckboxField } from "./CheckboxField";
 import { useURLState } from "../../../utils/useURLState";
 
 /**
- * `SidebarStatusSelector` is a sidebar compoenent to search transactions with
+ * `SidebarStatusSelector` is a sidebar component to search transactions with
  * a particular status in the sidebar. Its architecture is the same as
  * `TagSearch`
  * @param setParams a useState setter to change the query parameters
+ * @param statuses all possible status to search for, in the form of a
+ * {value, label} array
+ * @param defaultState  an object with all values and their default state as
+ * a boolean
+ * @param queryKey the status field name in the server side API
  */
-export const SidebarStatusSelector = ({ setParams }) => {
+export const SidebarStatusSelector = ({
+    setParams,
+    statuses,
+    defaultState,
+    queryKey = "status__in",
+}: {
+    setParams: (object) => void;
+    statuses: { value: string; label: string }[];
+    defaultState: any; //([key: string]: boolean);
+    queryKey?: string;
+}) => {
     const [checkboxState, setCheckboxState] = useURLState(
         "status",
         defaultState,
@@ -27,7 +42,7 @@ export const SidebarStatusSelector = ({ setParams }) => {
 
     useEffect(() => {
         setParams({
-            status__in: Object.entries(checkboxState)
+            [queryKey]: Object.entries(checkboxState)
                 .map(([key, value]) => (value ? key : false))
                 .filter(Boolean)
                 .join(","),
@@ -40,7 +55,7 @@ export const SidebarStatusSelector = ({ setParams }) => {
             title="Statut"
             retractedByDefault={false}
         >
-            {orderStatus.map(({ value, label }) => (
+            {statuses.map(({ value, label }) => (
                 <CheckboxField
                     label={label}
                     state={checkboxState}
@@ -51,22 +66,4 @@ export const SidebarStatusSelector = ({ setParams }) => {
             ))}
         </SidebarSection>
     );
-};
-
-const orderStatus = [
-    { value: "ORDERED", label: "Commandé" },
-    { value: "CANCELLED", label: "Annulé" },
-    { value: "REJECTED", label: "Refusé" },
-    { value: "VALIDATED", label: "Validé" },
-    { value: "DELIVERED", label: "Transmis" },
-    { value: "REFUNDED", label: "Remboursé" },
-];
-
-const defaultState = {
-    ORDERED: false,
-    CANCELLED: false,
-    REJECTED: false,
-    VALIDATED: false,
-    DELIVERED: false,
-    REFUNDED: false,
 };
