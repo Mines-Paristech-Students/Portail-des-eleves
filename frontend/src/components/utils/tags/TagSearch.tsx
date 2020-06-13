@@ -15,9 +15,19 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
         api.tags.list
     );
 
+    /* fieldsState is a key value dict, with tags id as key, and a boolean to
+     * tell whether or not they're selected as a value.
+     */
     const [fieldsState, setFieldsState] = useState({});
-    const [groups, setGroups] = useState({});
+    // key: namespace id, value: array of tags belonging to the namespace
+    const [groups, setGroups] = useState<{ [key: string]: Tag[] }>({});
 
+    /* Fuse search object, updated whe the tags are  updated. Tag filtering is
+     * based on the `searchValue`, updated in a plain input.
+     * `showingTags` is a 2-level tree, with namespace id in first level and
+     * tag id in second level which has a boolean leaf to tell whether the
+     * tag should be displayed or not.
+     */
     const [fuseSearch, setFuseSearch] = useState(new Fuse([]));
     const [searchValue, setSearchValue] = useState("");
     const [showingTags, setShowingTags] = useState({});
@@ -49,6 +59,8 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
         let groups = {};
         let fieldsState = {};
         let showingTags = {};
+
+        // Initalize groups and checkbox states
         for (let tag of tags.results) {
             if (!groups.hasOwnProperty(tag.namespace.id)) {
                 groups[tag.namespace.id] = [];
@@ -78,6 +90,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
         setShowingTags((showingTags) => {
             let newShowingTags = { ...showingTags };
 
+            // Mark all tags as not showing
             for (let tag of tags.results) {
                 if (!newShowingTags.hasOwnProperty(tag.namespace.id)) {
                     newShowingTags[tag.namespace.id] = {};
@@ -86,6 +99,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                 delete newShowingTags[tag.namespace.id][tag.id];
             }
 
+            // Mark showing tags as such
             fuseSearch
                 .search(searchValue)
                 .map((res) => res.item as Tag)
