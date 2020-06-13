@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 /**
  * Like useState (https://reactjs.org/docs/hooks-state.html), but saves the

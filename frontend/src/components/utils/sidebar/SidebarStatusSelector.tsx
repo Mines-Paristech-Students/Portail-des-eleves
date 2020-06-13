@@ -47,7 +47,7 @@ export const SidebarStatusSelector = ({
                 .filter(Boolean)
                 .join(","),
         });
-    }, [checkboxState, setParams]);
+    }, [checkboxState, setParams, queryKey]);
 
     return (
         <SidebarSection
