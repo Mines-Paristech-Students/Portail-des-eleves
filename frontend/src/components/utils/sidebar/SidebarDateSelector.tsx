@@ -64,7 +64,7 @@ export const SidebarDateSelector = ({ association, setParams }) => {
                 ? { uploaded_on__year__in: selectedYears }
                 : {}),
         });
-    }, [selectedYears, selectedMonths]);
+    }, [selectedYears, selectedMonths, setParams]);
 
     return status === "loading" ? (
         <Loading />
@@ -90,7 +90,7 @@ export const SidebarDateSelector = ({ association, setParams }) => {
             <SidebarSection
                 retractable={true}
                 title="Mois"
-                retractedByDefault={false}
+                retractedByDefault={true}
             >
                 {MONTHS.map((month) => (
                     <CheckboxField
