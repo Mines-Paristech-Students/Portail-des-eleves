@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 /**
  * Like useState (https://reactjs.org/docs/hooks-state.html), but saves the
- * value of the hook in the get parameters.
+ * value of the hook in the url hash.
  * @param paramToWatch
  * @param defaultValue
  * @param toUrlConverter a function to convert the data into string
@@ -19,12 +19,16 @@ export function useURLState<T>(
     const [paramValue, setParamValue] = useState<T>(defaultValue);
 
     const changeParam = (value) => {
+        // No change, don't do anything
         if (value === paramValue) {
             return;
         }
 
         setParamValue(value);
+
+        // Change URL value
         const params = new URLSearchParams(
+            // substr removes the hash tag at the beginning
             new URL(window.location.href).hash.substr(1)
         );
         const urlValue = toUrlConverter(value);
@@ -40,6 +44,7 @@ export function useURLState<T>(
     };
 
     useEffect(() => {
+        // substr removes the hash tag at the beginning
         const params = new URLSearchParams(location.hash.substr(1));
         // Convert the object to a string using JSON because we don't know
         // what type of data we're working with in advance. Also helps to
