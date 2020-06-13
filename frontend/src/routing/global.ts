@@ -31,5 +31,3 @@ export const routes = [
     )
     .concat(addRoutePrefix("/sondages", pollsRoutes))
     .concat(usersRoutes);
-
-routes.forEach((r) => console.log(r.path));
