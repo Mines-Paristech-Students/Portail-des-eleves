@@ -11,17 +11,25 @@ import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
 import { isImageMime } from "../../../utils/mime";
 import "./list.css";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
     const history = useHistory();
 
     const [tagParams, setTagParams] = useState({});
+    const [searchParams, setSearchParams] = useState({});
+
     return (
         <AssociationLayout
             association={association}
             additionalSidebar={
                 <>
+                    <SidebarSpace />
+                    <SidebarInputSearch
+                        setParams={setSearchParams}
+                        placeholder={"Chercher par nom ou desc."}
+                    />
                     <SidebarSpace />
                     <TagSearch
                         tagsQueryParams={{
@@ -39,7 +47,7 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    { page_size: 30, ...tagParams },
+                    { page_size: 30, ...tagParams, ...searchParams },
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
