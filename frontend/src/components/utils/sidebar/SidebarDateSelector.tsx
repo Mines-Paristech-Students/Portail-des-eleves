@@ -77,7 +77,7 @@ export const SidebarDateSelector = ({ association, setParams }) => {
     ) : status === "success" && data ? (
         <>
             <SidebarSection
-                retractable={true}
+                retractable
                 title="Année"
                 retractedByDefault={false}
             >
