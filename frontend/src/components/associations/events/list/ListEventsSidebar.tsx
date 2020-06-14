@@ -37,7 +37,6 @@ export const ListEventsSidebar = ({
             retractedByDefault={false}
         >
             <CheckboxField
-                // id={"before"}
                 label={"Terminés"}
                 state={parameters.time["before"]}
                 onChange={(newTime) =>
