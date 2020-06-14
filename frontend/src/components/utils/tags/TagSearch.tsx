@@ -113,6 +113,10 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                 limit: 10,
             })
         );
+        // Don't set the dependency to checkedTags as this effect should
+        // only be  called when the component is mounted in order to initialize
+        // the values
+        // eslint-disable-next-line
     }, [tags, setParams]);
 
     // When the tag search input changes, update the visible tags to only
