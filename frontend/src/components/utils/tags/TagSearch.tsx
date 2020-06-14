@@ -24,7 +24,7 @@ import { useURLState } from "../../../utils/useURLState";
  * />
  * will display a tag search form for all products related to the association
  * with ID `associationId`. Note the page_size is fixed to 1000 because it
- * allows fluid UI but there never be more than a thousand tags for an association.
+ * allows fluid UI but there will never be more than a thousand tags for an association.
  * This is also the upper limit for the backend, so don't forget to change
  * both the frontend and the backend if you want to increase it.
  *
