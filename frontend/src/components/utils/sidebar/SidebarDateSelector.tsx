@@ -92,7 +92,7 @@ export const SidebarDateSelector = ({ association, setParams }) => {
             </SidebarSection>
 
             <SidebarSection
-                retractable={true}
+                retractable
                 title="Mois"
                 retractedByDefault
             >
