@@ -44,7 +44,6 @@ export const ListEventsSidebar = ({
                 }
             />
             <CheckboxField
-                // id={"now"}
                 label={"En cours"}
                 state={parameters.time["now"]}
                 onChange={(newTime) =>
