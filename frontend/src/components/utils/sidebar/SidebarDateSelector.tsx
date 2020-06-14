@@ -94,7 +94,7 @@ export const SidebarDateSelector = ({ association, setParams }) => {
             <SidebarSection
                 retractable={true}
                 title="Mois"
-                retractedByDefault={true}
+                retractedByDefault
             >
                 {MONTHS.map((month) => (
                     <CheckboxField
