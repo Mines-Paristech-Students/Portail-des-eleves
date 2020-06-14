@@ -18,7 +18,7 @@ from associations.views import (
     CreateBallotView,
     set_association_logo,
 )
-from associations.views.media import MediaViewSet
+from associations.views.media import MediaViewSet, get_media_uploaded_on_bounds
 from associations.views import set_association_logo
 from subscriptions.views.widget_balance import widget_balance_view
 
@@ -39,6 +39,9 @@ router.register(r"events", EventViewSet)
 
 # Medias.
 router.register(r"media", MediaViewSet)
+urlpatterns += [
+    path("media/<association_pk>/upload_bounds", get_media_uploaded_on_bounds)
+]
 
 # Library.
 router.register(r"library", LibraryViewSet)

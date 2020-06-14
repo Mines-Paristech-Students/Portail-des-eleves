@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { api } from "../../services/apiService";
+import { api } from "../../../services/apiService";
 import { DebounceInput } from "react-debounce-input";
 import { Row } from "react-bootstrap";
-import { UserAvatarCard } from "./avatar/UserAvatarCard";
-import { Pagination } from "./Pagination";
-import { PageTitle } from "./PageTitle";
-import "../utils/avatar/user_avatar.css";
+import { UserAvatarCard } from "../../utils/avatar/UserAvatarCard";
+import { Pagination } from "../../utils/Pagination";
+import { PageTitle } from "../../utils/PageTitle";
+import "../../utils/avatar/user_avatar.css";
 
 export const UserSelector = ({ setUser }) => {
     const [searchValue, setSearchValue] = useState("");
