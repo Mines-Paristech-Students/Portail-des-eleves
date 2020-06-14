@@ -17,18 +17,18 @@ export const MONTHS = [
 ];
 
 export const MONTHS_SHORT = [
-    "jan",
-    "fev",
-    "mar",
-    "avr",
+    "jan.",
+    "fév.",
+    "mars",
+    "avr.",
     "mai",
     "juin",
-    "juil",
-    "aout",
-    "sept",
-    "oct",
-    "nov",
-    "dec",
+    "juil.",
+    "août",
+    "sept.",
+    "oct.",
+    "nov.",
+    "déc.",
 ];
 
 export const WEEKDAYS_LONG = [
