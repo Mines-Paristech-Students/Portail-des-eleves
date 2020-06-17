@@ -54,41 +54,36 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
       <ListGroup>
         {poll.choices
           // Sort by descending number of votes.
-          .sort((a, b) => Number(b.numberOfVotes) - Number(a.numberOfVotes))
-          .map((choice) => {
-            if (choice.numberOfVotes !== undefined) {
-              return (
-                <ListGroup.Item key={choice.id} className="border-0">
-                  <div className="clearfix">
-                    <div className="float-left">
-                      <strong>{choice.text}</strong>
-                    </div>
-                    <div className="float-right text-muted">
-                      <small>
-                        {Number(
-                          (100 * choice.numberOfVotes) /
-                            totalNumberOfVotes(poll)
-                        ).toFixed(1)}{" "}
-                        %
-                      </small>
-                    </div>
+          .sort((a, b) => a.text.localeCompare(b.text))
+          .map((choice) =>
+            choice.numberOfVotes !== undefined ? (
+              <ListGroup.Item key={choice.id} className="border-0">
+                <div className="clearfix">
+                  <div className="float-left">
+                    <strong>{choice.text}</strong>
                   </div>
-                  <ProgressBar
-                    className="progress-sm"
-                    now={choice.numberOfVotes}
-                    min={0}
-                    max={totalNumberOfVotes(poll)}
-                    variant={getColor(
-                      choice.numberOfVotes,
-                      totalNumberOfVotes(poll)
-                    )}
-                  />
-                </ListGroup.Item>
-              );
-            } else {
-              return <></>;
-            }
-          })}
+                  <div className="float-right text-muted">
+                    <small>
+                      {Number(
+                        (100 * choice.numberOfVotes) / totalNumberOfVotes(poll)
+                      ).toFixed(1)}{" "}
+                      %
+                    </small>
+                  </div>
+                </div>
+                <ProgressBar
+                  className="progress-sm"
+                  now={choice.numberOfVotes}
+                  min={0}
+                  max={totalNumberOfVotes(poll)}
+                  variant={getColor(
+                    choice.numberOfVotes,
+                    totalNumberOfVotes(poll)
+                  )}
+                />
+              </ListGroup.Item>
+            ) : null
+          )}
       </ListGroup>
     </Card.Body>
   </Card>

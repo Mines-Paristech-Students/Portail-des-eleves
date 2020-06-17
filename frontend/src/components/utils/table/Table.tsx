@@ -17,34 +17,39 @@ import { Sorting } from "./sorting";
  * @param data a list of objects (one item per row) which will be used to fill the table.
  * @param props props to apply to the  table
  * @param dataTable if true (by default), the table will be a datatable.
+ * @param emptyComponent displayed in the first row if `data` is empty. Defaults to a generic message.
  */
 export const Table = ({
   columns,
   data,
   showHeaders = true,
   dataTable = true,
+  emptyComponent = <p className="text-center m-0">Pas de résultats.</p>,
 }: {
   columns: Column[];
   data: object[];
   showHeaders?: boolean;
   dataTable?: boolean;
-}) => {
-  return (
-    <div className="table-responsive">
-      <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
-        <table
-          className={`table card-table table-vcenter ${
-            dataTable ? "datatable dataTable" : ""
-          } no-footer table-striped`}
-          role="grid"
-        >
-          {showHeaders && <TableHeader columns={columns} />}
-          <TableBody columns={columns} data={data} />
-        </table>
-      </div>
+  emptyComponent?: React.ReactNode;
+}) => (
+  <div className="table-responsive">
+    <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
+      <table
+        className={`table card-table table-vcenter ${
+          dataTable ? "datatable dataTable" : ""
+        } no-footer table-striped`}
+        role="grid"
+      >
+        {showHeaders && <TableHeader columns={columns} />}
+        <TableBody
+          columns={columns}
+          data={data}
+          emptyComponent={emptyComponent}
+        />
+      </table>
     </div>
-  );
-};
+  </div>
+);
 
 /**
  * Return a `Column[]` object ready to be injected into a `Table` component, as well as a `sorting` object containing

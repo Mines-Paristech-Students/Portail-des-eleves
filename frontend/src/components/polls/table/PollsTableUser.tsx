@@ -48,8 +48,13 @@ const columnData: (remove) => (setEditPoll) => Column[] = (remove) => (
     render: (poll) => (
       <>
         {poll.question}
-        <div className="small pollChoice">{poll.choices[0].text}</div>
-        <div className="small pollChoice">{poll.choices[1].text}</div>
+        {poll.choices
+          .sort((a, b) => a.text.localeCompare(b.text))
+          .map((choice) => (
+            <div className="small pollChoice" key={choice.id}>
+              {choice.text}
+            </div>
+          ))}
       </>
     ),
     canSort: true,

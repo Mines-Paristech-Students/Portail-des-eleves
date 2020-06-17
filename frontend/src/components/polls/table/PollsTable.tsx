@@ -67,7 +67,6 @@ export const PollsTable = ({
       }
     >
       <PageTitle>{adminVersion ? "Administration" : "Mes sondages"}</PageTitle>
-
       <Card>
         <Pagination
           apiMethod={api.polls.list}

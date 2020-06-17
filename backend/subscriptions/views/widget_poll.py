@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from polls.models import Poll, Vote
-from polls.views import PollViewSet
+from polls.models import Poll
+from polls.serializers import ReadOnlyPollSerializer
 
 
 @api_view(["GET"])
@@ -15,12 +15,8 @@ def widget_poll_view(request):
 
     return Response(
         {
-            "active_polls": [
-                PollViewSet.as_view({"get": "results"})(request).content
-                if Vote.objects.filter(poll=poll, user=request.user).exists()
-                else PollViewSet.as_view({"get": "retrieve"})(request).content
-            ]
-            for poll in Poll.objects.all()
-            if poll.is_active
+            "active_polls": ReadOnlyPollSerializer(
+                many=True, context={"request": request}
+            ).to_representation([poll for poll in Poll.objects.all() if poll.is_active])
         }
     )
