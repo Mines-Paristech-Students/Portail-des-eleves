@@ -31,8 +31,6 @@
     "prettier": "^2.0.5",
     "socket.io": "^2.3.0",
     "socketio-jwt": "^4.5.0"
-  },
-  "prettier": {
-    "tabWidth": 2
+  }
   }
 }
