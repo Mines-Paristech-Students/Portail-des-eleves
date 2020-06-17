@@ -6,11 +6,6 @@ import { PollsTableUser } from "../components/polls/table/PollsTableUser";
 
 export const routes: Route[] = [
     {
-        path: "",
-        component: () => ListPolls({ current: true }),
-        exact: true,
-    },
-    {
         path: "/anciens",
         component: () => ListPolls({ current: false }),
         exact: true,
@@ -28,6 +23,11 @@ export const routes: Route[] = [
     {
         path: "/proposer",
         component: SubmitPoll,
+        exact: true,
+    },
+    {
+        path: "",
+        component: () => ListPolls({ current: true }),
         exact: true,
     },
 ];

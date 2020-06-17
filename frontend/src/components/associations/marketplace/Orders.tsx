@@ -15,12 +15,32 @@ import { SidebarSeparator } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { AssociationLayout } from "../Layout";
 import { SidebarUserSearch } from "../../utils/sidebar/SidebarUserSearch";
+import { SidebarStatusSelector } from "../../utils/sidebar/SidebarStatusSelector";
+
+const orderStatus = [
+    { value: "ORDERED", label: "Commandé" },
+    { value: "CANCELLED", label: "Annulé" },
+    { value: "REJECTED", label: "Refusé" },
+    { value: "VALIDATED", label: "Validé" },
+    { value: "DELIVERED", label: "Livrée" },
+    { value: "REFUNDED", label: "Remboursé" },
+];
+
+const defaultStatusState = {
+    ORDERED: false,
+    CANCELLED: false,
+    REJECTED: false,
+    VALIDATED: false,
+    DELIVERED: false,
+    REFUNDED: false,
+};
 
 export const AssociationMarketplaceOrders = ({ association }) => {
     const marketplaceId = association.id;
 
     const [searchParams, setSearchParams] = useState({});
     const [userParams, setUserParams] = useState({});
+    const [statusParams, setStatusParams] = useState({});
 
     return (
         <AssociationLayout
@@ -30,23 +50,23 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                     <SidebarSeparator />
                     <SidebarUserSearch
                         setParams={setUserParams}
-                        userName={"buyer"}
+                        apiKey={"buyer"}
                     />
-                    <SidebarInputSearch setParams={setSearchParams} />
+                    <SidebarInputSearch
+                        setParams={setSearchParams}
+                        placeholder={"Chercher un produit"}
+                    />
+                    <SidebarStatusSelector
+                        setParams={setStatusParams}
+                        statuses={orderStatus}
+                        defaultState={defaultStatusState}
+                    />
                 </>
             }
         >
             <PageTitle>Commandes</PageTitle>
 
             <Pagination
-                render={(transactions: Transaction[], paginationControl) => (
-                    <>
-                        <Card>
-                            <Table columns={columns} data={transactions} />
-                        </Card>
-                        {paginationControl}
-                    </>
-                )}
                 apiKey={[
                     "transactions.list.admin",
                     marketplaceId,
@@ -55,6 +75,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                         ordering: "-date",
                         ...searchParams,
                         ...userParams,
+                        ...statusParams,
                     },
                 ]}
                 apiMethod={api.transactions.list}
@@ -62,6 +83,31 @@ export const AssociationMarketplaceOrders = ({ association }) => {
                 paginationControlProps={{
                     className: "justify-content-center mt-5",
                 }}
+                render={(transactions: Transaction[], paginationControl) => (
+                    <>
+                        {transactions.length > 0 ? (
+                            <>
+                                <Card>
+                                    <Table
+                                        columns={columns}
+                                        data={transactions}
+                                    />
+                                </Card>
+                                {paginationControl}
+                            </>
+                        ) : (
+                            <Card>
+                                <p
+                                    className={
+                                        "text-center text-muted lead my-3"
+                                    }
+                                >
+                                    Aucun résultat
+                                </p>
+                            </Card>
+                        )}
+                    </>
+                )}
             />
         </AssociationLayout>
     );
