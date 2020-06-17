@@ -28,37 +28,37 @@ import { SelectGroup, SelectGroupProps } from "./SelectGroup";
  * @param props passed to `TextField`.
  */
 export function SelectFormGroup({
-    name,
-    items,
-    type,
-    selectType = "inline",
-    label,
-    help,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    ...props
+  name,
+  items,
+  type,
+  selectType = "inline",
+  label,
+  help,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  ...props
 }: BaseFormGroupProps & SelectGroupProps) {
-    return (
-        <BaseFormGroup
-            name={name}
-            label={label}
-            help={help}
-            feedback={feedback}
-            feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-            formGroupProps={formGroupProps}
-            labelProps={labelProps}
-            feedbackProps={feedbackProps}
-        >
-            <SelectGroup
-                name={name}
-                type={type}
-                items={items}
-                selectType={selectType}
-                {...props}
-            />
-        </BaseFormGroup>
-    );
+  return (
+    <BaseFormGroup
+      name={name}
+      label={label}
+      help={help}
+      feedback={feedback}
+      feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+      formGroupProps={formGroupProps}
+      labelProps={labelProps}
+      feedbackProps={feedbackProps}
+    >
+      <SelectGroup
+        name={name}
+        type={type}
+        items={items}
+        selectType={selectType}
+        {...props}
+      />
+    </BaseFormGroup>
+  );
 }

@@ -22,70 +22,68 @@ import { useURLState } from "../../../utils/useURLState";
  * {buyer: something}
  */
 export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
-    const [inputValue, setInputValue] = useState("");
-    const [selectedUser, setSelectedUser] = useState<{
-        label: string;
-        value: User;
-    } | null>(null);
-    const [selectedUserId, setSelectedUserId] = useURLState<string | null>(
-        "user",
-        null,
-        (user) => user || "",
-        (data) => data
-    );
+  const [inputValue, setInputValue] = useState("");
+  const [selectedUser, setSelectedUser] = useState<{
+    label: string;
+    value: User;
+  } | null>(null);
+  const [selectedUserId, setSelectedUserId] = useURLState<string | null>(
+    "user",
+    null,
+    (user) => user || "",
+    (data) => data
+  );
 
-    const { resolvedData: users, status, error } = useBetterPaginatedQuery<any>(
-        ["users.list", { page_size: 20, search: inputValue }],
-        api.users.list
-    );
+  const { resolvedData: users, status, error } = useBetterPaginatedQuery<any>(
+    ["users.list", { page_size: 20, search: inputValue }],
+    api.users.list
+  );
 
-    const onChange = (value) => {
-        const user = (value as { label: string; value: User })?.value;
-        setSelectedUserId(user?.id);
-        setSelectedUser(value);
-    };
+  const onChange = (value) => {
+    const user = (value as { label: string; value: User })?.value;
+    setSelectedUserId(user?.id);
+    setSelectedUser(value);
+  };
 
-    useEffect(() => {
-        // This effect will be called when the page is loaded, selectedUserId
-        // parsed but there is not selectedUser yet
-        if (users && selectedUserId) {
-            setSelectedUser((selectedUser) => {
-                if (selectedUser) return selectedUser;
+  useEffect(() => {
+    // This effect will be called when the page is loaded, selectedUserId
+    // parsed but there is not selectedUser yet
+    if (users && selectedUserId) {
+      setSelectedUser((selectedUser) => {
+        if (selectedUser) return selectedUser;
 
-                const selectedUsers = users.results.filter(
-                    (u) => u.id === selectedUserId
-                );
-                const newSelectedUser =
-                    selectedUsers.length >= 1 ? selectedUsers[0] : null;
-
-                return { value: newSelectedUser, label: newSelectedUser.id };
-            });
-        }
-    }, [selectedUserId, users]);
-
-    useEffect(() => {
-        setParams(
-            selectedUser?.value
-                ? { [apiKey || "user"]: selectedUser.value.id }
-                : {}
+        const selectedUsers = users.results.filter(
+          (u) => u.id === selectedUserId
         );
-    }, [setParams, selectedUser, apiKey]);
+        const newSelectedUser =
+          selectedUsers.length >= 1 ? selectedUsers[0] : null;
 
-    return status === "loading" ? null : status === "error" ? (
-        <ErrorMessage>{error}</ErrorMessage>
-    ) : users ? (
-        <Select
-            placeholder={"Rechercher un utilisateur"}
-            className={"mb-3"}
-            isClearable={true}
-            options={users.results.map((user) => ({
-                label: user.id,
-                value: user,
-            }))}
-            {...props}
-            onInputChange={setInputValue}
-            onChange={onChange}
-            value={selectedUser}
-        />
-    ) : null;
+        return { value: newSelectedUser, label: newSelectedUser.id };
+      });
+    }
+  }, [selectedUserId, users]);
+
+  useEffect(() => {
+    setParams(
+      selectedUser?.value ? { [apiKey || "user"]: selectedUser.value.id } : {}
+    );
+  }, [setParams, selectedUser, apiKey]);
+
+  return status === "loading" ? null : status === "error" ? (
+    <ErrorMessage>{error}</ErrorMessage>
+  ) : users ? (
+    <Select
+      placeholder={"Rechercher un utilisateur"}
+      className={"mb-3"}
+      isClearable={true}
+      options={users.results.map((user) => ({
+        label: user.id,
+        value: user,
+      }))}
+      {...props}
+      onInputChange={setInputValue}
+      onChange={onChange}
+      value={selectedUser}
+    />
+  ) : null;
 };

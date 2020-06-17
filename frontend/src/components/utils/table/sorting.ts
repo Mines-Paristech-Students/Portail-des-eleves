@@ -1,32 +1,32 @@
 export enum Sorting {
-    Unsorted,
-    Ascending,
-    Descending,
+  Unsorted,
+  Ascending,
+  Descending,
 }
 
 /**
  * Return the CSS class for the header corresponding to `sorting`.
  */
 export const sortingToClassName = (sorting?: Sorting) =>
-    sorting === Sorting.Unsorted
-        ? "sorting"
-        : sorting === Sorting.Ascending
-        ? "sorting_asc"
-        : sorting === Sorting.Descending
-        ? "sorting_desc"
-        : "";
+  sorting === Sorting.Unsorted
+    ? "sorting"
+    : sorting === Sorting.Ascending
+    ? "sorting_asc"
+    : sorting === Sorting.Descending
+    ? "sorting_desc"
+    : "";
 
 /**
  * Cycle through the sorting like this: Unsorted -> Ascending -> Descending -> Unsorted
  */
 export const cycleSorting = (current?: Sorting) =>
-    current === Sorting.Unsorted
-        ? Sorting.Ascending
-        : current === Sorting.Ascending
-        ? Sorting.Descending
-        : current === Sorting.Descending
-        ? Sorting.Unsorted
-        : undefined;
+  current === Sorting.Unsorted
+    ? Sorting.Ascending
+    : current === Sorting.Ascending
+    ? Sorting.Descending
+    : current === Sorting.Descending
+    ? Sorting.Unsorted
+    : undefined;
 
 /**
  * Build an URL sorting parameter from a `sorting` object. The function iterates through the object's keys and returns
@@ -38,18 +38,18 @@ export const cycleSorting = (current?: Sorting) =>
  * converting camelCase into snake_case.
  */
 export const sortingToApiParameter = (sorting: any, mapping?: any) => {
-    if (sorting === undefined) {
-        return undefined;
-    }
-
-    for (let key of Object.getOwnPropertyNames(sorting)) {
-        switch (sorting[key]) {
-            case Sorting.Ascending:
-                return `${mapping ? mapping[key] : key}`;
-            case Sorting.Descending:
-                return `-${mapping ? mapping[key] : key}`;
-        }
-    }
-
+  if (sorting === undefined) {
     return undefined;
+  }
+
+  for (let key of Object.getOwnPropertyNames(sorting)) {
+    switch (sorting[key]) {
+      case Sorting.Ascending:
+        return `${mapping ? mapping[key] : key}`;
+      case Sorting.Descending:
+        return `-${mapping ? mapping[key] : key}`;
+    }
+  }
+
+  return undefined;
 };

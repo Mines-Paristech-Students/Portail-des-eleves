@@ -13,34 +13,34 @@ import { PageTitle } from "../PageTitle";
  * Otherwise, it just needs to start with `to`.
  */
 export const SidebarItem = ({ icon, to, children, exact = true }) => {
-    const location = useLocation();
-    const iconClassName = "fe fe-" + icon;
+  const location = useLocation();
+  const iconClassName = "fe fe-" + icon;
 
-    return (
-        <Link
-            className={`list-group-item list-group-item-action d-flex align-items-center ${
-                (exact && location.pathname === to) ||
-                (!exact && location.pathname.startsWith(to))
-                    ? "active"
-                    : ""
-            }`}
-            to={to}
-        >
-            <span className="icon mr-3">
-                <i className={iconClassName} />
-            </span>
-            {children}
-        </Link>
-    );
+  return (
+    <Link
+      className={`list-group-item list-group-item-action d-flex align-items-center ${
+        (exact && location.pathname === to) ||
+        (!exact && location.pathname.startsWith(to))
+          ? "active"
+          : ""
+      }`}
+      to={to}
+    >
+      <span className="icon mr-3">
+        <i className={iconClassName} />
+      </span>
+      {children}
+    </Link>
+  );
 };
 
 /**
  * A vertical space. Its height can be configured with the `size` props.
  */
 export const SidebarSpace = (props: { size?: number }) => {
-    let size = props.size ? props.size : 2;
+  let size = props.size ? props.size : 2;
 
-    return <div className={`pb-${size} pt-${size}`} />;
+  return <div className={`pb-${size} pt-${size}`} />;
 };
 
 /**
@@ -49,12 +49,10 @@ export const SidebarSpace = (props: { size?: number }) => {
 export const SidebarSeparator = () => <hr className="w-100" />;
 
 export const Sidebar = ({ title, children, ...rest }) => {
-    return (
-        <>
-            <PageTitle>{title}</PageTitle>
-            <div className="list-group list-group-transparent mb-0">
-                {children}
-            </div>
-        </>
-    );
+  return (
+    <>
+      <PageTitle>{title}</PageTitle>
+      <div className="list-group list-group-transparent mb-0">{children}</div>
+    </>
+  );
 };

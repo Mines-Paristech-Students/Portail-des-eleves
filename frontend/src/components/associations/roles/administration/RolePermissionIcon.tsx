@@ -2,13 +2,13 @@ import React from "react";
 import { RolePermission } from "../../../../models/associations/role";
 
 const icons = {
-    administration: "settings",
-    election: "list",
-    event: "calendar",
-    media: "file",
-    library: "book-open",
-    marketplace: "shopping-cart",
-    page: "book",
+  administration: "settings",
+  election: "list",
+  event: "calendar",
+  media: "file",
+  library: "book-open",
+  marketplace: "shopping-cart",
+  page: "book",
 };
 
 /**
@@ -19,19 +19,18 @@ const icons = {
  * `fe fe-[icon]`.
  */
 export const RolePermissionIcon = ({
-    permission,
-    ...props
+  permission,
+  ...props
 }: {
-    permission: RolePermission;
+  permission: RolePermission;
 } & React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLElement>,
-    HTMLElement
+  React.HTMLAttributes<HTMLElement>,
+  HTMLElement
 >) => (
-    <i
-        {...props}
-        className={
-            (props.className ? props.className : "") +
-            ` fe fe-${icons[permission]}`
-        }
-    />
+  <i
+    {...props}
+    className={
+      (props.className ? props.className : "") + ` fe fe-${icons[permission]}`
+    }
+  />
 );

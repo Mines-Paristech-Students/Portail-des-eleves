@@ -8,20 +8,20 @@ import { useFormikContext } from "formik";
 import Container from "react-bootstrap/Container";
 
 const MarkdownPreview = ({ value }: { value: string }) => (
-    <Container
-        style={{
-            border: "1px solid #e9ecef",
-            borderRadius: "3px",
-            padding: "0.375rem 0.75rem",
-            textAlign: value ? "left" : "center",
-        }}
-    >
-        {value ? (
-            <ReactMarkdown source={value} />
-        ) : (
-            <span className="text-muted font-italic">Pas de contenu.</span>
-        )}
-    </Container>
+  <Container
+    style={{
+      border: "1px solid #e9ecef",
+      borderRadius: "3px",
+      padding: "0.375rem 0.75rem",
+      textAlign: value ? "left" : "center",
+    }}
+  >
+    {value ? (
+      <ReactMarkdown source={value} />
+    ) : (
+      <span className="text-muted font-italic">Pas de contenu.</span>
+    )}
+  </Container>
 );
 
 /**
@@ -38,57 +38,51 @@ const MarkdownPreview = ({ value }: { value: string }) => (
  * @param props passed to `TextFormGroup`, see its doc for further details.
  */
 export const MarkdownFormGroup = ({
-    name,
-    help,
-    preview = true,
-    ...props
+  name,
+  help,
+  preview = true,
+  ...props
 }: TextFieldProps & BaseFormGroupProps & { preview?: boolean }) => {
-    const { values } = useFormikContext<any>();
-    const [showPreview, setShowPreview] = useState(false);
+  const { values } = useFormikContext<any>();
+  const [showPreview, setShowPreview] = useState(false);
 
-    return (
-        <>
-            <TextFormGroup
-                name={name}
-                help={
-                    <>
-                        {help && (
-                            <>
-                                {help}
-                                <br />
-                            </>
-                        )}
-                        Le{" "}
-                        <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://guides.github.com/features/mastering-markdown/#syntax"
-                            className="text-reset"
-                        >
-                            Markdown
-                        </a>{" "}
-                        est activé.{" "}
-                        {preview &&
-                            (showPreview ? (
-                                <Link
-                                    to="#"
-                                    onClick={() => setShowPreview(false)}
-                                >
-                                    Désactiver la prévisualisation.
-                                </Link>
-                            ) : (
-                                <Link
-                                    to="#"
-                                    onClick={() => setShowPreview(true)}
-                                >
-                                    Prévisualiser.
-                                </Link>
-                            ))}
-                    </>
-                }
-                {...props}
-            />
-            {preview && showPreview && <MarkdownPreview value={values[name]} />}
-        </>
-    );
+  return (
+    <>
+      <TextFormGroup
+        name={name}
+        help={
+          <>
+            {help && (
+              <>
+                {help}
+                <br />
+              </>
+            )}
+            Le{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://guides.github.com/features/mastering-markdown/#syntax"
+              className="text-reset"
+            >
+              Markdown
+            </a>{" "}
+            est activé.{" "}
+            {preview &&
+              (showPreview ? (
+                <Link to="#" onClick={() => setShowPreview(false)}>
+                  Désactiver la prévisualisation.
+                </Link>
+              ) : (
+                <Link to="#" onClick={() => setShowPreview(true)}>
+                  Prévisualiser.
+                </Link>
+              ))}
+          </>
+        }
+        {...props}
+      />
+      {preview && showPreview && <MarkdownPreview value={values[name]} />}
+    </>
+  );
 };

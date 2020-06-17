@@ -1,7 +1,7 @@
 import React from "react";
 import {
-    DayPickerInputField,
-    DayPickerInputFieldProps,
+  DayPickerInputField,
+  DayPickerInputFieldProps,
 } from "./DayPickerInputField";
 import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
 
@@ -33,37 +33,37 @@ import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
  * @param props passed to `DayPickerInputField`.
  */
 export const DayPickerInputFormGroup = ({
-    name,
-    label,
-    help,
-    feedback = true,
-    disabled = false,
-    parseFormats = ["DD/MM/YYYY"],
-    displayFormat = "DD/MM/YYYY",
-    todayButton = false,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    ...props
+  name,
+  label,
+  help,
+  feedback = true,
+  disabled = false,
+  parseFormats = ["DD/MM/YYYY"],
+  displayFormat = "DD/MM/YYYY",
+  todayButton = false,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  ...props
 }: DayPickerInputFieldProps & BaseFormGroupProps) => (
-    <BaseFormGroup
-        name={name}
-        label={label}
-        help={help}
-        feedback={!disabled && feedback}
-        feedbackOnTouchedOnly={false}
-        formGroupProps={formGroupProps}
-        labelProps={labelProps}
-        feedbackProps={feedbackProps}
-    >
-        <DayPickerInputField
-            name={name}
-            feedback={!disabled && feedback}
-            disabled={disabled}
-            parseFormats={parseFormats}
-            displayFormat={displayFormat}
-            todayButton={todayButton}
-            {...props}
-        />
-    </BaseFormGroup>
+  <BaseFormGroup
+    name={name}
+    label={label}
+    help={help}
+    feedback={!disabled && feedback}
+    feedbackOnTouchedOnly={false}
+    formGroupProps={formGroupProps}
+    labelProps={labelProps}
+    feedbackProps={feedbackProps}
+  >
+    <DayPickerInputField
+      name={name}
+      feedback={!disabled && feedback}
+      disabled={disabled}
+      parseFormats={parseFormats}
+      displayFormat={displayFormat}
+      todayButton={todayButton}
+      {...props}
+    />
+  </BaseFormGroup>
 );
