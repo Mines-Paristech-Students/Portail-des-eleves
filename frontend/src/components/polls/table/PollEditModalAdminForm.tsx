@@ -140,9 +140,8 @@ export const PollEditModalAdminForm = ({
                                             <em>
                                                 Envoyé par {poll.user} le{" "}
                                                 {dayjs(
-                                                    poll.creationDateTime,
-                                                    "DD/MM/YYYY"
-                                                )}
+                                                    poll.creationDateTime
+                                                ).format("DD/MM/YYYY")}
                                                 .
                                             </em>
                                         </Card.Subtitle>
