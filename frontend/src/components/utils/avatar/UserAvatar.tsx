@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 import "./user_avatar.css";
 
 export interface UserAvatarProps {
-    userId: string;
-    size?: Size;
-    backgroundColor?: TablerColor;
-    linkClassName?: string;
-    avatarClassName?: string;
-    tooltip?: string;
-    link?: boolean;
+  userId: string;
+  size?: Size;
+  backgroundColor?: TablerColor;
+  linkClassName?: string;
+  avatarClassName?: string;
+  tooltip?: string;
+  link?: boolean;
 }
 
 /**
@@ -27,34 +27,32 @@ export interface UserAvatarProps {
  * @param link optional. If true, add a link to the user profile. Defaults to true.
  */
 export const UserAvatar = ({
-    userId,
-    size,
-    backgroundColor,
-    linkClassName,
-    avatarClassName,
-    tooltip,
-    link = false,
+  userId,
+  size,
+  backgroundColor,
+  linkClassName,
+  avatarClassName,
+  tooltip,
+  link = false,
 }: UserAvatarProps) => {
-    const avatar = (
-        <Avatar
-            url={`/profile/${userId}`}
-            size={size}
-            backgroundColor={backgroundColor}
-            className={avatarClassName}
-            tooltip={tooltip}
-        />
-    );
+  const avatar = (
+    <Avatar
+      url={`/profile/${userId}`}
+      size={size}
+      backgroundColor={backgroundColor}
+      className={avatarClassName}
+      tooltip={tooltip}
+    />
+  );
 
-    return link ? (
-        <Link
-            to={`/profils/${userId}`}
-            className={`user-avatar-link ${linkClassName || ""}`}
-        >
-            {avatar}
-        </Link>
-    ) : (
-        <span className={`user-avatar-link ${linkClassName || ""}`}>
-            {avatar}
-        </span>
-    );
+  return link ? (
+    <Link
+      to={`/profils/${userId}`}
+      className={`user-avatar-link ${linkClassName || ""}`}
+    >
+      {avatar}
+    </Link>
+  ) : (
+    <span className={`user-avatar-link ${linkClassName || ""}`}>{avatar}</span>
+  );
 };

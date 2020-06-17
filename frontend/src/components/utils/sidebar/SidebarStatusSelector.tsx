@@ -15,59 +15,59 @@ import { useURLState } from "../../../utils/useURLState";
  * @param queryKey the status field name in the server side API
  */
 export const SidebarStatusSelector = ({
-    setParams,
-    statuses,
-    defaultState,
-    queryKey = "status__in",
+  setParams,
+  statuses,
+  defaultState,
+  queryKey = "status__in",
 }: {
-    setParams: (object) => void;
-    statuses: { value: string; label: string }[];
-    defaultState: any; //([key: string]: boolean);
-    queryKey?: string;
+  setParams: (object) => void;
+  statuses: { value: string; label: string }[];
+  defaultState: any; //([key: string]: boolean);
+  queryKey?: string;
 }) => {
-    const [checkboxState, setCheckboxState] = useURLState(
-        "status",
-        defaultState,
-        (data) =>
-            Object.entries(data)
-                .map(([key, value]) => (value ? key : false))
-                .filter(Boolean)
-                .join("-"),
-        (data) => {
-            let state = { ...defaultState };
-            data.split("-").forEach((value) => (state[value] = true));
-            return state;
-        }
-    );
+  const [checkboxState, setCheckboxState] = useURLState(
+    "status",
+    defaultState,
+    (data) =>
+      Object.entries(data)
+        .map(([key, value]) => (value ? key : false))
+        .filter(Boolean)
+        .join("-"),
+    (data) => {
+      let state = { ...defaultState };
+      data.split("-").forEach((value) => (state[value] = true));
+      return state;
+    }
+  );
 
-    useEffect(() => {
-        setParams({
-            [queryKey]: Object.entries(checkboxState)
-                .map(([key, value]) => (value ? key : false))
-                .filter(Boolean)
-                .join(","),
-        });
-    }, [checkboxState, setParams, queryKey]);
+  useEffect(() => {
+    setParams({
+      [queryKey]: Object.entries(checkboxState)
+        .map(([key, value]) => (value ? key : false))
+        .filter(Boolean)
+        .join(","),
+    });
+  }, [checkboxState, setParams, queryKey]);
 
-    return (
-        <SidebarSection
-            retractable={true}
-            title="Statut"
-            retractedByDefault={false}
-        >
-            {statuses.map(({ value, label }) => (
-                <CheckboxField
-                    label={label}
-                    state={checkboxState[value]}
-                    onChange={(checked) =>
-                        setCheckboxState((state) => ({
-                            ...state,
-                            value: checked,
-                        }))
-                    }
-                    key={value}
-                />
-            ))}
-        </SidebarSection>
-    );
+  return (
+    <SidebarSection
+      retractable={true}
+      title="Statut"
+      retractedByDefault={false}
+    >
+      {statuses.map(({ value, label }) => (
+        <CheckboxField
+          label={label}
+          state={checkboxState[value]}
+          onChange={(checked) =>
+            setCheckboxState((state) => ({
+              ...state,
+              value: checked,
+            }))
+          }
+          key={value}
+        />
+      ))}
+    </SidebarSection>
+  );
 };

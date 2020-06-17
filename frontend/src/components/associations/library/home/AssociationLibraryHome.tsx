@@ -10,38 +10,38 @@ import Col from "react-bootstrap/Col";
 import { PageTitle } from "../../../utils/PageTitle";
 
 export const AssociationLibraryHome = ({
-    association,
+  association,
 }: {
-    association: Association;
+  association: Association;
 }) => {
-    return (
-        <AssociationLayout association={association}>
-            <Container>
-                <PageTitle>Bibliothèque</PageTitle>
+  return (
+    <AssociationLayout association={association}>
+      <Container>
+        <PageTitle>Bibliothèque</PageTitle>
 
-                <Pagination
-                    apiMethod={api.loanables.list}
-                    apiKey={[
-                        "loanables.list",
-                        { library__id: association.id, page_size: 10 },
-                    ]}
-                    paginationControlProps={{
-                        className: "justify-content-center mb-5",
-                    }}
-                    render={(loanables, paginationControl) => (
-                        <>
-                            <Row>
-                                {loanables.map((loanable) => (
-                                    <Col key={loanable.id} xs={12} lg={6}>
-                                        <LoanableCard loanable={loanable} />
-                                    </Col>
-                                ))}
-                            </Row>
-                            {paginationControl}
-                        </>
-                    )}
-                />
-            </Container>
-        </AssociationLayout>
-    );
+        <Pagination
+          apiMethod={api.loanables.list}
+          apiKey={[
+            "loanables.list",
+            { library__id: association.id, page_size: 10 },
+          ]}
+          paginationControlProps={{
+            className: "justify-content-center mb-5",
+          }}
+          render={(loanables, paginationControl) => (
+            <>
+              <Row>
+                {loanables.map((loanable) => (
+                  <Col key={loanable.id} xs={12} lg={6}>
+                    <LoanableCard loanable={loanable} />
+                  </Col>
+                ))}
+              </Row>
+              {paginationControl}
+            </>
+          )}
+        />
+      </Container>
+    </AssociationLayout>
+  );
 };

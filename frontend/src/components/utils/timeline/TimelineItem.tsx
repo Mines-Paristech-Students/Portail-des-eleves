@@ -11,24 +11,24 @@ import { formatLongDateMonthYear } from "../../../utils/format";
  * @param endDate optional. Only displayed if `startDate` is also provided. Displays an end date on the right of the startDate.
  */
 export const TimelineItem = ({
-    badgeColor = TablerColor.Blue,
-    content,
-    startDate,
-    endDate,
+  badgeColor = TablerColor.Blue,
+  content,
+  startDate,
+  endDate,
 }: {
-    badgeColor?: TablerColor;
-    content?: any;
-    startDate?: Date;
-    endDate?: Date;
+  badgeColor?: TablerColor;
+  content?: any;
+  startDate?: Date;
+  endDate?: Date;
 }) => (
-    <li className="timeline-item">
-        <div className={`timeline-badge bg-${badgeColor}`} />
-        {content}
-        {startDate && (
-            <div className="timeline-time">
-                {formatLongDateMonthYear(startDate)}
-                {endDate && ` — ${formatLongDateMonthYear(endDate)}`}
-            </div>
-        )}
-    </li>
+  <li className="timeline-item">
+    <div className={`timeline-badge bg-${badgeColor}`} />
+    {content}
+    {startDate && (
+      <div className="timeline-time">
+        {formatLongDateMonthYear(startDate)}
+        {endDate && ` — ${formatLongDateMonthYear(endDate)}`}
+      </div>
+    )}
+  </li>
 );

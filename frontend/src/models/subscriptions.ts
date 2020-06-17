@@ -1,6 +1,6 @@
 import { User } from "./user";
 
 export interface WidgetSubscriptions {
-    user: User;
-    payload: string;
+  user: User;
+  payload: string;
 }

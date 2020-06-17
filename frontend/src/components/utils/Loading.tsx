@@ -11,18 +11,18 @@ import Spinner from "react-bootstrap/Spinner";
  * @param children the React children.
  */
 export const Loading = ({
-    className = "",
-    children,
+  className = "",
+  children,
 }: {
-    className?: string;
-    children?: any;
+  className?: string;
+  children?: any;
 }) => (
-    <Container className={className}>
-        <Row className="justify-content-center">
-            <Col xs="1">
-                <Spinner animation="border" role="status" />
-                {children}
-            </Col>
-        </Row>
-    </Container>
+  <Container className={className}>
+    <Row className="justify-content-center">
+      <Col xs="1">
+        <Spinner animation="border" role="status" />
+        {children}
+      </Col>
+    </Row>
+  </Container>
 );

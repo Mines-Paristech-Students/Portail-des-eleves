@@ -8,37 +8,37 @@ import { UserProvider } from "../../services/authService";
  * Ensure the user is logged-in before displaying them the route
  */
 export const PrivateRoute = ({
-    component: Component,
-    routeProps = {},
-    ...rest
+  component: Component,
+  routeProps = {},
+  ...rest
 }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                authService.isAuthenticated ? (
-                    <Component {...props} {...routeProps} />
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                            state: { from: props.location },
-                        }}
-                    />
-                )
-            }
-        />
-    );
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        authService.isAuthenticated ? (
+          <Component {...props} {...routeProps} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location },
+            }}
+          />
+        )
+      }
+    />
+  );
 };
 
 export const CommonPrivateRoute = ({ component: Component, ...rest }) => (
-    <PrivateRoute
-        {...rest}
-        component={(props) => (
-            <UserProvider>
-                <Navbar />
-                <Component {...props} />
-            </UserProvider>
-        )}
-    />
+  <PrivateRoute
+    {...rest}
+    component={(props) => (
+      <UserProvider>
+        <Navbar />
+        <Component {...props} />
+      </UserProvider>
+    )}
+  />
 );

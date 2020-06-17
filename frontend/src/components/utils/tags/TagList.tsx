@@ -4,12 +4,12 @@ import { Tag as TagComponent } from "./Tag";
 import { Tag } from "../../../models/tag";
 
 export enum TaggableModel {
-    Association = "association",
-    Loanable = "loanable",
-    Media = "media",
-    Page = "page",
-    Product = "product",
-    Role = "role",
+  Association = "association",
+  Loanable = "loanable",
+  Media = "media",
+  Page = "page",
+  Product = "product",
+  Role = "role",
 }
 
 /**
@@ -20,38 +20,38 @@ export enum TaggableModel {
  * @constructor
  */
 export const TagList = ({
-    model,
-    instance,
-    collapsed = false,
-    ...props
+  model,
+  instance,
+  collapsed = false,
+  ...props
 }: {
-    model: TaggableModel;
-    instance: any;
-    collapsed?: boolean;
-    [key: string]: any;
+  model: TaggableModel;
+  instance: any;
+  collapsed?: boolean;
+  [key: string]: any;
 }) => {
-    const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
 
-    useEffect(() => {
-        if (instance.tags) {
-            setTags(instance.tags);
-        } else {
-            api.tags.list({ [model]: instance.id }).then((response) => {
-                setTags(response.results);
-            });
-        }
-    }, [instance.tags, instance.id, model]);
+  useEffect(() => {
+    if (instance.tags) {
+      setTags(instance.tags);
+    } else {
+      api.tags.list({ [model]: instance.id }).then((response) => {
+        setTags(response.results);
+      });
+    }
+  }, [instance.tags, instance.id, model]);
 
-    return (
-        <div {...props}>
-            {tags.map((tag) => (
-                <TagComponent
-                    tag={tag.namespace.name}
-                    addon={tag.value}
-                    key={tag.id}
-                    collapsed={collapsed}
-                />
-            ))}
-        </div>
-    );
+  return (
+    <div {...props}>
+      {tags.map((tag) => (
+        <TagComponent
+          tag={tag.namespace.name}
+          addon={tag.value}
+          key={tag.id}
+          collapsed={collapsed}
+        />
+      ))}
+    </div>
+  );
 };

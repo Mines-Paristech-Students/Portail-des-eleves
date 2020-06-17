@@ -13,21 +13,21 @@ import { Association } from "../../models/associations/association";
  * @constructor
  */
 export const AssociationLayout = ({
-    association,
-    additionalSidebar = null,
-    children = null,
+  association,
+  additionalSidebar = null,
+  children = null,
 }: {
-    association: Association;
-    additionalSidebar?: any;
-    children?: any;
+  association: Association;
+  additionalSidebar?: any;
+  children?: any;
 }) => (
-    <Container>
-        <Row>
-            <Col md={3}>
-                <AssociationSidebar association={association} />
-                {additionalSidebar}
-            </Col>
-            <Col md={9}>{children}</Col>
-        </Row>
-    </Container>
+  <Container>
+    <Row>
+      <Col md={3}>
+        <AssociationSidebar association={association} />
+        {additionalSidebar}
+      </Col>
+      <Col md={9}>{children}</Col>
+    </Row>
+  </Container>
 );

@@ -21,29 +21,29 @@ import { Size } from "../../../utils/size";
  * Except `children`, the props are the same as `UserAvatar`.
  */
 export const UserAvatarCard = ({
-    children,
-    userId,
-    className = "",
-    avatarClassName,
-    linkClassName,
-    size = Size.XXL,
-    link = false,
-    ...props
+  children,
+  userId,
+  className = "",
+  avatarClassName,
+  linkClassName,
+  size = Size.XXL,
+  link = false,
+  ...props
 }: {
-    children?: any;
-    className?: string;
-    avatarClassName?: string;
+  children?: any;
+  className?: string;
+  avatarClassName?: string;
 } & UserAvatarProps) => (
-    <Card className={`justify-content-center ${className}`}>
-        <UserAvatar
-            userId={userId}
-            avatarClassName={avatarClassName}
-            linkClassName={"mx-auto " + (linkClassName ? linkClassName : "")}
-            size={size}
-            link={link}
-            {...props}
-        />
+  <Card className={`justify-content-center ${className}`}>
+    <UserAvatar
+      userId={userId}
+      avatarClassName={avatarClassName}
+      linkClassName={"mx-auto " + (linkClassName ? linkClassName : "")}
+      size={size}
+      link={link}
+      {...props}
+    />
 
-        {children}
-    </Card>
+    {children}
+  </Card>
 );

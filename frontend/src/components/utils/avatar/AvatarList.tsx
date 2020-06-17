@@ -7,21 +7,21 @@ import React from "react";
  * @param children the `Avatar` or `UserAvatar` components which will be rendered inside the list.
  */
 export const AvatarList = ({
-    stacked = false,
-    className = "",
-    children,
+  stacked = false,
+  className = "",
+  children,
 }: {
-    stacked?: boolean;
-    className?: string;
-    children: any;
+  stacked?: boolean;
+  className?: string;
+  children: any;
 }) => (
-    <div
-        className={
-            (className || "") +
-            " " +
-            (stacked ? "avatar-list-stacked" : "avatar-list")
-        }
-    >
-        {children}
-    </div>
+  <div
+    className={
+      (className || "") +
+      " " +
+      (stacked ? "avatar-list-stacked" : "avatar-list")
+    }
+  >
+    {children}
+  </div>
 );

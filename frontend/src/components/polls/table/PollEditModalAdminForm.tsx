@@ -14,174 +14,160 @@ import { DayPickerFormGroup } from "../../utils/forms/DayPickerFormGroup";
 import dayjs from "dayjs";
 
 const StateField = () => (
-    <SelectFormGroup
-        selectType="pills"
-        type="radio"
-        label="Statut"
-        name="state"
-        items={[
-            {
-                value: "ACCEPTED",
-                children: (
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-check text-success" /> Accepté
-                    </span>
-                ),
-            },
-            {
-                value: "REJECTED",
-                children: (
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-x text-danger" /> Refusé
-                    </span>
-                ),
-            },
-            {
-                value: "REVIEWING",
-                children: (
-                    <span className="selectgroup-button selectgroup-button-icon">
-                        <i className="fe fe-eye text-warning" /> En attente
-                    </span>
-                ),
-            },
-        ]}
-    />
+  <SelectFormGroup
+    selectType="pills"
+    type="radio"
+    label="Statut"
+    name="state"
+    items={[
+      {
+        value: "ACCEPTED",
+        children: (
+          <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-check text-success" /> Accepté
+          </span>
+        ),
+      },
+      {
+        value: "REJECTED",
+        children: (
+          <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-x text-danger" /> Refusé
+          </span>
+        ),
+      },
+      {
+        value: "REVIEWING",
+        children: (
+          <span className="selectgroup-button selectgroup-button-icon">
+            <i className="fe fe-eye text-warning" /> En attente
+          </span>
+        ),
+      },
+    ]}
+  />
 );
 
 const AdminCommentField = () => {
-    const { values } = useFormikContext<any>();
+  const { values } = useFormikContext<any>();
 
-    if (values.state === "REJECTED") {
-        return (
-            <TextFormGroup
-                label="Commentaire"
-                name="adminComment"
-                type="text"
-                placeholder="Un commentaire ?"
-            />
-        );
-    }
+  if (values.state === "REJECTED") {
+    return (
+      <TextFormGroup
+        label="Commentaire"
+        name="adminComment"
+        type="text"
+        placeholder="Un commentaire ?"
+      />
+    );
+  }
 
-    return null;
+  return null;
 };
 
 const DateField = () => {
-    const { values } = useFormikContext<any>();
+  const { values } = useFormikContext<any>();
 
-    if (values.state === "ACCEPTED") {
-        return (
-            <DayPickerFormGroup
-                label="Date de publication"
-                name="publicationDate"
-            />
-        );
-    }
+  if (values.state === "ACCEPTED") {
+    return (
+      <DayPickerFormGroup label="Date de publication" name="publicationDate" />
+    );
+  }
 
-    return null;
+  return null;
 };
 
 export const PollEditModalAdminForm = ({
-    poll,
-    handleClose,
-    onUpdate,
+  poll,
+  handleClose,
+  onUpdate,
 }: {
-    poll: Poll;
-    handleClose: () => void;
-    onUpdate: any;
+  poll: Poll;
+  handleClose: () => void;
+  onUpdate: any;
 }) => {
-    let minDate = new Date();
-    minDate.setDate(minDate.getDate() - 1);
+  let minDate = new Date();
+  minDate.setDate(minDate.getDate() - 1);
 
-    const onSubmit = (values, { setSubmitting }) => {
-        let data = {
-            state: values.state,
-            adminComment:
-                values.state === "REJECTED" ? values.adminComment : "",
-            publicationDate: values.publicationDate,
-        };
-
-        onUpdate(data, setSubmitting);
+  const onSubmit = (values, { setSubmitting }) => {
+    let data = {
+      state: values.state,
+      adminComment: values.state === "REJECTED" ? values.adminComment : "",
+      publicationDate: values.publicationDate,
     };
 
-    return (
-        <Formik
-            initialValues={{
-                state: poll.state,
-                adminComment: poll.adminComment,
-                publicationDate: poll.publicationDate,
-            }}
-            validationSchema={Yup.object({
-                publicationDate: Yup.date().when("state", {
-                    is: "ACCEPTED",
-                    then: Yup.date()
-                        .min(
-                            minDate,
-                            "Le sondage doit être publié aujourd’hui ou dans le futur."
-                        )
-                        .required("Ce champ est requis."),
-                    otherwise: Yup.date().notRequired(),
-                }),
-            })}
-            onSubmit={onSubmit}
-        >
-            <Form>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Col>
-                                <Card className="mx-auto">
-                                    <Card.Header>
-                                        <Card.Title as="h3">
-                                            {poll.question}
-                                        </Card.Title>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <Card.Subtitle>
-                                            <em>
-                                                Envoyé par {poll.user} le{" "}
-                                                {dayjs(
-                                                    poll.creationDateTime,
-                                                    "DD/MM/YYYY"
-                                                )}
-                                                .
-                                            </em>
-                                        </Card.Subtitle>
+    onUpdate(data, setSubmitting);
+  };
 
-                                        <span className="selectgroup-button">
-                                            {poll.choices[0].text}
-                                        </span>
-                                        <span className="selectgroup-button">
-                                            {poll.choices[1].text}
-                                        </span>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col>
-                                <StateField />
-                                <AdminCommentField />
-                                <DateField />
-                            </Col>
-                        </Row>
-                    </Container>
-                </Modal.Body>
+  return (
+    <Formik
+      initialValues={{
+        state: poll.state,
+        adminComment: poll.adminComment,
+        publicationDate: poll.publicationDate,
+      }}
+      validationSchema={Yup.object({
+        publicationDate: Yup.date().when("state", {
+          is: "ACCEPTED",
+          then: Yup.date()
+            .min(
+              minDate,
+              "Le sondage doit être publié aujourd’hui ou dans le futur."
+            )
+            .required("Ce champ est requis."),
+          otherwise: Yup.date().notRequired(),
+        }),
+      })}
+      onSubmit={onSubmit}
+    >
+      <Form>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col>
+                <Card className="mx-auto">
+                  <Card.Header>
+                    <Card.Title as="h3">{poll.question}</Card.Title>
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Subtitle>
+                      <em>
+                        Envoyé par {poll.user} le{" "}
+                        {dayjs(poll.creationDateTime, "DD/MM/YYYY")}.
+                      </em>
+                    </Card.Subtitle>
 
-                <Modal.Footer>
-                    <Button
-                        className="btn-icon"
-                        variant="outline-danger"
-                        onClick={handleClose}
-                    >
-                        Annuler
-                    </Button>
-                    <Button
-                        className="btn-icon"
-                        variant="outline-success"
-                        type="submit"
-                    >
-                        Valider
-                    </Button>
-                </Modal.Footer>
-            </Form>
-        </Formik>
-    );
+                    <span className="selectgroup-button">
+                      {poll.choices[0].text}
+                    </span>
+                    <span className="selectgroup-button">
+                      {poll.choices[1].text}
+                    </span>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col>
+                <StateField />
+                <AdminCommentField />
+                <DateField />
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            className="btn-icon"
+            variant="outline-danger"
+            onClick={handleClose}
+          >
+            Annuler
+          </Button>
+          <Button className="btn-icon" variant="outline-success" type="submit">
+            Valider
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Formik>
+  );
 };
