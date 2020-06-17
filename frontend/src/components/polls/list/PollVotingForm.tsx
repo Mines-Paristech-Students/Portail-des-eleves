@@ -108,10 +108,12 @@ const ChoiceFields = ({ choices }: { choices: Choice[] }) => (
         selectType="vertical"
         type="radio"
         label=""
-        items={choices.map((choice) => ({
-            value: choice.id.toString(),
-            text: choice.text,
-        }))}
+        items={choices
+            .sort((a, b) => a.text.localeCompare(b.text))
+            .map((choice) => ({
+                value: choice.id.toString(),
+                text: choice.text,
+            }))}
         name="choice"
     />
 );
