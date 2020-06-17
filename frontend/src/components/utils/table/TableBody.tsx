@@ -14,13 +14,19 @@ const Row = ({ columns, data }: { columns: Column[]; data: object }) => (
 export const TableBody = ({
   columns,
   data,
+  emptyComponent,
 }: {
   columns: Column[];
   data: object[];
+  emptyComponent?: React.ReactNode;
 }) => (
   <tbody>
-    {data.map((rowData, i) => (
-      <Row key={i} columns={columns} data={rowData} />
-    ))}
+    {data.length === 0 && emptyComponent ? (
+      <tr role="row">
+        <td colSpan={columns.length}>{emptyComponent}</td>
+      </tr>
+    ) : (
+      data.map((rowData, i) => <Row key={i} columns={columns} data={rowData} />)
+    )}
   </tbody>
 );
