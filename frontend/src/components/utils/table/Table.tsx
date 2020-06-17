@@ -19,33 +19,31 @@ import { Sorting } from "./sorting";
  * @param dataTable if true (by default), the table will be a datatable.
  */
 export const Table = ({
-    columns,
-    data,
-    showHeaders = true,
-    dataTable = true,
+  columns,
+  data,
+  showHeaders = true,
+  dataTable = true,
 }: {
-    columns: Column[];
-    data: object[];
-    showHeaders?: boolean;
-    dataTable?: boolean;
+  columns: Column[];
+  data: object[];
+  showHeaders?: boolean;
+  dataTable?: boolean;
 }) => {
-    return (
-        <div className="table-responsive">
-            <div
-                className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}
-            >
-                <table
-                    className={`table card-table table-vcenter ${
-                        dataTable ? "datatable dataTable" : ""
-                    } no-footer table-striped`}
-                    role="grid"
-                >
-                    {showHeaders && <TableHeader columns={columns} />}
-                    <TableBody columns={columns} data={data} />
-                </table>
-            </div>
-        </div>
-    );
+  return (
+    <div className="table-responsive">
+      <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
+        <table
+          className={`table card-table table-vcenter ${
+            dataTable ? "datatable dataTable" : ""
+          } no-footer table-striped`}
+          role="grid"
+        >
+          {showHeaders && <TableHeader columns={columns} />}
+          <TableBody columns={columns} data={data} />
+        </table>
+      </div>
+    </div>
+  );
 };
 
 /**
@@ -66,60 +64,53 @@ export const Table = ({
  * `cellClassName` will be appended to the class of the `<td>` elements located in the `key` column.<br />
  */
 export function useColumns<T = any>(
-    columns: {
-        key: string;
-        header: any;
-        render?: (data: T) => any;
-        canSort?: boolean;
-        headerClassName?: any;
-        cellClassName?: any;
-    }[]
+  columns: {
+    key: string;
+    header: any;
+    render?: (data: T) => any;
+    canSort?: boolean;
+    headerClassName?: any;
+    cellClassName?: any;
+  }[]
 ): { columns: Column[]; sorting: { [key: string]: Sorting } } {
-    // Build an initial sorting object filled with `Sorting.Unsorted`.
-    let initialSorting = {};
+  // Build an initial sorting object filled with `Sorting.Unsorted`.
+  let initialSorting = {};
 
-    for (let { key, canSort } of columns) {
-        if (canSort) {
-            initialSorting[key] = Sorting.Unsorted;
-        }
+  for (let { key, canSort } of columns) {
+    if (canSort) {
+      initialSorting[key] = Sorting.Unsorted;
     }
+  }
 
-    const [sorting, setSorting] = useState(initialSorting);
+  const [sorting, setSorting] = useState(initialSorting);
 
-    return {
-        columns: columns.map(
-            ({
-                key,
-                header,
-                render,
-                canSort,
-                headerClassName,
-                cellClassName,
-            }) => {
-                // Even if the column does not need a sort, it requires these attributes.
-                let base = {
-                    key: key,
-                    header: header,
-                    render: render,
-                    headerClassName: headerClassName,
-                    cellClassName: cellClassName,
-                };
+  return {
+    columns: columns.map(
+      ({ key, header, render, canSort, headerClassName, cellClassName }) => {
+        // Even if the column does not need a sort, it requires these attributes.
+        let base = {
+          key: key,
+          header: header,
+          render: render,
+          headerClassName: headerClassName,
+          cellClassName: cellClassName,
+        };
 
-                // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
-                return canSort
-                    ? {
-                          ...base,
-                          sorting: sorting[key],
-                          onChangeSorting: (newSort?: Sorting) =>
-                              setSorting((_) => {
-                                  let newState = { ...initialSorting };
-                                  newState[key] = newSort;
-                                  return newState;
-                              }),
-                      }
-                    : base;
+        // If the column needs a sort, add the `sorting` state and the `onChangeSorting` mutating function.
+        return canSort
+          ? {
+              ...base,
+              sorting: sorting[key],
+              onChangeSorting: (newSort?: Sorting) =>
+                setSorting((_) => {
+                  let newState = { ...initialSorting };
+                  newState[key] = newSort;
+                  return newState;
+                }),
             }
-        ),
-        sorting: sorting,
-    };
+          : base;
+      }
+    ),
+    sorting: sorting,
+  };
 }

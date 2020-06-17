@@ -7,22 +7,22 @@ import ListGroup from "react-bootstrap/ListGroup";
 import dayjs from "dayjs";
 
 const totalNumberOfVotes = (poll) =>
-    poll.choices.reduce(
-        (total, choice) =>
-            choice.numberOfVotes ? total + choice.numberOfVotes : total,
-        0
-    );
+  poll.choices.reduce(
+    (total, choice) =>
+      choice.numberOfVotes ? total + choice.numberOfVotes : total,
+    0
+  );
 
 const getColor = (
-    numberOfVotes: number,
-    totalVotes: number
+  numberOfVotes: number,
+  totalVotes: number
 ): "success" | "warning" | "danger" => {
-    if (numberOfVotes > totalVotes / 2) {
-        return "success";
-    } else if (numberOfVotes > totalVotes / 3) {
-        return "warning";
-    }
-    return "danger";
+  if (numberOfVotes > totalVotes / 2) {
+    return "success";
+  } else if (numberOfVotes > totalVotes / 3) {
+    return "warning";
+  }
+  return "danger";
 };
 
 /**
@@ -32,71 +32,64 @@ const getColor = (
  * rank of the choice.
  */
 export const PollResults = ({ poll }: { poll: Poll }) => (
-    <Card>
-        <Card.Header>
-            <Card.Title as="h3">{poll.question}</Card.Title>
-        </Card.Header>
-        <Card.Body>
-            <Card.Subtitle className="text-left">
-                <em>
-                    {poll.publicationDate &&
-                        dayjs(poll.publicationDate).format("DD/MM/YYYY")}{" "}
-                    (
-                    {`${totalNumberOfVotes(poll)} ${decidePlural(
-                        totalNumberOfVotes(poll),
-                        "vote",
-                        "votes"
-                    )}`}
-                    )
-                </em>
-            </Card.Subtitle>
+  <Card>
+    <Card.Header>
+      <Card.Title as="h3">{poll.question}</Card.Title>
+    </Card.Header>
+    <Card.Body>
+      <Card.Subtitle className="text-left">
+        <em>
+          {poll.publicationDate &&
+            dayjs(poll.publicationDate).format("DD/MM/YYYY")}{" "}
+          (
+          {`${totalNumberOfVotes(poll)} ${decidePlural(
+            totalNumberOfVotes(poll),
+            "vote",
+            "votes"
+          )}`}
+          )
+        </em>
+      </Card.Subtitle>
 
-            <ListGroup>
-                {poll.choices
-                    // Sort by descending number of votes.
-                    .sort(
-                        (a, b) =>
-                            Number(b.numberOfVotes) - Number(a.numberOfVotes)
-                    )
-                    .map((choice) => {
-                        if (choice.numberOfVotes !== undefined) {
-                            return (
-                                <ListGroup.Item
-                                    key={choice.id}
-                                    className="border-0"
-                                >
-                                    <div className="clearfix">
-                                        <div className="float-left">
-                                            <strong>{choice.text}</strong>
-                                        </div>
-                                        <div className="float-right text-muted">
-                                            <small>
-                                                {Number(
-                                                    (100 *
-                                                        choice.numberOfVotes) /
-                                                        totalNumberOfVotes(poll)
-                                                ).toFixed(1)}{" "}
-                                                %
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <ProgressBar
-                                        className="progress-sm"
-                                        now={choice.numberOfVotes}
-                                        min={0}
-                                        max={totalNumberOfVotes(poll)}
-                                        variant={getColor(
-                                            choice.numberOfVotes,
-                                            totalNumberOfVotes(poll)
-                                        )}
-                                    />
-                                </ListGroup.Item>
-                            );
-                        } else {
-                            return <></>;
-                        }
-                    })}
-            </ListGroup>
-        </Card.Body>
-    </Card>
+      <ListGroup>
+        {poll.choices
+          // Sort by descending number of votes.
+          .sort((a, b) => Number(b.numberOfVotes) - Number(a.numberOfVotes))
+          .map((choice) => {
+            if (choice.numberOfVotes !== undefined) {
+              return (
+                <ListGroup.Item key={choice.id} className="border-0">
+                  <div className="clearfix">
+                    <div className="float-left">
+                      <strong>{choice.text}</strong>
+                    </div>
+                    <div className="float-right text-muted">
+                      <small>
+                        {Number(
+                          (100 * choice.numberOfVotes) /
+                            totalNumberOfVotes(poll)
+                        ).toFixed(1)}{" "}
+                        %
+                      </small>
+                    </div>
+                  </div>
+                  <ProgressBar
+                    className="progress-sm"
+                    now={choice.numberOfVotes}
+                    min={0}
+                    max={totalNumberOfVotes(poll)}
+                    variant={getColor(
+                      choice.numberOfVotes,
+                      totalNumberOfVotes(poll)
+                    )}
+                  />
+                </ListGroup.Item>
+              );
+            } else {
+              return <></>;
+            }
+          })}
+      </ListGroup>
+    </Card.Body>
+  </Card>
 );

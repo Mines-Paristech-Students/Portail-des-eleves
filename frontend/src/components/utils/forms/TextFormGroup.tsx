@@ -52,39 +52,39 @@ import { TextField, TextFieldProps } from "./TextField";
  * @param props passed to `TextField`.
  */
 export const TextFormGroup = ({
-    name,
-    label,
-    help,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    iconLeft,
-    iconRight,
-    textLeft,
-    textRight,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    ...props
+  name,
+  label,
+  help,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  iconLeft,
+  iconRight,
+  textLeft,
+  textRight,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  ...props
 }: TextFieldProps & BaseFormGroupProps) => (
-    <BaseFormGroup
-        name={name}
-        label={label}
-        help={help}
-        feedback={feedback}
-        feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-        formGroupProps={formGroupProps}
-        labelProps={labelProps}
-        feedbackProps={feedbackProps}
-    >
-        <TextField
-            name={name}
-            feedback={feedback}
-            feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-            iconLeft={iconLeft}
-            iconRight={iconRight}
-            textLeft={textLeft}
-            textRight={textRight}
-            {...props}
-        />
-    </BaseFormGroup>
+  <BaseFormGroup
+    name={name}
+    label={label}
+    help={help}
+    feedback={feedback}
+    feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+    formGroupProps={formGroupProps}
+    labelProps={labelProps}
+    feedbackProps={feedbackProps}
+  >
+    <TextField
+      name={name}
+      feedback={feedback}
+      feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+      iconLeft={iconLeft}
+      iconRight={iconRight}
+      textLeft={textLeft}
+      textRight={textRight}
+      {...props}
+    />
+  </BaseFormGroup>
 );

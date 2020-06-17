@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
 
 type UrlParam =
-    | undefined
-    | boolean
-    | number
-    | string
-    | (boolean | number | string)[]
-    | { [key: string]: UrlParam };
+  | undefined
+  | boolean
+  | number
+  | string
+  | (boolean | number | string)[]
+  | { [key: string]: UrlParam };
 
 /**
  * Transforms an object into URL parameters. The returned string joins the parameters found in the object with '&'
@@ -38,30 +38,30 @@ type UrlParam =
  * ```
  */
 export const toUrlParams = (parameters: { [key: string]: UrlParam }): string =>
-    "?" + toUrlParamsAux(parameters);
+  "?" + toUrlParamsAux(parameters);
 
 const toUrlParamsAux = (
-    parameters: {
-        [key: string]: UrlParam;
-    },
-    keyPrefix = ""
+  parameters: {
+    [key: string]: UrlParam;
+  },
+  keyPrefix = ""
 ) =>
-    // Iterate through the keys.
-    Object.getOwnPropertyNames(parameters)
-        .map((key) => {
-            const value = parameters[key];
+  // Iterate through the keys.
+  Object.getOwnPropertyNames(parameters)
+    .map((key) => {
+      const value = parameters[key];
 
-            return value === undefined
-                ? ""
-                : Array.isArray(value)
-                ? // Iterate through the array.
-                  value.map((v) => `${keyPrefix + key}=${v}`).join("&")
-                : typeof value === "object"
-                ? // Recursive call with a new prefix.
-                  toUrlParamsAux(value, keyPrefix + key + "__")
-                : `${keyPrefix + key}=${value}`;
-        })
-        .join("&");
+      return value === undefined
+        ? ""
+        : Array.isArray(value)
+        ? // Iterate through the array.
+          value.map((v) => `${keyPrefix + key}=${v}`).join("&")
+        : typeof value === "object"
+        ? // Recursive call with a new prefix.
+          toUrlParamsAux(value, keyPrefix + key + "__")
+        : `${keyPrefix + key}=${value}`;
+    })
+    .join("&");
 
 /**
  * Format a date object for it to be used in `toUrlParams`.
@@ -73,24 +73,22 @@ const toUrlParamsAux = (
  * each key.
  */
 export const castDatesToUrlParam = (
-    dates: {
-        [key: string]: Date | undefined;
-    },
-    format: string | { [key: string]: string } = "YYYY-MM-DD"
+  dates: {
+    [key: string]: Date | undefined;
+  },
+  format: string | { [key: string]: string } = "YYYY-MM-DD"
 ): { [key: string]: UrlParam } => {
-    let r = {};
+  let r = {};
 
-    if (typeof format === "object") {
-        for (let key of Object.getOwnPropertyNames(dates)) {
-            r[key] = dates[key]
-                ? dayjs(dates[key]).format(format[key])
-                : undefined;
-        }
-    } else {
-        for (let key of Object.getOwnPropertyNames(dates)) {
-            r[key] = dates[key] ? dayjs(dates[key]).format(format) : undefined;
-        }
+  if (typeof format === "object") {
+    for (let key of Object.getOwnPropertyNames(dates)) {
+      r[key] = dates[key] ? dayjs(dates[key]).format(format[key]) : undefined;
     }
+  } else {
+    for (let key of Object.getOwnPropertyNames(dates)) {
+      r[key] = dates[key] ? dayjs(dates[key]).format(format) : undefined;
+    }
+  }
 
-    return r;
+  return r;
 };

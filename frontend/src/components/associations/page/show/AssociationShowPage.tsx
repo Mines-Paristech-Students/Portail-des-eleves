@@ -8,19 +8,19 @@ import Container from "react-bootstrap/Container";
 import { AssociationPageCard } from "./AssociationPageCard";
 
 export const AssociationShowPage = ({ association }) => {
-    const { pageId } = useParams<{ pageId: string }>();
-    const { data: page, status, error } = useBetterQuery<Page>(
-        ["page.get", pageId],
-        api.pages.get
-    );
+  const { pageId } = useParams<{ pageId: string }>();
+  const { data: page, status, error } = useBetterQuery<Page>(
+    ["page.get", pageId],
+    api.pages.get
+  );
 
-    return status === "loading" ? (
-        <LoadingAssociation />
-    ) : status === "error" ? (
-        <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
-    ) : page ? (
-        <Container className="mt-4">
-            <AssociationPageCard association={association} page={page} />
-        </Container>
-    ) : null;
+  return status === "loading" ? (
+    <LoadingAssociation />
+  ) : status === "error" ? (
+    <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
+  ) : page ? (
+    <Container className="mt-4">
+      <AssociationPageCard association={association} page={page} />
+    </Container>
+  ) : null;
 };

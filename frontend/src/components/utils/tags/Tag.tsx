@@ -13,48 +13,44 @@ import { tablerColors } from "../../../utils/colors";
  * @param additionalClassNames
  */
 export const Tag = ({
-    color = "",
-    tag = "",
-    addon = "",
-    tooltip = "",
-    collapsed = false,
-    additionalClassNames = "",
+  color = "",
+  tag = "",
+  addon = "",
+  tooltip = "",
+  collapsed = false,
+  additionalClassNames = "",
 }) => {
-    if (color === "") {
-        color = tablerColors[hashCode(tag) % tablerColors.length];
-    }
+  if (color === "") {
+    color = tablerColors[hashCode(tag) % tablerColors.length];
+  }
 
-    if (collapsed) {
-        tooltip = tag;
-        tag = addon;
-        addon = "";
-    }
+  if (collapsed) {
+    tooltip = tag;
+    tag = addon;
+    addon = "";
+  }
 
-    let className = "mr-2 tag tag-" + color + " " + additionalClassNames;
-    let tagElement = (
-        <div className={className}>
-            {tag}
-            {addon.length !== 0 ? (
-                <span className="tag-addon">{addon}</span>
-            ) : null}
-        </div>
+  let className = "mr-2 tag tag-" + color + " " + additionalClassNames;
+  let tagElement = (
+    <div className={className}>
+      {tag}
+      {addon.length !== 0 ? <span className="tag-addon">{addon}</span> : null}
+    </div>
+  );
+
+  if (tooltip.length > 0) {
+    return (
+      <OverlayTrigger
+        key={color + addon + tooltip + tag}
+        placement={"bottom"}
+        overlay={
+          <Tooltip id={color + addon + tooltip + tag}>{tooltip}</Tooltip>
+        }
+      >
+        {tagElement}
+      </OverlayTrigger>
     );
-
-    if (tooltip.length > 0) {
-        return (
-            <OverlayTrigger
-                key={color + addon + tooltip + tag}
-                placement={"bottom"}
-                overlay={
-                    <Tooltip id={color + addon + tooltip + tag}>
-                        {tooltip}
-                    </Tooltip>
-                }
-            >
-                {tagElement}
-            </OverlayTrigger>
-        );
-    } else {
-        return tagElement;
-    }
+  } else {
+    return tagElement;
+  }
 };

@@ -1,7 +1,7 @@
 import {
-    api,
-    PaginatedResponse,
-    useBetterQuery,
+  api,
+  PaginatedResponse,
+  useBetterQuery,
 } from "../../../../services/apiService";
 import { Tag as TagModel } from "../../../../models/tag";
 import { tablerColors } from "../../../../utils/colors";
@@ -12,30 +12,28 @@ import { Tag } from "../../../utils/tags/Tag";
 import React from "react";
 
 export const TagList = ({ namespace }) => {
-    const { data, status, error } = useBetterQuery<
-        PaginatedResponse<TagModel[]>
-    >(
-        ["namespace.tags.list", { namespace: namespace.id, page_size: 1000 }],
-        api.tags.list
-    );
+  const { data, status, error } = useBetterQuery<PaginatedResponse<TagModel[]>>(
+    ["namespace.tags.list", { namespace: namespace.id, page_size: 1000 }],
+    api.tags.list
+  );
 
-    const color = tablerColors[hashCode(namespace.name) % tablerColors.length];
+  const color = tablerColors[hashCode(namespace.name) % tablerColors.length];
 
-    return (
-        <>
-            {status === "loading" ? (
-                <Loading />
-            ) : status === "error" ? (
-                <Error detail={error} />
-            ) : (data?.results.length || 0) > 0 ? (
-                data?.results.map((tag) => (
-                    <span key={tag.id}>
-                        <Tag color={color} tag={tag.value} />
-                    </span>
-                ))
-            ) : (
-                <em className={"text-muted"}>Aucun tag</em>
-            )}
-        </>
-    );
+  return (
+    <>
+      {status === "loading" ? (
+        <Loading />
+      ) : status === "error" ? (
+        <Error detail={error} />
+      ) : (data?.results.length || 0) > 0 ? (
+        data?.results.map((tag) => (
+          <span key={tag.id}>
+            <Tag color={color} tag={tag.value} />
+          </span>
+        ))
+      ) : (
+        <em className={"text-muted"}>Aucun tag</em>
+      )}
+    </>
+  );
 };

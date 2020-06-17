@@ -3,13 +3,13 @@ import { FieldAttributes, useField } from "formik";
 import Form from "react-bootstrap/Form";
 
 export type TextFieldProps = {
-    name: string;
-    feedback?: boolean;
-    feedbackOnTouchedOnly?: boolean;
-    iconLeft?: string;
-    iconRight?: string;
-    textLeft?: string;
-    textRight?: string;
+  name: string;
+  feedback?: boolean;
+  feedbackOnTouchedOnly?: boolean;
+  iconLeft?: string;
+  iconRight?: string;
+  textLeft?: string;
+  textRight?: string;
 } & FieldAttributes<any>;
 
 /**
@@ -31,58 +31,56 @@ export type TextFieldProps = {
  * @param props passed to `useField` and `Form.Control`.
  */
 export const TextField = ({
-    name,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    iconLeft,
-    iconRight,
-    textLeft,
-    textRight,
-    ...props
+  name,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  iconLeft,
+  iconRight,
+  textLeft,
+  textRight,
+  ...props
 }: TextFieldProps) => {
-    const [field, meta] = useField({ name: name, ...props });
+  const [field, meta] = useField({ name: name, ...props });
 
-    const control = (
-        <Form.Control
-            {...field}
-            {...props}
-            isInvalid={
-                feedback &&
-                (meta.touched || !feedbackOnTouchedOnly) &&
-                !!meta.error
-            }
-        />
-    );
+  const control = (
+    <Form.Control
+      {...field}
+      {...props}
+      isInvalid={
+        feedback && (meta.touched || !feedbackOnTouchedOnly) && !!meta.error
+      }
+    />
+  );
 
-    return iconLeft || iconRight ? (
-        <div className="input-icon">
-            {iconLeft && (
-                <span className="input-icon-addon">
-                    <i className={`fe fe-${iconLeft}`} />
-                </span>
-            )}
-            {control}
-            {iconRight && (
-                <span className="input-icon-addon">
-                    <i className={`fe fe-${iconRight}`} />
-                </span>
-            )}
+  return iconLeft || iconRight ? (
+    <div className="input-icon">
+      {iconLeft && (
+        <span className="input-icon-addon">
+          <i className={`fe fe-${iconLeft}`} />
+        </span>
+      )}
+      {control}
+      {iconRight && (
+        <span className="input-icon-addon">
+          <i className={`fe fe-${iconRight}`} />
+        </span>
+      )}
+    </div>
+  ) : textLeft || textRight ? (
+    <div className="input-group">
+      {textLeft && (
+        <div className="input-group-prepend">
+          <span className="input-group-text">{textLeft}</span>
         </div>
-    ) : textLeft || textRight ? (
-        <div className="input-group">
-            {textLeft && (
-                <div className="input-group-prepend">
-                    <span className="input-group-text">{textLeft}</span>
-                </div>
-            )}
-            {control}
-            {textRight && (
-                <div className="input-group-append">
-                    <span className="input-group-text">{textRight}</span>
-                </div>
-            )}
+      )}
+      {control}
+      {textRight && (
+        <div className="input-group-append">
+          <span className="input-group-text">{textRight}</span>
         </div>
-    ) : (
-        control
-    );
+      )}
+    </div>
+  ) : (
+    control
+  );
 };

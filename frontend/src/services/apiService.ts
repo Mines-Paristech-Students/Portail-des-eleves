@@ -1,10 +1,10 @@
 import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
 import {
-    PaginatedQueryResult,
-    QueryResult,
-    usePaginatedQuery,
-    useQuery,
+  PaginatedQueryResult,
+  QueryResult,
+  usePaginatedQuery,
+  useQuery,
 } from "react-query";
 import { events } from "./api/events";
 import { pages } from "./api/pages";
@@ -27,46 +27,46 @@ import { loanables } from "./api/library/loanable";
 const baseApi = "http://localhost:8000/api/v1";
 
 export const apiService = applyConverters(
-    Axios.create({
-        withCredentials: true,
-        baseURL: baseApi,
-    })
+  Axios.create({
+    withCredentials: true,
+    baseURL: baseApi,
+  })
 );
 
 /**
  * Add a callback function to the promise, called on success, which returns the `data` of the `AxiosResponse`.
  */
 export function unwrap<T>(promise): Promise<T> {
-    return promise.then((response: AxiosResponse<T>) => {
-        return response.data;
-    });
+  return promise.then((response: AxiosResponse<T>) => {
+    return response.data;
+  });
 }
 
 export const api = {
-    associations: associations,
-    medias: medias,
-    news: news,
-    pages: pages,
+  associations: associations,
+  medias: medias,
+  news: news,
+  pages: pages,
 
-    events: events,
+  events: events,
 
-    loanables: loanables,
+  loanables: loanables,
 
-    marketplace: marketplace,
-    products: products,
-    transactions: transactions,
-    fundings: fundings,
+  marketplace: marketplace,
+  products: products,
+  transactions: transactions,
+  fundings: fundings,
 
-    roles: roles,
+  roles: roles,
 
-    polls: polls,
+  polls: polls,
 
-    tags: tags,
-    namespaces: namespaces,
+  tags: tags,
+  namespaces: namespaces,
 
-    jwt: jwt,
-    users: users,
-    profile: profile,
+  jwt: jwt,
+  users: users,
+  profile: profile,
 };
 
 /**
@@ -106,22 +106,22 @@ export const api = {
  * @return an object `{ status, data, error }`.
  */
 export function useBetterQuery<T>(
-    key: false | any[],
-    fetchFunction: (...params: any) => any,
-    config?: any
+  key: false | any[],
+  fetchFunction: (...params: any) => any,
+  config?: any
 ): QueryResult<T> {
-    return useQuery<T, any, any>(
-        key,
-        (_, ...params) => fetchFunction(...params),
-        config
-    );
+  return useQuery<T, any, any>(
+    key,
+    (_, ...params) => fetchFunction(...params),
+    config
+  );
 }
 
 export type PaginatedResponse<T> = {
-    count: number;
-    next: string;
-    previous: string;
-    results: T;
+  count: number;
+  next: string;
+  previous: string;
+  results: T;
 };
 
 /**
@@ -136,15 +136,15 @@ export type PaginatedResponse<T> = {
  * @return an object `{ status, data, error }`.
  */
 export function useBetterPaginatedQuery<T>(
-    key: false | any[],
-    fetchFunction: (...params: any) => any,
-    config?: any
+  key: false | any[],
+  fetchFunction: (...params: any) => any,
+  config?: any
 ): PaginatedQueryResult<T> {
-    return usePaginatedQuery<T, any, any>(
-        key,
-        (_, ...params) => {
-            return fetchFunction(...params);
-        },
-        config
-    );
+  return usePaginatedQuery<T, any, any>(
+    key,
+    (_, ...params) => {
+      return fetchFunction(...params);
+    },
+    config
+  );
 }
