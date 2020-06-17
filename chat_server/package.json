@@ -32,5 +32,4 @@
     "socket.io": "^2.3.0",
     "socketio-jwt": "^4.5.0"
   }
-  }
 }
