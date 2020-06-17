@@ -1,11 +1,7 @@
 import { Poll } from "../../models/polls";
 import { AxiosResponse } from "axios";
-import {
-    apiService,
-    PaginatedResponse,
-    toUrlParams,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
+import { toUrlParams } from "../../utils/urlParam";
 
 /**
  * Parse the `publicationDate` and `creationDateTime` JSON field.
@@ -33,34 +29,15 @@ export type ListPollsApiParameters = {
     page_size?: number;
 };
 
-const list = (parameters: ListPollsApiParameters, page = 1) =>
-    unwrap<PaginatedResponse<Poll[]>>(
-        apiService
-            .get<PaginatedResponse<Poll[]>>(
-                `/polls/${toUrlParams({ ...parameters, page: page })}`
-            )
-            .then(parseDates)
-    );
-
 export const polls = {
-    list: list,
-    /**
-     * List the polls which are still open (to which people can vote).
-     */
-    listCurrent: (page = 1) =>
-        list({
-            is_active: true,
-            page: page,
-        }),
-    /**
-     * List the polls which are now closed (but were published before).
-     */
-    listOld: (page = 1) =>
-        list({
-            is_active: false,
-            is_published: true,
-            page: page,
-        }),
+    list: (parameters: ListPollsApiParameters, page = 1) =>
+        unwrap<PaginatedResponse<Poll[]>>(
+            apiService
+                .get<PaginatedResponse<Poll[]>>(
+                    `/polls/${toUrlParams({ ...parameters, page: page })}`
+                )
+                .then(parseDates)
+        ),
     get: (pollId) => unwrap<Poll>(apiService.get(`/polls/${pollId}/`)),
     create: ({
         data,

@@ -1,6 +1,10 @@
 /*
-The a elements are a too close from each other in an `AvatarList`, this fixes it.
+The a elements are a bit too close from each other in an `AvatarList`.
  */
 .avatar-list .user-avatar-link {
     margin-right: 0.5rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

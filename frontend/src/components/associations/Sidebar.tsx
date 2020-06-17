@@ -28,6 +28,13 @@ export const AssociationSidebar = ({ association }) => {
                 />
                 <AddPageItem association={association} />
                 <SidebarItem
+                    icon={"book"}
+                    to={`/associations/${association.id}/bibliotheque`}
+                    exact={false}
+                >
+                    Bibliothèque
+                </SidebarItem>
+                <SidebarItem
                     icon={"calendar"}
                     to={`/associations/${association.id}/evenements`}
                     exact={false}
@@ -48,6 +55,13 @@ export const AssociationSidebar = ({ association }) => {
                 >
                     Magasin
                 </SidebarItem>
+                <SidebarItem
+                    icon={"users"}
+                    to={`/associations/${association.id}/membres`}
+                    exact={false}
+                >
+                    Membres
+                </SidebarItem>
                 {association.myRole.permissions?.includes("administration") && (
                     <SidebarItem
                         icon={"settings"}
@@ -60,6 +74,8 @@ export const AssociationSidebar = ({ association }) => {
                     <MarketSubNavbar association={association} />
                 )}
                 <EventSubSidebar association={association} />
+                <LibrarySubSidebar association={association} />
+                <RolesSubSidebar association={association} />
             </Sidebar>
         );
     }
@@ -86,7 +102,7 @@ const AddPageItem = ({ association }) =>
     association.myRole.permissions?.includes("page") ? (
         <SidebarItem
             icon={"plus"}
-            to={`/associations/${association.id}/pages/nouvelle`}
+            to={`/associations/${association.id}/pages/creer`}
         >
             Ajouter une page
         </SidebarItem>
@@ -117,6 +133,31 @@ const EventSubSidebar = ({ association }: { association: Association }) => {
                     to={`/associations/${association.id}/evenements/creer`}
                 >
                     Nouveau
+                </SidebarItem>
+            )}
+        </>
+    ) : null;
+};
+
+const LibrarySubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/bibliotheque`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"home"}
+                to={`/associations/${association.id}/bibliotheque`}
+            >
+                Accueil
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("library") && (
+                <SidebarItem
+                    icon={"settings"}
+                    to={`/associations/${association.id}/bibliotheque/gerer`}
+                >
+                    Gestion
                 </SidebarItem>
             )}
         </>
@@ -154,6 +195,37 @@ const MarketSubNavbar = ({ association }) => {
             >
                 Produits
             </SidebarItem>
+        </>
+    ) : null;
+};
+
+const RolesSubSidebar = ({ association }: { association: Association }) => {
+    const location = useLocation();
+    return location.pathname.startsWith(
+        `/associations/${association.id}/membres`
+    ) ? (
+        <>
+            <SidebarSpace />
+            <SidebarItem
+                icon={"users"}
+                to={`/associations/${association.id}/membres`}
+            >
+                Actuels
+            </SidebarItem>
+            <SidebarItem
+                icon={"inbox"}
+                to={`/associations/${association.id}/membres/anciens`}
+            >
+                Anciens
+            </SidebarItem>
+            {association.myRole?.permissions?.includes("administration") && (
+                <SidebarItem
+                    icon={"settings"}
+                    to={`/associations/${association.id}/membres/administration`}
+                >
+                    Gestion
+                </SidebarItem>
+            )}
         </>
     ) : null;
 };

@@ -1,19 +1,23 @@
-import django_filters
-from rest_framework import status
+import magic
+from django.db.models import Min, Max
 from rest_framework import viewsets
-from rest_framework.parsers import MultiPartParser
+from rest_framework.decorators import api_view
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 
-from associations.models import Media
+from associations.models import Media, Association
 from associations.permissions import CanEditMedia
-from associations.serializers.media import MediaSerializer, SubmitMediaSerializer
+from associations.serializers.media import MediaSerializer
 from tags.filters.taggable import TaggableFilter
 
 
 class MediaFilter(TaggableFilter):
     class Meta:
         model = Media
-        fields = ("association",)
+        fields = {
+            "association": ["exact"],
+            "uploaded_on": ["exact", "year", "month", "year__in", "month__in"],
+        }
 
 
 class MediaViewSet(viewsets.ModelViewSet):
@@ -21,17 +25,35 @@ class MediaViewSet(viewsets.ModelViewSet):
     serializer_class = MediaSerializer
 
     filter_class = MediaFilter
-    parser_classes = (MultiPartParser,)
+    parser_classes = (MultiPartParser, JSONParser)
     permission_classes = (CanEditMedia,)
 
-    def create(self, request, *args, **kwargs):
-        serializer = SubmitMediaSerializer(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+    def perform_create(self, serializer):
+        association = Association.objects.get(pk=self.request.data["association"])
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        media = serializer.save(
+            uploaded_by=self.request.user,
+            association=association,
+            file=self.request.data["file"],
         )
+
+        try:
+            mime = magic.Magic(mime=True)
+            media.mimetype = mime.from_file(media.file.path)
+            media.save()
+        except FileNotFoundError as e:
+            media.delete()
+            raise e
+
+
+@api_view(["GET"])
+def get_media_uploaded_on_bounds(request, association_pk):
+    dates = (
+        Media.objects.filter(association=association_pk)
+        .values_list("uploaded_on")
+        .aggregate(Min("uploaded_on"), Max("uploaded_on"))
+    )
+
+    return Response(
+        {"min": dates["uploaded_on__min"], "max": dates["uploaded_on__max"]}
+    )

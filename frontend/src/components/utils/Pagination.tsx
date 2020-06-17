@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useBetterPaginatedQuery } from "../../services/apiService";
-import { Pagination as BoostrapPagination } from "react-bootstrap";
+import { Pagination as BootstrapPagination } from "react-bootstrap";
 import { Loading } from "./Loading";
 import { Error } from "./Error";
 import { useURLState } from "../../utils/useURLState";
@@ -54,9 +54,13 @@ export const Pagination = ({
     const [page, setPage] = useURLState("page", 1);
     const [maxPage, setMaxPage] = useState(1);
 
-    // We have to use this "temporized" field to make sure we always update the
-    // page before the parameters, in  order to avoid unnecessary requests
-    // which might end up in 404
+    // Before propagating a change of `apiKey`, we reset the page to 1.
+    // Indeed, if the `apiKey` induces a change of the maximum available page
+    // (e.g. if `apiKey` contains a filter), we don't want the “old” page prop
+    // to exceed this maximum.
+    // However, changing the page may trigger a rerendering of the component
+    // using `Pagination`, which, in turn, may change the `apiKey` prop, losing the
+    // initial key. Hence we save this “initial” key in `temporizedApiKey`.
     const [temporizedApiKey, setTemporizedApiKey] = useState<any[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
     useEffect(() => {
@@ -149,47 +153,47 @@ const PaginationControl = ({ page, maxPage, setPage, ...props }) => {
     maxProposedPage = Math.min(maxPage, maxProposedPage);
 
     return (
-        <BoostrapPagination {...props}>
-            <BoostrapPagination.Prev
+        <BootstrapPagination {...props}>
+            <BootstrapPagination.Prev
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
             />
-            <BoostrapPagination.Item
+            <BootstrapPagination.Item
                 onClick={() => setPage(1)}
                 key={1}
                 active={1 === page}
             >
                 1
-            </BoostrapPagination.Item>
+            </BootstrapPagination.Item>
             {minProposedPage > 2 ? (
-                <BoostrapPagination.Ellipsis disabled />
+                <BootstrapPagination.Ellipsis disabled />
             ) : null}
             {Array.from(
                 { length: maxProposedPage - minProposedPage },
                 (_, index) => index + minProposedPage
             ).map((i) => (
-                <BoostrapPagination.Item
+                <BootstrapPagination.Item
                     onClick={() => setPage(i)}
                     key={i}
                     active={i === page}
                 >
                     {i}
-                </BoostrapPagination.Item>
+                </BootstrapPagination.Item>
             ))}
             {maxProposedPage < maxPage ? (
-                <BoostrapPagination.Ellipsis disabled />
+                <BootstrapPagination.Ellipsis disabled />
             ) : null}
-            <BoostrapPagination.Item
+            <BootstrapPagination.Item
                 onClick={() => setPage(maxPage)}
                 key={maxPage}
                 active={maxPage === page}
             >
                 {maxPage}
-            </BoostrapPagination.Item>
-            <BoostrapPagination.Next
+            </BootstrapPagination.Item>
+            <BootstrapPagination.Next
                 disabled={page === maxPage}
                 onClick={() => setPage(page + 1)}
             />
-        </BoostrapPagination>
+        </BootstrapPagination>
     );
 };

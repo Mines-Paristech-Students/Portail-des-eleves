@@ -2,21 +2,24 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import { Col } from "react-bootstrap";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
-import { SidebarSpace } from "../../utils/sidebar/Sidebar";
+import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
+import { isImageMime } from "../../../utils/mime";
+import "./list.css";
+import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
 
 export const AssociationFilesystemList = ({ association }) => {
     const associationId = association.id;
     const history = useHistory();
 
     const [tagParams, setTagParams] = useState({});
+    const [dateParams, setDateParams] = useState({});
+
     return (
         <AssociationLayout
             association={association}
@@ -32,6 +35,11 @@ export const AssociationFilesystemList = ({ association }) => {
                         }}
                         setTagParams={setTagParams}
                     />
+                    <SidebarSeparator />
+                    <SidebarDateSelector
+                        association={association}
+                        setParams={setDateParams}
+                    />
                 </>
             }
         >
@@ -39,50 +47,70 @@ export const AssociationFilesystemList = ({ association }) => {
                 apiKey={[
                     "medias.list",
                     associationId,
-                    tagParams,
+                    { page_size: 30, ...tagParams, ...dateParams },
                 ]}
                 apiMethod={api.medias.list}
                 render={(medias, paginationControl) => (
                     <>
-                        {association.myRole.permissions?.includes("media") && (
-                            <Link
-                                to={`/associations/${association.id}/fichiers/televerser`}
-                                className={"btn btn-success float-right mt-5"}
-                            >
-                                <i className="fe fe-upload" />
-                                Ajouter des fichiers
-                            </Link>
-                        )}
-                        <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-                        <Row>
-                            {medias.map((media) => {
-                                return (
-                                    <Col md={4} key={media.id}>
-                                        <Card
-                                            onClick={() =>
-                                                history.push(
-                                                    `/associations/${association.id}/fichiers/${media.id}/`
-                                                )
-                                            }
+                        <div className="d-flex align-items-center">
+                            <PageTitle className={"mt-6"}>Fichiers</PageTitle>
+                            {association.myRole.permissions?.includes(
+                                "media"
+                            ) && (
+                                <Link
+                                    to={`/associations/${association.id}/fichiers/televerser`}
+                                    className={
+                                        "btn btn-success btn-sm float-right ml-auto"
+                                    }
+                                >
+                                    <span className="fe fe-upload" /> Ajouter
+                                    des fichiers
+                                </Link>
+                            )}
+                        </div>
+
+                        <div className={"card-columns"}>
+                            {medias.map((media) => (
+                                <Card
+                                    key={media.id}
+                                    onClick={() =>
+                                        history.push(
+                                            `/associations/${association.id}/fichiers/${media.id}/`
+                                        )
+                                    }
+                                >
+                                    {isImageMime(media.mimetype) && (
+                                        <img src={media.url} alt={media.name} />
+                                    )}
+                                    <Card.Body>
+                                        <h4 className={"m-0"}>{media.name}</h4>
+                                        <p className="text-muted">
+                                            {media.description}
+                                        </p>
+                                    </Card.Body>
+
+                                    {media.tags.length > 0 && (
+                                        <Card.Footer
+                                            style={{
+                                                backgroundColor:
+                                                    "rgba(0, 0, 0, 0.03)",
+                                            }}
                                         >
-                                            <Card.Body>
-                                                <h4>{media.name}</h4>
-                                                <p className="text-muted">
-                                                    {media.description}
-                                                </p>
+                                            <TagList
+                                                model={TaggableModel.Media}
+                                                instance={media}
+                                                collapsed={true}
+                                            />
+                                        </Card.Footer>
+                                    )}
+                                </Card>
+                            ))}
+                        </div>
+                        {paginationControl}
 
-                                                <TagList
-                                                    model={TaggableModel.Media}
-                                                    id={media.id}
-                                                    collapsed={true}
-                                                />
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                );
-                            })}
-
-                            {medias.length === 0 && (
+                        {medias.length === 0 &&
+                            (Object.entries(tagParams).length === 0 &&
+                            Object.entries(dateParams).length === 0 ? (
                                 <Instructions
                                     title={"Gestion des médias"}
                                     emoji={"🗂️"}
@@ -101,15 +129,11 @@ export const AssociationFilesystemList = ({ association }) => {
                                         "Revenez quand les responsables de l'association en auront ajouté !"
                                     )}
                                 </Instructions>
-                            )}
-                        </Row>
-                        {paginationControl}
-
-                        {medias.length === 0 && (
-                            <Card className="text-center lead">
-                                <Card.Body>Aucun fichier trouvé</Card.Body>
-                            </Card>
-                        )}
+                            ) : (
+                                <Card className="text-center lead">
+                                    <Card.Body>Aucun fichier trouvé</Card.Body>
+                                </Card>
+                            ))}
                     </>
                 )}
             />

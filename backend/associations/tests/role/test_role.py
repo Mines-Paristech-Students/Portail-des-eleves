@@ -37,6 +37,22 @@ class RoleTestCase(BaseRoleTestCase):
                 msg=f"{permission_name} property not found in Role but found in Role.PERMISSION_NAMES.",
             )
 
+    def test_expired_permission_is_not_active(self):
+        self.login("17simple")
+        res = self.retrieve(4)
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue(date.today() >= date.fromisoformat(res.data["end_date"]))
+        self.assertListEqual(res.data["permissions"], [])
+
+    def test_future_permission_is_not_active(self):
+        self.login("17simple")
+        res = self.retrieve(5)
+        self.assertStatusCode(res, 200)
+
+        self.assertTrue(date.today() < date.fromisoformat(res.data["start_date"]))
+        self.assertListEqual(res.data["permissions"], [])
+
     ########
     # LIST #
     ########
@@ -112,6 +128,7 @@ class RoleTestCase(BaseRoleTestCase):
         self.assertStatusCode(res, 201)
 
         last_role = Role.objects.order_by("-id")[0]
+
         for field, value in self.association_admin_create_role_data.items():
             compare_to = (
                 getattr(last_role, field).id
@@ -189,14 +206,8 @@ class RoleTestCase(BaseRoleTestCase):
         "role": "Piche",
         "rank": 42,
         "start_date": date(2014, 1, 1),
-        "end_date": date(2021, 1, 1),
-        "administration_permission": False,
-        "election_permission": True,
-        "event_permission": True,
-        "media_permission": True,
-        "library_permission": True,
-        "marketplace_permission": True,
-        "page_permission": True,
+        "end_date": date(2121, 1, 1),
+        "permissions": ["election", "event", "media", "library", "marketplace", "page"],
     }
 
     def test_if_not_association_admin_then_cannot_full_update(self):
@@ -235,7 +246,9 @@ class RoleTestCase(BaseRoleTestCase):
         role = Role.objects.get(pk=0)
         for field, value in self.full_update_role_data.items():
             if field != "id":  # Skip id 'coz equal ofc.
-                if field in self.GLOBAL_ADMIN_ALLOWED_FIELDS:
+                if field == "permissions":
+                    self.assertEqual(role.permissions, [])
+                elif field in self.GLOBAL_ADMIN_ALLOWED_FIELDS:
                     compare_to = (
                         getattr(role, field).id
                         if hasattr(getattr(role, field), "id")
@@ -296,13 +309,15 @@ class RoleTestCase(BaseRoleTestCase):
             {
                 "role": "Nouveau dictateur",
                 "rank": 0,
-                "administration_permission": True,
-                "election_permission": True,
-                "event_permission": True,
-                "media_permission": True,
-                "library_permission": True,
-                "marketplace_permission": True,
-                "page_permission": True,
+                "permissions": [
+                    "administration",
+                    "election",
+                    "event",
+                    "media",
+                    "library",
+                    "marketplace",
+                    "page",
+                ],
             },
         )
         self.assertStatusCode(res, 200)
@@ -316,9 +331,7 @@ class RoleTestCase(BaseRoleTestCase):
         # Check if 17member_biero can use its new administration permission.
         self.login("17member_biero")
 
-        res = self.update(
-            0, {"role": "Dictateur déchu", "administration_permission": False}
-        )
+        res = self.update(0, {"role": "Dictateur déchu", "permissions": []})
         self.assertStatusCode(res, 200)
         self.assertFalse(
             User.objects.get(pk="17admin_biero").get_role(biero).administration
@@ -326,7 +339,7 @@ class RoleTestCase(BaseRoleTestCase):
 
         # 17admin saves 17admin_biero.
         self.login("17admin")
-        res = self.update(0, {"administration_permission": True})
+        res = self.update(0, {"permissions": ["administration"]})
         self.assertStatusCode(res, 200)
         self.assertTrue(
             User.objects.get(pk="17admin_biero").get_role(biero).administration
@@ -340,7 +353,7 @@ class RoleTestCase(BaseRoleTestCase):
             {
                 "role": "TRAÎTRE",
                 "rank": 0,
-                "administration_permission": False,
+                "permissions": [],
                 "end_date": date(1900, 1, 1),
             },
         )

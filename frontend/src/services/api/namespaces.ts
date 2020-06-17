@@ -1,16 +1,15 @@
-import {
-    apiService,
-    PaginatedResponse,
-    toUrlParams,
-    unwrap,
-} from "../apiService";
+import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { Namespace } from "../../models/tag";
+import { toUrlParams } from "../../utils/urlParam";
 
 export const namespaces = {
-    list: (params) => {
+    list: (params, axiosConfig = {}) => {
         params["page_size"] = 1000;
         return unwrap<PaginatedResponse<Namespace[]>>(
-            apiService.get("/tags/namespaces/" + toUrlParams(params))
+            apiService.get(
+                "/tags/namespaces/" + toUrlParams(params),
+                axiosConfig
+            )
         );
     },
     create: ({ name, scoped_to_model, scoped_to_pk }) =>
@@ -24,5 +23,10 @@ export const namespaces = {
     delete: (namespaceId) =>
         unwrap<Namespace>(
             apiService.delete(`/tags/namespaces/${namespaceId}/`)
+        ),
+
+    save: (namespace) =>
+        unwrap<Namespace>(
+            apiService.patch(`/tags/namespaces/${namespace.id}/`, namespace)
         ),
 };

@@ -70,12 +70,6 @@ export const AssociationFilesystemEdit = ({ association }) => {
             >
                 {(formik) => (
                     <Form onSubmit={formik.handleSubmit}>
-                        <Button
-                            className={"btn-success float-right"}
-                            type="submit"
-                        >
-                            Sauvegarder
-                        </Button>
                         <PageTitle>
                             <Link
                                 to={`/associations/${association.id}/fichiers`}
@@ -105,15 +99,19 @@ export const AssociationFilesystemEdit = ({ association }) => {
                                 className={"form-control border-0"}
                                 placeholder={"Description"}
                                 onChange={formik.handleChange}
-                                value={formik.values.description}
+                                value={formik.values.description || ""}
                             />
-                            <Card.Footer>
-                                Mis en ligne le {media.uploadedOn}
-                            </Card.Footer>
                         </Card>
 
                         <Button
-                            className={"btn-danger float-right"}
+                            className={"btn-success float-right"}
+                            type="submit"
+                        >
+                            Sauvegarder
+                        </Button>
+
+                        <Button
+                            className={"btn-danger"}
                             onClick={() => deleteFile(media)}
                         >
                             Supprimer

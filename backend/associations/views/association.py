@@ -1,4 +1,9 @@
+from datetime import date
+
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from django_filters import DateTimeFromToRangeFilter
+from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
@@ -16,13 +21,39 @@ from associations.serializers import (
 from associations.serializers.association import AssociationLogoSerializer
 
 
+class RoleFilter(FilterSet):
+    start_date = DateTimeFromToRangeFilter()
+    end_date = DateTimeFromToRangeFilter()
+    is_active = CharFilter(method="filter_is_active")
+
+    class Meta:
+        model = Role
+        fields = ("start_date", "end_date", "user", "association", "is_active")
+
+    def filter_is_active(self, queryset, _, value):
+        condition = Q(start_date__lte=date.today()) & (
+            Q(end_date__isnull=True) | Q(end_date__gt=date.today())
+        )
+
+        if value.lower() == "true" or len(value) == 0:
+            return queryset.filter(condition)
+        else:
+            return queryset.exclude(condition)
+
+
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = (RolePermission,)
-    serializer_class = RoleSerializer
-
-    filter_fields = ("user", "association")
+    filterset_class = RoleFilter
+    ordering_fields = (
+        "user__first_name",
+        "user__last_name",
+        "role",
+        "rank",
+        "start_date",
+        "end_date",
+    )
 
     def get_write_role_serializer(self, association, *args, **kwargs):
         """Given an association, return the good WriteRoleSerializer, depending on the permissions of the user."""

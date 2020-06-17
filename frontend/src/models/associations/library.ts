@@ -3,9 +3,10 @@ import { User } from "../user";
 
 export enum LoanStatus {
     Accepted = "ACCEPTED",
-    Rejected = "REJECTED",
-    Cancelled = "CANCELLED",
     Borrowed = "BORROWED",
+    Cancelled = "CANCELLED",
+    Pending = "PENDING",
+    Rejected = "REJECTED",
     Returned = "RETURNED",
 }
 
@@ -14,22 +15,24 @@ export interface Loan {
     user: User;
     status: LoanStatus;
     loanable: Loanable;
-    expectedReturnDate: Date;
-    loanDate: Date;
-    realReturnDate: Date;
+    expectedReturnDate?: Date;
+    loanDate?: Date;
+    realReturnDate?: Date;
 }
 
 export interface Loanable {
     name: string;
-    description: string;
-    image: string;
-    comment: string;
+    description?: string;
+    image?: string;
+    comment?: string;
     library: Library;
+    status: "AVAILABLE" | "BORROWED";
+    expectedReturnDate?: Date;
 }
 
 export interface Library {
     id: string;
     enabled: boolean;
-    association: Association;
+    association: string;
     loanables: Loanable[];
 }

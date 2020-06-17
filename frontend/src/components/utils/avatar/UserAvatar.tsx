@@ -33,7 +33,7 @@ export const UserAvatar = ({
     linkClassName,
     avatarClassName,
     tooltip,
-    link = true,
+    link = false,
 }: UserAvatarProps) => {
     const avatar = (
         <Avatar
@@ -53,6 +53,8 @@ export const UserAvatar = ({
             {avatar}
         </Link>
     ) : (
-        avatar
+        <span className={`user-avatar-link ${linkClassName || ""}`}>
+            {avatar}
+        </span>
     );
 };
