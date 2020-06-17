@@ -36,7 +36,7 @@ const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
   },
   {
     key: "publicationDate",
-    render: (poll) => dayjs(poll.publicationDat).format("DD/MM/YYYY"),
+    render: (poll) => dayjs(poll.publicationDate).format("DD/MM/YYYY"),
     header: "Publication",
     canSort: true,
   },
