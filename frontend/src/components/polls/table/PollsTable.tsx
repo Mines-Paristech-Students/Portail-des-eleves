@@ -11,9 +11,9 @@ import { authService } from "../../../App";
 import { ForbiddenError } from "../../utils/ErrorPage";
 import { Pagination } from "../../utils/Pagination";
 import {
-    PollsTableFilter,
-    PollStateFilter,
-    pollStateFilterToApiParameter,
+  PollsTableFilter,
+  PollStateFilter,
+  pollStateFilterToApiParameter,
 } from "./PollsTableFilter";
 import { UserContext } from "../../../services/authService";
 import { Table, useColumns } from "../../utils/table/Table";
@@ -29,81 +29,79 @@ import { PageTitle } from "../../utils/PageTitle";
  * a function).
  */
 export const PollsTable = ({
-    adminVersion,
-    columnData,
+  adminVersion,
+  columnData,
 }: {
-    adminVersion: boolean;
-    columnData: (setEditPoll) => Column[];
+  adminVersion: boolean;
+  columnData: (setEditPoll) => Column[];
 }) => {
-    const user = useContext(UserContext);
+  const user = useContext(UserContext);
 
-    // Contains the poll currently edited in the modal.
-    const [editPoll, setEditPoll] = useState<Poll | null>(null);
+  // Contains the poll currently edited in the modal.
+  const [editPoll, setEditPoll] = useState<Poll | null>(null);
 
-    // Create the sorting.
-    const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
+  // Create the sorting.
+  const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
 
-    // By default, show all the polls to the simple users (which means no state
-    // filter, which means everything to false) and only the polls to be
-    // reviewed to the admins.
-    const [stateFilter, setStateFilter] = useState<PollStateFilter>({
-        accepted: false,
-        rejected: false,
-        reviewing: adminVersion,
-    });
+  // By default, show all the polls to the simple users (which means no state
+  // filter, which means everything to false) and only the polls to be
+  // reviewed to the admins.
+  const [stateFilter, setStateFilter] = useState<PollStateFilter>({
+    accepted: false,
+    rejected: false,
+    reviewing: adminVersion,
+  });
 
-    return !authService.isStaff && adminVersion ? (
-        <ForbiddenError />
-    ) : (
-        <PollsBase
-            sidebarActions={
-                <PollsTableFilter
-                    stateFilter={stateFilter}
-                    setStateFilter={setStateFilter}
-                    formGroupProps={{ className: "mb-0" }}
-                />
-            }
-        >
-            <PageTitle>
-                {adminVersion ? "Administration" : "Mes sondages"}
-            </PageTitle>
+  return !authService.isStaff && adminVersion ? (
+    <ForbiddenError />
+  ) : (
+    <PollsBase
+      sidebarActions={
+        <PollsTableFilter
+          stateFilter={stateFilter}
+          setStateFilter={setStateFilter}
+          formGroupProps={{ className: "mb-0" }}
+        />
+      }
+    >
+      <PageTitle>{adminVersion ? "Administration" : "Mes sondages"}</PageTitle>
 
-            <Card>
-                <Pagination
-                    apiMethod={api.polls.list}
-                    apiKey={[
-                        "polls.list",
-                        {
-                            user: !adminVersion && user ? user.id : undefined,
-                            state: pollStateFilterToApiParameter(stateFilter),
-                            ordering: sortingToApiParameter(sorting, {
-                                question: "question",
-                                publicationDate: "publication_date",
-                                user: "user__pk",
-                                state: "state",
-                            }),
-                        },
-                    ]}
-                    config={{ refetchOnWindowFocus: false }}
-                    loadingElement={PollsLoading}
-                    errorElement={PollsError}
-                    paginationControlProps={{
-                        className: "justify-content-center mt-5",
-                    }}
-                    render={(polls: Poll[], paginationControl) => (
-                        <>
-                            <PollEditModal
-                                show={editPoll !== null}
-                                onHide={() => setEditPoll(null)}
-                                poll={editPoll}
-                                adminVersion={adminVersion}
-                            />
-                            <Table columns={columns} data={polls} />
-                            {paginationControl}
-                        </>
-                    )}
-                />
-            </Card>
-        </PollsBase>
-    );
+      <Card>
+        <Pagination
+          apiMethod={api.polls.list}
+          apiKey={[
+            "polls.list",
+            {
+              user: !adminVersion && user ? user.id : undefined,
+              state: pollStateFilterToApiParameter(stateFilter),
+              ordering: sortingToApiParameter(sorting, {
+                question: "question",
+                publicationDate: "publication_date",
+                user: "user__pk",
+                state: "state",
+              }),
+            },
+          ]}
+          config={{ refetchOnWindowFocus: false }}
+          loadingElement={PollsLoading}
+          errorElement={PollsError}
+          paginationControlProps={{
+            className: "justify-content-center mt-5",
+          }}
+          render={(polls: Poll[], paginationControl) => (
+            <>
+              <PollEditModal
+                show={editPoll !== null}
+                onHide={() => setEditPoll(null)}
+                poll={editPoll}
+                adminVersion={adminVersion}
+              />
+              <Table columns={columns} data={polls} />
+              {paginationControl}
+            </>
+          )}
+        />
+      </Card>
+    </PollsBase>
+  );
 };

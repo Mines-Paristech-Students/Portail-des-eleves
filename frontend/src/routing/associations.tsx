@@ -11,8 +11,8 @@ import { routes as rolesRoutes } from "./associations/roles";
 import { AssociationBootstrap } from "../components/associations/Bootstrap";
 
 export type AssociationRoute = Route & {
-    props?: object;
-    defaultLayout: boolean;
+  props?: object;
+  defaultLayout: boolean;
 };
 
 /**
@@ -27,37 +27,37 @@ export type AssociationRoute = Route & {
  * usual
  */
 export const routes: AssociationRoute[] = [
-    {
-        path: ``,
-        component: AssociationHome,
-        exact: true,
-        defaultLayout: true,
-    },
-    {
-        path: `/parametres`,
-        component: AssociationSettings,
-        exact: true,
-        defaultLayout: true,
-    },
+  {
+    path: ``,
+    component: AssociationHome,
+    exact: true,
+    defaultLayout: true,
+  },
+  {
+    path: `/parametres`,
+    component: AssociationSettings,
+    exact: true,
+    defaultLayout: true,
+  },
 
-    ...eventsRoutes,
-    ...libraryRoutes,
-    ...marketplaceRoutes,
-    ...mediasRoutes,
-    ...rolesRoutes,
-    ...pagesRoutes,
+  ...eventsRoutes,
+  ...libraryRoutes,
+  ...marketplaceRoutes,
+  ...mediasRoutes,
+  ...rolesRoutes,
+  ...pagesRoutes,
 ];
 
 export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>
-    routes.map((route) => ({
-        path: `/:associationId${route.path}`,
-        component: (match) => (
-            <AssociationBootstrap
-                match={match}
-                render={route.component}
-                useDefaultLayout={route.defaultLayout}
-                {...route.props}
-            />
-        ),
-        exact: route.exact,
-    }));
+  routes.map((route) => ({
+    path: `/:associationId${route.path}`,
+    component: (match) => (
+      <AssociationBootstrap
+        match={match}
+        render={route.component}
+        useDefaultLayout={route.defaultLayout}
+        {...route.props}
+      />
+    ),
+    exact: route.exact,
+  }));

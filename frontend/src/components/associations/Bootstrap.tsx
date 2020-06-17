@@ -15,33 +15,33 @@ import { AssociationLayout } from "./Layout";
  * @param props any additional prop
  */
 export const AssociationBootstrap = ({
-    render: Render,
-    useDefaultLayout,
-    match,
-    ...props
+  render: Render,
+  useDefaultLayout,
+  match,
+  ...props
 }) => {
-    const { associationId } = useParams<{ associationId: string }>();
+  const { associationId } = useParams<{ associationId: string }>();
 
-    const { data: association, error, status } = useBetterQuery<Association>(
-        ["association.get", associationId],
-        api.associations.get,
-        {
-            refetchOnWindowFocus: false,
-        }
-    );
+  const { data: association, error, status } = useBetterQuery<Association>(
+    ["association.get", associationId],
+    api.associations.get,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
-    // Render
-    return status === "loading" ? (
-        <Loading />
-    ) : status === "error" ? (
-        <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
-    ) : status === "success" && association ? (
-        useDefaultLayout ? (
-            <AssociationLayout association={association}>
-                <Render association={association} {...props} />
-            </AssociationLayout>
-        ) : (
-            <Render association={association} {...props} />
-        )
-    ) : null;
+  // Render
+  return status === "loading" ? (
+    <Loading />
+  ) : status === "error" ? (
+    <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
+  ) : status === "success" && association ? (
+    useDefaultLayout ? (
+      <AssociationLayout association={association}>
+        <Render association={association} {...props} />
+      </AssociationLayout>
+    ) : (
+      <Render association={association} {...props} />
+    )
+  ) : null;
 };

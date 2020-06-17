@@ -4,42 +4,42 @@ import { AssociationCreateEvent } from "../../components/associations/events/cre
 import { AssociationEditEvent } from "../../components/associations/events/edit/AssociationEditEvent";
 
 export const routes: AssociationRoute[] = [
-    {
-        path: `/evenements`,
-        component: AssociationListEvents,
-        exact: true,
-        props: {
-            title: "Événements à venir",
-            apiParameters: {
-                time: ["NOW", "AFTER"],
-                ordering: "starts_at",
-            },
-        },
-        defaultLayout: true,
+  {
+    path: `/evenements`,
+    component: AssociationListEvents,
+    exact: true,
+    props: {
+      title: "Événements à venir",
+      apiParameters: {
+        time: ["NOW", "AFTER"],
+        ordering: "starts_at",
+      },
     },
-    {
-        path: `/evenements/passes`,
-        component: AssociationListEvents,
-        exact: true,
-        props: {
-            title: "Événements passés",
-            apiParameters: {
-                time: ["BEFORE"],
-                ordering: "-starts_at",
-            },
-        },
-        defaultLayout: true,
+    defaultLayout: true,
+  },
+  {
+    path: `/evenements/passes`,
+    component: AssociationListEvents,
+    exact: true,
+    props: {
+      title: "Événements passés",
+      apiParameters: {
+        time: ["BEFORE"],
+        ordering: "-starts_at",
+      },
     },
-    {
-        path: `/evenements/creer`,
-        component: AssociationCreateEvent,
-        exact: true,
-        defaultLayout: true,
-    },
-    {
-        path: `/evenements/:eventId/modifier`,
-        component: AssociationEditEvent,
-        exact: true,
-        defaultLayout: true,
-    },
+    defaultLayout: true,
+  },
+  {
+    path: `/evenements/creer`,
+    component: AssociationCreateEvent,
+    exact: true,
+    defaultLayout: true,
+  },
+  {
+    path: `/evenements/:eventId/modifier`,
+    component: AssociationEditEvent,
+    exact: true,
+    defaultLayout: true,
+  },
 ];

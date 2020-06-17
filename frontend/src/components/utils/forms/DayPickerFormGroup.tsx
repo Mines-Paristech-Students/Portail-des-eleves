@@ -42,27 +42,27 @@ import { DayPickerField, DatePickerFieldProps } from "./DayPickerField";
  * @param props passed to `DayPickerField`.
  */
 export const DayPickerFormGroup = ({
-    name,
-    label,
-    help,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    todayButton = false,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    ...props
+  name,
+  label,
+  help,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  todayButton = false,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  ...props
 }: DatePickerFieldProps & BaseFormGroupProps) => (
-    <BaseFormGroup
-        name={name}
-        label={label}
-        help={help}
-        feedback={feedback}
-        feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-        formGroupProps={formGroupProps}
-        labelProps={labelProps}
-        feedbackProps={feedbackProps}
-    >
-        <DayPickerField name={name} todayButton={todayButton} {...props} />
-    </BaseFormGroup>
+  <BaseFormGroup
+    name={name}
+    label={label}
+    help={help}
+    feedback={feedback}
+    feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+    formGroupProps={formGroupProps}
+    labelProps={labelProps}
+    feedbackProps={feedbackProps}
+  >
+    <DayPickerField name={name} todayButton={todayButton} {...props} />
+  </BaseFormGroup>
 );

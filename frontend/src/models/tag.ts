@@ -1,12 +1,12 @@
 export interface Namespace {
-    id: string;
-    name: string;
-    scopedToPk: string;
-    scopedToModel: string;
+  id: string;
+  name: string;
+  scopedToPk: string;
+  scopedToModel: string;
 }
 
 export interface Tag {
-    id: string;
-    value: string;
-    namespace: Namespace;
+  id: string;
+  value: string;
+  namespace: Namespace;
 }

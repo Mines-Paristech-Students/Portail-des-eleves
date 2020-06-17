@@ -16,32 +16,32 @@ import { useURLState } from "../../../utils/useURLState";
  * {search: something}
  */
 export const SidebarInputSearch = ({ setParams, ...props }) => {
-    const [value, setValue] = useURLState(
-        "q",
-        "",
-        (data) => data,
-        (data) => data
-    );
+  const [value, setValue] = useURLState(
+    "q",
+    "",
+    (data) => data,
+    (data) => data
+  );
 
-    useEffect(() => {
-        setParams({ search: value });
-    }, [setParams, value]);
+  useEffect(() => {
+    setParams({ search: value });
+  }, [setParams, value]);
 
-    return (
-        <div className="input-icon mb-3">
-            <DebounceInput
-                className="form-control input-sm"
-                type="text"
-                placeholder="Chercher"
-                debounceTimeout={300}
-                minLength={2}
-                onChange={(e) => setValue(e.target.value)}
-                value={value}
-                {...props}
-            />
-            <span className="input-icon-addon">
-                <i className="fe fe-search" />
-            </span>
-        </div>
-    );
+  return (
+    <div className="input-icon mb-3">
+      <DebounceInput
+        className="form-control input-sm"
+        type="text"
+        placeholder="Chercher"
+        debounceTimeout={300}
+        minLength={2}
+        onChange={(e) => setValue(e.target.value)}
+        value={value}
+        {...props}
+      />
+      <span className="input-icon-addon">
+        <i className="fe fe-search" />
+      </span>
+    </div>
+  );
 };

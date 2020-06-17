@@ -8,46 +8,42 @@ import Button from "react-bootstrap/Button";
 import dayjs from "dayjs";
 
 export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
-    const isAvailable = loanable.status === "AVAILABLE";
+  const isAvailable = loanable.status === "AVAILABLE";
 
-    return (
-        <Card>
-            <CardStatus
-                color={isAvailable ? TablerColor.Blue : TablerColor.Gray}
-            />
+  return (
+    <Card>
+      <CardStatus color={isAvailable ? TablerColor.Blue : TablerColor.Gray} />
 
-            <Card.Header>
-                <Card.Title>{loanable.name}</Card.Title>
+      <Card.Header>
+        <Card.Title>{loanable.name}</Card.Title>
 
-                <div className="card-options">
-                    {isAvailable && (
-                        <>
-                            {
-                                <Button
-                                    className="btn-sm"
-                                    variant="primary"
-                                    onClick={() => window.alert("Emprunt")}
-                                >
-                                    Emprunter
-                                </Button>
-                            }
-                        </>
-                    )}
-                </div>
-            </Card.Header>
+        <div className="card-options">
+          {isAvailable && (
+            <>
+              {
+                <Button
+                  className="btn-sm"
+                  variant="primary"
+                  onClick={() => window.alert("Emprunt")}
+                >
+                  Emprunter
+                </Button>
+              }
+            </>
+          )}
+        </div>
+      </Card.Header>
 
-            <Card.Body className="pt-3">
-                {!isAvailable && (
-                    <p className="text-muted mb-4">
-                        Retour attendu avant le{" "}
-                        {dayjs(loanable.expectedReturnDate).format(
-                            "DD/MM/YYYY"
-                        )}
-                    </p>
-                )}
+      <Card.Body className="pt-3">
+        {!isAvailable && (
+          <p className="text-muted mb-4">
+            Retour attendu avant le{" "}
+            {dayjs(loanable.expectedReturnDate).format("DD/MM/YYYY")}
+          </p>
+        )}
 
-                <p>{formatNewLines(loanable.description)}</p>
-            </Card.Body>
-        </Card>
-    );
+        <p>{formatNewLines(loanable.description)}</p>
+      </Card.Body>
+    </Card>
+  );
 };

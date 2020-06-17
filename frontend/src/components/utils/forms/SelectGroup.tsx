@@ -3,28 +3,28 @@ import { FieldAttributes } from "formik";
 import { SelectGroupItem } from "./SelectGroupItem";
 
 export type SelectGroupProps = {
-    name: string;
-    items: {
-        value: string;
-        text?: string;
-        icon?: string;
-        children?: any;
-    }[];
-    type: "radio" | "checkbox";
-    selectType?: "inline" | "pills" | "vertical";
-    className?: string;
+  name: string;
+  items: {
+    value: string;
+    text?: string;
+    icon?: string;
+    children?: any;
+  }[];
+  type: "radio" | "checkbox";
+  selectType?: "inline" | "pills" | "vertical";
+  className?: string;
 } & FieldAttributes<any>;
 
 const getClassName = (selectType: string) => {
-    switch (selectType) {
-        case "pills":
-            return "selectgroup selectgroup-pills";
-        case "vertical":
-            return "selectgroup selectgroup-vertical w-100";
-        case "inline":
-        default:
-            return "selectgroup";
-    }
+  switch (selectType) {
+    case "pills":
+      return "selectgroup selectgroup-pills";
+    case "vertical":
+      return "selectgroup selectgroup-vertical w-100";
+    case "inline":
+    default:
+      return "selectgroup";
+  }
 };
 
 /**
@@ -48,26 +48,26 @@ const getClassName = (selectType: string) => {
  * @param props passed to `useField`.
  */
 export const SelectGroup = ({
-    name,
-    items,
-    type = "radio",
-    selectType = "inline",
-    ...props
+  name,
+  items,
+  type = "radio",
+  selectType = "inline",
+  ...props
 }: SelectGroupProps) => (
-    <div className={getClassName(selectType)}>
-        {items.map(({ value, text, icon, children, className }) => (
-            <SelectGroupItem
-                key={"item-" + value}
-                name={name}
-                value={value}
-                type={type}
-                text={text}
-                icon={icon}
-                className={className}
-                {...props}
-            >
-                {children}
-            </SelectGroupItem>
-        ))}
-    </div>
+  <div className={getClassName(selectType)}>
+    {items.map(({ value, text, icon, children, className }) => (
+      <SelectGroupItem
+        key={"item-" + value}
+        name={name}
+        value={value}
+        type={type}
+        text={text}
+        icon={icon}
+        className={className}
+        {...props}
+      >
+        {children}
+      </SelectGroupItem>
+    ))}
+  </div>
 );
