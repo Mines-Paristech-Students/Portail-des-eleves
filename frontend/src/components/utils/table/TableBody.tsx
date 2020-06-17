@@ -23,7 +23,7 @@ export const TableBody = ({
     emptyComponent?: React.ReactNode;
 }) => (
     <tbody>
-        {data.length == 0 && emptyComponent ? (
+        {data.length === 0 && emptyComponent ? (
             <tr role="row">
                 <td colSpan={columns.length}>{emptyComponent}</td>
             </tr>
