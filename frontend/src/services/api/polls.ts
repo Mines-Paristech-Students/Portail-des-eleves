@@ -6,7 +6,7 @@ import { toUrlParams } from "../../utils/urlParam";
 /**
  * Parse the `publicationDate` and `creationDateTime` JSON field.
  *
- * Should be called in a `then` after an `apiService.get("/polls/...")`.
+ * Should be called in a `then` after an `unwrap<PaginatedResponse<Poll[]>>`.
  */
 const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
   response.data.results.forEach((poll) => {
@@ -19,26 +19,26 @@ const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
   return response;
 };
 
+export type ListPollsApiParameters = {
+  user?: string;
+  state?: "ACCEPTED" | "REJECTED" | "REVIEWING"[];
+  ordering?:
+    | "question"
+    | "user__pk"
+    | "state"
+    | "publication_date"
+    | "-question"
+    | "-user__pk"
+    | "-state"
+    | "-publication_date";
+  is_active?: boolean;
+  is_published?: boolean;
+  page?: number;
+  page_size?: number;
+};
+
 export const polls = {
-  list: (
-    parameters: {
-      is_published?: boolean;
-      is_active?: boolean;
-      user?: string;
-      state?: ("REVIEWING" | "REJECTED" | "ACCEPTED")[];
-      ordering?:
-        | "question"
-        | "user__pk"
-        | "state"
-        | "publication_date"
-        | "-question"
-        | "-user__pk"
-        | "-state"
-        | "-publication_date";
-      page_size?: number;
-    },
-    page = 1
-  ) =>
+  list: (parameters: ListPollsApiParameters, page = 1) =>
     unwrap<PaginatedResponse<Poll[]>>(
       apiService
         .get<PaginatedResponse<Poll[]>>(

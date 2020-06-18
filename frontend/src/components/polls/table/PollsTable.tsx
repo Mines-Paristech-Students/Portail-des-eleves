@@ -43,14 +43,16 @@ export const PollsTable = ({
   // Create the sorting.
   const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
 
-  // By default, show all the polls to the simple users (which means no state
-  // filter, which means everything to false) and only the polls to be
-  // reviewed to the admins.
-  const [stateFilter, setStateFilter] = useState<PollStateFilter>({
-    accepted: false,
-    rejected: false,
-    reviewing: adminVersion,
-  });
+  // By default, show all the polls to the simple users and only the polls to be reviewed to the admins.
+  const defaultStateFilter: PollStateFilter = {
+    accepted: !adminVersion,
+    rejected: !adminVersion,
+    reviewing: true,
+  };
+
+  const [stateFilter, setStateFilter] = useState<PollStateFilter>(
+    defaultStateFilter
+  );
 
   return !authService.isStaff && adminVersion ? (
     <ForbiddenError />
@@ -65,7 +67,6 @@ export const PollsTable = ({
       }
     >
       <PageTitle>{adminVersion ? "Administration" : "Mes sondages"}</PageTitle>
-
       <Card>
         <Pagination
           apiMethod={api.polls.list}

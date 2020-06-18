@@ -30,14 +30,34 @@ export const cycleSorting = (current?: Sorting) =>
 
 /**
  * Build an URL sorting parameter from a `sorting` object. The function iterates through the object's keys and returns
- * the sorting parameter corresponding to the _first_ key containing either `Sorting.Ascending` or `Sorting.Descending`
- * (in other words, multi-sort is _not_ supported).
+ * the value of the sorting parameter corresponding to the _first_ key containing either `Sorting.Ascending` or
+ * `Sorting.Descending` (in other words, multi-sort is _not_ supported).
+ *
+ * For instance:
+ * ```
+ * sortingToApiParameter(
+ *     {
+ *         myPiche: Sorting.Descending,
+ *         yourPiche: Sorting.Ascending,
+ *     },
+ *     {
+ *         myPiche: my_piche
+ *     }
+ * )
+ * ```
+ *
+ * returns `"-mypiche"`.
+ *
+ * `undefined` is returned if no Sorting is found.
  *
  * @param sorting an object (like those given by `useColumns`) mapping `Sorting` objects to keys.
  * @param mapping an optional object which maps the key used by `sorting` to the keys used by the backend. Useful for
  * converting camelCase into snake_case.
  */
-export const sortingToApiParameter = (sorting: any, mapping?: any) => {
+export const sortingToApiParameter = (
+  sorting?: { [key: string]: Sorting },
+  mapping?: any
+) => {
   if (sorting === undefined) {
     return undefined;
   }
