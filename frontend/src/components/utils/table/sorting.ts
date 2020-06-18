@@ -38,7 +38,7 @@ export const cycleSorting = (current?: Sorting) =>
  * sortingToApiParameter(
  *     {
  *         myPiche: Sorting.Descending,
- *         myPoche: Sorting.Ascending,
+ *         yourPiche: Sorting.Ascending,
  *     },
  *     {
  *         myPiche: my_piche
