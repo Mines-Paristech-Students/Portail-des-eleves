@@ -5,7 +5,7 @@ from associations.serializers.page import PageShortSerializer
 
 
 from associations.serializers.marketplace import MarketplaceShortSerializer
-from associations.serializers.library import LibraryShortSerializer
+from associations.serializers.library_short import LibraryShortSerializer
 from associations.serializers.role import RoleSerializer
 
 
