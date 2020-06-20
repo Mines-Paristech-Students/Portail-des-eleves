@@ -19,7 +19,11 @@ const [namePlaceholder, descriptionPlaceholder, commentPlaceholder] = getRandom(
       "Pour vos meilleures soirées",
       "Achetée en juin 2019",
     ],
-    ["Amphi BDE", "C’était mieux avant.", "L208"],
+    [
+      "Morceau de faux plafond",
+      "Très utile après l’interne",
+      "5 € chez Bricorama",
+    ],
   ]
 );
 
