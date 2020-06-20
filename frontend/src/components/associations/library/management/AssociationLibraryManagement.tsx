@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AssociationLayout } from "../../Layout";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/PageTitle";
@@ -15,6 +15,10 @@ import { Link } from "react-router-dom";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import ReactMarkdown from "react-markdown";
+import { SidebarSeparator, SidebarSpace } from "../../../utils/sidebar/Sidebar";
+import { SidebarInputSearch } from "../../../utils/sidebar/SidebarInputSearch";
+import { SidebarSection } from "../../../utils/sidebar/SidebarSection";
+import { CheckboxField } from "../../../utils/sidebar/CheckboxField";
 
 const columnsDefinition = [
   {
@@ -44,7 +48,10 @@ const columnsDefinition = [
     header: "Statut",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
-      <LoanableStatusIcon status={loanable.status} numberOfPendingLoans={loanable.numberOfPendingLoans} />
+      <LoanableStatusIcon
+        status={loanable.status}
+        numberOfPendingLoans={loanable.numberOfPendingLoans}
+      />
     ),
   },
   {
@@ -66,9 +73,7 @@ const columnsDefinition = [
           ],
         }}
       >
-        <Link
-          to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
-        >
+        <Link to={`gestion/${loanable.id}/modifier`}>
           <Button className="btn-icon mr-1" variant="outline-primary" size="sm">
             <i className="fe fe-edit-2" />
           </Button>
@@ -85,8 +90,64 @@ export const AssociationLibraryManagement = ({
 }) => {
   const { columns, sorting } = useColumns(columnsDefinition);
 
+  const [searchParams, setSearchParams] = useState({});
+  const [statusParams, setStatusParams] = useState({
+    status: ["REQUESTED"],
+  });
+
   return (
-    <AssociationLayout association={association}>
+    <AssociationLayout
+      association={association}
+      additionalSidebar={
+        <>
+          <SidebarSeparator />
+          <SidebarInputSearch
+            setParams={setSearchParams}
+            placeholder="Chercher un objet"
+          />
+          <SidebarSpace />
+          <SidebarSection
+            title="Voir les objets..."
+            retractable={false}
+            retractedByDefault={false}
+          >
+            <CheckboxField
+              label={"Prêtés"}
+              state={statusParams.status.includes("BORROWED")}
+              onChange={(ticked) =>
+                setStatusParams((oldStatus) => ({
+                  status: ticked
+                    ? [...oldStatus.status, "BORROWED"]
+                    : oldStatus.status.filter((x) => x !== "BORROWED"),
+                }))
+              }
+            />
+            <CheckboxField
+              label={"Demandés"}
+              state={statusParams.status.includes("REQUESTED")}
+              onChange={(ticked) =>
+                setStatusParams((oldStatus) => ({
+                  status: ticked
+                    ? [...oldStatus.status, "REQUESTED"]
+                    : oldStatus.status.filter((x) => x !== "REQUESTED"),
+                }))
+              }
+            />
+            <CheckboxField
+              label={"Non demandés"}
+              state={statusParams.status.includes("AVAILABLE")}
+              onChange={(ticked) =>
+                setStatusParams((oldStatus) => ({
+                  status: ticked
+                    ? [...oldStatus.status, "AVAILABLE"]
+                    : oldStatus.status.filter((x) => x !== "AVAILABLE"),
+                }))
+              }
+            />
+          </SidebarSection>
+        </>
+      }
+    >
       <Container>
         <PageTitle>Gestion de la bibliothèque</PageTitle>
 
@@ -98,6 +159,8 @@ export const AssociationLibraryManagement = ({
               library: association.id,
               page_size: 10,
               ordering: sortingToApiParameter(sorting),
+              ...searchParams,
+              ...statusParams,
             },
           ]}
           paginationControlProps={{

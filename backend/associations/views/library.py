@@ -230,7 +230,7 @@ class LoansViewSet(viewsets.ModelViewSet):
         loanable = Loanable.objects.get(pk=serializer.validated_data["loanable"].id)
 
         # Check whether the loanable is already borrowed.
-        if loanable.is_borrowed():
+        if not loanable.is_available():
             return http.HttpResponseBadRequest("The object is already borrowed.")
 
         # Check whether the loanable already has a pending request from this user.
