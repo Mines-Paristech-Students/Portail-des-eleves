@@ -12,6 +12,7 @@ import { api } from "../../../../services/apiService";
 import { UserContext } from "../../../../services/authService";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import ReactMarkdown from "react-markdown";
 
 const LoanButton = ({
   loanable,
@@ -152,7 +153,9 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
           </p>
         )}
 
-        {loanable.description && <p>{formatNewLines(loanable.description)}</p>}
+        {loanable.description && (
+          <ReactMarkdown source={loanable.description} />
+        )}
       </Card.Body>
     </Card>
   );

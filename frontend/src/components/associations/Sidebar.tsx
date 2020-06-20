@@ -153,6 +153,7 @@ const LibrarySubSidebar = ({ association }: { association: Association }) => {
         <SidebarItem
           icon={"settings"}
           to={`/associations/${association.id}/bibliotheque/gestion`}
+          exact={false}
         >
           Gestion
         </SidebarItem>

@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { TextFieldProps } from "./TextField";
 import { BaseFormGroupProps } from "./BaseFormGroup";
 import { TextFormGroup } from "./TextFormGroup";
-import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { useFormikContext } from "formik";
 import Container from "react-bootstrap/Container";
+import "./markdown-form-group.css";
 
 const MarkdownPreview = ({ value }: { value: string }) => (
   <Container
+    className="mb-3"
     style={{
       border: "1px solid #e9ecef",
       borderRadius: "3px",
@@ -63,23 +64,34 @@ export const MarkdownFormGroup = ({
               target="_blank"
               rel="noopener noreferrer"
               href="https://guides.github.com/features/mastering-markdown/#syntax"
-              className="text-reset"
             >
               Markdown
             </a>{" "}
             est activé.{" "}
-            {preview &&
-              (showPreview ? (
-                <Link to="#" onClick={() => setShowPreview(false)}>
-                  Désactiver la prévisualisation.
-                </Link>
-              ) : (
-                <Link to="#" onClick={() => setShowPreview(true)}>
-                  Prévisualiser.
-                </Link>
-              ))}
+            {
+              // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md#case-i-want-to-perform-an-action-and-need-a-clickable-ui-element
+              preview &&
+                (showPreview ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview(false)}
+                    className="link-button"
+                  >
+                    Désactiver la prévisualisation.
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowPreview(true)}
+                    className="link-button"
+                  >
+                    Prévisualiser.
+                  </button>
+                ))
+            }
           </>
         }
+        as="textarea"
         {...props}
       />
       {preview && showPreview && <MarkdownPreview value={values[name]} />}

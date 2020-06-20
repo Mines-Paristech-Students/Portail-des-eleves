@@ -14,6 +14,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import ReactMarkdown from "react-markdown";
 
 const columnsDefinition = [
   {
@@ -24,7 +25,10 @@ const columnsDefinition = [
       <>
         <p className="my-0">{loanable.name}</p>
         {loanable.description && (
-          <p className="small text-justify mt-2">{loanable.description}</p>
+          <ReactMarkdown
+            className="small text-justify mt-2"
+            source={loanable.description}
+          />
         )}
       </>
     ),
@@ -33,6 +37,7 @@ const columnsDefinition = [
     key: "comment",
     header: "Commentaire",
     canSort: true,
+    render: (loanable: Loanable) => <ReactMarkdown source={loanable.comment} />,
   },
   {
     key: "status",
@@ -55,14 +60,14 @@ const columnsDefinition = [
             {
               name: "offset",
               options: {
-                offset: [-4, 8],
+                offset: [0, 8],
               },
             },
           ],
         }}
       >
         <Link
-          to={`/associations/${loanable.library}/bibliotheque/gestion/modifier/${loanable.id}`}
+          to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
         >
           <Button className="btn-icon mr-1" variant="outline-primary" size="sm">
             <i className="fe fe-edit-2" />

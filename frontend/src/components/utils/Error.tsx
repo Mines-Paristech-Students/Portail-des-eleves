@@ -6,7 +6,7 @@ export const Error = ({ detail }: { detail?: any }) => (
     <p>
       Erreur. Merci de réessayer ou de contacter les administrateurs.
       <br />
-      Détails: {detail}
+      Détails: {JSON.stringify(detail)}
     </p>
   </Container>
 );
