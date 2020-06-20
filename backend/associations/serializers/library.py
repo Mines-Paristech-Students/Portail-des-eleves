@@ -7,6 +7,7 @@ from associations.models import Association, Library, Loanable, Loan
 from associations.serializers.library_short import (
     LoanableShortSerializer,
     LoanPrioritySerializerMixin,
+    LoanShortSerializer,
 )
 from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
@@ -105,10 +106,11 @@ class LoanableSerializer(serializers.ModelSerializer):
     )
     tags = serializers.SerializerMethodField()
     user_loan = serializers.SerializerMethodField()
+    number_of_pending = serializers.SerializerMethodField()
 
     class Meta:
         model = Loanable
-        read_only_fields = ("id", "tags", "user_loan")
+        read_only_fields = ("id", "tags", "user_loan", "number_of_pending")
         fields = read_only_fields + (
             "name",
             "description",
@@ -129,11 +131,15 @@ class LoanableSerializer(serializers.ModelSerializer):
         user_loans = loanable.loans.order_by("-request_date").filter(user=user)
 
         if user_loans.exists():
-            return LoanSerializer(context=self.context).to_representation(
+            return LoanShortSerializer(context=self.context).to_representation(
                 user_loans.first()
             )
 
         return None
+
+    def get_number_of_pending(self, loanable):
+        """Return the number of pending requests for this loanable."""
+        return len(loanable.loans.filter(status="PENDING"))
 
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
