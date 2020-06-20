@@ -2,6 +2,7 @@ import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
 import { routes as usersRoutes } from "./users";
 import { routes as pollsRoutes } from "./polls";
+import { routes as repartitionsRoutes } from "./repartitions";
 import {
   compileAssociationRoutes,
   routes as associationsRoutes,
@@ -30,4 +31,5 @@ export const routes = [
     )
   )
   .concat(addRoutePrefix("/sondages", pollsRoutes))
+  .concat(addRoutePrefix("/repartitions", repartitionsRoutes))
   .concat(usersRoutes);
