@@ -6,7 +6,6 @@ import {
   SidebarSpace,
 } from "../utils/sidebar/Sidebar";
 import { api, useBetterQuery } from "../../services/apiService";
-import Badge from "react-bootstrap/Badge";
 import { SidebarBadge } from "../utils/sidebar/SidebarBadge";
 
 export const PollsSidebar = ({
