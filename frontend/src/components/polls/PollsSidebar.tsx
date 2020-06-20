@@ -1,4 +1,4 @@
-import React from "react";
+import React from test_loan.pyeact";
 import {
   Sidebar,
   SidebarItem,
