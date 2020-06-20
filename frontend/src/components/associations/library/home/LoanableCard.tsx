@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Loanable } from "../../../../models/associations/library";
 import Card from "react-bootstrap/Card";
-import { decidePlural, formatNewLines } from "../../../../utils/format";
+import { decidePlural } from "../../../../utils/format";
 import { CardStatus } from "../../../utils/CardStatus";
 import { TablerColor } from "../../../../utils/colors";
 import Button from "react-bootstrap/Button";
