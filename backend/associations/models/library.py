@@ -29,30 +29,9 @@ class Loanable(models.Model):
         ordering = ["-id"]
 
     @cached_property
-    def status(self):
-        """
-        :return: `BORROWED` if any loan has a `BORROWED` or `ACCEPTED` status; `REQUESTED` if any loan has a `PENDING`
-        status (but the previous condition is not met); `AVAILABLE` otherwise.
-        """
-        has_pending = False
-
-        for loan in self.loans.all():
-            if loan.status in ["BORROWED", "ACCEPTED"]:
-                return "BORROWED"
-            elif loan.status == "PENDING":
-                has_pending = True
-
-        if has_pending:
-            return "REQUESTED"
-
-        return "AVAILABLE"
-
-    def is_borrowed(self):
-        for loan in self.loans.all():
-            if loan.status == "BORROWED":
-                return True
-
-        return False
+    def number_of_pending_loans(self):
+        """Return the number of pending loans for this loanable."""
+        return len(self.loans.filter(status="PENDING"))
 
     def is_available(self):
         for loan in self.loans.all():

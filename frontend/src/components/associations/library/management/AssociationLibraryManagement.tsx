@@ -44,7 +44,7 @@ const columnsDefinition = [
     header: "Statut",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
-      <LoanableStatusIcon status={loanable.status} />
+      <LoanableStatusIcon status={loanable.status} numberOfPendingLoans={loanable.numberOfPendingLoans} />
     ),
   },
   {
@@ -95,7 +95,7 @@ export const AssociationLibraryManagement = ({
           apiKey={[
             "loanables.list",
             {
-              library__id: association.id,
+              library: association.id,
               page_size: 10,
               ordering: sortingToApiParameter(sorting),
             },

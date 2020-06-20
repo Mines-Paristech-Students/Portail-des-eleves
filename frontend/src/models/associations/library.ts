@@ -19,13 +19,13 @@ export interface Loan {
 export interface Loanable {
   id: number;
   userLoan: null | (Omit<Loan, "loanable"> & { loanable: number });
-  numberOfPending: number;
+  numberOfPendingLoans: number;
   name: string;
   description?: string;
   image?: string;
   comment?: string;
   library: Library;
-  status: "AVAILABLE" | "BORROWED" | "REQUESTED";
+  status: "AVAILABLE" | "BORROWED";
   expectedReturnDate: Date | null;
 }
 

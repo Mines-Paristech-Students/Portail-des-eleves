@@ -1,7 +1,11 @@
 from django import http
 from django.db.models import Q
-from rest_framework import status
-from rest_framework import viewsets
+from django_filters.rest_framework import (
+    DjangoFilterBackend,
+    FilterSet,
+    MultipleChoiceFilter,
+)
+from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
@@ -18,6 +22,7 @@ from associations.serializers import (
     LoanSerializer,
     LoanableSerializer,
 )
+from tags.filters import HasHiddenTagFilter
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
@@ -44,13 +49,69 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return LibrarySerializer
 
 
+class LoanableFilter(FilterSet):
+    status = MultipleChoiceFilter(
+        choices=(
+            ("AVAILABLE", "AVAILABLE"),
+            ("BORROWED", "BORROWED"),
+            ("REQUESTED", "REQUESTED"),
+        ),
+        method="filter_status",
+    )
+
+    class Meta:
+        model = Loanable
+        fields = ("status", "library")
+
+    def filter_status(self, queryset, _, filter):
+        """Filter by AVAILABLE, BORROWED or REQUESTED.
+        Here, AVAILABLE means that there are no PENDING loans linked to the loanable.
+        Otherwise, the status is REQUESTED."""
+
+        # No filter or every filter.
+        if len(filter) == 0 or len(filter) == 3:
+            return queryset
+
+        ids = set()
+
+        if "AVAILABLE" in filter:
+            ids.update(
+                [
+                    x.id
+                    for x in queryset
+                    if x.is_available() and x.number_of_pending_loans == 0
+                ]
+            )
+
+        if "BORROWED" in filter:
+            ids.update([x.id for x in queryset if not x.is_available()])
+
+        if "REQUESTED" in filter:
+            ids.update(
+                [
+                    x.id
+                    for x in queryset
+                    if x.is_available() and x.number_of_pending_loans > 0
+                ]
+            )
+
+        return queryset.filter(pk__in=ids)
+
+
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
     serializer_class = LoanableSerializer
     permission_classes = (LoanablePermission,)
 
-    filter_fields = ("library__id",)
     ordering = ("name", "comment")
+    search_fields = ("name", "description")
+    filterset_class = LoanableFilter
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every

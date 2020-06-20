@@ -271,7 +271,7 @@ class LoanTestCase(BaseLibraryTestCase):
     ):
         loanable_id = 4
         self.assertTrue(
-            Loanable.objects.get(pk=loanable_id).is_borrowed(),
+            Loanable.objects.get(pk=loanable_id).status == "BORROWED",
             f"Test premise is wrong: loanable {loanable_id} is not borrowed.",
         )
 

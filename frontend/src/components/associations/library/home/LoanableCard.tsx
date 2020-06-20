@@ -51,38 +51,31 @@ const LoanButton = ({
     </Button>
   );
 
-  if (loanable.status === "BORROWED") {
-    return <UnavailableButton />;
-  } else if (
-    loanable.status === "REQUESTED" &&
-    loanable.userLoan &&
+  return loanable.status === "BORROWED" ? (
+    <UnavailableButton />
+  ) : loanable.userLoan &&
     loanable.userLoan.status === "PENDING" &&
-    loanable.userLoan.priority
-  ) {
-    // The loanable is requested and the user has sent a request.
-    return (
-      <CancelButton
-        tooltipText={
-          loanable.userLoan.priority === 1
-            ? "Aucune demande avant la vôtre"
-            : `${loanable.userLoan.priority - 1} ${decidePlural(
-                loanable.userLoan.priority - 1,
-                "demande envoyée",
-                "demandes envoyées"
-              )} avant la vôtre`
-        }
-      />
-    );
-  }
-
-  // The loanable is not requested or other users have requested the loan, but not the user.
-  return (
+    loanable.userLoan.priority ? (
+    // The loanable is requested and the user has sent a pending request.
+    <CancelButton
+      tooltipText={
+        loanable.userLoan.priority === 1
+          ? "Aucune demande avant la vôtre"
+          : `${loanable.userLoan.priority - 1} ${decidePlural(
+              loanable.userLoan.priority - 1,
+              "demande envoyée",
+              "demandes envoyées"
+            )} avant la vôtre`
+      }
+    />
+  ) : (
+    // The loanable is not requested or other users have requested the loan, but not the user.
     <LoanButton
       tooltipText={
-        loanable.numberOfPending === 0
+        loanable.numberOfPendingLoans === 0
           ? "Aucune demande en attente"
-          : `${loanable.numberOfPending} ${decidePlural(
-              loanable.numberOfPending - 1,
+          : `${loanable.numberOfPendingLoans} ${decidePlural(
+              loanable.numberOfPendingLoans - 1,
               "demande",
               "demandes"
             )} en attente`
