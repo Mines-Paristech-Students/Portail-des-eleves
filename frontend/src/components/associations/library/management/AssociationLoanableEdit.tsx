@@ -11,7 +11,6 @@ import Card from "react-bootstrap/Card";
 import { queryCache, useMutation } from "react-query";
 import { ToastContext } from "../../../utils/Toast";
 import { useHistory } from "react-router-dom";
-import { LoansTable } from "./loans/LoansTable";
 
 export const AssociationLoanableEdit = ({
   association,
@@ -55,8 +54,6 @@ export const AssociationLoanableEdit = ({
   ) : status === "success" && loanable ? (
     <>
       <PageTitle>Modifier un objet</PageTitle>
-
-      <LoansTable loanableId={loanableId} />
 
       <Card>
         <Card.Header>

@@ -48,32 +48,64 @@ const columnsDefinition = [
     ),
   },
   {
-    key: "action",
-    header: "Action",
+    key: "actions",
+    header: "Actions",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
-      <OverlayTrigger
-        placement={"bottom"}
-        overlay={<Tooltip id="edit">Modifier</Tooltip>}
-        popperConfig={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8],
+      <>
+        <OverlayTrigger
+          placement={"bottom"}
+          overlay={<Tooltip id="edit">Gérer les demandes</Tooltip>}
+          popperConfig={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
               },
-            },
-          ],
-        }}
-      >
-        <Link
-          to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
+            ],
+          }}
         >
-          <Button className="btn-icon mr-1" variant="outline-primary" size="sm">
-            <i className="fe fe-edit-2" />
-          </Button>
-        </Link>
-      </OverlayTrigger>
+          <Link
+            to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/demandes`}
+          >
+            <Button
+              className="btn-icon m-1"
+              variant="outline-primary"
+              size="sm"
+            >
+              <i className="fe fe-help-circle" />
+            </Button>
+          </Link>
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement={"bottom"}
+          overlay={<Tooltip id="edit">Modifier l’objet</Tooltip>}
+          popperConfig={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
+              },
+            ],
+          }}
+        >
+          <Link
+            to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
+          >
+            <Button
+              className="btn-icon m-1"
+              variant="outline-secondary"
+              size="sm"
+            >
+              <i className="fe fe-edit-2" />
+            </Button>
+          </Link>
+        </OverlayTrigger>
+      </>
     ),
   },
 ];

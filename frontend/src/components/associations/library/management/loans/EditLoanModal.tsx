@@ -20,11 +20,11 @@ import "./edit_loan_modal.css";
 const LoanSummary = ({ loan }) => {
   return (
     <div>
-      La demande a été déposée le {dayjs(loan.requestDate).format("DD/MM/YYYY")}{" "}
-      à {dayjs(loan.requestDate).format("HH:mm")}.{" "}
+      Le prêt a été demandé le {dayjs(loan.requestDate).format("DD/MM/YYYY")} à{" "}
+      {dayjs(loan.requestDate).format("HH:mm")}.<br />
       {loan.status === "PENDING" ? (
         <>
-          Elle est <LoanStatusBadge status={loan.status} />.<br />
+          Il est <LoanStatusBadge status={loan.status} />.{" "}
           {loan.priority !== null ? (
             <span className={loan.priority > 1 ? "font-weight-bold" : ""}>
               {loan.priority === 1
@@ -39,25 +39,33 @@ const LoanSummary = ({ loan }) => {
         </>
       ) : loan.status === "REJECTED" ? (
         <>
-          Elle a été <LoanStatusBadge status={loan.status} />.
+          Il a été <LoanStatusBadge status={loan.status} />.
         </>
       ) : loan.status === "ACCEPTED" ? (
         <>
-          Elle a été <LoanStatusBadge status={loan.status} />.
+          Il a été <LoanStatusBadge status={loan.status} />.
         </>
       ) : loan.status === "BORROWED" ? (
         <>
-          L’objet a été <LoanStatusBadge status={loan.status} />.<br />
+          L’objet a été <LoanStatusBadge status={loan.status} /> le{" "}
+          {dayjs(loan.loanDate).format("DD/MM/YYYY")}.<br />
           {loan.expectedReturnDate && (
             <>
               La date de retour prévue est le{" "}
-              {dayjs(loan.expectedReturnDate).format("DD/MM/YYYY")}.
+              {dayjs(loan.expectedReturnDate).format("DD/MM/YYYY")}.{" "}
+              {dayjs() > dayjs(loan.expectedReturnDate) && (
+                <span className="font-weight-bold">
+                  Cette date est dépassée.
+                </span>
+              )}
             </>
           )}
         </>
       ) : loan.status === "RETURNED" ? (
         <>
-          L’objet a été <LoanStatusBadge status={loan.status} />.
+          L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")} et{" "}
+          <LoanStatusBadge status={loan.status} /> le{" "}
+          {dayjs(loan.realReturnDate).format("DD/MM/YYYY")}.
         </>
       ) : null}
     </div>
@@ -110,21 +118,37 @@ export const EditLoanModal = ({
         }}
         validationSchema={Yup.object({
           status: Yup.string().required("Ce champ est requis"),
-          loanDate: Yup.date().notRequired(),
-          expectedReturnDate: Yup.date(),
-          realReturnDate: Yup.date(),
-          /*endDate: Yup.date().when(
-          ["endDateEnabled", "startDate"],
-          (endDateEnabled, startDate, schema) =>
-            endDateEnabled
-              ? startDate &&
-                schema
-                  .required("Veuillez entrer une date au format JJ/MM/YYYY.")
+          loanDate: Yup.date().when(["status"], (status, schema) =>
+            status === "BORROWED"
+              ? schema.required(
+                  "Veuillez entrer une date au format JJ/MM/YYYY."
+                )
+              : schema.notRequired()
+          ),
+          expectedReturnDate: Yup.date().when(
+            ["status", "loanDate"],
+            (status, loanDate, schema) =>
+              status === "BORROWED"
+                ? loanDate &&
+                  schema
+                    .required("Veuillez entrer une date au format JJ/MM/YYYY")
+                    .min(
+                      loanDate,
+                      "La date de retour prévue doit être après la date de prêt."
+                    )
+                : schema.notRequired()
+          ),
+          realReturnDate: Yup.date().when(["status"], (status, schema) =>
+            status === "RETURNED"
+              ? schema
+                  .required("Veuillez entrer une date au format JJ/MM/YYYY")
                   .min(
-                    startDate,
-                    "La date de fin doit être après la date de début."
+                    loan.loanDate,
+                    `La date de retour doit être après la date de prêt
+${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
                   )
-              : schema.notRequired()*/
+              : schema.notRequired()
+          ),
         })}
         onSubmit={onSubmit}
         component={({ values }) => (
