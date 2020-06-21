@@ -2,6 +2,7 @@ import { AssociationRoute } from "../associations";
 import { AssociationLibraryHome } from "../../components/associations/library/home/AssociationLibraryHome";
 import { AssociationLibraryManagement } from "../../components/associations/library/management/AssociationLibraryManagement";
 import { AssociationLoanableEdit } from "../../components/associations/library/management/AssociationLoanableEdit";
+import { AssociationLoanableCreate } from "../../components/associations/library/management/AssociationLoanableCreate";
 
 export const routes: AssociationRoute[] = [
   {
@@ -17,9 +18,15 @@ export const routes: AssociationRoute[] = [
     defaultLayout: false,
   },
   {
+    path: `/bibliotheque/gestion/ajouter`,
+    component: AssociationLoanableCreate,
+    exact: true,
+    defaultLayout: true,
+  },
+  {
     path: `/bibliotheque/gestion/:loanableId/modifier`,
     component: AssociationLoanableEdit,
     exact: true,
-    defaultLayout: false,
+    defaultLayout: true,
   },
 ];

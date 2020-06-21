@@ -20,6 +20,11 @@ export const loanables = {
     ),
   get: ({ loanableId }: { loanableId: number | string }) =>
     unwrap<Loanable>(apiService.get(`/associations/loanables/${loanableId}/`)),
+  create: ({
+    data,
+  }: {
+    data: Pick<Loanable, "name" | "description" | "comment" | "library">;
+  }) => apiService.post("/associations/loanables/", data),
   patch: ({
     id,
     data,

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { AssociationLayout } from "../../Layout";
 import { Association } from "../../../../models/associations/association";
 import { useParams } from "react-router";
 import { api, useBetterQuery } from "../../../../services/apiService";
@@ -53,7 +52,7 @@ export const AssociationLoanableEdit = ({
   ) : status === "error" ? (
     <Error detail={error} />
   ) : status === "success" && loanable ? (
-    <AssociationLayout association={association}>
+    <>
       <PageTitle>Modifier un objet</PageTitle>
 
       <Card>
@@ -83,6 +82,6 @@ export const AssociationLoanableEdit = ({
           }
         />
       </Card>
-    </AssociationLayout>
+    </>
   ) : null;
 };
