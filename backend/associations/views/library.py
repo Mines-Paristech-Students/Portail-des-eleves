@@ -171,6 +171,16 @@ class LoansViewSet(viewsets.ModelViewSet):
         if loanable.is_borrowed():
             return http.HttpResponseBadRequest("The object is already borrowed.")
 
+        # Check whether the loanable already has a pending request from this user.
+        if Loan.objects.filter(
+            user=request.data["user"],
+            loanable=request.data["loanable"],
+            status="PENDING",
+        ):
+            return http.HttpResponseBadRequest(
+                "This user already has a pending request for this loanable."
+            )
+
         # Check whether the user can create a Loan for another user.
         user_role = request.user.get_role(loanable.library.association)
         user_is_library_admin = user_role is not None and user_role.library

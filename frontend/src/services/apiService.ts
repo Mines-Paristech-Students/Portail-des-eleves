@@ -22,7 +22,8 @@ import { users } from "./api/users";
 import { fundings } from "./api/fundings";
 import { profile } from "./api/profile";
 import { roles } from "./api/roles";
-import { loanables } from "./api/library/loanable";
+import { loanables } from "./api/library/loanables";
+import { loans } from "./api/library/loans";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -51,6 +52,7 @@ export const api = {
   events: events,
 
   loanables: loanables,
+  loans: loans,
 
   marketplace: marketplace,
   products: products,
