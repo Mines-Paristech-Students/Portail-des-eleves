@@ -110,7 +110,7 @@ class LoanableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loanable
-        read_only_fields = ("id", "tags", "user_loan", "number_of_pending")
+        read_only_fields = ("id", "tags", "user_loan", "number_of_pending", "status")
         fields = read_only_fields + (
             "name",
             "description",
@@ -143,10 +143,7 @@ class LoanableSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: Loanable):
         res = super().to_representation(instance)
-
-        res["status"] = instance.status
         res["expected_return_date"] = instance.get_expected_return_date()
-
         return res
 
     def update(self, instance, validated_data):

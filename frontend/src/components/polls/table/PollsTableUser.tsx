@@ -15,6 +15,7 @@ export const PollsTableUser = () => {
   const [remove] = useMutation(api.polls.remove, {
     onSuccess: (response) => {
       queryCache.refetchQueries(["polls.list"]);
+      queryCache.refetchQueries(["polls.stats"]);
 
       if (response.status === 204) {
         sendSuccessToast("Sondage supprimé.");
