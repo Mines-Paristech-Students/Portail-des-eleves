@@ -152,7 +152,8 @@ const LibrarySubSidebar = ({ association }: { association: Association }) => {
       {association.myRole?.permissions?.includes("library") && (
         <SidebarItem
           icon={"settings"}
-          to={`/associations/${association.id}/bibliotheque/gerer`}
+          to={`/associations/${association.id}/bibliotheque/gestion`}
+          exact={false}
         >
           Gestion
         </SidebarItem>

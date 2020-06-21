@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Loanable } from "../../../../models/associations/library";
 import Card from "react-bootstrap/Card";
-import { decidePlural, formatNewLines } from "../../../../utils/format";
+import { decidePlural } from "../../../../utils/format";
 import { CardStatus } from "../../../utils/CardStatus";
 import { TablerColor } from "../../../../utils/colors";
 import Button from "react-bootstrap/Button";
@@ -12,6 +12,7 @@ import { api } from "../../../../services/apiService";
 import { UserContext } from "../../../../services/authService";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import ReactMarkdown from "react-markdown";
 
 const LoanButton = ({
   loanable,
@@ -142,7 +143,9 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
           </p>
         )}
 
-        {loanable.description && <p>{formatNewLines(loanable.description)}</p>}
+        {loanable.description && (
+          <ReactMarkdown source={loanable.description} />
+        )}
       </Card.Body>
     </Card>
   );

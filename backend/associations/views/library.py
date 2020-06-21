@@ -50,6 +50,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
     permission_classes = (LoanablePermission,)
 
     filter_fields = ("library__id",)
+    ordering = ("name", "comment")
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
