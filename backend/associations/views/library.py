@@ -65,8 +65,10 @@ class LoanableFilter(FilterSet):
 
     def filter_status(self, queryset, _, filter):
         """Filter by AVAILABLE, BORROWED or REQUESTED.
-        Here, AVAILABLE means that there are no PENDING loans linked to the loanable.
-        Otherwise, the status is REQUESTED."""
+                                   | The loanable is available | The loanable is borrowed |
+        There are PENDING loans    | REQUESTED                 | Impossible               |
+        There are no PENDING loans | AVAILABLE                 | BORROWED                 |
+        """
 
         # No filter or every filter.
         if len(filter) == 0 or len(filter) == 3:
