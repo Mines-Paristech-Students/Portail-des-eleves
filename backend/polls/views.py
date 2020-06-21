@@ -94,23 +94,27 @@ class PollViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=("get",))
     def stats(self, *args, **kwargs):
+        is_active_condition = (
+            Q(publication_date__lte=date.today())
+            & Q(state="ACCEPTED")
+            & Q(publication_date__gt=date.today() - Poll.POLL_LIFETIME)
+        )
+
         """Return:
          - the number of polls with the REVIEWING (if the user is admin, otherwise None).
          - the number of polls to which the user can vote."""
         return response.Response(
             data={
-                "number_of_pending_polls": len(Poll.objects.filter(state="REVIEWING"))
+                "number_of_pending_polls": Poll.objects.filter(
+                    state="REVIEWING"
+                ).count()
                 if self.request.user.is_staff
                 else None,
-                "number_of_available_polls": len(
-                    [
-                        poll
-                        for poll in Poll.objects.filter()
-                        if poll.is_active
-                        and not self.request.user.id
-                        in poll.votes.all().values_list("user__id", flat=True)
-                    ]
-                ),
+                "number_of_available_polls": Poll.objects.exclude(
+                    votes__user=self.request.user
+                )
+                .filter(is_active_condition)
+                .count(),
             }
         )
 
