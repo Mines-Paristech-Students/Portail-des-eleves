@@ -67,7 +67,9 @@ export const sortingToApiParameter = (
       case Sorting.Ascending:
         return `${mapping && mapping.hasOwnProperty(key) ? mapping[key] : key}`;
       case Sorting.Descending:
-        return `-${mapping && mapping.hasOwnProperty(key) ? mapping[key] : key}`;
+        return `-${
+          mapping && mapping.hasOwnProperty(key) ? mapping[key] : key
+        }`;
     }
   }
 

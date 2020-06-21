@@ -63,8 +63,8 @@ const LoanSummary = ({ loan }) => {
         </>
       ) : loan.status === "RETURNED" ? (
         <>
-          L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")} et{" "}
-          <LoanStatusBadge status={loan.status} /> le{" "}
+          L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")}{" "}
+          et <LoanStatusBadge status={loan.status} /> le{" "}
           {dayjs(loan.realReturnDate).format("DD/MM/YYYY")}.
         </>
       ) : null}
