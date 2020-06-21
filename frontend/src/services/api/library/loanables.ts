@@ -3,9 +3,9 @@ import { Loanable } from "../../../models/associations/library";
 import { toUrlParams } from "../../../utils/urlParam";
 
 export type LoanableListParameters = {
-  library__id: string;
-  ordering: "name" | "-name" | "comment" | "-comment" | "status" | "-status";
-  page_size: number;
+  library__id?: string;
+  ordering?: "name" | "-name" | "comment" | "-comment" | "status" | "-status";
+  page_size?: number;
 };
 
 export const loanables = {

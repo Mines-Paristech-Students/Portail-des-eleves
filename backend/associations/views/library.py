@@ -1,7 +1,9 @@
 from django import http
 from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
@@ -18,6 +20,7 @@ from associations.serializers import (
     LoanSerializer,
     LoanableSerializer,
 )
+from tags.filters import HasHiddenTagFilter
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
@@ -50,7 +53,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
     permission_classes = (LoanablePermission,)
 
     filter_fields = ("library__id",)
-    ordering = ("name", "comment")
+    ordering_fields = ("name", "comment")
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
@@ -72,8 +75,9 @@ class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (LoansPermission,)
 
-    filter_fields = ("status", "user", "loan_date", "loanable__library__id")
-    ordering = ("loan_date",)
+    filter_fields = ("user", "status", "loanable__id", "loanable__library")
+    ordering = ("-request_date",)
+    ordering_fields = ("user__id", "request_date")
 
     @classmethod
     def get_field_from_data_or_instance(cls, field, data, instance, default=None):

@@ -11,6 +11,7 @@ import Card from "react-bootstrap/Card";
 import { queryCache, useMutation } from "react-query";
 import { ToastContext } from "../../../utils/Toast";
 import { useHistory } from "react-router-dom";
+import { LoansTable } from "./loans/LoansTable";
 
 export const AssociationLoanableEdit = ({
   association,
@@ -55,7 +56,12 @@ export const AssociationLoanableEdit = ({
     <>
       <PageTitle>Modifier un objet</PageTitle>
 
+      <LoansTable loanableId={loanableId} />
+
       <Card>
+        <Card.Header>
+          <Card.Title>Informations sur l’objet</Card.Title>
+        </Card.Header>
         <MutateLoanableForm
           initialValues={{
             name: loanable.name || "",
@@ -75,7 +81,7 @@ export const AssociationLoanableEdit = ({
               {
                 onSuccess: () =>
                   history.push(
-                    `/associations/${loanable.library}/bibliotheque/gestion`
+                    `/associations/${association.id}/bibliotheque/gestion`
                   ),
               }
             )
