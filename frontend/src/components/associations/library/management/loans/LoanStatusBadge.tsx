@@ -2,7 +2,7 @@ import React from "react";
 import { Loan } from "../../../../../models/associations/library";
 import Badge from "react-bootstrap/Badge";
 
-export const LoanStatus = ({ status }: Pick<Loan, "status">) => {
+export const LoanStatusBadge = ({ status }: Pick<Loan, "status">) => {
   switch (status) {
     case "ACCEPTED":
       return <Badge variant="primary">Accepté</Badge>;

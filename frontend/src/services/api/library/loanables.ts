@@ -10,7 +10,7 @@ export type LoanableListParameters = {
 
 export const loanables = {
   list: (parameters: LoanableListParameters, page: number) =>
-    unwrap<PaginatedResponse<Loanable>>(
+    unwrap<PaginatedResponse<Loanable[]>>(
       apiService.get(
         `/associations/loanables/${toUrlParams({
           ...parameters,

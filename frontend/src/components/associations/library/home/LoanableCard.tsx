@@ -96,7 +96,7 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
   const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
     ToastContext
   );
-  const [loan] = useMutation(api.loans.post, {
+  const [create] = useMutation(api.loans.create, {
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),
     onSuccess: () => {
       sendSuccessToast("Demande envoyée.");
@@ -130,7 +130,7 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
             <LoanButton
               loanable={loanable}
               loan={() =>
-                loan({
+                create({
                   userId: user.id,
                   loanableId: loanable.id,
                 })
