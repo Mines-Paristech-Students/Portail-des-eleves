@@ -20,6 +20,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
   const [vote] = useMutation(api.polls.vote, {
     onSuccess: () => {
       queryCache.refetchQueries(["polls.list"]);
+      queryCache.refetchQueries(["polls.stats"]);
       sendSuccessToast("Vous avez voté.");
     },
     onError: (errorAsUnknown) => {
