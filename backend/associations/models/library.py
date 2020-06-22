@@ -31,14 +31,28 @@ class Loanable(models.Model):
     @cached_property
     def number_of_pending_loans(self):
         """Return the number of pending loans for this loanable."""
-        return len(self.loans.filter(status="PENDING"))
+        return self.loans.filter(status="PENDING").count()
 
+    @cached_property
     def is_available(self):
-        for loan in self.loans.all():
-            if loan.status in ["BORROWED", "ACCEPTED"]:
-                return False
+        # If a BORROWED or ACCEPTED loan exists, then the loanable is not available.
+        return not self.loans.filter(status__in=["BORROWED", "ACCEPTED"]).exists()
 
-        return True
+    @cached_property
+    def status(self):
+        """
+                                   | The loanable is available | The loanable is borrowed |
+        There are PENDING loans    | REQUESTED                 | Impossible               |
+        There are no PENDING loans | AVAILABLE                 | BORROWED                 |
+        """
+
+        if self.is_available:
+            if self.number_of_pending_loans == 0:
+                return "AVAILABLE"
+
+            return "REQUESTED"
+
+        return "BORROWED"
 
     def get_expected_return_date(self):
         loans = Loan.objects.filter(

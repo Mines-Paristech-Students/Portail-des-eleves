@@ -25,7 +25,7 @@ export interface Loanable {
   image?: string;
   comment?: string;
   library: Library;
-  status: "AVAILABLE" | "BORROWED";
+  status: "AVAILABLE" | "BORROWED" | "REQUESTED";
   expectedReturnDate: Date | null;
 }
 

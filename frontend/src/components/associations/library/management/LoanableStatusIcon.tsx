@@ -1,6 +1,7 @@
 import React from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import { Loanable } from "../../../../models/associations/library";
 
 const Base = ({
   tooltipText,
@@ -19,16 +20,10 @@ const Base = ({
   </OverlayTrigger>
 );
 
-export const LoanableStatusIcon = ({
-  status,
-  numberOfPendingLoans,
-}: {
-  status: "AVAILABLE" | "BORROWED";
-  numberOfPendingLoans: number;
-}) =>
+export const LoanableStatusIcon = ({ status }: Pick<Loanable, "status">) =>
   status === "BORROWED" ? (
     <Base tooltipText="Emprunté" icon="x" textVariant="danger" />
-  ) : status === "AVAILABLE" && numberOfPendingLoans > 0 ? (
+  ) : status === "REQUESTED" ? (
     <Base tooltipText="Demandé" icon="eye" textVariant="warning" />
   ) : (
     <Base tooltipText="Disponible" icon="check" textVariant="success" />

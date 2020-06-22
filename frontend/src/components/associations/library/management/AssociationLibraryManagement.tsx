@@ -48,10 +48,7 @@ const columnsDefinition = [
     header: "Statut",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
-      <LoanableStatusIcon
-        status={loanable.status}
-        numberOfPendingLoans={loanable.numberOfPendingLoans}
-      />
+      <LoanableStatusIcon status={loanable.status} />
     ),
   },
   {

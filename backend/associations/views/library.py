@@ -74,30 +74,22 @@ class LoanableFilter(FilterSet):
         if len(filter) == 0 or len(filter) == 3:
             return queryset
 
-        ids = set()
+        # Looks like the canonical way to get an "always False" condition:
+        # https://stackoverflow.com/questions/35893867/always-false-q-object
+        condition = Q(pk__in=[])
 
         if "AVAILABLE" in filter:
-            ids.update(
-                [
-                    x.id
-                    for x in queryset
-                    if x.is_available() and x.number_of_pending_loans == 0
-                ]
-            )
+            condition |= ~Q(loans__status__in=["BORROWED", "ACCEPTED", "PENDING"])
 
         if "BORROWED" in filter:
-            ids.update([x.id for x in queryset if not x.is_available()])
+            condition |= Q(loans__status__in=["BORROWED", "ACCEPTED"])
 
         if "REQUESTED" in filter:
-            ids.update(
-                [
-                    x.id
-                    for x in queryset
-                    if x.is_available() and x.number_of_pending_loans > 0
-                ]
+            condition |= (~Q(loans__status__in=["BORROWED", "ACCEPTED"])) & Q(
+                loans__status="PENDING"
             )
 
-        return queryset.filter(pk__in=ids)
+        return queryset.filter(condition).distinct()
 
 
 class LoanableViewSet(viewsets.ModelViewSet):
@@ -232,7 +224,7 @@ class LoansViewSet(viewsets.ModelViewSet):
         loanable = Loanable.objects.get(pk=serializer.validated_data["loanable"].id)
 
         # Check whether the loanable is already borrowed.
-        if not loanable.is_available():
+        if not loanable.is_available:
             return http.HttpResponseBadRequest("The object is already borrowed.")
 
         # Check whether the loanable already has a pending request from this user.
