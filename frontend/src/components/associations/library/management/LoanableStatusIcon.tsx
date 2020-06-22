@@ -1,31 +1,12 @@
 import React from "react";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-
 import { Loanable } from "../../../../models/associations/library";
-
-const Base = ({
-  tooltipText,
-  icon,
-  textVariant,
-}: {
-  tooltipText: string;
-  icon: string;
-  textVariant: string;
-}) => (
-  <OverlayTrigger
-    placement="bottom"
-    overlay={<Tooltip id="pending">{tooltipText}</Tooltip>}
-  >
-    <i className={`fe fe-${icon} text-${textVariant}`} />
-  </OverlayTrigger>
-);
+import { Tag } from "../../../utils/tags/Tag";
 
 export const LoanableStatusIcon = ({ status }: Pick<Loanable, "status">) =>
   status === "BORROWED" ? (
-    <Base tooltipText="Emprunté" icon="x" textVariant="danger" />
+    <Tag tag="Prêté" color="info" />
   ) : status === "REQUESTED" ? (
-    <Base tooltipText="Demandé" icon="eye" textVariant="warning" />
+    <Tag tag="Demandé" color="warning" />
   ) : (
-    <Base tooltipText="Disponible" icon="check" textVariant="success" />
+    <Tag tag="Non demandé" color="secondary" />
   );

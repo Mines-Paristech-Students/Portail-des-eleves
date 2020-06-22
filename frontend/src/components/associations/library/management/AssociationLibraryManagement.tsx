@@ -27,33 +27,32 @@ const columnsDefinition = [
     canSort: true,
     render: (loanable: Loanable) => (
       <>
-        <p className="my-0">{loanable.name}</p>
+        <p className="my-0">
+          <LoanableStatusIcon status={loanable.status} />
+          {loanable.name}
+        </p>
         {loanable.description && (
           <ReactMarkdown
             className="small text-justify mt-2"
             source={loanable.description}
           />
         )}
+        {loanable.comment && (
+          <>
+            <hr className="ml-0 my-4 w-75" />
+            <ReactMarkdown
+              className="small text-justify"
+              source={loanable.comment}
+            />
+          </>
+        )}
       </>
-    ),
-  },
-  {
-    key: "comment",
-    header: "Commentaire",
-    canSort: true,
-    render: (loanable: Loanable) => <ReactMarkdown source={loanable.comment} />,
-  },
-  {
-    key: "status",
-    header: "Statut",
-    cellClassName: "text-center",
-    render: (loanable: Loanable) => (
-      <LoanableStatusIcon status={loanable.status} />
     ),
   },
   {
     key: "actions",
     header: "Actions",
+    headerClassName: "w-auto",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
       <>
