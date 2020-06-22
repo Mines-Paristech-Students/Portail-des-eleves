@@ -29,37 +29,30 @@ class Loanable(models.Model):
         ordering = ["-id"]
 
     @cached_property
+    def number_of_pending_loans(self):
+        """Return the number of pending loans for this loanable."""
+        return self.loans.filter(status="PENDING").count()
+
+    @cached_property
+    def is_available(self):
+        # If a BORROWED or ACCEPTED loan exists, then the loanable is not available.
+        return not self.loans.filter(status__in=["BORROWED", "ACCEPTED"]).exists()
+
+    @cached_property
     def status(self):
         """
-        :return: `BORROWED` if any loan has a `BORROWED` or `ACCEPTED` status; `REQUESTED` if any loan has a `PENDING`
-        status (but the previous condition is not met); `AVAILABLE` otherwise.
+                                   | The loanable is available | The loanable is borrowed |
+        There are PENDING loans    | REQUESTED                 | Impossible               |
+        There are no PENDING loans | AVAILABLE                 | BORROWED                 |
         """
-        has_pending = False
 
-        for loan in self.loans.all():
-            if loan.status in ["BORROWED", "ACCEPTED"]:
-                return "BORROWED"
-            elif loan.status == "PENDING":
-                has_pending = True
+        if self.is_available:
+            if self.number_of_pending_loans == 0:
+                return "AVAILABLE"
 
-        if has_pending:
             return "REQUESTED"
 
-        return "AVAILABLE"
-
-    def is_borrowed(self):
-        for loan in self.loans.all():
-            if loan.status == "BORROWED":
-                return True
-
-        return False
-
-    def is_available(self):
-        for loan in self.loans.all():
-            if loan.status in ["BORROWED", "ACCEPTED"]:
-                return False
-
-        return True
+        return "BORROWED"
 
     def get_expected_return_date(self):
         loans = Loan.objects.filter(
