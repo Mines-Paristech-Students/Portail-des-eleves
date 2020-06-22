@@ -22,74 +22,54 @@ const LoanButton = ({
   loanable: Loanable;
   loan: () => void;
   cancel: () => void;
-}) => {
-  const CancelButton = ({ tooltipText }: { tooltipText: string }) => (
+}) =>
+  loanable.status === "BORROWED" ? (
+    <Button className="btn-sm" variant="outline-danger" disabled={true}>
+      Indisponible
+    </Button>
+  ) : loanable.userLoan &&
+    loanable.userLoan.status === "PENDING" &&
+    loanable.userLoan.priority ? (
+    // The loanable is requested and the user has sent a pending request.
     <OverlayTrigger
       placement="bottom"
-      overlay={<Tooltip id={`${loanable.id}-tooltip`}>{tooltipText}</Tooltip>}
+      overlay={
+        <Tooltip id={`${loanable.id}-tooltip`}>
+          {loanable.userLoan.priority === 1
+            ? "Aucune demande avant la vôtre"
+            : `${loanable.userLoan.priority - 1} ${decidePlural(
+                loanable.userLoan.priority - 1,
+                "demande envoyée",
+                "demandes envoyées"
+              )} avant la vôtre`}
+        </Tooltip>
+      }
     >
       <Button className="btn-sm" variant="secondary" onClick={cancel}>
         Annuler la demande
       </Button>
     </OverlayTrigger>
-  );
-
-  const LoanButton = ({ tooltipText }: { tooltipText: string }) => (
+  ) : (
+    // The loanable is not requested or other users have requested the loan, but not the user.
     <OverlayTrigger
       placement="bottom"
-      overlay={<Tooltip id={`${loanable.id}-tooltip`}>{tooltipText}</Tooltip>}
+      overlay={
+        <Tooltip id={`${loanable.id}-tooltip`}>
+          {loanable.numberOfPendingLoans === 0
+            ? "Aucune demande en attente"
+            : `${loanable.numberOfPendingLoans} ${decidePlural(
+                loanable.numberOfPendingLoans - 1,
+                "demande",
+                "demandes"
+              )} en attente`}
+        </Tooltip>
+      }
     >
       <Button className="btn-sm" variant="primary" onClick={loan}>
         Emprunter
       </Button>
     </OverlayTrigger>
   );
-
-  const UnavailableButton = () => (
-    <Button className="btn-sm" variant="outline-danger" disabled={true}>
-      Indisponible
-    </Button>
-  );
-
-  if (loanable.status === "BORROWED") {
-    return <UnavailableButton />;
-  } else if (
-    loanable.status === "REQUESTED" &&
-    loanable.userLoan &&
-    loanable.userLoan.status === "PENDING" &&
-    loanable.userLoan.priority
-  ) {
-    // The loanable is requested and the user has sent a request.
-    return (
-      <CancelButton
-        tooltipText={
-          loanable.userLoan.priority === 1
-            ? "Aucune demande avant la vôtre"
-            : `${loanable.userLoan.priority - 1} ${decidePlural(
-                loanable.userLoan.priority - 1,
-                "demande envoyée",
-                "demandes envoyées"
-              )} avant la vôtre`
-        }
-      />
-    );
-  }
-
-  // The loanable is not requested or other users have requested the loan, but not the user.
-  return (
-    <LoanButton
-      tooltipText={
-        loanable.numberOfPending === 0
-          ? "Aucune demande en attente"
-          : `${loanable.numberOfPending} ${decidePlural(
-              loanable.numberOfPending - 1,
-              "demande",
-              "demandes"
-            )} en attente`
-      }
-    />
-  );
-};
 
 export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
   const user = useContext(UserContext);

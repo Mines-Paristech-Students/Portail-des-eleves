@@ -1,7 +1,11 @@
 from django import http
 from django.db.models import Q
-from rest_framework import status
-from rest_framework import viewsets
+from django_filters.rest_framework import (
+    DjangoFilterBackend,
+    FilterSet,
+    MultipleChoiceFilter,
+)
+from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 
 from associations.models import Library, Loan, Loanable
@@ -18,6 +22,7 @@ from associations.serializers import (
     LoanSerializer,
     LoanableSerializer,
 )
+from tags.filters import HasHiddenTagFilter
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
@@ -44,13 +49,63 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return LibrarySerializer
 
 
+class LoanableFilter(FilterSet):
+    status = MultipleChoiceFilter(
+        choices=(
+            ("AVAILABLE", "AVAILABLE"),
+            ("BORROWED", "BORROWED"),
+            ("REQUESTED", "REQUESTED"),
+        ),
+        method="filter_status",
+    )
+
+    class Meta:
+        model = Loanable
+        fields = ("status", "library")
+
+    def filter_status(self, queryset, _, filter):
+        """Filter by AVAILABLE, BORROWED or REQUESTED.
+                                   | The loanable is available | The loanable is borrowed |
+        There are PENDING loans    | REQUESTED                 | Impossible               |
+        There are no PENDING loans | AVAILABLE                 | BORROWED                 |
+        """
+
+        # No filter or every filter.
+        if len(filter) == 0 or len(filter) == 3:
+            return queryset
+
+        # Looks like the canonical way to get an "always False" condition:
+        # https://stackoverflow.com/questions/35893867/always-false-q-object
+        condition = Q(pk__in=[])
+
+        if "AVAILABLE" in filter:
+            condition |= ~Q(loans__status__in=["BORROWED", "ACCEPTED", "PENDING"])
+
+        if "BORROWED" in filter:
+            condition |= Q(loans__status__in=["BORROWED", "ACCEPTED"])
+
+        if "REQUESTED" in filter:
+            condition |= (~Q(loans__status__in=["BORROWED", "ACCEPTED"])) & Q(
+                loans__status="PENDING"
+            )
+
+        return queryset.filter(condition).distinct()
+
+
 class LoanableViewSet(viewsets.ModelViewSet):
     queryset = Loanable.objects.all()
     serializer_class = LoanableSerializer
     permission_classes = (LoanablePermission,)
 
-    filter_fields = ("library__id",)
     ordering = ("name", "comment")
+    search_fields = ("name", "description")
+    filterset_class = LoanableFilter
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
@@ -169,7 +224,7 @@ class LoansViewSet(viewsets.ModelViewSet):
         loanable = Loanable.objects.get(pk=serializer.validated_data["loanable"].id)
 
         # Check whether the loanable is already borrowed.
-        if loanable.is_borrowed():
+        if not loanable.is_available:
             return http.HttpResponseBadRequest("The object is already borrowed.")
 
         # Check whether the loanable already has a pending request from this user.

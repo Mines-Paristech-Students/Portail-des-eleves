@@ -19,7 +19,7 @@ export interface Loan {
 export interface Loanable {
   id: number;
   userLoan: null | (Omit<Loan, "loanable"> & { loanable: number });
-  numberOfPending: number;
+  numberOfPendingLoans: number;
   name: string;
   description?: string;
   image?: string;
