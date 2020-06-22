@@ -106,11 +106,16 @@ class LoanableSerializer(serializers.ModelSerializer):
     )
     tags = serializers.SerializerMethodField()
     user_loan = serializers.SerializerMethodField()
-    number_of_pending = serializers.SerializerMethodField()
 
     class Meta:
         model = Loanable
-        read_only_fields = ("id", "tags", "user_loan", "number_of_pending", "status")
+        read_only_fields = (
+            "id",
+            "tags",
+            "user_loan",
+            "number_of_pending_loans",
+            "status",
+        )
         fields = read_only_fields + (
             "name",
             "description",
@@ -137,13 +142,11 @@ class LoanableSerializer(serializers.ModelSerializer):
 
         return None
 
-    def get_number_of_pending(self, loanable):
-        """Return the number of pending requests for this loanable."""
-        return len(loanable.loans.filter(status="PENDING"))
+    def to_representation(self, loanable: Loanable):
+        res = super().to_representation(loanable)
 
-    def to_representation(self, instance: Loanable):
-        res = super().to_representation(instance)
-        res["expected_return_date"] = instance.get_expected_return_date()
+        res["expected_return_date"] = loanable.get_expected_return_date()
+
         return res
 
     def update(self, instance, validated_data):
