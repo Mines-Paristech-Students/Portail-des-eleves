@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.request import Request
 
 from associations.models import Role, Media
 
@@ -13,11 +14,11 @@ def _get_role_for_user(user, association):
 class CanEditMedia(BasePermission):
     message = "Editing medias is not allowed."
 
-    def has_permission(self, request, view):
+    def has_permission(self, request: Request, view):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method == "CREATE":
+        if request.method == "POST":
             if "association" in request.data:
                 association = request.data["association"]
             else:
@@ -45,5 +46,4 @@ class CanEditMedia(BasePermission):
 
         if not role or association is None:
             return False
-
         return role.media
