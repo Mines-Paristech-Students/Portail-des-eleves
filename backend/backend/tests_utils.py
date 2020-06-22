@@ -44,7 +44,7 @@ class BaseTestCase(APITestCase):
     def get(self, url, data=None):
         return self.client.get(self.api_base + url, data)
 
-    def post(self, url, data=None, format="json"):
+    def post(self, url, data=None, format="json", files=None):
         return self.client.post(self.api_base + url, data, format=format)
 
     def patch(self, url, data=None, format="json"):

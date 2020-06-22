@@ -6,6 +6,7 @@ export type LoanableListParameters = {
   library__id?: string;
   ordering?: "name" | "-name" | "comment" | "-comment" | "status" | "-status";
   page_size?: number;
+  search?: string;
 };
 
 export const loanables = {

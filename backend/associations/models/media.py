@@ -29,3 +29,7 @@ class Media(models.Model):
     @property
     def url(self):
         return MEDIA_URL + "associations/" + self.file.name
+
+    def delete(self, using=None, keep_parents=False):
+        self.file.delete()
+        super().delete()
