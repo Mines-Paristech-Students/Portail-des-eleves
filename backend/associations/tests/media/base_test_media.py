@@ -17,12 +17,17 @@ class BaseMediaTestCase(WeakAuthenticationBaseTestCase):
             Exception("Media root should be in its own directory")
 
         try:
+            try:
+                shutil.rmtree(settings.MEDIA_ROOT)
+            except FileNotFoundError:
+                pass
             os.makedirs(settings.MEDIA_ROOT)
         except FileExistsError:
             pass
 
     def tearDown(self):
-        shutil.rmtree(settings.MEDIA_ROOT)
+        pass
+        # shutil.rmtree(settings.MEDIA_ROOT)
 
     def upload(self, association, file_path, media_name=None):
         """
