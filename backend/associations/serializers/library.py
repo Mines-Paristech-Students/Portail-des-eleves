@@ -129,7 +129,6 @@ class LoanableSerializer(serializers.ModelSerializer):
 
     def get_user_loan(self, loanable):
         """Return the last loan of the user for this loanable."""
-
         request = self.context.get("request", None)
         user = getattr(request, "user", None)
 
@@ -144,9 +143,7 @@ class LoanableSerializer(serializers.ModelSerializer):
 
     def to_representation(self, loanable: Loanable):
         res = super().to_representation(loanable)
-
         res["expected_return_date"] = loanable.get_expected_return_date()
-
         return res
 
     def update(self, instance, validated_data):

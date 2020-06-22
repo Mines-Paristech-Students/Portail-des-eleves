@@ -146,7 +146,15 @@ export const AssociationLibraryManagement = ({
       }
     >
       <Container>
-        <PageTitle>Gestion de la bibliothèque</PageTitle>
+        <div className="d-flex align-items-center">
+          <PageTitle>Gestion de la bibliothèque</PageTitle>
+          <Link
+            to={`/associations/${association.id}/bibliotheque/gestion/ajouter`}
+            className={"btn btn-primary btn-sm ml-auto"}
+          >
+            <span className={"fe fe-plus"} /> Ajouter un objet
+          </Link>
+        </div>
 
         <Pagination
           apiMethod={api.loanables.list}
