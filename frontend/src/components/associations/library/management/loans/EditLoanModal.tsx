@@ -68,86 +68,108 @@ const LoanSummary = ({ loan }) => {
   );
 };
 
-const selectItems = ([
-  ["PENDING", "En attente"],
-  ["REJECTED", "Refusé"],
-  ["ACCEPTED", "Accepté"],
-  ["BORROWED", "Emprunté"],
-  ["RETURNED", "Retourné"],
-] as [LoanStatus, string][]).map(([value, text]) => ({
-  value: value,
-  children: (
-    <span
-      className={`selectgroup-button selectgroup-button-${value.toLowerCase()}`}
-    >
-      {text}
-    </span>
-  ),
-}));
+/**
+ * Transform an array of [LoanStatus, text] into an array ready to be used in
+ * a `SelectFormGroup`.
+ */
+const getSelectItems = (values: [LoanStatus, string][]) =>
+  values.map(([value, text]) => ({
+    value: value,
+    children: (
+      <span
+        className={`selectgroup-button selectgroup-button-${value.toLowerCase()}`}
+      >
+        {text}
+      </span>
+    ),
+  }));
+
+const selectItems = (status) =>
+  getSelectItems(
+    status !== "BORROWED" && status !== "RETURNED"
+      ? [
+          ["PENDING", "En attente"],
+          ["REJECTED", "Refusé"],
+          ["ACCEPTED", "Accepté"],
+          ["BORROWED", "Emprunté"],
+        ]
+      : [
+          ["PENDING", "En attente"],
+          ["REJECTED", "Refusé"],
+          ["ACCEPTED", "Accepté"],
+          ["BORROWED", "Emprunté"],
+          ["RETURNED", "Retourné"],
+        ]
+  );
 
 export const EditLoanModal = ({
   show,
   onHide,
   onSubmit,
   loan,
+  hideConfirmMessage = "Voulez-vous vraiment fermer ? Toutes les modifications seront perdues.",
 }: {
   show: boolean;
   onHide: () => void;
   onSubmit: (values, { setSubmitting }) => void;
   loan: Loan | null;
+  hideConfirmMessage?: string;
 }) =>
   loan && (
-    <Modal size="lg" show={show} onHide={onHide}>
-      <Modal.Header>
-        <Modal.Title>
-          {loan.user} veut emprunter{" "}
-          <span className="font-italic">{loan.loanable.name}</span>
-        </Modal.Title>
-      </Modal.Header>
-
-      <Formik
-        initialValues={{
-          status: loan.status,
-          loanDate: loan.loanDate || undefined,
-          expectedReturnDate: loan.expectedReturnDate || undefined,
-          realReturnDate: loan.realReturnDate || undefined,
-        }}
-        validationSchema={Yup.object({
-          status: Yup.string().required("Ce champ est requis"),
-          loanDate: Yup.date().when(["status"], (status, schema) =>
+    <Formik
+      initialValues={{
+        status: loan.status,
+        loanDate: loan.loanDate || undefined,
+        expectedReturnDate: loan.expectedReturnDate || undefined,
+        realReturnDate: loan.realReturnDate || undefined,
+      }}
+      validationSchema={Yup.object({
+        status: Yup.string().required("Ce champ est requis"),
+        loanDate: Yup.date().when(["status"], (status, schema) =>
+          status === "BORROWED"
+            ? schema.required("Veuillez entrer une date au format JJ/MM/YYYY.")
+            : schema.notRequired()
+        ),
+        expectedReturnDate: Yup.date().when(
+          ["status", "loanDate"],
+          (status, loanDate, schema) =>
             status === "BORROWED"
-              ? schema.required(
-                  "Veuillez entrer une date au format JJ/MM/YYYY."
-                )
-              : schema.notRequired()
-          ),
-          expectedReturnDate: Yup.date().when(
-            ["status", "loanDate"],
-            (status, loanDate, schema) =>
-              status === "BORROWED"
-                ? loanDate &&
-                  schema
-                    .required("Veuillez entrer une date au format JJ/MM/YYYY")
-                    .min(
-                      loanDate,
-                      "La date de retour prévue doit être après la date de prêt."
-                    )
-                : schema.notRequired()
-          ),
-          realReturnDate: Yup.date().when(["status"], (status, schema) =>
-            status === "RETURNED"
-              ? schema
+              ? loanDate &&
+                schema
                   .required("Veuillez entrer une date au format JJ/MM/YYYY")
                   .min(
-                    loan.loanDate,
-                    `La date de retour doit être après la date de prêt
-${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
+                    loanDate,
+                    "La date de retour prévue doit être après la date de prêt."
                   )
               : schema.notRequired()
-          ),
-        })}
-        onSubmit={onSubmit}
-        component={({ values }) => (
+        ),
+        realReturnDate: Yup.date().when(["status"], (status, schema) =>
+          status === "RETURNED"
+            ? schema
+                .required("Veuillez entrer une date au format JJ/MM/YYYY")
+                .min(
+                  loan.loanDate,
+                  `La date de retour doit être après la date de prêt
+${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
+                )
+            : schema.notRequired()
+        ),
+      })}
+      onSubmit={onSubmit}
+      component={({ dirty, values }) => (
+        <Modal
+          size="lg"
+          show={show}
+          onHide={() =>
+            (!dirty || window.confirm(hideConfirmMessage)) && onHide()
+          }
+        >
+          <Modal.Header>
+            <Modal.Title>
+              {loan.user} veut emprunter{" "}
+              <span className="font-italic">{loan.loanable.name}</span>
+            </Modal.Title>
+          </Modal.Header>
           <Form>
             <Modal.Body>
               <Container>
@@ -163,7 +185,7 @@ ${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
                       type="radio"
                       label="Statut"
                       name="status"
-                      items={selectItems}
+                      items={selectItems(loan.status)}
                     />
                     {values.status === "BORROWED" && (
                       <>
@@ -192,7 +214,9 @@ ${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
               <Button
                 className="btn-icon"
                 variant="outline-danger"
-                onClick={onHide}
+                onClick={() =>
+                  (!dirty || window.confirm(hideConfirmMessage)) && onHide()
+                }
               >
                 Annuler
               </Button>
@@ -205,7 +229,7 @@ ${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
               </Button>
             </Modal.Footer>
           </Form>
-        )}
-      />
-    </Modal>
+        </Modal>
+      )}
+    />
   );

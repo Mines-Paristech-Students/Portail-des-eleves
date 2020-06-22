@@ -17,7 +17,8 @@ export const AssociationManageLoans = ({
 
   const { data: loanable, error, status } = useBetterQuery<Loanable>(
     ["loanables.get", { loanableId: loanableId }],
-    api.loanables.get
+    api.loanables.get,
+    { refetchOnWindowFocus: false }
   );
 
   return status === "loading" ? (

@@ -72,7 +72,9 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
     ToastContext
   );
 
+  // The loan edited in the modal.
   const [editLoan, setEditLoan] = useState<Loan | null>(null);
+
   const { columns, sorting } = useColumns(columnsDefinition(setEditLoan));
 
   const [edit] = useMutation(api.loans.patch, {
@@ -85,6 +87,7 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
     onError: () => sendErrorToast("Une erreur est survenue."),
   });
 
+  // Submit the form in the modal.
   const submit = (values, { setSubmitting }) => {
     if (editLoan) {
       if (values.status !== "RETURNED") {
@@ -92,7 +95,7 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
         values.realReturnDate = null;
 
         // `loanDate` and `expectedReturnDate` may only change when the loanable
-        // is borrowed.
+        // is borrowed. Otherwise, they should be reset.
         if (values.status !== "BORROWED") {
           values.loanDate = null;
           values.expectedReturnDate = null;
@@ -116,12 +119,18 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
     }
   };
 
+  // Hide the modal.
+  const hide = () => setEditLoan(null);
+
   return (
     <>
       <EditLoanModal
         show={editLoan !== null}
         onHide={() => setEditLoan(null)}
-        onSubmit={submit}
+        onSubmit={(...args) => {
+          hide();
+          submit(...args);
+        }}
         loan={editLoan}
       />
 
@@ -137,6 +146,7 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
         paginationControlProps={{
           className: "justify-content-center mt-5",
         }}
+        config={{ refetchOnWindowFocus: false }}
         render={(loans, paginationControl) => (
           <>
             <Card>
