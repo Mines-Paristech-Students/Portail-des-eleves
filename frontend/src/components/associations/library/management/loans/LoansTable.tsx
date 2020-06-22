@@ -5,7 +5,7 @@ import { api } from "../../../../../services/apiService";
 import { Table, useColumns } from "../../../../utils/table/Table";
 import { Loan } from "../../../../../models/associations/library";
 import dayjs from "dayjs";
-import { LoanStatusBadge } from "./LoanStatusBadge";
+import { LoanStatusTag } from "./LoanStatusTag";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import Button from "react-bootstrap/Button";
@@ -17,7 +17,7 @@ import { ToastContext } from "../../../../utils/Toast";
 const columnsDefinition = (setEditLoan) => [
   {
     key: "user",
-    header: "Utilisateur(trice)",
+    header: "Élève",
     canSort: true,
   },
   {
@@ -29,13 +29,13 @@ const columnsDefinition = (setEditLoan) => [
   {
     key: "status",
     header: "Statut",
-    render: (loan: Loan) => <LoanStatusBadge status={loan.status} />,
+    render: (loan: Loan) => <LoanStatusTag status={loan.status} />,
   },
   {
     key: "edit",
     header: "Modifier",
     render: (loan: Loan) =>
-      loan.status !== "CANCELLED" ? (
+      loan.status !== "CANCELLED" && (
         <OverlayTrigger
           placement="bottom"
           overlay={<Tooltip id="edit">Modifier</Tooltip>}
@@ -59,7 +59,7 @@ const columnsDefinition = (setEditLoan) => [
             <i className="fe fe-edit-2" />
           </Button>
         </OverlayTrigger>
-      ) : null,
+      ),
   },
 ];
 

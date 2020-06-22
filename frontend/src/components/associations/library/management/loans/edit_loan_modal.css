@@ -1,9 +1,6 @@
-.selectgroup-button-loan-status {
-  border-radius: 3px !important;
-}
-
 .selectgroup-button-pending {
   border-color: rgb(241, 196, 15) !important;
+  color: rgb(241, 196, 15) !important;
 }
 
 .selectgroup-input:focus + .selectgroup-button-pending {
@@ -16,6 +13,7 @@
 
 .selectgroup-button-rejected {
   border-color: rgb(205, 32, 31) !important;
+  color: rgb(205, 32, 31) !important;
 }
 
 .selectgroup-input:focus + .selectgroup-button-rejected {
@@ -28,6 +26,7 @@
 
 .selectgroup-button-accepted {
   border-color: rgb(70, 127, 207) !important;
+  color: rgb(70, 127, 207) !important;
 }
 
 .selectgroup-input:focus + .selectgroup-button-accepted {
@@ -40,6 +39,7 @@
 
 .selectgroup-button-borrowed {
   border-color: rgb(69, 170, 242) !important;
+  color: rgb(69, 170, 242) !important;
 }
 
 .selectgroup-input:focus + .selectgroup-button-borrowed {
@@ -52,6 +52,7 @@
 
 .selectgroup-button-returned {
   border-color: rgb(94, 186, 0) !important;
+  color: rgb(94, 186, 0) !important;
 }
 
 .selectgroup-input:focus + .selectgroup-button-returned {

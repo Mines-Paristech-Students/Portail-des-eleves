@@ -11,7 +11,7 @@ import Col from "react-bootstrap/Col";
 import { SelectFormGroup } from "../../../../utils/forms/SelectFormGroup";
 import dayjs from "dayjs";
 import { decidePlural } from "../../../../../utils/format";
-import { LoanStatusBadge } from "./LoanStatusBadge";
+import { LoanStatusTag } from "./LoanStatusTag";
 import "./edit_loan_modal.css";
 
 /**
@@ -24,7 +24,7 @@ const LoanSummary = ({ loan }) => {
       {dayjs(loan.requestDate).format("HH:mm")}.<br />
       {loan.status === "PENDING" ? (
         <>
-          Il est <LoanStatusBadge status={loan.status} />.{" "}
+          Il est <LoanStatusTag status={loan.status} />.{" "}
           {loan.priority !== null ? (
             <span className={loan.priority > 1 ? "font-weight-bold" : ""}>
               {loan.priority === 1
@@ -37,17 +37,13 @@ const LoanSummary = ({ loan }) => {
             </span>
           ) : null}
         </>
-      ) : loan.status === "REJECTED" ? (
+      ) : loan.status === "REJECTED" || loan.status === "BORROWED" ? (
         <>
-          Il a été <LoanStatusBadge status={loan.status} />.
-        </>
-      ) : loan.status === "ACCEPTED" ? (
-        <>
-          Il a été <LoanStatusBadge status={loan.status} />.
+          Il a été <LoanStatusTag status={loan.status} />.
         </>
       ) : loan.status === "BORROWED" ? (
         <>
-          L’objet a été <LoanStatusBadge status={loan.status} /> le{" "}
+          L’objet a été <LoanStatusTag status={loan.status} /> le{" "}
           {dayjs(loan.loanDate).format("DD/MM/YYYY")}.<br />
           {loan.expectedReturnDate && (
             <>
@@ -64,7 +60,7 @@ const LoanSummary = ({ loan }) => {
       ) : loan.status === "RETURNED" ? (
         <>
           L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")}{" "}
-          et <LoanStatusBadge status={loan.status} /> le{" "}
+          et <LoanStatusTag status={loan.status} /> le{" "}
           {dayjs(loan.realReturnDate).format("DD/MM/YYYY")}.
         </>
       ) : null}
@@ -73,18 +69,18 @@ const LoanSummary = ({ loan }) => {
 };
 
 const selectItems = ([
-  "PENDING",
-  "REJECTED",
-  "ACCEPTED",
-  "BORROWED",
-  "RETURNED",
-] as LoanStatus[]).map((value: LoanStatus) => ({
+  ["PENDING", "En attente"],
+  ["REJECTED", "Refusé"],
+  ["ACCEPTED", "Accepté"],
+  ["BORROWED", "Emprunté"],
+  ["RETURNED", "Retourné"],
+] as [LoanStatus, string][]).map(([value, text]) => ({
   value: value,
   children: (
     <span
-      className={`selectgroup-button selectgroup-button-loan-status selectgroup-button-icon mr-2 selectgroup-button-${value.toLowerCase()}`}
+      className={`selectgroup-button selectgroup-button-${value.toLowerCase()}`}
     >
-      <LoanStatusBadge status={value} />
+      {text}
     </span>
   ),
 }));
@@ -163,7 +159,7 @@ ${loan.loanDate && "(le " + dayjs(loan.loanDate).format("DD/MM/YYYY") + ")"}.`
                 <Row className="mt-5">
                   <Col xs={12} md={12}>
                     <SelectFormGroup
-                      selectType="inline"
+                      selectType="pills"
                       type="radio"
                       label="Statut"
                       name="status"
