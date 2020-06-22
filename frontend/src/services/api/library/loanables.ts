@@ -4,6 +4,7 @@ import { toUrlParams } from "../../../utils/urlParam";
 
 export type LoanableListParameters = {
   library__id: string;
+  ordering: "name" | "-name" | "comment" | "-comment" | "status" | "-status";
   page_size: number;
 };
 
@@ -17,4 +18,15 @@ export const loanables = {
         })}`
       )
     ),
+  get: ({ loanableId }: { loanableId: number | string }) =>
+    unwrap<Loanable>(apiService.get(`/associations/loanables/${loanableId}/`)),
+  patch: ({
+    id,
+    data,
+  }: {
+    id: number | string;
+    data: Partial<Pick<Loanable, "name" | "description" | "comment">>;
+  }) => apiService.patch(`/associations/loanables/${id}/`, data),
+  remove: ({ id }: { id: number | string }) =>
+    apiService.delete(`/associations/loanables/${id}/`),
 };

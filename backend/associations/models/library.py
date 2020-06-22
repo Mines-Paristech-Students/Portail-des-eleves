@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 from authentication.models import User
 
@@ -27,6 +28,25 @@ class Loanable(models.Model):
     class Meta:
         ordering = ["-id"]
 
+    @cached_property
+    def status(self):
+        """
+        :return: `BORROWED` if any loan has a `BORROWED` or `ACCEPTED` status; `REQUESTED` if any loan has a `PENDING`
+        status (but the previous condition is not met); `AVAILABLE` otherwise.
+        """
+        has_pending = False
+
+        for loan in self.loans.all():
+            if loan.status in ["BORROWED", "ACCEPTED"]:
+                return "BORROWED"
+            elif loan.status == "PENDING":
+                has_pending = True
+
+        if has_pending:
+            return "REQUESTED"
+
+        return "AVAILABLE"
+
     def is_borrowed(self):
         for loan in self.loans.all():
             if loan.status == "BORROWED":
@@ -38,6 +58,7 @@ class Loanable(models.Model):
         for loan in self.loans.all():
             if loan.status in ["BORROWED", "ACCEPTED"]:
                 return False
+
         return True
 
     def get_expected_return_date(self):
@@ -55,6 +76,7 @@ class Loan(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    request_date = models.DateTimeField(auto_now_add=True)
     loan_date = models.DateTimeField(auto_now=False, null=True)
     expected_return_date = models.DateTimeField(auto_now=False, null=True)
     real_return_date = models.DateTimeField(auto_now=False, null=True)

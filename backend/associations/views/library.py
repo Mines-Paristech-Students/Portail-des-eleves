@@ -50,6 +50,7 @@ class LoanableViewSet(viewsets.ModelViewSet):
     permission_classes = (LoanablePermission,)
 
     filter_fields = ("library__id",)
+    ordering = ("name", "comment")
 
     def get_queryset(self):
         """The user has access to the loanables coming from every enabled library and to the loanables of every
@@ -170,6 +171,16 @@ class LoansViewSet(viewsets.ModelViewSet):
         # Check whether the loanable is already borrowed.
         if loanable.is_borrowed():
             return http.HttpResponseBadRequest("The object is already borrowed.")
+
+        # Check whether the loanable already has a pending request from this user.
+        if Loan.objects.filter(
+            user=request.data["user"],
+            loanable=request.data["loanable"],
+            status="PENDING",
+        ):
+            return http.HttpResponseBadRequest(
+                "This user already has a pending request for this loanable."
+            )
 
         # Check whether the user can create a Loan for another user.
         user_role = request.user.get_role(loanable.library.association)

@@ -80,4 +80,8 @@ export const polls = {
       user: user.id,
       choice: choiceId,
     }),
+  stats: () =>
+    unwrap<{ numberOfPendingPolls: number; numberOfAvailablePolls: number }>(
+      apiService.get("/polls/stats/")
+    ),
 };
