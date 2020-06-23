@@ -50,7 +50,7 @@ class Media(models.Model):
 
 @receiver(post_save, sender=Media)
 def create_preview(sender, instance: Media, created, **kwargs):
-    if not created:
+    if not created or not instance.file:
         return
 
     mime = magic.Magic(mime=True)
