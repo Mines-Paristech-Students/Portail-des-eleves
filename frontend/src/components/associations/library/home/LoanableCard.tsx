@@ -22,8 +22,8 @@ const LoanButton = ({
   loanable: Loanable;
   loan: () => void;
   cancel: () => void;
-}) => {
-  return loanable.status === "BORROWED" ? (
+}) =>
+  loanable.status === "BORROWED" ? (
     <Button className="btn-sm" variant="outline-danger" disabled={true}>
       Indisponible
     </Button>
@@ -70,7 +70,6 @@ const LoanButton = ({
       </Button>
     </OverlayTrigger>
   );
-};
 
 export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
   const user = useContext(UserContext);
