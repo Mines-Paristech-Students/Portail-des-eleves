@@ -74,7 +74,11 @@ export const AssociationFilesystemList = ({ association }) => {
                   }
                 >
                   {media.previewUrl && (
-                    <img src={media.previewUrl} alt={media.name} className={"border-bottom"}/>
+                    <img
+                      src={media.previewUrl}
+                      alt={media.name}
+                      className={"border-bottom"}
+                    />
                   )}
                   <Card.Body>
                     <h4 className={"m-0"}>{media.name}</h4>
