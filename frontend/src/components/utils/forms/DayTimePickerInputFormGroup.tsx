@@ -35,37 +35,37 @@ import { BaseFormGroup, BaseFormGroupProps } from "./BaseFormGroup";
  * @param props passed to `DayTimePickerInputField`.
  */
 export const DayTimePickerInputFormGroup = ({
-    name,
-    label,
-    help,
-    feedback = true,
-    disabled = false,
-    parseFormats = ["DD/MM/YYYY HH:mm"],
-    displayFormat = "DD/MM/YYYY HH:mm",
-    todayButton = false,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    props,
+  name,
+  label,
+  help,
+  feedback = true,
+  disabled = false,
+  parseFormats = ["DD/MM/YYYY HH:mm"],
+  displayFormat = "DD/MM/YYYY HH:mm",
+  todayButton = false,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  props,
 }: DayPickerInputFieldProps & BaseFormGroupProps) => (
-    <BaseFormGroup
-        name={name}
-        label={label}
-        help={help}
-        feedback={!disabled && feedback}
-        feedbackOnTouchedOnly={false}
-        formGroupProps={formGroupProps}
-        labelProps={labelProps}
-        feedbackProps={feedbackProps}
-    >
-        <DayTimePickerInputField
-            name={name}
-            feedback={!disabled && feedback}
-            disabled={disabled}
-            parseFormats={parseFormats}
-            displayFormat={displayFormat}
-            todayButton={todayButton}
-            {...props}
-        />
-    </BaseFormGroup>
+  <BaseFormGroup
+    name={name}
+    label={label}
+    help={help}
+    feedback={!disabled && feedback}
+    feedbackOnTouchedOnly={false}
+    formGroupProps={formGroupProps}
+    labelProps={labelProps}
+    feedbackProps={feedbackProps}
+  >
+    <DayTimePickerInputField
+      name={name}
+      feedback={!disabled && feedback}
+      disabled={disabled}
+      parseFormats={parseFormats}
+      displayFormat={displayFormat}
+      todayButton={todayButton}
+      {...props}
+    />
+  </BaseFormGroup>
 );

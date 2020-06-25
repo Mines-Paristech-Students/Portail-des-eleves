@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 from authentication.models import User
 
@@ -27,18 +28,31 @@ class Loanable(models.Model):
     class Meta:
         ordering = ["-id"]
 
-    def is_borrowed(self):
-        for loan in self.loans.all():
-            if loan.status == "BORROWED":
-                return True
+    @cached_property
+    def number_of_pending_loans(self):
+        """Return the number of pending loans for this loanable."""
+        return self.loans.filter(status="PENDING").count()
 
-        return False
-
+    @cached_property
     def is_available(self):
-        for loan in self.loans.all():
-            if loan.status in ["BORROWED", "ACCEPTED"]:
-                return False
-        return True
+        # If a BORROWED or ACCEPTED loan exists, then the loanable is not available.
+        return not self.loans.filter(status__in=["BORROWED", "ACCEPTED"]).exists()
+
+    @cached_property
+    def status(self):
+        """
+                                   | The loanable is available | The loanable is borrowed |
+        There are PENDING loans    | REQUESTED                 | Impossible               |
+        There are no PENDING loans | AVAILABLE                 | BORROWED                 |
+        """
+
+        if self.is_available:
+            if self.number_of_pending_loans == 0:
+                return "AVAILABLE"
+
+            return "REQUESTED"
+
+        return "BORROWED"
 
     def get_expected_return_date(self):
         loans = Loan.objects.filter(
@@ -55,6 +69,7 @@ class Loan(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    request_date = models.DateTimeField(auto_now_add=True)
     loan_date = models.DateTimeField(auto_now=False, null=True)
     expected_return_date = models.DateTimeField(auto_now=False, null=True)
     real_return_date = models.DateTimeField(auto_now=False, null=True)

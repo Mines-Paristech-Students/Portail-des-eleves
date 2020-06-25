@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import sys
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -157,6 +158,8 @@ JQUERY_URL = False
 MEDIA_ROOT = join(BASE_DIR, "medias")
 MEDIA_URL = "/medias/"
 
+if len(sys.argv) > 1 and sys.argv[1] == "test":
+    MEDIA_ROOT = join(MEDIA_ROOT, "tests")
 
 # Customized settings.
 

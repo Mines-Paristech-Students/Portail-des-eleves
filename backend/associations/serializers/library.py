@@ -4,6 +4,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from associations.models import Association, Library, Loanable, Loan
+from associations.serializers.library_short import (
+    LoanableShortSerializer,
+    LoanPrioritySerializerMixin,
+    LoanShortSerializer,
+)
 from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
@@ -70,14 +75,14 @@ class UpdateLoanSerializer(serializers.ModelSerializer):
         return is_valid_super and not bool(self._errors)
 
 
-class LoanSerializer(serializers.ModelSerializer):
+class LoanSerializer(LoanPrioritySerializerMixin, serializers.ModelSerializer):
     loanable = PrimaryKeyRelatedField(queryset=Loanable.objects.all())
     user = PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Loan
-        fields = (
-            "id",
+        read_only_fields = ("id", "priority", "request_date")
+        fields = read_only_fields + (
             "user",
             "status",
             "loanable",
@@ -89,27 +94,28 @@ class LoanSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         res = super(serializers.ModelSerializer, self).to_representation(instance)
         res["library"] = instance.loanable.library.id
-        res["loanable"] = LoanableSerializer().to_representation(instance.loanable)
+        res["loanable"] = LoanableShortSerializer(self.context).to_representation(
+            instance.loanable
+        )
         return res
-
-
-class LoanableShortSerializer(serializers.ModelSerializer):
-    """Used to serialize loanables inside a LibrarySerializer."""
-
-    class Meta:
-        model = Loanable
-        fields = ("name", "description", "image", "comment")
 
 
 class LoanableSerializer(serializers.ModelSerializer):
     library = serializers.PrimaryKeyRelatedField(
         many=False, read_only=False, queryset=Library.objects
     )
-    tags = serializers.SerializerMethodField
+    tags = serializers.SerializerMethodField()
+    user_loan = serializers.SerializerMethodField()
 
     class Meta:
         model = Loanable
-        read_only_fields = ("id", "tags")
+        read_only_fields = (
+            "id",
+            "tags",
+            "user_loan",
+            "number_of_pending_loans",
+            "status",
+        )
         fields = read_only_fields + (
             "name",
             "description",
@@ -121,24 +127,29 @@ class LoanableSerializer(serializers.ModelSerializer):
     def get_tags(self, obj):
         return filter_tags(self.context, obj, short=False)
 
-    def to_representation(self, instance: Loanable):
-        res = super().to_representation(instance)
+    def get_user_loan(self, loanable):
+        """Return the last loan of the user for this loanable."""
+        request = self.context.get("request", None)
+        user = getattr(request, "user", None)
 
-        res["status"] = "AVAILABLE" if instance.is_available() else "BORROWED"
-        res["expected_return_date"] = instance.get_expected_return_date()
+        user_loans = loanable.loans.order_by("-request_date").filter(user=user)
 
+        if user_loans.exists():
+            return LoanShortSerializer(context=self.context).to_representation(
+                user_loans.first()
+            )
+
+        return None
+
+    def to_representation(self, loanable: Loanable):
+        res = super().to_representation(loanable)
+        res["expected_return_date"] = loanable.get_expected_return_date()
         return res
 
     def update(self, instance, validated_data):
         if "library" in validated_data:
             validated_data.pop("library")
         return super(LoanableSerializer, self).update(instance, validated_data)
-
-
-class LibraryShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Library
-        fields = ("id", "enabled", "association")
 
 
 class LibrarySerializer(serializers.ModelSerializer):

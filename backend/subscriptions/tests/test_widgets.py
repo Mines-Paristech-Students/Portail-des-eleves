@@ -192,7 +192,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.login(user)
             res = self.poll_widget()
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data, {})
+            self.assertEqual(res.data["active_polls"], [])
 
     def test_repartition_widget(self):
         # TODO once repartition widget is written.

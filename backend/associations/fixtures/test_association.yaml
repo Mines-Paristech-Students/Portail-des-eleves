@@ -30,6 +30,7 @@
     role: Admin
     start_date: "2017-01-01"
     administration_permission: true
+    media_permission: true
 
 - model: authentication.user
   pk: 17member_biero

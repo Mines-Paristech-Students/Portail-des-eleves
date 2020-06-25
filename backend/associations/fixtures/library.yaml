@@ -10,23 +10,90 @@
 - model: associations.loanable
   pk: 1
   fields:
-    name: Le bouclier d'auvergne
-    description: Lorem ipsum sic amet et doloris
-    comment: Private comment
+    name: Le Bouclier arverne
+    description: Lors de la reddition de Vercingétorix après Alésia, son bouclier a été dérobé par un soldat romain. Quelques années plus tard, Jules César veut le retrouver afin de manifester une fois de plus sa victoire sur la Gaule.
+    comment: https://fr.wikipedia.org/wiki/Le_Bouclier_arverne
     library: bde
 
 - model: associations.loanable
   pk: 2
   fields:
-    name: Tintin chez les chtis
-    description: Lorem ipsum sic amet et doloris
+    name: Tintin chez les Chtis
+    description: Accompagné de son fidèle Milou, Tintin démantèle un réseau de trafiquants de maroilles.
     library: bde
 
 - model: associations.loanable
   pk: 3
   fields:
-    name: Asterix contre César
-    description: Lorem ipsum sic amet et doloris
+    name: Astérix aux Jeux olympiques
+    description: "Astérix et Obélix se rendent en Grèce, à Olympie, pour participer aux Jeux olympiques. Une bonne partie du village gaulois les accompagne pour les soutenir en se faisant passer pour des romains (les jeux étant réservés aux Grecs, les Romains y étant admis au nom de leur supposée parenté avec les Troyens).
+
+    Malheureusement, quand ils arrivent, leurs espoirs de remporter les jeux haut la main s'écroulent quand ils entendent parler de l'interdiction des produits dopants. La potion magique procure une force surhumaine est par conséquent considérée comme un produit interdit. Refusant d'abandonner, Astérix n'a d'autre choix que de représenter la Gaule, seul, et sans potion magique. Toutefois, la présence des Gaulois a fortement perturbé la préparation des athlètes romains. Les Grecs remportent toutes les épreuves. Mais il est décidé de laisser la prochaine épreuve de course à pied aux Romains seulement (Astérix inclus)."
+    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_aux_Jeux_olympiques
+    library: bde
+
+- model: associations.loanable
+  pk: 4
+  fields:
+    name: Astérix et le Chaudron
+    description: Pour ne pas payer ses impôts, Moralélastix, un chef gaulois avare, dépose tout l'argent de sa tribu dans un chaudron et demande à Abraracourcix de le garder dans son village jusqu'au passage du questeur romain.
+    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_et_le_Chaudron
+    library: bde
+
+- model: associations.loanable
+  pk: 5
+  fields:
+    name: Astérix en Hispanie
+    description: Nous sommes en 45 avant Jésus-Christ. Toute la région de Munda (Montilla) en Hispanie est occupée par les Romains... Toute ? Non ! Un village peuplé d'irréductibles Ibères résiste encore et toujours à l'envahisseur. Jules César enlève donc Pépé, fils de Soupalognon y Crouton, le chef du village, et l'envoie à Babaorum, une garnison armoricaine, pour le protéger. C'était compter sans les voisins immédiats du camp retranché. Effectivement, Astérix et Obélix libèrent Pépé et décident de le ramener en Hispanie.
+    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_en_Hispanie
+    library: bde
+
+- model: associations.loanable
+  pk: 6
+  fields:
+    name: 4 aventures de Spirou et Fantasio
+    description: Spirou et Fantasio découvrent que le journal qui parle de l'affaire du savant fou Samovar (cf. Hors-série Radar le robot) cite également le robot. Craignant que cela n’excite les convoitises, Spirou et Fantasio retournent au laboratoire de Samovar et y rencontrent des bandits, effectivement à la recherche des plans du robot. Mais les deux jeunes héros les subtilisent et les détruisent, après être parvenus à échapper aux bandits. Peu de temps après, le journal annonce que le professeur Samovar recouvre doucement la mémoire. Les bandits tentent de l'enlever mais Spirou et Fantasio les en empêchent. Les malfaiteurs sont arrêtés tandis que Samovar, devenu complètement fou, est conduit à l'asile.
+    comment: https://fr.wikipedia.org/wiki/4_aventures_de_Spirou_et_Fantasio
+    library: bde
+
+- model: associations.loanable
+  pk: 7
+  fields:
+    name: Il y a un sorcier à Champignac
+    description: Spirou et Fantasio décident d'aller camper près du petit village de Champignac. Sur place, ils découvrent des cochons de toutes les couleurs, des vaches qui du jour au lendemain se mettent à produire du lait imbuvable, et décident d'aider un vagabond accusé de sorcellerie par le Maire de Champignac. Ils font également la connaissance du Comte de Champignac, un personnage original qui habite un château pourvu d'un immense parc.
+    comment: https://fr.wikipedia.org/wiki/Il_y_a_un_sorcier_%C3%A0_Champignac
+    library: bde
+
+- model: associations.loanable
+  pk: 8
+  fields:
+    name: Les Chapeaux noirs
+    description: Spirou et Fantasio ont pour mission de se rendre au Far West et de vérifier si des cow-boys existent encore. Sur place, c'est la consternation... Ceux-ci ont laissé place à la civilisation du béton et de l'essence. Cependant un homme les accoste et les fait conduire à Tombstone, une ville où les cow-boys existent encore.
+    comment: https://fr.wikipedia.org/wiki/Les_Chapeaux_noirs_(album)
+    library: bde
+
+- model: associations.loanable
+  pk: 9
+  fields:
+    name: Spirou et les Héritiers
+    description: Fantasio hérite. Son vieil oncle vient de mourir, Spirou l'attend devant chez le notaire pour connaître son héritage. L’oncle a décidé de léguer sa fortune à un seul de ses deux neveux, Fantasio ou son cousin Zantafio. Pour cela, l'un d'entre eux doit réussir au moins deux des trois épreuves qu'il leur impose.
+    comment: https://fr.wikipedia.org/wiki/Spirou_et_les_H%C3%A9ritiers
+    library: bde
+
+- model: associations.loanable
+  pk: 10
+  fields:
+    name: Les Voleurs du marsupilami
+    description: Spirou et Fantasio, qui regrettent d'avoir donné au zoo le Marsupilami capturé dans l'épisode précédent, décident de l'en sortir pour le ramener dans son milieu naturel. Mais avant qu'ils aient pu agir, ils apprennent la mort du petit animal. Le corps du Marsupilami disparaît peu après. Estimant que la personne qui a volé le corps n'aurait pu sortir son butin pendant les heures d'ouverture, Spirou et Fantasio restent dans le zoo jusqu'à la nuit tombée pour essayer de le capturer. Après une course-poursuite, le voleur leur échappe de justesse mais ils parviennent à lui arracher un bout du papier emballant le corps de l'animal, ainsi qu'un document portant son adresse.
+    comment: https://fr.wikipedia.org/wiki/Les_Voleurs_du_marsupilami
+    library: bde
+
+- model: associations.loanable
+  pk: 11
+  fields:
+    name: La Corne de rhinocéros
+    description: 'Fantasio a besoin d''un bon reportage: sa carrière en dépend. Avec Spirou, il se rend en fantacoptère sur le toit des "Galeries du bon bazar" dans le but de simuler un cambriolage. À l''intérieur, ils découvrent les vigiles attachés puis leur vieil ami Roulebille, blessé par l''explosion récente de l''usine Turbot en ville. Il leur apprend qu''il possède les plans d''une nouvelle voiture : la Turbotraction, que leurs concurrents convoitent.'
+    comment: https://fr.wikipedia.org/wiki/La_Corne_de_rhinoc%C3%A9ros
     library: bde
 
 - model: associations.loan
@@ -34,8 +101,9 @@
   fields:
     loanable: 1
     user: 17bocquet
-    loan_date: '2019-01-01T00:00:00+00:00'
-    expected_return_date: '2050-12-01T00:00:00+00:00'
+    request_date: "2018-01-01T00:00:00+00:00"
+    loan_date: "2019-01-01T00:00:00+00:00"
+    expected_return_date: "2050-12-01T00:00:00+00:00"
     status: BORROWED
 
 - model: associations.loan
@@ -43,8 +111,9 @@
   fields:
     loanable: 1
     user: 17bocquet
-    loan_date: '2018-03-04T00:00:00+00:00'
-    expected_return_date: '2018-06-01T00:00:00+00:00'
+    request_date: "2018-06-01T00:00:00+00:00"
+    loan_date: "2018-03-04T00:00:00+00:00"
+    expected_return_date: "2018-06-01T00:00:00+00:00"
     status: RETURNED
 
 #########

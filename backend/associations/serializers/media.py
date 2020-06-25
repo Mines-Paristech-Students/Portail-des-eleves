@@ -14,6 +14,7 @@ class MediaSerializer(serializers.ModelSerializer):
             "uploaded_on",
             "uploaded_by",
             "url",
+            "preview_url",
             "association",
             "mimetype",
             "tags",
@@ -24,12 +25,17 @@ class MediaSerializer(serializers.ModelSerializer):
         res = super(MediaSerializer, self).to_representation(instance)
 
         # Convert the server URI to an absolute URL
-        # ie /media/file.txt -> https://domain.name/media.file.txt
+        # ie /media/file.txt -> https://domain.name/media/file.txt
         request = self.context["request"]
         if request:
-            host = request.get_host()
-            res[
-                "url"
-            ] = f"{'https' if request.is_secure() else 'http'}://{host}{res['url']}"
-
+            res["url"] = urlize(request, res["url"]) if res["url"] else ""
+            res["preview_url"] = urlize(request, res["preview_url"])
         return res
+
+
+def urlize(request, url):
+    if not url or url.startswith("http"):
+        return url
+
+    host = request.get_host()
+    return f"{'https' if request.is_secure() else 'http'}://{host}{url}"

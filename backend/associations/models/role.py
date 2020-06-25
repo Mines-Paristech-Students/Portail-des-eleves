@@ -57,39 +57,40 @@ class Role(models.Model):
     page_permission = models.BooleanField(default=False)
 
     @cached_property
-    def is_archived(self):
-        """"Archived roles are not operating anymore but they allow to remember "
-        who was in the association."""
+    def is_active(self):
+        """"A role is active iff the start date is passed and there is no end date / the end date is not passed yet."""
 
-        return self.end_date is not None and self.end_date <= date.today()
+        return date.today() >= self.start_date and (
+            self.end_date is None or self.end_date > date.today()
+        )
 
     @cached_property
     def administration(self):
-        return self.administration_permission and not self.is_archived
+        return self.administration_permission and self.is_active
 
     @cached_property
     def election(self):
-        return self.election_permission and not self.is_archived
+        return self.election_permission and self.is_active
 
     @cached_property
     def event(self):
-        return self.event_permission and not self.is_archived
+        return self.event_permission and self.is_active
 
     @cached_property
     def media(self):
-        return self.media_permission and not self.is_archived
+        return self.media_permission and self.is_active
 
     @cached_property
     def library(self):
-        return self.library_permission and not self.is_archived
+        return self.library_permission and self.is_active
 
     @cached_property
     def marketplace(self):
-        return self.marketplace_permission and not self.is_archived
+        return self.marketplace_permission and self.is_active
 
     @cached_property
     def page(self):
-        return self.page_permission and not self.is_archived
+        return self.page_permission and self.is_active
 
     @cached_property
     def permissions(self):

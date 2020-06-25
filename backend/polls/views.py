@@ -2,7 +2,7 @@ from datetime import date
 
 from django.db.models import Q
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
-from rest_framework import exceptions, generics, response, status, viewsets
+from rest_framework import exceptions, generics, permissions, response, status, viewsets
 from rest_framework.decorators import action
 
 from api.paginator import SmallResultsSetPagination
@@ -16,7 +16,7 @@ from polls.models import Poll, Vote
 from polls.permissions import PollPermission, ResultsPermission, VotePermission
 
 
-class IsActiveFilter(FilterSet):
+class PollFilter(FilterSet):
     """
     This class is needed because Django does not allow to filter on properties.
 
@@ -58,7 +58,7 @@ class PollViewSet(viewsets.ModelViewSet):
     serializer_class = ReadOnlyPollSerializer
     permission_classes = (PollPermission,)
     pagination_class = SmallResultsSetPagination
-    filterset_class = IsActiveFilter
+    filterset_class = PollFilter
     ordering_fields = ["question", "user__pk", "state", "publication_date"]
 
     def get_queryset(self):
@@ -91,6 +91,32 @@ class PollViewSet(viewsets.ModelViewSet):
         poll = self.get_object()
         data = {"poll": poll.id, "results": poll.results}
         return response.Response(data=data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=("get",))
+    def stats(self, *args, **kwargs):
+        is_active_condition = (
+            Q(publication_date__lte=date.today())
+            & Q(state="ACCEPTED")
+            & Q(publication_date__gt=date.today() - Poll.POLL_LIFETIME)
+        )
+
+        """Return:
+         - the number of polls with the REVIEWING (if the user is admin, otherwise None).
+         - the number of polls to which the user can vote."""
+        return response.Response(
+            data={
+                "number_of_pending_polls": Poll.objects.filter(
+                    state="REVIEWING"
+                ).count()
+                if self.request.user.is_staff
+                else None,
+                "number_of_available_polls": Poll.objects.exclude(
+                    votes__user=self.request.user
+                )
+                .filter(is_active_condition)
+                .count(),
+            }
+        )
 
 
 class CreateVoteView(generics.CreateAPIView):

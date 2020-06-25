@@ -1,10 +1,10 @@
 import Axios, { AxiosResponse } from "axios";
 import applyConverters from "axios-case-converter";
 import {
-    PaginatedQueryResult,
-    QueryResult,
-    usePaginatedQuery,
-    useQuery,
+  PaginatedQueryResult,
+  QueryResult,
+  usePaginatedQuery,
+  useQuery,
 } from "react-query";
 import { events } from "./api/events";
 import { pages } from "./api/pages";
@@ -23,111 +23,54 @@ import { fundings } from "./api/fundings";
 import { profile } from "./api/profile";
 import { courses } from "./api/courses";
 import { roles } from "./api/roles";
+import { loanables } from "./api/library/loanables";
+import { loans } from "./api/library/loans";
 
 const baseApi = "http://localhost:8000/api/v1";
 
 export const apiService = applyConverters(
-    Axios.create({
-        withCredentials: true,
-        baseURL: baseApi,
-    })
+  Axios.create({
+    withCredentials: true,
+    baseURL: baseApi,
+  })
 );
 
 /**
  * Add a callback function to the promise, called on success, which returns the `data` of the `AxiosResponse`.
  */
 export function unwrap<T>(promise): Promise<T> {
-    return promise.then((response: AxiosResponse<T>) => {
-        return response.data;
-    });
+  return promise.then((response: AxiosResponse<T>) => {
+    return response.data;
+  });
 }
 
-type UrlParam =
-    | undefined
-    | boolean
-    | number
-    | string
-    | (boolean | number | string)[]
-    | { [key: string]: UrlParam };
-
-/**
- * Transforms an object into URL parameters. The returned string joins the parameters found in the object with '&'
- * and adds '?' at the beginning.
- * The keys and the values of the object are respectively the names and the values of the URL parameters.
- * If an array is passed as a value, the parameter will be repeated for each item of the array.
- * If an object is passed as a value, its key (in the top `parameters` object) will prefix (with a `__` separator) its
- * keys.
- * The values should be numbers, strings or booleans. A boolean value will be transformed into either `true` or `false`.
- *
- * Examples:
- * ```
- * toUrlParams({
- *     foo: 1,
- *     piche: 'clac'
- * }
- * == "?foo=1&piche=clac"
- * ```
- * ```
- * toUrlParams({
- *     foo: true,
- *     bar: {
- *         in: "it",
- *         gte: 3,
- *     },
- *     piche: ['clic', 'clac']
- * }
- * == "?foo=true&bar__in=it&bar__gte=3&piche=clic&piche=clac"
- * ```
- */
-export const toUrlParams = (parameters: { [key: string]: UrlParam }): string =>
-    "?" + toUrlParamsAux(parameters);
-
-const toUrlParamsAux = (
-    parameters: {
-        [key: string]: UrlParam;
-    },
-    keyPrefix = ""
-) =>
-    // Iterate through the keys.
-    Object.getOwnPropertyNames(parameters)
-        .map((key) => {
-            const value = parameters[key];
-
-            return value === undefined
-                ? ""
-                : Array.isArray(value)
-                ? // Iterate through the array.
-                  value.map((v) => `${keyPrefix + key}=${v}`).join("&")
-                : typeof value === "object"
-                ? // Recursive call with a new prefix.
-                  toUrlParamsAux(value, keyPrefix + key + "__")
-                : `${keyPrefix + key}=${value}`;
-        })
-        .join("&");
-
 export const api = {
-    associations: associations,
-    medias: medias,
-    news: news,
-    pages: pages,
+  associations: associations,
+  medias: medias,
+  news: news,
+  pages: pages,
 
-    events: events,
-    marketplace: marketplace,
-    products: products,
-    transactions: transactions,
-    fundings: fundings,
+  events: events,
+
+  loanables: loanables,
+  loans: loans,
+
+  marketplace: marketplace,
+  products: products,
+  transactions: transactions,
+  fundings: fundings,
 
     roles: roles,
     courses: courses,
 
-    polls: polls,
+  polls: polls,
 
-    tags: tags,
-    namespaces: namespaces,
+  tags: tags,
+  namespaces: namespaces,
 
-    jwt: jwt,
-    users: users,
-    profile: profile,
+  jwt: jwt,
+  users: users,
+  profile: profile,
 };
 
 /**
@@ -167,22 +110,22 @@ export const api = {
  * @return an object `{ status, data, error }`.
  */
 export function useBetterQuery<T>(
-    key: false | any[],
-    fetchFunction: (...params: any) => any,
-    config?: any
+  key: false | any[],
+  fetchFunction: (...params: any) => any,
+  config?: any
 ): QueryResult<T> {
-    return useQuery<T, any, any>(
-        key,
-        (_, ...params) => fetchFunction(...params),
-        config
-    );
+  return useQuery<T, any, any>(
+    key,
+    (_, ...params) => fetchFunction(...params),
+    config
+  );
 }
 
 export type PaginatedResponse<T> = {
-    count: number;
-    next: string;
-    previous: string;
-    results: T;
+  count: number;
+  next: string;
+  previous: string;
+  results: T;
 };
 
 /**
@@ -197,15 +140,15 @@ export type PaginatedResponse<T> = {
  * @return an object `{ status, data, error }`.
  */
 export function useBetterPaginatedQuery<T>(
-    key: false | any[],
-    fetchFunction: (...params: any) => any,
-    config?: any
+  key: false | any[],
+  fetchFunction: (...params: any) => any,
+  config?: any
 ): PaginatedQueryResult<T> {
-    return usePaginatedQuery<T, any, any>(
-        key,
-        (_, ...params) => {
-            return fetchFunction(...params);
-        },
-        config
-    );
+  return usePaginatedQuery<T, any, any>(
+    key,
+    (_, ...params) => {
+      return fetchFunction(...params);
+    },
+    config
+  );
 }

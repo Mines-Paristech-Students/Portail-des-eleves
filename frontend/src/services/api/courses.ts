@@ -2,8 +2,8 @@ import {
     apiService,
     PaginatedResponse,
     unwrap,
-    toUrlParams,
 } from "../apiService";
+import { toUrlParams } from "../../utils/urlParam";
 import { Course } from "../../models/courses/course";
 import { Comment, StatsQuestion } from "../../models/courses/requests";
 import { Submission } from "../../models/courses/submission";

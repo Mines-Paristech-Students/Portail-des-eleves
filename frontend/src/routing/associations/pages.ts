@@ -1,33 +1,25 @@
-import { Association } from "../../models/associations/association";
 import { AssociationRoute } from "../associations";
-import {
-    AssociationCreatePage,
-    AssociationEditPage,
-} from "../../components/associations/page/Edit";
-import { AssociationShowPage } from "../../components/associations/page/Show";
+import { AssociationShowPage } from "../../components/associations/page/show/AssociationShowPage";
+import { AssociationEditPage } from "../../components/associations/page/edit/AssociationEditPage";
+import { AssociationCreatePage } from "../../components/associations/page/create/AssociationCreatePage";
 
-export const routes: (association: Association) => AssociationRoute[] = (
-    association
-) => [
-    {
-        path: `/pages/nouvelle`,
-        component: AssociationCreatePage,
-        exact: true,
-        props: { association: association },
-        defaultLayout: true,
-    },
-    {
-        path: `/pages/:pageId`,
-        component: AssociationShowPage,
-        exact: true,
-        props: { association: association },
-        defaultLayout: true,
-    },
-    {
-        path: `/pages/:pageId/modifier`,
-        component: AssociationEditPage,
-        exact: true,
-        props: { association: association },
-        defaultLayout: true,
-    },
+export const routes: AssociationRoute[] = [
+  {
+    path: `/pages/creer`,
+    component: AssociationCreatePage,
+    exact: true,
+    defaultLayout: true,
+  },
+  {
+    path: `/pages/:pageId`,
+    component: AssociationShowPage,
+    exact: true,
+    defaultLayout: true,
+  },
+  {
+    path: `/pages/:pageId/modifier`,
+    component: AssociationEditPage,
+    exact: true,
+    defaultLayout: true,
+  },
 ];

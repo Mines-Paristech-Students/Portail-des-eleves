@@ -3,14 +3,14 @@ import Form from "react-bootstrap/Form";
 import { useFormikContext } from "formik";
 
 export type BaseFormGroupProps = {
-    name: string;
-    label?: string;
-    help?: string;
-    feedback?: boolean;
-    feedbackOnTouchedOnly?: boolean;
-    formGroupProps?: any;
-    labelProps?: any;
-    feedbackProps?: any;
+  name: string;
+  label?: string;
+  help?: string | JSX.Element;
+  feedback?: boolean;
+  feedbackOnTouchedOnly?: boolean;
+  formGroupProps?: any;
+  labelProps?: any;
+  feedbackProps?: any;
 };
 
 /**
@@ -34,39 +34,37 @@ export type BaseFormGroupProps = {
  * (if any).
  */
 export const BaseFormGroup = ({
-    name,
-    label,
-    help,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    children,
+  name,
+  label,
+  help,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  children,
 }: BaseFormGroupProps & { children: any }) => {
-    const { touched, errors } = useFormikContext();
+  const { touched, errors } = useFormikContext();
 
-    return (
-        <Form.Group controlId={name} {...formGroupProps}>
-            {label && <Form.Label {...labelProps}>{label}</Form.Label>}
+  return (
+    <Form.Group controlId={name} {...formGroupProps}>
+      {label && <Form.Label {...labelProps}>{label}</Form.Label>}
 
-            {children}
+      {children}
 
-            {help && <p className="form-text text-muted small mb-0">{help}</p>}
+      {help && <p className="form-text text-muted small mb-0">{help}</p>}
 
-            {feedback &&
-                (touched[name] || !feedbackOnTouchedOnly) &&
-                errors[name] && (
-                    // Display block is required to show it with an icon
-                    // https://stackoverflow.com/questions/50431450/force-to-show-invalid-feedback-in-bootstrap-4
-                    <Form.Control.Feedback
-                        type="invalid"
-                        className="d-block"
-                        {...feedbackProps}
-                    >
-                        {errors[name]}
-                    </Form.Control.Feedback>
-                )}
-        </Form.Group>
-    );
+      {feedback && (touched[name] || !feedbackOnTouchedOnly) && errors[name] && (
+        // Display block is required to show it with an icon
+        // https://stackoverflow.com/questions/50431450/force-to-show-invalid-feedback-in-bootstrap-4
+        <Form.Control.Feedback
+          type="invalid"
+          className="d-block"
+          {...feedbackProps}
+        >
+          {errors[name]}
+        </Form.Control.Feedback>
+      )}
+    </Form.Group>
+  );
 };

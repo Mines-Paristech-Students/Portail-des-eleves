@@ -1,27 +1,29 @@
-import { assert } from "chai";
-
+const jwt = require("jsonwebtoken");
 const io = require("socket.io-client");
-
-// The index we are testing
+const dotenv = require("dotenv");
+import { assert } from "chai";
 import { index } from "./index";
 
-// Generating a random-token for testing
-const jwt = require("jsonwebtoken");
-
-const dotenv = require("dotenv");
+// Parsing environnement configuration
 dotenv.config();
 
-const profile = {
-  username: "17doe",
-  email: "john@doe.com",
-  id: 123,
-};
+const public_key = process.env.JWT_PUBLIC_KEY;
+const jwt_algo = process.env.JWT_ALGO || "RS256";
+const token = process.env.JWT_TOKEN_TEST;
+const token_user = process.env.JWT_TOKEN_TEST_USER || "17bocquet";
 
-const token = jwt.sign(profile, process.env.JWT_SECRET, {
-  expiresIn: 60 * 60 * 5,
+describe("Testing Django public key integration", () => {
+  it("Check dotenv configutation", () => {
+    assert.notEqual(token, undefined);
+    assert.notEqual(public_key, undefined);
+  });
+
+  it("Can decode token", function () {
+    var decoded = jwt.verify(token, public_key, { algorithms: [jwt_algo] });
+    assert.strictEqual(token_user, decoded.user);
+  });
 });
 
-// Tests
 describe("Testing the messages service", () => {
   // These variables shouldn't be initialize yet, unless they launch a timeout while testing
   var server, socket_options, socket;
@@ -76,7 +78,6 @@ describe("Testing the messages service", () => {
         "licorne",
         "Inserted message is correct"
       );
-
       assert.exists(data.posted_on);
       done();
     });
@@ -94,17 +95,30 @@ describe("Testing the messages service", () => {
     socket.on("fetch_response", function (rows) {
       assert.strictEqual(rows.length, limit, "Correct number of rows");
       let row = rows[rows.length - 1];
+
       assert.strictEqual(
         row.username,
         token_user,
         "Last message username is correct"
       );
+
       assert.strictEqual(
         row.message,
         "licorne",
         "Last message content is correct"
       );
-      assert.exists(row.posted_on);
+
+      // Check if there are any issues with time stamps
+
+      const current_time = new Date().getTime();
+      const received_time = new Date(row.posted_on).getTime();
+
+      assert.isBelow(
+        Math.abs(current_time - received_time),
+        10000,
+        "Dates should differ by a few seconds"
+      );
+
       done();
     });
 

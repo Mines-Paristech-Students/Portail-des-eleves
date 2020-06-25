@@ -193,7 +193,7 @@ class LoanTestCase(BaseLibraryTestCase):
         )
 
     def test_if_library_enabled_then_can_create_loan(self):
-        loanable_id = 3
+        loanable_id = 5
         self.assertTrue(
             Loanable.objects.get(pk=loanable_id).library.enabled,
             f"Test premise is wrong: library of loanable {loanable_id} is not enabled",
@@ -204,6 +204,16 @@ class LoanTestCase(BaseLibraryTestCase):
                 user, data={"user": user, "loanable": loanable_id}, code=201
             )
 
+    def test_cannot_multiple_pending_loans(self):
+        for user in ALL_USERS:
+            self.assertCanCreateLoan(user, data={"user": user, "loanable": 5}, code=201)
+            self.assertCannotCreateLoan(
+                user, data={"user": user, "loanable": 5}, code=400
+            )
+            self.assertCannotCreateLoan(
+                "17library_bd-tek", data={"user": user, "loanable": 5}, code=400
+            )
+
     def test_verify_loan_entry_if_not_library_administrator(self):
         """
         When a loan is created:\n
@@ -212,7 +222,7 @@ class LoanTestCase(BaseLibraryTestCase):
         * the status is set to PENDING;\n
         * the dates are set to None.
         """
-        loanable_id = 3
+        loanable_id = 5
         self.assertTrue(
             Loanable.objects.get(pk=loanable_id).library.enabled,
             f"Test premise is wrong: library of loanable {loanable_id} is not enabled",
@@ -253,15 +263,15 @@ class LoanTestCase(BaseLibraryTestCase):
         for user in ALL_USERS_EXCEPT_LIBRARY_BD_TEK:
             if user != "17wan-fat":
                 self.assertCannotCreateLoan(
-                    user, data={"loanable": 3, "user": "17wan-fat"}, code=403
+                    user, data={"loanable": 5, "user": "17wan-fat"}, code=403
                 )
 
     def test_if_not_library_administrator_and_loanable_already_borrowed_then_cannot_create_loan(
         self,
     ):
         loanable_id = 4
-        self.assertTrue(
-            Loanable.objects.get(pk=loanable_id).is_borrowed(),
+        self.assertFalse(
+            Loanable.objects.get(pk=loanable_id).is_available,
             f"Test premise is wrong: loanable {loanable_id} is not borrowed.",
         )
 
