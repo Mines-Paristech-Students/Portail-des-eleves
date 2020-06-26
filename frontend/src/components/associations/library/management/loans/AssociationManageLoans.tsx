@@ -7,6 +7,10 @@ import { api, useBetterQuery } from "../../../../../services/apiService";
 import { Loanable } from "../../../../../models/associations/library";
 import { Loading } from "../../../../utils/Loading";
 import { Error } from "../../../../utils/Error";
+import { LoanableCard } from "../../home/LoanableCard";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export const AssociationManageLoans = ({
   association,
@@ -32,7 +36,19 @@ export const AssociationManageLoans = ({
         <span className="font-italic">{loanable.name}</span>
       </PageTitle>
 
-      <LoansTable loanableId={loanableId} />
+      <Container>
+        <Row>
+          <Col xs="12" md={{ offset: 1, span: 10 }}>
+            <LoanableCard loanable={loanable} editButton comment />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <LoansTable loanableId={loanableId} />
+          </Col>
+        </Row>
+      </Container>
     </>
   ) : null;
 };

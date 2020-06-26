@@ -99,7 +99,7 @@ export const AssociationLibraryHome = ({
                 <Row>
                   {loanables.map((loanable) => (
                     <Col key={loanable.id} xs={12} lg={6}>
-                      <LoanableCard loanable={loanable} />
+                      <LoanableCard loanable={loanable} loanButton cardStatus />
                     </Col>
                   ))}
                 </Row>

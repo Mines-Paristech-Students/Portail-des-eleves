@@ -17,56 +17,52 @@ import "./edit_loan_modal.css";
 /**
  * A short text giving information about the loan.
  */
-const LoanSummary = ({ loan }) => {
-  return (
-    <div>
-      Le prêt a été demandé le {dayjs(loan.requestDate).format("DD/MM/YYYY")} à{" "}
-      {dayjs(loan.requestDate).format("HH:mm")}.<br />
-      {loan.status === "PENDING" ? (
-        <>
-          Il est <LoanStatusTag status={loan.status} />.{" "}
-          {loan.priority !== null ? (
-            <span className={loan.priority > 1 ? "font-weight-bold" : ""}>
-              {loan.priority === 1
-                ? "Aucune demande n’a été déposée avant celle-ci."
-                : `${loan.priority - 1} ${decidePlural(
-                    loan.priority - 1,
-                    "demande a été déposée",
-                    "demandes ont été déposées"
-                  )} avant celle-ci.`}
-            </span>
-          ) : null}
-        </>
-      ) : loan.status === "REJECTED" || loan.status === "BORROWED" ? (
-        <>
-          Il a été <LoanStatusTag status={loan.status} />.
-        </>
-      ) : loan.status === "BORROWED" ? (
-        <>
-          L’objet a été <LoanStatusTag status={loan.status} /> le{" "}
-          {dayjs(loan.loanDate).format("DD/MM/YYYY")}.<br />
-          {loan.expectedReturnDate && (
-            <>
-              La date de retour prévue est le{" "}
-              {dayjs(loan.expectedReturnDate).format("DD/MM/YYYY")}.{" "}
-              {dayjs() > dayjs(loan.expectedReturnDate) && (
-                <span className="font-weight-bold">
-                  Cette date est dépassée.
-                </span>
-              )}
-            </>
-          )}
-        </>
-      ) : loan.status === "RETURNED" ? (
-        <>
-          L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")}{" "}
-          et <LoanStatusTag status={loan.status} /> le{" "}
-          {dayjs(loan.realReturnDate).format("DD/MM/YYYY")}.
-        </>
-      ) : null}
-    </div>
-  );
-};
+const LoanSummary = ({ loan }) => (
+  <div>
+    Le prêt a été demandé le {dayjs(loan.requestDate).format("DD/MM/YYYY")} à{" "}
+    {dayjs(loan.requestDate).format("HH:mm")}.<br />
+    {loan.status === "PENDING" ? (
+      <>
+        Il est <LoanStatusTag status={loan.status} />.{" "}
+        {loan.priority !== null ? (
+          <span className={loan.priority > 1 ? "font-weight-bold" : ""}>
+            {loan.priority === 1
+              ? "Aucune demande n’a été déposée avant celle-ci."
+              : `${loan.priority - 1} ${decidePlural(
+                  loan.priority - 1,
+                  "demande a été déposée",
+                  "demandes ont été déposées"
+                )} avant celle-ci.`}
+          </span>
+        ) : null}
+      </>
+    ) : loan.status === "REJECTED" || loan.status === "BORROWED" ? (
+      <>
+        Il a été <LoanStatusTag status={loan.status} />.
+      </>
+    ) : loan.status === "BORROWED" ? (
+      <>
+        L’objet a été <LoanStatusTag status={loan.status} /> le{" "}
+        {dayjs(loan.loanDate).format("DD/MM/YYYY")}.<br />
+        {loan.expectedReturnDate && (
+          <>
+            La date de retour prévue est le{" "}
+            {dayjs(loan.expectedReturnDate).format("DD/MM/YYYY")}.{" "}
+            {dayjs() > dayjs(loan.expectedReturnDate) && (
+              <span className="font-weight-bold">Cette date est dépassée.</span>
+            )}
+          </>
+        )}
+      </>
+    ) : loan.status === "RETURNED" ? (
+      <>
+        L’objet a été emprunté le {dayjs(loan.loanDate).format("DD/MM/YYYY")} et{" "}
+        <LoanStatusTag status={loan.status} /> le{" "}
+        {dayjs(loan.realReturnDate).format("DD/MM/YYYY")}.
+      </>
+    ) : null}
+  </div>
+);
 
 /**
  * Transform an array of [LoanStatus, text] into an array ready to be used in
@@ -119,9 +115,10 @@ export const EditLoanModal = ({
     <Formik
       initialValues={{
         status: loan.status,
-        loanDate: loan.loanDate || undefined,
-        expectedReturnDate: loan.expectedReturnDate || undefined,
-        realReturnDate: loan.realReturnDate || undefined,
+        loanDate: loan.loanDate || dayjs().toDate(),
+        expectedReturnDate:
+          loan.expectedReturnDate || dayjs().add(14, "day").toDate(),
+        realReturnDate: loan.realReturnDate || dayjs().toDate(),
       }}
       validationSchema={Yup.object({
         status: Yup.string().required("Ce champ est requis"),
