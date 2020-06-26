@@ -14,12 +14,13 @@ export interface EditTooltipOption {
 export const EditTooltip = ({ questionIndex, tooltipOptions }) => {
   return (
     <Col key={"tooltip-" + questionIndex}>
-      {tooltipOptions.map((option: EditTooltipOption) => (
+      {tooltipOptions.map((option: EditTooltipOption, index) => (
         <OverlayTrigger
+          key={index}
           placement="right"
           overlay={<Tooltip id="tooltip-options">{option.tooltip}</Tooltip>}
         >
-          <Row>
+          <Row >
             <Button onClick={() => option.onClick(questionIndex)}>
               <i className={"fe fe-" + option.icon} />
             </Button>

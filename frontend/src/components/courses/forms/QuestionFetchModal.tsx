@@ -13,7 +13,6 @@ import { api } from "../../../services/apiService";
 import { useFormik } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Question, QuestionCategory } from "../../../models/courses/question";
-import { useLocation } from "react-router-dom";
 
 const RefreshAlert = () => {
   const [showAlert, setShowAlert] = useState(true);
@@ -40,7 +39,6 @@ export const QuestionFetchModal = ({ formId, trigger }) => {
 
   const [forms, setForms] = useState<FormModel[]>([]);
 
-  const location = useLocation();
   const newToast = useContext(ToastContext);
 
   useEffect(() => {

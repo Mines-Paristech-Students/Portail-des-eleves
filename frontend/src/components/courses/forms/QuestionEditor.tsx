@@ -1,26 +1,13 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Form,
-  Row,
   Col,
-  Button,
-  Modal,
-  Container,
   Card,
-  Spinner,
-  ListGroup,
-  Badge,
-  Overlay,
-  OverlayTrigger,
-  Tooltip,
 } from "react-bootstrap";
-import { Form as FormModel } from "../../../models/courses/form";
-import { PageTitle } from "../../utils/PageTitle";
-import { api, useBetterQuery } from "../../../services/apiService";
-import { Formik, useFormik, useField, FormikProps } from "formik";
+import { api } from "../../../services/apiService";
+import { Formik, useField, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
-import { Question, QuestionCategory } from "../../../models/courses/question";
-import { useParams } from "react-router-dom";
+import { Question } from "../../../models/courses/question";
 import { CardStatus } from "../../utils/CardStatus";
 import { TablerColor } from "../../../utils/colors";
 import { EditTooltip, EditTooltipOption } from "./EditTooltip";
@@ -76,7 +63,7 @@ export const QuestionEditor = ({
       setStatus(TablerColor.Pink);
       return { label: "Ne peut pas etre vide" };
     }
-    if (status != TablerColor.Green) setStatus(TablerColor.Blue);
+    if (status !== TablerColor.Green) setStatus(TablerColor.Blue);
     return {};
   };
 
@@ -151,7 +138,7 @@ export const QuestionEditor = ({
                       <CardStatus
                         position="left"
                         color={
-                          status == TablerColor.Green
+                          status === TablerColor.Green
                             ? TablerColor.Green
                             : props.touched.label
                               ? props.errors.label
