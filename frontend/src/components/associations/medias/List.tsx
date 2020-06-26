@@ -9,7 +9,6 @@ import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
-import { isImageMime } from "../../../utils/mime";
 import "./list.css";
 import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
 
@@ -74,8 +73,8 @@ export const AssociationFilesystemList = ({ association }) => {
                     )
                   }
                 >
-                  {isImageMime(media.mimetype) && (
-                    <img src={media.url} alt={media.name} />
+                  {media.previewUrl && (
+                    <img src={media.previewUrl} alt={media.name} />
                   )}
                   <Card.Body>
                     <h4 className={"m-0"}>{media.name}</h4>
