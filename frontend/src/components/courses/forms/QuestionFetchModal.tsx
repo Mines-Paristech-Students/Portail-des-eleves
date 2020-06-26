@@ -35,7 +35,7 @@ const RefreshAlert = () => {
 };
 
 export const QuestionFetchModal = ({ formId }) => {
-  const [isFetching, setIsFetching] = useState(false);
+  const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [forms, setForms] = useState<FormModel[]>([]);
 
@@ -62,7 +62,7 @@ export const QuestionFetchModal = ({ formId }) => {
       ).finally(() => {
         newToast.sendInfoToast("Rafraichissement...");
         setSubmitting(false);
-        setIsFetching(false);
+        setShow(false);
         window.location.reload(false);
       });
     },
@@ -110,12 +110,12 @@ export const QuestionFetchModal = ({ formId }) => {
 
   return (
     <>
-      <Button onClick={(e) => setIsFetching(true)} disabled={isFetching}>
+      <Button onClick={(e) => setShow(true)} disabled={show}>
         Récupérer d'un autre formulaire
       </Button>
 
-      {isFetching && (
-        <Modal show={isFetching} onHide={() => setIsFetching(false)}>
+      {show && (
+        <Modal show={show} onHide={() => setShow(false)}>
           <Form onSubmit={formik.handleSubmit}>
             <Modal.Header closeButton>
               <Modal.Title>Récupération</Modal.Title>
@@ -181,7 +181,7 @@ export const QuestionFetchModal = ({ formId }) => {
               >
                 Ajouter
               </Button>
-              <Button variant="secondary" onClick={() => setIsFetching(false)}>
+              <Button variant="secondary" onClick={() => setShow(false)}>
                 Fermer
               </Button>
             </Modal.Footer>
