@@ -148,12 +148,6 @@ export const QuestionEditor = ({
                         onChange={props.handleChange}
                       />
 
-                      {props.touched.label && props.errors.label && (
-                        <Form.Control.Feedback type="invalid">
-                          {props.errors.label}
-                        </Form.Control.Feedback>
-                      )}
-
                       <CardStatus
                         position="left"
                         color={
@@ -167,6 +161,7 @@ export const QuestionEditor = ({
                         }
                       />
                     </Card>
+
                   </Card.Header>
 
                   <Card.Body>

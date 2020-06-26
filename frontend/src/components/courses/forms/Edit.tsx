@@ -24,8 +24,7 @@ import { useParams } from "react-router-dom";
 import { CardStatus } from "../../utils/CardStatus";
 import { TablerColor } from "../../../utils/colors";
 import { QuestionEditor } from "./QuestionEditor";
-import { EditTooltip, EditTooltipOption } from "./EditTooltip";
-import { QuestionFetchModal } from "./QuestionFetchModal";
+import { EditTooltipOption } from "./EditTooltip";
 
 export const EditCourseForm = () => {
   const formId = parseInt(useParams<{ formId: string }>().formId);
@@ -76,19 +75,18 @@ export const EditCourseForm = () => {
     setQuestions(copy);
   };
 
-  const deleteQuestion = (index : number) => {
+  const deleteQuestion = (index: number) => {
     const copy = questions.slice();
     copy.splice(index, 1);
     setQuestions(copy);
     setTooltipIndex(false);
-  }
+  };
 
-
-  const updateQuestion = (index : number, question: Question) => {
+  const updateQuestion = (index: number, question: Question) => {
     const copy = questions.slice();
     copy.splice(index, 1, question);
     setQuestions(copy);
-  }
+  };
 
   const tooltipOptions: EditTooltipOption[] = [
     {
@@ -109,7 +107,9 @@ export const EditCourseForm = () => {
     <Container>
       <PageTitle>Modification de formulaire</PageTitle>
 
-      <Row>{form && <FormEditor form={form} />}</Row>
+      <Row>
+        <Col sm={11}>{form && <FormEditor form={form} />}</Col>
+      </Row>
 
       <br />
 
@@ -142,13 +142,14 @@ const FormEditor = ({ form }) => {
     initialValues: { name: form.name },
     validate: (values) =>
       values.name === "" ? { errors: "Cannot be empty" } : {},
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, setFieldTouched }) => {
       form.name = values.name;
       api.courses.forms
         .save(form)
         .then((res) => {
           newToast.sendSuccessToast(`Updated ${form.name}`);
           setSubmitting(false);
+          setFieldTouched("name", false);
         })
         .catch((err) => {
           newToast.sendErrorToast("Could not update form...");
@@ -158,12 +159,9 @@ const FormEditor = ({ form }) => {
   });
 
   return (
-    <Form onSubmit={formik.handleSubmit}>
+    <Card as={Form} onSubmit={formik.handleSubmit} className="p-2">
       <Row>
-        <Col>
-          <Form.Label>Nom: </Form.Label>
-        </Col>
-        <Col>
+        <Col sm={10}>
           <Form.Control
             id="name"
             name="name"
@@ -178,12 +176,21 @@ const FormEditor = ({ form }) => {
             </Form.Control.Feedback>
           )}
         </Col>
-        <Col>
+        <Col sm={2}>
           <Button type="submit" disabled={formik.isSubmitting}>
-            Modifier
+            <i className="fe fe-check"/>
           </Button>
         </Col>
       </Row>
-    </Form>
+      <CardStatus
+        color={
+          formik.touched.name
+            ? formik.errors.name
+              ? TablerColor.Red
+              : TablerColor.Orange
+            : TablerColor.Blue
+        }
+      />
+    </Card>
   );
 };
