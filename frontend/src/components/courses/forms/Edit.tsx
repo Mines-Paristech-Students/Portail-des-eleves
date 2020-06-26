@@ -55,6 +55,11 @@ export const EditCourseForm = () => {
     []
   );
 
+  const { data: form } = useBetterQuery<FormModel>(
+    ["courses.forms.get", formId],
+    api.courses.forms.get
+  );
+
   const insertQuestion = (index = questions.length, duplicate = false) => {
     let newQuestion: Question = {
       label: "",
@@ -68,16 +73,17 @@ export const EditCourseForm = () => {
     }
     const copy = questions.slice();
     copy.splice(index, 0, newQuestion);
-    console.log(copy);
     setQuestions(copy);
   };
 
-  const { data: form } = useBetterQuery<FormModel>(
-    ["courses.forms.get", formId],
-    api.courses.forms.get
-  );
+  const deleteQuestion = (index : number) => {
+    const copy = questions.slice();
+    copy.splice(index, 1);
+    setQuestions(copy);
+    setTooltipIndex(false);
+  }
 
-  let tooltipOptions: EditTooltipOption[] = [
+  const tooltipOptions: EditTooltipOption[] = [
     {
       icon: "plus",
       onClick: (index) => insertQuestion(index, false),
@@ -112,6 +118,7 @@ export const EditCourseForm = () => {
                 questionIndex={index}
                 showTooltip={tooltipIndex === index}
                 tooltipOptions={tooltipOptions}
+                deleteQuestion={() => deleteQuestion(index)}
               />
             </Row>
           );

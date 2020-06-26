@@ -32,6 +32,7 @@ export const QuestionEditor = ({
   questionIndex,
   showTooltip,
   tooltipOptions,
+  deleteQuestion,
 }) => {
   const [status, setStatus] = useState<TablerColor>(TablerColor.Blue);
   const [showModal, setShowModal] = useState(false);
@@ -98,6 +99,11 @@ export const QuestionEditor = ({
             {
               icon: "refresh-ccw",
               onClick: () => props.handleReset(),
+              tooltip: "Ré-initialiser",
+            },
+            {
+              icon: "trash-2",
+              onClick: deleteQuestion,
               tooltip: "Ré-initialiser",
             },
           ];
