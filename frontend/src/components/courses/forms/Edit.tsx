@@ -32,7 +32,7 @@ export const EditCourseForm = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [funcIndex, setFuncIndex] = useState<number>(-1);
+  const [tooltipIndex, setTooltipIndex] = useState<boolean | number>(false);
   const newToast = useContext(ToastContext);
 
   /* 
@@ -54,12 +54,6 @@ export const EditCourseForm = () => {
     // eslint-disable-next-line
     []
   );
-  
-  const pushQuestion = (question : Question) => {
-      const copy = questions.slice();
-      copy.push(question);
-      setQuestions(copy);
-  }
 
   const insertQuestion = (index = questions.length, duplicate = false) => {
     let newQuestion: Question = {
@@ -83,7 +77,7 @@ export const EditCourseForm = () => {
     api.courses.forms.get
   );
 
-  let options: EditTooltipOption[] = [
+  let tooltipOptions: EditTooltipOption[] = [
     {
       icon: "plus",
       onClick: (index) => insertQuestion(index, false),
@@ -109,31 +103,19 @@ export const EditCourseForm = () => {
       {questions &&
         questions.map((question, index) => {
           const key: string = question.id + question.label;
+
           return (
-            <Row key={"Row-" + key}>
-              <Col
-                sm={11}
-                onClick={() => setFuncIndex(index)}
-                key={"Col1-" + key}
-              >
-                <QuestionEditor question={question} />
-              </Col>
-              <Col sm={1} id={"func" + question.id} key={"Col2-" + key}>
-                {index == funcIndex && (
-                  <EditTooltip questionIndex={index} tooltipOptions={options} />
-                )}
-              </Col>
+            <Row key={"Row-" + key} onClick={() => setTooltipIndex(index)}>
+              <QuestionEditor
+                formId={formId}
+                question={question}
+                questionIndex={index}
+                showTooltip={tooltipIndex === index}
+                tooltipOptions={tooltipOptions}
+              />
             </Row>
           );
         })}
-
-      <br />
-
-      <Row className="w-100 d-flex justify-content-around">
-        <Button onClick={() => insertQuestion()}>Ajouter une question</Button>
-
-        <QuestionFetchModal formId={formId} />
-      </Row>
     </Container>
   );
 };

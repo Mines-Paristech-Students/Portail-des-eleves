@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 interface EditTooltipFunc {
-  (index: number): any;
+  (any): void;
 }
 
 export interface EditTooltipOption {

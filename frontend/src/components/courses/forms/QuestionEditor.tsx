@@ -1,4 +1,3 @@
-
 import React, { useEffect, useContext, useState } from "react";
 import {
   Form,
@@ -24,11 +23,20 @@ import { Question, QuestionCategory } from "../../../models/courses/question";
 import { useParams } from "react-router-dom";
 import { CardStatus } from "../../utils/CardStatus";
 import { TablerColor } from "../../../utils/colors";
+import { EditTooltip, EditTooltipOption } from "./EditTooltip";
+import { QuestionFetchModal } from "./QuestionFetchModal";
 
-
-export const QuestionEditor = ({ question }) => {
+export const QuestionEditor = ({
+  formId,
+  question,
+  questionIndex,
+  showTooltip,
+  tooltipOptions,
+}) => {
   const [status, setStatus] = useState<TablerColor>(TablerColor.Blue);
+  const [showModal, setShowModal] = useState(false);
   const newToast = useContext(ToastContext);
+  const key: string = question.id + question.label;
 
   const onSubmit = (question, { setSubmitting, setFieldTouched }) => {
     setStatus(TablerColor.Orange);
@@ -66,124 +74,142 @@ export const QuestionEditor = ({ question }) => {
   };
 
   return (
-    <Formik
-      id={"formik" + question.id}
-      initialValues={question}
-      validate={validate}
-      onSubmit={onSubmit}
-    >
-      {(props: FormikProps<Question>) => {
-        let isTouched = false;
-        Object.keys(props.touched).forEach((key) => {
-          if (props.touched[key]) isTouched = true;
-        });
-        if (isTouched && status === TablerColor.Blue)
-          setStatus(TablerColor.Cyan);
+    <>
+      <Formik
+        id={"formik" + question.id}
+        initialValues={question}
+        validate={validate}
+        onSubmit={onSubmit}
+      >
+        {(props: FormikProps<Question>) => {
+          let isTouched = false;
+          Object.keys(props.touched).forEach((key) => {
+            if (props.touched[key]) isTouched = true;
+          });
+          if (isTouched && status === TablerColor.Blue)
+            setStatus(TablerColor.Cyan);
 
-        return (
-          <Card as={Form} onSubmit={props.handleSubmit}>
-            <CardStatus color={status} />
+          let questionTooltipOptions: EditTooltipOption[] = [
+            {
+              icon: "folder-plus",
+              onClick: () => setShowModal(!showModal),
+              tooltip: "Récupérer",
+            },
+            {
+              icon: "refresh-ccw",
+              onClick: () => props.handleReset(),
+              tooltip: "Ré-initialiser",
+            },
+          ];
 
-            <Card.Header>
-              <Card as={Form.Group}>
-                <Form.Control
-                  placeholder="Intitulé"
-                  id="label"
-                  name="label"
-                  value={props.values.label}
-                  onBlur={props.handleBlur}
-                  onChange={props.handleChange}
-                />
+          return (
+            <>
+              <Col sm={11} key={"Col1-" + key}>
+                <Card as={Form} onSubmit={props.handleSubmit}>
+                  <CardStatus color={status} />
 
-                {props.touched.label && props.errors.label && (
-                  <Form.Control.Feedback type="invalid">
-                    {props.errors.label}
-                  </Form.Control.Feedback>
-                )}
+                  <Card.Header>
+                    <Card as={Form.Group}>
+                      <Form.Control
+                        placeholder="Intitulé"
+                        id="label"
+                        name="label"
+                        value={props.values.label}
+                        onBlur={props.handleBlur}
+                        onChange={props.handleChange}
+                      />
 
-                <CardStatus
-                  position="left"
-                  color={
-                    props.touched.label
-                      ? props.errors.label
-                        ? TablerColor.Red
-                        : TablerColor.Cyan
-                      : TablerColor.Blue
-                  }
-                />
-              </Card>
-            </Card.Header>
+                      {props.touched.label && props.errors.label && (
+                        <Form.Control.Feedback type="invalid">
+                          {props.errors.label}
+                        </Form.Control.Feedback>
+                      )}
 
-            <Card.Body>
-              <MyRadioField
-                label="Catégorie"
-                id={"category" + question.id}
-                name="category"
-                mapping={{
-                  Commentaire: "C",
-                  Notation: "R",
-                }}
-                disabled={question.id ? false : true}
-                {...props}
-              />
+                      <CardStatus
+                        position="left"
+                        color={
+                          props.touched.label
+                            ? props.errors.label
+                              ? TablerColor.Red
+                              : TablerColor.Cyan
+                            : TablerColor.Blue
+                        }
+                      />
+                    </Card>
+                  </Card.Header>
 
-              <Form.Group>
-                <Form.Label>Paramètres</Form.Label>
-                <Form.Check
-                  type="switch"
-                  label="Obligatoire"
-                  id={"required" + question.id}
-                  name="required"
-                  onBlur={props.handleBlur}
-                  onChange={props.handleChange}
-                  checked={props.values.required}
-                />
-                <br />
-                <Form.Check
-                  type="switch"
-                  label="Activer"
-                  id={"archived" + question.id}
-                  name="archived"
-                  onBlur={props.handleBlur}
-                  onChange={props.handleChange}
-                  checked={props.values.archived}
-                />
-              </Form.Group>
-            </Card.Body>
+                  <Card.Body>
+                    <MyRadioField
+                      label="Catégorie"
+                      id={"category" + question.id}
+                      name="category"
+                      mapping={{
+                        Commentaire: "C",
+                        Notation: "R",
+                      }}
+                      disabled={question.id ? false : true}
+                      {...props}
+                    />
 
-            <Card.Footer className="d-flex justify-content-around">
-              <Button type="submit" disabled={props.isSubmitting}>
-                Valider
-                {props.isSubmitting && (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
+                    <Form.Group>
+                      <Form.Label>Paramètres</Form.Label>
+                      <Form.Check
+                        type="switch"
+                        label="Obligatoire"
+                        id={"required" + question.id}
+                        name="required"
+                        onBlur={props.handleBlur}
+                        onChange={props.handleChange}
+                        checked={props.values.required}
+                      />
+                      <br />
+                      <Form.Check
+                        type="switch"
+                        label="Activer"
+                        id={"archived" + question.id}
+                        name="archived"
+                        onBlur={props.handleBlur}
+                        onChange={props.handleChange}
+                        checked={props.values.archived}
+                      />
+                    </Form.Group>
+                  </Card.Body>
+
+                  <Card.Footer className="d-flex justify-content-around">
+                    <Button type="submit" disabled={props.isSubmitting}>
+                      Valider
+                      {props.isSubmitting && (
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Button>
+                  </Card.Footer>
+                </Card>
+              </Col>
+              <Col sm={1} id={"func" + question.id} key={"Col2-" + key}>
+                {showTooltip && (
+                  <EditTooltip
+                    questionIndex={questionIndex}
+                    tooltipOptions={[].concat.apply(
+                      [],
+                      [tooltipOptions, questionTooltipOptions]
+                    )}
                   />
                 )}
-              </Button>
-              {/* <Button
-                                onClick={() => {
-                                    console.log("reset");
-                                    for (let key in question) {
-                                        props.setFieldTouched(key, false);
-                                    }
-                                    setStatus(TablerColor.Blue);
-                                    props.handleReset();
-                                }}
-                            >
-                                Ré-initialiser
-                            </Button> */}
-            </Card.Footer>
-          </Card>
-        );
-      }}
-    </Formik>
+              </Col>
+            </>
+          );
+        }}
+      </Formik>
+      <QuestionFetchModal formId={formId} trigger={showModal} />
+    </>
   );
 };
-
 
 const MyRadioField = ({ label, mapping, disabled, ...props }) => {
   // @ts-ignore
