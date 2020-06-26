@@ -83,6 +83,13 @@ export const EditCourseForm = () => {
     setTooltipIndex(false);
   }
 
+
+  const updateQuestion = (index : number, question: Question) => {
+    const copy = questions.slice();
+    copy.splice(index, 1, question);
+    setQuestions(copy);
+  }
+
   const tooltipOptions: EditTooltipOption[] = [
     {
       icon: "plus",
@@ -119,6 +126,7 @@ export const EditCourseForm = () => {
                 showTooltip={tooltipIndex === index}
                 tooltipOptions={tooltipOptions}
                 deleteQuestion={() => deleteQuestion(index)}
+                updateQuestion={updateQuestion}
               />
             </Row>
           );

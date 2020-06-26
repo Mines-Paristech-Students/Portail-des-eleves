@@ -33,6 +33,7 @@ export const QuestionEditor = ({
   showTooltip,
   tooltipOptions,
   deleteQuestion,
+  updateQuestion,
 }) => {
   const [status, setStatus] = useState<TablerColor>(TablerColor.Blue);
   const [showModal, setShowModal] = useState(false);
@@ -48,6 +49,10 @@ export const QuestionEditor = ({
         newToast.sendSuccessToast(
           `Updated questions ${res.label} for ${res.form}`
         );
+
+        // Modifying the question
+        question = Object.assign({}, res);
+        updateQuestion(questionIndex, question);
 
         // Re-initialization
         setSubmitting(false);
@@ -71,6 +76,7 @@ export const QuestionEditor = ({
       setStatus(TablerColor.Pink);
       return { label: "Ne peut pas etre vide" };
     }
+    if (status != TablerColor.Green) setStatus(TablerColor.Blue);
     return {};
   };
 
@@ -88,25 +94,42 @@ export const QuestionEditor = ({
             if (props.touched[key]) isTouched = true;
           });
           if (isTouched && status === TablerColor.Blue)
-            setStatus(TablerColor.Cyan);
+            setStatus(TablerColor.Orange);
 
           let questionTooltipOptions: EditTooltipOption[] = [
             {
               icon: "folder-plus",
               onClick: () => setShowModal(!showModal),
-              tooltip: "Récupérer",
+              tooltip: "Récupérer d'un autre formulaire",
             },
             {
               icon: "refresh-ccw",
-              onClick: () => props.handleReset(),
+              onClick: () => {
+                props.handleReset();
+                for (let key in question) {
+                  props.setFieldTouched(key, false);
+                }
+                setStatus(TablerColor.Blue);
+              },
               tooltip: "Ré-initialiser",
             },
             {
-              icon: "trash-2",
-              onClick: deleteQuestion,
-              tooltip: "Ré-initialiser",
+              icon: props.isSubmitting ? "loader" : "check",
+              onClick: props.isSubmitting
+                ? () => {
+                    newToast.sendInfoToast("Submission en cours...");
+                  }
+                : props.handleSubmit,
+              tooltip: "valider",
             },
           ];
+
+          if (question.id === undefined)
+            questionTooltipOptions.push({
+              icon: "trash-2",
+              onClick: deleteQuestion,
+              tooltip: "Supprimer",
+            });
 
           return (
             <>
@@ -134,11 +157,13 @@ export const QuestionEditor = ({
                       <CardStatus
                         position="left"
                         color={
-                          props.touched.label
-                            ? props.errors.label
-                              ? TablerColor.Red
-                              : TablerColor.Cyan
-                            : TablerColor.Blue
+                          status == TablerColor.Green
+                            ? TablerColor.Green
+                            : props.touched.label
+                              ? props.errors.label
+                                ? TablerColor.Red
+                                : TablerColor.Orange
+                              : TablerColor.Blue
                         }
                       />
                     </Card>
@@ -180,21 +205,6 @@ export const QuestionEditor = ({
                       />
                     </Form.Group>
                   </Card.Body>
-
-                  <Card.Footer className="d-flex justify-content-around">
-                    <Button type="submit" disabled={props.isSubmitting}>
-                      Valider
-                      {props.isSubmitting && (
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </Button>
-                  </Card.Footer>
                 </Card>
               </Col>
               <Col sm={1} id={"func" + question.id} key={"Col2-" + key}>
@@ -212,6 +222,7 @@ export const QuestionEditor = ({
           );
         }}
       </Formik>
+
       <QuestionFetchModal formId={formId} trigger={showModal} />
     </>
   );
