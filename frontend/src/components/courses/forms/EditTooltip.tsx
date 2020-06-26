@@ -20,7 +20,7 @@ export const EditTooltip = ({ questionIndex, tooltipOptions }) => {
           placement="right"
           overlay={<Tooltip id="tooltip-options">{option.tooltip}</Tooltip>}
         >
-          <Row >
+          <Row>
             <Button onClick={() => option.onClick(questionIndex)}>
               <i className={"fe fe-" + option.icon} />
             </Button>

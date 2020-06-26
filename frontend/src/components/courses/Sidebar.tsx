@@ -7,96 +7,91 @@ import { SidebarSpace, SidebarSeparator } from "../utils/sidebar/Sidebar";
 import { useLocation } from "react-router-dom";
 
 export const MainSidebar = () => {
-    const location = useLocation();
+  const location = useLocation();
 
-    // Extracting the course from the URL
-    const regCourse = new RegExp("^/cours/([0-9])/");
-    const match = regCourse.exec(location.pathname);
+  // Extracting the course from the URL
+  const regCourse = new RegExp("^/cours/([0-9])/");
+  const match = regCourse.exec(location.pathname);
 
-    return (
-        <Sidebar title="Cours">
-            <SidebarItem icon={"book"} to={"/cours/"}>
-                Cours
-            </SidebarItem>
+  return (
+    <Sidebar title="Cours">
+      <SidebarItem icon={"book"} to={"/cours/"}>
+        Cours
+      </SidebarItem>
 
-            <SidebarItem icon={"edit-3"} to={"/cours/formulaires"}>
-                Formulaires
-            </SidebarItem>
+      <SidebarItem icon={"edit-3"} to={"/cours/formulaires"}>
+        Formulaires
+      </SidebarItem>
 
-            {match && <CourseSidebar courseId={match[1]} />}
+      {match && <CourseSidebar courseId={match[1]} />}
 
-            {location.pathname.startsWith("/cours/formulaires") && (
-                <FormSidebar />
-            )}
-        </Sidebar>
-    );
+      {location.pathname.startsWith("/cours/formulaires") && <FormSidebar />}
+    </Sidebar>
+  );
 };
 
 const CourseSidebar = ({ courseId }) => {
-    return (
-        <>
-            <SidebarSeparator />
-            <EvaluationSidebar courseId={courseId} />
+  return (
+    <>
+      <SidebarSeparator />
+      <EvaluationSidebar courseId={courseId} />
 
-            <SidebarSpace />
+      <SidebarSpace />
 
-            <SidebarItem
-                icon={"plus-circle"}
-                to={`/cours/${courseId}/formulaires/lier`}
-            >
-                Lier un formulaire
-            </SidebarItem>
-        </>
-    );
+      <SidebarItem
+        icon={"plus-circle"}
+        to={`/cours/${courseId}/formulaires/lier`}
+      >
+        Lier un formulaire
+      </SidebarItem>
+    </>
+  );
 };
 
 const EvaluationSidebar = ({ courseId }) => {
-    const { data: has_voted, error, status } = useBetterQuery<boolean>(
-        ["courses.has_voted", courseId],
-        api.courses.has_voted
-    );
+  const { data: has_voted, error, status } = useBetterQuery<boolean>(
+    ["courses.has_voted", courseId],
+    api.courses.has_voted
+  );
 
-    return (
-        <>
-            {status === "error" && (
-                <SidebarItem icon="x-circle" to={`/cours/${courseId}`}>
-                    {`${error}`}
-                </SidebarItem>
-            )}
+  return (
+    <>
+      {status === "error" && (
+        <SidebarItem icon="x-circle" to={`/cours/${courseId}`}>
+          {`${error}`}
+        </SidebarItem>
+      )}
 
-            {status === "loading" && (
-                <SidebarItem icon="loader" to={`/cours/${courseId}`}>
-                    <Loading />
-                </SidebarItem>
-            )}
+      {status === "loading" && (
+        <SidebarItem icon="loader" to={`/cours/${courseId}`}>
+          <Loading />
+        </SidebarItem>
+      )}
 
-            {status === "success" && has_voted && (
-                <SidebarItem
-                    icon="pie-chart"
-                    to={`/cours/${courseId}/resultats`}
-                >
-                    Statistiques
-                </SidebarItem>
-            )}
+      {status === "success" && has_voted && (
+        <SidebarItem icon="pie-chart" to={`/cours/${courseId}/resultats`}>
+          Statistiques
+        </SidebarItem>
+      )}
 
-            {status === "success" && !has_voted && (
-                <SidebarItem icon="edit-3" to={`/cours/${courseId}/evaluer`}>
-                    Évaluer
-                </SidebarItem>
-            )}
-        </>
-    );
+      {status === "success" && !has_voted && (
+        <SidebarItem icon="edit-3" to={`/cours/${courseId}/evaluer`}>
+          Évaluer
+        </SidebarItem>
+      )}
+    </>
+  );
 };
 
 const FormSidebar = () => {
-    const user = useContext(UserContext);
+  const user = useContext(UserContext);
 
-    return user?.isStaff ? (
-        <>
-            <SidebarSeparator />
-            <SidebarItem icon={"file-plus"} to={`/cours/formulaires/nouveau`}>
-                Creer un formulaire
-            </SidebarItem>
-        </>
-    ) : null;
+  return user?.isStaff ? (
+    <>
+      <SidebarSeparator />
+      <SidebarItem icon={"file-plus"} to={`/cours/formulaires/nouveau`}>
+        Creer un formulaire
+      </SidebarItem>
+    </>
+  ) : null;
 };

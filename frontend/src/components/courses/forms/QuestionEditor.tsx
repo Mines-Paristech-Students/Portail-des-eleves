@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Form,
-  Col,
-  Card,
-} from "react-bootstrap";
+import { Form, Col, Card } from "react-bootstrap";
 import { api } from "../../../services/apiService";
 import { Formik, useField, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
@@ -141,14 +137,13 @@ export const QuestionEditor = ({
                           status === TablerColor.Green
                             ? TablerColor.Green
                             : props.touched.label
-                              ? props.errors.label
-                                ? TablerColor.Red
-                                : TablerColor.Orange
-                              : TablerColor.Blue
+                            ? props.errors.label
+                              ? TablerColor.Red
+                              : TablerColor.Orange
+                            : TablerColor.Blue
                         }
                       />
                     </Card>
-
                   </Card.Header>
 
                   <Card.Body>

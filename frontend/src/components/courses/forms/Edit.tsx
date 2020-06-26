@@ -1,12 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import {
-  Form,
-  Row,
-  Col,
-  Button,
-  Container,
-  Card,
-} from "react-bootstrap";
+import { Form, Row, Col, Button, Container, Card } from "react-bootstrap";
 import { Form as FormModel } from "../../../models/courses/form";
 import { PageTitle } from "../../utils/PageTitle";
 import { api, useBetterQuery } from "../../../services/apiService";
@@ -171,7 +164,7 @@ const FormEditor = ({ form }) => {
         </Col>
         <Col sm={2}>
           <Button type="submit" disabled={formik.isSubmitting}>
-            <i className="fe fe-check"/>
+            <i className="fe fe-check" />
           </Button>
         </Col>
       </Row>

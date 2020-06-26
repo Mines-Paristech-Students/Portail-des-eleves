@@ -60,8 +60,8 @@ export const api = {
   transactions: transactions,
   fundings: fundings,
 
-    roles: roles,
-    courses: courses,
+  roles: roles,
+  courses: courses,
 
   polls: polls,
 

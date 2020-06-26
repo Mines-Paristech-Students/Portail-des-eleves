@@ -1,20 +1,20 @@
 export interface EvalData {
-    ratings: { [key: number]: number };
-    comments: { [key: number]: string };
+  ratings: { [key: number]: number };
+  comments: { [key: number]: string };
 }
 
 export interface CommentSubmission {
-    question: number;
-    content: string;
+  question: number;
+  content: string;
 }
 
 export interface RatingSubmission {
-    question: number;
-    value: number;
+  question: number;
+  value: number;
 }
 
 export interface Submission {
-    course: number;
-    ratings: RatingSubmission[];
-    comments: CommentSubmission[];
+  course: number;
+  ratings: RatingSubmission[];
+  comments: CommentSubmission[];
 }

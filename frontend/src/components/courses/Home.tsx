@@ -4,13 +4,13 @@ import { Loading } from "../utils/Loading";
 import { ResultsCourse } from "./evaluations/Stats";
 
 export const CourseHome = ({ course }) => {
-    if (!course) {
-        return <Loading />;
-    }
+  if (!course) {
+    return <Loading />;
+  }
 
-    return (
-        <Container>
-            <ResultsCourse course={course} />
-        </Container>
-    );
+  return (
+    <Container>
+      <ResultsCourse course={course} />
+    </Container>
+  );
 };
