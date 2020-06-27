@@ -18,6 +18,7 @@ export const EditCourseForm = () => {
   const formId = parseInt(useParams<{ formId: string }>().formId);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [tooltipIndex, setTooltipIndex] = useState<boolean | number>(false);
   const newToast = useContext(ToastContext);
@@ -51,6 +52,7 @@ export const EditCourseForm = () => {
         })
         .catch((err) => {
           newToast.sendErrorToast("Could not fetch questions...");
+          setError(true);
         });
     },
     // eslint-disable-next-line
@@ -97,7 +99,9 @@ export const EditCourseForm = () => {
   };
 
   return isLoading ? (
-    <p>Chargement des cours</p>
+    <Loading />
+  ) : error ? (
+    <Error />
   ) : (
     <Container>
       <PageTitle>Modification de formulaire</PageTitle>

@@ -105,6 +105,7 @@ class Question(models.Model):
         unique_together = [["form", "label"]]
 
     id = models.AutoField(primary_key=True, unique=True)
+
     label = models.CharField(max_length=64)
 
     required = models.BooleanField(default=False)
@@ -120,6 +121,9 @@ class Question(models.Model):
 
 
 class Rating(models.Model):
+    class Meta:
+        ordering = ["-date"]
+
     id = models.AutoField(primary_key=True, unique=True)
 
     date = models.DateTimeField(auto_now_add=True)
@@ -132,11 +136,11 @@ class Rating(models.Model):
 
     course = models.ForeignKey(Course, related_name="rating", on_delete=models.CASCADE,)
 
+
+class Comment(models.Model):
     class Meta:
         ordering = ["-date"]
 
-
-class Comment(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
 
     date = models.DateTimeField(auto_now_add=True)
@@ -150,6 +154,3 @@ class Comment(models.Model):
     course = models.ForeignKey(
         Course, related_name="comment", on_delete=models.CASCADE,
     )
-
-    class Meta:
-        ordering = ["-date"]

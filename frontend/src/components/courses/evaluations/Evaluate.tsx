@@ -18,7 +18,7 @@ import { TablerColor } from "../../../utils/colors";
 import { CardStatus } from "../../utils/CardStatus";
 
 export const EvaluateCourse = ({ course }) => {
-  const { data: questions, error, status } = useBetterQuery<Question[]>(
+  const { data: questions, status } = useBetterQuery<Question[]>(
     ["courses.questions", course.form],
     api.courses.forms.questions.list
   );
@@ -154,49 +154,44 @@ export const QuestionsForm = ({ questions, course }) => {
             onSubmit={props.handleSubmit}
             as={Card}
           >
-            {questions.map((question) => {
-              const field = question.archived ? null : question.category ===
-                "R" ? (
-                <RatingField
-                  question={question}
-                  id={question.id}
-                  name="ratings"
-                  label="First Name"
-                  {...props}
-                />
-              ) : question.category === "C" ? (
-                <CommentField
-                  question={question}
-                  id={question.id}
-                  name="comments"
-                  label="First Name"
-                  {...props}
-                />
-              ) : null;
+            {questions.map((question) => (
+              <Form.Group className="p-3 text-center">
+                <Form.Label>
+                  <h4>{question.label}</h4>
+                </Form.Label>
 
-              return (
-                <Form.Group className="p-3 text-center">
-                  <Form.Label>
-                    <h4>{question.label}</h4>
-                  </Form.Label>
-
-                  <Col sm={12} key={question.id}>
-                    <Card key={questions.id}>
-                      <CardStatus
-                        color={
-                          props.errors[question.id]
-                            ? TablerColor.Red
-                            : question.required
-                            ? TablerColor.Lime
-                            : TablerColor.Gray
-                        }
+                <Col sm={12} key={question.id}>
+                  <Card key={questions.id}>
+                    <CardStatus
+                      color={
+                        props.errors[question.id]
+                          ? TablerColor.Red
+                          : question.required
+                          ? TablerColor.Lime
+                          : TablerColor.Gray
+                      }
+                    />
+                    {question.archived ? null : question.category === "R" ? (
+                      <RatingField
+                        question={question}
+                        id={question.id}
+                        name="ratings"
+                        label="First Name"
+                        {...props}
                       />
-                      {field}
-                    </Card>
-                  </Col>
-                </Form.Group>
-              );
-            })}
+                    ) : question.category === "C" ? (
+                      <CommentField
+                        question={question}
+                        id={question.id}
+                        name="comments"
+                        label="First Name"
+                        {...props}
+                      />
+                    ) : null}
+                  </Card>
+                </Col>
+              </Form.Group>
+            ))}
             <Button type="submit" disabled={props.isSubmitting}>
               Submit
             </Button>

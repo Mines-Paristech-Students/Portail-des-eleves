@@ -48,12 +48,9 @@ const DictToHistogram = (histogram: Histogram, sum: number) => (
 );
 
 const StatsCardQuestion = ({ statsQuestion }) => {
-  let sum = 0;
-  Object.keys(statsQuestion.histogram)
+  const sum = Object.keys(statsQuestion.histogram)
     .map((e) => parseInt(e))
-    .forEach((key) => {
-      sum += statsQuestion.histogram[key];
-    });
+    .reduce((acc, key) => acc + statsQuestion.histogram[key]);
 
   return (
     <Col md={12} key={statsQuestion.id}>
@@ -80,7 +77,7 @@ const StatsCardQuestion = ({ statsQuestion }) => {
 };
 
 const StatsCourse = ({ course }) => {
-  const { data: stats, error, status } = useBetterQuery<StatsQuestion[]>(
+  const { data: stats, status } = useBetterQuery<StatsQuestion[]>(
     ["courses.stats", course.id],
     api.courses.stats
   );
@@ -111,7 +108,7 @@ export const PaginatedCardComment = ({ question, course }) => (
 );
 
 const PaginatedComments = ({ course }) => {
-  const { data: questions, error, status } = useBetterQuery<Question[]>(
+  const { data: questions, status } = useBetterQuery<Question[]>(
     ["courses.forms.question.list", course.form],
     api.courses.forms.questions.list
   );

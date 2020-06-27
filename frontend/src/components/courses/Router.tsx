@@ -19,7 +19,7 @@ import { Error } from "../utils/Error";
 export const CourseRouter = ({ match }) => {
   let { courseId } = useParams<{ courseId: string }>();
 
-  const { data: course, error, status } = useBetterQuery<Course>(
+  const { data: course, status } = useBetterQuery<Course>(
     ["course.get", courseId],
     api.courses.get
   );
