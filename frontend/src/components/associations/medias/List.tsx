@@ -7,11 +7,11 @@ import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
-import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
+import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
+import { isImageMime } from "../../../utils/mime";
 import "./list.css";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
-import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
@@ -63,52 +63,6 @@ export const AssociationFilesystemList = ({ association }) => {
                 </Link>
               )}
             </div>
-  const [tagParams, setTagParams] = useState({});
-  const [dateParams, setDateParams] = useState({});
-
-  return (
-    <AssociationLayout
-      association={association}
-      additionalSidebar={
-        <>
-          <SidebarSpace />
-          <TagSearch
-            tagsQueryParams={{
-              page_size: 1000,
-              namespace__scoped_to_model: "association",
-              namespace__scoped_to_pk: associationId,
-              related_to: "media",
-            }}
-            setTagParams={setTagParams}
-          />
-          <SidebarSeparator />
-          <SidebarDateSelector
-            association={association}
-            setParams={setDateParams}
-          />
-        </>
-      }
-    >
-      <Pagination
-        apiKey={[
-          "medias.list",
-          associationId,
-          { page_size: 30, ...tagParams, ...dateParams },
-        ]}
-        apiMethod={api.medias.list}
-        render={(medias, paginationControl) => (
-          <>
-            <div className="d-flex align-items-center">
-              <PageTitle className={"mt-6"}>Fichiers</PageTitle>
-              {association.myRole.permissions?.includes("media") && (
-                <Link
-                  to={`/associations/${association.id}/fichiers/televerser`}
-                  className={"btn btn-success btn-sm float-right ml-auto"}
-                >
-                  <span className="fe fe-upload" /> Ajouter des fichiers
-                </Link>
-              )}
-            </div>
 
             <div className={"card-columns"}>
               {medias.map((media) => (
@@ -120,12 +74,8 @@ export const AssociationFilesystemList = ({ association }) => {
                     )
                   }
                 >
-                  {media.previewUrl && (
-                    <img
-                      src={media.previewUrl}
-                      alt={media.name}
-                      className={"border-bottom"}
-                    />
+                  {isImageMime(media.mimetype) && (
+                    <img src={media.url} alt={media.name} />
                   )}
                   <Card.Body>
                     <h4 className={"m-0"}>{media.name}</h4>
@@ -151,8 +101,8 @@ export const AssociationFilesystemList = ({ association }) => {
             {paginationControl}
 
             {medias.length === 0 &&
-              (Object.entries(tagParams).length === 0 &&
-              Object.entries(dateParams).length === 0 ? (  <Instructions
+              (Object.entries(tagParams).length === 0 ? (
+                <Instructions
                   title={"Gestion des médias"}
                   emoji={"🗂️"}
                   emojiAriaLabel="Des fiches cartonnées"

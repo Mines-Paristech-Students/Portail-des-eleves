@@ -37,22 +37,19 @@ export const ListEventsSidebar = ({
       retractedByDefault={false}
     >
       <CheckboxField
-        id={"before"}
         label={"Terminés"}
         state={parameters.time}
-        setState={(newTime) => setParameters({ ...parameters, time: newTime })}
+        onChange={(newTime) => setParameters({ ...parameters, time: newTime })}
       />
       <CheckboxField
-        id={"now"}
         label={"En cours"}
         state={parameters.time}
-        setState={(newTime) => setParameters({ ...parameters, time: newTime })}
+        onChange={(newTime) => setParameters({ ...parameters, time: newTime })}
       />
       <CheckboxField
-        id={"after"}
         label={"À venir"}
         state={parameters.time}
-        setState={(newTime) => setParameters({ ...parameters, time: newTime })}
+        onChange={(newTime) => setParameters({ ...parameters, time: newTime })}
       />
     </SidebarSection>
     {adminVersion && (
