@@ -7,6 +7,7 @@ import { Question } from "../../../models/courses/question";
 import { useField, Formik, FormikProps } from "formik";
 import { ToastContext } from "../../utils/Toast";
 import { Loading } from "../../utils/Loading";
+import { Error } from "../../utils/Error";
 import {
   Submission,
   EvalData,
@@ -22,19 +23,16 @@ export const EvaluateCourse = ({ course }) => {
     api.courses.forms.questions.list
   );
 
-  if (status === "loading") return <Loading />;
-  else if (status === "error") {
-    return `Something went wrong: ${error}`;
-  } else if (status === "success" && questions) {
-    return (
-      <Container>
-        <PageTitle>Cours</PageTitle>
-        <QuestionsForm questions={questions} course={course} />
-      </Container>
-    );
-  }
-
-  return null;
+  return status === "loading" ? (
+    <Loading />
+  ) : status === "error" ? (
+    <Error />
+  ) : status === "success" && questions ? (
+    <Container>
+      <PageTitle>Cours</PageTitle>
+      <QuestionsForm questions={questions} course={course} />
+    </Container>
+  ) : null;
 };
 
 export const QuestionsForm = ({ questions, course }) => {
@@ -157,30 +155,24 @@ export const QuestionsForm = ({ questions, course }) => {
             as={Card}
           >
             {questions.map((question) => {
-              if (question.archived) return null;
-
-              let field: JSX.Element = <p>Error</p>;
-              if (question.category === "R") {
-                field = (
-                  <RatingField
-                    question={question}
-                    id={question.id}
-                    name="ratings"
-                    label="First Name"
-                    {...props}
-                  />
-                );
-              } else if (question.category === "C") {
-                field = (
-                  <CommentField
-                    question={question}
-                    id={question.id}
-                    name="comments"
-                    label="First Name"
-                    {...props}
-                  />
-                );
-              }
+              const field = question.archived ? null : question.category ===
+                "R" ? (
+                <RatingField
+                  question={question}
+                  id={question.id}
+                  name="ratings"
+                  label="First Name"
+                  {...props}
+                />
+              ) : question.category === "C" ? (
+                <CommentField
+                  question={question}
+                  id={question.id}
+                  name="comments"
+                  label="First Name"
+                  {...props}
+                />
+              ) : null;
 
               return (
                 <Form.Group className="p-3 text-center">
@@ -216,6 +208,7 @@ export const QuestionsForm = ({ questions, course }) => {
 };
 
 export const RatingField = ({ question, label, ...props }) => {
+  // Can not compile because of Formik type mismatch
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
 
@@ -224,8 +217,9 @@ export const RatingField = ({ question, label, ...props }) => {
     helpers.setValue(field.value);
   };
 
-  if (meta.touched && meta.error) return <p>{meta.error}</p>;
-  return (
+  return meta.touched && meta.error ? (
+    <Error />
+  ) : (
     <Row className="d-flex justify-content-center">
       {Array.from(Array(5).keys()).map((index) => (
         <Button
@@ -245,6 +239,7 @@ export const RatingField = ({ question, label, ...props }) => {
 };
 
 export const CommentField = ({ question, label, ...props }) => {
+  // Can not compile because of Formik type mismatch
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
 
@@ -253,8 +248,9 @@ export const CommentField = ({ question, label, ...props }) => {
     helpers.setValue(field.value);
   };
 
-  if (meta.touched && meta.error) return <p>{meta.error}</p>;
-  return (
+  return meta.touched && meta.error ? (
+    <Error />
+  ) : (
     <Form.Control
       as="textarea"
       rows={3}

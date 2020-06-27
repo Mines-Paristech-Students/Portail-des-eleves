@@ -11,6 +11,8 @@ import { CardStatus } from "../../utils/CardStatus";
 import { TablerColor } from "../../../utils/colors";
 import { QuestionEditor } from "./QuestionEditor";
 import { EditTooltipOption } from "./EditTooltip";
+import { Loading } from "../../utils/Loading";
+import { Error } from "../../utils/Error";
 
 export const EditCourseForm = () => {
   const formId = parseInt(useParams<{ formId: string }>().formId);
@@ -19,6 +21,19 @@ export const EditCourseForm = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [tooltipIndex, setTooltipIndex] = useState<boolean | number>(false);
   const newToast = useContext(ToastContext);
+
+  const tooltipOptions: EditTooltipOption[] = [
+    {
+      icon: "plus",
+      onClick: (index) => insertQuestion(index, false),
+      tooltip: "ajouter",
+    },
+    {
+      icon: "copy",
+      onClick: (index) => insertQuestion(index, true),
+      tooltip: "copier",
+    },
+  ];
 
   /* 
     We don't want the questions to reload, as it could change our components!
@@ -29,7 +44,9 @@ export const EditCourseForm = () => {
       api.courses.forms.questions
         .list(formId)
         .then((questions) => {
-          setQuestions(questions);
+          questions.length === 0
+            ? setQuestions(questions)
+            : setQuestions([createEmptyQuestion()]);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -45,7 +62,7 @@ export const EditCourseForm = () => {
     api.courses.forms.get
   );
 
-  const insertQuestion = (index = questions.length, duplicate = false) => {
+  const createEmptyQuestion = () => {
     let newQuestion: Question = {
       label: "",
       required: true,
@@ -53,6 +70,11 @@ export const EditCourseForm = () => {
       category: QuestionCategory.Rating,
       form: formId,
     };
+    return newQuestion;
+  };
+
+  const insertQuestion = (index = questions.length, duplicate = false) => {
+    let newQuestion = createEmptyQuestion();
     if (duplicate) {
       newQuestion = Object.assign({}, questions[index]);
     }
@@ -74,22 +96,9 @@ export const EditCourseForm = () => {
     setQuestions(copy);
   };
 
-  const tooltipOptions: EditTooltipOption[] = [
-    {
-      icon: "plus",
-      onClick: (index) => insertQuestion(index, false),
-      tooltip: "ajouter",
-    },
-    {
-      icon: "copy",
-      onClick: (index) => insertQuestion(index, true),
-      tooltip: "copier",
-    },
-  ];
-
-  if (isLoading) return <p>Chargement des cours</p>;
-
-  return (
+  return isLoading ? (
+    <p>Chargement des cours</p>
+  ) : (
     <Container>
       <PageTitle>Modification de formulaire</PageTitle>
 
@@ -100,23 +109,22 @@ export const EditCourseForm = () => {
       <br />
 
       {questions &&
-        questions.map((question, index) => {
-          const key: string = question.id + question.label;
-
-          return (
-            <Row key={"Row-" + key} onClick={() => setTooltipIndex(index)}>
-              <QuestionEditor
-                formId={formId}
-                question={question}
-                questionIndex={index}
-                showTooltip={tooltipIndex === index}
-                tooltipOptions={tooltipOptions}
-                deleteQuestion={() => deleteQuestion(index)}
-                updateQuestion={updateQuestion}
-              />
-            </Row>
-          );
-        })}
+        questions.map((question, index) => (
+          <Row
+            key={"Row-" + question.id + question.label}
+            onClick={() => setTooltipIndex(index)}
+          >
+            <QuestionEditor
+              formId={formId}
+              question={question}
+              questionIndex={index}
+              showTooltip={tooltipIndex === index}
+              tooltipOptions={tooltipOptions}
+              deleteQuestion={() => deleteQuestion(index)}
+              updateQuestion={updateQuestion}
+            />
+          </Row>
+        ))}
     </Container>
   );
 };

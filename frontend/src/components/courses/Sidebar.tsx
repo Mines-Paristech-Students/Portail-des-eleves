@@ -4,14 +4,11 @@ import { Sidebar, SidebarItem } from "../../utils/Sidebar";
 import { Loading } from "../utils/Loading";
 import { UserContext } from "../../services/authService";
 import { SidebarSpace, SidebarSeparator } from "../utils/sidebar/Sidebar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 export const MainSidebar = () => {
   const location = useLocation();
-
-  // Extracting the course from the URL
-  const regCourse = new RegExp("^/cours/([0-9])/");
-  const match = regCourse.exec(location.pathname);
+  const { courseId } = useParams();
 
   return (
     <Sidebar title="Cours">
@@ -23,7 +20,7 @@ export const MainSidebar = () => {
         Formulaires
       </SidebarItem>
 
-      {match && <CourseSidebar courseId={match[1]} />}
+      {courseId && <CourseSidebar courseId={courseId} />}
 
       {location.pathname.startsWith("/cours/formulaires") && <FormSidebar />}
     </Sidebar>

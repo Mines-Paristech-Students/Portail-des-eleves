@@ -10,12 +10,11 @@ import { api, useBetterQuery } from "../../services/apiService";
 import { PrivateRoute } from "../utils/Route";
 import { MainSidebar } from "./Sidebar";
 import { routes } from "../../routing/courses/courses";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import { Row, Col, Container } from "react-bootstrap";
 import { PageNotFoundError } from "../utils/ErrorPage";
 import { Course } from "../../models/courses/course";
 import { Loading } from "../utils/Loading";
+import { Error } from "../utils/Error";
 
 export const CourseRouter = ({ match }) => {
   let { courseId } = useParams<{ courseId: string }>();
@@ -39,27 +38,25 @@ export const CourseRouter = ({ match }) => {
   );
 
   // Render
-  if (status === "loading") return <Loading />;
-  if (status === "error") return `Une erreur est apparue: ${error}`;
-  if (status === "success") {
-    return (
-      <Container>
-        <Row>
-          <Col md={3}>
-            <MainSidebar />
-          </Col>
-          <Col md={9}>
-            <Router>
-              <Switch>
-                {privateRoutes}
-                <Route component={PageNotFoundError} />
-              </Switch>
-            </Router>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-
-  return null;
+  return status === "loading" ? (
+    <Loading />
+  ) : status === "error" ? (
+    <Error />
+  ) : status === "success" ? (
+    <Container>
+      <Row>
+        <Col md={3}>
+          <MainSidebar />
+        </Col>
+        <Col md={9}>
+          <Router>
+            <Switch>
+              {privateRoutes}
+              <Route component={PageNotFoundError} />
+            </Switch>
+          </Router>
+        </Col>
+      </Row>
+    </Container>
+  ) : null;
 };

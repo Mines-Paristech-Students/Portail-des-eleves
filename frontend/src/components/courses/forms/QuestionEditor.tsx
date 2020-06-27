@@ -206,6 +206,7 @@ export const QuestionEditor = ({
 };
 
 const MyRadioField = ({ label, mapping, disabled, ...props }) => {
+  // Cannot combile because of formik type mismatch
   // @ts-ignore
   const [field, meta, helper] = useField(props);
 

@@ -6,6 +6,7 @@ import { QuestionCategory, Question } from "../../../models/courses/question";
 import { StatsQuestion, Histogram } from "../../../models/courses/requests";
 import { PaginatedModalComment } from "./PaginatedModalComment";
 import { Loading } from "../../utils/Loading";
+import { Error } from "../../utils/Error";
 
 const DigitToStar = (num: number) => {
   let ceil = Math.ceil(num);
@@ -84,20 +85,17 @@ const StatsCourse = ({ course }) => {
     api.courses.stats
   );
 
-  if (status === "loading") return <Loading />;
-  if (status === "error") return <p>{`Something went wrong: ${error}`}</p>;
-
-  if (status === "success" && stats) {
-    return (
-      <Row>
-        {stats.map((statsQuestion) => (
-          <StatsCardQuestion statsQuestion={statsQuestion} />
-        ))}
-      </Row>
-    );
-  }
-
-  return null;
+  return status === "loading" ? (
+    <Loading />
+  ) : status === "error" ? (
+    <Error />
+  ) : status === "success" && stats ? (
+    <Row>
+      {stats.map((statsQuestion) => (
+        <StatsCardQuestion statsQuestion={statsQuestion} />
+      ))}
+    </Row>
+  ) : null;
 };
 
 export const PaginatedCardComment = ({ question, course }) => (
@@ -118,23 +116,19 @@ const PaginatedComments = ({ course }) => {
     api.courses.forms.questions.list
   );
 
-  if (status === "loading") return <Loading />;
-
-  if (status === "error") return <p>{`Something went wrong: ${error}`}</p>;
-
-  if (status === "success" && questions) {
-    return (
-      <Row>
-        {questions
-          .filter((question) => question.category === QuestionCategory.Comment)
-          .map((question) => (
-            <PaginatedCardComment question={question} course={course} />
-          ))}
-      </Row>
-    );
-  }
-
-  return null;
+  return status === "loading" ? (
+    <Loading />
+  ) : status === "error" ? (
+    <Error />
+  ) : status === "success" && questions ? (
+    <Row>
+      {questions
+        .filter((question) => question.category === QuestionCategory.Comment)
+        .map((question) => (
+          <PaginatedCardComment question={question} course={course} />
+        ))}
+    </Row>
+  ) : null;
 };
 
 export const ResultsCourse = ({ course }) => (
