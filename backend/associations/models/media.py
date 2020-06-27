@@ -10,6 +10,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from pdf2image import convert_from_path
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from associations.models.association import Association
 from authentication.models import User
