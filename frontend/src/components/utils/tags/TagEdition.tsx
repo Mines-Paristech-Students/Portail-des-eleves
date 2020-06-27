@@ -10,39 +10,34 @@ import "./TagEdition.css";
  * @param id the id of the object ("bde", 1, 2...)
  */
 export const TagEdition = ({ model, id }) => {
-    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
+  const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    // API Helpers to bind and remove tags
-    const bindTag = (newTag) => {
-        api.tags
-            .bind(model, id, newTag.id)
-            .then((res) => {
-                if (res !== "Tag is already linked") {
-                    sendSuccessToast("Tag ajouté.");
-                }
-            })
-            .catch(() => {
-                sendErrorToast("Erreur lors de l'ajout du tag.");
-            });
-    };
+  // API Helpers to bind and remove tags
+  const bindTag = (newTag) => {
+    api.tags
+      .bind(model, id, newTag.id)
+      .then((res) => {
+        if (res !== "Tag is already linked") {
+          sendSuccessToast("Tag ajouté.");
+        }
+      })
+      .catch(() => {
+        sendErrorToast("Erreur lors de l'ajout du tag.");
+      });
+  };
 
-    const removeTag = (tag) => {
-        api.tags
-            .unbind(model, id, tag.id)
-            .then((_) => {
-                sendSuccessToast("Tag retiré.");
-            })
-            .catch(() => {
-                sendErrorToast("Erreur lors du retrait du tag.");
-            });
-    };
+  const removeTag = (tag) => {
+    api.tags
+      .unbind(model, id, tag.id)
+      .then((_) => {
+        sendSuccessToast("Tag retiré.");
+      })
+      .catch(() => {
+        sendErrorToast("Erreur lors du retrait du tag.");
+      });
+  };
 
-    return (
-        <TagSelector
-            model={model}
-            id={id}
-            onBind={bindTag}
-            onUnbind={removeTag}
-        />
-    );
+  return (
+    <TagSelector model={model} id={id} onBind={bindTag} onUnbind={removeTag} />
+  );
 };

@@ -26,33 +26,33 @@ import { SelectUserField, SelectUserFieldProps } from "./SelectUserField";
  * @param props passed to `SelectUserField`.
  */
 export const SelectUserFormGroup = ({
-    name,
-    isMulti = false,
-    label,
-    help,
-    feedback = true,
-    feedbackOnTouchedOnly = true,
-    formGroupProps,
-    labelProps,
-    feedbackProps,
-    ...props
+  name,
+  isMulti = false,
+  label,
+  help,
+  feedback = true,
+  feedbackOnTouchedOnly = true,
+  formGroupProps,
+  labelProps,
+  feedbackProps,
+  ...props
 }: SelectUserFieldProps & BaseFormGroupProps) => (
-    <BaseFormGroup
-        name={name}
-        label={label}
-        help={help}
-        feedback={feedback}
-        feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-        formGroupProps={formGroupProps}
-        labelProps={labelProps}
-        feedbackProps={feedbackProps}
-    >
-        <SelectUserField
-            name={name}
-            feedback={feedback}
-            feedbackOnTouchedOnly={feedbackOnTouchedOnly}
-            isMulti={isMulti}
-            {...props}
-        />
-    </BaseFormGroup>
+  <BaseFormGroup
+    name={name}
+    label={label}
+    help={help}
+    feedback={feedback}
+    feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+    formGroupProps={formGroupProps}
+    labelProps={labelProps}
+    feedbackProps={feedbackProps}
+  >
+    <SelectUserField
+      name={name}
+      feedback={feedback}
+      feedbackOnTouchedOnly={feedbackOnTouchedOnly}
+      isMulti={isMulti}
+      {...props}
+    />
+  </BaseFormGroup>
 );

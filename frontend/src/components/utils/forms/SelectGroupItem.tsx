@@ -19,50 +19,44 @@ import { FieldAttributes, useField } from "formik";
  * @param props passed to `useField` and the `input` element.
  */
 export const SelectGroupItem = ({
-    name,
-    value,
-    type = "radio",
-    text,
-    icon,
-    children,
-    ...props
+  name,
+  value,
+  type = "radio",
+  text,
+  icon,
+  children,
+  ...props
 }: {
-    name: string;
-    value: string;
-    type: "radio" | "checkbox";
-    text?: string;
-    icon?: string;
-    children?: any;
+  name: string;
+  value: string;
+  type: "radio" | "checkbox";
+  text?: string;
+  icon?: string;
+  children?: any;
 } & FieldAttributes<any>) => {
-    const [field] = useField({
-        name: name,
-        value: value,
-        type: type,
-        ...props,
-    });
+  const [field] = useField({
+    name: name,
+    value: value,
+    type: type,
+    ...props,
+  });
 
-    return (
-        <label className="selectgroup-item">
-            <input
-                {...field}
-                {...props}
-                className={`${props.className || ""} selectgroup-input`}
-                type={type}
-            />
-            {children ? (
-                children
-            ) : (
-                <span className="selectgroup-button">
-                    {" "}
-                    {text ? (
-                        text
-                    ) : icon ? (
-                        <i className={`fe fe-${icon}`} />
-                    ) : (
-                        value
-                    )}
-                </span>
-            )}
-        </label>
-    );
+  return (
+    <label className="selectgroup-item">
+      <input
+        {...field}
+        {...props}
+        className={`${props.className || ""} selectgroup-input`}
+        type={type}
+      />
+      {children ? (
+        children
+      ) : (
+        <span className="selectgroup-button">
+          {" "}
+          {text ? text : icon ? <i className={`fe fe-${icon}`} /> : value}
+        </span>
+      )}
+    </label>
+  );
 };

@@ -1,8 +1,8 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import {
-    PERMISSIONS,
-    RolePermission,
+  PERMISSIONS,
+  RolePermission,
 } from "../../../../models/associations/role";
 import * as Yup from "yup";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -18,37 +18,37 @@ import { getRandom } from "../../../../utils/random";
 import { SelectUserFormGroup } from "../../../utils/forms/SelectUserFormGroup";
 
 const rolePlaceholder = getRandom([
-    "Dictateur",
-    "Dictatrice",
-    "Tyran",
-    "VP Pipo",
-    "VP Claquage",
-    "Retraité",
-    "Retraitée",
-    "VP Aigreur",
+  "Dictateur",
+  "Dictatrice",
+  "Tyran",
+  "VP Pipo",
+  "VP Claquage",
+  "Retraité",
+  "Retraitée",
+  "VP Aigreur",
 ]);
 
 const permissionItems = PERMISSIONS.map((permission) => ({
-    value: permission,
-    children: (
-        <RolePermissionTooltip permission={permission}>
-            <span className="selectgroup-button selectgroup-button-icon">
-                <RolePermissionIcon permission={permission} />
-            </span>
-        </RolePermissionTooltip>
-    ),
+  value: permission,
+  children: (
+    <RolePermissionTooltip permission={permission}>
+      <span className="selectgroup-button selectgroup-button-icon">
+        <RolePermissionIcon permission={permission} />
+      </span>
+    </RolePermissionTooltip>
+  ),
 }));
 
 export type MutateRoleModalValues = {
-    association?: string;
-    // Follows react-select data structure.
-    user?: { value: string; label: string };
-    role: string;
-    rank: number;
-    startDate: Date;
-    endDate: Date | undefined | null;
-    endDateEnabled: boolean;
-    permissions: RolePermission[];
+  association?: string;
+  // Follows react-select data structure.
+  user?: { value: string; label: string };
+  role: string;
+  rank: number;
+  startDate: Date;
+  endDate: Date | undefined | null;
+  endDateEnabled: boolean;
+  permissions: RolePermission[];
 };
 
 /**
@@ -63,126 +63,118 @@ export type MutateRoleModalValues = {
  * @param onHide called when the Cancel button or the cross is clicked.
  */
 export const MutateRoleModal = ({
-    version,
-    title,
-    show,
-    initialValues,
-    onSubmit,
-    onHide,
+  version,
+  title,
+  show,
+  initialValues,
+  onSubmit,
+  onHide,
 }: {
-    version: "create" | "edit";
-    title: string;
-    show: boolean;
-    initialValues: MutateRoleModalValues;
-    onSubmit: (
-        values: MutateRoleModalValues,
-        formikHelpers: FormikHelpers<MutateRoleModalValues>
-    ) => void;
-    onHide: () => void;
+  version: "create" | "edit";
+  title: string;
+  show: boolean;
+  initialValues: MutateRoleModalValues;
+  onSubmit: (
+    values: MutateRoleModalValues,
+    formikHelpers: FormikHelpers<MutateRoleModalValues>
+  ) => void;
+  onHide: () => void;
 }) => (
-    <Modal size="lg" show={show} onHide={onHide}>
-        <Modal.Header>
-            <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
+  <Modal size="lg" show={show} onHide={onHide}>
+    <Modal.Header>
+      <Modal.Title>{title}</Modal.Title>
+    </Modal.Header>
 
-        <Formik
-            initialValues={initialValues}
-            validationSchema={Yup.object({
-                user:
-                    version === "create"
-                        ? Yup.string().required("Ce champ est requis.")
-                        : Yup.string().notRequired(),
-                role: Yup.string().required("Ce champ est requis."),
-                rank: Yup.number()
-                    .required("Ce champ est requis.")
-                    .min(0, "Veuillez entrer un nombre positif"),
-                startDate: Yup.date().required(
-                    "Veuillez entrer une date au format JJ/MM/YYYY."
-                ),
-                endDate: Yup.date().when(
-                    ["endDateEnabled", "startDate"],
-                    (endDateEnabled, startDate, schema) =>
-                        endDateEnabled
-                            ? startDate &&
-                              schema
-                                  .required(
-                                      "Veuillez entrer une date au format JJ/MM/YYYY."
-                                  )
-                                  .min(
-                                      startDate,
-                                      "La date de fin doit être après la date de début."
-                                  )
-                            : schema.notRequired()
-                ),
-            })}
-            onSubmit={onSubmit}
-            component={({ values }) => (
-                <Form>
-                    <Modal.Body>
-                        {version === "create" && (
-                            <SelectUserFormGroup
-                                name="user"
-                                label="Membre"
-                                className="text-capitalize"
-                            />
-                        )}
-                        <TextFormGroup
-                            name="role"
-                            label="Rôle"
-                            placeholder={rolePlaceholder}
-                        />
-                        <TextFormGroup
-                            name="rank"
-                            type="number"
-                            min={0}
-                            label="Position dans la liste des membres"
-                            help="À positions égales, l’ordre alphabétique est utilisé."
-                        />
-                        <DayPickerInputFormGroup
-                            name="startDate"
-                            label="Date de début"
-                        />
-                        <DayPickerInputFormGroup
-                            name="endDate"
-                            label={
-                                <>
-                                    <SwitchCheckbox
-                                        name="endDateEnabled"
-                                        labelClassName=""
-                                    />
-                                    Date de fin
-                                </>
-                            }
-                            help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
-                            disabled={!values.endDateEnabled}
-                        />
-                        <SelectFormGroup
-                            name="permissions"
-                            selectType="pills"
-                            type="checkbox"
-                            label="Permissions"
-                            items={permissionItems}
-                        />
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button
-                            className="btn-icon"
-                            variant="outline-danger"
-                            onClick={onHide}
-                        >
-                            Annuler
-                        </Button>
-                        <Button
-                            className="btn-icon"
-                            variant="outline-success"
-                            type="submit"
-                        >
-                            Valider
-                        </Button>
-                    </Modal.Footer>
-                </Form>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={Yup.object({
+        user:
+          version === "create"
+            ? Yup.string().required("Ce champ est requis.")
+            : Yup.string().notRequired(),
+        role: Yup.string().required("Ce champ est requis."),
+        rank: Yup.number()
+          .required("Ce champ est requis.")
+          .min(0, "Veuillez entrer un nombre positif"),
+        startDate: Yup.date().required(
+          "Veuillez entrer une date au format JJ/MM/YYYY."
+        ),
+        endDate: Yup.date().when(
+          ["endDateEnabled", "startDate"],
+          (endDateEnabled, startDate, schema) =>
+            endDateEnabled
+              ? startDate &&
+                schema
+                  .required("Veuillez entrer une date au format JJ/MM/YYYY.")
+                  .min(
+                    startDate,
+                    "La date de fin doit être après la date de début."
+                  )
+              : schema.notRequired()
+        ),
+      })}
+      onSubmit={onSubmit}
+      component={({ values }) => (
+        <Form>
+          <Modal.Body>
+            {version === "create" && (
+              <SelectUserFormGroup
+                name="user"
+                label="Membre"
+                className="text-capitalize"
+              />
             )}
-        />
-    </Modal>
+            <TextFormGroup
+              name="role"
+              label="Rôle"
+              placeholder={rolePlaceholder}
+            />
+            <TextFormGroup
+              name="rank"
+              type="number"
+              min={0}
+              label="Position dans la liste des membres"
+              help="À positions égales, l’ordre alphabétique est utilisé."
+            />
+            <DayPickerInputFormGroup name="startDate" label="Date de début" />
+            <DayPickerInputFormGroup
+              name="endDate"
+              label={
+                <>
+                  <SwitchCheckbox name="endDateEnabled" labelClassName="" />
+                  Date de fin
+                </>
+              }
+              help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
+              disabled={!values.endDateEnabled}
+            />
+            <SelectFormGroup
+              name="permissions"
+              selectType="pills"
+              type="checkbox"
+              label="Permissions"
+              items={permissionItems}
+            />
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              className="btn-icon"
+              variant="outline-danger"
+              onClick={onHide}
+            >
+              Annuler
+            </Button>
+            <Button
+              className="btn-icon"
+              variant="outline-success"
+              type="submit"
+            >
+              Valider
+            </Button>
+          </Modal.Footer>
+        </Form>
+      )}
+    />
+  </Modal>
 );

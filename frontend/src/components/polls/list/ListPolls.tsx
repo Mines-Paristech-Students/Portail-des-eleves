@@ -15,40 +15,40 @@ import { PollsError } from "../PollsError";
 import { PollsLoading } from "../PollsLoading";
 
 const Content = ({ current, polls, paginationControl }) => {
-    const cards: ReactElement[] = current
-        ? [].concat(
-              polls
-                  .filter((poll) => poll.isActive && !poll.userHasVoted)
-                  .map((poll) => <PollVotingForm poll={poll} />),
-              polls
-                  .filter((poll) => poll.isActive && poll.userHasVoted)
-                  .map((poll) => <PollResults poll={poll} />)
-          )
-        : polls
-              .filter((poll) => !poll.isActive && poll.hasBeenPublished)
-              .map((poll) => <PollResults poll={poll} />);
+  const cards: ReactElement[] = current
+    ? [].concat(
+        polls
+          .filter((poll) => poll.isActive && !poll.userHasVoted)
+          .map((poll) => <PollVotingForm poll={poll} />),
+        polls
+          .filter((poll) => poll.isActive && poll.userHasVoted)
+          .map((poll) => <PollResults poll={poll} />)
+      )
+    : polls
+        .filter((poll) => !poll.isActive && poll.hasBeenPublished)
+        .map((poll) => <PollResults poll={poll} />);
 
-    return (
-        <Container>
-            {cards.length > 0 ? (
-                <Row>
-                    {cards.map((pollCard, index) => (
-                        <Col key={"poll-card-" + index} xs={{ span: 6 }}>
-                            {pollCard}
-                        </Col>
-                    ))}
-                </Row>
-            ) : (
-                <Row>
-                    <Col key={"poll-card-empty"} xs={{ span: 6, offset: 3 }}>
-                        <PollNoPolls />
-                    </Col>
-                </Row>
-            )}
+  return (
+    <Container>
+      {cards.length > 0 ? (
+        <Row>
+          {cards.map((pollCard, index) => (
+            <Col key={"poll-card-" + index} xs={{ span: 6 }}>
+              {pollCard}
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <Row>
+          <Col key={"poll-card-empty"} xs={{ span: 6, offset: 3 }}>
+            <PollNoPolls />
+          </Col>
+        </Row>
+      )}
 
-            {paginationControl}
-        </Container>
-    );
+      {paginationControl}
+    </Container>
+  );
 };
 
 /**
@@ -62,31 +62,29 @@ const Content = ({ current, polls, paginationControl }) => {
  *   - always display the poll as a `PollResult`.
  */
 export const ListPolls = ({ current }: { current?: boolean }) => (
-    <PollsBase>
-        <PageTitle>
-            {current ? "Sondages en cours" : "Anciens sondages"}
-        </PageTitle>
-        <Pagination
-            render={(polls: Poll[], paginationControl) => (
-                <Content
-                    current={current}
-                    polls={polls}
-                    paginationControl={paginationControl}
-                />
-            )}
-            apiKey={[
-                "polls.list",
-                current
-                    ? { is_active: true }
-                    : { is_published: true, is_active: false },
-            ]}
-            apiMethod={api.polls.list}
-            config={{ refetchOnWindowFocus: false }}
-            paginationControlProps={{
-                className: "justify-content-center mb-5",
-            }}
-            loadingElement={PollsLoading}
-            errorElement={PollsError}
+  <PollsBase>
+    <PageTitle>{current ? "Sondages en cours" : "Anciens sondages"}</PageTitle>
+    <Pagination
+      render={(polls: Poll[], paginationControl) => (
+        <Content
+          current={current}
+          polls={polls}
+          paginationControl={paginationControl}
         />
-    </PollsBase>
+      )}
+      apiKey={[
+        "polls.list",
+        current
+          ? { is_active: true }
+          : { is_published: true, is_active: false },
+      ]}
+      apiMethod={api.polls.list}
+      config={{ refetchOnWindowFocus: false }}
+      paginationControlProps={{
+        className: "justify-content-center mb-5",
+      }}
+      loadingElement={PollsLoading}
+      errorElement={PollsError}
+    />
+  </PollsBase>
 );

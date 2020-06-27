@@ -8,65 +8,63 @@ import * as Yup from "yup";
 import { Button, Form, InputGroup } from "react-bootstrap";
 
 export const CreateNamespaceForm = ({ association }) => {
-    const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
+  const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-    const [createNamespace] = useMutation(api.namespaces.create, {
-        onSuccess: (response) => {
-            queryCache.refetchQueries(["association.namespaces.list"]);
-            sendSuccessToast("Namespace ajouté");
-        },
-        onError: (errorAsUnknown) => {
-            const error = errorAsUnknown as AxiosError;
-            sendErrorToast(
-                `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`
-            );
-        },
-    });
+  const [createNamespace] = useMutation(api.namespaces.create, {
+    onSuccess: (response) => {
+      queryCache.refetchQueries(["association.namespaces.list"]);
+      sendSuccessToast("Namespace ajouté");
+    },
+    onError: (errorAsUnknown) => {
+      const error = errorAsUnknown as AxiosError;
+      sendErrorToast(
+        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${error.message}`
+      );
+    },
+  });
 
-    return (
-        <Formik
-            onSubmit={(values) => {
-                createNamespace({
-                    name: values.namespaceName,
-                    scoped_to_model: "association",
-                    scoped_to_pk: association.id,
-                });
-            }}
-            initialValues={{ namespaceName: "" }}
-            validationSchema={Yup.object({
-                namespaceName: Yup.string()
-                    .required("Ce champ est requis.")
-                    .min(2, "Un namespace doit avoir au minimum 2 caractères"),
-            })}
-        >
-            {({ values, handleChange, errors, touched, handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                    <InputGroup>
-                        <Form.Control
-                            placeholder={"Nouveau namespace"}
-                            name={"namespaceName"}
-                            value={values.namespaceName}
-                            onChange={handleChange}
-                            isInvalid={
-                                (errors.namespaceName &&
-                                    touched.namespaceName) ||
-                                false
-                            }
-                        />
-                        <InputGroup.Append>
-                            <Button type={"submit"} variant={"success"}>
-                                <span className="fe fe-plus" />
-                                Ajouter le namespace
-                            </Button>
-                        </InputGroup.Append>
-                        {errors.namespaceName && touched.namespaceName && (
-                            <Form.Control.Feedback type={"invalid"}>
-                                {errors.namespaceName}
-                            </Form.Control.Feedback>
-                        )}
-                    </InputGroup>
-                </form>
+  return (
+    <Formik
+      onSubmit={(values) => {
+        createNamespace({
+          name: values.namespaceName,
+          scoped_to_model: "association",
+          scoped_to_pk: association.id,
+        });
+      }}
+      initialValues={{ namespaceName: "" }}
+      validationSchema={Yup.object({
+        namespaceName: Yup.string()
+          .required("Ce champ est requis.")
+          .min(2, "Un namespace doit avoir au minimum 2 caractères"),
+      })}
+    >
+      {({ values, handleChange, errors, touched, handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <InputGroup>
+            <Form.Control
+              placeholder={"Nouveau namespace"}
+              name={"namespaceName"}
+              value={values.namespaceName}
+              onChange={handleChange}
+              isInvalid={
+                (errors.namespaceName && touched.namespaceName) || false
+              }
+            />
+            <InputGroup.Append>
+              <Button type={"submit"} variant={"success"}>
+                <span className="fe fe-plus" />
+                Ajouter le namespace
+              </Button>
+            </InputGroup.Append>
+            {errors.namespaceName && touched.namespaceName && (
+              <Form.Control.Feedback type={"invalid"}>
+                {errors.namespaceName}
+              </Form.Control.Feedback>
             )}
-        </Formik>
-    );
+          </InputGroup>
+        </form>
+      )}
+    </Formik>
+  );
 };
