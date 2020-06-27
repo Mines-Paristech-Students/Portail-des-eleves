@@ -166,6 +166,7 @@
   fields:
     loanable: 1
     user: 17simple
+    request_date: "2018-01-01T00:00:00+00:00"
     loan_date: "2019-01-01T00:00:00+00:00"
     expected_return_date: "2019-01-07T00:00:00+00:00"
     real_return_date: "2019-01-02T00:00:00+00:00"
@@ -176,6 +177,7 @@
   fields:
     loanable: 2
     user: 17simple
+    request_date: "2018-01-01T00:00:00+00:00"
     loan_date: "2019-01-03T00:00:00+00:00"
     expected_return_date: "2019-01-09T00:00:00+00:00"
     real_return_date: "2019-01-04T00:00:00+00:00"

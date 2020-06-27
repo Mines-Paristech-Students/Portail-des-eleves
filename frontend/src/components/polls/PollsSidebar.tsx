@@ -5,6 +5,8 @@ import {
   SidebarSeparator,
   SidebarSpace,
 } from "../utils/sidebar/Sidebar";
+import { api, useBetterQuery } from "../../services/apiService";
+import { SidebarBadge } from "../utils/sidebar/SidebarBadge";
 
 export const PollsSidebar = ({
   isStaff,
@@ -12,11 +14,22 @@ export const PollsSidebar = ({
 }: {
   isStaff: boolean;
   actions?: any;
-}) => (
-  <Sidebar title="Sondages">
+}) => {
+  const { data: stats, status } = useBetterQuery<{
+    numberOfPendingPolls: number | null;
+    numberOfAvailablePolls: number;
+  }>(["polls.stats"], api.polls.stats);
+
+  return (<Sidebar title="Sondages">
     <SidebarItem icon="clock" to="/sondages">
       En cours
-    </SidebarItem>
+    {status === "success" &&
+          stats &&
+          stats.numberOfAvailablePolls !== null && (
+            <SidebarBadge variant="primary">
+              {stats.numberOfAvailablePolls}
+            </SidebarBadge>
+          )}</SidebarItem>
     <SidebarItem icon="inbox" to="/sondages/anciens">
       Anciens
     </SidebarItem>
@@ -31,7 +44,14 @@ export const PollsSidebar = ({
     {isStaff ? (
       <SidebarItem icon="shield" to="/sondages/administration">
         Administration
-      </SidebarItem>
+      {status === "success" &&
+            stats &&
+            stats.numberOfPendingPolls !== null &&
+            stats.numberOfPendingPolls > 0 && (
+              <SidebarBadge variant="warning">
+                {stats.numberOfPendingPolls}
+              </SidebarBadge>
+            )}</SidebarItem>
     ) : null}
     {actions && (
       <>
@@ -39,4 +59,4 @@ export const PollsSidebar = ({
       </>
     )}
   </Sidebar>
-);
+);};

@@ -54,10 +54,10 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
       <ListGroup>
         {poll.choices
           // Sort by descending number of votes.
-          .sort((a, b) => Number(b.numberOfVotes) - Number(a.numberOfVotes))
-          .map((choice) => {
-            if (choice.numberOfVotes !== undefined) {
-              return (
+          .sort((a, b) => a.text.localeCompare(b.text))
+          .map((choice) =>
+            choice.numberOfVotes !== undefined ? (
+
                 <ListGroup.Item key={choice.id} className="border-0">
                   <div className="clearfix">
                     <div className="float-left">
@@ -84,11 +84,8 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                     )}
                   />
                 </ListGroup.Item>
-              );
-            } else {
-              return <></>;
-            }
-          })}
+              ): null
+          )}
       </ListGroup>
     </Card.Body>
   </Card>

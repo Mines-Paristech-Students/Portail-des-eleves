@@ -58,9 +58,12 @@ export const SidebarStatusSelector = ({
       {statuses.map(({ value, label }) => (
         <CheckboxField
           label={label}
-          state={checkboxState}
-          setState={setCheckboxState}
-          id={value}
+          state={checkboxState[value]}
+          onChange={(checked) =>
+            setCheckboxState((state) => ({
+          ...state,
+              value: checked,
+            }))}
           key={value}
         />
       ))}

@@ -9,7 +9,7 @@ import { LoadingAssociation } from "../../Loading";
 import { PageTitle } from "../../../utils/PageTitle";
 import { Pagination } from "../../../utils/Pagination";
 import { EventCard } from "./EventCard";
-import { EventsListParameters } from "../../../../services/api/events";
+import { ListEventsApiParameters } from "../../../../services/api/events";
 import { Association } from "../../../../models/associations/association";
 
 /**
@@ -20,6 +20,7 @@ import { Association } from "../../../../models/associations/association";
  * @param apiParameters see `EventsListParameters` for the available filters and ordering. The key `association` is
  * omitted, given that it's already available with the `association` props.
  */
+
 export const AssociationListEvents = ({
   association,
   title,
@@ -27,7 +28,7 @@ export const AssociationListEvents = ({
 }: {
   association: Association;
   title: string;
-  apiParameters: Omit<EventsListParameters, "association">;
+  apiParameters: Omit<ListEventsApiParameters, "association">;
 }) => (
   <Pagination
     apiKey={["events.list", { ...apiParameters, association: association.id }]}

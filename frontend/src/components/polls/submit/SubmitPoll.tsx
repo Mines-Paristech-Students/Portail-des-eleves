@@ -28,7 +28,7 @@ export const SubmitPoll = () => {
   const [create] = useMutation(api.polls.create, {
     onSuccess: () => {
       queryCache.refetchQueries(["polls.list"]);
-      sendSuccessToast("Sondage envoyé.");
+      queryCache.refetchQueries(["polls.stats"]);sendSuccessToast("Sondage envoyé.");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;

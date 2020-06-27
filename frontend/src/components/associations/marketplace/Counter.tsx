@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { User } from "../../../models/user";
-import { UserSelector } from "../../utils/UserSelector";
+import { UserSelector } from "./UserSelector";
 import { CounterOrderMaker } from "./counter/CounterOrderMaker";
 
 /**

@@ -7,11 +7,13 @@ from associations.serializers.library import (
     CreateLoanSerializer,
     UpdateLoanSerializer,
     LoanSerializer,
-    LoanableShortSerializer,
     LoanableSerializer,
-    LibraryShortSerializer,
     LibrarySerializer,
     LibraryWriteSerializer,
+)
+from associations.serializers.library_short import (
+    LoanableShortSerializer,
+    LibraryShortSerializer,
 )
 from associations.serializers.marketplace import (
     CreateTransactionSerializer,

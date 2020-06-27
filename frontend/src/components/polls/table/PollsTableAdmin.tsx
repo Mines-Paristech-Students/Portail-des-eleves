@@ -16,11 +16,14 @@ const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
     render: (poll) => (
       <>
         {poll.question}
-        <div className="small pollChoice">{poll.choices[0].text}</div>
-        <div className="small pollChoice">{poll.choices[1].text}</div>
-      </>
-    ),
-    canSort: true,
+        {poll.choices
+          .sort((a, b) => a.text.localeCompare(b.text))
+          .map((choice) => (
+        <div className="small pollChoice"key={choice.id}>
+              {choice.text}</div>
+      ))}
+    </>
+    ),canSort: true,
     headerClassName: "w-50",
   },
   {
@@ -31,7 +34,7 @@ const columnData: (setEditPoll) => Column[] = (setEditPoll) => [
   },
   {
     key: "publicationDate",
-    render: (poll) => dayjs(poll.publicationDate, "DD/MM/YYYY"),
+    render: (poll) => dayjs(poll.publicationDate).format( "DD/MM/YYYY"),
     header: "Publication",
     canSort: true,
   },

@@ -79,7 +79,7 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
     // Update checkboxes state
     setFieldsState(state);
 
-    // update the checked tags model to save them in the URL
+  // update the checked tags model to save them in the URL
     const ids = Object.entries(state) // [ [namespace.tag_id, is_selected] ]
       .map(([key, value]) => value && key)
       .filter(Boolean);
@@ -201,9 +201,12 @@ export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
                     <CheckboxField
                       label={tag.value}
                       key={tag.id}
-                      id={tag.id}
-                      state={fieldsState}
-                      setState={onStateChange}
+                      state={fieldsState[tag.id]}
+                      onChange={(state) =>
+                        onStateChange({
+                          ...fieldsState,
+                      [tag.id]: state,
+                        })}
                     />
                   )
               )}

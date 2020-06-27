@@ -38,4 +38,12 @@ export const medias = {
     apiService.delete(`/associations/media/${file.id}`, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
+
+  getUploadBounds: (associationId) =>
+    unwrap<{ min: Date | null; max: Date | null }>(
+      apiService.get(`/associations/media/${associationId}/upload_bounds`)
+    ).then((res) => ({
+      min: res.min && new Date(res.min),
+      max: res.max && new Date(res.max),
+    })),
 };
