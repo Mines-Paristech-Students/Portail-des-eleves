@@ -15,9 +15,8 @@ const [
 ] = ["The Répartition", "2", "12"];
 
 export const NewRepartition = ({ children }: { children?: any }) => {
-
   const onSubmit = (values, { resetForm, setSubmitting }) => {
-  //TODO
+    //TODO
   };
 
   return (
