@@ -3,21 +3,14 @@ import {
   Sidebar,
   SidebarItem,
   SidebarSeparator,
-  SidebarSpace,
 } from "../utils/sidebar/Sidebar";
 
-export const RepSidebar = ({
-  isStaff,
-  actions,
-}: {
-  isStaff: boolean;
-  actions?: any;
-}) => (
+export const RepartitionsSidebar = ({ actions }: { actions?: any }) => (
   <Sidebar title="Répartitions">
-    <SidebarItem icon="plus" to="/repartitions/nouveau">
+    <SidebarItem icon="plus" to="/repartitions/Groups">
       Nouvelle répartition
     </SidebarItem>
-    <SidebarItem icon="inbox" to="/repartitions/anciens">
+    <SidebarItem icon="inbox" to="/repartitions/OldRepartitions">
       Anciennes
     </SidebarItem>
     {actions && (

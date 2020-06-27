@@ -1,19 +1,19 @@
 import { Route } from "./global";
 import { RepartitionsHome } from "../components/repartitions/Home";
-import { Nouveau } from "../components/repartitions/Nouveau";
-import { Anciens } from "../components/repartitions/Anciens";
+import { Groups } from "../components/repartitions/Groups";
+import { OldRepartitions } from "../components/repartitions/OldRepartitions";
 
 export const routes: Route[] = [
-{
-  path: "/Anciens",
-  component: Anciens,
-  exact: true,
-},
-{
-  path: "/Nouveau",
-  component: Nouveau,
-  exact: true,
-},
+  {
+    path: "/oldrepartitions",
+    component: OldRepartitions,
+    exact: true,
+  },
+  {
+    path: "/groups",
+    component: Groups,
+    exact: true,
+  },
   {
     path: ``,
     component: RepartitionsHome,
