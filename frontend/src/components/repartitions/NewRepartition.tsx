@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import { RepartitionsHome } from "./Home";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../utils/forms/TextFormGroup";
 import { PageTitle } from "../utils/PageTitle";
@@ -15,10 +15,10 @@ const [
 ] = ["The Répartition", "2", "12"];
 
 export const NewRepartition = ({ children }: { children?: any }) => {
-  const onSave = (val) => {
-    console.log("Edited Value -> ", val);
+
+  const onSubmit = (values, { resetForm, setSubmitting }) => {
+  //TODO
   };
-  const onSubmit = (values, { resetForm, setSubmitting }) => {};
 
   return (
     <RepartitionsHome>
