@@ -72,9 +72,7 @@ def create_preview(sender, instance: Media, created, **kwargs):
                 os.path.splitext(filename.name)[0] + "_preview" + filename.suffix,
                 ContentFile(output.getvalue()),
             )
-
             instance.save()
-
     elif instance.mimetype == "application/pdf":
         with io.BytesIO() as output:
             filename = pathlib.Path(instance.file.name)
