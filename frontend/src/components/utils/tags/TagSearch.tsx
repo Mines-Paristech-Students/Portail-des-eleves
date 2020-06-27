@@ -22,6 +22,16 @@ import { useURLState } from "../../../utils/useURLState";
  *         related_to: "product",
  *     }}
  * />
+ * <Pagination
+ *   apiKey={[
+ *     "medias.list",
+ *     associationId,
+ *     { ...tagParams },
+ *   ]}
+ *   apiMethod={api.medias.list}
+ *   render={(medias, paginationControl) => (<YourList medias={medias}/>)}
+ * />
+ *
  * will display a tag search form for all products related to the association
  * with ID `associationId`. Note the page_size is fixed to 1000 because it
  * allows fluid UI but there will never be more than a thousand tags for an association.
