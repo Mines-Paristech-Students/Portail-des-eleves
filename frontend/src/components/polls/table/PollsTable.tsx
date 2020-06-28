@@ -45,7 +45,7 @@ export const PollsTable = ({
 
   // By default, show all the polls to the simple users  and only the polls to be
   // reviewed to the admins.
-  const defaultStateFilter: PollStateFilter ={
+  const defaultStateFilter: PollStateFilter = {
     accepted: !adminVersion,
     rejected: !adminVersion,
     reviewing: true,

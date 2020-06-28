@@ -20,24 +20,24 @@ const parseDates = (response: AxiosResponse<PaginatedResponse<Poll[]>>) => {
 };
 
 export type ListPollsApiParameters = {
-      user?: string;
-      state?: "ACCEPTED" | "REJECTED" | "REVIEWING"[];
-      ordering?:
-        | "question"
-        | "user__pk"
-        | "state"
-        | "publication_date"
-        | "-question"
-        | "-user__pk"
-        | "-state"
-        | "-publication_date";is_active?: boolean;
+  user?: string;
+  state?: "ACCEPTED" | "REJECTED" | "REVIEWING"[];
+  ordering?:
+    | "question"
+    | "user__pk"
+    | "state"
+    | "publication_date"
+    | "-question"
+    | "-user__pk"
+    | "-state"
+    | "-publication_date";
+  is_active?: boolean;
   is_published?: boolean;
   page?: number;
-      page_size?: number;
-    };
-   export const polls = {
-  list: (parameters: ListPollsApiParameters, page = 1
-  ) =>
+  page_size?: number;
+};
+export const polls = {
+  list: (parameters: ListPollsApiParameters, page = 1) =>
     unwrap<PaginatedResponse<Poll[]>>(
       apiService
         .get<PaginatedResponse<Poll[]>>(

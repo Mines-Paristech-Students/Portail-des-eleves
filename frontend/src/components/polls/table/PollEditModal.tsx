@@ -24,7 +24,8 @@ export const PollEditModal = ({
   const [update] = useMutation(api.polls.update, {
     onSuccess: () => {
       queryCache.refetchQueries(["polls.list"]);
-      queryCache.refetchQueries(["polls.stats"]);sendSuccessToast("Sondage modifié.");
+      queryCache.refetchQueries(["polls.stats"]);
+      sendSuccessToast("Sondage modifié.");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;

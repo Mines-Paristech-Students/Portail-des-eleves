@@ -20,7 +20,8 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
   const [vote] = useMutation(api.polls.vote, {
     onSuccess: () => {
       queryCache.refetchQueries(["polls.list"]);
-      queryCache.refetchQueries(["polls.stats"]);sendSuccessToast("Vous avez voté.");
+      queryCache.refetchQueries(["polls.stats"]);
+      sendSuccessToast("Vous avez voté.");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -108,10 +109,12 @@ const ChoiceFields = ({ choices }: { choices: Choice[] }) => (
     selectType="vertical"
     type="radio"
     label=""
-    items={choices.sort((a, b) => a.text.localeCompare(b.text)).map((choice) => ({
-      value: choice.id.toString(),
-      text: choice.text,
-    }))}
+    items={choices
+      .sort((a, b) => a.text.localeCompare(b.text))
+      .map((choice) => ({
+        value: choice.id.toString(),
+        text: choice.text,
+      }))}
     name="choice"
   />
 );

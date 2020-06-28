@@ -30,23 +30,26 @@ export const Table = ({
   data: object[];
   showHeaders?: boolean;
   dataTable?: boolean;
-emptyComponent?: React.ReactNode;
-  }) => (
-    <div className="table-responsive">
-      <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
-        <table
-          className={`table card-table table-vcenter ${
-            dataTable ? "datatable dataTable" : ""
-          } no-footer table-striped`}
-          role="grid"
-        >
-          {showHeaders && <TableHeader columns={columns} />}
-          <TableBody columns={columns} data={data}
-        emptyComponent={emptyComponent}
-        /></table>
-      </div>
+  emptyComponent?: React.ReactNode;
+}) => (
+  <div className="table-responsive">
+    <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
+      <table
+        className={`table card-table table-vcenter ${
+          dataTable ? "datatable dataTable" : ""
+        } no-footer table-striped`}
+        role="grid"
+      >
+        {showHeaders && <TableHeader columns={columns} />}
+        <TableBody
+          columns={columns}
+          data={data}
+          emptyComponent={emptyComponent}
+        />
+      </table>
     </div>
-  );
+  </div>
+);
 
 /**
  * Return a `Column[]` object ready to be injected into a `Table` component, as well as a `sorting` object containing

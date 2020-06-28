@@ -23,8 +23,11 @@ export const AssociationLibraryHome = ({
   const [searchParams, setSearchParams] = useState({});
   const [statusParams, setStatusParams] = useState({
     status: ["AVAILABLE", "REQUESTED"],
-  });return (
-    <AssociationLayout association={association}additionalSidebar={
+  });
+  return (
+    <AssociationLayout
+      association={association}
+      additionalSidebar={
         <>
           <SidebarSeparator />
           <SidebarInputSearch
@@ -70,7 +73,8 @@ export const AssociationLibraryHome = ({
             />
           </SidebarSection>
         </>
-      }>
+      }
+    >
       <Container>
         <PageTitle>Bibliothèque</PageTitle>
 
@@ -78,24 +82,28 @@ export const AssociationLibraryHome = ({
           apiMethod={api.loanables.list}
           apiKey={[
             "loanables.list",
-            { library: association.id,
+            {
+              library: association.id,
               page_size: 10,
               ...searchParams,
-              ...statusParams, },
+              ...statusParams,
+            },
           ]}
           paginationControlProps={{
             className: "justify-content-center mb-5",
           }}
-          render={(loanables, paginationControl) =>loanables.length > 0 ? (
-            <>
-              <Row>
-                {loanables.map((loanable) => (
-                  <Col key={loanable.id} xs={12} lg={6}>
-                    <LoanableCard loanable={loanable} />
-                  </Col>
-                ))}
-              </Row>
-              {paginationControl}</>
+          render={(loanables, paginationControl) =>
+            loanables.length > 0 ? (
+              <>
+                <Row>
+                  {loanables.map((loanable) => (
+                    <Col key={loanable.id} xs={12} lg={6}>
+                      <LoanableCard loanable={loanable} />
+                    </Col>
+                  ))}
+                </Row>
+                {paginationControl}
+              </>
             ) : (
               <Instructions
                 title="Bibliothèque"

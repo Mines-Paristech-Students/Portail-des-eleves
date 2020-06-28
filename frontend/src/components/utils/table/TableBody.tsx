@@ -26,8 +26,7 @@ export const TableBody = ({
         <td colSpan={columns.length}>{emptyComponent}</td>
       </tr>
     ) : (
-      data.map((rowData, i) =>
-      <Row key={i} columns={columns} data={rowData} />)
+      data.map((rowData, i) => <Row key={i} columns={columns} data={rowData} />)
     )}
   </tbody>
 );

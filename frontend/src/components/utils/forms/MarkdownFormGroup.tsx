@@ -9,7 +9,8 @@ import "./markdown-form-group.css";
 
 const MarkdownPreview = ({ value }: { value: string }) => (
   <Container
-    className="mb-3"style={{
+    className="mb-3"
+    style={{
       border: "1px solid #e9ecef",
       borderRadius: "3px",
       padding: "0.375rem 0.75rem",
@@ -63,25 +64,31 @@ export const MarkdownFormGroup = ({
               target="_blank"
               rel="noopener noreferrer"
               href="https://guides.github.com/features/mastering-markdown/#syntax"
-
             >
               Markdown
             </a>{" "}
             est activé.{" "}
-            {// See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md#case-i-want-to-perform-an-action-and-need-a-clickable-ui-elementpreview &&
-              (showPreview ? (
+            {
+              // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md#case-i-want-to-perform-an-action-and-need-a-clickable-ui-elementpreview &&
+              showPreview ? (
                 <button
-                    type="button" onClick={() => setShowPreview(false)}className="link-button">
+                  type="button"
+                  onClick={() => setShowPreview(false)}
+                  className="link-button"
+                >
                   Désactiver la prévisualisation.
                 </button>
               ) : (
                 <button
-                    type="button" onClick={() => setShowPreview(true)}className="link-button">
+                  type="button"
+                  onClick={() => setShowPreview(true)}
+                  className="link-button"
+                >
                   Prévisualiser.
                 </button>
-              ))
-          }
-        </>
+              )
+            }
+          </>
         }
         as="textarea"
         {...props}

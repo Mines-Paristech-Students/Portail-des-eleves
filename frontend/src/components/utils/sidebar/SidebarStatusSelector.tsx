@@ -61,9 +61,10 @@ export const SidebarStatusSelector = ({
           state={checkboxState[value]}
           onChange={(checked) =>
             setCheckboxState((state) => ({
-          ...state,
+              ...state,
               value: checked,
-            }))}
+            }))
+          }
           key={value}
         />
       ))}

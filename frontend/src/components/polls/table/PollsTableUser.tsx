@@ -52,7 +52,7 @@ const columnData: (remove) => (setEditPoll) => Column[] = (remove) => (
         {poll.choices
           .sort((a, b) => a.text.localeCompare(b.text))
           .map((choice) => (
-        <div className="small pollChoice"key={choice.id}>
+            <div className="small pollChoice" key={choice.id}>
               {choice.text}
             </div>
           ))}

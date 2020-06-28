@@ -96,27 +96,33 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
 
   return (
     <Card>
-      <CardStatus color={loanable.status !== "BORROWED" ? TablerColor.Blue : TablerColor.Gray} />
+      <CardStatus
+        color={
+          loanable.status !== "BORROWED" ? TablerColor.Blue : TablerColor.Gray
+        }
+      />
 
       <Card.Header>
         <Card.Title>{loanable.name}</Card.Title>
 
-        {user && (<div className="card-options">
-          <LoanButton
-            loanable={loanable}
+        {user && (
+          <div className="card-options">
+            <LoanButton
+              loanable={loanable}
               loan={() =>
                 loan({
                   userId: user.id,
                   loanableId: loanable.id,
-                  })
-                  }
-                cancel={() => {
-                  if (loanable.userLoan) {
-                return cancel(loanable.userLoan.id);
+                })
               }
-            }}
-          />
-        </div>)}
+              cancel={() => {
+                if (loanable.userLoan) {
+                  return cancel(loanable.userLoan.id);
+                }
+              }}
+            />
+          </div>
+        )}
       </Card.Header>
 
       <Card.Body className="pt-3">
