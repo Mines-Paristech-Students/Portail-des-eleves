@@ -16,7 +16,7 @@ import { useURLState } from "../../../utils/useURLState";
  * {search: something}
  */
 export const SidebarInputSearch = ({ setParams, ...props }) => {
-  const [value, setValue] = useURLState(
+  const [searchValue, setSearchValue] = useURLState(
     "q",
     "",
     (data) => data,
@@ -24,8 +24,8 @@ export const SidebarInputSearch = ({ setParams, ...props }) => {
   );
 
   useEffect(() => {
-    setParams({ search: value });
-  }, [setParams, value]);
+    setParams({ search: searchValue });
+  }, [searchValue, setParams]);
 
   return (
     <div className="input-icon mb-3">
@@ -35,8 +35,8 @@ export const SidebarInputSearch = ({ setParams, ...props }) => {
         placeholder="Chercher"
         debounceTimeout={300}
         minLength={2}
-        onChange={(e) => setValue(e.target.value)}
-        value={value}
+        onChange={(e) => setSearchValue(e.target.value)}
+        value={searchValue}
         {...props}
       />
       <span className="input-icon-addon">
