@@ -7,23 +7,29 @@ import { Pagination } from "../../utils/Pagination";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
-import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
+import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
+import { isImageMime } from "../../../utils/mime";
 import "./list.css";
-import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
   const history = useHistory();
 
   const [tagParams, setTagParams] = useState({});
-  const [dateParams, setDateParams] = useState({});
+  const [searchParams, setSearchParams] = useState({});
 
   return (
     <AssociationLayout
       association={association}
       additionalSidebar={
         <>
+          <SidebarSpace />
+          <SidebarInputSearch
+            setParams={setSearchParams}
+            placeholder={"Chercher par nom ou desc."}
+          />
           <SidebarSpace />
           <TagSearch
             tagsQueryParams={{
@@ -34,11 +40,6 @@ export const AssociationFilesystemList = ({ association }) => {
             }}
             setTagParams={setTagParams}
           />
-          <SidebarSeparator />
-          <SidebarDateSelector
-            association={association}
-            setParams={setDateParams}
-          />
         </>
       }
     >
@@ -46,7 +47,7 @@ export const AssociationFilesystemList = ({ association }) => {
         apiKey={[
           "medias.list",
           associationId,
-          { page_size: 30, ...tagParams, ...dateParams },
+          { page_size: 30, ...tagParams, ...searchParams },
         ]}
         apiMethod={api.medias.list}
         render={(medias, paginationControl) => (
@@ -73,12 +74,8 @@ export const AssociationFilesystemList = ({ association }) => {
                     )
                   }
                 >
-                  {media.previewUrl && (
-                    <img
-                      src={media.previewUrl}
-                      alt={media.name}
-                      className={"border-bottom"}
-                    />
+                  {isImageMime(media.mimetype) && (
+                    <img src={media.url} alt={media.name} />
                   )}
                   <Card.Body>
                     <h4 className={"m-0"}>{media.name}</h4>
@@ -104,8 +101,7 @@ export const AssociationFilesystemList = ({ association }) => {
             {paginationControl}
 
             {medias.length === 0 &&
-              (Object.entries(tagParams).length === 0 &&
-              Object.entries(dateParams).length === 0 ? (
+              (Object.entries(tagParams).length === 0 ? (
                 <Instructions
                   title={"Gestion des médias"}
                   emoji={"🗂️"}

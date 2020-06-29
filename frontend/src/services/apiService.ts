@@ -21,6 +21,7 @@ import { jwt } from "./api/jwt";
 import { users } from "./api/users";
 import { fundings } from "./api/fundings";
 import { profile } from "./api/profile";
+import { courses } from "./api/courses";
 import { roles } from "./api/roles";
 import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
@@ -60,6 +61,7 @@ export const api = {
   fundings: fundings,
 
   roles: roles,
+  courses: courses,
 
   polls: polls,
 

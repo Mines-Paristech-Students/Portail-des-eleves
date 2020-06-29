@@ -19,6 +19,7 @@ python manage.py makemigrations polls
 python manage.py makemigrations repartitions
 python manage.py makemigrations subscriptions
 python manage.py makemigrations tags
+python manage.py makemigrations courses 
 
 python manage.py migrate
 
@@ -28,3 +29,4 @@ python manage.py loaddata polls
 python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
 python manage.py loaddata tags
+python manage.py loaddata courses 
