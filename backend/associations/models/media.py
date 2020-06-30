@@ -56,7 +56,7 @@ def create_preview(sender, instance: Media, created, **kwargs):
     if not created or not instance.file:
         return
 
-    mime = magic.Magic(mime=True)
+    mime = magic.Magic(magic_file="magic.mgc", mime=True)
     instance.mimetype = mime.from_file(instance.file.path)
 
     if instance.mimetype.startswith("image"):
