@@ -11,15 +11,13 @@ export const AssociationLogoSettings = ({ association }) => {
     api.medias.get
   );
 
-  const [showSelectModal, setShowSelectorModal] = useState(false);
+  const [showSelectModal, setShowSelectorModal] = useState(true);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
       queryCache.refetchQueries("association.get");
     });
   };
-
-    console.log("a", logo);
 
   return (
     <Card>
