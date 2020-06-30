@@ -9,8 +9,19 @@ import Button from "react-bootstrap/Button";
 import { TagSearch } from "./tags/TagSearch";
 import { SidebarSeparator } from "./sidebar/Sidebar";
 import { SidebarDateSelector } from "./sidebar/SidebarDateSelector";
-import { SidebarInputSearch } from "./sidebar/SidebarInputSearch";
+import { Association } from "../../models/associations/association";
 
+/**
+ * A generic way to select one (maybe more in the future) media from an
+ * association media galery
+ * @param association the association from which we want the medias
+ * @param imageOnly if we want to only display  images
+ * @param setMedia a callback called when the user validate a media
+ * @param media the default media (can be null)
+ * @param showModal determine whether the media selector be shown
+ * @param setShowModal setter for `showModal`
+ * @constructor
+ */
 export const MediaSelector = ({
   association,
   imageOnly,
@@ -18,6 +29,13 @@ export const MediaSelector = ({
   media,
   showModal,
   setShowModal,
+}: {
+  association: Association;
+  imageOnly: true;
+  media: Media;
+  setMedia: () => void;
+  showModal: boolean;
+  setShowModal: () => void;
 }) => {
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [tagParams, setTagParams] = useState({});
