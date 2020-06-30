@@ -9,6 +9,9 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from pdf2image import convert_from_path
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from associations.models.association import Association
 from authentication.models import User
@@ -71,5 +74,16 @@ def create_preview(sender, instance: Media, created, **kwargs):
                 os.path.splitext(filename.name)[0] + "_preview" + filename.suffix,
                 ContentFile(output.getvalue()),
             )
+            instance.save()
+    elif instance.mimetype == "application/pdf":
+        with io.BytesIO() as output:
+            filename = pathlib.Path(instance.file.name)
+
+            preview_name = os.path.splitext(filename.name)[0] + "_preview.png"
+
+            image = convert_from_path(instance.file.path, last_page=1)[0]
+            image.thumbnail((800, 800))
+            image.save(output, format="PNG")
+            instance.preview.save(preview_name, ContentFile(output.getvalue()))
 
             instance.save()

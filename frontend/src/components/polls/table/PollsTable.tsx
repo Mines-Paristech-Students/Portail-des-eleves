@@ -43,7 +43,8 @@ export const PollsTable = ({
   // Create the sorting.
   const { columns, sorting } = useColumns<Poll>(columnData(setEditPoll));
 
-  // By default, show all the polls to the simple users and only the polls to be reviewed to the admins.
+  // By default, show all the polls to the simple users  and only the polls to be
+  // reviewed to the admins.
   const defaultStateFilter: PollStateFilter = {
     accepted: !adminVersion,
     rejected: !adminVersion,

@@ -1,6 +1,8 @@
 import magic
+from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Min, Max
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
@@ -8,6 +10,7 @@ from rest_framework.response import Response
 from associations.models import Media, Association
 from associations.permissions import CanEditMedia
 from associations.serializers.media import MediaSerializer
+from tags.filters import HasHiddenTagFilter
 from tags.filters.taggable import TaggableFilter
 
 
@@ -27,6 +30,8 @@ class MediaViewSet(viewsets.ModelViewSet):
     filter_class = MediaFilter
     parser_classes = (MultiPartParser, JSONParser)
     permission_classes = (CanEditMedia,)
+    filter_backends = (DjangoFilterBackend, SearchFilter, HasHiddenTagFilter)
+    search_fields = ("name", "description")
 
     def perform_create(self, serializer):
         association = Association.objects.get(pk=self.request.data["association"])

@@ -24,7 +24,6 @@ export const AssociationLibraryHome = ({
   const [statusParams, setStatusParams] = useState({
     status: ["AVAILABLE", "REQUESTED"],
   });
-
   return (
     <AssociationLayout
       association={association}

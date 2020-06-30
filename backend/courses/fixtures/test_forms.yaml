@@ -1,0 +1,28 @@
+- model: courses.form
+  pk: 1
+  fields:
+    date: '2020-04-20T22:10:57.577Z'
+    name: "generic"
+
+- model: courses.course
+  pk: 1
+  fields:
+    name: Maths diff
+    form: 1
+    have_voted: [17bocquet]
+  
+- model: courses.question
+  pk: 1
+  fields:
+    label: 2+2?
+    required: true
+    category: R
+    form: 1
+
+- model: courses.question
+  pk: 2
+  fields:
+    label: Le nom de mon chat ?
+    required: false
+    category: C
+    form: 1

@@ -1,0 +1,32 @@
+version: '3'
+services:
+  # chat:
+    # restart: always
+    # build:
+    #   context: ./chat_server/ 
+    #   dockerfile: chat_server.Dockerfile
+    # links:
+    #   - db:db
+    # env_file:
+    #    - ./chat_server/db.env
+    # ports:
+    #   - 3000:3000
+
+  db:
+    restart: always
+    build:
+      context: ./chat_server/
+      dockerfile: docker/db.Dockerfile
+    ports: 
+      - "5432:5432"
+  
+  backend:
+    restart: always
+    build:
+      # Because of cli & database init
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    links:
+      - db:db
+    ports:
+      - "8000:8000"
