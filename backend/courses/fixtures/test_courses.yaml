@@ -1,0 +1,83 @@
+- model: courses.form
+  pk: 1
+  fields:
+    date: '2020-04-20T22:10:57.577Z'
+    name: "generic"
+
+- model: courses.form
+  pk: 2
+  fields:
+    date: '2020-04-20T22:10:57.577Z'
+    name: "generic2"
+
+- model: courses.course
+  pk: 1
+  fields:
+    name: Maths diff
+    form: 1
+    have_voted: [17simple]
+
+- model: courses.question
+  pk: 1
+  fields:
+    label: 3+3?
+    required: true
+    category: R
+    form: 1
+
+- model: courses.question
+  pk: 2
+  fields:
+    label: 1?
+    required: false 
+    category: R
+    form: 1
+
+- model: courses.question
+  pk: 3
+  fields:
+    label: Le nom de mon chat ?
+    required: false
+    category: C
+    form: 1
+
+- model: courses.question
+  pk: 4
+  fields:
+    label: plip 
+    required: false 
+    archived: true
+    category: R
+    form: 1
+
+- model: courses.rating
+  pk: 1
+  fields: 
+    date: '2020-04-20T22:10:57.577Z'
+    value: 2
+    question: 1
+    course: 1
+
+- model: courses.rating
+  pk: 2
+  fields: 
+    date: '2020-04-20T22:10:57.577Z'
+    value: 3
+    question: 1
+    course: 1
+
+- model: courses.rating
+  pk: 3
+  fields: 
+    date: '2020-04-20T22:10:57.577Z'
+    value: 5
+    question: 2
+    course: 1
+
+- model: courses.rating
+  pk: 4
+  fields: 
+    date: '2020-04-20T22:10:57.577Z'
+    value: 5
+    question: 4
+    course: 1

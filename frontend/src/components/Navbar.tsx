@@ -26,6 +26,7 @@ const links = [
   { icon: "user", url: "/trombi", label: "Trombi" },
   { icon: "zap", url: "/associations", label: "Associations" },
   { icon: "check-square", url: "/sondages", label: "Sondages" },
+  { icon: "book-open", url: "/cours", label: "Cours" },
 ];
 
 function Navbar() {

@@ -69,25 +69,24 @@ export const MarkdownFormGroup = ({
             </a>{" "}
             est activé.{" "}
             {
-              // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md#case-i-want-to-perform-an-action-and-need-a-clickable-ui-element
-              preview &&
-                (showPreview ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowPreview(false)}
-                    className="link-button"
-                  >
-                    Désactiver la prévisualisation.
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setShowPreview(true)}
-                    className="link-button"
-                  >
-                    Prévisualiser.
-                  </button>
-                ))
+              // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md#case-i-want-to-perform-an-action-and-need-a-clickable-ui-elementpreview &&
+              showPreview ? (
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(false)}
+                  className="link-button"
+                >
+                  Désactiver la prévisualisation.
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(true)}
+                  className="link-button"
+                >
+                  Prévisualiser.
+                </button>
+              )
             }
           </>
         }

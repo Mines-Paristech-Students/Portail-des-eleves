@@ -36,7 +36,6 @@ export type ListPollsApiParameters = {
   page?: number;
   page_size?: number;
 };
-
 export const polls = {
   list: (parameters: ListPollsApiParameters, page = 1) =>
     unwrap<PaginatedResponse<Poll[]>>(

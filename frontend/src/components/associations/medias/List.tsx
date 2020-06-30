@@ -1,29 +1,34 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
-import Card from "react-bootstrap/Card";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
-import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
-import { Instructions } from "../../utils/Instructions";
+import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import "./list.css";
-import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
 import { MediaPreviewCard } from "./PreviewCard";
+import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
+import { Instructions } from "../../utils/Instructions";
+import { Card } from "react-bootstrap";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
   const history = useHistory();
 
   const [tagParams, setTagParams] = useState({});
-  const [dateParams, setDateParams] = useState({});
+  const [searchParams, setSearchParams] = useState({});
 
   return (
     <AssociationLayout
       association={association}
       additionalSidebar={
         <>
+          <SidebarSpace />
+          <SidebarInputSearch
+            setParams={setSearchParams}
+            placeholder={"Chercher par nom ou desc."}
+          />
           <SidebarSpace />
           <TagSearch
             tagsQueryParams={{
@@ -34,11 +39,6 @@ export const AssociationFilesystemList = ({ association }) => {
             }}
             setTagParams={setTagParams}
           />
-          <SidebarSeparator />
-          <SidebarDateSelector
-            association={association}
-            setParams={setDateParams}
-          />
         </>
       }
     >
@@ -46,7 +46,7 @@ export const AssociationFilesystemList = ({ association }) => {
         apiKey={[
           "medias.list",
           associationId,
-          { page_size: 30, ...tagParams, ...dateParams },
+          { page_size: 30, ...tagParams, ...searchParams },
         ]}
         apiMethod={api.medias.list}
         render={(medias, paginationControl) => (
@@ -78,8 +78,7 @@ export const AssociationFilesystemList = ({ association }) => {
             {paginationControl}
 
             {medias.length === 0 &&
-              (Object.entries(tagParams).length === 0 &&
-              Object.entries(dateParams).length === 0 ? (
+              (Object.entries(tagParams).length === 0 ? (
                 <Instructions
                   title={"Gestion des médias"}
                   emoji={"🗂️"}

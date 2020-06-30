@@ -11,7 +11,7 @@ export const AssociationLogoSettings = ({ association }) => {
     api.medias.get
   );
 
-  const [showSelectModal, setShowSelectorModal] = useState(true);
+  const [showSelectModal, setShowSelectorModal] = useState(false);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {

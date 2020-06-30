@@ -1,3 +1,15 @@
+import { Association } from "./association";
+import { User } from "../user";
+
+export enum LoanStatus {
+  Accepted = "ACCEPTED",
+  Borrowed = "BORROWED",
+  Cancelled = "CANCELLED",
+  Pending = "PENDING",
+  Rejected = "REJECTED",
+  Returned = "RETURNED",
+}
+
 export interface Loan {
   id: number;
   priority: number | null;

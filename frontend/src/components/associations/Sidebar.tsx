@@ -25,13 +25,6 @@ export const AssociationSidebar = ({ association }) => {
         <ListPagesItem association={association} pages={pages.results} />
         <AddPageItem association={association} />
         <SidebarItem
-          icon={"book"}
-          to={`/associations/${association.id}/bibliotheque`}
-          exact={false}
-        >
-          Bibliothèque
-        </SidebarItem>
-        <SidebarItem
           icon={"calendar"}
           to={`/associations/${association.id}/evenements`}
           exact={false}
@@ -44,6 +37,13 @@ export const AssociationSidebar = ({ association }) => {
           exact={false}
         >
           Fichiers
+        </SidebarItem>
+        <SidebarItem
+          icon={"book"}
+          to={`/associations/${association.id}/bibliotheque`}
+          exact={false}
+        >
+          Bibliothèque
         </SidebarItem>
         <SidebarItem
           icon={"shopping-cart"}
