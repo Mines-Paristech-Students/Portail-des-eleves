@@ -115,6 +115,7 @@
     request_date: "2018-06-01T00:00:00+00:00"
     loan_date: "2018-03-04T00:00:00+00:00"
     expected_return_date: "2018-06-01T00:00:00+00:00"
+    real_return_date: "2018-06-03T00:00:00+00:00"
     status: RETURNED
 
 #########
