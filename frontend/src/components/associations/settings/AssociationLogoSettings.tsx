@@ -26,7 +26,11 @@ export const AssociationLogoSettings = ({ association }) => {
       </Card.Header>
       <Card.Body className={"text-center"}>
         <p>
-          {association.logo && logo ? (
+          {status === "error" ? (
+            <p className="text-danger">
+              Erreur lors du chargement du logo de l'association : {error}
+            </p>
+          ) : association.logo && logo ? (
             <img
               src={logo.url}
               alt={"Logo de l'association"}
@@ -48,7 +52,7 @@ export const AssociationLogoSettings = ({ association }) => {
           association={association}
           imageOnly={true}
           setMedia={onMediaChange}
-          media={logo}
+          media={logo ? logo : null}
           showModal={showSelectModal}
           setShowModal={setShowSelectorModal}
         />

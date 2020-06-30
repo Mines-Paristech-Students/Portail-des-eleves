@@ -32,10 +32,10 @@ export const MediaSelector = ({
 }: {
   association: Association;
   imageOnly: true;
-  media: Media;
-  setMedia: () => void;
+  media: Media | null;
+  setMedia: (media: (Media | null)) => void;
   showModal: boolean;
-  setShowModal: () => void;
+  setShowModal: (boolean) => void;
 }) => {
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const [tagParams, setTagParams] = useState({});
@@ -89,12 +89,12 @@ export const MediaSelector = ({
                           showDescription={false}
                           overlayInformation={true}
                           onClick={() =>
-                            selectedMedia && media.id == selectedMedia.id
+                            selectedMedia && media.id === selectedMedia.id
                               ? setSelectedMedia(null)
                               : setSelectedMedia(media)
                           }
                           style={
-                            selectedMedia && media.id == selectedMedia.id
+                            selectedMedia && media.id === selectedMedia.id
                               ? { border: "2px solid var(--blue)" }
                               : {}
                           }
