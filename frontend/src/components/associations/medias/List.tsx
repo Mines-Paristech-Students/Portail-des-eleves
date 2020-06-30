@@ -11,6 +11,7 @@ import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { Instructions } from "../../utils/Instructions";
 import "./list.css";
 import { SidebarDateSelector } from "../../utils/sidebar/SidebarDateSelector";
+import { MediaPreviewCard } from "./PreviewCard";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
@@ -65,40 +66,14 @@ export const AssociationFilesystemList = ({ association }) => {
 
             <div className={"card-columns"}>
               {medias.map((media) => (
-                <Card
-                  key={media.id}
+                <MediaPreviewCard
+                  media={media}
                   onClick={() =>
                     history.push(
                       `/associations/${association.id}/fichiers/${media.id}/`
                     )
                   }
-                >
-                  {media.previewUrl && (
-                    <img
-                      src={media.previewUrl}
-                      alt={media.name}
-                      className={"border-bottom"}
-                    />
-                  )}
-                  <Card.Body>
-                    <h4 className={"m-0"}>{media.name}</h4>
-                    <p className="text-muted">{media.description}</p>
-                  </Card.Body>
-
-                  {media.tags.length > 0 && (
-                    <Card.Footer
-                      style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.03)",
-                      }}
-                    >
-                      <TagList
-                        model={TaggableModel.Media}
-                        instance={media}
-                        collapsed={true}
-                      />
-                    </Card.Footer>
-                  )}
-                </Card>
+                />
               ))}
             </div>
             {paginationControl}

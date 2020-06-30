@@ -10,4 +10,10 @@ export const associations = {
     unwrap<Association>(
       apiService.get(`/associations/associations/${associationId}/`)
     ),
+  setLogo: (associationId, mediaId) =>
+    unwrap<Association>(
+      apiService.patch(`/associations/associations/${associationId}/`, {
+        logo: mediaId,
+      })
+    ),
 };
