@@ -36,6 +36,9 @@ class MediaViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter, HasHiddenTagFilter)
     search_fields = ("name", "description")
 
+    class Meta:
+        ordering = ["-id"]
+
     def perform_create(self, serializer):
         association = Association.objects.get(pk=self.request.data["association"])
 

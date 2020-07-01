@@ -11,7 +11,7 @@ export const AssociationLogoSettings = ({ association }) => {
     api.medias.get
   );
 
-  const [showSelectModal, setShowSelectorModal] = useState(false);
+  const [showSelectModal, setShowSelectorModal] = useState(true);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
@@ -28,7 +28,8 @@ export const AssociationLogoSettings = ({ association }) => {
         <p>
           {status === "error" ? (
             <p className="text-danger">
-              Erreur lors du chargement du logo de l'association : {error}
+              Erreur lors du chargement du logo de l'association :
+              {(error as any).toString()}
             </p>
           ) : association.logo && logo ? (
             <img

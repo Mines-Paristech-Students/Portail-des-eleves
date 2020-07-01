@@ -9,6 +9,7 @@ import { Tag } from "../../../models/tag";
 import { FileUploadSuccess } from "./UploadStates/Success";
 import { FileUploadError } from "./UploadStates/Error";
 import { FileUpload } from "./UploadStates/Uploading";
+import { Association } from "../../../models/associations/association";
 
 enum UploadState {
   Uploading,
@@ -16,7 +17,22 @@ enum UploadState {
   Fail,
 }
 
-export const AssociationFilesystemUpload = ({ association }) => {
+export const AssociationFilesystemUpload = ({ association }) => (
+  <>
+    <PageTitle>
+      <Link
+        to={`/associations/${association.id}/fichiers`}
+        className={"text-primary"}
+      >
+        <i className={"fe fe-arrow-left"} />
+      </Link>
+      Envoi de fichiers
+    </PageTitle>
+    <UploadForm association={association} />
+  </>
+);
+
+export const UploadForm = ({ association }: { association: Association }) => {
   // Subcomponents that will be used to upload the medias
   const [medias, setMedias] = useState<
     { media: any; status: UploadState; error: AxiosError | null }[]
@@ -76,15 +92,6 @@ export const AssociationFilesystemUpload = ({ association }) => {
 
   return (
     <>
-      <PageTitle>
-        <Link
-          to={`/associations/${association.id}/fichiers`}
-          className={"text-primary"}
-        >
-          <i className={"fe fe-arrow-left"} />
-        </Link>
-        Envoi de fichiers
-      </PageTitle>
       <div className="py-2">
         <p className="lead">Etape 1</p>
         <TagAdder
