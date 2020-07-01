@@ -5,13 +5,13 @@ from django.http import HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.mixins import NestedViewSetMixin
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework as filters
 
 from repartitions.algorithm import make_reparition
 from repartitions.models import Campaign, UserCampaign, Wish, Proposition, Group
@@ -24,9 +24,10 @@ from repartitions.serializers import (
     GroupPublicSerializer,
     UserCampaignPublicSerializer,
 )
+from tags.filters import HasHiddenTagFilter
 
 
-class CampaignFilter(django_filters.FilterSet):
+class CampaignFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = Campaign
         fields = {"status": ["exact"]}
@@ -38,7 +39,12 @@ class CampaignView(viewsets.ModelViewSet):
     permission_classes = (CanManageCampaign,)
 
     filter_class = CampaignFilter
-    filter_backends = (DjangoFilterBackend,)
+
+    def get_queryset(self):
+        # This filtering is done here instead of `filter_queryset` so it does not interfere with `CampaignFilter`.
+        return Campaign.objects.filter(
+            Q(usercampaign__user=self.request.user) | Q(manager=self.request.user)
+        ).distinct()
 
     def create(self, request, *args, **kwargs):
         request.data["manager"] = request.user.id
@@ -54,11 +60,6 @@ class CampaignView(viewsets.ModelViewSet):
             serializer.save()
         elif campaign.groups.count() == 0:
             make_reparition(campaign)
-
-    def filter_queryset(self, queryset):
-        return queryset.filter(
-            Q(usercampaign__user=self.request.user) | Q(manager=self.request.user)
-        ).distinct()
 
 
 class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
