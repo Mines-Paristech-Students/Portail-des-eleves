@@ -90,7 +90,7 @@ export const MutateLoanableForm = ({
             onClick={onDelete}
             className="mr-2"
           >
-            Supprimer
+            Supprimer l’objet
           </Button>
         )}
         <Button type="submit" variant="outline-success">

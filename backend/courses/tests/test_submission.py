@@ -22,8 +22,8 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
     course = 1
 
     submission_data = {
-        "ratings": [{"question": 1, "value": 2,}],
-        "comments": [{"question": 3, "content": "plop",}],
+        "ratings": [{"question": 1, "value": 2}],
+        "comments": [{"question": 3, "content": "plop"}],
     }
 
     ########
@@ -45,9 +45,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         res = self.submit(self.course, data=self.submission_data)
         self.assertStatusCode(res, 201)
 
-        self.assertTrue(
-            Course.objects.filter(have_voted="17bocquet").exists(), True,
-        )
+        self.assertTrue(Course.objects.filter(have_voted="17bocquet").exists(), True)
 
         new_rating = Rating.objects.latest("date")
         data_rating = self.submission_data["ratings"][0]
@@ -71,9 +69,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["ratings"].append(
-            {"question": 4, "value": "plip",}
-        )
+        fake_data["ratings"].append({"question": 4, "value": "plip"})
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
@@ -82,9 +78,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["comments"].append(
-            {"question": 2, "content": "plip",}
-        )
+        fake_data["comments"].append({"question": 2, "content": "plip"})
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)
@@ -95,9 +89,7 @@ class SubmitTestCase(WeakAuthenticationBaseTestCase):
         self.login("17bocquet")
 
         fake_data = copy.deepcopy(self.submission_data)
-        fake_data["ratings"].append(
-            {"question": 5, "value": 3,}
-        )
+        fake_data["ratings"].append({"question": 5, "value": 3})
 
         res = self.submit(self.course, data=fake_data)
         self.assertStatusCode(res, 400)

@@ -1,27 +1,17 @@
-import { Association } from "./association";
-import { User } from "../user";
-
-export enum LoanStatus {
-  Accepted = "ACCEPTED",
-  Borrowed = "BORROWED",
-  Cancelled = "CANCELLED",
-  Pending = "PENDING",
-  Rejected = "REJECTED",
-  Returned = "RETURNED",
-}
+export type LoanStatus =
+  | "ACCEPTED"
+  | "BORROWED"
+  | "CANCELLED"
+  | "PENDING"
+  | "REJECTED"
+  | "RETURNED";
 
 export interface Loan {
   id: number;
   priority: number | null;
   requestDate: Date;
   user: string;
-  status:
-    | "ACCEPTED"
-    | "BORROWED"
-    | "CANCELLED"
-    | "PENDING"
-    | "REJECTED"
-    | "RETURNED";
+  status: LoanStatus;
   loanable: Pick<Loanable, "name" | "description" | "image" | "comment">;
   expectedReturnDate: Date | null;
   loanDate: Date | null;

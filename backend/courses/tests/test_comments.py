@@ -8,20 +8,9 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class CommentTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_comments.yaml"]
 
-    EXPECTED_FIELDS = [
-        "count",
-        "next",
-        "previous",
-        "results",
-    ]
+    EXPECTED_FIELDS = ["count", "next", "previous", "results"]
 
-    EXPECTED_FIELDS_COMMENT = [
-        "id",
-        "question",
-        "course",
-        "content",
-        "date",
-    ]
+    EXPECTED_FIELDS_COMMENT = ["id", "question", "course", "content", "date"]
 
     ALL_USERS = ["17admin", "17simple"]
 
@@ -50,11 +39,7 @@ class CommentTestCase(WeakAuthenticationBaseTestCase):
     filter_date = "2100-04-20T22:10:57.577Z"
     filter_question = 1
     filter_course = 1
-    filter_many = {
-        "question": 2,
-        "course": 1,
-        "date": "2100-04-20T22:10:57.577Z",
-    }
+    filter_many = {"question": 2, "course": 1, "date": "2100-04-20T22:10:57.577Z"}
 
     def if_logged_in_then_can_list_all_comments(self):
         self.login("17simple")

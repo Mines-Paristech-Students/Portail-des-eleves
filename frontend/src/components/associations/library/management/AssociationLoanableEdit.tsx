@@ -56,6 +56,9 @@ export const AssociationLoanableEdit = ({
       <PageTitle>Modifier un objet</PageTitle>
 
       <Card>
+        <Card.Header>
+          <Card.Title>Informations sur l’objet</Card.Title>
+        </Card.Header>
         <MutateLoanableForm
           initialValues={{
             name: loanable.name || "",
@@ -75,7 +78,7 @@ export const AssociationLoanableEdit = ({
               {
                 onSuccess: () =>
                   history.push(
-                    `/associations/${loanable.library}/bibliotheque/gestion`
+                    `/associations/${association.id}/bibliotheque/gestion`
                   ),
               }
             )
