@@ -1,4 +1,3 @@
-import { Association } from "../../models/associations/association";
 import { api, useBetterQuery } from "../../services/apiService";
 import { Media } from "../../models/associations/media";
 import React from "react";
@@ -10,7 +9,7 @@ import React from "react";
  * @param props additionnal JSX props
  */
 export const Logo = ({ association, ...props }) => {
-  const { data: logo, status, error } = useBetterQuery<Media>(
+  const { data: logo, status } = useBetterQuery<Media>(
     ["association.logo.get", association.logo],
     api.medias.get
   );
