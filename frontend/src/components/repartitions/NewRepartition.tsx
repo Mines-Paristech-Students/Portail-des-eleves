@@ -7,18 +7,41 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextFormGroup } from "../utils/forms/TextFormGroup";
 import { PageTitle } from "../utils/PageTitle";
+import { api } from "../../services/apiService";
+import { queryCache, useMutation } from "react-query";
+import { AxiosError } from "axios";
 
 const [
-  repartiontitlePlaceholder,
-  groupsnumberPlaceholder,
-  studentnumberPlaceholder,
+  repartitionTitlePlaceholder,
+  groupsNumberPlaceholder,
+  studentsNumberPlaceholder,
 ] = ["The Répartition", "2", "12"];
 
 export const NewRepartition = ({ children }: { children?: any }) => {
   const onSubmit = (values, { resetForm, setSubmitting }) => {
-    //TODO
-  };
+    let data = {
+      name: values.repartitionTitle,
+      status: "CREATING",
+      groupsNumber: values.groupsNumber,
+      studentsNumber: values.studentsNumber,
+    };
 
+    create(
+      { data },
+      {
+        onSuccess: resetForm,
+        onSettled: () => setSubmitting(false),
+      }
+    );
+  };
+  const [create] = useMutation(api.repartitions.create, {
+    onSuccess: () => {
+      queryCache.refetchQueries(["repartitions.list"]);
+    },
+    onError: (errorAsUnknown) => {
+      const error = errorAsUnknown as AxiosError;
+    },
+  });
   return (
     <RepartitionsHome>
       <PageTitle>Nouvelle répartition</PageTitle>
@@ -26,23 +49,23 @@ export const NewRepartition = ({ children }: { children?: any }) => {
         <Card className="text-left">
           <Formik
             initialValues={{
-              repartiontitle: "",
-              groupsnumber: "",
-              studentnumber: "",
+              repartitionTitle: "",
+              groupsNumber: "",
+              studentsNumber: "",
             }}
             validationSchema={Yup.object({
-              repartiontitle: Yup.string().required("Ce champ est requis."),
-              groupsnumber: Yup.string()
+              repartitionTitle: Yup.string().required("Ce champ est requis."),
+              groupsNumber: Yup.string()
                 .max(2)
                 .required("Ce champ est requis."),
-              studentnumber: Yup.string()
+              studentsNumber: Yup.string()
                 .max(3)
                 .required("Ce champ est requis."),
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
                 setSubmitting(false);
+                window.open("./Groups");
               }, 400);
             }}
           >
@@ -59,21 +82,21 @@ export const NewRepartition = ({ children }: { children?: any }) => {
                 <Card.Body>
                   <TextFormGroup
                     label="Sujet"
-                    name="repartiontitle"
+                    name="repartitionTitle"
                     type="text"
-                    placeholder={repartiontitlePlaceholder}
+                    placeholder={repartitionTitlePlaceholder}
                   />
                   <TextFormGroup
                     label="Nombre de groupes"
-                    name="groupsnumber"
+                    name="groupsNumber"
                     type="number"
-                    placeholder={groupsnumberPlaceholder}
+                    placeholder={groupsNumberPlaceholder}
                   />
                   <TextFormGroup
                     label="Nombre d'élèves"
-                    name="studentnumber"
+                    name="studentsNumber"
                     type="number"
-                    placeholder={studentnumberPlaceholder}
+                    placeholder={studentsNumberPlaceholder}
                   />
                 </Card.Body>
                 <Card.Footer className="text-right">
@@ -86,7 +109,6 @@ export const NewRepartition = ({ children }: { children?: any }) => {
           </Formik>
         </Card>
       </Row>
-      <Row>{children}</Row>
     </RepartitionsHome>
   );
 };

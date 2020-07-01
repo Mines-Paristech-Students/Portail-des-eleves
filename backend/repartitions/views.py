@@ -26,10 +26,22 @@ from repartitions.serializers import (
 )
 
 
+class CampaignFilter(SearchFilter):
+    class Meta:
+        model = Media
+        fields = {
+            "status": ["exact"],
+        }
+
+
 class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
     permission_classes = (CanManageCampaign,)
+
+    filter_class = CampaignFilter
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+
 
     def create(self, request, *args, **kwargs):
         request.data["manager"] = request.user.id

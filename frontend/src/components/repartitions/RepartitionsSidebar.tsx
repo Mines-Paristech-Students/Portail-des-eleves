@@ -7,7 +7,7 @@ import {
 
 export const RepartitionsSidebar = ({ actions }: { actions?: any }) => (
   <Sidebar title="Répartitions">
-    <SidebarItem icon="plus" to="/repartitions/Groups">
+    <SidebarItem icon="plus" to="/repartitions/NewRepartition">
       Nouvelle répartition
     </SidebarItem>
     <SidebarItem icon="inbox" to="/repartitions/OldRepartitions">

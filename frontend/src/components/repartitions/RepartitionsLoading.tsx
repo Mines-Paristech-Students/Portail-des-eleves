@@ -1,3 +1,3 @@
 import { Loading } from "../utils/Loading";
 
-export const PollsLoading = Loading;
+export const RepartitionsLoading = Loading;

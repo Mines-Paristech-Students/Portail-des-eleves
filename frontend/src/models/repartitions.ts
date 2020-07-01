@@ -4,13 +4,16 @@ export enum CampaignStatus {
   Closed = "CLOSED",
   Open = "OPEN",
   Results = "RESULTS",
-}
+  Creating = "CREATING"
+  }
 
-export interface Campaign {
+export interface Repartition {
   id: string;
   name: string;
-  manager: User;
+  manager?: User;
   status: CampaignStatus;
+  groupsNumber: number;
+  studentsNumber: number;
 }
 
 export interface Category {
@@ -26,7 +29,7 @@ export interface Proposition {
 export interface Group {
   id: string;
   proposition: Proposition;
-  campaign: Campaign;
+  repartition: Repartition;
   users: User[];
 }
 
