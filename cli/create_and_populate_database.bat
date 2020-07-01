@@ -23,6 +23,6 @@ python manage.py migrate
 python manage.py loaddata authentication profile
 python manage.py loaddata association election event library marketplace media page role
 python manage.py loaddata polls
-python manage.py loaddata repartitions
+python manage.py loaddata repartition
 python manage.py loaddata subscriptions
 python manage.py loaddata tags

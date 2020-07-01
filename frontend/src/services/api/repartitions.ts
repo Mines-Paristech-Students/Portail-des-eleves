@@ -4,21 +4,8 @@ import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { toUrlParams } from "../../utils/urlParam";
 import { User } from "../../models/user";
 
-/**
- * Parse the `publicationDate` and `creationDateTime` JSON field.
- *
- * Should be called in a `then` after an `unwrap<PaginatedResponse<Poll[]>>`.
- */
-
 export type ListRepartitionsApiParameters = {
-  user?: string;
-  status?: "OPEN" | "CLOSED" | "RESULTS"[];
-  ordering?:
-    | "user__pk"
-    | "status"
-    | "-user__pk"
-    | "-status"
-  is_active?: boolean;
+  status?: string;
 };
 
 export const repartitions = {

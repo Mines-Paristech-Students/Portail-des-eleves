@@ -1,0 +1,76 @@
+- model: repartitions.campaign
+  pk: 1
+  fields:
+    name: Material science groups
+    manager: 17bocquet
+
+- model: repartitions.campaign
+  pk: 2
+  fields:
+    name: Controverses
+    manager: 17bocquet
+
+- model: repartitions.campaign
+  pk: 3
+  fields:
+    name: MMS
+    manager: 17bocquet
+
+- model: repartitions.campaign
+  pk: 11
+  fields:
+    name: Material 2017
+    manager: 17wan-fat
+
+- model: repartitions.campaign
+  pk: 12
+  fields:
+    name: Controverses 2017
+    manager: 17wan-fat
+
+- model: repartitions.campaign
+  pk: 13
+  fields:
+    name: MMS 2017
+    manager: 17wan-fat
+
+- model: repartitions.category
+  pk: 1
+  fields:
+    name: Everyone
+    campaign: 1
+
+- model: repartitions.proposition
+  pk: 1
+  fields:
+    campaign: 1
+    name: Metals
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+- model: repartitions.proposition
+  pk: 2
+  fields:
+    campaign: 1
+    name: Polymers
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+- model: repartitions.proposition
+  pk: 3
+  fields:
+    campaign: 1
+    name: Bio-materials
+#    number_of_places: 5  TODO: either remove this or restore it in the model.
+
+- model: repartitions.usercampaign
+  fields:
+    user: 17bocquet
+    campaign: 1
+    category: 1
+- model: repartitions.usercampaign
+  fields:
+    user: 16leroy
+    campaign: 1
+    category: 1
+- model: repartitions.usercampaign
+  fields:
+    user: 18aouir
+    campaign: 1
+    category: 1

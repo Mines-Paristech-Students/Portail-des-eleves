@@ -9,6 +9,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.mixins import NestedViewSetMixin
+import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 
@@ -25,7 +26,7 @@ from repartitions.serializers import (
 )
 
 
-class CampaignFilter(filters.FilterSet):
+class CampaignFilter(django_filters.FilterSet):
     class Meta:
         model = Campaign
         fields = {"status": ["exact"]}
