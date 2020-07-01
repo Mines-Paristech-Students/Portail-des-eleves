@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Q
 from django.http import HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
@@ -8,14 +9,12 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_extensions.mixins import NestedViewSetMixin
+from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
 
 from repartitions.algorithm import make_reparition
 from repartitions.models import Campaign, UserCampaign, Wish, Proposition, Group
-from repartitions.permissions import (
-    CanManageCampaign,
-    user_in_campaign,
-    UserCampaignPermission,
-)
+from repartitions.permissions import CanManageCampaign, UserCampaignPermission
 from repartitions.serializers import (
     CampaignSerializer,
     UserCampaignAdminSerializer,
@@ -26,47 +25,26 @@ from repartitions.serializers import (
 )
 
 
-class CampaignFilter(SearchFilter):
+class CampaignFilter(filters.FilterSet):
     class Meta:
-        model = Media
-        fields = {
-            "status": ["exact"],
-        }
+        model = Campaign
+        fields = {"status": ["exact"]}
 
 
-class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
+class CampaignView(viewsets.ModelViewSet):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
     permission_classes = (CanManageCampaign,)
 
     filter_class = CampaignFilter
-    filter_backends = (DjangoFilterBackend, SearchFilter)
-
+    filter_backends = (DjangoFilterBackend,)
 
     def create(self, request, *args, **kwargs):
         request.data["manager"] = request.user.id
         return super(CampaignView, self).create(request, *args, **kwargs)
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        queryset = [
-            c
-            for c in queryset
-            if user_in_campaign(request.user, c) or c.manager == request.user
-        ]
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def perform_update(self, serializer):
         serializer.save()
-
         campaign = serializer.instance
 
         if campaign.status == "OPEN":
@@ -75,6 +53,11 @@ class CampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
             serializer.save()
         elif campaign.groups.count() == 0:
             make_reparition(campaign)
+
+    def filter_queryset(self, queryset):
+        return queryset.filter(
+            Q(usercampaign__user=self.request.user) | Q(manager=self.request.user)
+        ).distinct()
 
 
 class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
