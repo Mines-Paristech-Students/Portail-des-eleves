@@ -33,7 +33,7 @@ export const MediaSelector = ({
   association: Association;
   imageOnly: true;
   media: Media | null;
-  setMedia: (media: (Media | null)) => void;
+  setMedia: (media: Media | null) => void;
   showModal: boolean;
   setShowModal: (boolean) => void;
 }) => {

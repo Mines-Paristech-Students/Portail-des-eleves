@@ -35,7 +35,7 @@ export const AssociationFilesystemList = ({ association }) => {
               page_size: 1000,
               namespace__scoped_to_model: "association",
               namespace__scoped_to_pk: associationId,
-              related_to: "media"
+              related_to: "media",
             }}
             setTagParams={setTagParams}
           />

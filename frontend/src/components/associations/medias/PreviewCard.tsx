@@ -38,15 +38,15 @@ export const MediaPreviewCard = (
         {overlayInformation && (
           <div
             className="card-img-overlay to-show d-flex"
-            style={{ justifyContent: 'center' }}
+            style={{ justifyContent: "center" }}
           >
-              <h4>{media.name}</h4>
-              <TagList
-                model={TaggableModel.Media}
-                instance={media}
-                collapsed={true}
-              />
-            </div>
+            <h4>{media.name}</h4>
+            <TagList
+              model={TaggableModel.Media}
+              instance={media}
+              collapsed={true}
+            />
+          </div>
         )}
       </div>
     )}
