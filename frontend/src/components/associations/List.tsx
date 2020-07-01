@@ -19,7 +19,10 @@ export const AssociationList = () => (
             <Card key={association.id}>
               <Link to={`/associations/${association.id}`}>
                 {association.logo && (
-                  <Logo association={association} style={{ maxHeight: "500px" }} />
+                  <Logo
+                    association={association}
+                    style={{ maxHeight: "500px" }}
+                  />
                 )}
                 <Card.Body>
                   <Card.Title>{association.name}</Card.Title>

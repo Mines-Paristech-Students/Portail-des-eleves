@@ -9,10 +9,7 @@ import React from "react";
  * @param association the association for which we want the logo
  * @param props additionnal JSX props
  */
-export const Logo = ({
-  association,
-  ...props
-})=> {
+export const Logo = ({ association, ...props }) => {
   const { data: logo, status, error } = useBetterQuery<Media>(
     ["association.logo.get", association.logo],
     api.medias.get
