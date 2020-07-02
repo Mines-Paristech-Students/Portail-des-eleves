@@ -7,7 +7,7 @@ import "./PreviewCard.css";
  * Generic component to present a media in a card
  * @param media the media to display
  * @param showPreview show the preview
- * @param showDescription show the preview
+ * @param showDescription show the description
  * @param showTags show the preview
  * @param overlayInformation true to show the information on the image on hover
  * @param onClick callback in case the card is clicked
