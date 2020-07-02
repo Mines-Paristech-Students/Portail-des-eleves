@@ -16,7 +16,7 @@ import { Association } from "../../models/associations/association";
  * association media galery
  * @param association the association from which we want the medias
  * @param imageOnly if we want to only display  images
- * @param setMedia a callback called when the user validate a media
+ * @param setMedia a callback called when the user validates a media
  * @param media the default media (can be null)
  * @param showModal determine whether the media selector be shown
  * @param setShowModal setter for `showModal`
