@@ -9,11 +9,7 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class CourseTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_courses.yaml"]
 
-    EXPECTED_FIELDS = {
-        "id",
-        "name",
-        "form",
-    }
+    EXPECTED_FIELDS = {"id", "name", "form"}
 
     ALL_USERS = ["17admin", "17simple"]
 
@@ -92,11 +88,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     # CREATE #
     ##########
 
-    create_course_data = {
-        "id": 2,
-        "name": "plop",
-        "form": 1,
-    }
+    create_course_data = {"id": 2, "name": "plop", "form": 1}
 
     def test_if_not_global_admin_then_cannot_create(self):
         self.login("17simple")
@@ -122,11 +114,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
     # UPDATE #
     ##########
 
-    update_course_data = {
-        "id": 1,
-        "name": "maths 2",
-        "form": 2,
-    }
+    update_course_data = {"id": 1, "name": "maths 2", "form": 2}
 
     def test_if_not_global_admin_then_cannot_update(self):
         self.login("17simple")
@@ -171,7 +159,7 @@ class CourseTestCase(WeakAuthenticationBaseTestCase):
         "id": 1,
         "label": "3+3?",
         "average": 2.5,
-        "histogram": {1: 0, 2: 1, 3: 1, 4: 0, 5: 0,},
+        "histogram": {1: 0, 2: 1, 3: 1, 4: 0, 5: 0},
     }
 
     num_not_archvied = 2

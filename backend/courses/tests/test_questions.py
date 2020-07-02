@@ -7,14 +7,7 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class QuestionTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_courses.yaml"]
 
-    EXPECTED_FIELDS = {
-        "id",
-        "category",
-        "label",
-        "required",
-        "archived",
-        "form",
-    }
+    EXPECTED_FIELDS = {"id", "category", "label", "required", "archived", "form"}
 
     ALL_USERS = ["17admin", "17simple"]
 
@@ -83,11 +76,7 @@ class QuestionTestCase(WeakAuthenticationBaseTestCase):
     # CREATE #
     ##########
 
-    create_question_data = {
-        "label": "test",
-        "category": "C",
-        "form": 1,
-    }
+    create_question_data = {"label": "test", "category": "C", "form": 1}
 
     def test_if_not_global_admin_then_cannot_create(self):
         self.login("17simple")
