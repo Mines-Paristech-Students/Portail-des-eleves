@@ -15,10 +15,7 @@ NUMERIC_SCALE = (
     (5, ("VERY_SATISFIED")),
 )
 
-QUESTION_CATEGORY = (
-    ("C", ("COMMENT")),
-    ("R", ("RATING")),
-)
+QUESTION_CATEGORY = (("C", ("COMMENT")), ("R", ("RATING")))
 
 
 FILE_CATEGORY = (
@@ -43,10 +40,10 @@ class Course(models.Model):
     name = models.CharField(max_length=128)
 
     form = models.ForeignKey(
-        Form, related_name="course", on_delete=models.SET_NULL, blank=True, null=True,
+        Form, related_name="course", on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    have_voted = models.ManyToManyField(User, related_name="course", blank=True,)
+    have_voted = models.ManyToManyField(User, related_name="course", blank=True)
 
     @cached_property
     def stats(self):
@@ -92,11 +89,11 @@ class CourseMedia(models.Model):
     file = models.FileField(upload_to="courses/")
 
     uploaded_by = models.ForeignKey(
-        User, related_name="coursemedia", on_delete=models.CASCADE,
+        User, related_name="coursemedia", on_delete=models.CASCADE
     )
 
     course = models.ForeignKey(
-        Course, related_name="coursemedia", on_delete=models.CASCADE,
+        Course, related_name="coursemedia", on_delete=models.CASCADE
     )
 
 
@@ -116,7 +113,7 @@ class Question(models.Model):
     category = models.CharField(max_length=1, choices=QUESTION_CATEGORY, default="C")
 
     form = models.ForeignKey(
-        Form, related_name="question", on_delete=models.CASCADE, blank=True, null=True,
+        Form, related_name="question", on_delete=models.CASCADE, blank=True, null=True
     )
 
 
@@ -131,10 +128,10 @@ class Rating(models.Model):
     value = models.SmallIntegerField(choices=NUMERIC_SCALE)
 
     question = models.ForeignKey(
-        Question, related_name="rating", on_delete=models.CASCADE,
+        Question, related_name="rating", on_delete=models.CASCADE
     )
 
-    course = models.ForeignKey(Course, related_name="rating", on_delete=models.CASCADE,)
+    course = models.ForeignKey(Course, related_name="rating", on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
@@ -148,9 +145,7 @@ class Comment(models.Model):
     content = models.CharField(max_length=512)
 
     question = models.ForeignKey(
-        Question, related_name="comment", on_delete=models.CASCADE,
+        Question, related_name="comment", on_delete=models.CASCADE
     )
 
-    course = models.ForeignKey(
-        Course, related_name="comment", on_delete=models.CASCADE,
-    )
+    course = models.ForeignKey(Course, related_name="comment", on_delete=models.CASCADE)
