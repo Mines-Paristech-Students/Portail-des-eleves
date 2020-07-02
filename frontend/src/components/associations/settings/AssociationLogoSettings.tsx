@@ -45,7 +45,7 @@ export const AssociationLogoSettings = ({ association }) => {
           className="btn btn-primary"
           onClick={() => setShowSelectorModal(true)}
         >
-          Séléctionner un logo
+          Sélectionner un logo
         </button>
 
         <MediaSelector
