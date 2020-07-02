@@ -11,7 +11,7 @@ import "./PreviewCard.css";
  * @param showTags show the tags
  * @param overlayInformation true to show the information on the image on hover
  * @param onClick callback in case the card is clicked
- * @param props additional JSX props
+ * @param props additional JSX props passed to the `Card` component
  * @constructor
  */
 export const MediaPreviewCard = (
