@@ -11,7 +11,7 @@ export const AssociationLogoSettings = ({ association }) => {
     api.medias.get
   );
 
-  const [showSelectModal, setShowSelectorModal] = useState(false);
+  const [showSelectModal, setShowSelectModal] = useState(false);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
@@ -43,7 +43,7 @@ export const AssociationLogoSettings = ({ association }) => {
 
         <button
           className="btn btn-primary"
-          onClick={() => setShowSelectorModal(true)}
+          onClick={() => setShowSelectModal(true)}
         >
           Sélectionner un logo
         </button>
@@ -54,7 +54,7 @@ export const AssociationLogoSettings = ({ association }) => {
           setMedia={onMediaChange}
           media={logo ? logo : null}
           showModal={showSelectModal}
-          setShowModal={setShowSelectorModal}
+          setShowModal={setShowSelectModal}
         />
       </Card.Body>
     </Card>
