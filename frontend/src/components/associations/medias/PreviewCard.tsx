@@ -8,7 +8,7 @@ import "./PreviewCard.css";
  * @param media the media to display
  * @param showPreview show the preview
  * @param showDescription show the description
- * @param showTags show the preview
+ * @param showTags show the tags
  * @param overlayInformation true to show the information on the image on hover
  * @param onClick callback in case the card is clicked
  * @param props additional JSX props
