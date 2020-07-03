@@ -18,6 +18,8 @@ import { Sorting } from "./sorting";
  * @param props props to apply to the  table
  * @param dataTable if true (by default), the table will be a datatable.
  * @param emptyComponent displayed in the first row if `data` is empty. Defaults to a generic message.
+ * @param borderTop default to true. If false, the top border of the table is removed (useful when embedding a table
+ * in a card).
  */
 export const Table = ({
   columns,
@@ -25,19 +27,21 @@ export const Table = ({
   showHeaders = true,
   dataTable = true,
   emptyComponent = <p className="text-center m-0">Pas de résultats.</p>,
+  borderTop = true,
 }: {
   columns: Column[];
   data: object[];
   showHeaders?: boolean;
   dataTable?: boolean;
   emptyComponent?: React.ReactNode;
+  borderTop?: boolean;
 }) => (
   <div className="table-responsive">
     <div className={`${dataTable ? "dataTables_wrapper" : ""} no-footer`}>
       <table
         className={`table card-table table-vcenter ${
           dataTable ? "datatable dataTable" : ""
-        } no-footer table-striped`}
+        } no-footer table-striped ${!borderTop && "border-top-0"}`}
         role="grid"
       >
         {showHeaders && <TableHeader columns={columns} />}

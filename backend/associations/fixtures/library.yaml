@@ -12,7 +12,7 @@
   fields:
     name: Le Bouclier arverne
     description: Lors de la reddition de Vercingétorix après Alésia, son bouclier a été dérobé par un soldat romain. Quelques années plus tard, Jules César veut le retrouver afin de manifester une fois de plus sa victoire sur la Gaule.
-    comment: https://fr.wikipedia.org/wiki/Le_Bouclier_arverne
+    comment: Acheté le 23/02/2007.
     library: bde
 
 - model: associations.loanable
@@ -20,6 +20,7 @@
   fields:
     name: Tintin chez les Chtis
     description: Accompagné de son fidèle Milou, Tintin démantèle un réseau de trafiquants de maroilles.
+    comment: Histoire vraie.
     library: bde
 
 - model: associations.loanable
@@ -29,7 +30,7 @@
     description: "Astérix et Obélix se rendent en Grèce, à Olympie, pour participer aux Jeux olympiques. Une bonne partie du village gaulois les accompagne pour les soutenir en se faisant passer pour des romains (les jeux étant réservés aux Grecs, les Romains y étant admis au nom de leur supposée parenté avec les Troyens).
 
     Malheureusement, quand ils arrivent, leurs espoirs de remporter les jeux haut la main s'écroulent quand ils entendent parler de l'interdiction des produits dopants. La potion magique procure une force surhumaine est par conséquent considérée comme un produit interdit. Refusant d'abandonner, Astérix n'a d'autre choix que de représenter la Gaule, seul, et sans potion magique. Toutefois, la présence des Gaulois a fortement perturbé la préparation des athlètes romains. Les Grecs remportent toutes les épreuves. Mais il est décidé de laisser la prochaine épreuve de course à pied aux Romains seulement (Astérix inclus)."
-    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_aux_Jeux_olympiques
+    comment: Don de 12masselo
     library: bde
 
 - model: associations.loanable
@@ -37,7 +38,7 @@
   fields:
     name: Astérix et le Chaudron
     description: Pour ne pas payer ses impôts, Moralélastix, un chef gaulois avare, dépose tout l'argent de sa tribu dans un chaudron et demande à Abraracourcix de le garder dans son village jusqu'au passage du questeur romain.
-    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_et_le_Chaudron
+    comment: La page 12 et la page 13 sont déchirées.
     library: bde
 
 - model: associations.loanable
@@ -45,7 +46,7 @@
   fields:
     name: Astérix en Hispanie
     description: Nous sommes en 45 avant Jésus-Christ. Toute la région de Munda (Montilla) en Hispanie est occupée par les Romains... Toute ? Non ! Un village peuplé d'irréductibles Ibères résiste encore et toujours à l'envahisseur. Jules César enlève donc Pépé, fils de Soupalognon y Crouton, le chef du village, et l'envoie à Babaorum, une garnison armoricaine, pour le protéger. C'était compter sans les voisins immédiats du camp retranché. Effectivement, Astérix et Obélix libèrent Pépé et décident de le ramener en Hispanie.
-    comment: https://fr.wikipedia.org/wiki/Ast%C3%A9rix_en_Hispanie
+    comment: Acheté le 29/01/2019.
     library: bde
 
 - model: associations.loanable
@@ -53,7 +54,7 @@
   fields:
     name: 4 aventures de Spirou et Fantasio
     description: Spirou et Fantasio découvrent que le journal qui parle de l'affaire du savant fou Samovar (cf. Hors-série Radar le robot) cite également le robot. Craignant que cela n’excite les convoitises, Spirou et Fantasio retournent au laboratoire de Samovar et y rencontrent des bandits, effectivement à la recherche des plans du robot. Mais les deux jeunes héros les subtilisent et les détruisent, après être parvenus à échapper aux bandits. Peu de temps après, le journal annonce que le professeur Samovar recouvre doucement la mémoire. Les bandits tentent de l'enlever mais Spirou et Fantasio les en empêchent. Les malfaiteurs sont arrêtés tandis que Samovar, devenu complètement fou, est conduit à l'asile.
-    comment: https://fr.wikipedia.org/wiki/4_aventures_de_Spirou_et_Fantasio
+    comment: Édition collector, signée par l’auteur.
     library: bde
 
 - model: associations.loanable
@@ -85,7 +86,7 @@
   fields:
     name: Les Voleurs du marsupilami
     description: Spirou et Fantasio, qui regrettent d'avoir donné au zoo le Marsupilami capturé dans l'épisode précédent, décident de l'en sortir pour le ramener dans son milieu naturel. Mais avant qu'ils aient pu agir, ils apprennent la mort du petit animal. Le corps du Marsupilami disparaît peu après. Estimant que la personne qui a volé le corps n'aurait pu sortir son butin pendant les heures d'ouverture, Spirou et Fantasio restent dans le zoo jusqu'à la nuit tombée pour essayer de le capturer. Après une course-poursuite, le voleur leur échappe de justesse mais ils parviennent à lui arracher un bout du papier emballant le corps de l'animal, ainsi qu'un document portant son adresse.
-    comment: https://fr.wikipedia.org/wiki/Les_Voleurs_du_marsupilami
+    comment: Empruntée très très souvent par 18anguille…
     library: bde
 
 - model: associations.loanable
@@ -93,7 +94,7 @@
   fields:
     name: La Corne de rhinocéros
     description: 'Fantasio a besoin d''un bon reportage: sa carrière en dépend. Avec Spirou, il se rend en fantacoptère sur le toit des "Galeries du bon bazar" dans le but de simuler un cambriolage. À l''intérieur, ils découvrent les vigiles attachés puis leur vieil ami Roulebille, blessé par l''explosion récente de l''usine Turbot en ville. Il leur apprend qu''il possède les plans d''une nouvelle voiture : la Turbotraction, que leurs concurrents convoitent.'
-    comment: https://fr.wikipedia.org/wiki/La_Corne_de_rhinoc%C3%A9ros
+    comment: Une super BD ! :D
     library: bde
 
 - model: associations.loan
@@ -114,6 +115,7 @@
     request_date: "2018-06-01T00:00:00+00:00"
     loan_date: "2018-03-04T00:00:00+00:00"
     expected_return_date: "2018-06-01T00:00:00+00:00"
+    real_return_date: "2018-06-03T00:00:00+00:00"
     status: RETURNED
 
 #########

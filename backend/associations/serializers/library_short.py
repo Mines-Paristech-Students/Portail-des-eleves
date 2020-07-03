@@ -11,19 +11,16 @@ class LoanPrioritySerializerMixin(serializers.ModelSerializer):
     priority = serializers.SerializerMethodField(read_only=True)
 
     def get_priority(self, loan):
-        """If the status is `PENDING`, return the priority of this loan (if the loan is the first on the list,
-        return 1).
+        """If the status is `PENDING`, return the priority of this loan (starting from 1).
         Otherwise, return `None`."""
 
         if loan.status == "PENDING":
-            request = self.context.get("request", None)
-            user = getattr(request, "user", None)
             pending_loans = loan.loanable.loans.filter(status="PENDING").order_by(
                 "request_date"
             )
 
-            for i, loan in enumerate(pending_loans, 1):
-                if loan.user == user:
+            for i, pending_loan in enumerate(pending_loans, 1):
+                if pending_loan.user.id == loan.user.id:
                     return i
 
         return None

@@ -1,0 +1,64 @@
+.selectgroup-button-pending {
+  border-color: rgb(241, 196, 15) !important;
+  color: rgb(241, 196, 15) !important;
+}
+
+.selectgroup-input:focus + .selectgroup-button-pending {
+  box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.1) !important;
+}
+
+.selectgroup-input:checked + .selectgroup-button-pending {
+  background-color: rgba(241, 196, 15, 0.1) !important;
+}
+
+.selectgroup-button-rejected {
+  border-color: rgb(205, 32, 31) !important;
+  color: rgb(205, 32, 31) !important;
+}
+
+.selectgroup-input:focus + .selectgroup-button-rejected {
+  box-shadow: 0 0 0 3px rgba(205, 32, 31, 0.1) !important;
+}
+
+.selectgroup-input:checked + .selectgroup-button-rejected {
+  background-color: rgba(205, 32, 31, 0.1) !important;
+}
+
+.selectgroup-button-accepted {
+  border-color: rgb(70, 127, 207) !important;
+  color: rgb(70, 127, 207) !important;
+}
+
+.selectgroup-input:focus + .selectgroup-button-accepted {
+  box-shadow: 0 0 0 3px rgba(70, 127, 207, 0.1) !important;
+}
+
+.selectgroup-input:checked + .selectgroup-button-accepted {
+  background-color: rgba(70, 127, 207, 0.1) !important;
+}
+
+.selectgroup-button-borrowed {
+  border-color: rgb(69, 170, 242) !important;
+  color: rgb(69, 170, 242) !important;
+}
+
+.selectgroup-input:focus + .selectgroup-button-borrowed {
+  box-shadow: 0 0 0 3px rgba(69, 170, 242, 0.1) !important;
+}
+
+.selectgroup-input:checked + .selectgroup-button-borrowed {
+  background-color: rgba(69, 170, 242, 0.1) !important;
+}
+
+.selectgroup-button-returned {
+  border-color: rgb(94, 186, 0) !important;
+  color: rgb(94, 186, 0) !important;
+}
+
+.selectgroup-input:focus + .selectgroup-button-returned {
+  box-shadow: 0 0 0 3px rgba(94, 186, 0, 0.1) !important;
+}
+
+.selectgroup-input:checked + .selectgroup-button-returned {
+  background-color: rgba(94, 186, 0, 0.1) !important;
+}
