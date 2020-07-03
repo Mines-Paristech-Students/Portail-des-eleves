@@ -27,8 +27,8 @@ export const SubmitPoll = () => {
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const [create] = useMutation(api.polls.create, {
     onSuccess: () => {
-      queryCache.refetchQueries(["polls.list"]);
-      queryCache.refetchQueries(["polls.stats"]);
+      queryCache.invalidateQueries(["polls.list"]);
+      queryCache.invalidateQueries(["polls.stats"]);
       sendSuccessToast("Sondage envoyé.");
     },
     onError: (errorAsUnknown) => {

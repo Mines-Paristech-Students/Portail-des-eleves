@@ -19,8 +19,8 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
   const user = useContext(UserContext);
   const [vote] = useMutation(api.polls.vote, {
     onSuccess: () => {
-      queryCache.refetchQueries(["polls.list"]);
-      queryCache.refetchQueries(["polls.stats"]);
+      queryCache.invalidateQueries(["polls.list"]);
+      queryCache.invalidateQueries(["polls.stats"]);
       sendSuccessToast("Vous avez voté.");
     },
     onError: (errorAsUnknown) => {

@@ -20,7 +20,7 @@ export const AssociationCreateEvent = ({
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const [create] = useMutation(api.events.create, {
     onSuccess: (response) => {
-      queryCache.refetchQueries(["events.list"]);
+      queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Événement créé.");
     },
     onError: (errorAsUnknown) => {

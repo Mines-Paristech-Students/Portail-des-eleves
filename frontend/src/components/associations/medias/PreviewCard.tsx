@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
-import React from "react";
+import React  from "react";
 import "./PreviewCard.css";
 
 /**
@@ -14,23 +14,15 @@ import "./PreviewCard.css";
  * @param props additional JSX props passed to the `Card` component
  * @constructor
  */
-export const MediaPreviewCard = (
-  {
-    media,
-    showPreview = true,
-    showDescription = true,
-    showTags = true,
-    overlayInformation = false,
-    onClick = () => {},
-    ...props
-  } /* {
-  media: Media;
-  showPreview?: boolean;
-  showDescription?: boolean;
-  showTags?: boolean;
-  onClick?: () => void;
-}*/
-) => (
+export const MediaPreviewCard = ({
+  media,
+  showPreview = true,
+  showDescription = true,
+  showTags = true,
+  overlayInformation = false,
+  onClick = () => {},
+  ...props
+}) => (
   <Card onClick={onClick} {...props}>
     {showPreview && media.previewUrl && (
       <div className={"text-white to-hover"}>

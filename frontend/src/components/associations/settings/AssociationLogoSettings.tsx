@@ -8,14 +8,16 @@ import { Media } from "../../../models/associations/media";
 export const AssociationLogoSettings = ({ association }) => {
   const { data: logo, status, error } = useBetterQuery<Media>(
     ["association.logo.get", association.logo],
-    api.medias.get
+    api.medias.get, {
+      enabled: association.logo
+    }
   );
 
   const [showSelectModal, setShowSelectModal] = useState(false);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
-      queryCache.refetchQueries("association.get");
+      queryCache.invalidateQueries("association.get");
     });
   };
 

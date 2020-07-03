@@ -10,6 +10,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 
 from associations.models import Media, Association
+from associations.models.media import find_mime_type
 from associations.permissions import CanEditMedia
 from associations.serializers.media import MediaSerializer
 from tags.filters import HasHiddenTagFilter
@@ -46,8 +47,7 @@ class MediaViewSet(viewsets.ModelViewSet):
         )
 
         try:
-            mime = magic.Magic(magic_file="magic.mgc", mime=True)
-            media.mimetype = mime.from_file(media.file.path)
+            media.mimetype = find_mime_type(media.file.path)
             media.save()
         except FileNotFoundError as e:
             media.delete()

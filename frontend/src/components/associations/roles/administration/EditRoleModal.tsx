@@ -19,7 +19,7 @@ export const EditRoleModal = ({
 
   const [update] = useMutation(api.roles.update, {
     onSuccess: () => {
-      queryCache.refetchQueries(["roles.list"]);
+      queryCache.invalidateQueries(["roles.list"]);
       sendSuccessToast("Rôle modifié.");
     },
     onError: (errorAsUnknown) => {

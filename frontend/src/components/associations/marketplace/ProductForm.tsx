@@ -49,7 +49,7 @@ export const ProductForm: ({
     api.products
       .update(product)
       .then(() => {
-        queryCache.refetchQueries("products.list");
+        queryCache.invalidateQueries("products.list");
         sendSuccessToast("Modifications enregistrées");
       })
       .catch((err) => {
@@ -60,7 +60,7 @@ export const ProductForm: ({
   const submitCreate = async (product) => {
     try {
       const response = await api.products.create(product);
-      queryCache.refetchQueries("products.list");
+      queryCache.invalidateQueries("products.list");
 
       // Bind the created object to all necessary tags and THEN mark it
       // as done
