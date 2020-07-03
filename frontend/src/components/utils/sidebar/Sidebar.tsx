@@ -37,11 +37,9 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
 /**
  * A vertical space. Its height can be configured with the `size` props.
  */
-export const SidebarSpace = (props: { size?: number }) => {
-  let size = props.size ? props.size : 2;
-
-  return <div className={`pb-${size} pt-${size}`} />;
-};
+export const SidebarSpace = ({ size = 2 }: { size?: number }) => (
+  <div className={`pb-${size} pt-${size}`} />
+);
 
 /**
  * A horizontal separator line.

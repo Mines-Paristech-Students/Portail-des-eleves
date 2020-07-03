@@ -187,7 +187,7 @@ export const EditUserProfile = () => {
       },
       {
         onSuccess: () => {
-          queryCache.refetchQueries(["profile.get"]);
+          queryCache.invalidateQueries(["profile.get"]);
           sendSuccessToast("Profil mis à jour.");
         },
         onError: (errorAsUnknown) => {

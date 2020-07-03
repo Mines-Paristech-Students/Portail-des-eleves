@@ -16,7 +16,7 @@ export const QuantitySelect = ({ order }) => {
   const onOrder = () => {
     order(quantity);
     setQuantity(0);
-    queryCache.refetchQueries(["marketplace.balance"]);
+    queryCache.invalidateQueries(["marketplace.balance"]);
   };
 
   return quantity === 0 ? (

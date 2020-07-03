@@ -33,8 +33,8 @@ export const AssociationEditPage = ({
     onSuccess: () => {
       sendSuccessToast("Page sauvegardée.");
       return queryCache
-        .refetchQueries("pages.list")
-        .then(() => queryCache.refetchQueries("pages.get"));
+        .invalidateQueries("pages.list")
+        .then(() => queryCache.invalidateQueries("pages.get"));
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -56,7 +56,7 @@ export const AssociationEditPage = ({
     onSuccess: () => {
       sendSuccessToast("Page supprimée.");
       return queryCache
-        .refetchQueries("pages.list")
+        .invalidateQueries("pages.list")
         .then(() => history.push(`/associations/${association.id}`));
     },
     onError: (errorAsUnknown) => {

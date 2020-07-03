@@ -109,7 +109,7 @@ export const LoanableCard = ({
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),
     onSuccess: () => {
       sendSuccessToast("Demande envoyée.");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("La demande a échoué."),
   });
@@ -118,7 +118,7 @@ export const LoanableCard = ({
     onMutate: () => sendInfoToast("Annulation en cours..."),
     onSuccess: () => {
       sendSuccessToast("Demande annulée.");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("L’annulation a échoué."),
   });

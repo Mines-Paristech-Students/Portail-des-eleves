@@ -31,7 +31,7 @@ export const AssociationEditEvent = ({
 
   const [edit] = useMutation(api.events.update, {
     onSuccess: (response) => {
-      queryCache.refetchQueries(["events.get"]);
+      queryCache.invalidateQueries(["events.get"]);
 
       if (response.status === 200) {
         sendSuccessToast("Événement modifié.");
@@ -52,7 +52,7 @@ export const AssociationEditEvent = ({
 
   const [remove] = useMutation(api.events.delete, {
     onSuccess: () => {
-      queryCache.refetchQueries(["events.list"]);
+      queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Événement supprimé.");
 
       history.push(`/associations/${association.id}/evenements`);

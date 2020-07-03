@@ -13,7 +13,9 @@ class Association(models.Model):
     id = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=200)
 
-    logo = models.ImageField(upload_to="associations/logos/", null=True, default=None)
+    logo = models.ForeignKey(
+        "Media", on_delete=models.SET_NULL, null=True, related_name="logo_of"
+    )
 
     marketplace = models.OneToOneField(
         Marketplace,

@@ -1,0 +1,11 @@
+.to-show {
+  opacity: 0;
+  transition: 0.3s;
+}
+.to-hover:hover > .to-show {
+  opacity: 1;
+}
+
+.card-img-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}

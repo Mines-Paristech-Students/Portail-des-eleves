@@ -1,25 +1,29 @@
 import magic
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Min, Max
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import api_view
+from rest_framework.filters import SearchFilter
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.response import Response
 
 from associations.models import Media, Association
+from associations.models.media import find_mime_type
 from associations.permissions import CanEditMedia
 from associations.serializers.media import MediaSerializer
 from tags.filters import HasHiddenTagFilter
 from tags.filters.taggable import TaggableFilter
 
 
-class MediaFilter(TaggableFilter):
+class MediaFilter(TaggableFilter, SearchFilter):
     class Meta:
         model = Media
         fields = {
             "association": ["exact"],
             "uploaded_on": ["exact", "year", "month", "year__in", "month__in"],
+            "mimetype": ["exact", "contains"],
         }
 
 
@@ -43,8 +47,7 @@ class MediaViewSet(viewsets.ModelViewSet):
         )
 
         try:
-            mime = magic.Magic(magic_file="magic.mgc", mime=True)
-            media.mimetype = mime.from_file(media.file.path)
+            media.mimetype = find_mime_type(media.file.path)
             media.save()
         except FileNotFoundError as e:
             media.delete()

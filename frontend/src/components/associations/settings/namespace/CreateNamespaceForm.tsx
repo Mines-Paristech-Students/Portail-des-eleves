@@ -12,7 +12,7 @@ export const CreateNamespaceForm = ({ association }) => {
 
   const [createNamespace] = useMutation(api.namespaces.create, {
     onSuccess: (response) => {
-      queryCache.refetchQueries(["association.namespaces.list"]);
+      queryCache.invalidateQueries(["association.namespaces.list"]);
       sendSuccessToast("Namespace ajouté");
     },
     onError: (errorAsUnknown) => {
