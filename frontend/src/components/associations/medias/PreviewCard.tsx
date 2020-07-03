@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
-import React  from "react";
+import React from "react";
 import "./PreviewCard.css";
 
 /**
