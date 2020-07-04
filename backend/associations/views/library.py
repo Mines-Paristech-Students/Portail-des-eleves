@@ -142,7 +142,7 @@ class LoanFilter(FilterSet):
 
     def filter_status(self, queryset, _, filter):
         # No filter or every filter.
-        if len(filter) == 0 or len(filter) == 6:
+        if len(filter) == 0 or len(filter) == len(Loan.STATUS):
             return queryset
 
         return queryset.filter(status__in=filter)

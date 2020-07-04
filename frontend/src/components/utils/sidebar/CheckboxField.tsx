@@ -2,16 +2,8 @@ import React from "react";
 import { FormCheck } from "react-bootstrap";
 
 /**
- * Utility function useful for updating array states where each item is supposed
- * to be managed by one checkbox.
- *
- * If the checkbox is checked, return `oldStatus` updated to include `value`.
- * If it is uncheckd, return `oldStatus` updated to exclude `value`.
- *
- * For instance, suppose the status is an array which may contain at most the
- * items: `["BORROWED", "AVAILABLE", "REQUESTED"]`.
- *
- * One may use this snippet to update `BORROWED`:
+ * Return a status array updated to include `value` if `checked`, excluding
+ * `value` otherwise. Useful with `CheckboxField`:
  *
  * ```
  * <CheckboxField

@@ -25,11 +25,11 @@ import {
 // Useful for generating the `CheckboxField`.
 const checkboxFieldsData: [LoanStatus, string][] = [
   ["PENDING", "En attente"],
-  ["CANCELLED", "Annulés"],
   ["ACCEPTED", "Acceptés"],
   ["REJECTED", "Refusés"],
-  ["BORROWED", "Prêtés"],
-  ["RETURNED", "Rendus"],
+  ["BORROWED", "Empruntés"],
+  ["RETURNED", "Retournés"],
+  ["CANCELLED", "Annulés"],
 ];
 
 export const AssociationManageLoans = ({
@@ -40,7 +40,7 @@ export const AssociationManageLoans = ({
   const { loanableId } = useParams<{ loanableId: string }>();
 
   const [statusParams, setStatusParams] = useState<{ status: LoanStatus[] }>({
-    status: ["PENDING"],
+    status: ["PENDING", "ACCEPTED", "BORROWED"],
   });
 
   const { data: loanable, error, status } = useBetterQuery<Loanable>(
@@ -60,7 +60,7 @@ export const AssociationManageLoans = ({
         <>
           <SidebarSeparator />
           <SidebarSection
-            title="Voir..."
+            title="Voir statuts…"
             retractable={false}
             retractedByDefault={false}
           >
