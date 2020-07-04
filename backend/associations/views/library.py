@@ -127,8 +127,9 @@ class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (LoansPermission,)
 
-    filter_fields = ("status", "user", "loan_date", "loanable__library__id")
-    ordering = ("loan_date",)
+    filter_fields = ("user", "status", "loanable__id", "loanable__library")
+    ordering = ("-request_date",)
+    ordering_fields = ("user__id", "request_date")
 
     @classmethod
     def get_field_from_data_or_instance(cls, field, data, instance, default=None):

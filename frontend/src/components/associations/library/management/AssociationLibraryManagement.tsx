@@ -28,54 +28,82 @@ const columnsDefinition = [
     render: (loanable: Loanable) => (
       <>
         <p className="my-0">{loanable.name}</p>
-        {loanable.description && (
+        {loanable.comment && (
           <ReactMarkdown
-            className="small text-justify mt-2"
-            source={loanable.description}
+            className="mt-2 mb-0 small text-justify"
+            source={loanable.comment}
           />
         )}
       </>
     ),
   },
   {
-    key: "comment",
-    header: "Commentaire",
-    canSort: true,
-    render: (loanable: Loanable) => <ReactMarkdown source={loanable.comment} />,
-  },
-  {
     key: "status",
     header: "Statut",
-    cellClassName: "text-center",
     render: (loanable: Loanable) => (
       <LoanableStatusIcon status={loanable.status} />
     ),
   },
   {
-    key: "action",
-    header: "Action",
+    key: "actions",
+    header: "Actions",
+    headerClassName: "w-auto",
     cellClassName: "text-center",
     render: (loanable: Loanable) => (
-      <OverlayTrigger
-        placement={"bottom"}
-        overlay={<Tooltip id="edit">Modifier</Tooltip>}
-        popperConfig={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8],
+      <>
+        <OverlayTrigger
+          placement={"bottom"}
+          overlay={<Tooltip id="edit">Gérer les demandes</Tooltip>}
+          popperConfig={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
               },
-            },
-          ],
-        }}
-      >
-        <Link to={`gestion/${loanable.id}/modifier`}>
-          <Button className="btn-icon mr-1" variant="outline-primary" size="sm">
-            <i className="fe fe-edit-2" />
-          </Button>
-        </Link>
-      </OverlayTrigger>
+            ],
+          }}
+        >
+          <Link
+            to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/demandes`}
+          >
+            <Button
+              className="btn-icon m-1"
+              variant="outline-primary"
+              size="sm"
+            >
+              <i className="fe fe-help-circle" />
+            </Button>
+          </Link>
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement={"bottom"}
+          overlay={<Tooltip id="edit">Modifier l’objet</Tooltip>}
+          popperConfig={{
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 8],
+                },
+              },
+            ],
+          }}
+        >
+          <Link
+            to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
+          >
+            <Button
+              className="btn-icon m-1"
+              variant="outline-secondary"
+              size="sm"
+            >
+              <i className="fe fe-edit-2" />
+            </Button>
+          </Link>
+        </OverlayTrigger>
+      </>
     ),
   },
 ];

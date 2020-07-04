@@ -9,7 +9,7 @@ export const NamespaceDeleteButton = ({ namespace }) => {
 
   const [mutate] = useMutation(api.namespaces.delete, {
     onSuccess: (response) => {
-      queryCache.refetchQueries(["association.namespaces.list"]);
+      queryCache.invalidateQueries(["association.namespaces.list"]);
       sendSuccessToast("Namespace supprimé");
     },
     onError: (errorAsUnknown) => {

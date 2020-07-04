@@ -121,3 +121,6 @@ backend/repartitions/migrations
 backend/subscriptions/migrations
 backend/tags/migrations
 backend/courses/migrations
+backend/medias
+
+medias/associations/*_preview*

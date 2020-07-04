@@ -8,6 +8,8 @@ rmdir /S /Q repartitions\migrations
 rmdir /S /Q subscriptions\migrations
 rmdir /S /Q tags\migrations
 
+rmdir /S /Q medias
+mklink /J medias ..\medias
 
 python manage.py reset_db --noinput
 
@@ -28,3 +30,5 @@ python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
 python manage.py loaddata tags
 python manage.py loaddata courses 
+
+cd ..

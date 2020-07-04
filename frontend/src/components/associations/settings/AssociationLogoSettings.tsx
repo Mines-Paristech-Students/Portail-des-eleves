@@ -8,14 +8,17 @@ import { Media } from "../../../models/associations/media";
 export const AssociationLogoSettings = ({ association }) => {
   const { data: logo, status, error } = useBetterQuery<Media>(
     ["association.logo.get", association.logo],
-    api.medias.get
+    api.medias.get,
+    {
+      enabled: association.logo,
+    }
   );
 
-  const [showSelectModal, setShowSelectorModal] = useState(true);
+  const [showSelectModal, setShowSelectModal] = useState(false);
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
-      queryCache.refetchQueries("association.get");
+      queryCache.invalidateQueries("association.get");
     });
   };
 
@@ -46,7 +49,7 @@ export const AssociationLogoSettings = ({ association }) => {
           className="btn btn-primary"
           onClick={() => setShowSelectorModal(true)}
         >
-          Séléctionner un logo
+          Sélectionner un logo
         </button>
 
         <MediaSelector
@@ -55,7 +58,7 @@ export const AssociationLogoSettings = ({ association }) => {
           setMedia={onMediaChange}
           media={logo ? logo : null}
           showModal={showSelectModal}
-          setShowModal={setShowSelectorModal}
+          setShowModal={setShowSelectModal}
         />
       </Card.Body>
     </Card>

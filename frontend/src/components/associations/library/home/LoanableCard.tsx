@@ -13,6 +13,7 @@ import { UserContext } from "../../../../services/authService";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 
 const LoanButton = ({
   loanable,
@@ -71,16 +72,44 @@ const LoanButton = ({
     </OverlayTrigger>
   );
 
-export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
+/**
+ * Display the information about a loanable in a card.
+ * @param loanable the loanable to display.
+ * @param loanButton whether or not to display a button to loan
+ * the loanable / cancel the loan
+ * @param editButton whether or not to display a link-button to the form to edit
+ * the loanable.
+ * @param comment whether or not to display the private comment about the
+ * loanable.
+ * @param cardStatus whether or not to display the card status (according to
+ * the loanable status).
+ * @param className given to the `Card` component.
+ */
+export const LoanableCard = ({
+  loanable,
+  loanButton = false,
+  editButton = false,
+  comment = false,
+  cardStatus = false,
+  className = "",
+}: {
+  loanable: Loanable;
+  loanButton?: boolean;
+  editButton?: boolean;
+  comment?: boolean;
+  cardStatus?: boolean;
+  className?: string;
+}) => {
   const user = useContext(UserContext);
   const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
     ToastContext
   );
-  const [loan] = useMutation(api.loans.post, {
+
+  const [create] = useMutation(api.loans.create, {
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),
     onSuccess: () => {
       sendSuccessToast("Demande envoyée.");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("La demande a échoué."),
   });
@@ -89,28 +118,30 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
     onMutate: () => sendInfoToast("Annulation en cours..."),
     onSuccess: () => {
       sendSuccessToast("Demande annulée.");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("L’annulation a échoué."),
   });
 
   return (
-    <Card>
-      <CardStatus
-        color={
-          loanable.status !== "BORROWED" ? TablerColor.Blue : TablerColor.Gray
-        }
-      />
+    <Card className={className}>
+      {cardStatus && (
+        <CardStatus
+          color={
+            loanable.status !== "BORROWED" ? TablerColor.Blue : TablerColor.Gray
+          }
+        />
+      )}
 
       <Card.Header>
         <Card.Title>{loanable.name}</Card.Title>
 
-        {user && (
-          <div className="card-options">
+        <div className="card-options">
+          {user && loanButton && (
             <LoanButton
               loanable={loanable}
               loan={() =>
-                loan({
+                create({
                   userId: user.id,
                   loanableId: loanable.id,
                 })
@@ -121,8 +152,17 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
                 }
               }}
             />
-          </div>
-        )}
+          )}
+          {editButton && (
+            <Link
+              to={`/associations/${loanable.library}/bibliotheque/gestion/${loanable.id}/modifier`}
+            >
+              <Button variant="secondary" size="sm">
+                Modifier
+              </Button>
+            </Link>
+          )}
+        </div>
       </Card.Header>
 
       <Card.Body className="pt-3">
@@ -134,7 +174,20 @@ export const LoanableCard = ({ loanable }: { loanable: Loanable }) => {
         )}
 
         {loanable.description && (
-          <ReactMarkdown source={loanable.description} />
+          <ReactMarkdown
+            className="text-justify"
+            source={loanable.description}
+          />
+        )}
+
+        {comment && loanable.comment && (
+          <>
+            <hr className="ml-0 my-4 w-75" />
+            <ReactMarkdown
+              className="small text-justify"
+              source={loanable.comment}
+            />
+          </>
         )}
       </Card.Body>
     </Card>

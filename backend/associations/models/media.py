@@ -1,14 +1,13 @@
 import io
 import os
 import pathlib
+import platform
 
 import magic
 from PIL import Image
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from pdf2image import convert_from_path
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -56,8 +55,7 @@ def create_preview(sender, instance: Media, created, **kwargs):
     if not created or not instance.file:
         return
 
-    mime = magic.Magic(mime=True)
-    instance.mimetype = mime.from_file(instance.file.path)
+    instance.mimetype = find_mime_type(instance.file.path)
 
     if instance.mimetype.startswith("image"):
         with io.BytesIO() as output:
@@ -87,3 +85,13 @@ def create_preview(sender, instance: Media, created, **kwargs):
             instance.preview.save(preview_name, ContentFile(output.getvalue()))
 
             instance.save()
+
+
+def find_mime_type(path):
+    # the magic file is auto-discovered on Unix based OS
+    if platform.system() == "Windows":
+        mime = magic.Magic(magic_file="magic.mgc", mime=True)
+    else:
+        mime = magic.Magic(mime=True)
+
+    return mime.from_file(path)

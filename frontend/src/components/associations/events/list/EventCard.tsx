@@ -42,7 +42,7 @@ export const EventCard = ({
 
   const [join] = useMutation(api.events.join, {
     onSuccess: () => {
-      queryCache.refetchQueries(["events.list"]);
+      queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Inscription effectuée.");
     },
     onError: (errorAsUnknown) => {
@@ -60,7 +60,7 @@ export const EventCard = ({
 
   const [leave] = useMutation(api.events.leave, {
     onSuccess: () => {
-      queryCache.refetchQueries(["events.list"]);
+      queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Désinscription effectuée.");
     },
     onError: (errorAsUnknown) => {

@@ -5,11 +5,7 @@ from backend.tests_utils import WeakAuthenticationBaseTestCase
 class FormTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_forms.yaml"]
 
-    EXPECTED_FIELDS = {
-        "id",
-        "date",
-        "name",
-    }
+    EXPECTED_FIELDS = {"id", "date", "name"}
 
     ALL_USERS = ["17admin", "17simple"]
 
@@ -82,9 +78,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     # CREATE #
     ##########
 
-    create_form_data = {
-        "name": "maths generic",
-    }
+    create_form_data = {"name": "maths generic"}
 
     def test_if_not_global_admin_then_cannot_create(self):
         self.login("17simple")
@@ -109,11 +103,7 @@ class FormTestCase(WeakAuthenticationBaseTestCase):
     # UPDATE #
     ##########
 
-    update_form_data = {
-        "id": 1,
-        "date": "2020-04-20T22:10:57.577Z",
-        "name": "maths 2",
-    }
+    update_form_data = {"id": 1, "date": "2020-04-20T22:10:57.577Z", "name": "maths 2"}
 
     def test_if_not_global_admin_then_cannot_update(self):
         self.login("17simple")

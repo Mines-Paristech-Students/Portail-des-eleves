@@ -24,7 +24,7 @@ export const AssociationCreatePage = ({
     onSuccess: () => {
       sendSuccessToast("Page créée.");
       history.push(`/associations/${association.id}`);
-      return queryCache.refetchQueries("pages.list");
+      return queryCache.invalidateQueries("pages.list");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;

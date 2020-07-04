@@ -32,8 +32,8 @@ export const AssociationLoanableEdit = ({
     onMutate: () => sendInfoToast("Modifications envoyées…"),
     onSuccess: () => {
       sendSuccessToast("Modifications enregistrées");
-      queryCache.refetchQueries("loanables.get");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.get");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("Une erreur est survenue"),
   });
@@ -42,7 +42,7 @@ export const AssociationLoanableEdit = ({
     onMutate: () => sendInfoToast("Suppression en cours…"),
     onSuccess: () => {
       sendSuccessToast("Objet supprimé");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.list");
     },
     onError: () => sendErrorToast("Une erreur est survenue"),
   });
@@ -56,6 +56,9 @@ export const AssociationLoanableEdit = ({
       <PageTitle>Modifier un objet</PageTitle>
 
       <Card>
+        <Card.Header>
+          <Card.Title>Informations sur l’objet</Card.Title>
+        </Card.Header>
         <MutateLoanableForm
           initialValues={{
             name: loanable.name || "",
@@ -75,7 +78,7 @@ export const AssociationLoanableEdit = ({
               {
                 onSuccess: () =>
                   history.push(
-                    `/associations/${loanable.library}/bibliotheque/gestion`
+                    `/associations/${association.id}/bibliotheque/gestion`
                   ),
               }
             )
