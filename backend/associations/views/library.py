@@ -123,11 +123,36 @@ class LoanableViewSet(viewsets.ModelViewSet):
         )
 
 
+class LoanFilter(FilterSet):
+    status = MultipleChoiceFilter(
+        choices=(
+            ("PENDING", "PENDING"),
+            ("CANCELLED", "CANCELLED"),
+            ("REJECTED", "REJECTED"),
+            ("ACCEPTED", "ACCEPTED"),
+            ("BORROWED", "BORROWED"),
+            ("RETURNED", "RETURNED"),
+        ),
+        method="filter_status",
+    )
+
+    class Meta:
+        model = Loan
+        fields = ("user", "loanable__id", "loanable__library", "status")
+
+    def filter_status(self, queryset, _, filter):
+        # No filter or every filter.
+        if len(filter) == 0 or len(filter) == len(Loan.STATUS):
+            return queryset
+
+        return queryset.filter(status__in=filter)
+
+
 class LoansViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     permission_classes = (LoansPermission,)
 
-    filter_fields = ("user", "status", "loanable__id", "loanable__library")
+    filterset_class = LoanFilter
     ordering = ("-request_date",)
     ordering_fields = ("user__id", "request_date")
 
