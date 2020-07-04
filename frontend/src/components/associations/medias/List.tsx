@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { api } from "../../../services/apiService";
-import Card from "react-bootstrap/Card";
 import { PageTitle } from "../../utils/PageTitle";
 import { Pagination } from "../../utils/Pagination";
-import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { AssociationLayout } from "../Layout";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
-import { Instructions } from "../../utils/Instructions";
-import { isImageMime } from "../../../utils/mime";
 import "./list.css";
+import { MediaPreviewCard } from "./PreviewCard";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
+import { Instructions } from "../../utils/Instructions";
+import { Card } from "react-bootstrap";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
@@ -66,36 +65,14 @@ export const AssociationFilesystemList = ({ association }) => {
 
             <div className={"card-columns"}>
               {medias.map((media) => (
-                <Card
-                  key={media.id}
+                <MediaPreviewCard
+                  media={media}
                   onClick={() =>
                     history.push(
                       `/associations/${association.id}/fichiers/${media.id}/`
                     )
                   }
-                >
-                  {isImageMime(media.mimetype) && (
-                    <img src={media.url} alt={media.name} />
-                  )}
-                  <Card.Body>
-                    <h4 className={"m-0"}>{media.name}</h4>
-                    <p className="text-muted">{media.description}</p>
-                  </Card.Body>
-
-                  {media.tags.length > 0 && (
-                    <Card.Footer
-                      style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.03)",
-                      }}
-                    >
-                      <TagList
-                        model={TaggableModel.Media}
-                        instance={media}
-                        collapsed={true}
-                      />
-                    </Card.Footer>
-                  )}
-                </Card>
+                />
               ))}
             </div>
             {paginationControl}

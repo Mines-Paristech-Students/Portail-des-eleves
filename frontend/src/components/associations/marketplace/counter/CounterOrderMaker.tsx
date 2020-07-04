@@ -89,7 +89,7 @@ export const CounterOrderMaker = ({
       sendSuccessToast("Commande passée avec succès");
     }
 
-    await queryCache.refetchQueries("marketplace.transactions.list");
+    await queryCache.invalidateQueries("marketplace.transactions.list");
   };
 
   return (

@@ -13,4 +13,5 @@ export interface Media {
   type: string;
   media: string;
   mimetype: string;
+  previewUrl: string;
 }

@@ -88,7 +88,7 @@ export const LoansTable = ({
     onMutate: () => sendInfoToast("Modification en cours…"),
     onSuccess: () => {
       sendSuccessToast("Modifications enregistrées !");
-      queryCache.refetchQueries("loans.list");
+      queryCache.invalidateQueries("loans.list");
       setEditLoan(null);
     },
     onError: () => sendErrorToast("Une erreur est survenue."),

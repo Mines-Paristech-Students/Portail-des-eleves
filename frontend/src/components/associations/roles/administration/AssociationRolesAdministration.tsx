@@ -57,7 +57,7 @@ const DeleteRoleButton = ({ handleClick }: { handleClick: () => void }) => (
 
 const columnData = (
   setEditRole: (role: Role) => void,
-  remove: (roleId: number) => void
+  remove: (roleId) => void
 ) => [
   {
     key: "member",
@@ -139,7 +139,7 @@ export const AssociationRolesAdministration = ({
       sendErrorToast(
         `Une erreur est survenue: ${JSON.stringify((response as any).data)}.`
       ),
-    onSettled: () => queryCache.refetchQueries("roles.list"),
+    onSettled: () => queryCache.invalidateQueries("roles.list"),
   });
 
   const { columns, sorting } = useColumns<Role>(

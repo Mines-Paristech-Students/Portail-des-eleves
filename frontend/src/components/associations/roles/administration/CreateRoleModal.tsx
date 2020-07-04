@@ -19,7 +19,7 @@ export const CreateRoleModal = ({
 
   const [create] = useMutation(api.roles.create, {
     onSuccess: () => {
-      queryCache.refetchQueries(["roles.list"]);
+      queryCache.invalidateQueries(["roles.list"]);
       sendSuccessToast("Rôle créé.");
     },
     onError: (errorAsUnknown) => {

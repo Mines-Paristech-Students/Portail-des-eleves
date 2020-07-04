@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from associations.models import Association
+from associations.models import Association, Media
+from associations.serializers.media import MediaSerializer
 from associations.serializers.page import PageShortSerializer
 
 

@@ -87,11 +87,15 @@ class NamespaceViewSet(viewsets.ModelViewSet):
 class TagFilter(RelatedToFilter):
     class Meta:
         model = Tag
-        fields = tuple(Tag.LINKED_TO_MODEL.keys()) + (
-            "namespace__scoped_to_model",
-            "namespace__scoped_to_pk",
-            "namespace",
-        )
+        fields = {
+            **{key: ["exact"] for key in tuple(Tag.LINKED_TO_MODEL.keys())},
+            **{
+                "namespace__scoped_to_model": ["exact"],
+                "namespace__scoped_to_pk": ["exact"],
+                "namespace": ["exact"],
+                "media__mimetype": ["exact", "contains"],
+            },
+        }
 
 
 class TagViewSet(

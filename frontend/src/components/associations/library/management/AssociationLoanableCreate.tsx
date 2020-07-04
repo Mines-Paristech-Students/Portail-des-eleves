@@ -22,8 +22,8 @@ export const AssociationLoanableCreate = ({
     onMutate: () => sendInfoToast("Création en cours…"),
     onSuccess: () => {
       sendSuccessToast("Objet créé !");
-      queryCache.refetchQueries("loanables.get");
-      queryCache.refetchQueries("loanables.list");
+      queryCache.invalidateQueries("loanables.get");
+      queryCache.invalidateQueries("loanables.list");
       history.push(`/associations/${association.id}/bibliotheque/gestion`);
     },
     onError: () => sendErrorToast("Une erreur est survenue"),
