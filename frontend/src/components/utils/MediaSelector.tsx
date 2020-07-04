@@ -10,6 +10,7 @@ import { TagSearch } from "./tags/TagSearch";
 import { SidebarDateSelector } from "./sidebar/SidebarDateSelector";
 import { Association } from "../../models/associations/association";
 import { UploadForm } from "../associations/medias/Upload";
+import "./MediaSelector.css";
 
 /**
  * A generic way to select one (maybe more in the future) media from an
@@ -44,6 +45,12 @@ export const MediaSelector = ({
     setSelectedMedia(media);
   }, [media]);
 
+  const onMediaUpload = (media: Media) => {
+    if (!imageOnly || media.mimetype.startsWith("image")) {
+      setSelectedMedia(media);
+    }
+  };
+
   return (
     <Modal
       size="xl"
@@ -60,7 +67,7 @@ export const MediaSelector = ({
             setSelectedMedia={setSelectedMedia}
           />
         ) : (
-          <UploadForm association={association} />
+          <UploadForm association={association} onMediaUpload={onMediaUpload} />
         )}
       </Modal.Body>
       <Modal.Footer>
@@ -159,6 +166,7 @@ const ExistingMediaSelector = ({
                     media={media}
                     showDescription={false}
                     overlayInformation={true}
+                    className={"pointer"}
                     onClick={() =>
                       selectedMedia && media.id === selectedMedia.id
                         ? setSelectedMedia(null)

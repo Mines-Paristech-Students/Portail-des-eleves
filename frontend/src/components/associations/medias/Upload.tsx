@@ -10,6 +10,7 @@ import { FileUploadSuccess } from "./UploadStates/Success";
 import { FileUploadError } from "./UploadStates/Error";
 import { FileUpload } from "./UploadStates/Uploading";
 import { Association } from "../../../models/associations/association";
+import { Media } from "../../../models/associations/media";
 
 enum UploadState {
   Uploading,
@@ -32,7 +33,18 @@ export const AssociationFilesystemUpload = ({ association }) => (
   </>
 );
 
-export const UploadForm = ({ association }: { association: Association }) => {
+/**
+ * @param association the association to which the uploaded files should be
+ * linked
+ * @param onMediaUpload a callback for when a new media is successfully uploaded
+ */
+export const UploadForm = ({
+  association,
+  onMediaUpload = () => {},
+}: {
+  association: Association;
+  onMediaUpload?: (media: Media) => void;
+}) => {
   // Subcomponents that will be used to upload the medias
   const [medias, setMedias] = useState<
     { media: any; status: UploadState; error: AxiosError | null }[]
@@ -66,6 +78,7 @@ export const UploadForm = ({ association }: { association: Association }) => {
       newUploadingFiles[i].media = media;
       newUploadingFiles[i].status = UploadState.Success;
       setMedias(newUploadingFiles);
+      onMediaUpload(media);
     }
 
     // Bind the created object to all necessary tags and THEN mark it
@@ -76,6 +89,7 @@ export const UploadForm = ({ association }: { association: Association }) => {
       .then((_) => {
         newUploadingFiles[i].media = media;
         newUploadingFiles[i].status = UploadState.Success;
+        onMediaUpload(media);
       })
       .catch((error) => {
         newUploadingFiles[i].error = error;
