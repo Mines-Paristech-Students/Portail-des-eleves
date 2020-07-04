@@ -34,6 +34,6 @@ export const routes: AssociationRoute[] = [
     path: `/bibliotheque/gestion/:loanableId/demandes`,
     component: AssociationManageLoans,
     exact: true,
-    defaultLayout: true,
+    defaultLayout: false,
   },
 ];
