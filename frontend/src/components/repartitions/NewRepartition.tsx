@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Row from "react-bootstrap/Row";
 import { RepartitionsHome } from "./Home";
 import Button from "react-bootstrap/Button";
@@ -10,6 +10,7 @@ import { PageTitle } from "../utils/PageTitle";
 import { api } from "../../services/apiService";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
+import { UserContext } from "../../services/authService";
 
 const [
   repartitionTitlePlaceholder,
@@ -17,13 +18,19 @@ const [
   studentsNumberPlaceholder,
 ] = ["The Répartition", "2", "12"];
 
+
 export const NewRepartition = ({ children }: { children?: any }) => {
+
+  // const user = useContext(UserContext);
   const onSubmit = (values, { resetForm, setSubmitting }) => {
+  window.open("./Groups");
     let data = {
-      name: values.repartitionTitle,
-      status: "CREATING",
-      groupsNumber: values.groupsNumber,
-      studentsNumber: values.studentsNumber,
+    id: Math.random(),
+    name: values.repartitionTitle,
+    status: "OPEN",
+   //   manager: user,
+    groupsNumber: values.groupsNumber,
+    studentsNumber: values.studentsNumber,
     };
 
     create(
@@ -34,9 +41,9 @@ export const NewRepartition = ({ children }: { children?: any }) => {
       }
     );
   };
-  const [create] = useMutation(api.repartitions.create, {
+  const [create] = useMutation(api.campaigns.create, {
     onSuccess: () => {
-      queryCache.refetchQueries(["repartitions.list"]);
+      queryCache.refetchQueries(["campaigns.list"]);
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -62,12 +69,7 @@ export const NewRepartition = ({ children }: { children?: any }) => {
                 .max(3)
                 .required("Ce champ est requis."),
             })}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                setSubmitting(false);
-                window.open("./Groups");
-              }, 400);
-            }}
+            onSubmit={onSubmit}
           >
             {({
               values,

@@ -3,18 +3,24 @@
   fields:
     name: Material science groups
     manager: 17bocquet
+    status: OPEN
+    groupsnumber: 3
 
 - model: repartitions.campaign
   pk: 2
   fields:
     name: Controverses
     manager: 17bocquet
+    status: CLOSED
+    groupsnumber: 6
 
 - model: repartitions.campaign
   pk: 3
   fields:
     name: MMS
     manager: 17bocquet
+    status: OPEN
+    groupsnumber: 10
 
 - model: repartitions.campaign
   pk: 11

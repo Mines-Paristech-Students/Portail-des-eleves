@@ -3,17 +3,16 @@ import { User } from "./user";
 export enum CampaignStatus {
   Closed = "CLOSED",
   Open = "OPEN",
-  Results = "RESULTS",
-  Creating = "CREATING"
+  Results = "RESULTS"
   }
 
-export interface Repartition {
+export interface Campaign {
   id: string;
   name: string;
   manager?: User;
   status: CampaignStatus;
-  groupsNumber: number;
-  studentsNumber: number;
+  groupsNumber?: number;
+  studentsNumber?: number;
 }
 
 export interface Category {
@@ -29,7 +28,7 @@ export interface Proposition {
 export interface Group {
   id: string;
   proposition: Proposition;
-  repartition: Repartition;
+  campaign: Campaign;
   users: User[];
 }
 
