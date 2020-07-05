@@ -38,6 +38,7 @@ class ChoiceReadOnlySerializer(serializers.ModelSerializer):
 
 class ElectionReadOnlySerializer(serializers.ModelSerializer):
     choices = ChoiceReadOnlySerializer(many=True, read_only=True)
+    user_voter = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Election
@@ -50,8 +51,13 @@ class ElectionReadOnlySerializer(serializers.ModelSerializer):
             "choices",
             "is_active",
             "show_results",
+            "user_voter",
         )
         fields = read_only_fields
 
     def save(self, **kwargs):
         raise NotImplementedError("This serializer is read-only.")
+
+    def get_user_voter(self, election):
+        query = election.voters.filter(user=self.context["request"].user)
+        return VoterReadOnlySerializer(query[0]).data if query.exists() else None

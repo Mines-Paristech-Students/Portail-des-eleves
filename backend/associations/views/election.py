@@ -9,11 +9,13 @@ from associations.permissions.election import (
     ChoicePermission,
     ElectionPermission,
     ResultsPermission,
+    VotePermission,
 )
 from associations.serializers.election import (
     ElectionSerializer,
     VoterSerializer,
     ChoiceSerializer,
+    VoteSerializer,
 )
 from associations.serializers.election_read_only import (
     VoterReadOnlySerializer,
@@ -51,6 +53,7 @@ class VoterViewSet(viewsets.ModelViewSet):
         )
 
     def perform_destroy(self, instance: Voter):
+        # Only allow deletion if the election has not started.
         if instance.election.has_started:
             raise ValidationError("The voter cannot be deleted anymore.")
 
@@ -93,6 +96,7 @@ class ChoiceViewSet(viewsets.ModelViewSet):
         serializer.save(**override)
 
     def perform_destroy(self, instance: Choice):
+        # Only allow deletion if the election has not started.
         if instance.election.has_started:
             raise ValidationError("The choice cannot be deleted anymore.")
 
@@ -116,6 +120,36 @@ class ElectionViewSet(viewsets.ModelViewSet):
             return ElectionSerializer
 
         return ElectionReadOnlySerializer
+
+    def perform_update(self, serializer):
+        # If the election has started, only allow to change `results_are_published`.
+        election = self.get_object()
+        override = {
+            key: getattr(election, key)
+            for key in (
+                "association",
+                "name",
+                "starts_at",
+                "ends_at",
+                "max_choices_per_ballot",
+                "choices",
+                "voters",
+            )
+        }
+
+        serializer.save(**override)
+
+    def perform_destroy(self, instance: Election):
+        # Only allow deletion if the election has not started.
+        if instance.has_started:
+            raise ValidationError("The election cannot be deleted anymore.")
+
+        instance.delete()
+
+    @action(detail=True, methods=("put",), permission_classes=(VotePermission,))
+    def vote(self, *args, **kwargs):
+        election = self.get_object()
+        print(VoteSerializer(data=self.request.data).validated_data)
 
     @action(detail=True, methods=("get",), permission_classes=(ResultsPermission,))
     def results(self, *args, **kwargs):

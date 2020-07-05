@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from rest_framework import permissions
 
-from associations.models import Voter, Choice
+from associations.models import Voter, Choice, Election
 from associations.permissions.utils import check_permission_from_post_data
 
 
@@ -56,18 +56,32 @@ class ElectionPermission(permissions.BasePermission):
     message = "You are not allowed to edit this election."
 
     def has_permission(self, request, view):
-        if request.method in ("POST",):
-            return check_permission_from_post_data(request, "election")
-
-        return True
+        return request.method != "POST" or check_permission_from_post_data(
+            request, "election"
+        )
 
     def has_object_permission(self, request, view, election):
         role = request.user.get_role(election.association)
+        return request.method in permissions.SAFE_METHODS or (role and role.election)
 
-        if role and role.election:  # Elections administrator.
-            return True
-        else:
-            return request.method in permissions.SAFE_METHODS
+
+class VotePermission(permissions.BasePermission):
+    """
+                               | Election has started | Election has not started |
+       User is a PENDING voter | PUT                  |                          |
+       Otherwise               |                      |                          |
+    """
+
+    message = "You are not allowed to vote."
+
+    def has_permission(self, request, view):
+        return request.method == "PUT"
+
+    def has_object_permission(self, request, view, election: Election):
+        return (
+            election.is_active
+            and election.voters.filter(user=request.user, status="PENDING").exists()
+        )
 
 
 class ResultsPermission(permissions.BasePermission):
