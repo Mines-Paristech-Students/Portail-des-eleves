@@ -8,9 +8,7 @@ import * as Yup from "yup";
 import { TextFormGroup } from "../utils/forms/TextFormGroup";
 import { PageTitle } from "../utils/PageTitle";
 
-
 export const NewRepartitionResults = ({ children }: { children?: any }) => {
-
   return (
     <RepartitionsHome>
       <PageTitle>Résultats</PageTitle>

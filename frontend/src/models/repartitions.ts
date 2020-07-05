@@ -3,8 +3,8 @@ import { User } from "./user";
 export enum CampaignStatus {
   Closed = "CLOSED",
   Open = "OPEN",
-  Results = "RESULTS"
-  }
+  Results = "RESULTS",
+}
 
 export interface Campaign {
   id: string;

@@ -12,15 +12,23 @@ export type ListCampaignsApiParameters = {
 export const campaigns = {
   list: (parameters: ListCampaignsApiParameters, page = 1) =>
     unwrap<PaginatedResponse<Campaign[]>>(
-      apiService
-        .get<PaginatedResponse<Campaign[]>>(
-          `/repartitions/campaigns/${toUrlParams({ ...parameters, page: page })}`
-        )
+      apiService.get<PaginatedResponse<Campaign[]>>(
+        `/repartitions/campaigns/${toUrlParams({ ...parameters, page: page })}`
+      )
     ),
-  get: (repartitionId) => unwrap<Campaign>(apiService.get(`/repartitions/campaigns/${repartitionId}/`)),
+  get: (repartitionId) =>
+    unwrap<Campaign>(
+      apiService.get(`/repartitions/campaigns/${repartitionId}/`)
+    ),
   create: ({
     data,
   }: {
-    data: { id:number; name: string; status: string, groupsNumber: number, studentsNumber: number }; //;students: User[]; propositions: { proposition: Proposition }[]
+    data: {
+      id: number;
+      name: string;
+      status: string;
+      groupsNumber: number;
+      studentsNumber: number;
+    }; //;students: User[]; propositions: { proposition: Proposition }[]
   }) => apiService.post("/repartitions/campaigns/", data),
 };

@@ -18,19 +18,17 @@ const [
   studentsNumberPlaceholder,
 ] = ["The Répartition", "2", "12"];
 
-
 export const NewRepartition = ({ children }: { children?: any }) => {
-
   // const user = useContext(UserContext);
   const onSubmit = (values, { resetForm, setSubmitting }) => {
-  window.open("./Groups");
+    window.open("./Groups");
     let data = {
-    id: Math.random(),
-    name: values.repartitionTitle,
-    status: "OPEN",
-   //   manager: user,
-    groupsNumber: values.groupsNumber,
-    studentsNumber: values.studentsNumber,
+      id: Math.random(),
+      name: values.repartitionTitle,
+      status: "OPEN",
+      //   manager: user,
+      groupsNumber: values.groupsNumber,
+      studentsNumber: values.studentsNumber,
     };
 
     create(

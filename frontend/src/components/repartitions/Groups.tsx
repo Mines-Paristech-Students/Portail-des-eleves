@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import EditableLabel from 'react-inline-editing';
+import EditableLabel from "react-inline-editing";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import { NewRepartitionResults } from "./NewRepartitionResults";
@@ -16,27 +16,27 @@ import { Campaign } from "../../models/repartitions";
 import { api } from "../../services/apiService";
 
 const Content = ({ current, campaigns, paginationControl }) => {
-  const campaignsList: ReactElement[] = campaigns
-          .filter((campaign) => campaign.status = "OPEN");
+  const campaignsList: ReactElement[] = campaigns.filter(
+    (campaign) => (campaign.status = "OPEN")
+  );
 
   return (
     <Container>
-      {(
+      {
         <Row>
           {campaignsList.map((campaign) => (
-    //    GroupTitles(1).map((title) => (
-        <Card className="text-left">
-          <Card.Title>
-          {
-          //<EditableLabel text={"Campagne"}/>
-          }
-            </Card.Title>
-        </Card>
-  //    ))
-
+            //    GroupTitles(1).map((title) => (
+            <Card className="text-left">
+              <Card.Title>
+                {
+                  //<EditableLabel text={"Campagne"}/>
+                }
+              </Card.Title>
+            </Card>
+            //    ))
           ))}
         </Row>
-      )}
+      }
 
       {paginationControl}
     </Container>
@@ -46,8 +46,7 @@ const Content = ({ current, campaigns, paginationControl }) => {
 // const groupnames = GroupTitles(4);
 
 const Titlecards = ({ current }: { current?: boolean }) => (
-
-<Container className="mt-5">
+  <Container className="mt-5">
     <Pagination
       render={(campaigns: Campaign[], paginationControl) => (
         <Content
@@ -58,9 +57,7 @@ const Titlecards = ({ current }: { current?: boolean }) => (
       )}
       apiKey={[
         "campaigns.list",
-        current
-          ? { status: "OPEN" }
-          : { status: "CLOSED" },
+        current ? { status: "OPEN" } : { status: "CLOSED" },
       ]}
       apiMethod={api.campaigns.list}
       config={{ refetchOnWindowFocus: false }}
@@ -70,9 +67,11 @@ const Titlecards = ({ current }: { current?: boolean }) => (
       loadingElement={RepartitionsLoading}
       errorElement={RepartitionsError}
     />
-    </Container>
-  )
+  </Container>
+);
 
 export const Groups = () => (
-  <NewRepartitionResults><Titlecards /></NewRepartitionResults>
+  <NewRepartitionResults>
+    <Titlecards />
+  </NewRepartitionResults>
 );
