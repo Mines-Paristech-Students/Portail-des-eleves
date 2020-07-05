@@ -72,7 +72,7 @@ class ElectionTestCase(BaseElectionTestCase):
         "association": "biero",
         "name": "La meilleure bière",
         "choices": [{"name": "La Kro"}, {"name": "La Despe"}],
-        "registered_voters": ["17bocquet", "17wan-fat"],
+        "voters": [{"user": "17bocquet"}, {"user": "17wan-fat"}],
         "starts_at": datetime(2019, 5, 1, 00, 00, tzinfo=timezone.utc),
         "ends_at": datetime(2019, 5, 2, 00, 00, tzinfo=timezone.utc),
         "max_choices_per_ballot": 1,
@@ -82,7 +82,7 @@ class ElectionTestCase(BaseElectionTestCase):
         "association": "biero",
         "name": "La meilleure bière",
         "choices": [{"name": "La Kro"}, {"name": "La Despe"}],
-        "registered_voters": ["17bocquet", "17wan-fat"],
+        "voters": [{"user": "17bocquet"}, {"user": "17wan-fat"}],
         "starts_at": datetime(2020, 5, 1, 00, 00, tzinfo=timezone.utc),
         "ends_at": datetime(2019, 5, 2, 00, 00, tzinfo=timezone.utc),
         "max_choices_per_ballot": 1,
@@ -96,8 +96,8 @@ class ElectionTestCase(BaseElectionTestCase):
             election.max_choices_per_ballot, data["max_choices_per_ballot"]
         )
         self.assertEqual(
-            set([v[0] for v in election.registered_voters.values_list("id")]),
-            set(data["registered_voters"]),
+            set(election.voters.values_list("user__id", flat=True)),
+            set([v["user"] for v in data["voters"]]),
         )
         self.assertEqual(
             set([c[0] for c in election.choices.values_list("name")]),

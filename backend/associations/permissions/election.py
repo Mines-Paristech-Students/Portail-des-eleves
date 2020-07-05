@@ -2,8 +2,46 @@ from datetime import datetime, timezone
 
 from rest_framework import permissions
 
-from associations.models import Association
+from associations.models import Voter, Choice
 from associations.permissions.utils import check_permission_from_post_data
+
+
+class VoterPermission(permissions.BasePermission):
+    """
+                        | Permissions |
+        Election admin  | CRUD        |
+        User            |             |
+    """
+
+    message = "You are not allowed to access this voter."
+
+    def has_permission(self, request, view):
+        return request.method != "POST" or check_permission_from_post_data(
+            request, "election"
+        )
+
+    def has_object_permission(self, request, view, voter: Voter):
+        role = request.user.get_role(voter.election.association)
+        return role and role.election
+
+
+class ChoicePermission(permissions.BasePermission):
+    """
+                        | Permissions |
+        Election admin  | CRUD        |
+        User            |             |
+    """
+
+    message = "You are not allowed to access this choice."
+
+    def has_permission(self, request, view):
+        return request.method != "POST" or check_permission_from_post_data(
+            request, "election"
+        )
+
+    def has_object_permission(self, request, view, choice: Choice):
+        role = request.user.get_role(choice.election.association)
+        return role and role.election
 
 
 class ElectionPermission(permissions.BasePermission):
@@ -11,10 +49,6 @@ class ElectionPermission(permissions.BasePermission):
                         | Permissions |
         Election admin  | CRUD        |
         User            | R           |
-
-        From our point of view, no election should be hidden to any user of the site. So, even if some users are not
-        allowed to vote, they are still allowed to see the elections, including the choices, the allowed voters, and
-        the results when the election is over.
 
         This permission MUST NOT handle the endpoints /vote/ and /results/.
     """
@@ -55,27 +89,3 @@ class ResultsPermission(permissions.BasePermission):
             return True
 
         return datetime.now(tz=timezone.utc) > election.ends_at
-
-
-class BallotPermission(permissions.BasePermission):
-    """
-                       | Permissions |
-        Allowed voters | C           |
-        Others         |             |
-    """
-
-    message = "You are not allowed to vote to this election."
-
-    def has_permission(self, request, view):
-        if request.method not in ("POST",):
-            return False
-
-        election_pk = view.kwargs.get("election_pk", None)
-        election_query = Association.objects.filter(pk=election_pk)
-
-        if election_query.exists():
-            return request.user.allowed_elections.filter(
-                id=election_query[0].id
-            ).exists()
-
-        return True
