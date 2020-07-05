@@ -171,7 +171,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
         # Update the voter state.
         voter = election.voters.get(user=self.request.user, status="PENDING")
-        voter.status = "OFFLINE_VOTE"
+        voter.status = "ONLINE_VOTE"
         voter.save()
 
         # Update the choices.
