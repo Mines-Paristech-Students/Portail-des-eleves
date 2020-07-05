@@ -1,19 +1,8 @@
 from rest_framework import serializers
 
 from associations.models import Choice, Voter, Election
+from associations.serializers.election import VoterSerializer
 from authentication.serializers.user_short import UserShortSerializer
-
-
-class VoterReadOnlySerializer(serializers.ModelSerializer):
-    user = UserShortSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = Voter
-        read_only_fields = ("id", "user", "status")
-        fields = read_only_fields
-
-    def save(self, **kwargs):
-        raise NotImplementedError("This serializer is read-only.")
 
 
 class ChoiceReadOnlySerializer(serializers.ModelSerializer):
@@ -60,4 +49,4 @@ class ElectionReadOnlySerializer(serializers.ModelSerializer):
 
     def get_user_voter(self, election):
         query = election.voters.filter(user=self.context["request"].user)
-        return VoterReadOnlySerializer(query[0]).data if query.exists() else None
+        return VoterSerializer(query[0]).data if query.exists() else None

@@ -3,35 +3,25 @@ from rest_framework.exceptions import ValidationError
 
 from associations.models import Association, Election, Choice, Voter
 from authentication.models import User
+from authentication.serializers.user_short import UserShortSerializer
 
 
 class VoteSerializer(serializers.Serializer):
     """This serializer is not bound to any model and is used for the /vote/ action."""
 
-    election = serializers.PrimaryKeyRelatedField(
-        queryset=Election.objects.all(), many=False, read_only=False
-    )
     choices = serializers.PrimaryKeyRelatedField(
         queryset=Choice.objects.all(), many=True, read_only=False
     )
 
-    def is_valid(self, raise_exception=False):
-        self._errors = {}
-
-        for choice in self.validated_data["choices"]:
-            if choice.election != self.validated_data["election"]:
-                self._errors = {"choices": "A choice is not in the election."}
-
-        if self._errors and raise_exception:
-            raise ValidationError(self._errors)
-
-        return super(VoteSerializer, self).is_valid(raise_exception)
-
     def create(self, validated_data):
-        pass
+        raise NotImplementedError(
+            "This serializer cannot be used for database operations."
+        )
 
     def update(self, instance, validated_data):
-        pass
+        raise NotImplementedError(
+            "This serializer cannot be used for database operations."
+        )
 
 
 class VoterSerializer(serializers.ModelSerializer):
@@ -43,6 +33,11 @@ class VoterSerializer(serializers.ModelSerializer):
         model = Voter
         read_only_fields = ("id",)
         fields = read_only_fields + ("user", "status", "election")
+
+    def to_representation(self, voter: Voter):
+        response = super(VoterSerializer, self).to_representation(voter)
+        response["user"] = UserShortSerializer(voter.user).data
+        return response
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
