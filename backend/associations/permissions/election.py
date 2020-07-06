@@ -8,17 +8,15 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class VoterPermission(permissions.BasePermission):
     """
-                        | Permissions |
-        Election admin  | CRUD        |
-        User            |             |
+                        | Permissions                     |
+        Election admin  | CRUD                            |
+        User            | List (filtered out in the view) |
     """
 
     message = "You are not allowed to access this voter."
 
     def has_permission(self, request, view):
-        return request.method != "POST" or check_permission_from_post_data(
-            request, "election"
-        )
+        return True
 
     def has_object_permission(self, request, view, voter: Voter):
         role = request.user.get_role(voter.election.association)
@@ -35,9 +33,7 @@ class ChoicePermission(permissions.BasePermission):
     message = "You are not allowed to access this choice."
 
     def has_permission(self, request, view):
-        return request.method != "POST" or check_permission_from_post_data(
-            request, "election"
-        )
+        return True
 
     def has_object_permission(self, request, view, choice: Choice):
         role = request.user.get_role(choice.election.association)

@@ -32,7 +32,7 @@ class Election(models.Model):
         ordering = ["-id"]
 
     @cached_property
-    def has_started(self):
+    def started(self):
         return self.starts_at <= datetime.now(tz=timezone.utc)
 
     @cached_property

@@ -46,10 +46,26 @@ class ChoiceSerializer(serializers.ModelSerializer):
         read_only_fields = ("id",)
         fields = read_only_fields + ("election", "name", "number_of_offline_votes")
 
-    def to_representation(self, instance: Choice):
-        response = super(ChoiceSerializer, self).to_representation(instance)
 
-        if instance.show_results:
+class ElectionVoterSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), many=False, read_only=False
+    )
+
+    class Meta:
+        model = Voter
+        fields = ("user", "status")
+
+
+class ElectionChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Choice
+        fields = ("name", "number_of_offline_votes")
+
+    def to_representation(self, instance: Choice):
+        response = super(ElectionChoiceSerializer, self).to_representation(instance)
+
+        if instance.election.show_results:
             response["number_of_online_votes"] = instance.number_of_online_votes
             response["number_of_votes"] = instance.number_of_votes
 
@@ -60,8 +76,8 @@ class ElectionSerializer(serializers.ModelSerializer):
     association = serializers.PrimaryKeyRelatedField(
         queryset=Association.objects.all(), read_only=False
     )
-    voters = VoterSerializer(many=True, read_only=False)
-    choices = ChoiceSerializer(many=True, read_only=False)
+    voters = ElectionVoterSerializer(many=True, read_only=False)
+    choices = ElectionChoiceSerializer(many=True, read_only=False)
 
     class Meta:
         model = Election

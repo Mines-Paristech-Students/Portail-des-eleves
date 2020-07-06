@@ -8,7 +8,6 @@ from associations.permissions.election import (
     VoterPermission,
     ChoicePermission,
     ElectionPermission,
-    ResultsPermission,
     VotePermission,
 )
 from associations.serializers.election import (
@@ -17,10 +16,7 @@ from associations.serializers.election import (
     ChoiceSerializer,
     VoteSerializer,
 )
-from associations.serializers.election_read_only import (
-    ChoiceReadOnlySerializer,
-    ElectionReadOnlySerializer,
-)
+from associations.serializers.election_read_only import ElectionReadOnlySerializer
 
 
 class VoterViewSet(viewsets.ModelViewSet):
@@ -28,17 +24,45 @@ class VoterViewSet(viewsets.ModelViewSet):
     serializer_class = VoterSerializer
     permission_classes = (VoterPermission,)
 
+    filter_fields = ("user", "status", "election", "election__association")
+
+    def get_queryset(self):
+        """Filter the results according to the user election permission."""
+        return Voter.objects.filter(
+            election__association__id__in=self.request.user.get_associations_with_permission(
+                "election"
+            )
+        )
+
     def perform_create(self, serializer):
+        # Check if the user can create the voter.
+        role = self.request.user.get_role(
+            serializer.validated_data["election"].association
+        )
+        if not role or not role.election:
+            raise PermissionDenied(
+                "You are not allowed to create a voter for this election."
+            )
+
         # Only allow creation if the election has not started.
-        if serializer.validated_data["election"].has_started:
+        if serializer.validated_data["election"].started:
             raise ValidationError("The voter cannot be added anymore.")
 
-        serializer.save()
+        serializer.save(status="PENDING")
 
     def perform_update(self, serializer):
-        # The status can only be updated from PENDING to ONLINE_VOTE or OFFLINE_VOTE.
+        if not self.get_object().election.started:
+            raise ValidationError(
+                "The status cannot be updated as the election has not started."
+            )
+
+        # The status can only be updated from PENDING.
         if self.get_object().status != "PENDING":
             raise ValidationError("The status cannot be updated anymore.")
+
+        # The status can only be updated to OFFLINE_VOTE (as ONLINE_VOTE is automatically handled).
+        if serializer.validated_data["status"] != "OFFLINE_VOTE":
+            raise ValidationError("The status can only be updated to OFFLINE_VOTE.")
 
         # Do not change the user and the election.
         serializer.save(
@@ -47,7 +71,7 @@ class VoterViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance: Voter):
         # Only allow deletion if the election has not started.
-        if instance.election.has_started:
+        if instance.election.started:
             raise ValidationError("The voter cannot be deleted anymore.")
 
         instance.delete()
@@ -55,25 +79,31 @@ class VoterViewSet(viewsets.ModelViewSet):
 
 class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()
-    serializer_class = ChoiceReadOnlySerializer
+    serializer_class = ChoiceSerializer
     permission_classes = (ChoicePermission,)
 
-    def get_serializer_class(self):
-        if self.action == "create":
-            return ChoiceSerializer
-        elif self.action == "list":
-            return ChoiceReadOnlySerializer
+    filter_fields = ("election", "election__association")
 
-        role = self.request.user.get_role(self.get_object().election.association)
-
-        if role and role.election:
-            return ChoiceSerializer
-
-        return ChoiceReadOnlySerializer
+    def get_queryset(self):
+        """Filter the choices according to the user election permission."""
+        return Choice.objects.filter(
+            election__association__id__in=self.request.user.get_associations_with_permission(
+                "election"
+            )
+        )
 
     def perform_create(self, serializer):
+        # Check if the user can create the choice.
+        role = self.request.user.get_role(
+            serializer.validated_data["election"].association
+        )
+        if not role or not role.election:
+            raise PermissionDenied(
+                "You are not allowed to create a choice for this election."
+            )
+
         # Only allow creation if the election has not started.
-        if serializer.validated_data["election"].has_started:
+        if serializer.validated_data["election"].started:
             raise ValidationError("The choice cannot be added anymore.")
 
         serializer.save()
@@ -83,14 +113,14 @@ class ChoiceViewSet(viewsets.ModelViewSet):
         override = {"election": choice.election}
 
         # If the election has started, do not change the name.
-        if self.get_object().election.has_started:
+        if self.get_object().election.started:
             override["name"] = choice.name
 
         serializer.save(**override)
 
     def perform_destroy(self, instance: Choice):
         # Only allow deletion if the election has not started.
-        if instance.election.has_started:
+        if instance.election.started:
             raise ValidationError("The choice cannot be deleted anymore.")
 
         instance.delete()
@@ -117,29 +147,31 @@ class ElectionViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         # If the election has started, only allow to change `results_are_published`.
         election = self.get_object()
-        override = {
-            key: getattr(election, key)
-            for key in (
-                "association",
-                "name",
-                "starts_at",
-                "ends_at",
-                "max_choices_per_ballot",
-                "choices",
-                "voters",
-            )
-        }
 
-        serializer.save(**override)
+        override = (
+            {
+                key: getattr(election, key)
+                for key in ("name", "starts_at", "ends_at", "max_choices_per_ballot")
+            }
+            if election.started
+            else {}
+        )
+
+        serializer.save(
+            association=election.association,
+            choices=election.choices,
+            voters=election.voters,
+            **override
+        )
 
     def perform_destroy(self, instance: Election):
         # Only allow deletion if the election has not started.
-        if instance.has_started:
+        if instance.started:
             raise ValidationError("The election cannot be deleted anymore.")
 
         instance.delete()
 
-    @action(detail=True, methods=("put",))  # , permission_classes=(VotePermission,))
+    @action(detail=True, methods=("put",), permission_classes=(VotePermission,))
     def vote(self, *args, **kwargs):
         serializer = VoteSerializer(data=self.request.data)
         serializer.is_valid(raise_exception=True)
@@ -165,9 +197,12 @@ class ElectionViewSet(viewsets.ModelViewSet):
         ):
             raise ValidationError("An invalid choice was provided.")
 
-        # Check if not too many choices have been provided.
+        # Check if at least one choice but not too many choices have been provided.
         if len(serializer.validated_data["choices"]) > election.max_choices_per_ballot:
             raise ValidationError("Too many choices were provided.")
+
+        if len(serializer.validated_data["choices"]) == 0:
+            raise ValidationError("No choice was provided.")
 
         # Update the voter state.
         voter = election.voters.get(user=self.request.user, status="PENDING")
@@ -183,9 +218,3 @@ class ElectionViewSet(viewsets.ModelViewSet):
             data={"choices": [c.id for c in serializer.validated_data["choices"]]},
             status=status.HTTP_200_OK,
         )
-
-    @action(detail=True, methods=("get",), permission_classes=(ResultsPermission,))
-    def results(self, *args, **kwargs):
-        election = self.get_object()
-        data = {"election": election.id, "results": election.results}
-        return Response(data=data, status=status.HTTP_200_OK)

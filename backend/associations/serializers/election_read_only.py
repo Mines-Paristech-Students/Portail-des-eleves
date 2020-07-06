@@ -33,6 +33,7 @@ class ElectionReadOnlySerializer(serializers.ModelSerializer):
         model = Election
         read_only_fields = (
             "id",
+            "association",
             "name",
             "starts_at",
             "ends_at",
