@@ -154,7 +154,7 @@ class LoansViewSet(viewsets.ModelViewSet):
 
     filterset_class = LoanFilter
     ordering = ("-request_date",)
-    ordering_fields = ("user__id", "request_date")
+    ordering_fields = ("user__id", "request_date", "loanable__name")
 
     @classmethod
     def get_field_from_data_or_instance(cls, field, data, instance, default=None):
