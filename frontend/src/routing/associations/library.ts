@@ -13,7 +13,7 @@ export const routes: AssociationRoute[] = [
     exact: true,
     defaultLayout: false,
   },
-    {
+  {
     path: `/bibliotheque/historique`,
     component: AssociationLibraryHistory,
     exact: true,

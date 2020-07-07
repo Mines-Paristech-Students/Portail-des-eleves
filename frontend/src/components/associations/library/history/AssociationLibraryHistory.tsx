@@ -39,7 +39,9 @@ const columnsDefinition = (cancel) => [
   {
     key: "status",
     header: "Statut",
-    render: (loan: Loan) => <LoanStatusTag status={loan.status} />,
+    render: (loan: Loan) => (
+      <LoanStatusTag status={loan.status} priority={loan.priority} />
+    ),
   },
   {
     key: "request_date",
@@ -48,9 +50,9 @@ const columnsDefinition = (cancel) => [
     canSort: true,
   },
   {
-    key: "expected_return_date",
+    key: "return_date",
     header: "Retour",
-    render: (loan: Loan) => <LoanReturnDate loan={loan}/>
+    render: (loan: Loan) => <LoanReturnDate loan={loan} />,
   },
   {
     key: "actions",

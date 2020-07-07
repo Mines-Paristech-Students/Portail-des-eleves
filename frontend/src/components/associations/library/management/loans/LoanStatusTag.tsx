@@ -2,7 +2,18 @@ import React from "react";
 import { Loan } from "../../../../../models/associations/library";
 import { Tag } from "../../../../utils/tags/Tag";
 
-export const LoanStatusTag = ({ status }: Pick<Loan, "status">) => {
+/**
+ * Display the provided loan status in a `Tag` element.
+ *
+ * @param status
+ * @param priority if provided, if `status` is `PENDING`, then the `Tag` is
+ * given a tooltip displaying the priority of the loan.
+ * @constructor
+ */
+export const LoanStatusTag = ({
+  status,
+  priority,
+}: Pick<Loan, "status"> & Partial<Pick<Loan, "priority">>) => {
   switch (status) {
     case "ACCEPTED":
       return <Tag color="primary" tag="Accepté" />;
@@ -11,7 +22,13 @@ export const LoanStatusTag = ({ status }: Pick<Loan, "status">) => {
     case "CANCELLED":
       return <Tag color="secondary" tag="Annulé" />;
     case "PENDING":
-      return <Tag color="warning" tag="En attente" />;
+      return (
+        <Tag
+          color="warning"
+          tag="En attente"
+          tooltip={priority ? `Priorité : ${priority}` : ""}
+        />
+      );
     case "REJECTED":
       return <Tag color="danger" tag="Refusé" />;
     case "RETURNED":

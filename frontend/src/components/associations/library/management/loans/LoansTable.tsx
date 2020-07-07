@@ -30,7 +30,9 @@ const columnsDefinition = (setEditLoan) => [
   {
     key: "status",
     header: "Statut",
-    render: (loan: Loan) => <LoanStatusTag status={loan.status} />,
+    render: (loan: Loan) => (
+      <LoanStatusTag status={loan.status} priority={loan.priority} />
+    ),
   },
   {
     key: "edit",

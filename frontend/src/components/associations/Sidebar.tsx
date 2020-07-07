@@ -153,7 +153,7 @@ const LibrarySubSidebar = ({ association }: { association: Association }) => {
         icon={"book-open"}
         to={`/associations/${association.id}/bibliotheque/historique`}
       >
-        Mes prêts
+        Mes demandes
       </SidebarItem>
       {association.myRole?.permissions?.includes("library") && (
         <SidebarItem
