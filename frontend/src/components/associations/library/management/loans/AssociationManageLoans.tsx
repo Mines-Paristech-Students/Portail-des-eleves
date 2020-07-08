@@ -5,6 +5,7 @@ import { PageTitle } from "../../../../utils/PageTitle";
 import { LoansTable } from "./LoansTable";
 import { api, useBetterQuery } from "../../../../../services/apiService";
 import {
+  LOAN_STATUS_TRANSLATION,
   Loanable,
   LoanStatus,
 } from "../../../../../models/associations/library";
@@ -21,16 +22,6 @@ import {
   CheckboxField,
   updateStatus,
 } from "../../../../utils/sidebar/CheckboxField";
-
-// Useful for generating the `CheckboxField`.
-const checkboxFieldsData: [LoanStatus, string][] = [
-  ["PENDING", "En attente"],
-  ["ACCEPTED", "Acceptés"],
-  ["REJECTED", "Refusés"],
-  ["BORROWED", "Empruntés"],
-  ["RETURNED", "Retournés"],
-  ["CANCELLED", "Annulés"],
-];
 
 export const AssociationManageLoans = ({
   association,
@@ -64,7 +55,7 @@ export const AssociationManageLoans = ({
             retractable={false}
             retractedByDefault={false}
           >
-            {checkboxFieldsData.map(([value, label]) => (
+            {LOAN_STATUS_TRANSLATION.map(([value, label]) => (
               <CheckboxField
                 key={value}
                 label={label}
