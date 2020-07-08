@@ -15,7 +15,7 @@ export const routes: AssociationRoute[] = [
         ordering: "starts_at",
       },
     },
-    defaultLayout: true,
+    defaultLayout: false,
   },
   {
     path: `/evenements/passes`,
@@ -28,7 +28,7 @@ export const routes: AssociationRoute[] = [
         ordering: "-starts_at",
       },
     },
-    defaultLayout: true,
+    defaultLayout: false,
   },
   {
     path: `/evenements/creer`,

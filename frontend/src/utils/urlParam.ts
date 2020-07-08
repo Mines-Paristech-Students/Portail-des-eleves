@@ -61,6 +61,7 @@ const toUrlParamsAux = (
           toUrlParamsAux(value, keyPrefix + key + "__")
         : `${keyPrefix + key}=${value}`;
     })
+    .filter((x) => x !== "")
     .join("&");
 
 /**

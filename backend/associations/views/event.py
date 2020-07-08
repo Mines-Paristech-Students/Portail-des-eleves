@@ -5,14 +5,16 @@ from django_filters.rest_framework import (
     DateTimeFromToRangeFilter,
     FilterSet,
     MultipleChoiceFilter,
+    DjangoFilterBackend,
 )
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from associations.models import Event
 from associations.permissions import EventsPermission, JoinEventPermission
 from associations.serializers import EventSerializer, ReadOnlyEventSerializer
+from tags.filters import HasHiddenTagFilter
 
 
 class EventFilter(FilterSet):
@@ -63,6 +65,13 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = (EventsPermission,)
     filterset_class = EventFilter
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
+    search_fields = ("name", "place", "description")
     ordering_fields = ["starts_at"]
 
     def get_serializer_class(self):
