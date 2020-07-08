@@ -31,7 +31,8 @@ export const AssociationLogoSettings = ({ association }) => {
         <p>
           {status === "error" ? (
             <p className="text-danger">
-              Erreur lors du chargement du logo de l'association : {error}
+              Erreur lors du chargement du logo de l'association :
+              {(error as any).toString()}
             </p>
           ) : association.logo && logo ? (
             <img

@@ -88,9 +88,16 @@ def create_preview(sender, instance: Media, created, **kwargs):
 
 
 def find_mime_type(path):
-    # the magic file is auto-discovered on Unix based OS
+    # The magic file is auto-discovered on Unix based OS.
+    # On Windows, both Magic file versions may be used, depending on your dependencies.
+    # Àou also need to download Poppler: https://github.com/oschwartz10612/poppler-windows/releases/tag/v0.89.0-patched
+    # Put it somewhere on your system and create a PATH environment variable linking to the `bin` folder.
+    # Don't forget to reboot Windows afterwards.
     if platform.system() == "Windows":
-        mime = magic.Magic(magic_file="magic.mgc", mime=True)
+        try:
+            mime = magic.Magic(magic_file="magic_v14.mgc", mime=True)
+        except magic.MagicException:
+            mime = magic.Magic(magic_file="magic_v12.mgc", mime=True)
     else:
         mime = magic.Magic(mime=True)
 

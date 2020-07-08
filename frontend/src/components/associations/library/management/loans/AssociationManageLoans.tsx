@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Association } from "../../../../../models/associations/association";
 import { useParams } from "react-router";
 import { PageTitle } from "../../../../utils/PageTitle";
 import { LoansTable } from "./LoansTable";
 import { api, useBetterQuery } from "../../../../../services/apiService";
-import { Loanable } from "../../../../../models/associations/library";
+import {
+  LOAN_STATUS_TRANSLATION,
+  Loanable,
+  LoanStatus,
+} from "../../../../../models/associations/library";
 import { Loading } from "../../../../utils/Loading";
 import { Error } from "../../../../utils/Error";
 import { LoanableCard } from "../../home/LoanableCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { AssociationLayout } from "../../../Layout";
+import { SidebarSeparator } from "../../../../utils/sidebar/Sidebar";
+import { SidebarSection } from "../../../../utils/sidebar/SidebarSection";
+import {
+  CheckboxField,
+  updateStatus,
+} from "../../../../utils/sidebar/CheckboxField";
 
 export const AssociationManageLoans = ({
   association,
@@ -18,6 +29,10 @@ export const AssociationManageLoans = ({
   association: Association;
 }) => {
   const { loanableId } = useParams<{ loanableId: string }>();
+
+  const [statusParams, setStatusParams] = useState<{ status: LoanStatus[] }>({
+    status: ["PENDING", "ACCEPTED", "BORROWED"],
+  });
 
   const { data: loanable, error, status } = useBetterQuery<Loanable>(
     ["loanables.get", { loanableId: loanableId }],
@@ -30,7 +45,32 @@ export const AssociationManageLoans = ({
   ) : status === "error" ? (
     <Error detail={error} />
   ) : status === "success" && loanable ? (
-    <>
+    <AssociationLayout
+      association={association}
+      additionalSidebar={
+        <>
+          <SidebarSeparator />
+          <SidebarSection
+            title="Voir statuts…"
+            retractable={false}
+            retractedByDefault={false}
+          >
+            {LOAN_STATUS_TRANSLATION.map(([value, label]) => (
+              <CheckboxField
+                key={value}
+                label={label}
+                state={statusParams.status.includes(value)}
+                onChange={(checked) =>
+                  setStatusParams((oldStatus) => ({
+                    status: updateStatus(checked, value, oldStatus.status),
+                  }))
+                }
+              />
+            ))}
+          </SidebarSection>
+        </>
+      }
+    >
       <PageTitle>
         Gérer les demandes de{" "}
         <span className="font-italic">{loanable.name}</span>
@@ -45,10 +85,10 @@ export const AssociationManageLoans = ({
 
         <Row>
           <Col>
-            <LoansTable loanableId={loanableId} />
+            <LoansTable loanableId={loanableId} apiParameters={statusParams} />
           </Col>
         </Row>
       </Container>
-    </>
+    </AssociationLayout>
   ) : null;
 };

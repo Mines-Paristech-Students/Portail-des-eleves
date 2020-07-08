@@ -4,7 +4,7 @@ import { Association } from "./association";
 export interface Media {
   id: string;
   uploadedOn: Date;
-  uploadedBy: Date;
+  uploadedBy: string;
   url: string;
   tags: Tag[];
   name: string;
