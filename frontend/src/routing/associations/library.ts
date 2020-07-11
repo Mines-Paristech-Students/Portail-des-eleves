@@ -4,11 +4,18 @@ import { AssociationLibraryManagement } from "../../components/associations/libr
 import { AssociationLoanableEdit } from "../../components/associations/library/management/AssociationLoanableEdit";
 import { AssociationLoanableCreate } from "../../components/associations/library/management/AssociationLoanableCreate";
 import { AssociationManageLoans } from "../../components/associations/library/management/loans/AssociationManageLoans";
+import { AssociationLibraryHistory } from "../../components/associations/library/history/AssociationLibraryHistory";
 
 export const routes: AssociationRoute[] = [
   {
     path: `/bibliotheque`,
     component: AssociationLibraryHome,
+    exact: true,
+    defaultLayout: false,
+  },
+  {
+    path: `/bibliotheque/historique`,
+    component: AssociationLibraryHistory,
     exact: true,
     defaultLayout: false,
   },
@@ -34,6 +41,6 @@ export const routes: AssociationRoute[] = [
     path: `/bibliotheque/gestion/:loanableId/demandes`,
     component: AssociationManageLoans,
     exact: true,
-    defaultLayout: true,
+    defaultLayout: false,
   },
 ];

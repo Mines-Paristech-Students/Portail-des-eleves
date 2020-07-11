@@ -2,16 +2,17 @@ import Card from "react-bootstrap/Card";
 import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import React from "react";
 import "./PreviewCard.css";
+import dayjs from "dayjs";
 
 /**
  * Generic component to present a media in a card
  * @param media the media to display
  * @param showPreview show the preview
- * @param showDescription show the description
- * @param showTags show the tags
+ * @param showDescription show the preview
+ * @param showTags show the preview
  * @param overlayInformation true to show the information on the image on hover
  * @param onClick callback in case the card is clicked
- * @param props additional JSX props passed to the `Card` component
+ * @param props additional JSX props
  * @constructor
  */
 export const MediaPreviewCard = ({
@@ -33,6 +34,7 @@ export const MediaPreviewCard = ({
             style={{ justifyContent: "center" }}
           >
             <h4>{media.name}</h4>
+            <p>{dayjs(media.uploadedOn).format("DD/DD/YYYY")}</p>
             <TagList
               model={TaggableModel.Media}
               instance={media}

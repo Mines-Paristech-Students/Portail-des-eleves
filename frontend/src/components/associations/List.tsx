@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { Pagination } from "../utils/Pagination";
+import { Logo } from "./Logo";
 
 export const AssociationList = () => (
   <Container>
@@ -13,10 +14,16 @@ export const AssociationList = () => (
       apiKey={["associations.list"]}
       apiMethod={api.associations.list}
       render={(associations, paginationControl) => (
-        <>
+        <div className={"card-columns"}>
           {associations.map((association) => (
-            <Card key={association.id} className={"col-md-3 m-4"}>
+            <Card key={association.id}>
               <Link to={`/associations/${association.id}`}>
+                {association.logo && (
+                  <Logo
+                    association={association}
+                    style={{ maxHeight: "500px" }}
+                  />
+                )}
                 <Card.Body>
                   <Card.Title>{association.name}</Card.Title>
                 </Card.Body>
@@ -24,7 +31,7 @@ export const AssociationList = () => (
             </Card>
           ))}
           {paginationControl}
-        </>
+        </div>
       )}
     />
   </Container>

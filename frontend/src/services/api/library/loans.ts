@@ -1,13 +1,21 @@
 import { apiService, PaginatedResponse, unwrap } from "../../apiService";
-import { Loan } from "../../../models/associations/library";
+import { Loan, LoanStatus } from "../../../models/associations/library";
 import { toUrlParams } from "../../../utils/urlParam";
 import dayjs from "dayjs";
 
 export type ListLoansApiParameters = {
   loanable?: { id: number | string; library: string };
-  ordering?: "user__id" | "-user__id" | "request_date" | "-request_date";
+  status?: LoanStatus[];
+  user?: string;
+  ordering?:
+    | "user__id"
+    | "-user__id"
+    | "request_date"
+    | "-request_date"
+    | "loanable__name"
+    | "-loanable__name";
   page_size?: number;
-} & Partial<Pick<Loan, "user" | "status">>;
+} & Partial<Pick<Loan, "user">>;
 
 export const loans = {
   list: (parameters: ListLoansApiParameters, page: number) =>

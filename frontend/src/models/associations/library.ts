@@ -6,6 +6,16 @@ export type LoanStatus =
   | "REJECTED"
   | "RETURNED";
 
+// Useful for generating `CheckboxField` for instance.
+export const LOAN_STATUS_TRANSLATION: [LoanStatus, string][] = [
+  ["PENDING", "En attente"],
+  ["ACCEPTED", "Acceptés"],
+  ["REJECTED", "Refusés"],
+  ["BORROWED", "Empruntés"],
+  ["RETURNED", "Retournés"],
+  ["CANCELLED", "Annulés"],
+];
+
 export interface Loan {
   id: number;
   priority: number | null;

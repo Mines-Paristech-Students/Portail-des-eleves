@@ -13,6 +13,7 @@ import { sortingToApiParameter } from "../../../../utils/table/sorting";
 import { EditLoanModal } from "./EditLoanModal";
 import { queryCache, useMutation } from "react-query";
 import { ToastContext } from "../../../../utils/Toast";
+import { ListLoansApiParameters } from "../../../../../services/api/library/loans";
 
 const columnsDefinition = (setEditLoan) => [
   {
@@ -29,7 +30,9 @@ const columnsDefinition = (setEditLoan) => [
   {
     key: "status",
     header: "Statut",
-    render: (loan: Loan) => <LoanStatusTag status={loan.status} />,
+    render: (loan: Loan) => (
+      <LoanStatusTag status={loan.status} priority={loan.priority} />
+    ),
   },
   {
     key: "edit",
@@ -67,7 +70,13 @@ const columnsDefinition = (setEditLoan) => [
  * Displays a table gathering information about the loans.
  * Also manages a modal for editing a loan.
  */
-export const LoansTable = ({ loanableId }: { loanableId: string }) => {
+export const LoansTable = ({
+  loanableId,
+  apiParameters,
+}: {
+  loanableId: string;
+  apiParameters?: Partial<ListLoansApiParameters>;
+}) => {
   const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
     ToastContext
   );
@@ -141,6 +150,7 @@ export const LoansTable = ({ loanableId }: { loanableId: string }) => {
           {
             loanable: { id: loanableId },
             ordering: sortingToApiParameter(sorting, { user: "user__id" }),
+            ...apiParameters,
           },
         ]}
         paginationControlProps={{
