@@ -24,7 +24,8 @@ jobs:
         run: |
           sudo apt-get install poppler-utils
           python -m pip install --upgrade pip
-          pip uninstall -y wheel
+          pip show wheel
+          pip show aws-lambda-builders
           pip install -r backend/requirements.txt
       - name: Setup PostgreSQL
         uses: Harmon758/postgresql-action@v1.0.0
