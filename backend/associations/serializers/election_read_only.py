@@ -49,5 +49,9 @@ class ElectionReadOnlySerializer(serializers.ModelSerializer):
         raise NotImplementedError("This serializer is read-only.")
 
     def get_user_voter(self, election):
-        query = election.voters.filter(user=self.context["request"].user)
-        return VoterSerializer(query[0]).data if query.exists() else None
+        try:
+            return VoterSerializer(
+                election.voters.get(user=self.context["request"].user)
+            ).data
+        except (Voter.DoesNotExist, Voter.MultipleObjectsReturned):
+            return None

@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -62,7 +63,9 @@ class VoterViewSet(viewsets.ModelViewSet):
 
         # The status can only be updated to OFFLINE_VOTE (as ONLINE_VOTE is automatically handled).
         if serializer.validated_data["status"] != "OFFLINE_VOTE":
-            raise ValidationError("The status can only be updated to OFFLINE_VOTE.")
+            raise ValidationError(
+                "The staff can only update the status to OFFLINE_VOTE."
+            )
 
         # Do not change the user and the election.
         serializer.save(
@@ -204,15 +207,16 @@ class ElectionViewSet(viewsets.ModelViewSet):
         if len(serializer.validated_data["choices"]) == 0:
             raise ValidationError("No choice was provided.")
 
-        # Update the voter state.
-        voter = election.voters.get(user=self.request.user, status="PENDING")
-        voter.status = "ONLINE_VOTE"
-        voter.save()
+        with transaction.atomic():
+            # Update the voter state.
+            voter = election.voters.get(user=self.request.user, status="PENDING")
+            voter.status = "ONLINE_VOTE"
+            voter.save()
 
-        # Update the choices.
-        for choice in serializer.validated_data["choices"]:
-            choice.number_of_online_votes += 1
-            choice.save()
+            # Update the choices.
+            for choice in serializer.validated_data["choices"]:
+                choice.number_of_online_votes += 1
+                choice.save()
 
         return Response(
             data={"choices": [c.id for c in serializer.validated_data["choices"]]},

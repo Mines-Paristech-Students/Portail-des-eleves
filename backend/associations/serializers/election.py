@@ -13,12 +13,7 @@ class VoteSerializer(serializers.Serializer):
         queryset=Choice.objects.all(), many=True, read_only=False
     )
 
-    def create(self, validated_data):
-        raise NotImplementedError(
-            "This serializer cannot be used for database operations."
-        )
-
-    def update(self, instance, validated_data):
+    def save(self, **kwargs):
         raise NotImplementedError(
             "This serializer cannot be used for database operations."
         )
