@@ -15,7 +15,7 @@ class Page(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update_date = models.DateTimeField(auto_now=True)
 
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     text = models.TextField(blank=True, default="")
 
     NEWS = "NEWS"
