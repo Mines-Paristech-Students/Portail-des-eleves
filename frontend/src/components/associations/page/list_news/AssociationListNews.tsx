@@ -30,12 +30,7 @@ export const AssociationListNews = ({
         <Row>
           {pages.map((page) => (
             <Col key={page.id} xs={12} md={{ span: 10, offset: 1 }}>
-              <PageCard
-                association={association}
-                page={page}
-                header
-                date
-              />
+              <PageCard association={association} page={page} header date />
             </Col>
           ))}
         </Row>
