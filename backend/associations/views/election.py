@@ -160,10 +160,7 @@ class ElectionViewSet(viewsets.ModelViewSet):
             else {}
         )
 
-        serializer.save(
-            association=election.association,
-            **override
-        )
+        serializer.save(association=election.association, **override)
 
     def perform_destroy(self, instance: Election):
         # Only allow deletion if the election has not started.
