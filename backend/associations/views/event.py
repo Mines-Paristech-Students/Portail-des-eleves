@@ -38,7 +38,12 @@ class EventFilter(FilterSet):
         Note that this ordering may be overriden with the starts_at parameter.
         """
 
-        # Inspired by https://stackoverflow.com/a/38390480.
+        # Fetch the three Event partitions (in the right order).
+        # Then, use the trick described in https://stackoverflow.com/a/38390480
+        # Namely, annotate the queryset union with an `ordering` field which
+        # is a letter (one letter per partition, so NOW is A, AFTER is B and
+        # BEFORE is C) plus a number (the rank inside each partition).
+        # Finally, order by `ordering`.
 
         now = (
             queryset.filter(
