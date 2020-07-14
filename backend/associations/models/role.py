@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from associations.models.association import Association
-from authentication.models import User
+from authentication.models.user import User
 
 
 class Role(models.Model):

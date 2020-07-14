@@ -14,10 +14,8 @@ from associations.views import (
     LoansViewSet,
     LoanableViewSet,
     RoleViewSet,
-    ElectionViewSet,
-    CreateBallotView,
-    set_association_logo,
 )
+from associations.views.election import VoterViewSet, ElectionViewSet, ChoiceViewSet
 from associations.views.media import MediaViewSet, get_media_uploaded_on_bounds
 from associations.views import set_association_logo
 from subscriptions.views.widget_balance import widget_balance_view
@@ -30,9 +28,8 @@ router.register(r"associations", AssociationViewSet)
 
 # Elections.
 router.register(r"elections", ElectionViewSet)
-urlpatterns.append(
-    path("elections/<slug:election_pk>/vote/", CreateBallotView.as_view(), name="vote")
-)
+router.register(r"choices", ChoiceViewSet)
+router.register(r"voters", VoterViewSet)
 
 # Events.
 router.register(r"events", EventViewSet)

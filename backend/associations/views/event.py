@@ -1,18 +1,20 @@
 from datetime import datetime
 
-from django.db.models import Q
+from django.db.models import Case, When, Value, CharField
 from django_filters.rest_framework import (
     DateTimeFromToRangeFilter,
     FilterSet,
     MultipleChoiceFilter,
+    DjangoFilterBackend,
 )
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from associations.models import Event
 from associations.permissions import EventsPermission, JoinEventPermission
 from associations.serializers import EventSerializer, ReadOnlyEventSerializer
+from tags.filters import HasHiddenTagFilter
 
 
 class EventFilter(FilterSet):
@@ -28,26 +30,68 @@ class EventFilter(FilterSet):
         fields = ("starts_at", "ends_at", "association", "time")
 
     def filter_time(self, queryset, _, times):
-        # No filter or every filter.
-        if len(times) == 0 or len(times) == 3:
-            return queryset
+        """Filter the events by time (BEFORE, NOW, AFTER) and return them in that order:
+        * NOW, ordered by "-starts_at"
+        * AFTER, ordered by "starts_at"
+        * BEFORE, ordered by "-starts_at".
 
-        # Looks like the canonical way to get an "always False" condition:
-        # https://stackoverflow.com/questions/35893867/always-false-q-object
-        condition = Q(pk__in=[])
+        Note that this ordering may be overriden with the starts_at parameter.
+        """
 
-        if "BEFORE" in times:
-            condition |= Q(ends_at__lte=datetime.now())
+        # Fetch the three Event partitions (in the right order).
+        # Then, use the trick described in https://stackoverflow.com/a/38390480
+        # Namely, annotate the queryset union with an `ordering` field which
+        # is a letter (one letter per partition, so NOW is A, AFTER is B and
+        # BEFORE is C) plus a number (the rank inside each partition).
+        # Finally, order by `ordering`.
 
-        if "NOW" in times:
-            condition |= Q(starts_at__lte=datetime.now()) & Q(
-                ends_at__gte=datetime.now()
+        now = (
+            queryset.filter(
+                starts_at__lte=datetime.now(), ends_at__gte=datetime.now()
+            ).order_by("-starts_at")
+            if "NOW" in times
+            else Event.objects.none()
+        )
+
+        after = (
+            queryset.filter(starts_at__gte=datetime.now()).order_by("starts_at")
+            if "AFTER" in times
+            else Event.objects.none()
+        )
+
+        before = (
+            queryset.filter(ends_at__lte=datetime.now()).order_by("-starts_at")
+            if "BEFORE" in times
+            else Event.objects.none()
+        )
+
+        return (
+            (now | after | before)
+            .annotate(
+                ordering=Case(
+                    *(
+                        [
+                            When(pk=pk, then=Value(f"A{rank}"))
+                            for rank, pk in enumerate(now.values_list("pk", flat=True))
+                        ]
+                        + [
+                            When(pk=pk, then=Value(f"B{rank}"))
+                            for rank, pk in enumerate(
+                                after.values_list("pk", flat=True)
+                            )
+                        ]
+                        + [
+                            When(pk=pk, then=Value(f"C{rank}"))
+                            for rank, pk in enumerate(
+                                before.values_list("pk", flat=True)
+                            )
+                        ]
+                    ),
+                    output_field=CharField(),
+                )
             )
-
-        if "AFTER" in times:
-            condition |= Q(starts_at__gte=datetime.now())
-
-        return queryset.filter(condition)
+            .order_by("ordering")
+        )
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -63,6 +107,13 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = (EventsPermission,)
     filterset_class = EventFilter
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
+    search_fields = ("name", "place", "description")
     ordering_fields = ["starts_at"]
 
     def get_serializer_class(self):

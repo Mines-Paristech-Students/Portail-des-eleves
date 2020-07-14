@@ -1,15 +1,14 @@
-#######
-# BDE #
-#######
+##################################
+# Old election, published results.
 
 - model: associations.election
   pk: 1
   fields:
     association: bde
-    name: 'Élections BDE'
-    registered_voters: [17bocquet, 17wan-fat]
-    starts_at: '2019-09-10T17:41:28+00:00'
-    ends_at: '2020-09-10T17:41:28+00:00'
+    name: "Élection passée"
+    starts_at: "2017-09-10T17:41:28+00:00"
+    ends_at: "2019-09-10T17:41:28+00:00"
+    results_are_published: True
     max_choices_per_ballot: 1
 
 - model: associations.choice
@@ -17,33 +16,254 @@
   fields:
     election: 1
     name: Pichalaya
+    number_of_online_votes: 1
 
 - model: associations.choice
   pk: 2
   fields:
     election: 1
     name: Adrénapiche
+    number_of_offline_votes: 1
 
-- model: associations.ballot
+- model: associations.voter
   pk: 1
   fields:
     election: 1
-    choices: [1]
+    user: 17bocquet
+    status: PENDING
 
-- model: associations.ballot
+- model: associations.voter
   pk: 2
   fields:
     election: 1
-    choices: [1]
+    user: 17wan-fat
+    status: OFFLINE_VOTE
 
-- model: associations.ballot
+- model: associations.voter
   pk: 3
   fields:
     election: 1
-    choices: [2]
+    user: 19simple
+    status: ONLINE_VOTE
 
-- model: associations.ballot
+######################################
+# Old election, non-published results.
+
+- model: associations.election
+  pk: 2
+  fields:
+    association: bde
+    name: "Élection passée non publiée"
+    starts_at: "2017-09-10T17:41:28+00:00"
+    ends_at: "2019-09-10T17:41:28+00:00"
+    results_are_published: False
+    max_choices_per_ballot: 1
+
+- model: associations.choice
+  pk: 21
+  fields:
+    election: 2
+    name: Pichalaya
+    number_of_online_votes: 1
+
+- model: associations.choice
+  pk: 22
+  fields:
+    election: 2
+    name: Adrénapiche
+    number_of_offline_votes: 1
+
+- model: associations.voter
+  pk: 21
+  fields:
+    election: 2
+    user: 17bocquet
+    status: PENDING
+
+- model: associations.voter
+  pk: 22
+  fields:
+    election: 2
+    user: 17wan-fat
+    status: OFFLINE_VOTE
+
+- model: associations.voter
+  pk: 23
+  fields:
+    election: 2
+    user: 19simple
+    status: ONLINE_VOTE
+
+#########################################
+# Current election, 2 choices per ballot.
+
+- model: associations.election
+  pk: 3
+  fields:
+    association: bde
+    name: "Élection en cours (2 choix)"
+    starts_at: "2017-09-10T17:41:28+00:00"
+    ends_at: "2120-09-10T17:41:28+00:00"
+    results_are_published: True
+    max_choices_per_ballot: 2
+
+- model: associations.choice
+  pk: 31
+  fields:
+    election: 3
+    name: Choix 1
+    number_of_online_votes: 32
+    number_of_offline_votes: 93
+
+- model: associations.choice
+  pk: 32
+  fields:
+    election: 3
+    name: Choix 2
+    number_of_online_votes: 482
+    number_of_offline_votes: 12
+
+- model: associations.choice
+  pk: 33
+  fields:
+    election: 3
+    name: Choix 4
+    number_of_online_votes: 984
+    number_of_offline_votes: 0
+
+- model: associations.voter
+  pk: 31
+  fields:
+    election: 3
+    user: 17bocquet
+    status: PENDING
+
+- model: associations.voter
+  pk: 32
+  fields:
+    election: 3
+    user: 17wan-fat
+    status: OFFLINE_VOTE
+
+- model: associations.voter
+  pk: 33
+  fields:
+    election: 3
+    user: 19simple
+    status: ONLINE_VOTE
+
+########################################
+# Current election, 1 choice per ballot.
+
+- model: associations.election
   pk: 4
   fields:
-    election: 1
-    choices: [2]
+    association: bde
+    name: "Élection en cours (1 choix)"
+    starts_at: "2017-09-10T17:41:28+00:00"
+    ends_at: "2120-09-10T17:41:28+00:00"
+    results_are_published: True
+    max_choices_per_ballot: 1
+
+- model: associations.choice
+  pk: 41
+  fields:
+    election: 4
+    name: Choix 1
+    number_of_online_votes: 32
+    number_of_offline_votes: 93
+
+- model: associations.choice
+  pk: 42
+  fields:
+    election: 4
+    name: Choix 2
+    number_of_online_votes: 482
+    number_of_offline_votes: 12
+
+- model: associations.choice
+  pk: 43
+  fields:
+    election: 4
+    name: Choix 4
+    number_of_online_votes: 984
+    number_of_offline_votes: 0
+
+- model: associations.voter
+  pk: 41
+  fields:
+    election: 4
+    user: 17bocquet
+    status: PENDING
+
+- model: associations.voter
+  pk: 42
+  fields:
+    election: 4
+    user: 17wan-fat
+    status: OFFLINE_VOTE
+
+- model: associations.voter
+  pk: 43
+  fields:
+    election: 4
+    user: 19simple
+    status: ONLINE_VOTE
+
+##################
+# Future election.
+
+- model: associations.election
+  pk: 5
+  fields:
+    association: bde
+    name: "Élection à venir (en 2117)"
+    starts_at: "2117-09-10T17:41:28+00:00"
+    ends_at: "2120-09-10T17:41:28+00:00"
+    results_are_published: True
+    max_choices_per_ballot: 1
+
+- model: associations.choice
+  pk: 51
+  fields:
+    election: 5
+    name: Choix 1
+    number_of_online_votes: 0
+    number_of_offline_votes: 0
+
+- model: associations.choice
+  pk: 52
+  fields:
+    election: 5
+    name: Choix 2
+    number_of_online_votes: 0
+    number_of_offline_votes: 0
+
+- model: associations.choice
+  pk: 53
+  fields:
+    election: 5
+    name: Choix 4
+    number_of_online_votes: 0
+    number_of_offline_votes: 0
+
+- model: associations.voter
+  pk: 51
+  fields:
+    election: 5
+    user: 17bocquet
+    status: PENDING
+
+- model: associations.voter
+  pk: 52
+  fields:
+    election: 5
+    user: 17wan-fat
+    status: PENDING
+
+- model: associations.voter
+  pk: 53
+  fields:
+    election: 5
+    user: 19simple
+    status: PENDING

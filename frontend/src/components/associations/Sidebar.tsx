@@ -70,7 +70,6 @@ export const AssociationSidebar = ({ association }) => {
         {association.myRole.permissions?.includes("marketplace") && (
           <MarketSubNavbar association={association} />
         )}
-        <EventSubSidebar association={association} />
         <LibrarySubSidebar association={association} />
         <RolesSubSidebar association={association} />
       </Sidebar>
@@ -104,37 +103,6 @@ const AddPageItem = ({ association }) =>
       Ajouter une page
     </SidebarItem>
   ) : null;
-
-const EventSubSidebar = ({ association }: { association: Association }) => {
-  const location = useLocation();
-  return location.pathname.startsWith(
-    `/associations/${association.id}/evenements`
-  ) ? (
-    <>
-      <SidebarSpace />
-      <SidebarItem
-        icon={"calendar"}
-        to={`/associations/${association.id}/evenements`}
-      >
-        À venir
-      </SidebarItem>
-      <SidebarItem
-        icon={"inbox"}
-        to={`/associations/${association.id}/evenements/passes`}
-      >
-        Passés
-      </SidebarItem>
-      {association.myRole?.permissions?.includes("event") && (
-        <SidebarItem
-          icon={"plus"}
-          to={`/associations/${association.id}/evenements/creer`}
-        >
-          Nouveau
-        </SidebarItem>
-      )}
-    </>
-  ) : null;
-};
 
 const LibrarySubSidebar = ({ association }: { association: Association }) => {
   const location = useLocation();
