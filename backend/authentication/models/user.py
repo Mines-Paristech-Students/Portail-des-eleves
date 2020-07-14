@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
 )
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.functional import cached_property
 
 
@@ -175,3 +176,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_role(self, association=None):
         return self.roles.filter(association_id=association.id).first()
+
+    def get_associations_with_permission(self, permission: str) -> set:
+        """Return the associations ids for which a valid role with `permission` exists."""
+        query = Q(
+            **{
+                "user": self,
+                f"{permission}_permission": True,
+                "start_date__lte": date.today(),
+            }
+        )
+        query &= Q(end_date__gt=date.today()) | Q(end_date__isnull=True)
+
+        # This import is here to avoid circular imports.
+        from associations.models.role import Role
+
+        return set(Role.objects.filter(query).values_list("association__pk", flat=True))
