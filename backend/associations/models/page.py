@@ -15,7 +15,7 @@ class Page(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update_date = models.DateTimeField(auto_now=True)
 
-    title = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200)
     text = models.TextField(blank=True, default="")
 
     NEWS = "NEWS"
@@ -31,4 +31,5 @@ class Page(models.Model):
     )
 
     class Meta:
+        unique_together = ("association", "title")
         ordering = ["-id"]

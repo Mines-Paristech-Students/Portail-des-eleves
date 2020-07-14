@@ -5,8 +5,6 @@ import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { ErrorMessage } from "../utils/ErrorPage";
 import { Instructions } from "../utils/Instructions";
 import { Link } from "react-router-dom";
-import { PageCard } from "./page/PageCard";
-import { PageTitle } from "../utils/PageTitle";
 import { PageContainer } from "./page/PageContainer";
 
 export const AssociationHome = ({ association }) => {

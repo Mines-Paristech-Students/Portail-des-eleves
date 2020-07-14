@@ -1,6 +1,6 @@
 import React from "react";
 import { api, useBetterQuery } from "../../../../services/apiService";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { LoadingAssociation } from "../../Loading";
 import { Page } from "../../../../models/associations/page";
 import { ErrorMessage } from "../../../utils/ErrorPage";
