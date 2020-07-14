@@ -162,8 +162,6 @@ class ElectionViewSet(viewsets.ModelViewSet):
 
         serializer.save(
             association=election.association,
-            choices=election.choices,
-            voters=election.voters,
             **override
         )
 
