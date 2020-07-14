@@ -9,6 +9,7 @@ export type ListEventsApiParameters = {
   starts_at_after?: Date;
   ends_at_before?: Date;
   ends_at_after?: Date;
+  search?: string;
   ordering?: "starts_at" | "-starts_at";
 };
 
@@ -28,6 +29,7 @@ export const events = {
           ),
           association: parameters.association,
           time: parameters.time,
+          search: parameters.search,
           ordering: parameters.ordering,
           page: page,
           page_size: 10,
