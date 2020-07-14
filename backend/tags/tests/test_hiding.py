@@ -101,20 +101,6 @@ class HidingTestCase(TagsBaseTestCase):
         response = self.get("/associations/elections/2/")
         self.assertStatusCode(response, 404)
 
-    def test_hiding_election_results(self):
-        pk = 2
-        election = Election.objects.get(pk=2)
-        # Use a completed election or we cannot access the results no matter what.
-        self.assertFalse(election.is_active)
-
-        self.login("17simple")
-        response = self.get(f"/associations/elections/{pk}/results/")
-        self.assertEqual(response.status_code, 200)
-
-        self.switch_17simple_to_first_year()
-        response = self.get(f"/associations/elections/{pk}/results/")
-        self.assertEqual(response.status_code, 404)
-
     def test_hiding_events(self):
         self.login("17simple")
 

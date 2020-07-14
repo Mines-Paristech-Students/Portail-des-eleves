@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from django.db import models
 from django.utils.functional import cached_property
 
-from authentication.models import User
+from authentication.models.user import User
 
 
 class Poll(models.Model):
