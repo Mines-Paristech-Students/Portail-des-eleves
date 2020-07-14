@@ -1,4 +1,3 @@
-from associations.models import Election
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 # Please see the comments on test_election.yaml to get a better understanding of the test fixtures.
@@ -20,6 +19,9 @@ ALL_USERS_EXCEPT_ELECTION_BIERO = [
 ]
 """Same as ALL_USERS, but with 17election_biero removed."""
 
+ALL_USERS_EXCEPT_ELECTION_PDM = [user for user in ALL_USERS if user != "17election_pdm"]
+"""Same as ALL_USERS, but with 17election_pdm removed."""
+
 ALL_USERS_EXCEPT_ELECTION_ADMIN = [user for user in ALL_USERS if "election" not in user]
 """Same as ALL_USERS, but with 17election* removed."""
 
@@ -29,58 +31,3 @@ ALL_USERS_EXCEPT_ADMIN = [user for user in ALL_USERS if "admin" not in user]
 
 class BaseElectionTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "test_election.yaml"]
-
-    def endpoint_results(self, pk, association_id):
-        """Return the endpoint associated to the results action."""
-        return f"/associations/elections/{pk}/results/"
-
-    def results(self, pk, association_id):
-        return self.get(self.endpoint_results(pk, association_id))
-
-    def endpoint_vote(self, pk, association_id):
-        """Return the endpoint associated to the vote action."""
-        return f"/associations/elections/{pk}/vote/"
-
-    def vote(self, pk, association_id, data=None, format="json"):
-        return self.post(self.endpoint_vote(pk, association_id), data, format)
-
-    def endpoint_list(self, association_id):
-        """Return the endpoint associated to the list election action."""
-        return f"/associations/elections/"
-
-    def list(self, association_id):
-        return self.get(self.endpoint_list(association_id))
-
-    def endpoint_retrieve(self, pk, association_id):
-        """Return the endpoint associated to the retrieve action."""
-        return f"/associations/elections/{pk}/"
-
-    def retrieve(self, pk, association_id):
-        return self.get(self.endpoint_retrieve(pk, association_id))
-
-    def endpoint_create(self, association_id):
-        """Return the endpoint associated to the create action."""
-        return f"/associations/elections/"
-
-    def create(self, association_id, data=None, format="json"):
-        return self.post(self.endpoint_create(association_id), data, format)
-
-    def endpoint_update(self, pk, association_id):
-        """Return the endpoint associated to the update action."""
-        return f"/associations/elections/{pk}/"
-
-    def update(self, pk, association_id, data=None, format="json"):
-        return self.patch(self.endpoint_update(pk, association_id), data, format)
-
-    def endpoint_destroy(self, pk, association_id):
-        """Return the endpoint associated to the destroy action."""
-        return f"/associations/elections/{pk}/"
-
-    def destroy(self, pk, association_id):
-        return self.delete(self.endpoint_destroy(pk, association_id))
-
-    def get_registered_to_election(self, pk):
-        return [
-            x[0]
-            for x in Election.objects.get(pk=pk).registered_voters.values_list("id")
-        ]

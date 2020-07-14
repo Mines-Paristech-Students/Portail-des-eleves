@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v1
@@ -25,11 +25,17 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-  
       - name: Install Dependencies
         run: |
           sudo apt-get install poppler-utils
           python -m pip install --upgrade pip
+          pip show wheel
+          pip show aws-lambda-builders
+          pip show aws-sam-cli
+          pip uninstall -y wheel
+          pip uninstall -y aws-lambda-builders
+          pip uninstall -y aws-sam-cli
           pip install -r backend/requirements.txt
       - name: Setup PostgreSQL
         uses: Harmon758/postgresql-action@v1.0.0
