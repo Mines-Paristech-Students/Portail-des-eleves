@@ -11,8 +11,6 @@ then
     echo "PostgreSQL started"
 fi
 
-ln -s ../medias medias
-
 rm -Rf  authentication/migrations/*
 rm -Rf  associations/migrations/*
 rm -Rf  polls/migrations/*
