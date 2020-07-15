@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: ./nginx
+    tty: true
+    ports:
+      - 1337:80
+    volumes:
+      - assets_volume:/home/backend/web/assets
+      - media_volume:/home/backend/web/medias
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context : ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend_prod
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - assets_volume:/home/backend/web/assets
+      - media_volume:/home/backend/web/medias
+
+    expose:
+      - 8000
+    env_file:
+      ./backend/backend/.env.prod
+    depends_on:
+      - db
+
+  db:
+    image: postgres:10.0-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      ./backend/backend/.env.prod.db
+
+volumes:
+  postgres_data:
+  assets_volume:
+  media_volume:

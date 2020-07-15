@@ -26,7 +26,9 @@ import { roles } from "./api/roles";
 import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
 
-const baseApi = "http://localhost:8000/api/v1";
+const baseApi = process.env.REACT_APP_API_URL;
+
+Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 export const apiService = applyConverters(
   Axios.create({

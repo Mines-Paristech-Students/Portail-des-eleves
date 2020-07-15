@@ -113,6 +113,10 @@ venv.bak/
 # macOS
 .DS_Store
 
+# database volumes
+volumes
+
+
 backend/api/migrations
 backend/associations/migrations
 backend/authentication/migrations

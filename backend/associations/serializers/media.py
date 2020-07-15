@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from associations.models import Media
+from backend.settings import env
 from tags.serializers import TagSerializer
 
 
@@ -37,5 +38,5 @@ def urlize(request, url):
     if not url or url.startswith("http"):
         return url
 
-    host = request.get_host()
+    host = env.str("BACKEND_HOST")
     return f"{'https' if request.is_secure() else 'http'}://{host}{url}"
