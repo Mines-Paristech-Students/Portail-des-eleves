@@ -9,8 +9,10 @@ export enum CampaignStatus {
 export interface Campaign {
   id: string;
   name: string;
-  manager: User;
+  manager?: User;
   status: CampaignStatus;
+  groupsNumber?: number;
+  studentsNumber?: number;
 }
 
 export interface Category {

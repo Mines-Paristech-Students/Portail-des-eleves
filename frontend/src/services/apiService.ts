@@ -15,6 +15,7 @@ import { marketplace } from "./api/marketplace";
 import { products } from "./api/products";
 import { polls } from "./api/polls";
 import { associations } from "./api/associations";
+import { campaigns } from "./api/campaigns";
 import { tags } from "./api/tags";
 import { namespaces } from "./api/namespaces";
 import { jwt } from "./api/jwt";
@@ -64,6 +65,8 @@ export const api = {
   courses: courses,
 
   polls: polls,
+
+  campaigns: campaigns,
 
   tags: tags,
   namespaces: namespaces,

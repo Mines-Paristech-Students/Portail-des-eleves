@@ -9,6 +9,7 @@ class APITestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
 
     def setUp(self):
+        super(APITestCase, self).setUp()
         self.maxDiff = None
 
     def test_create_campaign(self):

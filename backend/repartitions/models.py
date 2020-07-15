@@ -13,6 +13,9 @@ class Campaign(models.Model):
     status = models.CharField(max_length=200, default="CLOSED")
     manager = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
+    class Meta:
+        ordering = ["-id"]
+
 
 class Category(models.Model):
     """ Represents a particular subset of users to be distributed between propositions. The users will be evenly
