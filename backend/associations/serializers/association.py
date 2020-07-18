@@ -11,8 +11,8 @@ class AssociationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Association
-        read_only_fields = ("my_role", "marketplace_enabled", "library_enabled")
-        fields = read_only_fields + ("id", "name", "logo", "is_hidden", "rank")
+        read_only_fields = ("id", "my_role", "marketplace_enabled", "library_enabled")
+        fields = read_only_fields + ("name", "logo", "is_hidden", "rank")
 
     def get_my_role(self, obj):
         role = self.context["request"].user.get_role(obj)

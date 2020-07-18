@@ -6,7 +6,7 @@ export interface Association {
   logo: string;
   marketplace_enabled: boolean;
   library_enabled: boolean;
-  rank?: number;
+  rank: number;
   myRole?: {
     id: string;
     role: string;

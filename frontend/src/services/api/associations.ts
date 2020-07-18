@@ -20,6 +20,8 @@ export const associations = {
     unwrap<Association>(
       apiService.get(`/associations/associations/${associationId}/`)
     ),
+  create: (data: Pick<Association, "name" | "rank">) =>
+    apiService.post("/associations/associations/", data),
   update: ({
     associationId,
     data,

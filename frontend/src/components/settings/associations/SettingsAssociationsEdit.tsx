@@ -27,12 +27,9 @@ export const SettingsAssociationsEdit = () => {
   );
 
   const [edit] = useMutation(api.associations.update, {
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryCache.invalidateQueries(["associations.get"]);
-
-      if (response.status === 200) {
-        sendSuccessToast("Événement modifié.");
-      }
+      sendSuccessToast("Association modifiée.");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -51,8 +48,7 @@ export const SettingsAssociationsEdit = () => {
     onSuccess: () => {
       queryCache.invalidateQueries(["associations.list"]);
       sendSuccessToast("Association supprimée.");
-
-      history.push(`/parameters/associations`);
+      history.push(`/parametres/associations`);
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;

@@ -23,7 +23,7 @@ export const MutateAssociationForm = ({
       name: Yup.string().required("Ce champ est requis."),
       rank: Yup.number()
         .integer("Le rang doit être un nombre entier.")
-        .notRequired(),
+        .required("Ce champ est requis."),
     })}
     onSubmit={(values, { resetForm, setSubmitting }) =>
       onSubmit(values, { resetForm, setSubmitting })

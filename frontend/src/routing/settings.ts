@@ -3,6 +3,7 @@ import { SettingsGlobal } from "../components/settings/SettingsGlobal";
 import { SettingsAssociations } from "../components/settings/associations/SettingsAssociations";
 import { SettingsUsers } from "../components/settings/SettingsUsers";
 import { SettingsAssociationsEdit } from "../components/settings/associations/SettingsAssociationsEdit";
+import { SettingsAssociationsAdd } from "../components/settings/associations/SettingsAssociationsAdd";
 
 export const routes: Route[] = [
   {
@@ -22,7 +23,7 @@ export const routes: Route[] = [
   },
   {
     path: "/associations/creer",
-    component: null,
+    component: SettingsAssociationsAdd,
     exact: true,
   },
   {
