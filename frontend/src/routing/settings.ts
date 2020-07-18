@@ -1,7 +1,8 @@
 import { Route } from "./global";
 import { SettingsGlobal } from "../components/settings/SettingsGlobal";
-import { SettingsAssociation } from "../components/settings/SettingsAssociation";
+import { SettingsAssociations } from "../components/settings/associations/SettingsAssociations";
 import { SettingsUsers } from "../components/settings/SettingsUsers";
+import { SettingsAssociationsEdit } from "../components/settings/associations/SettingsAssociationsEdit";
 
 export const routes: Route[] = [
   {
@@ -11,7 +12,17 @@ export const routes: Route[] = [
   },
   {
     path: "/associations",
-    component: SettingsAssociation,
+    component: SettingsAssociations,
+    exact: true,
+  },
+  {
+    path: "/associations/:associationId/modifier",
+    component: SettingsAssociationsEdit,
+    exact: true,
+  },
+  {
+    path: "/associations/creer",
+    component: null,
     exact: true,
   },
   {

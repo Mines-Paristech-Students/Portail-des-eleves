@@ -1,5 +1,6 @@
 from django.core.files.storage import FileSystemStorage
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 
 from associations.models.library import Library
@@ -37,6 +38,14 @@ class Association(models.Model):
         default=0,
         help_text="Order of appearance in the association list (lowest first).",
     )
+
+    @cached_property
+    def marketplace_enabled(self):
+        return self.marketplace is not None and self.marketplace.enabled
+
+    @cached_property
+    def library_enabled(self):
+        return self.library is not None and self.library.enabled
 
     def _get_unique_slug(self):
         slug = slugify(self.name)

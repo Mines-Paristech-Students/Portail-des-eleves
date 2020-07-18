@@ -1,18 +1,20 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import React from "react";
+import React, { useContext } from "react";
 import { Sidebar, SidebarItem } from "../utils/sidebar/Sidebar";
+import { ForbiddenError } from "../utils/ErrorPage";
+import { UserContext } from "../../services/authService";
 
 export const SettingsSidebar = () => (
   <Sidebar title="Paramètres">
     <SidebarItem icon="settings" to={`/parametres`} exact>
       Paramètres globaux
     </SidebarItem>
-    <SidebarItem icon="user" to={`/parametres/membres`} exact>
+    <SidebarItem icon="user" to={`/parametres/membres`} exact={false}>
       Membres
     </SidebarItem>
-    <SidebarItem icon="zap" to={`/parametres/associations`} exact>
+    <SidebarItem icon="zap" to={`/parametres/associations`} exact={false}>
       Associations
     </SidebarItem>
   </Sidebar>
@@ -30,14 +32,22 @@ export const SettingsLayout = ({
 }: {
   additionalSidebar?: any;
   children?: any;
-}) => (
-  <Container>
-    <Row>
-      <Col md={3}>
-        <SettingsSidebar />
-        {additionalSidebar}
-      </Col>
-      <Col md={9}>{children}</Col>
-    </Row>
-  </Container>
-);
+}) => {
+  const user = useContext(UserContext);
+
+  if (!user?.isStaff) {
+    return <ForbiddenError />;
+  }
+
+  return (
+    <Container>
+      <Row>
+        <Col md={3}>
+          <SettingsSidebar />
+          {additionalSidebar}
+        </Col>
+        <Col md={9}>{children}</Col>
+      </Row>
+    </Container>
+  );
+};
