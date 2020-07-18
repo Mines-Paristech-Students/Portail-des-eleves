@@ -59,7 +59,15 @@ export const SettingsAssociations = () => {
   return (
     <SettingsLayout>
       <Container>
-        <PageTitle>Associations</PageTitle>{" "}
+        <div className="d-flex align-items-center">
+          <PageTitle>Associations</PageTitle>
+          <Link
+            to={`/parametres/associations/creer`}
+            className={"btn btn-outline-primary btn-sm float-right ml-auto"}
+          >
+            <span className="fe fe-plus" /> Créer
+          </Link>
+        </div>
         <Pagination
           apiKey={[
             "associations.list",

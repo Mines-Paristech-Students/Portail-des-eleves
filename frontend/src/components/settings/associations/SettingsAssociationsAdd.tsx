@@ -44,7 +44,7 @@ export const SettingsAssociationsAdd = () => {
           >
             <i className="fe fe-arrow-left" />
           </Link>{" "}
-          Ajouter une association
+          Créer une association
         </PageTitle>
         <Card className="text-left">
           <MutateAssociationForm

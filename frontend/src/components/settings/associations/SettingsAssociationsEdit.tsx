@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { ToastContext } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
@@ -13,6 +13,7 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { SettingsLayout } from "../SettingsLayout";
 import { MutateAssociationForm } from "./MutateAssociationForm";
+import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 
 export const SettingsAssociationsEdit = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -63,6 +64,8 @@ export const SettingsAssociationsEdit = () => {
     },
   });
 
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+
   return status === "loading" ? (
     <LoadingAssociation />
   ) : status === "error" ? (
@@ -70,6 +73,12 @@ export const SettingsAssociationsEdit = () => {
   ) : association ? (
     <SettingsLayout>
       <Container>
+        <ConfirmDeleteModal
+          association={association}
+          onDelete={() => remove({ associationId: associationId })}
+          show={showConfirmDeleteModal}
+          onHide={() => setShowConfirmDeleteModal(false)}
+        />
         <PageTitle>
           <Link
             className="text-decoration-none"
@@ -94,11 +103,7 @@ export const SettingsAssociationsEdit = () => {
                 }
               )
             }
-            onDelete={() =>
-              window.confirm(
-                "Êtes-vous sûr(e) de vouloir supprimer cette association ? Cette opération ne peut pas être annulée."
-              ) && remove({ associationId: associationId })
-            }
+            onDelete={() => setShowConfirmDeleteModal(true)}
           />
         </Card>
       </Container>
