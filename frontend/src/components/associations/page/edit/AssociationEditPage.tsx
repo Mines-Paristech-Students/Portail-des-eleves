@@ -45,7 +45,8 @@ export const AssociationEditPage = ({
             ? "Détails : " +
               (error.response.status === 403
                 ? "vous n’avez pas le droit de modifier cette page."
-                : error.response.status === 400 && error.response.data.title
+                : error.response.status === 400 &&
+                  error.response.data.nonFieldErrors
                 ? "une page avec ce nom existe déjà."
                 : JSON.stringify(error.response.data))
             : ""

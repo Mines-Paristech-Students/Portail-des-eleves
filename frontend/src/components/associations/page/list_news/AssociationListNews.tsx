@@ -6,7 +6,9 @@ import { PageCard } from "../PageCard";
 import { PageTitle } from "../../../utils/PageTitle";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import { Col } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import { Link } from "react-router-dom";
 
 export const AssociationListNews = ({
   association,
@@ -26,14 +28,27 @@ export const AssociationListNews = ({
     render={(pages, paginationControl) => (
       <Container>
         <PageTitle>Brèves</PageTitle>
-
         <Row>
-          {pages.map((page) => (
-            <Col key={page.id} xs={12} md={{ span: 10, offset: 1 }}>
-              <PageCard association={association} page={page} header date />
+          {pages.length > 0 ? (
+            pages.map((page) => (
+              <Col key={page.id} xs={12} md={{ span: 10, offset: 1 }}>
+                <PageCard association={association} page={page} header date />
+              </Col>
+            ))
+          ) : (
+            <Col xs={12}>
+              <Card>
+                <Card.Body>
+                  Pas de brève pour le moment !{" "}
+                  {association.myRole?.permissions?.includes("page") && (
+                    <Link to="pages/creer">Ajouter une page.</Link>
+                  )}
+                </Card.Body>
+              </Card>
             </Col>
-          ))}
+          )}
         </Row>
+
         {paginationControl}
       </Container>
     )}
