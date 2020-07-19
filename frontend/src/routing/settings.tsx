@@ -1,14 +1,15 @@
 import { Route } from "./global";
-import { SettingsGlobal } from "../components/settings/SettingsGlobal";
 import { SettingsAssociations } from "../components/settings/associations/SettingsAssociations";
-import { SettingsUsers } from "../components/settings/SettingsUsers";
+import { SettingsUsers } from "../components/settings/users/SettingsUsers";
 import { SettingsAssociationsEdit } from "../components/settings/associations/SettingsAssociationsEdit";
 import { SettingsAssociationsAdd } from "../components/settings/associations/SettingsAssociationsAdd";
+import { Redirect } from "react-router";
+import React from "react";
 
 export const routes: Route[] = [
   {
     path: "",
-    component: SettingsGlobal,
+    component: () => <Redirect to="/parametres/associations" />,
     exact: true,
   },
   {

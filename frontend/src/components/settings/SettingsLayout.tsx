@@ -8,14 +8,11 @@ import { UserContext } from "../../services/authService";
 
 export const SettingsSidebar = () => (
   <Sidebar title="Paramètres">
-    <SidebarItem icon="settings" to={`/parametres`} exact>
-      Paramètres globaux
+    <SidebarItem icon="zap" to={`/parametres/associations`} exact={false}>
+      Associations
     </SidebarItem>
     <SidebarItem icon="user" to={`/parametres/membres`} exact={false}>
       Membres
-    </SidebarItem>
-    <SidebarItem icon="zap" to={`/parametres/associations`} exact={false}>
-      Associations
     </SidebarItem>
   </Sidebar>
 );
