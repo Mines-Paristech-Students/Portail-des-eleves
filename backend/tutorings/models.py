@@ -43,8 +43,6 @@ class Tutoring(models.Model):
     @cached_property
     def is_active(self):
         return  self.state == "ACCEPTED"
-
-
     @cached_property
     def is_assigned(self):
         for application in self.applications.all():
