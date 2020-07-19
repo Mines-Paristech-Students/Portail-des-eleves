@@ -5,13 +5,14 @@ import { queryCache, useMutation } from "react-query";
 import { api, useBetterQuery } from "../../../../services/apiService";
 import { AxiosError } from "axios";
 import { PageTitle } from "../../../utils/PageTitle";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { Event } from "../../../../models/associations/event";
 import { LoadingAssociation } from "../../Loading";
 import { Error } from "../../../utils/Error";
 import { MutateEventForm } from "../MutateEventForm";
 import { ForbiddenError } from "../../../utils/ErrorPage";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationEditEvent = ({
   association,
@@ -82,13 +83,7 @@ export const AssociationEditEvent = ({
     return (
       <>
         <PageTitle>
-          <Link
-            className="text-decoration-none"
-            to={`/associations/${association.id}/evenements`}
-            style={{ verticalAlign: "middle" }}
-          >
-            <i className="fe fe-arrow-left" />
-          </Link>{" "}
+          <ArrowLink to={`/associations/${association.id}/evenements`} />
           Modifier l’événement
         </PageTitle>
         <Card className="text-left">

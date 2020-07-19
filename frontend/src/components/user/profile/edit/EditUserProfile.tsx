@@ -20,6 +20,7 @@ import { AxiosError } from "axios";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import { SelectUserFormGroup } from "../../../utils/forms/SelectUserFormGroup";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 // The items in the select.
 const currentAcademicYearItems = [
@@ -220,13 +221,7 @@ export const EditUserProfile = () => {
     return (
       <Container className="mt-5">
         <PageTitle>
-          <Link
-            className="text-decoration-none"
-            to={`/profils/${user ? user.id : ""}`}
-            style={{ verticalAlign: "middle" }}
-          >
-            <i className="fe fe-arrow-left" />
-          </Link>{" "}
+          <ArrowLink to={`/profils/${user ? user.id : ""}`} />
           Modifier votre profil
         </PageTitle>
 

@@ -3,10 +3,11 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 import { Error } from "../../utils/Error";
 import { Product } from "../../../models/associations/marketplace";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ProductForm } from "./ProductForm";
 import { PageTitle } from "../../utils/PageTitle";
 import { Container } from "react-bootstrap";
+import { ArrowLink } from "../../utils/ArrowLink";
 
 export const AssociationMarketplaceProductEdit = ({ association }) => {
   const { productId } = useParams<{ productId: string }>();
@@ -24,12 +25,7 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
   ) : product ? (
     <Container>
       <PageTitle>
-        <Link
-          to={`/associations/${marketplaceId}/magasin/produits`}
-          className={"text-primary"}
-        >
-          <i className={"fe fe-arrow-left"} />
-        </Link>
+        <ArrowLink to={`/associations/${marketplaceId}/magasin/produits`} />
         Modifier le produit
       </PageTitle>
       <ProductForm association={association} product={product} />
