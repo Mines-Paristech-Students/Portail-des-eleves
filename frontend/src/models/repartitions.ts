@@ -10,9 +10,7 @@ export interface Campaign {
   id: string;
   name: string;
   manager?: User;
-  status: CampaignStatus;
-  groupsNumber?: number;
-  studentsNumber?: number;
+  status?: CampaignStatus;
 }
 
 export interface Category {

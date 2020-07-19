@@ -10,9 +10,6 @@ export const RepartitionsSidebar = ({ actions }: { actions?: any }) => (
     <SidebarItem icon="plus" to="/repartitions/NewRepartition">
       Nouvelle répartition
     </SidebarItem>
-    <SidebarItem icon="inbox" to="/repartitions/OldRepartitions">
-      Anciennes
-    </SidebarItem>
     {actions && (
       <>
         <SidebarSeparator /> {actions}

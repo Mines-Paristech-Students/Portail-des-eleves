@@ -12,11 +12,7 @@ import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import { UserContext } from "../../services/authService";
 
-const [
-  repartitionTitlePlaceholder,
-  groupsNumberPlaceholder,
-  studentsNumberPlaceholder,
-] = ["The Répartition", "2", "12"];
+const [repartitionTitlePlaceholder] = ["The Répartition"];
 
 export const NewRepartition = ({ children }: { children?: any }) => {
   // const user = useContext(UserContext);
@@ -25,10 +21,6 @@ export const NewRepartition = ({ children }: { children?: any }) => {
     let data = {
       id: Math.random(),
       name: values.repartitionTitle,
-      status: "OPEN",
-      //   manager: user,
-      groupsNumber: values.groupsNumber,
-      studentsNumber: values.studentsNumber,
     };
 
     create(
@@ -55,17 +47,9 @@ export const NewRepartition = ({ children }: { children?: any }) => {
           <Formik
             initialValues={{
               repartitionTitle: "",
-              groupsNumber: "",
-              studentsNumber: "",
             }}
             validationSchema={Yup.object({
               repartitionTitle: Yup.string().required("Ce champ est requis."),
-              groupsNumber: Yup.string()
-                .max(2)
-                .required("Ce champ est requis."),
-              studentsNumber: Yup.string()
-                .max(3)
-                .required("Ce champ est requis."),
             })}
             onSubmit={onSubmit}
           >
@@ -85,18 +69,6 @@ export const NewRepartition = ({ children }: { children?: any }) => {
                     name="repartitionTitle"
                     type="text"
                     placeholder={repartitionTitlePlaceholder}
-                  />
-                  <TextFormGroup
-                    label="Nombre de groupes"
-                    name="groupsNumber"
-                    type="number"
-                    placeholder={groupsNumberPlaceholder}
-                  />
-                  <TextFormGroup
-                    label="Nombre d'élèves"
-                    name="studentsNumber"
-                    type="number"
-                    placeholder={studentsNumberPlaceholder}
                   />
                 </Card.Body>
                 <Card.Footer className="text-right">

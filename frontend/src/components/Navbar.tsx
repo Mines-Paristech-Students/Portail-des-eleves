@@ -24,7 +24,7 @@ import { Size } from "../utils/size";
 const links = [
   { icon: "home", url: "/", label: "Accueil" },
   { icon: "user", url: "/trombi", label: "Trombi" },
-  { icon: "zap", url: "/repartitions", label: "Repartitions" },
+  { icon: "compass", url: "/repartitionView", label: "Répartitions" },
   { icon: "zap", url: "/associations", label: "Associations" },
   { icon: "check-square", url: "/sondages", label: "Sondages" },
 ];

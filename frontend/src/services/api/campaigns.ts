@@ -26,9 +26,8 @@ export const campaigns = {
     data: {
       id: number;
       name: string;
-      status: string;
-      groupsNumber: number;
-      studentsNumber: number;
-    }; //;students: User[]; propositions: { proposition: Proposition }[]
+    };
   }) => apiService.post("/repartitions/campaigns/", data),
+  edit: (campaign: Pick<Campaign, "id" | "name">) =>
+    apiService.patch(`/repartitions/campaigns/${campaign.id}/`, campaign),
 };

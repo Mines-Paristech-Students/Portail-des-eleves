@@ -1,8 +1,13 @@
 import { Homepage } from "../components/Homepage";
 import { AssociationList } from "../components/associations/List";
+import { RepartitionList } from "../components/repartitions/List";
 import { routes as usersRoutes } from "./users";
 import { routes as pollsRoutes } from "./polls";
-import { routes as repartitionsRoutes } from "./repartitions";
+import { routes as repartitionViewRoutes } from "./repartitions";
+import {
+  compileRepartitionRoutes,
+  routes as repartitionRoutes,
+} from "./repartitionView";
 import {
   compileAssociationRoutes,
   routes as associationsRoutes,
@@ -23,6 +28,7 @@ export type Route = {
 export const routes = [
   { path: "/", component: Homepage, exact: true },
   { path: "/associations", component: AssociationList, exact: true },
+  { path: "/repartitionView", component: RepartitionList, exact: true },
 ]
   .concat(
     addRoutePrefix(
@@ -30,6 +36,12 @@ export const routes = [
       compileAssociationRoutes(associationsRoutes)
     )
   )
+  .concat(
+    addRoutePrefix(
+      "/repartitionView",
+      compileRepartitionRoutes(repartitionRoutes)
+    )
+  )
+  .concat(addRoutePrefix("/repartitions", repartitionViewRoutes))
   .concat(addRoutePrefix("/sondages", pollsRoutes))
-  .concat(addRoutePrefix("/repartitions", repartitionsRoutes))
   .concat(usersRoutes);
