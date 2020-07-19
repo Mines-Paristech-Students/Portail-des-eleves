@@ -52,7 +52,7 @@ export const AssociationFilesystemList = ({ association }) => {
         render={(medias, paginationControl) => (
           <>
             <div className="d-flex align-items-center">
-              <PageTitle >Fichiers</PageTitle>
+              <PageTitle>Fichiers</PageTitle>
               {association.myRole.permissions?.includes("media") && (
                 <Link
                   to={`/associations/${association.id}/fichiers/televerser`}

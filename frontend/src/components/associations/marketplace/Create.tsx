@@ -22,7 +22,7 @@ export const AssociationMarketplaceProductCreate = ({ association }) => {
   return (
     <Container>
       <PageTitle>
-        <ArrowLink to={`/associations/${association.id}/magasin/produits`}/>
+        <ArrowLink to={`/associations/${association.id}/magasin/produits`} />
         Ajouter un produit
       </PageTitle>
       <ProductForm association={association} product={product} />
