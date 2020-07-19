@@ -12,7 +12,7 @@
     description: "Je suis en difficultés"
     state: "ACCEPTED"
 
-- model: tutorings.ApplyTutor
+- model: tutorings.TutorApplication
   pk: 1
   fields:
     tutoring: 1
@@ -35,7 +35,7 @@
     description: "Je veux intégrer les Mines"
 
 
-- model: tutorings.ApplyTutor
+- model: tutorings.TutorApplication
   pk: 2
   fields:
     user: "17simple"
@@ -58,7 +58,7 @@
     description: "Je veux intégrer les Mines"
 
 
-- model: tutorings.ApplyTutor
+- model: tutorings.TutorApplication
   pk: 3
   fields:
     user: "17simple"
@@ -66,7 +66,7 @@
     paps_time : "2020-06-01T20:00:20+00:00"
     state : "REVIEWING"
 
-- model: tutorings.ApplyTutor
+- model: tutorings.TutorApplication
   pk: 4
   fields:
     user: "17admin"

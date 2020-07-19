@@ -4,13 +4,11 @@ from rest_framework import exceptions, generics, response, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
-from tutorings.models import Tutoring, ApplyTutor
+from tutorings.models import Tutoring, TutorApplication
 from tutorings.serializers import WriteTutoringSerializer, AdminTutoringSerializer, ApplyTutorSerializer, \
     ReadOnlyTutoringSerializer, AdminApplyTutorSerializer
 from tutorings.permissions import TutoringPermission, ApplyTutorPermission, ApplicationPermission
 
-
-# Create your views here.
 
 class TutoringViewSet(viewsets.ModelViewSet):
     queryset = Tutoring.objects.all()
@@ -18,7 +16,6 @@ class TutoringViewSet(viewsets.ModelViewSet):
     permission_classes = (TutoringPermission,)
 
     def get_queryset(self):
-
         if self.request.user.is_staff:
             # Give access to all the tutorings.
             return Tutoring.objects.all()
@@ -46,7 +43,7 @@ class TutoringViewSet(viewsets.ModelViewSet):
 
 
 class CreateApplyTutorView(generics.CreateAPIView):
-    queryset = ApplyTutor.objects.all()
+    queryset = TutorApplication.objects.all()
     serializer_class = ApplyTutorSerializer
     permission_classes = (ApplyTutorPermission,)
 
@@ -110,12 +107,10 @@ class OfferTutoringView(generics.CreateAPIView):
     authentication_classes = ()
 
 
-
-
 class AssignTutoringView(generics.UpdateAPIView):
-    queryset = ApplyTutor.objects.all()
+    queryset = TutorApplication.objects.all()
     serializer_class = AdminApplyTutorSerializer
-    permission_classes = (ApplicationPermission,)
+    permission_classes = (TutoringPermission,)
 
     def get_tutoring_or_404(self, **kwargs):
         request_tutoring = Tutoring.objects.filter(pk=kwargs.get("tutoring_pk"))
@@ -126,7 +121,7 @@ class AssignTutoringView(generics.UpdateAPIView):
         return request_tutoring[0]
 
     def update(self, request, *args, **kwargs):
-        tutoring = self.get_tutoring_or_404( **kwargs)
+        tutoring = self.get_tutoring_or_404(**kwargs)
 
         if request.user.is_staff:
             serializer = self.get_serializer(data=request.data, partial=True)

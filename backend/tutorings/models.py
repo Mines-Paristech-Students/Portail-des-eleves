@@ -42,10 +42,8 @@ class Tutoring(models.Model):
 
     @cached_property
     def is_active(self):
-        if self.state != "ACCEPTED":
-            return False
-        else:
-            return True
+        return  self.state == "ACCEPTED"
+
 
     @cached_property
     def is_assigned(self):
@@ -55,7 +53,7 @@ class Tutoring(models.Model):
         return False
 
 
-class ApplyTutor(models.Model):
+class TutorApplication(models.Model):
     tutoring = models.ForeignKey(Tutoring, related_name="applications", verbose_name="paps", on_delete=models.CASCADE)
 
     # The user who papsed

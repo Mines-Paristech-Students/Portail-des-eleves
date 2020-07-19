@@ -2,11 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from tutorings.models import Tutoring, ApplyTutor
+from tutorings.models import Tutoring, TutorApplication
 
 
 class ApplyTutorInline(admin.TabularInline):
-    model = ApplyTutor
+    model = TutorApplication
 
 
 @admin.register(Tutoring)

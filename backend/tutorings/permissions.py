@@ -45,7 +45,7 @@ class ApplyTutorPermission(permissions.BasePermission):
 
 
 class ApplicationPermission(permissions.BasePermission):
-    message = "You are not allowed to view the results of this poll."
+    message = "You are not allowed to apply."
 
     def has_permission(self, request, view):
         return request.user.is_staff

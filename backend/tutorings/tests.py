@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 
 from backend.tests_utils import WeakAuthenticationBaseTestCase
-from tutorings.models import Tutoring, ApplyTutor
+from tutorings.models import Tutoring, TutorApplication
 
 
 class TutoringTestCase(WeakAuthenticationBaseTestCase):
@@ -23,7 +23,7 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         return self.get(self.endpoint_retrieve(pk))
 
     def endpoint_create(self):
-        return "/tutorings/tutoringsoffer/"
+        return "/tutorings/offer/"
 
     def create(self, data=None, format="json"):
         return self.post(self.endpoint_create(), data, format)
@@ -129,7 +129,7 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
 
         for tutoring in Tutoring.objects.exclude(state="ACCEPTED"):
             res = self.retrieve(tutoring.id)
-            self.assertStatusCodeIn(res, [403, 404])
+            self.assertStatusCode(res, 404)
 
     def test_if_admin_then_can_retrieve_all_fields(self):
         self.login("17admin")
@@ -181,7 +181,7 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
     )
 
     def check_last_tutoring(self, data):
-        tutoring = Tutoring.objects.last()
+        tutoring = Tutoring.objects.order_by("id").last()
         now = datetime.now(tz=timezone.utc)
         self.assertEqual(tutoring.name, data["name"])
         self.assertEqual(tutoring.contact, data["contact"])
@@ -282,6 +282,7 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
             self.assertEqual(updated_tutoring.state, self.update_data_admin["state"])
             self.assertEqual(updated_tutoring.admin_comment, self.update_data_admin["admin_comment"]
                              )
+            self.assertEqual(updated_tutoring.user.id, self.update_data_admin["user"])
 
     ###########
     # DESTROY #
@@ -322,11 +323,17 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
 
     def test_if_admin_then_can_assign_tutoring(self):
         self.login("17admin")
-        for application in ApplyTutor.objects.filter(tutoring__state="ACCEPTED").exclude(
-                tutoring__applications__state__contains = "ACCEPTED"):
-            res = self.applicant(application.id, data = {"state": "ACCEPTED"})
-            print(application.user)
-            print(res.data)
+
+        for application in TutorApplication.objects.filter(tutoring__state="ACCEPTED"):
+            if application in TutorApplication.objects.exclude(tutoring__applications__state__contains="ACCEPTED"):
+                res = self.applicant(application.id, data={"state": "ACCEPTED"})
+                res2 = self.update(application.tutoring.id, data = {"user" : application.user.id})
+                self.assertStatusCode(res, 200)
+                self.assertStatusCode(res2,200)
+                print(res.data)
+                print(res2.data)
+                print(application.tutoring.user)
+
 
     ##################
     # BUSINESS LOGIC #
