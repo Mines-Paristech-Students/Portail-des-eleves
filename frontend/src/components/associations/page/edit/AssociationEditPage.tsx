@@ -87,9 +87,13 @@ export const AssociationEditPage = ({
       <Container>
         <PageTitle>
           <ArrowLink
-            to={`/associations/${association.id}/pages${
-              page.pageType === "NEWS" ? "" : "/" + page.id
-            }`}
+            to={
+              page.title === "Accueil"
+                ? `/associations/${association.id}`
+                : `/associations/${association.id}/pages${
+                    page.pageType === "NEWS" ? "" : "/" + page.id
+                  }`
+            }
           />
           Modifier une page
         </PageTitle>
