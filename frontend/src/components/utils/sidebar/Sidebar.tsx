@@ -10,7 +10,7 @@ import { PageTitle } from "../PageTitle";
  * @param to the URL of the link.
  * @param children the children to render for the link.
  * @param exact defaults to `true`. If `true`, the link will be marked as `active` only if the location equals `to`.
- * Otherwise, it just needs to start with `to`.
+ * Otherwise, it needs to equal `to` or to start with `${to}/` or `${to}#`.
  */
 export const SidebarItem = ({ icon, to, children, exact = true }) => {
   const location = useLocation();
@@ -19,8 +19,10 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
   return (
     <Link
       className={`list-group-item list-group-item-action d-flex align-items-center ${
-        (exact && location.pathname === to) ||
-        (!exact && location.pathname.startsWith(to))
+        location.pathname === to ||
+        (!exact &&
+          (location.pathname.startsWith(`${to}/`) ||
+            location.pathname.startsWith(`${to}#`)))
           ? "active"
           : ""
       }`}

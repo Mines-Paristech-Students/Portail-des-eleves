@@ -2,11 +2,6 @@ import { Tag } from "../tag";
 import { User } from "../user";
 import { Association } from "./association";
 
-export enum PageType {
-  News = "NEWS",
-  Static = "STATIC",
-}
-
 export interface Page {
   id?: string;
   authors: User[];
@@ -16,5 +11,5 @@ export interface Page {
   association: Association;
   title: string;
   text: string;
-  pageType: PageType;
+  pageType: "NEWS" | "STATIC";
 }
