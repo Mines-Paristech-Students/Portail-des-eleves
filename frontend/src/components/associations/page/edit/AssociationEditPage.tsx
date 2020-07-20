@@ -10,6 +10,8 @@ import { MutatePageForm } from "../MutatePageForm";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import Container from "react-bootstrap/Container";
+import { PageTitle } from "../../../utils/PageTitle";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationEditPage = ({
   association,
@@ -24,7 +26,7 @@ export const AssociationEditPage = ({
   const { pageId } = useParams<{ pageId: string }>();
 
   const { data: page, status, error } = useBetterQuery<Page>(
-    ["page.get", pageId],
+    ["pages.get", pageId],
     api.pages.get
   );
 
@@ -44,7 +46,10 @@ export const AssociationEditPage = ({
             ? "Détails : " +
               (error.response.status === 403
                 ? "vous n’avez pas le droit de modifier cette page."
-                : error.response.data.detail)
+                : error.response.status === 400 &&
+                  error.response.data.nonFieldErrors
+                ? "une page avec ce nom existe déjà."
+                : JSON.stringify(error.response.data))
             : ""
         }`
       );
@@ -57,7 +62,7 @@ export const AssociationEditPage = ({
       sendSuccessToast("Page supprimée.");
       return queryCache
         .invalidateQueries("pages.list")
-        .then(() => history.push(`/associations/${association.id}`));
+        .then(() => history.push(`/associations/${association.id}/pages`));
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -79,12 +84,21 @@ export const AssociationEditPage = ({
     return <Error detail={`Une erreur est survenue : ${error}`} />;
   else if (page)
     return (
-      <Container className="mt-4">
+      <Container>
+        <PageTitle>
+          <ArrowLink
+            to={`/associations/${association.id}/pages${
+              page.pageType === "NEWS" ? "" : "/" + page.id
+            }`}
+          />
+          Modifier une page
+        </PageTitle>
+
         <MutatePageForm
-          title="Modifier une page"
           initialValues={{
             title: page.title,
             text: page.text,
+            pageType: page.pageType,
           }}
           onSubmit={(values, { setSubmitting }) =>
             edit(

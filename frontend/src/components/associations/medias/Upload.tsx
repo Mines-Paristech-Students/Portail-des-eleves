@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import { PageTitle } from "../../utils/PageTitle";
-import { Link } from "react-router-dom";
 import { api } from "../../../services/apiService";
 import { TagAdder } from "../../utils/tags/TagAdder";
 import { AxiosError } from "axios";
@@ -11,6 +10,7 @@ import { FileUploadError } from "./UploadStates/Error";
 import { FileUpload } from "./UploadStates/Uploading";
 import { Association } from "../../../models/associations/association";
 import { Media } from "../../../models/associations/media";
+import { ArrowLink } from "../../utils/ArrowLink";
 
 enum UploadState {
   Uploading,
@@ -21,12 +21,7 @@ enum UploadState {
 export const AssociationFilesystemUpload = ({ association }) => (
   <>
     <PageTitle>
-      <Link
-        to={`/associations/${association.id}/fichiers`}
-        className={"text-primary"}
-      >
-        <i className={"fe fe-arrow-left"} />
-      </Link>
+      <ArrowLink to={`/associations/${association.id}/fichiers`} />
       Envoi de fichiers
     </PageTitle>
     <UploadForm association={association} />

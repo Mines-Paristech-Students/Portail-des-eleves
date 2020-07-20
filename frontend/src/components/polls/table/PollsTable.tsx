@@ -98,7 +98,7 @@ export const PollsTable = ({
                 poll={editPoll}
                 adminVersion={adminVersion}
               />
-              <Table columns={columns} data={polls} />
+              <Table columns={columns} data={polls} borderTop={false} />
               {paginationControl}
             </>
           )}
