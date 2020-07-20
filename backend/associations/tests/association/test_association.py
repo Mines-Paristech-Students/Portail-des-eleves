@@ -12,10 +12,8 @@ class AssociationTestCase(BaseAssociationTestCase):
         "logo",
         "is_hidden",
         "rank",
-        "marketplace",
-        "library",
-        "pages",
         "my_role",
+        "enabled_modules",
     }
 
     ########
@@ -52,7 +50,6 @@ class AssociationTestCase(BaseAssociationTestCase):
     ##########
 
     create_association_data = {
-        "id": "bda",
         "name": "Bureau des Arts",
         "logo": None,
         "is_hidden": False,
@@ -64,21 +61,15 @@ class AssociationTestCase(BaseAssociationTestCase):
             self.login(user)
             res = self.create(self.create_association_data)
             self.assertStatusCode(res, 403)
-            self.assertFalse(
-                Association.objects.filter(
-                    pk=self.create_association_data["id"]
-                ).exists()
-            )
+            self.assertFalse(Association.objects.filter(pk="bureau-des-arts").exists())
 
     def test_if_global_admin_then_can_create(self):
         self.login("17admin")
         res = self.create(self.create_association_data)
         self.assertStatusCode(res, 201)
 
-        self.assertTrue(
-            Association.objects.filter(pk=self.create_association_data["id"]).exists()
-        )
-        association = Association.objects.get(pk=self.create_association_data["id"])
+        self.assertTrue(Association.objects.filter(pk="bureau-des-arts").exists())
+        association = Association.objects.get(pk="bureau-des-arts")
         self.assertEqual(association.name, self.create_association_data["name"])
         self.assertFalse(association.logo)
         self.assertEqual(
@@ -90,7 +81,6 @@ class AssociationTestCase(BaseAssociationTestCase):
     # UPDATE #
     ##########
     update_association_data = {
-        "id": "bds",
         "name": "Bureau des Sports",
         "logo": None,
         "is_hidden": True,
@@ -109,10 +99,8 @@ class AssociationTestCase(BaseAssociationTestCase):
         res = self.update("pdm", self.update_association_data)
         self.assertStatusCode(res, 200)
 
-        self.assertTrue(
-            Association.objects.filter(pk=self.update_association_data["id"]).exists()
-        )
-        association = Association.objects.get(pk=self.update_association_data["id"])
+        self.assertTrue(Association.objects.filter(pk="pdm").exists())
+        association = Association.objects.get(pk="pdm")
         self.assertEqual(association.name, self.update_association_data["name"])
         self.assertFalse(association.logo)
         self.assertEqual(

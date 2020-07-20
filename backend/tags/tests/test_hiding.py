@@ -399,30 +399,6 @@ class HidingTestCase(TagsBaseTestCase):
         self.assertNotIn("media", response.data, msg=msg)
         self.assertNotIn("medias", response.data, msg=msg)
 
-    def test_hiding_nested_pages_from_association(self):
-        # Can see all the pages in the association.
-        self.login("17simple")
-
-        for association in Association.objects.all():
-            response = self.get(f"/associations/associations/{association.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.data["pages"]), association.pages.count())
-
-        # Cannot see the hidden pages in the association.
-        self.switch_17simple_to_first_year()
-
-        # Use an association which is not hidden.
-        for association in Association.objects.exclude(tags__is_hidden=True):
-            response = self.get(f"/associations/associations/{association.id}/")
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(
-                len(response.data["pages"]),
-                association.pages.exclude(tags__is_hidden=True).count(),
-            )
-
-            for page in response.data["pages"]:
-                self.assertNotIn("hidden", page["title"])
-
     def test_hiding_nested_products_from_marketplace(self):
         # Can see all the products in the marketplace.
         self.login("17simple")
