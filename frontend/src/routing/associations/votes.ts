@@ -11,14 +11,14 @@ export const routes: AssociationRoute[] = [
     defaultLayout: true,
   },
   {
-    path: "/votes/:voteId",
-    component: AssociationViewElection,
+    path: "/votes/nouveau",
+    component: AssociationCreateElection,
     exact: true,
     defaultLayout: true,
   },
   {
-    path: "/votes/nouveau",
-    component: AssociationCreateElection,
+    path: "/votes/:electionId",
+    component: AssociationViewElection,
     exact: true,
     defaultLayout: true,
   },

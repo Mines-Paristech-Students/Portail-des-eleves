@@ -55,7 +55,7 @@ class ElectionVoterSerializer(serializers.ModelSerializer):
 class ElectionChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ("name", "number_of_offline_votes")
+        fields = ("id", "name", "number_of_offline_votes")
 
     def to_representation(self, instance: Choice):
         response = super(ElectionChoiceSerializer, self).to_representation(instance)
@@ -67,12 +67,23 @@ class ElectionChoiceSerializer(serializers.ModelSerializer):
         return response
 
 
-class ElectionSerializer(serializers.ModelSerializer):
+class GetUserVoterMixin:
+    def get_user_voter(self, election):
+        try:
+            return VoterSerializer(
+                election.voters.get(user=self.context["request"].user)
+            ).data
+        except (Voter.DoesNotExist, Voter.MultipleObjectsReturned):
+            return None
+
+
+class ElectionSerializer(serializers.ModelSerializer, GetUserVoterMixin):
     association = serializers.PrimaryKeyRelatedField(
         queryset=Association.objects.all(), read_only=False
     )
     voters = ElectionVoterSerializer(many=True, read_only=False)
     choices = ElectionChoiceSerializer(many=True, read_only=False)
+    user_voter = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Election
@@ -87,6 +98,7 @@ class ElectionSerializer(serializers.ModelSerializer):
             "max_choices_per_ballot",
             "choices",
             "voters",
+            "user_voter",
         )
 
     def is_valid(self, raise_exception=False):

@@ -1,4 +1,5 @@
 from django.db import transaction
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -18,6 +19,7 @@ from associations.serializers.election import (
     VoteSerializer,
 )
 from associations.serializers.election_read_only import ElectionReadOnlySerializer
+from tags.filters import HasHiddenTagFilter
 
 
 class VoterViewSet(viewsets.ModelViewSet):
@@ -129,10 +131,19 @@ class ChoiceViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 
+class ElectionFilter(FilterSet):
+    class Meta:
+        model = Election
+        fields = ("association",)
+
+
 class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
     serializer_class = ElectionReadOnlySerializer
     permission_classes = (ElectionPermission,)
+
+    filter_class = ElectionFilter
+    filter_backends = (DjangoFilterBackend, HasHiddenTagFilter)
 
     def get_serializer_class(self):
         if self.action == "create":

@@ -12,10 +12,30 @@ export const elections = {
           page: page,
         })}`
       )
-    ),
+    ).then((response) => ({
+      ...response,
+      results: response.results.map((election) => ({
+        ...election,
+        startsAt: election.startsAt && new Date(election.startsAt),
+        endsAt: election.endsAt && new Date(election.endsAt),
+      })),
+    })),
 
   get: (electionId) =>
-    unwrap<Election>(apiService.get(`/associations/elections/${electionId}`)),
+    unwrap<Election>(
+      apiService.get(`/associations/elections/${electionId}`)
+    ).then((election) => ({
+      ...election,
+      startsAt: election.startsAt && new Date(election.startsAt),
+      endsAt: election.endsAt && new Date(election.endsAt),
+    })),
+
+  vote: (electionId, choices) =>
+    unwrap<{ choices: string }[]>(
+      apiService.put(`/associations/elections/${electionId}/vote/`, {
+        choices: choices.map((choice) => choice.id),
+      })
+    ),
 
   create: (election) =>
     unwrap<Election>(apiService.post(`/associations/elections/`, election)),
