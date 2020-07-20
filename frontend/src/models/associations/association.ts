@@ -4,8 +4,7 @@ export interface Association {
   id: string;
   name: string;
   logo: string;
-  marketplace_enabled: boolean;
-  library_enabled: boolean;
+  enabledModules: "marketplace" | "library"[];
   rank: number;
   myRole?: {
     id: string;

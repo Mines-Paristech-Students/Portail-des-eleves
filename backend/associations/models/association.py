@@ -47,6 +47,14 @@ class Association(models.Model):
     def library_enabled(self):
         return self.library is not None and self.library.enabled
 
+    @cached_property
+    def enabled_modules(self):
+        return [
+            module
+            for module in ("marketplace", "library")
+            if getattr(self, f"{module}_enabled")
+        ]
+
     def _get_unique_slug(self):
         slug = slugify(self.name)
         unique_slug = slug

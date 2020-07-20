@@ -25,9 +25,7 @@ export const MutateAssociationForm = ({
         .integer("Le rang doit être un nombre entier.")
         .required("Ce champ est requis."),
     })}
-    onSubmit={(values, { resetForm, setSubmitting }) =>
-      onSubmit(values, { resetForm, setSubmitting })
-    }
+    onSubmit={onSubmit}
   >
     <Form>
       <Card.Body>
