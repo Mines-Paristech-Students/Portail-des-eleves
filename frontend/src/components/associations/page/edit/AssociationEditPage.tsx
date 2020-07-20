@@ -11,6 +11,7 @@ import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/PageTitle";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationEditPage = ({
   association,
@@ -84,7 +85,14 @@ export const AssociationEditPage = ({
   else if (page)
     return (
       <Container>
-        <PageTitle>Modifier une page</PageTitle>
+        <PageTitle>
+          <ArrowLink
+            to={`/associations/${association.id}/pages${
+              page.pageType === "NEWS" ? "" : "/" + page.id
+            }`}
+          />
+          Modifier une page
+        </PageTitle>
 
         <MutatePageForm
           initialValues={{
