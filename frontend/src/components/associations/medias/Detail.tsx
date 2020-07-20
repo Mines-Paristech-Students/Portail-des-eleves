@@ -9,6 +9,7 @@ import { Loading } from "../../utils/Loading";
 import { ErrorMessage } from "../../utils/ErrorPage";
 import { formatDate, formatTime } from "../../../utils/format";
 import { isImageMime } from "../../../utils/mime";
+import { ArrowLink } from "../../utils/ArrowLink";
 
 export const AssociationFilesystemDetail = ({ association }) => {
   const { fileId } = useParams<{ fileId: string }>();
@@ -41,12 +42,7 @@ export const AssociationFilesystemDetail = ({ association }) => {
         </div>
       )}
       <PageTitle>
-        <Link
-          to={`/associations/${association.id}/fichiers`}
-          className={"text-primary"}
-        >
-          <i className={"fe fe-arrow-left"} />
-        </Link>
+        <ArrowLink to={`/associations/${association.id}/fichiers`} />
         {media.name}
       </PageTitle>
 

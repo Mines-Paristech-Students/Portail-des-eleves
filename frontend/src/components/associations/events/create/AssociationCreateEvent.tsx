@@ -8,9 +8,9 @@ import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { ToastContext } from "../../../utils/Toast";
 import { AxiosError } from "axios";
-import { Link } from "react-router-dom";
 import { MutateEventForm } from "../MutateEventForm";
 import { ForbiddenError } from "../../../utils/ErrorPage";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationCreateEvent = ({
   association,
@@ -43,12 +43,7 @@ export const AssociationCreateEvent = ({
   return (
     <Container className="mt-5">
       <PageTitle>
-        <Link
-          className="text-decoration-none"
-          to={`/associations/${association.id}/evenements`}
-        >
-          <i className="fe fe-arrow-left" />
-        </Link>{" "}
+        <ArrowLink to={`/associations/${association.id}/evenements`} />
         Créer un événement
       </PageTitle>
       <Card className="text-left">
