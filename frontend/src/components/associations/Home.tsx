@@ -5,11 +5,14 @@ import { api, useBetterPaginatedQuery } from "../../services/apiService";
 import { ErrorMessage } from "../utils/ErrorPage";
 import { Instructions } from "../utils/Instructions";
 import { Link } from "react-router-dom";
-import { AssociationPageCard } from "./page/show/AssociationPageCard";
+import { PageContainer } from "./page/PageContainer";
 
 export const AssociationHome = ({ association }) => {
   const { resolvedData: data, error, status } = useBetterPaginatedQuery<any>(
-    ["association.page.list.homepage", association.id, { title: "Accueil" }],
+    [
+      "association.page.list.homepage",
+      { association_id: association.id, title: "Accueil" },
+    ],
     api.pages.list
   );
 
@@ -27,7 +30,7 @@ export const AssociationHome = ({ association }) => {
         {association.myRole.permissions?.includes("page") ? (
           <>
             Pour définir une page d'accueil,{" "}
-            <Link to={`/associations/${association.id}/pages/nouvelle`}>
+            <Link to={`/associations/${association.id}/pages/creer`}>
               créez une page
             </Link>{" "}
             appelée « Accueil ».
@@ -40,6 +43,6 @@ export const AssociationHome = ({ association }) => {
       </Instructions>
     </Container>
   ) : (
-    <AssociationPageCard association={association} page={data.results[0]} />
+    <PageContainer association={association} page={data.results[0]} />
   );
 };

@@ -22,6 +22,7 @@ import {
   CheckboxField,
   updateStatus,
 } from "../../../../utils/sidebar/CheckboxField";
+import { ArrowLink } from "../../../../utils/ArrowLink";
 
 export const AssociationManageLoans = ({
   association,
@@ -72,6 +73,9 @@ export const AssociationManageLoans = ({
       }
     >
       <PageTitle>
+        <ArrowLink
+          to={`/associations/${association.id}/bibliotheque/gestion`}
+        />
         Gérer les demandes de{" "}
         <span className="font-italic">{loanable.name}</span>
       </PageTitle>

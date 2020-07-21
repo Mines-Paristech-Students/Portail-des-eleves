@@ -7,6 +7,7 @@ import { queryCache, useMutation } from "react-query";
 import { PageTitle } from "../../../utils/PageTitle";
 import Card from "react-bootstrap/Card";
 import { MutateLoanableForm } from "./MutateLoanableForm";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationLoanableCreate = ({
   association,
@@ -31,7 +32,12 @@ export const AssociationLoanableCreate = ({
 
   return (
     <>
-      <PageTitle>Créer un objet</PageTitle>
+      <PageTitle>
+        <ArrowLink
+          to={`/associations/${association.id}/bibliotheque/gestion`}
+        />
+        Créer un objet
+      </PageTitle>
 
       <Card>
         <MutateLoanableForm

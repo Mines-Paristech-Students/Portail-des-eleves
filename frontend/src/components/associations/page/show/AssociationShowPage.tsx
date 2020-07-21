@@ -4,13 +4,12 @@ import { useParams } from "react-router-dom";
 import { LoadingAssociation } from "../../Loading";
 import { Page } from "../../../../models/associations/page";
 import { ErrorMessage } from "../../../utils/ErrorPage";
-import Container from "react-bootstrap/Container";
-import { AssociationPageCard } from "./AssociationPageCard";
+import { PageContainer } from "../PageContainer";
 
 export const AssociationShowPage = ({ association }) => {
   const { pageId } = useParams<{ pageId: string }>();
   const { data: page, status, error } = useBetterQuery<Page>(
-    ["page.get", pageId],
+    ["pages.get", pageId],
     api.pages.get
   );
 
@@ -19,8 +18,6 @@ export const AssociationShowPage = ({ association }) => {
   ) : status === "error" ? (
     <ErrorMessage>{`Une erreur est survenue: ${error}`}</ErrorMessage>
   ) : page ? (
-    <Container className="mt-4">
-      <AssociationPageCard association={association} page={page} />
-    </Container>
+    <PageContainer association={association} page={page} date />
   ) : null;
 };

@@ -11,6 +11,7 @@ import Card from "react-bootstrap/Card";
 import { queryCache, useMutation } from "react-query";
 import { ToastContext } from "../../../utils/Toast";
 import { useHistory } from "react-router-dom";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const AssociationLoanableEdit = ({
   association,
@@ -53,12 +54,14 @@ export const AssociationLoanableEdit = ({
     <Error detail={error} />
   ) : status === "success" && loanable ? (
     <>
-      <PageTitle>Modifier un objet</PageTitle>
+      <PageTitle>
+        <ArrowLink
+          to={`/associations/${association.id}/bibliotheque/gestion`}
+        />
+        Modifier un objet
+      </PageTitle>
 
       <Card>
-        <Card.Header>
-          <Card.Title>Informations sur l’objet</Card.Title>
-        </Card.Header>
         <MutateLoanableForm
           initialValues={{
             name: loanable.name || "",
