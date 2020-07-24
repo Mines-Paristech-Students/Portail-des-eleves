@@ -40,20 +40,26 @@ export const AssociationSidebar = ({ association }) => (
     >
       Fichiers
     </SidebarItem>
-    <SidebarItem
-      icon={"book"}
-      to={`/associations/${association.id}/bibliotheque`}
-      exact={false}
-    >
-      Bibliothèque
-    </SidebarItem>
-    <SidebarItem
-      icon={"shopping-cart"}
-      to={`/associations/${association.id}/magasin`}
-      exact={false}
-    >
-      Magasin
-    </SidebarItem>
+    {(association.myRole?.permissions?.includes("library") ||
+      association.enabledModules.includes("library")) && (
+      <SidebarItem
+        icon={"book"}
+        to={`/associations/${association.id}/bibliotheque`}
+        exact={false}
+      >
+        Bibliothèque
+      </SidebarItem>
+    )}
+    {(association.myRole?.permissions?.includes("marketplace") ||
+      association.enabledModules.includes("marketplace")) && (
+      <SidebarItem
+        icon={"shopping-cart"}
+        to={`/associations/${association.id}/magasin`}
+        exact={false}
+      >
+        Magasin
+      </SidebarItem>
+    )}
     <SidebarItem
       icon={"users"}
       to={`/associations/${association.id}/membres`}

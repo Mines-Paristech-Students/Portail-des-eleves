@@ -5,6 +5,7 @@ import { CourseList } from "../components/courses/List";
 import { FormRouter } from "../components/courses/forms/Route";
 import { CourseRouter } from "../components/courses/Router";
 import { routes as pollsRoutes } from "./polls";
+import { routes as settingsRoutes } from "./settings";
 import {
   compileAssociationRoutes,
   routes as associationsRoutes,
@@ -40,4 +41,5 @@ export const routes = [
     )
   )
   .concat(addRoutePrefix("/sondages", pollsRoutes))
+  .concat(addRoutePrefix("/parametres", settingsRoutes))
   .concat(usersRoutes);
