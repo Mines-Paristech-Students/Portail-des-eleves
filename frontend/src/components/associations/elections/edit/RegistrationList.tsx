@@ -35,7 +35,7 @@ export const RegistrationList = ({ election }) => {
 
   useEffect(() => {
     if (election.voters !== undefined && !initialized) {
-      setUsers(election.voters.map(v => v.user));
+      setUsers(election.voters.map((v) => v.user));
       setInitialized(true);
     }
   }, [election.voters, setUsers, initialized]);

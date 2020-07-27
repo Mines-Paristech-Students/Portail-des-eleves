@@ -51,21 +51,23 @@ export const UserSelector = ({
               {users &&
                 users.map((user) => {
                   const id = getUser(user).id;
-                  return <div
-                    className="col-lg-2 col-sm-3 col-6 p-2"
-                    onClick={() => setUser(user)}
-                    key={id}
-                  >
-                    <UserAvatarCard
-                      userId={id}
-                      className="h-100 cursor-pointer"
-                      link={false}
+                  return (
+                    <div
+                      className="col-lg-2 col-sm-3 col-6 p-2"
+                      onClick={() => setUser(user)}
+                      key={id}
                     >
-                      <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
-                        {id}
-                      </p>
-                    </UserAvatarCard>
-                  </div>
+                      <UserAvatarCard
+                        userId={id}
+                        className="h-100 cursor-pointer"
+                        link={false}
+                      >
+                        <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
+                          {id}
+                        </p>
+                      </UserAvatarCard>
+                    </div>
+                  );
                 })}
             </Row>
             <div className="d-flex justify-content-center mt-4">

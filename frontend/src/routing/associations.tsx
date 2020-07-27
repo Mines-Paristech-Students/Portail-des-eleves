@@ -47,7 +47,7 @@ export const routes: AssociationRoute[] = [
   ...mediasRoutes,
   ...rolesRoutes,
   ...pagesRoutes,
-  ...votesRoutes
+  ...votesRoutes,
 ];
 
 export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>
