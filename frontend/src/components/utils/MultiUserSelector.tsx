@@ -22,6 +22,7 @@ type SelectChoice = {
  *
  * @param onAdd: a callback called when a user is added.
  * @param onRemove: a callback called when a user is removed.
+ * @param editable: can the user add or remove voters.
  * @returns {
     users: the list of currently selected users id.
     setUsers: a function to set the list of all users.
@@ -30,7 +31,8 @@ type SelectChoice = {
  */
 export const useMultiUserSelector = (
   onAdd = (user) => {},
-  onRemove = (user) => {}
+  onRemove = (user) => {},
+  editable = true
 ) => {
   const loggedUser = useContext(UserContext);
 
@@ -87,10 +89,10 @@ export const useMultiUserSelector = (
         setUsers((users) => {
           let newUsers = { ...users };
           response.results.forEach((user) => {
-              newUsers[user.id] = {
-                selected: true,
-                user: user,
-              };
+            newUsers[user.id] = {
+              selected: true,
+              user: user,
+            };
           });
           return newUsers;
         });
@@ -194,67 +196,72 @@ export const useMultiUserSelector = (
       <Loading />
     ) : (
       <Container fluid={true}>
-        <Row className={"border bg-white"} style={{ height: "80vh" }}>
-          <Col md={3} className={"p-0 border-right overflow-auto"}>
-            <Select
-              value={promotion}
-              onChange={(v) => setPromotion(v as SelectChoice)}
-              options={
-                promotions
-                  ? promotions.promotions.map((promotion) => ({
-                      value: promotion,
-                      label: promotion,
-                    }))
-                  : []
-              }
-              placeholder="Filtrer par promotion…"
-              noOptionsMessage={() => "Aucun résultat"}
-              className={"rounded-0 border-bottom"}
-              styles={selectStyles}
-            />
+        <Row
+          className={"border bg-white"}
+          style={editable ? { height: "80vh" } : {}}
+        >
+          {editable && (
+            <Col md={3} className={"p-0 border-right overflow-auto"}>
+              <Select
+                value={promotion}
+                onChange={(v) => setPromotion(v as SelectChoice)}
+                options={
+                  promotions
+                    ? promotions.promotions.map((promotion) => ({
+                        value: promotion,
+                        label: promotion,
+                      }))
+                    : []
+                }
+                placeholder="Filtrer par promotion…"
+                noOptionsMessage={() => "Aucun résultat"}
+                className={"rounded-0 border-bottom"}
+                styles={selectStyles}
+              />
 
-            <DebounceInput
-              className={
-                "form-control rounded-0 border-top-0 border-left-0 border-right-0"
-              }
-              placeholder={"Rechercher quelqu'un..."}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              type="text"
-              debounceTimeout={300}
-              minLength={2}
-            />
+              <DebounceInput
+                className={
+                  "form-control rounded-0 border-top-0 border-left-0 border-right-0"
+                }
+                placeholder={"Rechercher quelqu'un..."}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                type="text"
+                debounceTimeout={300}
+                minLength={2}
+              />
 
-            {unselectedUsers.length > 0 && (
-              <button
-                className={"btn btn-link p-4 m-0"}
-                onClick={() => unselectedUsers.forEach(addUser)}
-              >
-                Tout ajouter
-              </button>
-            )}
-
-            <ul className="list-group list-group-flush">
-              {unselectedUsers.length > 0 ? (
-                unselectedUsers.map((user) => (
-                  <li
-                    className="list-group-item border-bottom"
-                    key={user.id}
-                    onClick={() => addUser(user)}
-                  >
-                    {user.firstName} {user.lastName}
-                  </li>
-                ))
-              ) : (
-                <p className="text-center mt-4 text-muted">
-                  <em>Aucun utilisateur restant</em>
-                </p>
+              {unselectedUsers.length > 0 && (
+                <button
+                  className={"btn btn-link p-4 m-0"}
+                  onClick={() => unselectedUsers.forEach(addUser)}
+                >
+                  Tout ajouter
+                </button>
               )}
-            </ul>
-          </Col>
-          <Col md={9} className={"bg-light overflow-auto"}>
+
+              <ul className="list-group list-group-flush">
+                {unselectedUsers.length > 0 ? (
+                  unselectedUsers.map((user) => (
+                    <li
+                      className="list-group-item border-bottom"
+                      key={user.id}
+                      onClick={() => addUser(user)}
+                    >
+                      {user.firstName} {user.lastName}
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-center mt-4 text-muted">
+                    <em>Aucun utilisateur restant</em>
+                  </p>
+                )}
+              </ul>
+            </Col>
+          )}
+          <Col md={editable ? 9 : 12} className={"bg-light overflow-auto"}>
             <Row className={"pt-2 pr-2"}>
-              {selectedUsers.length > 0 && (
+              {selectedUsers.length > 0 && editable && (
                 <p className={"text-right col col-12"}>
                   <button
                     className="btn btn-link text-danger"
@@ -265,20 +272,22 @@ export const useMultiUserSelector = (
                 </p>
               )}
               {selectedUsers.map((user) => (
-                <Col lg={2} sm={6} key={user.id}>
+                <Col lg={3} sm={6} key={user.id}>
                   <UserAvatarCard
                     userId={user.id}
                     className={"p-2"}
                     size={Size.Large}
                   >
                     <p className="text-muted text-center text-truncate mt-3 mb-0">
-                      <span
-                        className="btn btn-secondary btn-icon rounded-circle"
-                        onClick={() => removeUser(user)}
-                        style={avatarStyle}
-                      >
-                        <i className="fe fe-x" />
-                      </span>
+                      {editable && (
+                        <span
+                          className="btn btn-secondary btn-icon rounded-circle"
+                          onClick={() => removeUser(user)}
+                          style={avatarStyle}
+                        >
+                          <i className="fe fe-x" />
+                        </span>
+                      )}
                       {user.firstName} {user.lastName}
                     </p>
                   </UserAvatarCard>

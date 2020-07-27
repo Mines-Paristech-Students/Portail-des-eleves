@@ -11,8 +11,8 @@ import { Card } from "react-bootstrap";
 import { VoteCard } from "./Vote";
 import { Association } from "../../../../models/associations/association";
 import { UserContext } from "../../../../services/authService";
-import { Administration } from "./Administration";
-import { RegistrationList } from "./RegistrationList";
+import { Administration } from "../edit/Administration";
+import { RegistrationList } from "../edit/RegistrationList";
 
 const offLineColors = [
   "rgba(33,150,243)",
@@ -143,13 +143,6 @@ export const AssociationViewElection = ({
         <VoteCard election={election} />
       )}
 
-      {association.myRole?.permissions.includes("election") && (
-        <>
-          <Administration election={election} />
-          <RegistrationList election={election} />
-        </>
-      )}
-
       {electionStatus === "FINISHED" && (
         <Card>
           <Card.Header>
@@ -165,6 +158,13 @@ export const AssociationViewElection = ({
             )}
           </Card.Body>
         </Card>
+      )}
+
+      {association.myRole?.permissions.includes("election") && (
+        <div className={"mb-5"}>
+          <Administration election={election} />
+          <RegistrationList election={election} />
+        </div>
       )}
     </>
   ) : null;
