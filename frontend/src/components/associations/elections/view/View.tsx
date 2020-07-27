@@ -165,15 +165,16 @@ export const AssociationViewElection = ({
       {association.myRole?.permissions.includes("election") && (
         <div className={"mb-5"}>
           <Administration election={election} />
-          {election.startsAt > new Date() ? (
+          {election.startsAt > new Date() && (
             <RegistrationList election={election} />
-          ) : (
-            new Date() < election.endsAt && (
-              <>
-                <VoterStatus election={election} />
-                <OfflineVotes election={election} />
-              </>
-            )
+          )}{" "}
+          {new Date() < election.startsAt && new Date() < election.endsAt && (
+            <>
+              <VoterStatus election={election} />
+            </>
+          )}
+          {election.startsAt < new Date() && (
+            <OfflineVotes election={election} />
           )}
         </div>
       )}

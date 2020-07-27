@@ -1,8 +1,40 @@
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { toUrlParams } from "../../utils/urlParam";
-import { Election, Voter } from "../../models/associations/election";
+import { Choice, Election, Voter } from "../../models/associations/election";
+
+const voters = {
+  add: (election, userId) =>
+    apiService.post(`/associations/voters/`, {
+      election: election.id,
+      user: userId,
+    }),
+
+  remove: (election, userId) =>
+    apiService.delete(
+      `/associations/voters/destroy_from_user_and_election/${toUrlParams({
+        election: election.id,
+        user: userId,
+      })}`
+    ),
+
+  list: (params = {}) =>
+    unwrap(apiService.get(`/associations/voters/${toUrlParams(params)}`)),
+
+  update: (voter) =>
+    unwrap<Voter>(apiService.patch(`/associations/voters/${voter.id}/`, voter)),
+};
+
+const choices = {
+  update: (choice) =>
+    unwrap<Choice>(
+      apiService.patch(`/associations/choices/${choice.id}/`, choice)
+    ),
+};
 
 export const elections = {
+  voters: voters,
+  choices: choices,
+
   list: (associationId, params = {}, page = 1) =>
     unwrap<PaginatedResponse<Election[]>>(
       apiService.get(
@@ -49,28 +81,4 @@ export const elections = {
     unwrap<Election>(
       apiService.delete(`/associations/elections/${election.id}/`)
     ),
-
-  voters: {
-    add: (election, userId) =>
-      apiService.post(`/associations/voters/`, {
-        election: election.id,
-        user: userId,
-      }),
-
-    remove: (election, userId) =>
-      apiService.delete(
-        `/associations/voters/destroy_from_user_and_election/${toUrlParams({
-          election: election.id,
-          user: userId,
-        })}`
-      ),
-
-    list: (params = {}) =>
-      unwrap(apiService.get(`/associations/voters/${toUrlParams(params)}`)),
-
-    update: (voter) =>
-      unwrap<Voter>(
-        apiService.patch(`/associations/voters/${voter.id}/`, voter)
-      ),
-  },
 };
