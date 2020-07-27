@@ -49,4 +49,20 @@ export const elections = {
     unwrap<Election>(
       apiService.delete(`/associations/elections/${election.id}/`)
     ),
+
+  voters: {
+    add: (election, userId) =>
+      apiService.post(`/associations/voters/`, {
+        election: election.id,
+        user: userId,
+      }),
+
+    remove: (election, userId) =>
+      apiService.delete(
+        `/associations/voters/destroy_from_user_and_election/${toUrlParams({
+          election: election.id,
+          user: userId,
+        })}`
+      ),
+  },
 };

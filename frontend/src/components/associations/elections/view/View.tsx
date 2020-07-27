@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../../services/apiService";
 import { Election } from "../../../../models/associations/election";
 import { Loading } from "../../../utils/Loading";
-import { ErrorPage } from "../../../utils/ErrorPage";
+import { ErrorPage, ForbiddenError } from "../../../utils/ErrorPage";
 import { PageTitle } from "../../../utils/PageTitle";
 import dayjs from "dayjs";
 import Chart from "chart.js";
@@ -11,6 +11,8 @@ import { Card } from "react-bootstrap";
 import { VoteCard } from "./Vote";
 import { Association } from "../../../../models/associations/association";
 import { UserContext } from "../../../../services/authService";
+import { Administration } from "./Administration";
+import { RegistrationList } from "./RegistrationList";
 
 const offLineColors = [
   "rgba(33,150,243)",
@@ -112,9 +114,7 @@ export const AssociationViewElection = ({
   });
 
   return !isUserAllowed ? (
-    <ErrorPage title={"Accès interdit"} errorCode={403}>
-      Vous n'êtes ni voteur ni administrateur de ce vote
-    </ErrorPage>
+    <ForbiddenError />
   ) : status === "loading" ? (
     <Loading />
   ) : status === "error" ? (
@@ -126,22 +126,28 @@ export const AssociationViewElection = ({
       <Card>
         <Card.Header>
           <Card.Title>
-            Statut :{" "}
             {electionStatus === "PLANNED"
-              ? `prévu pour le ${dayjs(election.startsAt).format(
+              ? `Prévu pour le ${dayjs(election.startsAt).format(
                   "DD/MM/YYYY à HH:MM"
                 )}`
               : electionStatus === "FINISHED"
-              ? `terminé le ${dayjs(election.endsAt).format(
+              ? `Terminé le ${dayjs(election.endsAt).format(
                   "DD/MM/YYYY à HH:MM"
                 )}`
-              : "en cours"}
+              : "En cours"}
           </Card.Title>
         </Card.Header>
       </Card>
 
       {election.userVoter && electionStatus === "ACTIVE" && (
         <VoteCard election={election} />
+      )}
+
+      {association.myRole?.permissions.includes("election") && (
+        <>
+          <Administration election={election} />
+          <RegistrationList election={election} />
+        </>
       )}
 
       {electionStatus === "FINISHED" && (

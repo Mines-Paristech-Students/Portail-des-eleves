@@ -6,9 +6,7 @@ import { ToastContext } from "../../../utils/Toast";
 import { queryCache } from "react-query";
 
 export const VoteCard = ({ election }: { election: Election }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
   const [checks, setChecks] = useState<{ choice: Choice; state: boolean }[]>(
     []

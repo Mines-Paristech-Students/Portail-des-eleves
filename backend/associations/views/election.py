@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.http import Http404, HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -80,6 +81,23 @@ class VoterViewSet(viewsets.ModelViewSet):
             raise ValidationError("The voter cannot be deleted anymore.")
 
         instance.delete()
+
+    @action(detail=False, methods=("delete",), permission_classes=(VoterPermission,))
+    def destroy_from_user_and_election(self, request):
+        election_id = request.GET.get("election", "")
+        user_id = request.GET.get("user", "")
+
+        try:
+            election = Election.objects.get(pk=int(election_id))
+            if election.started:
+                raise ValidationError("The voter cannot be deleted anymore.")
+
+            voter = self.get_queryset().get(election_id=election_id, user_id=user_id)
+            self.perform_destroy(voter)
+        except (Election.DoesNotExist, Voter.DoesNotExist):
+            raise Http404("No voter found for this election")
+
+        return Response(status=204)
 
 
 class ChoiceViewSet(viewsets.ModelViewSet):

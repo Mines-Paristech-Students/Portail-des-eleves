@@ -15,7 +15,7 @@ export interface UserVoter {
   user: User;
   status: VoteStatus;
   election: 5;
-};
+}
 
 export interface Election {
   id: string;

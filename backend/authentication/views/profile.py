@@ -14,7 +14,7 @@ from tags.filters import HasHiddenTagFilter
 class ProfileFilter(FilterSet):
     class Meta:
         model = User
-        fields = {"promotion": ["exact", "in"]}
+        fields = {"id": ["exact", "in"], "promotion": ["exact", "in"]}
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
