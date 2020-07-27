@@ -7,11 +7,10 @@ import Card from "react-bootstrap/Card";
 import { Pagination } from "../../utils/Pagination";
 import { api } from "../../../services/apiService";
 import { sortingToApiParameter } from "../../utils/table/sorting";
-import Tooltip from "react-bootstrap/Tooltip";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Association } from "../../../models/associations/association";
+import { OverlayTriggerTooltip } from "../../utils/OverlayTriggerTooltip";
 
 const columnsData = [
   {
@@ -29,26 +28,22 @@ const columnsData = [
     key: "action",
     header: "Action",
     render: (association: Association) => (
-      <OverlayTrigger
-        placement={"bottom"}
-        overlay={<Tooltip id="edit">Modifier l’association</Tooltip>}
-        popperConfig={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8],
-              },
-            },
-          ],
-        }}
-      >
+      <>
+      <OverlayTriggerTooltip tooltip="Modifier l’association">
         <Link to={`/parametres/associations/${association.id}/modifier`}>
           <Button className="btn-icon m-1" variant="outline-primary" size="sm">
             <i className="fe fe-edit-2" />
           </Button>
         </Link>
-      </OverlayTrigger>
+      </OverlayTriggerTooltip>
+              <OverlayTriggerTooltip tooltip="Gérer les administrateurs(trices)">
+        <Link to={`/parametres/associations/${association.id}/administrateurs`}>
+          <Button className="btn-icon m-1" variant="outline-primary" size="sm">
+            <i className="fe fe-users" />
+          </Button>
+        </Link>
+      </OverlayTriggerTooltip>
+        </>
     ),
   },
 ];

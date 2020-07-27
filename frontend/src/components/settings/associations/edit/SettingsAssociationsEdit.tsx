@@ -1,19 +1,25 @@
 import React, { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { ToastContext } from "../../utils/Toast";
-import { api, useBetterQuery } from "../../../services/apiService";
-import { Association } from "../../../models/associations/association";
+import { ToastContext } from "../../../utils/Toast";
+import {
+  api,
+  useBetterPaginatedQuery,
+  useBetterQuery,
+} from "../../../../services/apiService";
+import { Association } from "../../../../models/associations/association";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
-import { LoadingAssociation } from "../../associations/Loading";
-import { Error } from "../../utils/Error";
-import { PageTitle } from "../../utils/PageTitle";
+import { LoadingAssociation } from "../../../associations/Loading";
+import { Error } from "../../../utils/Error";
+import { PageTitle } from "../../../utils/PageTitle";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
-import { SettingsLayout } from "../SettingsLayout";
+import { SettingsLayout } from "../../SettingsLayout";
 import { MutateAssociationForm } from "./MutateAssociationForm";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import { Role } from "../../../../models/associations/role";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const SettingsAssociationsEdit = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -21,10 +27,31 @@ export const SettingsAssociationsEdit = () => {
   const history = useHistory();
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-  const { data: association, error, status } = useBetterQuery<Association>(
+  const {
+    data: association,
+    error: associationError,
+    status: associationStatus,
+  } = useBetterQuery<Association>(
     ["associations.get", { associationId }],
     api.associations.get,
     { refetchOnWindowFocus: false }
+  );
+
+  const {
+    resolvedData: adminRoles,
+    error: adminRolesError,
+    status: adminRolesStatus,
+  } = useBetterPaginatedQuery<any>(
+    [
+      "roles.list",
+      {
+        association: associationId,
+        permission: ["administration"],
+        page_size: 100,
+      },
+      1,
+    ],
+    api.roles.list
   );
 
   const [edit] = useMutation(api.associations.update, {
@@ -66,11 +93,13 @@ export const SettingsAssociationsEdit = () => {
 
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
-  return status === "loading" ? (
+  return associationStatus === "loading" || adminRolesStatus === "loading" ? (
     <LoadingAssociation />
-  ) : status === "error" ? (
-    <Error detail={error} />
-  ) : association ? (
+  ) : associationStatus === "error" ? (
+    <Error detail={associationError} />
+  ) : adminRolesStatus === "error" ? (
+    <Error detail={adminRolesError} />
+  ) : association && adminRoles ? (
     <SettingsLayout>
       <Container>
         <ConfirmDeleteModal
@@ -80,32 +109,30 @@ export const SettingsAssociationsEdit = () => {
           onHide={() => setShowConfirmDeleteModal(false)}
         />
         <PageTitle>
-          <Link
-            className="text-decoration-none"
-            to={`/parametres/associations`}
-            style={{ verticalAlign: "middle" }}
-          >
-            <i className="fe fe-arrow-left" />
-          </Link>{" "}
+          <ArrowLink to={`/parametres/associations`} />
           Modifier l’association
         </PageTitle>
-        <Card className="text-left">
-          <MutateAssociationForm
-            initialValues={association}
-            onSubmit={(values, { setSubmitting }) =>
-              edit(
-                {
-                  associationId: associationId,
-                  data: values,
-                },
-                {
-                  onSettled: setSubmitting(false),
-                }
-              )
-            }
-            onDelete={() => setShowConfirmDeleteModal(true)}
-          />
-        </Card>
+        <MutateAssociationForm
+          initialValues={{
+            ...association,
+            administrators: adminRoles.results.map((role: Role) => ({
+              value: role.user.id,
+              label: `${role.user.firstName} ${role.user.lastName}`,
+            })),
+          }}
+          onSubmit={(values, { setSubmitting }) =>
+            edit(
+              {
+                associationId: associationId,
+                data: values,
+              },
+              {
+                onSettled: setSubmitting(false),
+              }
+            )
+          }
+          onDelete={() => setShowConfirmDeleteModal(true)}
+        />
       </Container>
     </SettingsLayout>
   ) : null;

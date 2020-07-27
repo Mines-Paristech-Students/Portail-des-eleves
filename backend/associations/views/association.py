@@ -25,10 +25,21 @@ class RoleFilter(FilterSet):
     start_date = DateTimeFromToRangeFilter()
     end_date = DateTimeFromToRangeFilter()
     is_active = CharFilter(method="filter_is_active")
+    permission = MultipleChoiceFilter(
+        choices=zip(Role.PERMISSION_NAMES, Role.PERMISSION_NAMES),
+        method="filter_permission",
+    )
 
     class Meta:
         model = Role
-        fields = ("start_date", "end_date", "user", "association", "is_active")
+        fields = (
+            "start_date",
+            "end_date",
+            "user",
+            "association",
+            "is_active",
+            "permission",
+        )
 
     def filter_is_active(self, queryset, _, value):
         condition = Q(start_date__lte=date.today()) & (
@@ -39,6 +50,31 @@ class RoleFilter(FilterSet):
             return queryset.filter(condition)
         else:
             return queryset.exclude(condition)
+
+    def filter_permission(self, queryset, _, permissions_filter):
+        """Filter by permission."""
+
+        # No filter or every filter.
+        if (
+            len(permissions_filter) == 0
+            or len(permissions_filter) == Role.PERMISSION_NAMES
+        ):
+            return queryset
+
+        # Looks like the canonical way to get an "always False" condition:
+        # https://stackoverflow.com/questions/35893867/always-false-q-object
+        condition = Q(pk__in=[])
+
+        for permission_name in Role.PERMISSION_NAMES:
+            if permission_name in permissions_filter:
+                condition |= Q(
+                    **{
+                        f"{permission_name}_permission": True,
+                        "start_date__lt": date.today(),
+                    }
+                ) & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
+
+        return queryset.filter(condition).distinct()
 
 
 class RoleViewSet(viewsets.ModelViewSet):

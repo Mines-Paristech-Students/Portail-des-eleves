@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
-import { PageTitle } from "../../utils/PageTitle";
+import { PageTitle } from "../../../utils/PageTitle";
 import { Link, useHistory } from "react-router-dom";
 import Card from "react-bootstrap/Card";
-import { MutateAssociationForm } from "./MutateAssociationForm";
-import { SettingsLayout } from "../SettingsLayout";
-import { ToastContext } from "../../utils/Toast";
-import { api } from "../../../services/apiService";
+import { MutateAssociationForm } from "../edit/MutateAssociationForm";
+import { SettingsLayout } from "../../SettingsLayout";
+import { ToastContext } from "../../../utils/Toast";
+import { api } from "../../../../services/apiService";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 export const SettingsAssociationsAdd = () => {
   const history = useHistory();
@@ -37,20 +38,14 @@ export const SettingsAssociationsAdd = () => {
     <SettingsLayout>
       <Container>
         <PageTitle>
-          <Link
-            className="text-decoration-none"
-            to={`/parametres/associations`}
-            style={{ verticalAlign: "middle" }}
-          >
-            <i className="fe fe-arrow-left" />
-          </Link>{" "}
-          Créer une association
+          <ArrowLink to={`/parametres/associations`} /> Créer une association
         </PageTitle>
         <Card className="text-left">
           <MutateAssociationForm
             initialValues={{
               name: "",
               rank: 0,
+              administrators: [],
             }}
             onSubmit={(values, { setSubmitting }) =>
               create(values, {

@@ -48,7 +48,7 @@ export type MutateRoleModalValues = {
   startDate: Date;
   endDate: Date | undefined | null;
   endDateEnabled: boolean;
-  permissions: RolePermission[];
+  permissions?: RolePermission[];
 };
 
 /**
@@ -58,6 +58,7 @@ export type MutateRoleModalValues = {
  * @param version choose between "create" and "edit".
  * @param title the title of the modal.
  * @param show indicates whether the modal is displayed or not.
+ * @param permissions indicates whether the modal should allow to edit the permissions.
  * @param initialValues used to populate the form.
  * @param onSubmit called when the Submit button is hit.
  * @param onHide called when the Cancel button or the cross is clicked.
@@ -66,6 +67,7 @@ export const MutateRoleModal = ({
   version,
   title,
   show,
+  permissions=false,
   initialValues,
   onSubmit,
   onHide,
@@ -73,6 +75,7 @@ export const MutateRoleModal = ({
   version: "create" | "edit";
   title: string;
   show: boolean;
+  permissions?: boolean;
   initialValues: MutateRoleModalValues;
   onSubmit: (
     values: MutateRoleModalValues,
@@ -148,13 +151,14 @@ export const MutateRoleModal = ({
               help="Si une date de fin est donnée, les permissions du membre seront automatiquement désactivées après celle-ci."
               disabled={!values.endDateEnabled}
             />
+            {permissions &&
             <SelectFormGroup
               name="permissions"
               selectType="pills"
               type="checkbox"
               label="Permissions"
               items={permissionItems}
-            />
+            />}
           </Modal.Body>
 
           <Modal.Footer>

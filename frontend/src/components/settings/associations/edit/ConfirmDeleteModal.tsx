@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Association } from "../../../models/associations/association";
+import { Association } from "../../../../models/associations/association";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";

@@ -45,6 +45,15 @@ export type RolesListApiParameters = {
   start_date_after?: Date;
   end_date_before?: Date;
   end_date_after?: Date;
+  permission?: (
+    | "administration"
+    | "election"
+    | "event"
+    | "media"
+    | "library"
+    | "marketplace"
+    | "page"
+  )[];
   ordering?: string;
   page_size?: number;
 };
@@ -66,6 +75,7 @@ export const roles = {
           association: parameters.association,
           user: parameters.user,
           is_active: parameters.is_active,
+          permission: parameters.permission,
           ordering: parameters.ordering,
           page_size: parameters.page_size,
           page: page,
