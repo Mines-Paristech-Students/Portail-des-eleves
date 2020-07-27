@@ -13,6 +13,8 @@ import { Association } from "../../../../models/associations/association";
 import { UserContext } from "../../../../services/authService";
 import { Administration } from "../edit/Administration";
 import { RegistrationList } from "../edit/RegistrationList";
+import { OfflineVotes } from "../edit/OfflineVotes";
+import { VoterStatus } from "../edit/VoterStatus";
 
 const offLineColors = [
   "rgba(33,150,243)",
@@ -163,7 +165,16 @@ export const AssociationViewElection = ({
       {association.myRole?.permissions.includes("election") && (
         <div className={"mb-5"}>
           <Administration election={election} />
-          <RegistrationList election={election} />
+          {election.startsAt > new Date() ? (
+            <RegistrationList election={election} />
+          ) : (
+            new Date() < election.endsAt && (
+              <>
+                <VoterStatus election={election} />
+                <OfflineVotes election={election} />
+              </>
+            )
+          )}
         </div>
       )}
     </>

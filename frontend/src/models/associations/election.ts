@@ -30,3 +30,10 @@ export interface Election {
   voters?: { user: User; status: VoteStatus }[];
   userVoter?: UserVoter;
 }
+
+export interface Voter {
+  id: number;
+  user: User;
+  status: VoteStatus;
+  election: number;
+}

@@ -1,6 +1,6 @@
 import { apiService, PaginatedResponse, unwrap } from "../apiService";
 import { toUrlParams } from "../../utils/urlParam";
-import { Election } from "../../models/associations/election";
+import { Election, Voter } from "../../models/associations/election";
 
 export const elections = {
   list: (associationId, params = {}, page = 1) =>
@@ -63,6 +63,14 @@ export const elections = {
           election: election.id,
           user: userId,
         })}`
+      ),
+
+    list: (params = {}) =>
+      unwrap(apiService.get(`/associations/voters/${toUrlParams(params)}`)),
+
+    update: (voter) =>
+      unwrap<Voter>(
+        apiService.patch(`/associations/voters/${voter.id}/`, voter)
       ),
   },
 };

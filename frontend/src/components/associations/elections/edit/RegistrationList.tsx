@@ -30,8 +30,7 @@ export const RegistrationList = ({ election }) => {
 
   const { setUsers, MultiUserSelector } = useMultiUserSelector(
     onAddVoter,
-    onRemoveVoter,
-    election.startsAt > new Date()
+    onRemoveVoter
   );
 
   useEffect(() => {

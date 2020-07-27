@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.http import Http404, HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
@@ -29,6 +29,13 @@ class VoterViewSet(viewsets.ModelViewSet):
     permission_classes = (VoterPermission,)
 
     filter_fields = ("user", "status", "election", "election__association")
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
+    search_fields = ("user__first_name", "user__last_name")
 
     def get_queryset(self):
         """Filter the results according to the user election permission."""
