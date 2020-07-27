@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 import Container from "react-bootstrap/Container";
 import { MutatePageForm } from "../MutatePageForm";
 import { Association } from "../../../../models/associations/association";
+import { PageTitle } from "../../../utils/PageTitle";
 
 export const AssociationCreatePage = ({
   association,
@@ -23,18 +24,22 @@ export const AssociationCreatePage = ({
     onMutate: () => sendInfoToast("Sauvegarde en cours…"),
     onSuccess: () => {
       sendSuccessToast("Page créée.");
-      history.push(`/associations/${association.id}`);
+      history.push(`/associations/${association.id}/pages`);
       return queryCache.invalidateQueries("pages.list");
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
+      console.log(error.response?.data.title);
       sendErrorToast(
         `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
           error.response
             ? "Détails : " +
               (error.response.status === 403
                 ? "vous n’avez pas le droit de créer de page."
-                : error.response.data.detail)
+                : error.response.status === 400 &&
+                  error.response.data.nonFieldErrors
+                ? "une page avec ce nom existe déjà."
+                : JSON.stringify(error.response.data))
             : ""
         }`
       );
@@ -42,10 +47,11 @@ export const AssociationCreatePage = ({
   });
 
   return (
-    <Container className="mt-4">
+    <Container>
+      <PageTitle>Créer une page</PageTitle>
+
       <MutatePageForm
-        title="Modifier une page"
-        initialValues={{}}
+        initialValues={{ title: "", text: "", pageType: "NEWS" }}
         onSubmit={(values, { setSubmitting }) =>
           create(
             { association: association.id, ...values },

@@ -31,4 +31,5 @@ class Page(models.Model):
     )
 
     class Meta:
+        unique_together = ("association", "title")
         ordering = ["-id"]

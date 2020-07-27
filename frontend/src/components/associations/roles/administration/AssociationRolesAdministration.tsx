@@ -183,7 +183,7 @@ export const AssociationRolesAdministration = ({
           <Container className="mt-4">
             <Row className="align-items-center mb-2">
               <Col sm="12" md="10">
-                <PageTitle className="my-0">Gestion des rôles</PageTitle>
+                <PageTitle>Gestion des rôles</PageTitle>
               </Col>
               <Col sm="12" md="2">
                 <Button

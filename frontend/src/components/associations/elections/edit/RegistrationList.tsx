@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMultiUserSelector } from "../../../utils/MultiUserSelector";
 import { api } from "../../../../services/apiService";
 import { ToastContext } from "../../../utils/Toast";
@@ -38,7 +38,7 @@ export const RegistrationList = ({ election }) => {
       setUsers(election.voters.map(v => v.user));
       setInitialized(true);
     }
-  }, [election.voters, setUsers]);
+  }, [election.voters, setUsers, initialized]);
 
   return MultiUserSelector;
 };

@@ -119,6 +119,20 @@ function Navbar() {
                     </NavLink>
                   </li>
                 ))}
+                {user.isStaff && (
+                  <li className="nav-item">
+                    <NavLink
+                      exact={false}
+                      to="/parametres"
+                      className="nav-link"
+                      activeClassName="active"
+                    >
+                      {" "}
+                      <i className="fe fe-settings" />
+                      Paramètres
+                    </NavLink>
+                  </li>
+                )}
               </ul>
             </Col>
           </Row>

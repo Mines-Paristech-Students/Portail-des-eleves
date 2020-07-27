@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { UserSelector } from "../../../utils/UserSelector";
-import { User } from "../../../../models/user";
 import { api } from "../../../../services/apiService";
 import { Modal, Button } from "react-bootstrap";
 import { Voter } from "../../../../models/associations/election";

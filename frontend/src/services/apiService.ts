@@ -8,7 +8,6 @@ import {
 } from "react-query";
 import { events } from "./api/events";
 import { pages } from "./api/pages";
-import { news } from "./api/news";
 import { medias } from "./api/medias";
 import { transactions } from "./api/transactions";
 import { marketplace } from "./api/marketplace";
@@ -48,7 +47,6 @@ export function unwrap<T>(promise): Promise<T> {
 export const api = {
   associations: associations,
   medias: medias,
-  news: news,
   pages: pages,
 
   events: events,
