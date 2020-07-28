@@ -6,12 +6,13 @@ import { UserAvatarCard } from "../../utils/avatar/UserAvatarCard";
 import { Pagination } from "../../utils/Pagination";
 import { PageTitle } from "../../utils/PageTitle";
 import "../../utils/avatar/user_avatar.css";
+import Container from "react-bootstrap/Container";
 
 export const UserSelector = ({ setUser }) => {
   const [searchValue, setSearchValue] = useState("");
 
   return (
-    <>
+    <Container className="mt-5">
       <PageTitle>Comptoir</PageTitle>
       <p className="text-muted text-center">Cliquez pour ouvrir un compte</p>
       <Pagination
@@ -52,6 +53,6 @@ export const UserSelector = ({ setUser }) => {
           </>
         )}
       />
-    </>
+    </Container>
   );
 };

@@ -11,6 +11,7 @@ import { MediaPreviewCard } from "./PreviewCard";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { Instructions } from "../../utils/Instructions";
 import { Card } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
@@ -50,9 +51,9 @@ export const AssociationFilesystemList = ({ association }) => {
         ]}
         apiMethod={api.medias.list}
         render={(medias, paginationControl) => (
-          <>
+          <Container>
             <div className="d-flex align-items-center">
-              <PageTitle className={"mt-6"}>Fichiers</PageTitle>
+              <PageTitle className={"mt-5"}>Fichiers</PageTitle>
               {association.myRole.permissions?.includes("media") && (
                 <Link
                   to={`/associations/${association.id}/fichiers/televerser`}
@@ -100,7 +101,7 @@ export const AssociationFilesystemList = ({ association }) => {
                   <Card.Body>Aucun fichier trouvé</Card.Body>
                 </Card>
               ))}
-          </>
+          </Container>
         )}
       />
     </AssociationLayout>

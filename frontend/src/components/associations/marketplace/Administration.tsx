@@ -14,6 +14,7 @@ import { SidebarSeparator, SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { AssociationLayout } from "../Layout";
+import Container from "react-bootstrap/Container";
 
 export const AssociationMarketplaceProductAdministration = ({
   association,
@@ -43,6 +44,7 @@ export const AssociationMarketplaceProductAdministration = ({
         </>
       }
     >
+      <Container className="mt-4">
       <div className="d-flex align-items-center">
         <PageTitle>Produits</PageTitle>
         <Link
@@ -52,6 +54,7 @@ export const AssociationMarketplaceProductAdministration = ({
           <span className={"fe fe-plus"} /> Ajouter un produit
         </Link>
       </div>
+      </Container>
 
       <Pagination
         apiKey={[

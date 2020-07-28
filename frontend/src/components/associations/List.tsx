@@ -8,7 +8,7 @@ import { Pagination } from "../utils/Pagination";
 import { Logo } from "./Logo";
 
 export const AssociationList = () => (
-  <Container>
+  <Container className="mt-5">
     <PageTitle>Associations</PageTitle>
     <Pagination
       apiKey={["associations.list"]}

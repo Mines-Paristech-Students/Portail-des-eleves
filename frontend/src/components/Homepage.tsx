@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 
 export const Homepage = () => {
   return (
-    <Container>
+    <Container className="mt-5">
       <PageTitle>Homepage</PageTitle>
       {/*<Chat />*/}
       {/*<MultiUserSelector onChange={() => {}} />*/}

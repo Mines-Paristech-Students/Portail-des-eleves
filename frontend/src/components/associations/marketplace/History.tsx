@@ -20,9 +20,11 @@ export const AssociationMarketplaceHistory = ({ association }) => {
   const marketplaceId = association.id;
 
   return (
-    <Container>
-      <div className={"float-right mt-2 mr-3"}>
+    <Container className="mt-5 justify-content-center">
+      <div className={"float-right mt-2  mr-3"}>
+         {/**/}
         <span className="tag align-middle mr-2">
+           {/**/}
           Mon solde : <Balance marketplaceId={marketplaceId} user={user} />
         </span>
         <Link
@@ -34,7 +36,7 @@ export const AssociationMarketplaceHistory = ({ association }) => {
       </div>
       <TransactionHistory marketplaceId={marketplaceId} user={user} />
       <FundingHistory marketplaceId={marketplaceId} user={user} />
-    </Container>
+      </Container>
   );
 };
 

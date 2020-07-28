@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 import { Pagination } from "../../utils/Pagination";
 
 export const FormList = () => (
-  <Container>
+  <Container className="mt-5">
     <PageTitle>Liste des formulaires</PageTitle>
     <Pagination
       apiKey={["api.courses.forms.list"]}

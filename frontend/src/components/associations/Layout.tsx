@@ -21,7 +21,7 @@ export const AssociationLayout = ({
   additionalSidebar?: any;
   children?: any;
 }) => (
-  <Container>
+  <Container className="mt-5">
     <Row>
       <Col md={3}>
         <AssociationSidebar association={association} />

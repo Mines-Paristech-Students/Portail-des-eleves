@@ -56,7 +56,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
         </>
       }
     >
-      <Container>
+      <Container className="mt-4">
         <div className="d-flex align-items-center">
           <PageTitle>Magasin </PageTitle>
           <div className={"ml-auto"}>

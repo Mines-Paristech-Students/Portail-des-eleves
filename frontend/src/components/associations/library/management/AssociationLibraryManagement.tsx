@@ -173,8 +173,9 @@ export const AssociationLibraryManagement = ({
         </>
       }
     >
-      <Container>
+      <Container className="mt-4">
         <div className="d-flex align-items-center">
+            {/**/}
           <PageTitle>Gestion de la bibliothèque</PageTitle>
           <Link
             to={`/associations/${association.id}/bibliotheque/gestion/ajouter`}

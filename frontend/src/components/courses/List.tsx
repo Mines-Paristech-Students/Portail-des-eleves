@@ -15,7 +15,7 @@ export const CourseList = () => (
       <Col md={3}>
         <MainSidebar />
       </Col>
-      <Col md={9}>
+      <Col md={9} className="mt-4">
         <PageTitle>Cours</PageTitle>
         <Pagination
           apiKey={["api.courses.list"]}

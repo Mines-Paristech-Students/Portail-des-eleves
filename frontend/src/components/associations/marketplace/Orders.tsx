@@ -16,6 +16,7 @@ import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { AssociationLayout } from "../Layout";
 import { SidebarUserSearch } from "../../utils/sidebar/SidebarUserSearch";
 import { SidebarStatusSelector } from "../../utils/sidebar/SidebarStatusSelector";
+import Container from "react-bootstrap/Container";
 
 const orderStatus = [
   { value: "ORDERED", label: "Commandé" },
@@ -61,6 +62,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
         </>
       }
     >
+      <Container className="mt-5">
       <PageTitle>Commandes</PageTitle>
 
       <Pagination
@@ -99,6 +101,7 @@ export const AssociationMarketplaceOrders = ({ association }) => {
           </>
         )}
       />
+      </Container>
     </AssociationLayout>
   );
 };
