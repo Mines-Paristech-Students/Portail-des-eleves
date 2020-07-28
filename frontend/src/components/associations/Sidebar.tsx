@@ -42,7 +42,7 @@ export const AssociationSidebar = ({ association }) => (
     </SidebarItem>
     <SidebarItem
       icon={"user-check"}
-      to={`/associations/${association.id}/votes/`}
+      to={`/associations/${association.id}/votes`}
       exact={false}
     >
       Votes

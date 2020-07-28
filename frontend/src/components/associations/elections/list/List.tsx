@@ -42,24 +42,31 @@ export const AssociationListElection = ({ association }) => {
                 }
                 className={"cursor-pointer"}
               >
+                <div
+                  className={`card-status ${
+                    election.endsAt < new Date()
+                      ? "bg-red"
+                      : election.startsAt > new Date()
+                      ? "bg-green"
+                      : "bg-yellow"
+                  }`}
+                />
+
                 <Card.Header>
                   <Card.Title>{election.name}</Card.Title>
                 </Card.Header>
-                {election.endsAt < new Date() ? (
-                  <p className={"card-alert alert alert-danger mb-0"}>
-                    Terminée le{" "}
-                    {dayjs(election.endsAt).format("DD/MM/YYYY à HH:mm")}
-                  </p>
-                ) : election.startsAt > new Date() ? (
-                  <p className={"card-alert alert alert-success mb-0"}>
-                    Commence le{" "}
-                    {dayjs(election.startsAt).format("DD/MM/YYYY à HH:mm")}
-                  </p>
-                ) : (
-                  <p className={"card-alert alert alert-warning mb-0"}>
-                    En cours
-                  </p>
-                )}
+                <Card.Body>
+                  {election.endsAt < new Date()
+                    ? `Terminée le
+                    ${dayjs(election.endsAt).format("DD/MM/YYYY à HH:mm")}`
+                    : election.startsAt > new Date()
+                    ? `Commence le
+                    ${dayjs(election.startsAt).format("DD/MM/YYYY à HH:mm")},
+                    termine le
+                    ${dayjs(election.endsAt).format("DD/MM/YYYY à HH:mm")}`
+                    : `En cours, termine le
+                    ${dayjs(election.endsAt).format("DD/MM/YYYY à HH:mm")}`}
+                </Card.Body>
               </Card>
             ))}
             {paginationControl}

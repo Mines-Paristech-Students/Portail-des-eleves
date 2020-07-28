@@ -83,7 +83,7 @@ export const useMultiUserSelector = (
 
   const onSetSelectedUserIds = (userIds) => {
     api.users
-      .list({ id__in: userIds, page_size: 1000 })
+      .list({ id__in: userIds.join(",p"), page_size: 1000 })
       .then((response) => {
         setUsers((users) => {
           let newUsers = { ...users };

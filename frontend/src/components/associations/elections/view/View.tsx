@@ -15,6 +15,7 @@ import { Administration } from "../edit/Administration";
 import { RegistrationList } from "../edit/RegistrationList";
 import { OfflineVotes } from "../edit/OfflineVotes";
 import { VoterStatus } from "../edit/VoterStatus";
+import { ArrowLink } from "../../../utils/ArrowLink";
 
 const offLineColors = [
   "rgba(33,150,243)",
@@ -123,17 +124,20 @@ export const AssociationViewElection = ({
     <ErrorPage>{error}</ErrorPage>
   ) : election ? (
     <>
-      <PageTitle>{election.name}</PageTitle>
+      <PageTitle>
+        <ArrowLink to={`/associations/${association.id}/votes/`} />
+        {election.name}
+      </PageTitle>
 
       <Card>
         <Card.Header>
           <Card.Title>
             {electionStatus === "PLANNED"
-              ? `Prévu pour le ${dayjs(election.startsAt).format(
+              ? `Prévue pour le ${dayjs(election.startsAt).format(
                   "DD/MM/YYYY à HH:MM"
                 )}`
               : electionStatus === "FINISHED"
-              ? `Terminé le ${dayjs(election.endsAt).format(
+              ? `Terminée le ${dayjs(election.endsAt).format(
                   "DD/MM/YYYY à HH:MM"
                 )}`
               : "En cours"}

@@ -55,7 +55,7 @@ const toUrlParamsAux = (
         ? ""
         : Array.isArray(value)
         ? // Iterate through the array.
-          `${keyPrefix + key}=${value.join(",")}`
+          value.map((v) => `${keyPrefix + key}=${v}`).join("&")
         : typeof value === "object"
         ? // Recursive call with a new prefix.
           toUrlParamsAux(value, keyPrefix + key + "__")

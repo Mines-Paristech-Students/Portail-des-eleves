@@ -1,16 +1,33 @@
 import { Election } from "../../../../models/associations/election";
 import { Card, Col, Row, Button } from "react-bootstrap";
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Formik } from "formik";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import * as Yup from "yup";
 import { DayTimePickerInputFormGroup } from "../../../utils/forms/DayTimePickerInputFormGroup";
+import { queryCache, useMutation } from "react-query";
+import { api } from "../../../../services/apiService";
+import { ToastContext } from "../../../utils/Toast";
 
 export const Administration = ({ election }: { election: Election }) => {
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
+    ToastContext
+  );
+
+  const [save] = useMutation(api.elections.update, {
+    onMutate: () => sendInfoToast("Sauvergarde..."),
+    onSuccess: () => {
+      sendSuccessToast("Sauvegardée !");
+      queryCache.invalidateQueries("election.get");
+    },
+    onError: (err) =>
+      sendErrorToast(`Erreur lors de la sauvegarde: ${err.toString}`),
+  });
+
   return (
     <Formik
       initialValues={election}
-      onSubmit={(values, action) => console.log(values)}
+      onSubmit={(values, action) => save({ ...values, id: election.id })}
       validationSchema={electionSchema}
     >
       <Form>
@@ -45,7 +62,7 @@ export const Administration = ({ election }: { election: Election }) => {
               variant={"success"}
               className={"float-right"}
             >
-              <i className="fe fe-save" /> Enregister
+              <i className="fe fe-save" /> Enregistrer
             </Button>
           </Card.Footer>
         </Card>
