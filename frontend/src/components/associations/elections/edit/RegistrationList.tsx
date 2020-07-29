@@ -10,7 +10,7 @@ export const RegistrationList = ({ election }) => {
   const sendToast = (promise) => {
     promise
       .then(() => {
-        sendSuccessToast("Liste des electeurs sauvegardée");
+        sendSuccessToast("Liste des électeurs sauvegardée");
       })
       .catch((err) => {
         sendErrorToast(
