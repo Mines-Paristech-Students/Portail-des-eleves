@@ -39,7 +39,7 @@ export const Administration = ({ election }: { election: Election }) => {
             <TextFormGroup
               name={"name"}
               label={"Intitulé de l'élection"}
-              placeholder={"Nouvelle éléction"}
+              placeholder={"Nouvelle élection"}
             />
             <Row>
               <Col md={6}>
