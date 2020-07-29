@@ -24,7 +24,7 @@ export const VoteCard = ({ election }: { election: Election }) => {
       election.maxChoicesPerBallot
     ) {
       sendErrorToast(
-        `Sélctionnez ${election.maxChoicesPerBallot} choix maximum`
+        `Sélectionnez ${election.maxChoicesPerBallot} choix maximum`
       );
       return;
     }
