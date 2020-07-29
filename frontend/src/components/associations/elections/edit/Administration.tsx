@@ -21,7 +21,7 @@ export const Administration = ({ election }: { election: Election }) => {
       queryCache.invalidateQueries("election.get");
     },
     onError: (err) =>
-      sendErrorToast(`Erreur lors de la sauvegarde: ${err.toString}`),
+      sendErrorToast(`Erreur lors de la sauvegarde : ${err.toString()}`),
   });
 
   return (
