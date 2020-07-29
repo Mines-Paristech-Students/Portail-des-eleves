@@ -15,7 +15,7 @@ export const Administration = ({ election }: { election: Election }) => {
   );
 
   const [save] = useMutation(api.elections.update, {
-    onMutate: () => sendInfoToast("Sauvergarde..."),
+    onMutate: () => sendInfoToast("Sauvegarde..."),
     onSuccess: () => {
       sendSuccessToast("Sauvegardée !");
       queryCache.invalidateQueries("election.get");
