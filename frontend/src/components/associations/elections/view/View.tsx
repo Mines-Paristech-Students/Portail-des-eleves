@@ -17,7 +17,7 @@ import { OfflineVotes } from "../edit/OfflineVotes";
 import { VoterStatus } from "../edit/VoterStatus";
 import { ArrowLink } from "../../../utils/ArrowLink";
 
-const offLineColors = [
+const offlineColors = [
   "rgba(33,150,243)",
   "rgba(229,57,53)",
   "rgba(124,179,66)",
@@ -30,7 +30,7 @@ const offLineColors = [
   "rgba(229,57,53)",
 ];
 
-const onLineColors = offLineColors.map((c) => c.slice(0, -2) + "0.9)");
+const onlineColors = offlineColors.map((c) => c.slice(0, -2) + "0.9)");
 
 export const AssociationViewElection = ({
   association,
@@ -94,12 +94,12 @@ export const AssociationViewElection = ({
           {
             label: "Votes hors ligne",
             data: election.choices.map((choice) => choice.numberOfOfflineVotes),
-            backgroundColor: offLineColors,
+            backgroundColor: offlineColors,
           },
           {
             label: "Votes en ligne",
             data: election.choices.map((choice) => choice.numberOfOnlineVotes),
-            backgroundColor: onLineColors,
+            backgroundColor: onlineColors,
           },
         ],
       },

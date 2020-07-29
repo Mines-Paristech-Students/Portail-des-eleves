@@ -14,7 +14,7 @@ export interface UserVoter {
   id: number;
   user: User;
   status: VoteStatus;
-  election: 5;
+  election: string;
 }
 
 export interface Election {
