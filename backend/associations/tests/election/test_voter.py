@@ -23,6 +23,11 @@ class VoterTestCase(BaseElectionTestCase):
     def destroy(self, pk):
         return self.delete(f"/associations/voters/{pk}/")
 
+    def destroy_from_user_election_pair(self, election_pk, user_pk):
+        return self.delete(
+            f"/associations/voters/destroy_from_user_and_election/?election={election_pk}&user={user_pk}"
+        )
+
     ##########
     # GLOBAL #
     ##########
@@ -278,6 +283,33 @@ class VoterTestCase(BaseElectionTestCase):
 
         for pk in (0, 10):
             res = self.destroy(pk)
+
+            self.assertEqual(res.status_code, 400, msg=res.data)
+            self.assertTrue(Voter.objects.filter(pk=pk).exists())
+
+    def test_can_delete_for_future_election_from_user_election_pair(self):
+        self.login("17election_pdm")
+        self.assertFalse(Election.objects.get(pk=20).started)
+
+        res = self.destroy_from_user_election_pair(20, "17simple")
+
+        self.assertEqual(res.status_code, 204, msg=res.data)
+        self.assertFalse(Voter.objects.filter(pk=20).exists())
+
+    def test_cannot_delete_other_association_voter_from_user_election_pair(self):
+        self.login("17election_biero")
+        self.assertFalse(Election.objects.get(pk=20).started)
+
+        res = self.destroy_from_user_election_pair(20, "17simple")
+
+        self.assertEqual(res.status_code, 404, msg=res.data)
+        self.assertTrue(Voter.objects.filter(pk=20).exists())
+
+    def test_cannot_delete_for_started_election_from_user_election_pair(self):
+        self.login("17election_biero")
+
+        for pk in (0, 10):
+            res = self.destroy_from_user_election_pair(pk, "17simple")
 
             self.assertEqual(res.status_code, 400, msg=res.data)
             self.assertTrue(Voter.objects.filter(pk=pk).exists())

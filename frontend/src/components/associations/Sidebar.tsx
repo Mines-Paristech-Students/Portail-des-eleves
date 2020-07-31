@@ -40,6 +40,13 @@ export const AssociationSidebar = ({ association }) => (
     >
       Fichiers
     </SidebarItem>
+    <SidebarItem
+      icon={"user-check"}
+      to={`/associations/${association.id}/votes`}
+      exact={false}
+    >
+      Votes
+    </SidebarItem>
     {(association.myRole?.permissions?.includes("library") ||
       association.enabledModules.includes("library")) && (
       <SidebarItem
@@ -77,7 +84,7 @@ export const AssociationSidebar = ({ association }) => (
     )}
     <LibrarySubSidebar association={association} />
     {association.myRole.permissions?.includes("marketplace") && (
-      <MarketSubSidebar association={association} />
+      <MarketSubNavbar association={association} />
     )}
     <PageSubSidebar association={association} />
     <RolesSubSidebar association={association} />
@@ -116,7 +123,7 @@ const LibrarySubSidebar = ({ association }: { association: Association }) => {
   ) : null;
 };
 
-const MarketSubSidebar = ({ association }) => {
+const MarketSubNavbar = ({ association }) => {
   const location = useLocation();
   return location.pathname.startsWith(
     `/associations/${association.id}/magasin`

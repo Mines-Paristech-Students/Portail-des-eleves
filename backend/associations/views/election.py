@@ -1,5 +1,7 @@
 from django.db import transaction
-from rest_framework import status, viewsets
+from django.http import Http404, HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from rest_framework import status, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.response import Response
@@ -18,6 +20,7 @@ from associations.serializers.election import (
     VoteSerializer,
 )
 from associations.serializers.election_read_only import ElectionReadOnlySerializer
+from tags.filters import HasHiddenTagFilter
 
 
 class VoterViewSet(viewsets.ModelViewSet):
@@ -26,6 +29,13 @@ class VoterViewSet(viewsets.ModelViewSet):
     permission_classes = (VoterPermission,)
 
     filter_fields = ("user", "status", "election", "election__association")
+    filter_backends = (
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        HasHiddenTagFilter,
+    )  # SearchFilter is not enabled by default.
+    search_fields = ("user__first_name", "user__last_name")
 
     def get_queryset(self):
         """Filter the results according to the user election permission."""
@@ -79,6 +89,23 @@ class VoterViewSet(viewsets.ModelViewSet):
 
         instance.delete()
 
+    @action(detail=False, methods=("delete",), permission_classes=(VoterPermission,))
+    def destroy_from_user_and_election(self, request):
+        election_id = request.GET.get("election", "")
+        user_id = request.GET.get("user", "")
+
+        try:
+            election = Election.objects.get(pk=int(election_id))
+            if election.started:
+                raise ValidationError("The voter cannot be deleted anymore.")
+
+            voter = self.get_queryset().get(election_id=election_id, user_id=user_id)
+            self.perform_destroy(voter)
+        except (Election.DoesNotExist, Voter.DoesNotExist):
+            raise Http404("No voter found for this election")
+
+        return Response(status=204)
+
 
 class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()
@@ -129,10 +156,19 @@ class ChoiceViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 
+class ElectionFilter(FilterSet):
+    class Meta:
+        model = Election
+        fields = ("association",)
+
+
 class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
     serializer_class = ElectionReadOnlySerializer
     permission_classes = (ElectionPermission,)
+
+    filter_class = ElectionFilter
+    filter_backends = (DjangoFilterBackend, HasHiddenTagFilter)
 
     def get_serializer_class(self):
         if self.action == "create":

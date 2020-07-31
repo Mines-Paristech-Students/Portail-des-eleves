@@ -6,6 +6,7 @@ import { routes as libraryRoutes } from "./associations/library";
 import { routes as marketplaceRoutes } from "./associations/marketplace";
 import { routes as mediasRoutes } from "./associations/medias";
 import { routes as pagesRoutes } from "./associations/pages";
+import { routes as votesRoutes } from "./associations/votes";
 import React from "react";
 import { routes as rolesRoutes } from "./associations/roles";
 import { AssociationBootstrap } from "../components/associations/Bootstrap";
@@ -46,6 +47,7 @@ export const routes: AssociationRoute[] = [
   ...mediasRoutes,
   ...rolesRoutes,
   ...pagesRoutes,
+  ...votesRoutes,
 ];
 
 export const compileAssociationRoutes = (routes: AssociationRoute[]): Route[] =>

@@ -24,6 +24,7 @@ import { courses } from "./api/courses";
 import { roles } from "./api/roles";
 import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
+import { elections } from "./api/elections";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -58,9 +59,11 @@ export const api = {
   transactions: transactions,
   fundings: fundings,
 
-  roles: roles,
-  courses: courses,
+  elections: elections,
 
+  roles: roles,
+
+  courses: courses,
   polls: polls,
 
   tags: tags,
