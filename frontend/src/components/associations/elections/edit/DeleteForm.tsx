@@ -28,7 +28,7 @@ export const DeleteForm = ({ election }) => {
 
   return (
     <Card className={"text-danger mt-5"}>
-      <div className="card-status bg-red"/>
+      <div className="card-status bg-red" />
       <Card.Header>
         <Card.Title>Zone de danger</Card.Title>
       </Card.Header>
@@ -37,7 +37,9 @@ export const DeleteForm = ({ election }) => {
           size={"lg"}
           variant={"outline-danger"}
           onClick={() => {
-            window.confirm("Supprimer l'élection ? Cette action est irréversible") &&
+            window.confirm(
+              "Supprimer l'élection ? Cette action est irréversible"
+            ) &&
               remove(election).then(() => {
                 history.push(`/associations/${election.association}/votes/`);
               });

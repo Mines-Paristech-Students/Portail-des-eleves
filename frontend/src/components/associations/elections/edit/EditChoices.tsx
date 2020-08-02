@@ -62,7 +62,9 @@ export const EditChoices = ({ election }: { election: Election }) => {
               <ChoiceEditForm choice={choice} key={choice.id} />
             ))}
             {choices.count === 0 && (
-              <p className="lead text-center text-muted">Aucun choix pour l'instant</p>
+              <p className="lead text-center text-muted">
+                Aucun choix pour l'instant
+              </p>
             )}
           </>
         ) : null}

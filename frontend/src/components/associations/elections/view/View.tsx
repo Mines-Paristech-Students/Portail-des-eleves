@@ -169,7 +169,7 @@ export const AssociationViewElection = ({
             <OfflineVotes election={election} />
           )}
 
-          <DeleteForm election={election}/>
+          <DeleteForm election={election} />
         </div>
       )}
     </>
