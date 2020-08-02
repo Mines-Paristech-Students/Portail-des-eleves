@@ -9,20 +9,30 @@ import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { ToastContext } from "../../../utils/Toast";
 
-export const Administration = ({ election }: { election: Election }) => {
+export const Administration = ({
+  election,
+  onChange = () => {},
+}: {
+  election: Election;
+  onChange?: (election: Election) => void;
+}) => {
   const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
     ToastContext
   );
 
-  const [save] = useMutation(api.elections.update, {
-    onMutate: () => sendInfoToast("Sauvegarde..."),
-    onSuccess: () => {
-      sendSuccessToast("Sauvegardée !");
-      queryCache.invalidateQueries("election.get");
-    },
-    onError: (err) =>
-      sendErrorToast(`Erreur lors de la sauvegarde : ${err.toString()}`),
-  });
+  const [save] = useMutation(
+    election.id ? api.elections.update : api.elections.create,
+    {
+      onMutate: () => sendInfoToast("Sauvegarde..."),
+      onSuccess: (election) => {
+        sendSuccessToast("Sauvegardée !");
+        queryCache.invalidateQueries("election.get");
+        onChange(election);
+      },
+      onError: (err) =>
+        sendErrorToast(`Erreur lors de la sauvegarde: ${err.toString()}`),
+    }
+  );
 
   return (
     <Formik
@@ -36,12 +46,23 @@ export const Administration = ({ election }: { election: Election }) => {
             <Card.Title>Paramètres</Card.Title>
           </Card.Header>
           <Card.Body>
-            <TextFormGroup
-              name={"name"}
-              label={"Intitulé de l'élection"}
-              placeholder={"Nouvelle élection"}
-            />
             <Row>
+              <Col md={6}>
+                <TextFormGroup
+                  name={"name"}
+                  label={"Intitulé de l'élection"}
+                  placeholder={"Nouvelle élection"}
+                />
+              </Col>
+              <Col md={6}>
+                <TextFormGroup
+                  name={"maxChoicesPerBallot"}
+                  label={"Nombre de choix maximum par votant"}
+                  type={"number"}
+                  className={"text-right"}
+                  placeholder={"1"}
+                />
+              </Col>
               <Col md={6}>
                 <DayTimePickerInputFormGroup
                   name={"startsAt"}
@@ -79,4 +100,8 @@ const electionSchema = Yup.object().shape({
     (startAt, schema) =>
       startAt && schema.min(startAt, "La fin du vote doit être après le début")
   ),
+  maxChoicesPerBallot: Yup.number()
+    .integer("Doit être un nombre entier")
+    .required()
+    .min(1, "Un choix par ballot au minimum"),
 });
