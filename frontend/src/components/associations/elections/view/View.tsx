@@ -19,6 +19,7 @@ import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import { ToastContext } from "../../../utils/Toast";
 import { EditChoices } from "../edit/EditChoices";
+import { DeleteForm } from "../edit/DeleteForm";
 
 const offlineColors = [
   "rgba(33,150,243)",
@@ -167,6 +168,8 @@ export const AssociationViewElection = ({
           {election.startsAt < new Date() && (
             <OfflineVotes election={election} />
           )}
+
+          <DeleteForm election={election}/>
         </div>
       )}
     </>
