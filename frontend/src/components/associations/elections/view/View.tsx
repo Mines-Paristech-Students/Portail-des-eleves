@@ -18,6 +18,7 @@ import { ArrowLink } from "../../../utils/ArrowLink";
 import { queryCache, useMutation } from "react-query";
 import { AxiosError } from "axios";
 import { ToastContext } from "../../../utils/Toast";
+import { EditChoices } from "../edit/EditChoices";
 
 const offlineColors = [
   "rgba(33,150,243)",
@@ -155,7 +156,10 @@ export const AssociationViewElection = ({
         <div className={"mb-5"}>
           <Administration election={election} />
           {new Date() < election.startsAt && (
-            <RegistrationList election={election} />
+            <>
+              <EditChoices election={election} />
+              <RegistrationList election={election} />
+            </>
           )}
           {election.startsAt < new Date() && new Date() < election.endsAt && (
             <VoterStatus election={election} />

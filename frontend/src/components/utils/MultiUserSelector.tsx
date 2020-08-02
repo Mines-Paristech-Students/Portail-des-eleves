@@ -82,7 +82,7 @@ export const useMultiUserSelector = (
   }, [selectedUsers]);
 
   const onSetSelectedUserIds = (userIds) => {
-    if (userIds.length == 0) {
+    if (userIds.length === 0) {
       setUsers((users) => {
         let newUsers = { ...users };
 

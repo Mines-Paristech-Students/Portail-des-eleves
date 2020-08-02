@@ -25,10 +25,19 @@ const voters = {
 };
 
 const choices = {
+  create: (choice) =>
+    unwrap<Choice>(apiService.post(`/associations/choices/`, choice)),
+
   update: (choice) =>
     unwrap<Choice>(
       apiService.patch(`/associations/choices/${choice.id}/`, choice)
     ),
+
+  delete: (choice) =>
+    unwrap<Choice>(apiService.delete(`/associations/choices/${choice.id}/`)),
+
+  list: (params = {}) =>
+    unwrap(apiService.get(`/associations/choices/${toUrlParams(params)}`)),
 };
 
 export const elections = {
