@@ -66,13 +66,12 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 200)
         # Use a list comprehension here to be sure to be crystal clear on which tutorings are effectively listed.
         tutorings = [
-            tutoring
-            for tutoring in Tutoring.objects.all()
-            if tutoring.is_active
+            tutoring for tutoring in Tutoring.objects.all() if tutoring.is_active
         ]
         self.assertEqual(len(tutorings), len(res.data))
         self.assertSetEqual(
-            set(tutoring.id for tutoring in tutorings), set(tutoring["id"] for tutoring in res.data)
+            set(tutoring.id for tutoring in tutorings),
+            set(tutoring["id"] for tutoring in res.data),
         )
 
     def test_if_admin_then_can_list_every_tutoring(self):
@@ -82,7 +81,8 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         tutorings = Tutoring.objects.all()
         self.assertEqual(tutorings.count(), len(res.data))
         self.assertSetEqual(
-            set(tutoring.id for tutoring in tutorings), set(tutoring["id"] for tutoring in res.data)
+            set(tutoring.id for tutoring in tutorings),
+            set(tutoring["id"] for tutoring in res.data),
         )
 
     ############
@@ -111,9 +111,7 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         for user in self.ALL_USERS:
             self.login(user)
 
-            for tutoring in Tutoring.objects.filter(
-                    state="ACCEPTED"
-            ):
+            for tutoring in Tutoring.objects.filter(state="ACCEPTED"):
                 res = self.retrieve(tutoring.id)
                 self.assertStatusCode(res, 200)
 
@@ -229,7 +227,6 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         "frequency": "1 fois par semaine",
         "time_availability": "Jeudi soir 18h",
         "description": "Travailler pour le bac 30 e de l'heure",
-
         "user": "17simple",
         "state": "ACCEPTED",
         "publication_date": date(2019, 1, 1),
@@ -245,7 +242,6 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         "frequency": "1 fois par semaine",
         "time_availability": "Jeudi soir 18h",
         "description": "Travailler pour le bac 30 e de l'heure",
-
         "user": "17simple",
         "state": "ACCEPTED",
         "publication_date": date(2019, 1, 1),
@@ -272,21 +268,29 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
             self.assertStatusCode(res, 200)
             updated_tutoring = Tutoring.objects.get(pk=tutoring.id)
             self.assertEqual(updated_tutoring.name, self.update_data_admin["name"])
-            self.assertEqual(updated_tutoring.contact, self.update_data_admin["contact"])
+            self.assertEqual(
+                updated_tutoring.contact, self.update_data_admin["contact"]
+            )
             self.assertEqual(updated_tutoring.place, self.update_data_admin["place"])
-            self.assertEqual(updated_tutoring.subject, self.update_data_admin["subject"])
+            self.assertEqual(
+                updated_tutoring.subject, self.update_data_admin["subject"]
+            )
             self.assertEqual(updated_tutoring.level, self.update_data_admin["level"])
-            self.assertEqual(updated_tutoring.frequency, self.update_data_admin["frequency"])
-            self.assertEqual(updated_tutoring.time_availability, self.update_data_admin["time_availability"])
-            self.assertEqual(updated_tutoring.description, self.update_data_admin["description"])
+            self.assertEqual(
+                updated_tutoring.frequency, self.update_data_admin["frequency"]
+            )
+            self.assertEqual(
+                updated_tutoring.time_availability,
+                self.update_data_admin["time_availability"],
+            )
+            self.assertEqual(
+                updated_tutoring.description, self.update_data_admin["description"]
+            )
             self.assertEqual(updated_tutoring.state, self.update_data_admin["state"])
-            self.assertEqual(updated_tutoring.admin_comment, self.update_data_admin["admin_comment"]
-                             )
+            self.assertEqual(
+                updated_tutoring.admin_comment, self.update_data_admin["admin_comment"]
+            )
             self.assertEqual(updated_tutoring.user.id, self.update_data_admin["user"])
-
-    ###########
-    # DESTROY #
-    ###########
 
     ########
     # APPLY #
@@ -325,15 +329,18 @@ class TutoringTestCase(WeakAuthenticationBaseTestCase):
         self.login("17admin")
 
         for application in TutorApplication.objects.filter(tutoring__state="ACCEPTED"):
-            if application in TutorApplication.objects.exclude(tutoring__applications__state__contains="ACCEPTED"):
+            if application in TutorApplication.objects.exclude(
+                tutoring__applications__state__contains="ACCEPTED"
+            ):
                 res = self.applicant(application.id, data={"state": "ACCEPTED"})
-                res2 = self.update(application.tutoring.id, data = {"user" : application.user.id})
+                res2 = self.update(
+                    application.tutoring.id, data={"user": application.user.id}
+                )
                 self.assertStatusCode(res, 200)
-                self.assertStatusCode(res2,200)
+                self.assertStatusCode(res2, 200)
                 print(res.data)
                 print(res2.data)
                 print(application.tutoring.user)
-
 
     ##################
     # BUSINESS LOGIC #

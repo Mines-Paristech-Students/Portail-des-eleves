@@ -8,16 +8,35 @@ class WriteTutoringSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutoring
         read_only_fields = ("id", "publication_date")
-        fields = read_only_fields + ("name", "contact", "place", "subject", "level",
-                                     "time_availability", "frequency", "description",)
+        fields = read_only_fields + (
+            "name",
+            "contact",
+            "place",
+            "subject",
+            "level",
+            "time_availability",
+            "frequency",
+            "description",
+        )
 
 
 class AdminTutoringSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutoring
         read_only_fields = ("id", "publication_date", "applications")
-        fields = read_only_fields + ("name", "contact", "place", "subject", "level",
-                                     "time_availability", "frequency", "description", "state","user","admin_comment")
+        fields = read_only_fields + (
+            "name",
+            "contact",
+            "place",
+            "subject",
+            "level",
+            "time_availability",
+            "frequency",
+            "description",
+            "state",
+            "user",
+            "admin_comment",
+        )
 
 
 class ReadOnlyTutoringSerializer(serializers.ModelSerializer):
@@ -29,12 +48,21 @@ class ReadOnlyTutoringSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tutoring
-        read_only_fields = ("id", "place", "subject", "level", "time_availability", "frequency", "description",)
+        read_only_fields = (
+            "id",
+            "place",
+            "subject",
+            "level",
+            "time_availability",
+            "frequency",
+            "description",
+        )
         fields = read_only_fields + ("applications",)
 
 
 class ApplyTutorSerializer(serializers.ModelSerializer):
     """Serializer used for applying to tutorings position"""
+
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), default=serializers.CurrentUserDefault()
     )

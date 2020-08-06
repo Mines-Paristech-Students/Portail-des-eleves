@@ -5,9 +5,18 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 
 from tutorings.models import Tutoring, TutorApplication
-from tutorings.serializers import WriteTutoringSerializer, AdminTutoringSerializer, ApplyTutorSerializer, \
-    ReadOnlyTutoringSerializer, AdminApplyTutorSerializer
-from tutorings.permissions import TutoringPermission, ApplyTutorPermission, ApplicationPermission
+from tutorings.serializers import (
+    WriteTutoringSerializer,
+    AdminTutoringSerializer,
+    ApplyTutorSerializer,
+    ReadOnlyTutoringSerializer,
+    AdminApplyTutorSerializer,
+)
+from tutorings.permissions import (
+    TutoringPermission,
+    ApplyTutorPermission,
+    ApplicationPermission,
+)
 
 
 class TutoringViewSet(viewsets.ModelViewSet):
@@ -131,6 +140,4 @@ class AssignTutoringView(generics.UpdateAPIView):
             raise exceptions.PermissionDenied("You cannot update this application")
         serializer.save(tutoring=tutoring)
 
-        return response.Response(
-            serializer.data, status=status.HTTP_200_OK,
-        )
+        return response.Response(serializer.data, status=status.HTTP_200_OK,)

@@ -12,8 +12,8 @@ class TutoringPermission(permissions.BasePermission):
             self.message = "You are not allowed to see this tutorings."
 
             return (
-                    request.user.is_staff  # Administrators can always retrieve.
-                    or tutoring.is_active
+                request.user.is_staff  # Administrators can always retrieve.
+                or tutoring.is_active
             )  # Published polls are public.
         elif request.method in ("PATCH",):
             self.message = "You are not allowed to update this tutorings."

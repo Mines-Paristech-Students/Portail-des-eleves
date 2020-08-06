@@ -11,14 +11,17 @@ class ApplyTutorInline(admin.TabularInline):
 
 @admin.register(Tutoring)
 class TutoringAdmin(admin.ModelAdmin):
-    list_display = ("name","contact",
-                    "place",
-                    "subject", "level",
-                    "time_availability", "frequency", "description")
+    list_display = (
+        "name",
+        "contact",
+        "place",
+        "subject",
+        "level",
+        "time_availability",
+        "frequency",
+        "description",
+    )
 
     inlines = [ApplyTutorInline]
 
-    fields = list_display + ("state", "publication_date", "papseur","admin_comment")
-
-
-
+    fields = list_display + ("state", "publication_date", "papseur", "admin_comment")

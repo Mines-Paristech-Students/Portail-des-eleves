@@ -5,6 +5,7 @@ from django.utils.functional import cached_property
 
 # Create your models here.
 
+
 class Tutoring(models.Model):
     # The date of creation.
     publication_date = models.DateTimeField(
@@ -27,13 +28,12 @@ class Tutoring(models.Model):
     )
 
     # The user who is assigned to the tutorings class
-    user = models.ForeignKey(User,
-                             verbose_name="papseur",
-                             on_delete=models.CASCADE,
-                             null=True,
-                             default=None,
-                             )
-    state = models.CharField(choices=STATES, verbose_name="état", max_length=9, default="REVIEWING")
+    user = models.ForeignKey(
+        User, verbose_name="papseur", on_delete=models.CASCADE, null=True, default=None,
+    )
+    state = models.CharField(
+        choices=STATES, verbose_name="état", max_length=9, default="REVIEWING"
+    )
 
     # A comment about the tutorings from the administrator.
     admin_comment = models.TextField(
@@ -42,7 +42,8 @@ class Tutoring(models.Model):
 
     @cached_property
     def is_active(self):
-        return  self.state == "ACCEPTED"
+        return self.state == "ACCEPTED"
+
     @cached_property
     def is_assigned(self):
         for application in self.applications.all():
@@ -52,25 +53,28 @@ class Tutoring(models.Model):
 
 
 class TutorApplication(models.Model):
-    tutoring = models.ForeignKey(Tutoring, related_name="applications", verbose_name="paps", on_delete=models.CASCADE)
+    tutoring = models.ForeignKey(
+        Tutoring,
+        related_name="applications",
+        verbose_name="paps",
+        on_delete=models.CASCADE,
+    )
 
     # The user who papsed
 
-    user = models.ForeignKey(User,
-                             verbose_name="papseur",
-                             on_delete=models.SET_NULL,
-                             null=True,
-                             )
-    paps_time = models.DateTimeField(
-        verbose_name="moment du paps", auto_now_add=True
+    user = models.ForeignKey(
+        User, verbose_name="papseur", on_delete=models.SET_NULL, null=True,
     )
+    paps_time = models.DateTimeField(verbose_name="moment du paps", auto_now_add=True)
 
     STATES = (
         ("REVIEWING", "Validation en cours"),
         ("ACCEPTED", "Accepté"),
     )
 
-    state = models.CharField(choices=STATES, verbose_name="état", max_length=9, default="REVIEWING")
+    state = models.CharField(
+        choices=STATES, verbose_name="état", max_length=9, default="REVIEWING"
+    )
 
     class Meta:
         unique_together = ("tutoring", "user")
