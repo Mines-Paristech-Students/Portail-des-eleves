@@ -13,11 +13,12 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import sys
 from datetime import timedelta
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from os.path import join
 
 import environ
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 environ.Env.read_env()
@@ -36,7 +37,7 @@ DEBUG = env.bool("DEBUG")
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ["http://localhost:5000","http://localhost:3000"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:5000", "http://localhost:3000"]
 
 AUTH_USER_MODEL = "authentication.User"
 
@@ -150,13 +151,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = "/assets/"
-STATIC_ROOT = os.path.join(BASE_DIR,"assets")
-STATICFILES_DIRS = (join(BASE_DIR,"medias" ,"assets"),)
+STATIC_ROOT = os.path.join(BASE_DIR, "assets")
+STATICFILES_DIRS = (join(BASE_DIR, "medias", "assets"),)
 
 USE_DJANGO_JQUERY = True
 JQUERY_URL = False
 
-MEDIA_ROOT = join(BASE_DIR,"..", "medias")
+MEDIA_ROOT = join(BASE_DIR, "..", "medias")
 MEDIA_URL = "/medias/"
 
 if len(sys.argv) > 1 and sys.argv[1] == "test":
@@ -192,13 +193,12 @@ JWT_AUTH_SETTINGS = {
 def is_prod_mode():
     return DEBUG is False
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_host = os.environ.get("SENTRY_HOST")
 
 sentry_sdk.init(
-    dsn="https://d5f3cb06dec94abe96e16bf57cd0c812@o417831.ingest.sentry.io/5319435",
+    dsn=sentry_host,
     integrations=[DjangoIntegration()],
-
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
