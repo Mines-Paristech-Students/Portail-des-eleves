@@ -43,12 +43,3 @@ class ApplyTutorPermission(permissions.BasePermission):
     def has_object_permission(self, request, view, tutoring):
         return tutoring.is_active
 
-
-class ApplicationPermission(permissions.BasePermission):
-    message = "You are not allowed to apply."
-
-    def has_permission(self, request, view):
-        return request.user.is_staff
-
-    def has_object_permission(self, request, view, tutoring):
-        return True
