@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import sys
 from datetime import timedelta
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from os.path import join
 
@@ -34,7 +35,7 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","").split(" ")
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = ["http://localhost:5000", "http://localhost:3000"]
@@ -194,12 +195,12 @@ def is_prod_mode():
     return DEBUG is False
 
 
-sentry_host = os.environ.get("SENTRY_HOST")
+sentry_host = os.environ.get("SENTRY_HOST","")
 
 sentry_sdk.init(
     dsn=sentry_host,
     integrations=[DjangoIntegration()],
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
+    send_default_pii=True,
 )
