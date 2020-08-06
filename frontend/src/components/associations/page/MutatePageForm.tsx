@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import React from "react";
 import { getRandom } from "../../../utils/random";
 import { MarkdownFormGroup } from "../../utils/forms/MarkdownFormGroup";
+import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
 
 const titlePlaceholder = getRandom([
   "Exclusif : les comptes cachés du BDE",
@@ -21,36 +22,33 @@ const titlePlaceholder = getRandom([
  * This component is used for creating or editing a page. It renders a form
  * in a `Card` component.
  *
- * @param title the title given to the card.
  * @param initialValues the values used to populate the form.
  * @param onSubmit called when the form is submitted.
  * @param onDelete optional. If specified, a Delete button is displayed and
  * bound to this callback.
  */
 export const MutatePageForm = ({
-  title,
   initialValues,
   onSubmit,
   onDelete = undefined,
 }: {
-  title: string;
   initialValues: {
     title?: string;
     text?: string;
+    pageType?: string;
   };
   onSubmit: (values, { resetForm, setSubmitting }) => any;
   onDelete?: () => any;
 }) => (
   <Card>
-    <Card.Header>
-      <Card.Title>{title}</Card.Title>
-    </Card.Header>
-
     <Formik
       initialValues={initialValues}
       validationSchema={Yup.object({
         title: Yup.string().required("Ce champ est requis."),
         text: Yup.string().required("Ce champ est requis."),
+        pageType: Yup.string()
+          .oneOf(["NEWS", "STATIC"])
+          .required("Ce champ est requis."),
       })}
       onSubmit={(values, { resetForm, setSubmitting }) =>
         onSubmit(values, { resetForm, setSubmitting })
@@ -58,6 +56,16 @@ export const MutatePageForm = ({
     >
       <Form>
         <Card.Body>
+          <SelectFormGroup
+            label="Type de page"
+            name={"pageType"}
+            items={[
+              { value: "NEWS", text: "Brève" },
+              { value: "STATIC", text: "Classique" },
+            ]}
+            type={"radio"}
+            selectType={"inline"}
+          />
           <TextFormGroup
             label="Titre"
             name="title"
@@ -86,7 +94,7 @@ export const MutatePageForm = ({
             </Button>
           )}
           <Button type="submit" variant="outline-success">
-            Envoyer
+            Sauvegarder
           </Button>
         </Card.Footer>
       </Form>

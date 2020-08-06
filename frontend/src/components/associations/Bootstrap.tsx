@@ -23,7 +23,7 @@ export const AssociationBootstrap = ({
   const { associationId } = useParams<{ associationId: string }>();
 
   const { data: association, error, status } = useBetterQuery<Association>(
-    ["association.get", associationId],
+    ["association.get", { associationId }],
     api.associations.get,
     {
       refetchOnWindowFocus: false,

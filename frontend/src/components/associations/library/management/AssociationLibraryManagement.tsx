@@ -202,7 +202,7 @@ export const AssociationLibraryManagement = ({
           render={(loanables, paginationControl) => (
             <>
               <Card>
-                <Table columns={columns} data={loanables} />
+                <Table columns={columns} data={loanables} borderTop={false} />
               </Card>
               {paginationControl}
             </>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { User } from "../../../models/user";
-import { UserSelector } from "./UserSelector";
 import { CounterOrderMaker } from "./counter/CounterOrderMaker";
+import { UserSelector } from "../../utils/UserSelector";
 
 /**
  * Counter is the component used by people in marketplace's counter to sell
@@ -21,7 +21,11 @@ export const AssociationMarketplaceCounter = ({ association }) => {
         ) : null}
       </p>
       {customer === null ? (
-        <UserSelector setUser={setCustomer} />
+        <UserSelector
+          setUser={setCustomer}
+          title={"Comptoir"}
+          helper={"Cliquez pour ouvrir un compte"}
+        />
       ) : (
         <CounterOrderMaker
           marketplaceId={association.id}

@@ -89,6 +89,8 @@ class AssociationViewSet(viewsets.ModelViewSet):
     serializer_class = AssociationSerializer
     permission_classes = (AssociationPermission,)
 
+    ordering_fields = ("rank", "name")
+
     def get_serializer_class(self):
         if self.action in ("list",):
             return AssociationShortSerializer

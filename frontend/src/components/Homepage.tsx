@@ -7,7 +7,6 @@ export const Homepage = () => {
     <Container>
       <PageTitle>Homepage</PageTitle>
       {/*<Chat />*/}
-      {/*<MultiUserSelector onChange={() => {}} />*/}
     </Container>
   );
 };

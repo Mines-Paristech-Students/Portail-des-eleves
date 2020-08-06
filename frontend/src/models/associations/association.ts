@@ -1,16 +1,11 @@
-import { Marketplace } from "./marketplace";
-import { Library } from "./library";
-import { Page } from "./page";
 import { RolePermission } from "./role";
 
 export interface Association {
   id: string;
   name: string;
   logo: string;
-  rank: string;
-  pages: Page[];
-  marketplace: Marketplace;
-  library: Library;
+  enabledModules: "marketplace" | "library"[];
+  rank: number;
   myRole?: {
     id: string;
     role: string;

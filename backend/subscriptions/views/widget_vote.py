@@ -23,7 +23,7 @@ def widget_vote_view(request):
                     "ends_at": election.ends_at,
                 }
                 for election in Election.objects.filter(
-                    registered_voters=request.user, ends_at__gte=datetime.datetime.now()
+                    voters__user=request.user, ends_at__gte=datetime.datetime.now()
                 )
                 .order_by("-ends_at")
                 .all()

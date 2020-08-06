@@ -8,7 +8,6 @@ import {
 } from "react-query";
 import { events } from "./api/events";
 import { pages } from "./api/pages";
-import { news } from "./api/news";
 import { medias } from "./api/medias";
 import { transactions } from "./api/transactions";
 import { marketplace } from "./api/marketplace";
@@ -25,6 +24,7 @@ import { courses } from "./api/courses";
 import { roles } from "./api/roles";
 import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
+import { elections } from "./api/elections";
 
 const baseApi = process.env.REACT_APP_API_URL;
 
@@ -49,7 +49,6 @@ export function unwrap<T>(promise): Promise<T> {
 export const api = {
   associations: associations,
   medias: medias,
-  news: news,
   pages: pages,
 
   events: events,
@@ -62,9 +61,11 @@ export const api = {
   transactions: transactions,
   fundings: fundings,
 
-  roles: roles,
-  courses: courses,
+  elections: elections,
 
+  roles: roles,
+
+  courses: courses,
   polls: polls,
 
   tags: tags,
