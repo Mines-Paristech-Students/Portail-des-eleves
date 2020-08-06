@@ -28,7 +28,7 @@ import { elections } from "./api/elections";
 
 const baseApi = process.env.REACT_APP_API_URL;
 
-Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+Axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 export const apiService = applyConverters(
   Axios.create({
