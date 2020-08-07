@@ -42,4 +42,3 @@ class ApplyTutorPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, tutoring):
         return tutoring.is_active
-

@@ -3,9 +3,6 @@ from authentication.models import User
 from django.utils.functional import cached_property
 
 
-# Create your models here.
-
-
 class Tutoring(models.Model):
     # The date of creation.
     publication_date = models.DateTimeField(

@@ -122,3 +122,4 @@ backend/polls/migrations
 backend/repartitions/migrations
 backend/subscriptions/migrations
 backend/tags/migrations
+backend/tutorings/migrations
