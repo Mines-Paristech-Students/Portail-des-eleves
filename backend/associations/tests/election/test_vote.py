@@ -130,9 +130,6 @@ class VoteTestCase(BaseElectionTestCase):
             res = self.get(f"/associations/elections/{election_id}/")
             self.assertStatusCode(res, 200)
 
-            for choice in res.data["choices"]:
-                self.assertFalse("number_of_votes" in choice)
-
         # Even if the results are published (because the election is not over).
         self.login("17election_pdm")
         self.assertStatusCode(
@@ -147,9 +144,6 @@ class VoteTestCase(BaseElectionTestCase):
             self.login(user)
             res = self.get(f"/associations/elections/{election_id}/")
             self.assertStatusCode(res, 200)
-
-            for choice in res.data["choices"]:
-                self.assertFalse("number_of_votes" in choice)
 
         # Do as if the election is over.
         election = Election.objects.get(pk=election_id)
