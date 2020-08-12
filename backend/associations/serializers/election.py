@@ -55,16 +55,13 @@ class ElectionVoterSerializer(serializers.ModelSerializer):
 class ElectionChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ("id", "name", "number_of_offline_votes")
-
-    def to_representation(self, instance: Choice):
-        response = super(ElectionChoiceSerializer, self).to_representation(instance)
-
-        if instance.election.show_results:
-            response["number_of_online_votes"] = instance.number_of_online_votes
-            response["number_of_votes"] = instance.number_of_votes
-
-        return response
+        fields = (
+            "id",
+            "name",
+            "number_of_offline_votes",
+            "number_of_online_votes",
+            "number_of_votes",
+        )
 
 
 class GetUserVoterMixin:
@@ -95,6 +92,7 @@ class ElectionSerializer(serializers.ModelSerializer, GetUserVoterMixin):
             "starts_at",
             "ends_at",
             "results_are_published",
+            "show_results",
             "max_choices_per_ballot",
             "choices",
             "voters",

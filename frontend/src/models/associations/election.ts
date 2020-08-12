@@ -25,7 +25,7 @@ export interface Election {
   endsAt: Date;
   maxChoicesPerBallot: number;
   resultsArePublished: boolean;
-  showResults: boolean;
+  showResults?: boolean;
   choices: Choice[];
   voters?: { user: User; status: VoteStatus }[];
   userVoter?: UserVoter;

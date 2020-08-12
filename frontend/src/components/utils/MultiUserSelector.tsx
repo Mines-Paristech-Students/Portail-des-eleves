@@ -82,24 +82,40 @@ export const useMultiUserSelector = (
   }, [selectedUsers]);
 
   const onSetSelectedUserIds = (userIds) => {
-    api.users
-      .list({ id__in: userIds.join(",p"), page_size: 1000 })
-      .then((response) => {
-        setUsers((users) => {
-          let newUsers = { ...users };
-          response.results.forEach((user) => {
-            newUsers[user.id] = {
-              selected: true,
-              user: user,
-            };
-          });
-          return newUsers;
-        });
-      })
-      .catch((err) => {
-        setUserStatus("error");
-        setUserError(err.toString());
+    if (userIds.length === 0) {
+      setUsers((users) => {
+        let newUsers = { ...users };
+
+        for (let user_id in newUsers) {
+          newUsers[user_id].selected = false;
+        }
+
+        return newUsers;
       });
+    } else {
+      api.users
+        .list({ id__in: userIds.join(","), page_size: 1000 })
+        .then((response) => {
+          setUsers((users) => {
+            let newUsers = { ...users };
+            for (let user_id in newUsers) {
+              newUsers[user_id].selected = false;
+            }
+
+            response.results.forEach((user) => {
+              newUsers[user.id] = {
+                selected: true,
+                user: user,
+              };
+            });
+            return newUsers;
+          });
+        })
+        .catch((err) => {
+          setUserStatus("error");
+          setUserError(err.toString());
+        });
+    }
   };
 
   const {

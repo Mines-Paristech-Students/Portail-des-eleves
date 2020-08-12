@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { api, useBetterQuery } from "../../../../services/apiService";
 import { Election } from "../../../../models/associations/election";
@@ -10,12 +10,16 @@ import Chart from "chart.js";
 import { Card } from "react-bootstrap";
 import { VoteCard } from "./Vote";
 import { Association } from "../../../../models/associations/association";
-import { UserContext } from "../../../../services/authService";
 import { Administration } from "../edit/Administration";
 import { RegistrationList } from "../edit/RegistrationList";
 import { OfflineVotes } from "../edit/OfflineVotes";
 import { VoterStatus } from "../edit/VoterStatus";
 import { ArrowLink } from "../../../utils/ArrowLink";
+import { queryCache, useMutation } from "react-query";
+import { AxiosError } from "axios";
+import { ToastContext } from "../../../utils/Toast";
+import { EditChoices } from "../edit/EditChoices";
+import { DeleteForm } from "../edit/DeleteForm";
 
 const offlineColors = [
   "rgba(33,150,243)",
@@ -40,10 +44,10 @@ export const AssociationViewElection = ({
   const { electionId } = useParams<{ electionId: string }>();
   const { data: election, status, error } = useBetterQuery<Election>(
     ["election.get", electionId],
-    api.elections.get
+    api.elections.get,
+    { refetchOnWindowFocus: false }
   );
 
-  const resultsChartRef = useRef(null);
   const electionStatus = !election
     ? undefined
     : election.endsAt < new Date()
@@ -52,71 +56,31 @@ export const AssociationViewElection = ({
     ? "PLANNED"
     : "ACTIVE";
 
-  const user = useContext(UserContext);
-  const [isUserAllowed, setIsUserAllowed] = useState(true);
+  const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
+  const isElectionAdmin = association.myRole?.permissions.includes("election");
 
-  useEffect(() => {
-    if (election) {
-      setIsUserAllowed(
-        election.userVoter !== undefined ||
-          association.myRole?.permissions.includes("election") ||
-          false
+  // Handle vote results publication
+  const [publishElectionResults] = useMutation(api.elections.update, {
+    onSuccess: (response) => {
+      queryCache.invalidateQueries(["election.get", electionId]);
+      sendSuccessToast(
+        response.resultsArePublished ? "Résultats publiés" : "Résultats masqués"
       );
-    }
-  }, [association.myRole, election, user]);
+    },
+    onError: (errorAsUnknown) => {
+      const error = errorAsUnknown as AxiosError;
 
-  useEffect(() => {
-    // Wait for all vars to be available
-    if (!resultsChartRef || !resultsChartRef.current || !election) {
-      return;
-    }
-
-    // Don't init the chart if results aren't accessible
-    if (
-      !(
-        (election.showResults || election.resultsArePublished) &&
-        electionStatus === "FINISHED"
-      )
-    ) {
-      return;
-    }
-
-    // Necessary because at this point resultsChartRef is not null but the TS
-    // compiler isn't aware of this
-    // @ts-ignore
-    new Chart(resultsChartRef.current.getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: election?.choices.map(
-          (choice) => `${choice.name} (${choice.numberOfVotes} votes)`
-        ),
-        datasets: [
-          {
-            label: "Votes hors ligne",
-            data: election.choices.map((choice) => choice.numberOfOfflineVotes),
-            backgroundColor: offlineColors,
-          },
-          {
-            label: "Votes en ligne",
-            data: election.choices.map((choice) => choice.numberOfOnlineVotes),
-            backgroundColor: onlineColors,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          xAxes: [
-            {
-              stacked: true,
-            },
-          ],
-        },
-        legend: false,
-      },
-    });
+      sendErrorToast(
+        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
+          error.response === undefined
+            ? ""
+            : "Détails : " + JSON.stringify(error.response.data)
+        }`
+      );
+    },
   });
 
-  return !isUserAllowed ? (
+  return election?.userVoter === undefined && !isElectionAdmin ? (
     <ForbiddenError />
   ) : status === "loading" ? (
     <Loading />
@@ -153,35 +117,111 @@ export const AssociationViewElection = ({
         <Card>
           <Card.Header>
             <Card.Title>Résultats</Card.Title>
+            {isElectionAdmin && (
+              <div className="card-options">
+                <label className="custom-switch m-0">
+                  <span className={"mr-2"}>Publier les résultats</span>
+                  <input
+                    type="checkbox"
+                    className="custom-switch-input"
+                    checked={election.resultsArePublished}
+                    onChange={() =>
+                      publishElectionResults({
+                        id: election.id,
+                        results_are_published: !election?.resultsArePublished,
+                      })
+                    }
+                  />
+                  <span className="custom-switch-indicator" />
+                </label>
+              </div>
+            )}
           </Card.Header>
           <Card.Body>
-            {election.showResults || election.resultsArePublished ? (
-              <canvas id="resultsChart" ref={resultsChartRef} />
-            ) : (
-              <p className="text-center lead">
-                Les résultats n'ont pas encore été publiés
-              </p>
+            {(election.showResults || isElectionAdmin) && (
+              <ElectionResultChart election={election} />
+            )}
+
+            {!election.showResults && (
+              <div className={"text-center"}>
+                <p className="lead">
+                  Les résultats n'ont pas encore été publiés
+                </p>
+              </div>
             )}
           </Card.Body>
         </Card>
       )}
 
-      {association.myRole?.permissions.includes("election") && (
+      {isElectionAdmin && (
         <div className={"mb-5"}>
           <Administration election={election} />
-          {election.startsAt > new Date() && (
-            <RegistrationList election={election} />
-          )}{" "}
-          {new Date() < election.startsAt && new Date() < election.endsAt && (
+          {new Date() < election.startsAt && (
             <>
-              <VoterStatus election={election} />
+              <EditChoices election={election} />
+              <RegistrationList election={election} />
             </>
+          )}
+          {election.startsAt < new Date() && new Date() < election.endsAt && (
+            <VoterStatus election={election} />
           )}
           {election.startsAt < new Date() && (
             <OfflineVotes election={election} />
           )}
+
+          <DeleteForm election={election} />
         </div>
       )}
     </>
   ) : null;
+};
+
+const ElectionResultChart = ({ election }) => {
+  const resultsChartRef = useRef(null);
+
+  useEffect(() => {
+    // Wait for all vars to be available
+    if (!resultsChartRef || !resultsChartRef.current || !election) {
+      return;
+    }
+
+    // Necessary because at this point resultsChartRef is not null but the TS
+    // compiler isn't aware of this
+    // @ts-ignore
+    new Chart(resultsChartRef.current.getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: election?.choices.map(
+          (choice) => `${choice.name} (${choice.numberOfVotes} votes)`
+        ),
+        datasets: [
+          {
+            label: "Votes hors ligne",
+            data: election.choices.map((choice) => choice.numberOfOfflineVotes),
+            backgroundColor: offlineColors,
+          },
+          {
+            label: "Votes en ligne",
+            data: election.choices.map((choice) => choice.numberOfOnlineVotes),
+            backgroundColor: onlineColors,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+            },
+          ],
+        },
+        legend: false,
+        animation: {
+          duration: 0,
+        },
+      },
+    });
+  });
+
+  return <canvas id="resultsChart" ref={resultsChartRef} />;
 };
