@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { UserAvatar } from "../utils/avatar/UserAvatar"; // import locale
 import { Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const BirthdayWidget = ({ ...props }) => {
   const { data, error, status } = useBetterQuery<any>(
@@ -37,22 +38,23 @@ export const BirthdayWidget = ({ ...props }) => {
             </h4>
             <Row>
               {users.map((user) => (
-                <div className="row col-auto align-items-center py-2" key={user.id}>
-                  <div className="col-auto pr-0">
+                <div
+                  className="col-md-6 align-items-center py-2 px-0"
+                  key={user.id}
+                >
+                  <Link to={`/profils/${user.id}`} className="float-left pr-2">
                     <UserAvatar
                       key={user.id}
                       userId={user.id}
                       tooltip={`${user.firstName} ${user.lastName}`}
                     />
-                  </div>
-                  <div className="col pl-1">
-                    <div>
-                      <a href="#" className="text-inherit">
-                        {user.id}
-                      </a>
-                    </div>
+                  </Link>
+                  <div>
+                    <Link to={`/profils/${user.id}`} className="text-inherit">
+                      {user.id}
+                    </Link>
                     <small className="d-block item-except text-sm text-muted h-1x">
-                      XXX ans
+                      {dayjs().year() - user.birthdayYear} ans
                     </small>
                   </div>
                 </div>
