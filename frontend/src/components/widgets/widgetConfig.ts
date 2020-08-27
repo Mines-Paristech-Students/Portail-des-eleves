@@ -23,10 +23,11 @@ export const useWidgetConfig = (widgetName) => {
   });
 
   return {
-    config: config && config.hasOwnProperty(widgetName) ? config[widgetName] : {},
+    config:
+      config && config.hasOwnProperty(widgetName) ? config[widgetName] : {},
     setConfig: (newConfig) => {
       console.log(newConfig);
-      setConfig({ ...config, [widgetName]: newConfig })
+      setConfig({ ...config, [widgetName]: newConfig });
     },
   };
 };

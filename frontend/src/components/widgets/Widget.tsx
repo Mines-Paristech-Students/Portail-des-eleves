@@ -10,11 +10,11 @@ export const Widget = ({
   color = null,
   ...props
 }: {
-  config: any,
-  setConfig:  (object) => void,
-  name: string,
-  children: JSX.Element,
-  color?: TablerColor | null
+  config: any;
+  setConfig: (object) => void;
+  name: string;
+  children: JSX.Element;
+  color?: TablerColor | null;
 }) => {
   const isOpen = config && config.isOpen !== undefined ? config.isOpen : true;
 
