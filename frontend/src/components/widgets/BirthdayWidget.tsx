@@ -9,6 +9,7 @@ import "dayjs/locale/fr";
 import { UserAvatar } from "../utils/avatar/UserAvatar"; // import locale
 import { Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { TablerColor } from "../../utils/colors";
 
 export const BirthdayWidget = ({ ...props }) => {
   const { data, error, status } = useBetterQuery<any>(
@@ -19,6 +20,7 @@ export const BirthdayWidget = ({ ...props }) => {
   return (
     <Widget
       name={"Anniversaires à venir"}
+      color={TablerColor.Red}
       {...useWidgetConfig("birthday")}
       {...props}
     >

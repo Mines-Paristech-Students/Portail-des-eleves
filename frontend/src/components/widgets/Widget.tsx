@@ -1,11 +1,26 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { TablerColor } from "../../utils/colors";
 
-export const Widget = ({ config, setConfig, name, children, ...props }) => {
+export const Widget = ({
+  config,
+  setConfig,
+  name,
+  children,
+  color = null,
+  ...props
+}: {
+  config: any,
+  setConfig:  (object) => void,
+  name: string,
+  children: JSX.Element,
+  color?: TablerColor | null
+}) => {
   const isOpen = config && config.isOpen !== undefined ? config.isOpen : true;
 
   return (
     <Card {...props}>
+      {color && <div className={`card-status bg-${color}`} />}
       <Card.Header>
         <Card.Title>{name}</Card.Title>
         <div className="card-options">
