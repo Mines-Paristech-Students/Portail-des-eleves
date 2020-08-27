@@ -1,38 +1,59 @@
 from backend.tests_utils import WeakAuthenticationBaseTestCase
+from subscriptions.models import WidgetSubscription
 
 ALL_USERS = ["17simple", "18simple", "17admin"]
 """A list of user ids covering all the spectrum of roles and permissions."""
 
 
 class BaseSubscriptionTestCase(WeakAuthenticationBaseTestCase):
-    fixtures = ["test_authentication.yaml", "test_subscriptions.yaml"]
+    fixtures = ["test_authentication.yaml"]
 
-    def endpoint_list(self):
-        return f"/subscriptions/subscriptions/"
+    def endpoint_set(self):
+        return f"/subscriptions/subscriptions/set/"
 
-    def list(self):
-        return self.get(self.endpoint_list())
+    def endpoint_get(self):
+        return f"/subscriptions/subscriptions/get/"
 
-    def endpoint_retrieve(self, pk):
-        return f"/subscriptions/subscriptions/{pk}/"
+    def test_get_set_work(self):
+        self.login("17bocquet")
 
-    def retrieve(self, pk):
-        return self.get(self.endpoint_retrieve(pk))
+        # create
+        res = self.post(self.endpoint_set(), {"payload": "this is some pref text"})
+        self.assertEqual(res.status_code, 201)
 
-    def endpoint_create(self):
-        return f"/subscriptions/subscriptions/"
+        res = self.get(self.endpoint_get())
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(
+            res.data, {"user": "17bocquet", "payload": "this is some pref text"}
+        )
 
-    def create(self, data=None, format="json"):
-        return self.post(self.endpoint_create(), data, format)
+        # update
+        res = self.post(self.endpoint_set(), {"payload": "AN UPDATE !"})
+        self.assertEqual(res.status_code, 200)
 
-    def endpoint_update(self, pk):
-        return f"/subscriptions/subscriptions/{pk}/"
+        res = self.get(self.endpoint_get())
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data, {"user": "17bocquet", "payload": "AN UPDATE !"})
 
-    def update(self, pk, data=None, format="json"):
-        return self.patch(self.endpoint_update(pk), data, format)
+    def test_cannot_set_other_pref_for_other_account(self):
+        self.login("17bocquet")
 
-    def endpoint_destroy(self, pk):
-        return f"/subscriptions/subscriptions/{pk}/"
+        res = self.post(
+            self.endpoint_set(),
+            {"payload": "this is some pref text", "user": "19simple"},
+        )
+        self.assertEqual(res.status_code, 201)
 
-    def destroy(self, pk):
-        return self.delete(self.endpoint_destroy(pk))
+        self.assertEqual(WidgetSubscription.objects.filter(user="19simple").count(), 0)
+
+    def test_common_uris_dont_exist(self):
+        self.assertEqual(self.get("/subscriptions/subscriptions/").status_code, 401)
+        self.assertEqual(
+            self.post("/subscriptions/subscriptions/", {}).status_code, 401
+        )
+        self.assertEqual(
+            self.put("/subscriptions/subscriptions/1/", {}).status_code, 401
+        )
+        self.assertEqual(
+            self.delete("/subscriptions/subscriptions/1/").status_code, 401
+        )
