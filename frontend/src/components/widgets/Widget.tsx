@@ -2,6 +2,9 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { TablerColor } from "../../utils/colors";
 
+/**
+ * Base layout for all widgets, basically wraps the card component
+ */
 export const Widget = ({
   config,
   setConfig,
