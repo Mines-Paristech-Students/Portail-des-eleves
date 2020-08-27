@@ -1,11 +1,11 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 
-export const Widget = ({ config, setConfig, name, children }) => {
+export const Widget = ({ config, setConfig, name, children, ...props }) => {
   const isOpen = config && config.isOpen !== undefined ? config.isOpen : true;
 
   return (
-    <Card>
+    <Card {...props}>
       <Card.Header>
         <Card.Title>{name}</Card.Title>
         <div className="card-options">
