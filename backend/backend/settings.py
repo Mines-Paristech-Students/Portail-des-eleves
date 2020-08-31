@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "tags",
     "repartitions",
     "courses",
+    "migration",
 ]
 
 MIDDLEWARE = [
