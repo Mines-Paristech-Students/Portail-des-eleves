@@ -25,6 +25,7 @@ import { roles } from "./api/roles";
 import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
 import { elections } from "./api/elections";
+import { subscriptions } from "./api/subscriptions";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -72,6 +73,7 @@ export const api = {
   jwt: jwt,
   users: users,
   profile: profile,
+  subscriptions: subscriptions,
 };
 
 /**
