@@ -9,34 +9,33 @@ import { genericMutationErrorHandling } from "../../../utils/genericMutationErro
  * Component to allow the user choose opt-in settings, such as
  * whether or not the library and marketplace are enabled
  */
-export const AssociationOptInSettings = ({ association }) =>
-  (
-    <Card>
-      <Card.Header>
-        <Card.Title>Fonctionnalités</Card.Title>
-      </Card.Header>
-      <Card.Body>
-        <Row>
-          <Col xs={6}>
-            <EnableModuleForm
-              id={association.id}
-              label={"Magasin"}
-              apiMethod={api.marketplace.update}
-              initialValue={association.enabledModules.includes("marketplace")}
-            />
-          </Col>
-          <Col xs={6}>
-            <EnableModuleForm
-              id={association.id}
-              label={"Bibliothèque"}
-              apiMethod={api.library.update}
-              initialValue={association.enabledModules.includes("library")}
-            />
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
-  );
+export const AssociationOptInSettings = ({ association }) => (
+  <Card>
+    <Card.Header>
+      <Card.Title>Fonctionnalités</Card.Title>
+    </Card.Header>
+    <Card.Body>
+      <Row>
+        <Col xs={6}>
+          <EnableModuleForm
+            id={association.id}
+            label={"Magasin"}
+            apiMethod={api.marketplace.update}
+            initialValue={association.enabledModules.includes("marketplace")}
+          />
+        </Col>
+        <Col xs={6}>
+          <EnableModuleForm
+            id={association.id}
+            label={"Bibliothèque"}
+            apiMethod={api.library.update}
+            initialValue={association.enabledModules.includes("library")}
+          />
+        </Col>
+      </Row>
+    </Card.Body>
+  </Card>
+);
 
 /**
  * Form to enable or disable marketplace and library
