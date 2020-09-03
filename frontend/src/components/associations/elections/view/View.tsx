@@ -16,10 +16,10 @@ import { OfflineVotes } from "../edit/OfflineVotes";
 import { VoterStatus } from "../edit/VoterStatus";
 import { ArrowLink } from "../../../utils/ArrowLink";
 import { queryCache, useMutation } from "react-query";
-import { AxiosError } from "axios";
 import { ToastContext } from "../../../utils/Toast";
 import { EditChoices } from "../edit/EditChoices";
 import { DeleteForm } from "../edit/DeleteForm";
+import { genericMutationErrorHandling } from "../../../../utils/genericMutationErrorHandling";
 
 const offlineColors = [
   "rgba(33,150,243)",
@@ -67,17 +67,7 @@ export const AssociationViewElection = ({
         response.resultsArePublished ? "Résultats publiés" : "Résultats masqués"
       );
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   return election?.userVoter === undefined && !isElectionAdmin ? (

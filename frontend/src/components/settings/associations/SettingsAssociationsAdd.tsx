@@ -8,7 +8,7 @@ import { SettingsLayout } from "../SettingsLayout";
 import { ToastContext } from "../../utils/Toast";
 import { api } from "../../../services/apiService";
 import { queryCache, useMutation } from "react-query";
-import { AxiosError } from "axios";
+import { genericMutationErrorHandling } from "../../../utils/genericMutationErrorHandling";
 
 export const SettingsAssociationsAdd = () => {
   const history = useHistory();
@@ -20,17 +20,7 @@ export const SettingsAssociationsAdd = () => {
       sendSuccessToast("Association créée.");
       history.push(`/parametres/associations`);
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   return (

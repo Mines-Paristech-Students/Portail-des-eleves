@@ -4,7 +4,6 @@ import { ToastContext } from "../../utils/Toast";
 import { api, useBetterQuery } from "../../../services/apiService";
 import { Association } from "../../../models/associations/association";
 import { queryCache, useMutation } from "react-query";
-import { AxiosError } from "axios";
 import { LoadingAssociation } from "../../associations/Loading";
 import { Error } from "../../utils/Error";
 import { PageTitle } from "../../utils/PageTitle";
@@ -14,6 +13,7 @@ import Container from "react-bootstrap/Container";
 import { SettingsLayout } from "../SettingsLayout";
 import { MutateAssociationForm } from "./MutateAssociationForm";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import { genericMutationErrorHandling } from "../../../utils/genericMutationErrorHandling";
 
 export const SettingsAssociationsEdit = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -22,27 +22,17 @@ export const SettingsAssociationsEdit = () => {
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
   const { data: association, error, status } = useBetterQuery<Association>(
-    ["associations.get", { associationId }],
+    ["association.get", { associationId }],
     api.associations.get,
     { refetchOnWindowFocus: false }
   );
 
   const [edit] = useMutation(api.associations.update, {
     onSuccess: () => {
-      queryCache.invalidateQueries(["associations.get"]);
+      queryCache.invalidateQueries(["association.get"]);
       sendSuccessToast("Association modifiée.");
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [remove] = useMutation(api.associations.delete, {
@@ -51,17 +41,7 @@ export const SettingsAssociationsEdit = () => {
       sendSuccessToast("Association supprimée.");
       history.push(`/parametres/associations`);
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
