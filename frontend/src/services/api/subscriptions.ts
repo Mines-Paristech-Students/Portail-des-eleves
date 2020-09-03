@@ -19,8 +19,8 @@ export const subscriptions = {
       (res) => res.birthdays
     ),
 
-  news: () =>
-    unwrap<any>(apiService.get("/subscriptions/news/")).then(
-      (res) => res.news
+  timeline: () =>
+    unwrap<any>(apiService.get("/subscriptions/timeline/")).then(
+      (res) => res.timeline
     ),
 };

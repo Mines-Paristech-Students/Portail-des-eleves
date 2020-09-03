@@ -87,6 +87,6 @@ def widget_timeline_view(request):
         }
         timeline.append(event)
 
-    timeline.sort(key=lambda x: x["date"])
+    timeline.sort(key=lambda x: x["date"], reverse=True)
 
     return Response({"timeline": timeline})

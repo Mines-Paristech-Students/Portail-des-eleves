@@ -29,6 +29,7 @@ class Media(models.Model):
     association = models.ForeignKey(Association, on_delete=models.CASCADE)
     file = models.FileField(storage=fs)
     preview = models.FileField(storage=fs, null=True)
+    preview_large = models.FileField(storage=fs, null=True)
 
     uploaded_on = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -44,9 +45,18 @@ class Media(models.Model):
     def preview_url(self):
         return MEDIA_URL + "associations/" + self.preview.name if self.preview else None
 
+    @property
+    def preview_large_url(self):
+        return (
+            MEDIA_URL + "associations/" + self.preview_large.name
+            if self.preview_large
+            else None
+        )
+
     def delete(self, using=None, keep_parents=False):
         self.file.delete()
         self.preview.delete()
+        self.preview_large.delete()
         super().delete()
 
 
@@ -65,6 +75,7 @@ def create_preview(sender, instance: Media, created, **kwargs):
             if extension == "JPG":
                 extension = "JPEG"
 
+            # image preview
             image = Image.open(instance.file.path)
             image.thumbnail((300, 300))
             image.save(output, format=extension)
@@ -73,6 +84,17 @@ def create_preview(sender, instance: Media, created, **kwargs):
                 ContentFile(output.getvalue()),
             )
             instance.save()
+
+            # image large preview
+
+            image = Image.open(instance.file.path)
+            image.thumbnail((800, 800))
+            image.save(output, format=extension)
+            instance.preview_large.save(
+                os.path.splitext(filename.name)[0] + "_preview_large" + filename.suffix,
+                ContentFile(output.getvalue()),
+            )
+
     elif instance.mimetype == "application/pdf":
         with io.BytesIO() as output:
             filename = pathlib.Path(instance.file.name)
@@ -83,6 +105,9 @@ def create_preview(sender, instance: Media, created, **kwargs):
             image.thumbnail((800, 800))
             image.save(output, format="PNG")
             instance.preview.save(preview_name, ContentFile(output.getvalue()))
+            instance.preview_large = (
+                instance.preview
+            )  # set the same preview and large preview for pdf
 
             instance.save()
 

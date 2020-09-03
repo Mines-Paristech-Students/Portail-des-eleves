@@ -15,6 +15,7 @@ class MediaSerializer(serializers.ModelSerializer):
             "uploaded_by",
             "url",
             "preview_url",
+            "preview_large_url",
             "association",
             "mimetype",
             "tags",
@@ -30,6 +31,7 @@ class MediaSerializer(serializers.ModelSerializer):
         if request:
             res["url"] = urlize(request, res["url"]) if res["url"] else ""
             res["preview_url"] = urlize(request, res["preview_url"])
+            res["preview_large_url"] = urlize(request, res["preview_large_url"])
         return res
 
 

@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PageTitle } from "./utils/PageTitle";
 import Container from "react-bootstrap/Container";
 import { BirthdayWidget } from "./widgets/BirthdayWidget";
 import { Col } from "react-bootstrap";
 import { Row } from "react-bootstrap";
-import { NewsWidget } from "./widgets/NewsWidget";
+import { TimelineWidget } from "./widgets/TimelineWidget";
+import { UserContext } from "../services/authService";
 
 export const Homepage = () => {
+  const user = useContext(UserContext);
+
   return (
     <Container>
-      <PageTitle>Homepage</PageTitle>
+      <PageTitle>Hello {user?.firstName}</PageTitle>
       {/*<Chat />*/}
       <Row>
         <Col md={4}>
           <BirthdayWidget />
         </Col>
         <Col>
-          <NewsWidget/>
+          <TimelineWidget />
         </Col>
       </Row>
     </Container>
