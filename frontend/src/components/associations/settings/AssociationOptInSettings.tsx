@@ -9,9 +9,8 @@ import { genericMutationErrorHandling } from "../../../utils/genericMutationErro
  * Component to allow the user choose opt-in settings, such as
  * whether or not the library and marketplace are enabled
  */
-export const AssociationOptInSettings = ({ association }) => {
-  console.log(association.enabledModules);
-  return (
+export const AssociationOptInSettings = ({ association }) =>
+  (
     <Card>
       <Card.Header>
         <Card.Title>Fonctionnalités</Card.Title>
@@ -38,7 +37,6 @@ export const AssociationOptInSettings = ({ association }) => {
       </Card.Body>
     </Card>
   );
-};
 
 /**
  * Form to enable or disable marketplace and library
