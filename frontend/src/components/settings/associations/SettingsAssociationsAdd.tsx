@@ -20,7 +20,7 @@ export const SettingsAssociationsAdd = () => {
       sendSuccessToast("Association créée.");
       history.push(`/parametres/associations`);
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   return (

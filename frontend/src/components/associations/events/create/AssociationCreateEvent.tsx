@@ -23,7 +23,7 @@ export const AssociationCreateEvent = ({
       queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Événement créé.");
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   if (!association.myRole?.permissions?.includes("event")) {

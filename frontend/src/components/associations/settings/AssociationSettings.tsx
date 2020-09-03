@@ -8,7 +8,7 @@ export const AssociationSettings = ({ association }) => (
   <>
     <PageTitle>Préférences</PageTitle>
     <AssociationNamespaceSettings association={association} />
-    <AssociationOptInSettings association={association}/>
+    <AssociationOptInSettings association={association} />
     <AssociationLogoSettings association={association} />
   </>
 );

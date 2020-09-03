@@ -67,7 +67,7 @@ export const AssociationViewElection = ({
         response.resultsArePublished ? "Résultats publiés" : "Résultats masqués"
       );
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   return election?.userVoter === undefined && !isElectionAdmin ? (

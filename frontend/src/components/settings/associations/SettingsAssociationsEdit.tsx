@@ -32,7 +32,7 @@ export const SettingsAssociationsEdit = () => {
       queryCache.invalidateQueries(["association.get"]);
       sendSuccessToast("Association modifiée.");
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [remove] = useMutation(api.associations.delete, {
@@ -41,7 +41,7 @@ export const SettingsAssociationsEdit = () => {
       sendSuccessToast("Association supprimée.");
       history.push(`/parametres/associations`);
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);

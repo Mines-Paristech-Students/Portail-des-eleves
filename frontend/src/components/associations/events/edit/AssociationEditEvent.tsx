@@ -38,7 +38,7 @@ export const AssociationEditEvent = ({
         sendSuccessToast("Événement modifié.");
       }
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [remove] = useMutation(api.events.delete, {
@@ -48,7 +48,7 @@ export const AssociationEditEvent = ({
 
       history.push(`/associations/${association.id}/evenements`);
     },
-    onError: genericMutationErrorHandling(sendErrorToast)
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   if (!association.myRole?.permissions?.includes("event")) {
