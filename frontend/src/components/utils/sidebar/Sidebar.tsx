@@ -9,10 +9,17 @@ import { PageTitle } from "../PageTitle";
  * the icon.
  * @param to the URL of the link.
  * @param children the children to render for the link.
+ * @param muted true if the item should be muted in the sidebar. Used for disabled but accessible modules
  * @param exact defaults to `true`. If `true`, the link will be marked as `active` only if the location equals `to`.
  * Otherwise, it needs to equal `to` or to start with `${to}/` or `${to}#`.
  */
-export const SidebarItem = ({ icon, to, children, exact = true }) => {
+export const SidebarItem = ({
+  icon,
+  to,
+  children,
+  muted = false,
+  exact = true,
+}) => {
   const location = useLocation();
   const iconClassName = "fe fe-" + icon;
 
@@ -25,7 +32,9 @@ export const SidebarItem = ({ icon, to, children, exact = true }) => {
             location.pathname.startsWith(`${to}#`)))
           ? "active"
           : ""
-      }`}
+      }
+      ${muted && "text-muted"}
+      `}
       to={to}
     >
       <span className="icon mr-3">

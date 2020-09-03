@@ -53,6 +53,7 @@ export const AssociationSidebar = ({ association }) => (
         icon={"book"}
         to={`/associations/${association.id}/bibliotheque`}
         exact={false}
+        muted={!association.enabledModules.includes("library")}
       >
         Bibliothèque
       </SidebarItem>
@@ -63,6 +64,7 @@ export const AssociationSidebar = ({ association }) => (
         icon={"shopping-cart"}
         to={`/associations/${association.id}/magasin`}
         exact={false}
+        muted={!association.enabledModules.includes("marketplace")}
       >
         Magasin
       </SidebarItem>

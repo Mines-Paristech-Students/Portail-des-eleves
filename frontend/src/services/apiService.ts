@@ -26,6 +26,7 @@ import { loanables } from "./api/library/loanables";
 import { loans } from "./api/library/loans";
 import { elections } from "./api/elections";
 import { subscriptions } from "./api/subscriptions";
+import { library } from "./api/library/library";
 
 const baseApi = "http://localhost:8000/api/v1";
 
@@ -52,6 +53,7 @@ export const api = {
 
   events: events,
 
+  library: library,
   loanables: loanables,
   loans: loans,
 

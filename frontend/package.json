@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "axios-case-converter": "^0.6.0",
+    "chart.js": "^2.9.3",
     "dayjs": "^1.8.28",
     "formik": "^2.1.4",
     "fuse.js": "^5.2.3",
@@ -19,12 +20,11 @@
     "react-markdown": "^4.3.1",
     "react-query": "2.4",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^3.4.3",
     "react-select": "^3.1.0",
     "socket.io-client": "^2.3.0",
     "tabler-ui": "^0.0.34",
-    "yup": "^0.28.4",
-    "chart.js": "^2.9.3"
+    "yup": "^0.28.4"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
