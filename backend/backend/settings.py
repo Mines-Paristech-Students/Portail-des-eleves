@@ -32,6 +32,7 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
+TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
 ALLOWED_HOSTS = ["localhost"] + [env.str("PORTAIL_HOSTNAME")] + ["127.0.0.1"]
 CORS_ORIGIN_ALLOW_ALL = False
@@ -159,7 +160,7 @@ JQUERY_URL = False
 MEDIA_ROOT = join(BASE_DIR, "medias")
 MEDIA_URL = "/medias/"
 
-if len(sys.argv) > 1 and sys.argv[1] == "test":
+if TESTING:
     MEDIA_ROOT = join(MEDIA_ROOT, "tests")
 
 # Customized settings.
