@@ -18,4 +18,9 @@ export const subscriptions = {
     unwrap<any>(apiService.get("/subscriptions/birthday/")).then(
       (res) => res.birthdays
     ),
+
+  news: () =>
+    unwrap<any>(apiService.get("/subscriptions/news/")).then(
+      (res) => res.news
+    ),
 };
