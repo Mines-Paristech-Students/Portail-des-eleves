@@ -7,10 +7,10 @@ import dayjs from "dayjs";
 import { queryCache, useMutation } from "react-query";
 import { api } from "../../../../services/apiService";
 import { ToastContext } from "../../../utils/Toast";
-import { AxiosError } from "axios";
 import { MutateEventForm } from "../MutateEventForm";
 import { ForbiddenError } from "../../../utils/ErrorPage";
 import { ArrowLink } from "../../../utils/ArrowLink";
+import { genericMutationErrorHandling } from "../../../../utils/genericMutationErrorHandling";
 
 export const AssociationCreateEvent = ({
   association,
@@ -23,17 +23,7 @@ export const AssociationCreateEvent = ({
       queryCache.invalidateQueries(["events.list"]);
       sendSuccessToast("Événement créé.");
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast)
   });
 
   if (!association.myRole?.permissions?.includes("event")) {

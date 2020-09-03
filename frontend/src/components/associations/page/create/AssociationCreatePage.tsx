@@ -29,7 +29,6 @@ export const AssociationCreatePage = ({
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
-      console.log(error.response?.data.title);
       sendErrorToast(
         `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
           error.response
