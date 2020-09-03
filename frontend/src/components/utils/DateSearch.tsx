@@ -50,7 +50,7 @@ export const DateSearch = ({ setDateParams }) => {
     } else {
       setDateParams({});
     }
-  }, [date]);
+  }, [date, setDateParams]);
 
   return (
     <SidebarSection
