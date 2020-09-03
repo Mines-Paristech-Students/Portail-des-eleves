@@ -11,6 +11,7 @@ import { MediaPreviewCard } from "./PreviewCard";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { Instructions } from "../../utils/Instructions";
 import { Card } from "react-bootstrap";
+import { DateSearch } from "../../utils/DateSearch";
 
 export const AssociationFilesystemList = ({ association }) => {
   const associationId = association.id;
@@ -18,6 +19,7 @@ export const AssociationFilesystemList = ({ association }) => {
 
   const [tagParams, setTagParams] = useState({});
   const [searchParams, setSearchParams] = useState({});
+  const [dateParams, setDateParams] = useState({});
 
   return (
     <AssociationLayout
@@ -39,6 +41,8 @@ export const AssociationFilesystemList = ({ association }) => {
             }}
             setTagParams={setTagParams}
           />
+          <SidebarSpace />
+          <DateSearch setDateParams={setDateParams} />
         </>
       }
     >
@@ -46,7 +50,7 @@ export const AssociationFilesystemList = ({ association }) => {
         apiKey={[
           "medias.list",
           associationId,
-          { page_size: 30, ...tagParams, ...searchParams },
+          { page_size: 30, ...tagParams, ...searchParams, ...dateParams },
         ]}
         apiMethod={api.medias.list}
         render={(medias, paginationControl) => (
@@ -67,6 +71,7 @@ export const AssociationFilesystemList = ({ association }) => {
               {medias.map((media) => (
                 <MediaPreviewCard
                   media={media}
+                  key={media.id}
                   onClick={() =>
                     history.push(
                       `/associations/${association.id}/fichiers/${media.id}/`
@@ -78,7 +83,9 @@ export const AssociationFilesystemList = ({ association }) => {
             {paginationControl}
 
             {medias.length === 0 &&
-              (Object.entries(tagParams).length === 0 ? (
+              (Object.entries(tagParams).length === 0 &&
+              Object.entries(searchParams).length === 0 &&
+              Object.entries(dateParams).length === 0 ? (
                 <Instructions
                   title={"Gestion des médias"}
                   emoji={"🗂️"}

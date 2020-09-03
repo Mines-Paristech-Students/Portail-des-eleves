@@ -19,7 +19,7 @@ class MediaFilter(TaggableFilter, SearchFilter):
         model = Media
         fields = {
             "association": ["exact"],
-            "uploaded_on": ["exact", "year", "month", "year__in", "month__in"],
+            "uploaded_on": ["exact", "year", "month", "day", "year__in", "month__in"],
             "mimetype": ["exact", "contains"],
         }
 

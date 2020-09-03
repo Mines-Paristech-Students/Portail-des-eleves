@@ -112,7 +112,7 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
           <Carousel.Item>
             <img
               className="d-block m-auto"
-              style={{height: "500px"}}
+              style={{ height: "500px" }}
               src={media.previewLargeUrl}
               alt={media.id}
             />
@@ -122,7 +122,9 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
     )}
     <Card.Footer>
       <Link
-        to={`/associations/${associationId}/fichiers`}
+        to={`/associations/${associationId}/fichiers#date=${dayjs(date).format(
+          "DD-MM-YYYY"
+        )}`}
         className="float-right"
       >
         Voir les médias
