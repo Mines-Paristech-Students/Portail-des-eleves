@@ -199,14 +199,8 @@ class WidgetsTestCase(BaseWidgetsTestCase):
         pass
 
     def test_timeline_widget(self):
-        self.login("17simple")
-        res = self.timeline_widget()
-        self.assertStatusCode(res, 200)
-
-        self.assertTrue("events" in res.data and "pages" in res.data)
-        self.assertEqual(len(res.data), 2)
-        self.assertEqual(len(res.data["events"]), 2)
-        self.assertEqual(len(res.data["pages"]), 3)
+        # TODO rewrite
+        pass
 
     def test_vote_widget(self):
         self.login("17simple")

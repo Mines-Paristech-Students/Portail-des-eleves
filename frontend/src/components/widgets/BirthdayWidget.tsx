@@ -14,7 +14,8 @@ import { TablerColor } from "../../utils/colors";
 export const BirthdayWidget = ({ ...props }) => {
   const { data, error, status } = useBetterQuery<any>(
     ["subsriptions.birthday.get"],
-    api.subscriptions.birthdays
+    api.subscriptions.birthdays,
+    { refetchOnWindowFocus: false }
   );
 
   return (

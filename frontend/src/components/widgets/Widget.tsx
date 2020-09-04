@@ -8,20 +8,22 @@ import { TablerColor } from "../../utils/colors";
 export const Widget = ({
   config,
   setConfig,
-  name,
+  name = "",
+  cardWrapped = true,
   children,
   color = null,
   ...props
 }: {
   config: any;
   setConfig: (object) => void;
-  name: string;
-  children: JSX.Element;
+  name?: string;
+  cardWrapped?: boolean;
+  children: JSX.Element | JSX.Element[] | null;
   color?: TablerColor | null;
 }) => {
   const isOpen = config && config.isOpen !== undefined ? config.isOpen : true;
 
-  return (
+  return cardWrapped ? (
     <Card {...props}>
       {color && <div className={`card-status bg-${color}`} />}
       <Card.Header>
@@ -41,7 +43,10 @@ export const Widget = ({
           )}
         </div>
       </Card.Header>
+
       {isOpen && <Card.Body>{children}</Card.Body>}
     </Card>
+  ) : (
+    <div {...props}>{children}</div>
   );
 };
