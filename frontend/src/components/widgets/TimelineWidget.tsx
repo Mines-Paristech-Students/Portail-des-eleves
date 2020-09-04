@@ -30,7 +30,7 @@ type TimelineItem =
 
 export const TimelineWidget = ({ ...props }) => {
   const { data, error, status } = useBetterQuery<TimelineItem[]>(
-    ["subsriptions.timeline.get"],
+    ["subscriptions.timeline.get"],
     api.subscriptions.timeline,
     { refetchOnWindowFocus: false }
   );

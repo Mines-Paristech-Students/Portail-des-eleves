@@ -6,13 +6,29 @@ import { Col } from "react-bootstrap";
 import { Row } from "react-bootstrap";
 import { TimelineWidget } from "./widgets/TimelineWidget";
 import { UserContext } from "../services/authService";
+import { getRandom } from "../utils/random";
+
+const greetings = [
+  "Bonjour",
+  "Bonsoir",
+  "Bonjoir",
+  "Salut",
+  "Salutations",
+  "Hola",
+  "Hello",
+  "Piche à toi",
+  "Schöne Grüße",
+  "Xin chào",
+];
 
 export const Homepage = () => {
   const user = useContext(UserContext);
 
   return (
     <Container>
-      <PageTitle>Hello {user?.firstName}</PageTitle>
+      <PageTitle>
+        {getRandom(greetings)}{" "}{user?.firstName}
+      </PageTitle>
       {/*<Chat />*/}
       <Row>
         <Col md={4}>

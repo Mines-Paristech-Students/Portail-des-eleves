@@ -1,12 +1,11 @@
 import datetime
 
-import pytz
-from django.db.models import Count, Q
+from django.db.models import Count
+from django.db.models.functions import Trunc
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from associations.models import Page, Media
-from django.db import connection
 
 from associations.serializers import PageSerializer
 from associations.serializers.media import MediaSerializer
@@ -48,30 +47,21 @@ def widget_timeline_view(request):
     else:
         limit_date = datetime.datetime.now() - datetime.timedelta(days=15)
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT COUNT(*), association_id, DATE(uploaded_on) AS upload_date "
-            "FROM associations_media "
-            "WHERE uploaded_on >= %s"
-            "GROUP BY association_id, DATE(uploaded_on) "
-            "ORDER BY DATE(uploaded_on) DESC "
-            "LIMIT 100;",
-            [limit_date.isoformat()],
-        )
-        result = cursor.fetchall()
+    result = (
+        Media.objects.annotate(day=Trunc("uploaded_on", "day"))
+        .values("association", "day")
+        .annotate(c=Count("association"))
+        .filter(uploaded_on__gt=limit_date)
+        .order_by("-uploaded_on__date")[:100]
+    )
 
     for row in result:
-        count, association_id, date = row
+        count, association_id, date = row["c"], row["association"], row["day"]
         media_serializer = MediaSerializer(many=True)
         media_serializer.context["request"] = request  # useful for url generation
 
         event = {
-            "date": datetime.datetime(
-                year=date.year,
-                month=date.month,
-                day=date.day,
-                tzinfo=pytz.timezone("Europe/Paris"),
-            ),
+            "date": date,
             "type": "FILE_UPLOAD",
             "payload": {
                 "count": count,
