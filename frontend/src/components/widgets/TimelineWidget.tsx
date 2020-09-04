@@ -129,7 +129,7 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
       >
         Voir les médias
       </Link>
-      Envoyés le le {dayjs(date).locale("fr").format("dddd DD MMMM")}
+      Envoyés le {dayjs(date).locale("fr").format("dddd DD MMMM")}
     </Card.Footer>
   </Card>
 );
