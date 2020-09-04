@@ -103,7 +103,7 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
     <div className={`card-status bg-green`} />
     <Card.Header>
       <Card.Title>
-        {count} nouveaux medias déposés dans {associationId}
+        {count} nouveaux médias déposés dans {associationId}
       </Card.Title>
     </Card.Header>
     {medias.length > 0 && (
@@ -129,7 +129,7 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
       >
         Voir les médias
       </Link>
-      Envoyés le le {dayjs(date).locale("fr").format("dddd DD MMMM")}
+      Envoyés le {dayjs(date).locale("fr").format("dddd DD MMMM")}
     </Card.Footer>
   </Card>
 );
