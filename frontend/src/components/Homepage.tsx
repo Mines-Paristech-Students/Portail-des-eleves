@@ -27,7 +27,7 @@ export const Homepage = () => {
   return (
     <Container>
       <PageTitle>
-        {getRandom(greetings)}{" "}{user?.firstName}
+        {getRandom(greetings)} {user?.firstName}
       </PageTitle>
       {/*<Chat />*/}
       <Row>
