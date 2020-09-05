@@ -7,16 +7,24 @@ export const ErrorMessage = (props) => {
 };
 
 /* Generic template for error pages */
-export const ErrorPage = (props) => {
+export const ErrorPage = ({
+  errorCode = 500,
+  title = "",
+  children = null,
+}: {
+  errorCode?: number;
+  title?: string;
+  children?: JSX.Element | string | Error | null;
+}) => {
   return (
     <div className="page">
       <div className="page-content">
         <div className="container text-center">
           <div className="display-1 text-muted mb-5">
-            <i className="si si-exclamation" /> {props.errorCode}
+            <i className="si si-exclamation" /> {errorCode}
           </div>
-          <h1 className="h2 mb-3">{props.title}</h1>
-          {props.children}
+          <h1 className="h2 mb-3">{title}</h1>
+          {children}
         </div>
       </div>
     </div>

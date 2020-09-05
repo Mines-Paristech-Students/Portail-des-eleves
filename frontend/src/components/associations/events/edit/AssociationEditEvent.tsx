@@ -3,7 +3,6 @@ import { Association } from "../../../../models/associations/association";
 import { ToastContext } from "../../../utils/Toast";
 import { queryCache, useMutation } from "react-query";
 import { api, useBetterQuery } from "../../../../services/apiService";
-import { AxiosError } from "axios";
 import { PageTitle } from "../../../utils/PageTitle";
 import { useHistory, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
@@ -13,6 +12,7 @@ import { Error } from "../../../utils/Error";
 import { MutateEventForm } from "../MutateEventForm";
 import { ForbiddenError } from "../../../utils/ErrorPage";
 import { ArrowLink } from "../../../utils/ArrowLink";
+import { genericMutationErrorHandling } from "../../../../utils/genericMutationErrorHandling";
 
 export const AssociationEditEvent = ({
   association,
@@ -38,17 +38,7 @@ export const AssociationEditEvent = ({
         sendSuccessToast("Événement modifié.");
       }
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   const [remove] = useMutation(api.events.delete, {
@@ -58,17 +48,7 @@ export const AssociationEditEvent = ({
 
       history.push(`/associations/${association.id}/evenements`);
     },
-    onError: (errorAsUnknown) => {
-      const error = errorAsUnknown as AxiosError;
-
-      sendErrorToast(
-        `Erreur. Merci de réessayer ou de contacter les administrateurs si cela persiste. ${
-          error.response === undefined
-            ? ""
-            : "Détails : " + JSON.stringify(error.response.data)
-        }`
-      );
-    },
+    onError: genericMutationErrorHandling(sendErrorToast),
   });
 
   if (!association.myRole?.permissions?.includes("event")) {

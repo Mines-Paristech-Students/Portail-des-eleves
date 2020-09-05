@@ -1,8 +1,8 @@
 import { Route } from "./global";
 import { SettingsAssociations } from "../components/settings/associations/SettingsAssociations";
 import { SettingsUsers } from "../components/settings/users/SettingsUsers";
-import { SettingsAssociationsEdit } from "../components/settings/associations/edit/SettingsAssociationsEdit";
-import { SettingsAssociationsAdd } from "../components/settings/associations/add/SettingsAssociationsAdd";
+import { SettingsAssociationsEdit } from "../components/settings/associations/SettingsAssociationsEdit";
+import { SettingsAssociationsAdd } from "../components/settings/associations/SettingsAssociationsAdd";
 import { Redirect } from "react-router";
 import React from "react";
 

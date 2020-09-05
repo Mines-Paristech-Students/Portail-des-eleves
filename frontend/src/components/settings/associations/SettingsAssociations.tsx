@@ -34,7 +34,7 @@ const columnsData = [
           <Button className="btn-icon m-1" variant="outline-primary" size="sm">
             <i className="fe fe-edit-2" />
           </Button>
-        </Link>
+        </Link>ç
       </OverlayTriggerTooltip>
               <OverlayTriggerTooltip tooltip="Gérer les administrateurs(trices)">
         <Link to={`/parametres/associations/${association.id}/administrateurs`}>

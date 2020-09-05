@@ -19,14 +19,20 @@ type SelectChoice = {
  * MultiUserSelector is a component used to select users by batch. It differs
  * from the `SelectUsers` because it's made for dozens of users, while
  * `SelectUsers` is good for half a dozen.
- * @param onChange a callback called every time selected a user is
- * selected/unselected. It is given the current list of selected users
+ *
+ * @param onAdd: a callback called when a user is added.
+ * @param onRemove: a callback called when a user is removed.
+ * @param editable: can the user add or remove voters.
+ * @returns {
+    users: the list of currently selected users id.
+    setUsers: a function to set the list of all users.
+    MultiUserSelector: the React component to show the list
+  }
  */
-export const MultiUserSelector = ({
-  onChange,
-}: {
-  onChange: (users: User[]) => void;
-}) => {
+export const useMultiUserSelector = (
+  onAdd = (user) => {},
+  onRemove = (user) => {}
+) => {
   const loggedUser = useContext(UserContext);
 
   const [searchValue, setSearchValue] = useState("");
@@ -51,15 +57,66 @@ export const MultiUserSelector = ({
     [key: string]: { user: User; selected: boolean };
   }>({});
 
-  const selectedUsers = Object.entries(users)
-    .filter(([_, { selected }]) => selected)
-    .map(([_, { user }]) => user)
-    .sort(compareUsers);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const [unselectedUsers, setUnselectedUsers] = useState<User[]>([]);
 
-  const unselectedUsers = Object.entries(users)
-    .filter(([_, { selected }]) => !selected)
-    .map(([_, { user }]) => user)
-    .sort(compareUsers);
+  useEffect(() => {
+    setSelectedUsers(
+      Object.entries(users)
+        .filter(([_, { selected }]) => selected)
+        .map(([_, { user }]) => user)
+        .sort(compareUsers)
+    );
+
+    setUnselectedUsers(
+      Object.entries(users)
+        .filter(([_, { selected }]) => !selected)
+        .map(([_, { user }]) => user)
+        .sort(compareUsers)
+    );
+  }, [users]);
+
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  useEffect(() => {
+    setSelectedUserIds(selectedUsers.map((user) => user.id));
+  }, [selectedUsers]);
+
+  const onSetSelectedUserIds = (userIds) => {
+    if (userIds.length === 0) {
+      setUsers((users) => {
+        let newUsers = { ...users };
+
+        for (let user_id in newUsers) {
+          newUsers[user_id].selected = false;
+        }
+
+        return newUsers;
+      });
+    } else {
+      api.users
+        .list({ id__in: userIds.join(","), page_size: 1000 })
+        .then((response) => {
+          setUsers((users) => {
+            let newUsers = { ...users };
+            for (let user_id in newUsers) {
+              newUsers[user_id].selected = false;
+            }
+
+            response.results.forEach((user) => {
+              newUsers[user.id] = {
+                selected: true,
+                user: user,
+              };
+            });
+            return newUsers;
+          });
+        })
+        .catch((err) => {
+          setUserStatus("error");
+          setUserError(err.toString());
+        });
+    }
+  };
 
   const {
     data: promotions,
@@ -121,6 +178,7 @@ export const MultiUserSelector = ({
         },
       },
     }));
+    onAdd(user.id);
   };
 
   const removeUser = (user) => {
@@ -141,121 +199,126 @@ export const MultiUserSelector = ({
         return newUsers;
       });
     }
+    onRemove(user.id);
   };
 
-  useEffect(() => {
-    onChange(selectedUsers);
-  }, [selectedUsers, onChange]);
+  const component =
+    userStatus === "error" ? (
+      <ErrorMessage>{userError}</ErrorMessage>
+    ) : promotionsStatus === "error" ? (
+      <ErrorMessage>{promotionsError}</ErrorMessage>
+    ) : promotionsStatus === "loading" ? (
+      <Loading />
+    ) : (
+      <Container fluid={true}>
+        <Row className={"border bg-white"} style={{ height: "80vh" }}>
+          <Col md={3} className={"p-0 border-right overflow-auto"}>
+            <Select
+              value={promotion}
+              onChange={(v) => setPromotion(v as SelectChoice)}
+              options={
+                promotions
+                  ? promotions.promotions.map((promotion) => ({
+                      value: promotion,
+                      label: promotion,
+                    }))
+                  : []
+              }
+              placeholder="Filtrer par promotion…"
+              noOptionsMessage={() => "Aucun résultat"}
+              className={"rounded-0 border-bottom"}
+              styles={selectStyles}
+            />
 
-  return userStatus === "error" ? (
-    <ErrorMessage>{userError}</ErrorMessage>
-  ) : promotionsStatus === "error" ? (
-    <ErrorMessage>{promotionsError}</ErrorMessage>
-  ) : promotionsStatus === "loading" ? (
-    <Loading />
-  ) : (
-    <Container fluid={true}>
-      <Row className={"border bg-white"} style={{ height: "80vh" }}>
-        <Col md={3} className={"p-0 border-right overflow-auto"}>
-          <Select
-            value={promotion}
-            onChange={(v) => setPromotion(v as SelectChoice)}
-            options={
-              promotions
-                ? promotions.promotions.map((promotion) => ({
-                    value: promotion,
-                    label: promotion,
-                  }))
-                : []
-            }
-            placeholder="Filtrer par promotion…"
-            noOptionsMessage={() => "Aucun résultat"}
-            className={"rounded-0 border-bottom"}
-            styles={selectStyles}
-          />
+            <DebounceInput
+              className={
+                "form-control rounded-0 border-top-0 border-left-0 border-right-0"
+              }
+              placeholder={"Rechercher quelqu'un..."}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              type="text"
+              debounceTimeout={300}
+              minLength={2}
+            />
 
-          <DebounceInput
-            className={
-              "form-control rounded-0 border-top-0 border-left-0 border-right-0"
-            }
-            placeholder={"Rechercher quelqu'un..."}
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            type="text"
-            debounceTimeout={300}
-            minLength={2}
-          />
-
-          {unselectedUsers.length > 0 && (
-            <button
-              className={"btn btn-link p-4 m-0"}
-              onClick={() => unselectedUsers.forEach(addUser)}
-            >
-              Tout ajouter
-            </button>
-          )}
-
-          <ul className="list-group list-group-flush">
-            {unselectedUsers.length > 0 ? (
-              unselectedUsers.map((user) => (
-                <li
-                  className="list-group-item border-bottom"
-                  key={user.id}
-                  onClick={() => addUser(user)}
-                >
-                  {user.firstName} {user.lastName}
-                </li>
-              ))
-            ) : (
-              <p className="text-center mt-4 text-muted">
-                <em>Aucun utilisateur restant</em>
-              </p>
+            {unselectedUsers.length > 0 && (
+              <button
+                className={"btn btn-link p-4 m-0"}
+                onClick={() => unselectedUsers.forEach(addUser)}
+              >
+                Tout ajouter
+              </button>
             )}
-          </ul>
-        </Col>
-        <Col md={9} className={"bg-light overflow-auto"}>
-          <Row className={"pt-2 pr-2"}>
-            {selectedUsers.length > 0 && (
-              <p className={"text-right col col-12"}>
-                <button
-                  className="btn btn-link text-danger"
-                  onClick={() => selectedUsers.forEach(removeUser)}
-                >
-                  Tout retirer
-                </button>
-              </p>
-            )}
-            {selectedUsers.map((user) => (
-              <Col lg={2} sm={6} key={user.id}>
-                <UserAvatarCard
-                  userId={user.id}
-                  className={"p-2"}
-                  size={Size.Large}
-                >
-                  <p className="text-muted text-center text-truncate mt-3 mb-0">
-                    <span
-                      className="btn btn-secondary btn-icon rounded-circle"
-                      onClick={() => removeUser(user)}
-                      style={avatarStyle}
-                    >
-                      <i className="fe fe-x" />
-                    </span>
+
+            <ul className="list-group list-group-flush">
+              {unselectedUsers.length > 0 ? (
+                unselectedUsers.map((user) => (
+                  <li
+                    className="list-group-item border-bottom"
+                    key={user.id}
+                    onClick={() => addUser(user)}
+                  >
                     {user.firstName} {user.lastName}
-                  </p>
-                </UserAvatarCard>
-              </Col>
-            ))}
+                  </li>
+                ))
+              ) : (
+                <p className="text-center mt-4 text-muted">
+                  <em>Aucun utilisateur restant</em>
+                </p>
+              )}
+            </ul>
+          </Col>
 
-            {selectedUsers.length === 0 && (
-              <p className={"text-center text-muted lead col mt-6"}>
-                Personne n'a été sélectionné pour l'instant
-              </p>
-            )}
-          </Row>
-        </Col>
-      </Row>
-    </Container>
-  );
+          <Col md={9} className={"bg-light overflow-auto"}>
+            <Row className={"pt-2 pr-2"}>
+              {selectedUsers.length > 0 && (
+                <p className={"text-right col col-12"}>
+                  <button
+                    className="btn btn-link text-danger"
+                    onClick={() => selectedUsers.forEach(removeUser)}
+                  >
+                    Tout retirer
+                  </button>
+                </p>
+              )}
+              {selectedUsers.map((user) => (
+                <Col lg={3} sm={6} key={user.id}>
+                  <UserAvatarCard
+                    userId={user.id}
+                    className={"p-2"}
+                    size={Size.Large}
+                  >
+                    <p className="text-muted text-center text-truncate mt-3 mb-0">
+                      <span
+                        className="btn btn-secondary btn-icon rounded-circle"
+                        onClick={() => removeUser(user)}
+                        style={avatarStyle}
+                      >
+                        <i className="fe fe-x" />
+                      </span>
+                      {user.firstName} {user.lastName}
+                    </p>
+                  </UserAvatarCard>
+                </Col>
+              ))}
+
+              {selectedUsers.length === 0 && (
+                <p className={"text-center text-muted lead col mt-6"}>
+                  Personne n'a été sélectionné pour l'instant
+                </p>
+              )}
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    );
+
+  return {
+    users: selectedUserIds,
+    setUsers: onSetSelectedUserIds,
+    MultiUserSelector: component,
+  };
 };
 
 const selectStyles = {

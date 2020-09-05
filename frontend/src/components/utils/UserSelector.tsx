@@ -1,22 +1,42 @@
 import React, { useState } from "react";
-import { api } from "../../services/apiService";
 import { DebounceInput } from "react-debounce-input";
-import { Row } from "react-bootstrap";
-import { UserAvatarCard } from "./avatar/UserAvatarCard";
+import { Row, Card } from "react-bootstrap";
+import "./avatar/user_avatar.css";
+import { api } from "../../services/apiService";
 import { Pagination } from "./Pagination";
 import { PageTitle } from "./PageTitle";
-import "../utils/avatar/user_avatar.css";
+import { UserAvatarCard } from "./avatar/UserAvatarCard";
+import { User } from "../../models/user";
 
-export const UserSelector = ({ setUser }) => {
+export const UserSelector = ({
+  setUser,
+  title,
+  helper = "",
+  inCard = false,
+  queryParams = {},
+  apiKey = "users.list.search",
+  apiMethod = api.users.list,
+  getUser = (user) => user,
+}: {
+  setUser: (user) => void;
+  title: string;
+  helper?: string;
+  inCard?: boolean;
+  queryParams?: object;
+  apiKey?: string;
+  apiMethod?: any;
+  getUser?: (user) => User;
+}) => {
   const [searchValue, setSearchValue] = useState("");
 
-  return (
+  const body = (
     <>
-      <PageTitle>Comptoir</PageTitle>
-      <p className="text-muted text-center">Cliquez pour ouvrir un compte</p>
       <Pagination
-        apiKey={["users.list.search", { search: searchValue, page_size: 20 }]}
-        apiMethod={api.users.list}
+        apiKey={[
+          apiKey,
+          { search: searchValue, page_size: 20, ...queryParams },
+        ]}
+        apiMethod={apiMethod}
         render={(users, paginationControl) => (
           <>
             <DebounceInput
@@ -28,23 +48,27 @@ export const UserSelector = ({ setUser }) => {
               onChange={(e) => setSearchValue(e.target.value)}
             />
             <Row>
-              {users.map((user) => (
-                <div
-                  className="col-lg-2 col-sm-3 col-6 p-2"
-                  onClick={() => setUser(user)}
-                  key={user.id}
-                >
-                  <UserAvatarCard
-                    userId={user.id}
-                    className="h-100 cursor-pointer"
-                    link={false}
-                  >
-                    <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
-                      {user.id}
-                    </p>
-                  </UserAvatarCard>
-                </div>
-              ))}
+              {users &&
+                users.map((user) => {
+                  const id = getUser(user).id;
+                  return (
+                    <div
+                      className="col-lg-2 col-sm-3 col-6 p-2"
+                      onClick={() => setUser(user)}
+                      key={id}
+                    >
+                      <UserAvatarCard
+                        userId={id}
+                        className="h-100 cursor-pointer"
+                        link={false}
+                      >
+                        <p className="text-muted text-center text-truncate mt-3 mb-0 px-2">
+                          {id}
+                        </p>
+                      </UserAvatarCard>
+                    </div>
+                  );
+                })}
             </Row>
             <div className="d-flex justify-content-center mt-4">
               <div>{paginationControl}</div>
@@ -52,6 +76,25 @@ export const UserSelector = ({ setUser }) => {
           </>
         )}
       />
+    </>
+  );
+
+  return inCard ? (
+    <Card>
+      <Card.Header>
+        <Card.Title>{title}</Card.Title>
+      </Card.Header>
+      <Card.Body>
+        {body}
+        <p className="text-muted text-center">{helper}</p>
+      </Card.Body>
+    </Card>
+  ) : (
+    <>
+      <PageTitle>{title}</PageTitle>
+      <p className="text-muted text-center">{helper}</p>
+
+      {body}
     </>
   );
 };

@@ -103,7 +103,12 @@ def birthdays_to_json(number_of_days):
             birthdays[bd] = {"day": bd.day, "month": bd.month, "users": []}
 
         birthdays[bd]["users"].append(
-            {"id": user.id, "first_name": user.first_name, "last_name": user.last_name}
+            {
+                "id": user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "birthday_year": user.birthday.year,
+            }
         )
 
     return {"birthdays": list(birthdays.values())}
