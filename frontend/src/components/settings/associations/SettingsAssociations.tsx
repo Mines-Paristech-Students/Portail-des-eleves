@@ -29,21 +29,31 @@ const columnsData = [
     header: "Action",
     render: (association: Association) => (
       <>
-      <OverlayTriggerTooltip tooltip="Modifier l’association">
-        <Link to={`/parametres/associations/${association.id}/modifier`}>
-          <Button className="btn-icon m-1" variant="outline-primary" size="sm">
-            <i className="fe fe-edit-2" />
-          </Button>
-        </Link>ç
-      </OverlayTriggerTooltip>
-              <OverlayTriggerTooltip tooltip="Gérer les administrateurs(trices)">
-        <Link to={`/parametres/associations/${association.id}/administrateurs`}>
-          <Button className="btn-icon m-1" variant="outline-primary" size="sm">
-            <i className="fe fe-users" />
-          </Button>
-        </Link>
-      </OverlayTriggerTooltip>
-        </>
+        <OverlayTriggerTooltip tooltip="Modifier l’association">
+          <Link to={`/parametres/associations/${association.id}/modifier`}>
+            <Button
+              className="btn-icon m-1"
+              variant="outline-primary"
+              size="sm"
+            >
+              <i className="fe fe-edit-2" />
+            </Button>
+          </Link>
+        </OverlayTriggerTooltip>
+        <OverlayTriggerTooltip tooltip="Gérer les administrateurs(trices)">
+          <Link
+            to={`/parametres/associations/${association.id}/administrateurs`}
+          >
+            <Button
+              className="btn-icon m-1"
+              variant="outline-primary"
+              size="sm"
+            >
+              <i className="fe fe-users" />
+            </Button>
+          </Link>
+        </OverlayTriggerTooltip>
+      </>
     ),
   },
 ];
