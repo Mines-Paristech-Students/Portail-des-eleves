@@ -48,7 +48,11 @@ export const TimelineWidget = ({ ...props }) => {
         <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
       ) : status === "success" && data ? (
         data.map(({ date, type, payload }) => (
-          <div key={date + "-" + type} className={"mb-4"}>
+          <div
+            // ts-ignore
+            key={date + "-" + type + "-" + (payload.hasOwnProperty("associationId") && payload["associationId"])}
+            className={"mb-4"}
+          >
             {type === "NEWS" ? (
               <TimelineNews news={payload} />
             ) : type === "FILE_UPLOAD" ? (
@@ -109,7 +113,7 @@ const TimelineFileUpload = ({ count, associationId, medias, date }) => (
     {medias.length > 0 && (
       <Carousel>
         {medias.map((media) => (
-          <Carousel.Item>
+          <Carousel.Item key={media.id}>
             <img
               className="d-block m-auto"
               style={{ height: "500px" }}

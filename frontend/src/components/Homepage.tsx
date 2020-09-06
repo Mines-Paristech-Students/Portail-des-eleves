@@ -7,6 +7,8 @@ import { Row } from "react-bootstrap";
 import { TimelineWidget } from "./widgets/TimelineWidget";
 import { UserContext } from "../services/authService";
 import { getRandom } from "../utils/random";
+import "./homepage.css";
+import { PollWidget } from "./widgets/PollWidget";
 
 const greetings = [
   "Bonjour",
@@ -25,17 +27,20 @@ export const Homepage = () => {
   const user = useContext(UserContext);
 
   return (
-    <Container>
+    <Container fluid>
       <PageTitle>
         {getRandom(greetings)} {user?.firstName}
       </PageTitle>
       {/*<Chat />*/}
       <Row>
-        <Col md={4}>
-          <BirthdayWidget />
+        <Col className="side-widget">
+          <PollWidget />
         </Col>
         <Col>
           <TimelineWidget />
+        </Col>
+        <Col className={"side-widget"}>
+          <BirthdayWidget />
         </Col>
       </Row>
     </Container>

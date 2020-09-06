@@ -23,4 +23,9 @@ export const subscriptions = {
     unwrap<any>(apiService.get("/subscriptions/timeline/")).then(
       (res) => res.timeline
     ),
+
+  polls: () =>
+    unwrap<any>(apiService.get("/subscriptions/poll/")).then(
+      (res) => res.activePolls
+    ),
 };

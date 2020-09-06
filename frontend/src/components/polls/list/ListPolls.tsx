@@ -13,6 +13,7 @@ import { Pagination } from "../../utils/Pagination";
 import { Poll } from "../../../models/polls";
 import { PollsError } from "../PollsError";
 import { PollsLoading } from "../PollsLoading";
+import { Card } from "react-bootstrap";
 
 const Content = ({ current, polls, paginationControl }) => {
   const cards: ReactElement[] = current
@@ -34,14 +35,20 @@ const Content = ({ current, polls, paginationControl }) => {
         <Row>
           {cards.map((pollCard, index) => (
             <Col key={"poll-card-" + index} xs={{ span: 6 }}>
-              {pollCard}
+              <Card>
+                <Card.Body>{pollCard}</Card.Body>
+              </Card>
             </Col>
           ))}
         </Row>
       ) : (
         <Row>
           <Col key={"poll-card-empty"} xs={{ span: 6, offset: 3 }}>
-            <PollNoPolls />
+            <Card>
+              <Card.Body>
+                <PollNoPolls />
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
       )}

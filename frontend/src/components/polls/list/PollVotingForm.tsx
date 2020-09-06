@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { Choice, Poll } from "../../../models/polls";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import { SelectFormGroup } from "../../utils/forms/SelectFormGroup";
-import { Form, Formik } from "formik";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext } from "../../utils/Toast";
@@ -21,6 +19,7 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     onSuccess: () => {
       queryCache.invalidateQueries(["polls.list"]);
       queryCache.invalidateQueries(["polls.stats"]);
+      queryCache.invalidateQueries(["subsriptions.polls.get"]);
       sendSuccessToast("Vous avez voté.");
     },
     onError: (errorAsUnknown) => {
@@ -50,71 +49,36 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
     },
   });
 
-  const onSubmit = (values, { setSubmitting }) => {
-    vote(
-      {
-        user: user,
-        pollId: poll.id,
-        choiceId: values.choice,
-      },
-      { onSettled: setSubmitting(false) }
-    );
+  const onSubmit = (choiceId) => {
+    vote({
+      user: user,
+      pollId: poll.id,
+      choiceId: choiceId,
+    });
   };
 
   return (
-    <Card>
-      <Card.Header>
-        <Card.Title as="h3">{poll.question}</Card.Title>
-      </Card.Header>
+    <>
+      <h3>{poll.question}</h3>
 
-      <Card.Body>
-        <Card.Subtitle className="text-left">
-          <em>
-            {poll.publicationDate &&
-              dayjs(poll.publicationDate).format("DD/MM/YYYY")}
-          </em>
-        </Card.Subtitle>
-
-        <Formik
-          initialValues={{
-            choice: undefined,
-          }}
-          onSubmit={onSubmit}
+      {poll.choices.map((choice) => (
+        <Button
+          key={choice.id}
+          size={"lg"}
+          variant={"secondary"}
+          className={"btn-pill d-block w-100 mb-2 btn btn-square"}
+          onClick={() => onSubmit(choice.id)}
         >
-          <Form>
-            <ChoiceFields choices={poll.choices} />
+          {choice.text}
+        </Button>
+      ))}
 
-            <div className="text-center ml-auto">
-              {poll.userHasVoted ? (
-                <p>Vous avez déjà voté.</p>
-              ) : (
-                <Button
-                  disabled={poll.userHasVoted}
-                  variant="outline-success"
-                  type="submit"
-                >
-                  Voter
-                </Button>
-              )}
-            </div>
-          </Form>
-        </Formik>
-      </Card.Body>
-    </Card>
+      <p className="text-center text-muted">
+        <em>
+          {poll.publicationDate &&
+            dayjs(poll.publicationDate).format("DD/MM/YYYY")}
+        </em>
+      </p>
+    </>
   );
 };
-
-const ChoiceFields = ({ choices }: { choices: Choice[] }) => (
-  <SelectFormGroup
-    selectType="vertical"
-    type="radio"
-    label=""
-    items={choices
-      .sort((a, b) => a.text.localeCompare(b.text))
-      .map((choice) => ({
-        value: choice.id.toString(),
-        text: choice.text,
-      }))}
-    name="choice"
-  />
-);

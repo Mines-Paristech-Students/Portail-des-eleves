@@ -1,0 +1,5 @@
+@media (min-width: 700px) {
+  .side-widget {
+    max-width: 400px;
+  }
+}
