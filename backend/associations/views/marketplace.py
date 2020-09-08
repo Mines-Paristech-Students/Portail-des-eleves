@@ -271,11 +271,20 @@ def compute_balance(user, marketplace):
 class BalanceView(APIView):
     @staticmethod
     def get_balance_in_json(user, marketplace):
-        return {
+        res = {
             "balance": compute_balance(user, marketplace),
             "marketplace": marketplace.id,
             "user": user.id,
         }
+
+        try:
+            res["association"] = {
+                "name": marketplace.association.name
+            }
+        except Marketplace.association.RelatedObjectDoesNotExist:
+            pass
+
+        return res
 
     def get(self, request, marketplace_id=None, user_id=None):
         if not marketplace_id:

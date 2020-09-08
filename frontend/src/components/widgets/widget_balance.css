@@ -1,0 +1,5 @@
+img.balance-gif {
+  border-radius: 0 !important;
+  max-height: 150px;
+  object-fit: cover;
+}

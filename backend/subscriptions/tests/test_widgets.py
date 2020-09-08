@@ -158,7 +158,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
                         "marketplace": marketplace.id,
                         "user": user,
                     }
-                    for marketplace in Marketplace.objects.all()
+                    for marketplace in Marketplace.objects.filter(enabled=True).all()
                 ],
             )
 

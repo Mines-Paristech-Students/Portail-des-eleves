@@ -9,6 +9,7 @@ import { UserContext } from "../services/authService";
 import { getRandom } from "../utils/random";
 import "./homepage.css";
 import { PollWidget } from "./widgets/PollWidget";
+import { BalanceWidget } from "./widgets/BalanceWidget";
 
 const greetings = [
   "Bonjour",
@@ -35,6 +36,7 @@ export const Homepage = () => {
       <Row>
         <Col className="side-widget">
           <PollWidget />
+          <BalanceWidget />
         </Col>
         <Col>
           <TimelineWidget />
