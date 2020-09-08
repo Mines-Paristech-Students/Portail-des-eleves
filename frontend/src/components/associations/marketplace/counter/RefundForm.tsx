@@ -25,7 +25,7 @@ export const RefundForm = ({ customer, marketplaceId, ...props }) => {
     onSuccess: async () => {
       sendSuccessToast(`Solde mis à jour`);
       setShow(false);
-      await queryCache.invalidateQueries("marketplace.balance");
+      await queryCache.invalidateQueries(["marketplace.balance"]);
     },
     onError: (err) => {
       sendErrorToast(`Erreur lors du passage de la commande : ${err}`);

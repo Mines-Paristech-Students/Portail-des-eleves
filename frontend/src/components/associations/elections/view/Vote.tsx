@@ -38,7 +38,7 @@ export const VoteCard = ({ election }: { election: Election }) => {
       )
       .then(() => {
         sendSuccessToast("Votre vote a bien été enregistré");
-        queryCache.invalidateQueries("election.get");
+        queryCache.invalidateQueries(["election.get"]);
       })
       .catch((err) => {
         sendErrorToast(`Une erreur est survenue ${err}`);

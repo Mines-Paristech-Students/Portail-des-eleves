@@ -33,8 +33,8 @@ export const AssociationLoanableEdit = ({
     onMutate: () => sendInfoToast("Modifications envoyées…"),
     onSuccess: () => {
       sendSuccessToast("Modifications enregistrées");
-      queryCache.invalidateQueries("loanables.get");
-      queryCache.invalidateQueries("loanables.list");
+      queryCache.invalidateQueries(["loanables.get"]);
+      queryCache.invalidateQueries(["loanables.list"]);
     },
     onError: () => sendErrorToast("Une erreur est survenue"),
   });
@@ -43,7 +43,7 @@ export const AssociationLoanableEdit = ({
     onMutate: () => sendInfoToast("Suppression en cours…"),
     onSuccess: () => {
       sendSuccessToast("Objet supprimé");
-      queryCache.invalidateQueries("loanables.list");
+      queryCache.invalidateQueries(["loanables.list"]);
     },
     onError: () => sendErrorToast("Une erreur est survenue"),
   });

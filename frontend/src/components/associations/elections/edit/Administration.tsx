@@ -26,7 +26,7 @@ export const Administration = ({
       onMutate: () => sendInfoToast("Sauvegarde..."),
       onSuccess: (election) => {
         sendSuccessToast("Sauvegardée !");
-        queryCache.invalidateQueries("election.get");
+        queryCache.invalidateQueries(["election.get"]);
         onChange(election);
       },
       onError: (err) =>

@@ -36,7 +36,7 @@ export const ChangeStateModal = ({ voter, setVoter }) => {
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),
     onSuccess: () => {
       sendSuccessToast("Demande envoyée.");
-      queryCache.invalidateQueries("election.voters.search");
+      queryCache.invalidateQueries(["election.voters.search"]);
     },
     onError: () => sendErrorToast("La demande a échoué."),
   });

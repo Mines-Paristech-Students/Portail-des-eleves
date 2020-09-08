@@ -17,7 +17,7 @@ export const useWidgetConfig = (widgetName) => {
     onMutate: () => sendInfoToast("Modification en cours…"),
     onSuccess: () => {
       sendSuccessToast("Préférences enregistrées !");
-      queryCache.invalidateQueries("subscriptions.config.get");
+      queryCache.invalidateQueries(["subscriptions.config.get"]);
     },
     onError: () => sendErrorToast("Une erreur est survenue."),
   });
