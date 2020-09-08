@@ -30,7 +30,13 @@ const getColor = (
  * The results are displayed as progress bars, with colours depending on the
  * rank of the choice.
  */
-export const PollResults = ({ poll, children }: { poll: Poll, children?: JSX.Element }) => (
+export const PollResults = ({
+  poll,
+  children,
+}: {
+  poll: Poll;
+  children?: JSX.Element;
+}) => (
   <>
     <h3 className={"m-0"}>{poll.question}</h3>
     <ListGroup>

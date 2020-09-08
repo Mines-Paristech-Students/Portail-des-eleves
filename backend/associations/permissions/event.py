@@ -5,11 +5,11 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class EventsPermission(BasePermission):
     """
-                     | Permissions |
-        Events admin | CRUD        |
-        Simple       | R           |
+                 | Permissions |
+    Events admin | CRUD        |
+    Simple       | R           |
 
-        The customized actions 'join' and 'leave' rely on a different permission.
+    The customized actions 'join' and 'leave' rely on a different permission.
     """
 
     message = "You are not allowed to edit this event."
@@ -31,7 +31,7 @@ class EventsPermission(BasePermission):
 
 class JoinEventPermission(BasePermission):
     """
-        Only PUT is allowed
+    Only PUT is allowed
     """
 
     message = "You are not allowed to edit this event."

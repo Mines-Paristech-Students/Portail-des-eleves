@@ -26,7 +26,7 @@ export const subscriptions = {
     ),
 
   polls: (params) =>
-    unwrap<any>(apiService.get(`/subscriptions/poll/${toUrlParams(params)}`)).then(
-      (res) => res.polls
-    ),
+    unwrap<any>(
+      apiService.get(`/subscriptions/poll/${toUrlParams(params)}`)
+    ).then((res) => res.polls),
 };

@@ -3,13 +3,13 @@ from rest_framework import permissions
 
 class PollPermission(permissions.BasePermission):
     """
-        Status ->     | POST                        | REVIEWING          | REJECTED           | ACCEPTED           |
-                      | For them | For another user | Own | Other user's | Own | Other user's | Own | Other user's |
-        Administrator | C        |                  | RUD | RU           | RUD | RU           | RU  | RU           |
-        Simple        | C        |                  | RUD |              | R D |              | R   | R            |
+    Status ->     | POST                        | REVIEWING          | REJECTED           | ACCEPTED           |
+                  | For them | For another user | Own | Other user's | Own | Other user's | Own | Other user's |
+    Administrator | C        |                  | RUD | RU           | RUD | RU           | RU  | RU           |
+    Simple        | C        |                  | RUD |              | R D |              | R   | R            |
 
-        This permission MUST NOT handle the endpoints /vote/ and /results/.
-        The POST restriction is handled in the serializer.
+    This permission MUST NOT handle the endpoints /vote/ and /results/.
+    The POST restriction is handled in the serializer.
     """
 
     message = "Request not allowed."
@@ -44,8 +44,8 @@ class PollPermission(permissions.BasePermission):
 
 class ResultsPermission(permissions.BasePermission):
     """
-                  | Not published | Published |
-        Anyone    |               | R         |
+              | Not published | Published |
+    Anyone    |               | R         |
     """
 
     message = "You are not allowed to view the results of this poll."
@@ -59,8 +59,8 @@ class ResultsPermission(permissions.BasePermission):
 
 class VotePermission(permissions.BasePermission):
     """
-                  | Not active | Active |
-        Anyone    |            | C      |
+              | Not active | Active |
+    Anyone    |            | C      |
     """
 
     message = "You are not allowed to vote to this poll."

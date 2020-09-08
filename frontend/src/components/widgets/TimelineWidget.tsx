@@ -50,7 +50,14 @@ export const TimelineWidget = ({ ...props }) => {
         data.map(({ date, type, payload }) => (
           <div
             // ts-ignore
-            key={date + "-" + type + "-" + (payload.hasOwnProperty("associationId") && payload["associationId"])}
+            key={
+              date +
+              "-" +
+              type +
+              "-" +
+              (payload.hasOwnProperty("associationId") &&
+                payload["associationId"])
+            }
             className={"mb-4"}
           >
             {type === "NEWS" ? (
