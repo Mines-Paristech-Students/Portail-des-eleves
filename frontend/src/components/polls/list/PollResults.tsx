@@ -5,7 +5,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import ListGroup from "react-bootstrap/ListGroup";
 import dayjs from "dayjs";
 
-const totalNumberOfVotes = (poll) =>
+export const totalNumberOfVotes = (poll) =>
   poll.choices.reduce(
     (total, choice) =>
       choice.numberOfVotes ? total + choice.numberOfVotes : total,
@@ -30,15 +30,16 @@ const getColor = (
  * The results are displayed as progress bars, with colours depending on the
  * rank of the choice.
  */
-export const PollResults = ({ poll }: { poll: Poll }) => (
+export const PollResults = ({ poll, children }: { poll: Poll, children?: JSX.Element }) => (
   <>
-    <h3 className={"text-center"}>{poll.question}</h3>
+    <h3 className={"m-0"}>{poll.question}</h3>
     <ListGroup>
       {poll.choices
         // Sort by descending number of votes.
         .sort((a, b) => a.text.localeCompare(b.text))
-        .map((choice) =>
-          choice.numberOfVotes !== undefined ? (
+        .map((choice) => {
+          let numberOfVotes = totalNumberOfVotes(poll);
+          return choice.numberOfVotes !== undefined ? (
             <ListGroup.Item key={choice.id} className="border-0">
               <div className="clearfix">
                 <div className="float-left">
@@ -47,7 +48,9 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                 <div className="float-right text-muted">
                   <small>
                     {Number(
-                      (100 * choice.numberOfVotes) / totalNumberOfVotes(poll)
+                      numberOfVotes > 0
+                        ? (100 * choice.numberOfVotes) / numberOfVotes
+                        : 0
                     ).toFixed(1)}{" "}
                     %
                   </small>
@@ -57,17 +60,15 @@ export const PollResults = ({ poll }: { poll: Poll }) => (
                 className="progress-sm"
                 now={choice.numberOfVotes}
                 min={0}
-                max={totalNumberOfVotes(poll)}
-                variant={getColor(
-                  choice.numberOfVotes,
-                  totalNumberOfVotes(poll)
-                )}
+                max={numberOfVotes}
+                variant={getColor(choice.numberOfVotes, numberOfVotes)}
               />
             </ListGroup.Item>
-          ) : null
-        )}
+          ) : null;
+        })}
     </ListGroup>
 
+    {children}
     <p className="text-center text-muted">
       <em>
         {poll.publicationDate &&

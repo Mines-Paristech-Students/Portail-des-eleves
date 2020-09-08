@@ -15,19 +15,14 @@ import { PollsError } from "../PollsError";
 import { PollsLoading } from "../PollsLoading";
 import { Card } from "react-bootstrap";
 
-const Content = ({ current, polls, paginationControl }) => {
-  const cards: ReactElement[] = current
-    ? [].concat(
-        polls
-          .filter((poll) => poll.isActive && !poll.userHasVoted)
-          .map((poll) => <PollVotingForm poll={poll} />),
-        polls
-          .filter((poll) => poll.isActive && poll.userHasVoted)
-          .map((poll) => <PollResults poll={poll} />)
-      )
-    : polls
-        .filter((poll) => !poll.isActive && poll.hasBeenPublished)
-        .map((poll) => <PollResults poll={poll} />);
+const Content = ({ polls, paginationControl }) => {
+  const cards: ReactElement[] = polls.map((poll) =>
+    poll.isActive && !poll.userHasVoted ? (
+      <PollVotingForm poll={poll} />
+    ) : (
+      <PollResults poll={poll} />
+    )
+  );
 
   return (
     <Container>
@@ -68,30 +63,39 @@ const Content = ({ current, polls, paginationControl }) => {
  * If `current` is `false`, only display the inactive polls...
  *   - always display the poll as a `PollResult`.
  */
-export const ListPolls = ({ current }: { current?: boolean }) => (
+export const ListPolls = ({
+  current,
+  title,
+}: {
+  current?: boolean;
+  title?: string;
+}) => (
+  <Pagination
+    render={(polls: Poll[], paginationControl) =>
+      polls.length > 0 && (
+        <>
+          <PageTitle>{title}</PageTitle>
+          <Content polls={polls} paginationControl={paginationControl} />
+        </>
+      )
+    }
+    apiKey={[
+      "polls.list",
+      current ? { is_active: true } : { is_published: true, is_active: false },
+    ]}
+    apiMethod={api.polls.list}
+    config={{ refetchOnWindowFocus: false }}
+    paginationControlProps={{
+      className: "justify-content-center mb-5",
+    }}
+    loadingElement={PollsLoading}
+    errorElement={PollsError}
+  />
+);
+
+export const ListAllPolls = () => (
   <PollsBase>
-    <PageTitle>{current ? "Sondages en cours" : "Anciens sondages"}</PageTitle>
-    <Pagination
-      render={(polls: Poll[], paginationControl) => (
-        <Content
-          current={current}
-          polls={polls}
-          paginationControl={paginationControl}
-        />
-      )}
-      apiKey={[
-        "polls.list",
-        current
-          ? { is_active: true }
-          : { is_published: true, is_active: false },
-      ]}
-      apiMethod={api.polls.list}
-      config={{ refetchOnWindowFocus: false }}
-      paginationControlProps={{
-        className: "justify-content-center mb-5",
-      }}
-      loadingElement={PollsLoading}
-      errorElement={PollsError}
-    />
+    <ListPolls title={"Sondages en cours"} current={true} />
+    <ListPolls title={"Anciens sondages"} current={false} />
   </PollsBase>
 );

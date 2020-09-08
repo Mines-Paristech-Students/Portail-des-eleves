@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { Choice, Poll } from "../../../models/polls";
+import { Poll } from "../../../models/polls";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
 import { UserContext } from "../../../services/authService";
 import { api } from "../../../services/apiService";
 import { ToastContext } from "../../utils/Toast";
@@ -12,7 +11,13 @@ import dayjs from "dayjs";
 /**
  * Display a form allowing to vote for a Poll in a Card.
  */
-export const PollVotingForm = ({ poll }: { poll: Poll }) => {
+export const PollVotingForm = ({
+  poll,
+  children,
+}: {
+  poll: Poll;
+  children?: JSX.Element;
+}) => {
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const user = useContext(UserContext);
   const [vote] = useMutation(api.polls.vote, {
@@ -60,19 +65,18 @@ export const PollVotingForm = ({ poll }: { poll: Poll }) => {
   return (
     <>
       <h3>{poll.question}</h3>
-
       {poll.choices.map((choice) => (
         <Button
           key={choice.id}
           size={"lg"}
           variant={"secondary"}
-          className={"btn-pill d-block w-100 mb-2 btn btn-square"}
+          className={"d-block w-100 mb-2 btn-square"}
           onClick={() => onSubmit(choice.id)}
         >
           {choice.text}
         </Button>
       ))}
-
+      {children}
       <p className="text-center text-muted">
         <em>
           {poll.publicationDate &&

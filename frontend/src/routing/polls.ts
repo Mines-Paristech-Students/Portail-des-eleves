@@ -1,15 +1,10 @@
-import { ListPolls } from "../components/polls/list/ListPolls";
+import { ListAllPolls, ListPolls } from "../components/polls/list/ListPolls";
 import { SubmitPoll } from "../components/polls/submit/SubmitPoll";
 import { Route } from "./global";
 import { PollsTableAdmin } from "../components/polls/table/PollsTableAdmin";
 import { PollsTableUser } from "../components/polls/table/PollsTableUser";
 
 export const routes: Route[] = [
-  {
-    path: "/anciens",
-    component: () => ListPolls({ current: false }),
-    exact: true,
-  },
   {
     path: "/administration",
     component: PollsTableAdmin,
@@ -27,7 +22,7 @@ export const routes: Route[] = [
   },
   {
     path: "",
-    component: () => ListPolls({ current: true }),
+    component: ListAllPolls,
     exact: true,
   },
 ];
