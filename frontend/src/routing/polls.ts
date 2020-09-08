@@ -1,4 +1,4 @@
-import { ListAllPolls, ListPolls } from "../components/polls/list/ListPolls";
+import { ListAllPolls } from "../components/polls/list/ListPolls";
 import { SubmitPoll } from "../components/polls/submit/SubmitPoll";
 import { Route } from "./global";
 import { PollsTableAdmin } from "../components/polls/table/PollsTableAdmin";
