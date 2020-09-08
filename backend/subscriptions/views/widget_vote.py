@@ -9,9 +9,9 @@ from associations.models import Election
 @api_view(["GET"])
 def widget_vote_view(request):
     """
-        Display the current elections.
+    Display the current elections.
 
-        :return: A JSON object with one key, `elections`, which is a list of objects `{"id", "has_voted", "ends_at"}`.
+    :return: A JSON object with one key, `elections`, which is a list of objects `{"id", "has_voted", "ends_at"}`.
     """
 
     return Response(

@@ -11,8 +11,8 @@ from subscriptions.serializers import WidgetSubscriptionSerializer
 class WidgetSubscriptionViewSet(
     viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin
 ):
-    """ Simple getter/setter subscription preferences for every user. The preferences are stored in database as
-    plain text so it could be anything. In practise, it'll be JSON formatted. """
+    """Simple getter/setter subscription preferences for every user. The preferences are stored in database as
+    plain text so it could be anything. In practise, it'll be JSON formatted."""
 
     queryset = WidgetSubscription.objects.all()
     serializer_class = WidgetSubscriptionSerializer

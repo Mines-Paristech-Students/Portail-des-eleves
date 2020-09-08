@@ -196,8 +196,9 @@ class WidgetsTestCase(BaseWidgetsTestCase):
 
             res = self.poll_widget({"date": "2019-08-01"})
             self.assertStatusCode(res, 200)
-            self.assertEqual(list(map(lambda poll: poll["id"], res.data["polls"])), [1, 4])
-
+            self.assertEqual(
+                list(map(lambda poll: poll["id"], res.data["polls"])), [1, 4]
+            )
 
     def test_repartition_widget(self):
         # TODO once repartition widget is written.
@@ -215,4 +216,3 @@ class WidgetsTestCase(BaseWidgetsTestCase):
         self.assertTrue("elections" in res.data)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(len(res.data["elections"]), 1)
-

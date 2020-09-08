@@ -9,9 +9,9 @@ from associations.models.marketplace import Marketplace
 @api_view(["GET"])
 def get_widgets(*args, **kwargs):
     """
-        Display the list of the available widgets.
+    Display the list of the available widgets.
 
-        :return: A JSON object with one key, `widgets`. This key holds a list of objects `{"type", "mandatory", "url"}`.
+    :return: A JSON object with one key, `widgets`. This key holds a list of objects `{"type", "mandatory", "url"}`.
     """
 
     mandatory_widgets = [
