@@ -8,9 +8,9 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class VoterPermission(permissions.BasePermission):
     """
-                        | Permissions                     |
-        Election admin  | CRUD                            |
-        User            | List (filtered out in the view) |
+                    | Permissions                     |
+    Election admin  | CRUD                            |
+    User            | List (filtered out in the view) |
     """
 
     message = "You are not allowed to access this voter."
@@ -25,9 +25,9 @@ class VoterPermission(permissions.BasePermission):
 
 class ChoicePermission(permissions.BasePermission):
     """
-                        | Permissions |
-        Election admin  | CRUD        |
-        User            |             |
+                    | Permissions |
+    Election admin  | CRUD        |
+    User            |             |
     """
 
     message = "You are not allowed to access this choice."
@@ -42,11 +42,11 @@ class ChoicePermission(permissions.BasePermission):
 
 class ElectionPermission(permissions.BasePermission):
     """
-                        | Permissions |
-        Election admin  | CRUD        |
-        User            | R           |
+                    | Permissions |
+    Election admin  | CRUD        |
+    User            | R           |
 
-        This permission MUST NOT handle the endpoints /vote/ and /results/.
+    This permission MUST NOT handle the endpoints /vote/ and /results/.
     """
 
     message = "You are not allowed to edit this election."
@@ -63,9 +63,9 @@ class ElectionPermission(permissions.BasePermission):
 
 class VotePermission(permissions.BasePermission):
     """
-                               | Election has started | Election has not started |
-       User is a PENDING voter | PUT                  |                          |
-       Otherwise               |                      |                          |
+                            | Election has started | Election has not started |
+    User is a PENDING voter | PUT                  |                          |
+    Otherwise               |                      |                          |
     """
 
     message = "You are not allowed to vote."
@@ -82,9 +82,9 @@ class VotePermission(permissions.BasePermission):
 
 class ResultsPermission(permissions.BasePermission):
     """
-                       | Before ends_at | After ends_at |
-        Election admin | R              | R             |
-        Others         |                | R             |
+                   | Before ends_at | After ends_at |
+    Election admin | R              | R             |
+    Others         |                | R             |
     """
 
     message = "You are not allowed to view the results of this election."

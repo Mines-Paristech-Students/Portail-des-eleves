@@ -96,11 +96,11 @@ class EventFilter(FilterSet):
 
 class EventViewSet(viewsets.ModelViewSet):
     """
-        Filters:
-            - starts_at_before / starts_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
-            - ends_at_before / ends_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
-            - time: choose between BEFORE, NOW, AFTER. If several `time` are provided, the conditions are OR'ed.
-            - association: filter the organizing association.
+    Filters:
+        - starts_at_before / starts_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
+        - ends_at_before / ends_at_end: use a datetime like `2016-01-01 8:00` or a date like `2016-01-01`.
+        - time: choose between BEFORE, NOW, AFTER. If several `time` are provided, the conditions are OR'ed.
+        - association: filter the organizing association.
     """
 
     queryset = Event.objects.all()

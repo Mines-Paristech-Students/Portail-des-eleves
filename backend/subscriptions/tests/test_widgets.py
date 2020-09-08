@@ -55,8 +55,8 @@ class BaseWidgetsTestCase(WeakAuthenticationBaseTestCase):
     def endpoint_poll(self):
         return f"/subscriptions/poll/"
 
-    def poll_widget(self):
-        return self.get(self.endpoint_poll())
+    def poll_widget(self, data=None):
+        return self.get(self.endpoint_poll(), data)
 
     def endpoint_repartition(self):
         return f"/subscriptions/repartition/"
@@ -192,7 +192,13 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.login(user)
             res = self.poll_widget()
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data["active_polls"], [])
+            self.assertEqual(res.data["polls"], [])
+
+            res = self.poll_widget({"date": "2019-08-01"})
+            self.assertStatusCode(res, 200)
+            self.assertEqual(
+                list(map(lambda poll: poll["id"], res.data["polls"])), [1, 4]
+            )
 
     def test_repartition_widget(self):
         # TODO once repartition widget is written.

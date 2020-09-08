@@ -18,7 +18,7 @@ export const AssociationLogoSettings = ({ association }) => {
 
   const onMediaChange = (media) => {
     api.associations.setLogo(association.id, media?.id || null).then(() => {
-      queryCache.invalidateQueries("association.get");
+      queryCache.invalidateQueries(["association.get"]);
     });
   };
 

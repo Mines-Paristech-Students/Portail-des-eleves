@@ -1,4 +1,5 @@
 import { apiService, unwrap } from "../apiService";
+import { toUrlParams } from "../../utils/urlParam";
 
 export const subscriptions = {
   config: {
@@ -23,4 +24,9 @@ export const subscriptions = {
     unwrap<any>(apiService.get("/subscriptions/timeline/")).then(
       (res) => res.timeline
     ),
+
+  polls: (params) =>
+    unwrap<any>(
+      apiService.get(`/subscriptions/poll/${toUrlParams(params)}`)
+    ).then((res) => res.polls),
 };

@@ -1,30 +1,21 @@
-import Card from "react-bootstrap/Card";
 import React from "react";
 import { Link } from "react-router-dom";
-import { CardStatus } from "../../utils/CardStatus";
-import { TablerColor } from "../../../utils/colors";
 
 export const PollNoPolls = () => (
-  <Card className="mx-auto">
-    <CardStatus color={TablerColor.Red} />
+  <>
+    <h3>Pas de sondage !</h3>
 
-    <Card.Header>
-      <Card.Title as="h3">Pas de sondage !</Card.Title>
-    </Card.Header>
-
-    <Card.Body>
-      <Link
-        to="/sondages/proposer"
-        className="selectgroup-button text-decoration-none"
-      >
-        C’est terrible, je vais de ce pas en proposer un !
-      </Link>
-      <Link
-        to="/sondages/proposer"
-        className="selectgroup-button text-decoration-none"
-      >
-        OK, laissez-moi faire le boulot du VP geek à sa place…
-      </Link>
-    </Card.Body>
-  </Card>
+    <Link
+      to="/sondages/proposer"
+      className="d-block w-100 mb-2 btn btn-secondary btn-square"
+    >
+      C’est terrible, je vais de ce pas en proposer un !
+    </Link>
+    <Link
+      to="/sondages/proposer"
+      className="d-block w-100 mb-2 btn btn-secondary btn-square"
+    >
+      OK, laissez-moi faire le boulot du VP geek à sa place…
+    </Link>
+  </>
 );

@@ -6,7 +6,7 @@ from authentication.models.user import User
 
 class Library(models.Model):
     """
-        Provides an interface to lend objects to people and to follow who has what
+    Provides an interface to lend objects to people and to follow who has what
     """
 
     id = models.SlugField(max_length=200, primary_key=True)

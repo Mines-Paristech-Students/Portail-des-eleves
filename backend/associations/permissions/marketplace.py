@@ -7,9 +7,9 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class MarketplacePermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRUD    | CRUD     |
-        Simple | R       |          |
+           | Enabled | Disabled |
+    Admin  | CRUD    | CRUD     |
+    Simple | R       |          |
     """
 
     message = "You are not allowed to edit this marketplace."
@@ -31,9 +31,9 @@ class MarketplacePermission(BasePermission):
 
 class ProductPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRUD    | CRUD     |
-        Simple | R       |          |
+           | Enabled | Disabled |
+    Admin  | CRUD    | CRUD     |
+    Simple | R       |          |
     """
 
     message = "You are not allowed to edit this product."
@@ -64,11 +64,11 @@ class ProductPermission(BasePermission):
 
 class TransactionPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRU     | CRU      |
-        Simple | CRU     | R        |
+           | Enabled | Disabled |
+    Admin  | CRU     | CRU      |
+    Simple | CRU     | R        |
 
-        A simple user may only see or update their own loan.
+    A simple user may only see or update their own loan.
     """
 
     message = "You are not allowed to edit this transaction."
@@ -106,9 +106,9 @@ class TransactionPermission(BasePermission):
 
 class FundingPermission(BasePermission):
     """
-               | Enabled | Disabled |
-        Admin  | CRU     | RU       |
-        Simple | R       | R        |
+           | Enabled | Disabled |
+    Admin  | CRU     | RU       |
+    Simple | R       | R        |
     """
 
     message = "You are not allowed to access this funding."

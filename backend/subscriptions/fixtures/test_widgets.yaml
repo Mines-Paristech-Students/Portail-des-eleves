@@ -1471,7 +1471,7 @@
 - model: polls.Poll
   pk: 2
   fields:
-    question: "Ton cours préféré ?"
+    question: "Ton cours préféré ?"
     user: "17simple"
     creation_date_time: "2019-06-01T20:00:00+00:00"
     state: "REJECTED"
@@ -1492,7 +1492,7 @@
 - model: polls.Poll
   pk: 3
   fields:
-    question: "Le plus beauf ?"
+    question: "Le plus beauf ?"
     user: "17simple"
     creation_date_time: "2019-06-01T20:00:00+00:00"
     state: "REVIEWING"
