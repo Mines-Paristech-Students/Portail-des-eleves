@@ -42,7 +42,7 @@ export const BalanceWidget = ({ ...props }) => {
             <img
               className={"m-auto balance-gif"}
               src="/assets/balance/balance-negative.gif"
-              alt="Not all balance are positive"
+              alt="Au moins un solde est négatif"
             />
           )}
           <table className="table card-table border-top">
