@@ -12,6 +12,7 @@ export const Widget = ({
   cardWrapped = true,
   children,
   color = null,
+  bodyWrapped = true,
   ...props
 }: {
   config: any;
@@ -20,6 +21,7 @@ export const Widget = ({
   cardWrapped?: boolean;
   children: JSX.Element | JSX.Element[] | null;
   color?: TablerColor | null;
+  bodyWrapped?: boolean;
 }) => {
   const isOpen = config && config.isOpen !== undefined ? config.isOpen : true;
 
@@ -44,7 +46,7 @@ export const Widget = ({
         </div>
       </Card.Header>
 
-      {isOpen && <Card.Body>{children}</Card.Body>}
+      {isOpen && (bodyWrapped ? <Card.Body>{children}</Card.Body> : children)}
     </Card>
   ) : (
     <div {...props}>{children}</div>
