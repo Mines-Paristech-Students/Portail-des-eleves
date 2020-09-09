@@ -36,7 +36,7 @@ export const BalanceWidget = ({ ...props }) => {
             <img
               className={"m-auto balance-gif"}
               src="/assets/balance/balance-positive.gif"
-              alt="All balances are positive"
+              alt="Tous les soldes sont positifs"
             />
           ) : (
             <img
