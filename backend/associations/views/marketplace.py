@@ -278,9 +278,7 @@ class BalanceView(APIView):
         }
 
         try:
-            res["association"] = {
-                "name": marketplace.association.name
-            }
+            res["association"] = {"name": marketplace.association.name}
         except Marketplace.association.RelatedObjectDoesNotExist:
             pass
 
