@@ -6,9 +6,9 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class LibraryPermission(BasePermission):
     """
-                      | Enabled | Disabled |
-        Library admin | CRUD    | CRUD     |
-        User          | R       |          |
+                  | Enabled | Disabled |
+    Library admin | CRUD    | CRUD     |
+    User          | R       |          |
     """
 
     message = "You are not allowed to edit this library."
@@ -30,9 +30,9 @@ class LibraryPermission(BasePermission):
 
 class LoanablePermission(BasePermission):
     """
-                      | Enabled | Disabled |
-        Library admin | CRUD    | CRUD     |
-        User          | R       |          |
+                  | Enabled | Disabled |
+    Library admin | CRUD    | CRUD     |
+    User          | R       |          |
     """
 
     message = "You are not allowed to edit this loanable."
@@ -59,11 +59,11 @@ class LoanablePermission(BasePermission):
 
 class LoansPermission(BasePermission):
     """
-               | Library enabled | Library disabled |
-        Admin  | CRU             | CRU              |
-        Simple | CRU             | R                |
+           | Library enabled | Library disabled |
+    Admin  | CRU             | CRU              |
+    Simple | CRU             | R                |
 
-        An user can only read and update their own loans in enabled libraries.
+    An user can only read and update their own loans in enabled libraries.
     """
 
     message = "You are not allowed to edit this loan."

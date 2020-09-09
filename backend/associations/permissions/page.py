@@ -5,9 +5,9 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class PagePermission(BasePermission):
     """
-                   | Page |
-        Page admin | CRUD |
-        Simple     | R    |
+               | Page |
+    Page admin | CRUD |
+    Simple     | R    |
     """
 
     message = "You are not allowed to edit this page."

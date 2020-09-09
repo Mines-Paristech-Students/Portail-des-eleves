@@ -14,10 +14,10 @@ from associations.serializers.media import MediaSerializer
 @api_view(["GET"])
 def widget_timeline_view(request):
     """
-        Display the current and coming events and the five latest news.
+    Display the current and coming events and the five latest news.
 
-        :return: A JSON object with two key, `events` (a list of serialized `Event` objects) and `pages` (a list of
-        serialized `Page` objects).
+    :return: A JSON object with two key, `events` (a list of serialized `Event` objects) and `pages` (a list of
+    serialized `Page` objects).
     """
 
     timeline = []

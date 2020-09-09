@@ -199,8 +199,8 @@ class MarketplaceWriteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """
-            Update an existing instance of Marketplace based upon validated_data.\n
-            The nested fields association and products will not be updated.
+        Update an existing instance of Marketplace based upon validated_data.\n
+        The nested fields association and products will not be updated.
         """
 
         instance.enabled = validated_data.get("enabled", instance.enabled)

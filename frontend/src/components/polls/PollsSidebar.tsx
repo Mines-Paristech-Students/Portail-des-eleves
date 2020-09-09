@@ -22,7 +22,7 @@ export const PollsSidebar = ({
 
   return (
     <Sidebar title="Sondages">
-      <SidebarItem icon="clock" to="/sondages">
+      <SidebarItem icon="check-circle" to="/sondages">
         En cours
         {status === "success" &&
           stats &&
@@ -31,9 +31,6 @@ export const PollsSidebar = ({
               {stats.numberOfAvailablePolls}
             </SidebarBadge>
           )}
-      </SidebarItem>
-      <SidebarItem icon="inbox" to="/sondages/anciens">
-        Anciens
       </SidebarItem>
       <SidebarSpace />
       <SidebarItem icon="check-square" to="/sondages/mes-sondages">

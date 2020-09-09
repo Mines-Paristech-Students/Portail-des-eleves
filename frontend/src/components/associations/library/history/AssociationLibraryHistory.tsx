@@ -100,7 +100,7 @@ export const AssociationLibraryHistory = ({
     onMutate: () => sendInfoToast("Annulation en cours..."),
     onSuccess: () => {
       sendSuccessToast("Demande annulée.");
-      queryCache.invalidateQueries("loans.list");
+      queryCache.invalidateQueries(["loans.list"]);
     },
     onError: () => sendErrorToast("L’annulation a échoué."),
   });

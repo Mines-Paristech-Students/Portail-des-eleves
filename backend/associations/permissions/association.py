@@ -5,9 +5,9 @@ from associations.permissions.utils import check_permission_from_post_data
 
 class AssociationPermission(BasePermission):
     """
-                             | Association |
-        Global administrator | CRUD        |
-        User                 | R           |
+                         | Association |
+    Global administrator | CRUD        |
+    User                 | R           |
     """
 
     message = "You do not have the permission to edit this association."
@@ -18,11 +18,11 @@ class AssociationPermission(BasePermission):
 
 class RolePermission(BasePermission):
     """
-                                  | Own association role | Other association role |
-        Global administrator      | CRU                  | CRU                    |
-        Association administrator | CRUD                 | R                      |
-        Association member        | R                    | R
-        User                      | R                    | R
+                              | Own association role | Other association role |
+    Global administrator      | CRU                  | CRU                    |
+    Association administrator | CRUD                 | R                      |
+    Association member        | R                    | R
+    User                      | R                    | R
     """
 
     message = "You do not have the permission to edit this role."

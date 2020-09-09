@@ -10,10 +10,10 @@ from associations.serializers.marketplace import ProductShortSerializer
 @api_view(["GET"])
 def widget_marketplace_view(request, marketplace_id):
     """
-        Display the five most purchased products of the marketplace if they are available.
+    Display the five most purchased products of the marketplace if they are available.
 
-        :return: A JSON object with two keys, `balance` (the balance of the marketplace) and `suggested_products`,
-        a list of serialized `Product` objects.
+    :return: A JSON object with two keys, `balance` (the balance of the marketplace) and `suggested_products`,
+    a list of serialized `Product` objects.
     """
 
     marketplace = Marketplace.objects.get(pk=marketplace_id)
