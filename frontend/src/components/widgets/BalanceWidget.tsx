@@ -10,7 +10,7 @@ import "./widget_balance.css";
 
 export const BalanceWidget = ({ ...props }) => {
   const { data, error, status } = useBetterQuery<any>(
-    ["subsriptions.balance.get"],
+    ["subscriptions.balance.get"],
     api.subscriptions.balances,
     { refetchOnWindowFocus: false }
   );
