@@ -42,7 +42,6 @@ export const CreateRoleModal = ({
       version="create"
       title={`Créer un rôle`}
       show={show}
-      permissions
       initialValues={{
         user: undefined,
         role: "",

@@ -52,7 +52,7 @@ class RoleFilter(FilterSet):
             return queryset.exclude(condition)
 
     def filter_permission(self, queryset, _, permissions_filter):
-        """Filter by permission."""
+        """Filter by active permission."""
 
         # No filter or every filter.
         if (
@@ -70,7 +70,7 @@ class RoleFilter(FilterSet):
                 condition |= Q(
                     **{
                         f"{permission_name}_permission": True,
-                        "start_date__lt": date.today(),
+                        "start_date__lte": date.today(),
                     }
                 ) & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
 

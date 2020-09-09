@@ -12,7 +12,7 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import { SettingsLayout } from "../SettingsLayout";
 import { MutateAssociationForm } from "./MutateAssociationForm";
-import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import { ConfirmAssociationDeletionModal } from "./ConfirmAssociationDeletionModal";
 import { genericMutationErrorHandling } from "../../../utils/genericMutationErrorHandling";
 
 export const SettingsAssociationsEdit = () => {
@@ -53,7 +53,7 @@ export const SettingsAssociationsEdit = () => {
   ) : association ? (
     <SettingsLayout>
       <Container>
-        <ConfirmDeleteModal
+        <ConfirmAssociationDeletionModal
           association={association}
           onDelete={() => remove({ associationId: associationId })}
           show={showConfirmDeleteModal}
