@@ -3,7 +3,7 @@ from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django_filters import DateTimeFromToRangeFilter
-from django_filters.rest_framework import FilterSet, CharFilter
+from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
