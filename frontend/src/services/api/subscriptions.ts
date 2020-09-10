@@ -29,4 +29,9 @@ export const subscriptions = {
     unwrap<any>(
       apiService.get(`/subscriptions/poll/${toUrlParams(params)}`)
     ).then((res) => res.polls),
+
+  balances: () =>
+    unwrap<any>(apiService.get(`/subscriptions/balance/`)).then(
+      (res) => res.balances
+    ),
 };
