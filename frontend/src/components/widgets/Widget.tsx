@@ -9,10 +9,10 @@ export const Widget = ({
   config,
   setConfig,
   name = "",
-  cardWrapped = true,
   children,
   color = null,
   bodyWrapped = true,
+  cardWrapped = true,
   ...props
 }: {
   config: any;

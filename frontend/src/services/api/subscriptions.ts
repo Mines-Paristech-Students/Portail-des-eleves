@@ -34,4 +34,13 @@ export const subscriptions = {
     unwrap<any>(apiService.get(`/subscriptions/balance/`)).then(
       (res) => res.balances
     ),
+
+  events: () =>
+    unwrap<any>(apiService.get(`/subscriptions/event/`)).then((res) =>
+      res.events.map((event) => ({
+        ...event,
+        startsAt: new Date(event.startsAt),
+        endsAt: new Date(event.endsAt),
+      }))
+    ),
 };

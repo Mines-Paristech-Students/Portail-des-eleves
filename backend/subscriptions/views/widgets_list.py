@@ -27,6 +27,7 @@ def get_widgets(*args, **kwargs):
             "vote",
             "repartition",
             "balance",
+            "event",
         ]
     ]
 

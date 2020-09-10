@@ -4,6 +4,7 @@ from rest_framework_bulk.routes import BulkRouter
 from subscriptions.views.subscription_viewset import WidgetSubscriptionViewSet
 from subscriptions.views.widget_balance import widget_balance_view
 from subscriptions.views.widget_birthday import widget_birthday_view
+from subscriptions.views.widget_events import widget_event_view
 from subscriptions.views.widget_library import widget_library_view
 from subscriptions.views.widget_marketplace import widget_marketplace_view
 from subscriptions.views.widget_poll import widget_poll_view
@@ -39,6 +40,7 @@ urlpatterns = [
     path("poll/", widget_poll_view, name="widget_poll"),
     path("vote/", widget_vote_view, name="widget_vote"),
     path("repartition/", widget_repartition_view, name="widget_repartition"),
+    path("event/", widget_event_view, name="widget_event"),
     path("balance/", widget_balance_view, name="widget_balance"),
     path(
         "marketplace/<marketplace_id>/",
