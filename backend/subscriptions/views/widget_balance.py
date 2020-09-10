@@ -15,7 +15,7 @@ def widget_balance_view(request):
         {
             "balances": [
                 BalanceView.get_balance_in_json(request.user, marketplace)
-                for marketplace in Marketplace.objects.all()
+                for marketplace in Marketplace.objects.filter(enabled=True).all()
             ]
         }
     )
