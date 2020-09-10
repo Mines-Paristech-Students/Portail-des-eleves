@@ -36,7 +36,7 @@ export const Homepage = () => {
       {/*<Chat />*/}
       <Row>
         <Col className="side-widget">
-          <EventWidget/>
+          <EventWidget />
           <PollWidget />
           <BalanceWidget />
         </Col>

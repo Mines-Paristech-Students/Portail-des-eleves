@@ -114,14 +114,13 @@ const GroupEvents = ({ events, setSelectedEvent }) => {
   ).body;
 };
 
-
 const EventModal = ({ event, setEvent }) => {
   const user = useContext(UserContext);
 
   return event != null ? (
     <Modal show={true} onHide={() => setEvent(null)}>
       <Modal.Body>
-        <h1 >
+        <h1>
           {event.name}{" "}
           {event.participants.some(
             (participant) => participant.id === user?.id

@@ -25,12 +25,14 @@ def widget_event_view(request):
                         "association": {
                             "id": event.association.id,
                             "name": event.association.name,
-                            "logo": urlize(request, event.association.logo.preview_url)
+                            "logo": urlize(request, event.association.logo.preview_url),
                         },
-                        "participants": UserShortSerializer(many=True).to_representation(event.participants),
+                        "participants": UserShortSerializer(
+                            many=True
+                        ).to_representation(event.participants),
                         "starts_at": event.starts_at,
                         "ends_at": event.ends_at,
-                        "place": event.place
+                        "place": event.place,
                     },
                     Event.objects.filter(ends_at__gt=datetime.now())
                     .order_by("starts_at")[:5]
