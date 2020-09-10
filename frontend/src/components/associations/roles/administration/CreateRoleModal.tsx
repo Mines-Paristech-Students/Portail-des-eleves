@@ -19,8 +19,8 @@ export const CreateRoleModal = ({
 
   const [create] = useMutation(api.roles.create, {
     onSuccess: () => {
-      queryCache.invalidateQueries(["roles.list"]);
       sendSuccessToast("Rôle créé.");
+      return queryCache.invalidateQueries(["roles.list"]);
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -51,7 +51,7 @@ export const CreateRoleModal = ({
         endDateEnabled: false,
         permissions: [],
       }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting }) =>
         create(
           {
             role: {
@@ -62,7 +62,7 @@ export const CreateRoleModal = ({
               startDate: values.startDate,
               endDate:
                 values.endDateEnabled && values.endDate ? values.endDate : null,
-              permissions: values.permissions,
+              permissions: values.permissions || [],
             },
           },
           {
@@ -71,8 +71,8 @@ export const CreateRoleModal = ({
               onHide();
             },
           }
-        );
-      }}
+        )
+      }
       onHide={onHide}
     />
   );

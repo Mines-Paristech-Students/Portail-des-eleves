@@ -19,8 +19,8 @@ export const EditRoleModal = ({
 
   const [update] = useMutation(api.roles.update, {
     onSuccess: () => {
-      queryCache.invalidateQueries(["roles.list"]);
       sendSuccessToast("Rôle modifié.");
+      return queryCache.invalidateQueries(["roles.list"]);
     },
     onError: (errorAsUnknown) => {
       const error = errorAsUnknown as AxiosError;
@@ -55,7 +55,7 @@ export const EditRoleModal = ({
         endDateEnabled: !!role.endDate,
         permissions: role.permissions,
       }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting }) =>
         update(
           {
             roleId: role.id,
@@ -74,8 +74,8 @@ export const EditRoleModal = ({
               onHide();
             },
           }
-        );
-      }}
+        )
+      }
       onHide={onHide}
     />
   );

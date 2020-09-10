@@ -48,7 +48,7 @@ export type MutateRoleModalValues = {
   startDate: Date;
   endDate: Date | undefined | null;
   endDateEnabled: boolean;
-  permissions: RolePermission[];
+  permissions?: RolePermission[];
 };
 
 /**
@@ -73,6 +73,7 @@ export const MutateRoleModal = ({
   version: "create" | "edit";
   title: string;
   show: boolean;
+  permissions?: boolean;
   initialValues: MutateRoleModalValues;
   onSubmit: (
     values: MutateRoleModalValues,

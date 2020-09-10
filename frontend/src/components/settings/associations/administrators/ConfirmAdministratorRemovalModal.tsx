@@ -1,40 +1,55 @@
 import React, { useState } from "react";
-import { Association } from "../../../models/associations/association";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
+import { Association } from "../../../../models/associations/association";
+import { Role } from "../../../../models/associations/role";
 
-export const ConfirmDeleteModal = ({
+export const ConfirmAdministratorRemovalModal = ({
   association,
-  onDelete,
+  role,
+  onRemove,
   show,
   onHide,
 }: {
   association: Association;
-  onDelete: any;
+  role?: Role;
+  onRemove: any;
   show: boolean;
   onHide: () => void;
 }) => {
   const [confirmInput, setConfirmInput] = useState("");
-  const confirmTarget = association.name;
+
+  if (role === undefined) {
+    return <></>;
+  }
+
+  const confirmTarget = role.user.id;
   const verifyConfirm = () =>
     confirmInput.toLowerCase() === confirmTarget.toLowerCase();
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setConfirmInput("");
+        onHide();
+      }}
+    >
       <Modal.Header>
         <Modal.Title>Confirmer la suppression</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p>
-          Vous êtes sur le point de supprimer l’association{" "}
-          <span className="font-weight-bold">{association.name}</span>.
+          Vous êtes sur le point d’enlever{" "}
+          <span className="font-weight-bold">
+            {role.user.firstName} {role.user.lastName}
+          </span>{" "}
+          du groupe des administrateur(trice)s de l’association{" "}
+          {association.name}.
         </p>
         <p>
-          Cela supprimera également tous les objets liés à cette association
-          (fichiers, rôles, événements, marché, bibliothèque…).
-          <br />
           <span className="font-weight-bold text-danger">
             Cette opération ne peut pas être annulée.
           </span>
@@ -54,7 +69,12 @@ export const ConfirmDeleteModal = ({
         <Button
           variant="danger"
           disabled={!verifyConfirm()}
-          onClick={() => verifyConfirm() && onDelete()}
+          onClick={() => {
+            if (verifyConfirm()) {
+              setConfirmInput("");
+              onRemove();
+            }
+          }}
         >
           Supprimer
         </Button>

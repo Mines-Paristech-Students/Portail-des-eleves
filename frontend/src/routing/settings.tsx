@@ -5,6 +5,8 @@ import { SettingsAssociationsEdit } from "../components/settings/associations/Se
 import { SettingsAssociationsAdd } from "../components/settings/associations/SettingsAssociationsAdd";
 import { Redirect } from "react-router";
 import React from "react";
+import { SettingsAssociationsAdministrators } from "../components/settings/associations/administrators/SettingsAssociationsAdministrators";
+import { SettingsAssociationsAdministratorsAdd } from "../components/settings/associations/administrators/SettingsAssociationsAdministratorsAdd";
 
 export const routes: Route[] = [
   {
@@ -20,6 +22,16 @@ export const routes: Route[] = [
   {
     path: "/associations/:associationId/modifier",
     component: SettingsAssociationsEdit,
+    exact: true,
+  },
+  {
+    path: "/associations/:associationId/administrateurs",
+    component: SettingsAssociationsAdministrators,
+    exact: true,
+  },
+  {
+    path: "/associations/:associationId/administrateurs/ajouter",
+    component: SettingsAssociationsAdministratorsAdd,
     exact: true,
   },
   {

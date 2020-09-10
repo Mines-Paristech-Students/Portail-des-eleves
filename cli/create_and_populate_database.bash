@@ -3,7 +3,7 @@
 
 cd ../backend
 
-rm medias
+rm -f medias
 ln -s ../medias medias
 
 rm -Rf  authentication/migrations/*
