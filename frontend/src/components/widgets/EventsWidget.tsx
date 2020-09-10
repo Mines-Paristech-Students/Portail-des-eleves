@@ -4,18 +4,16 @@ import { TablerColor } from "../../utils/colors";
 import { useWidgetConfig } from "./widgetConfig";
 import { Loading } from "../utils/Loading";
 import { ErrorMessage } from "../utils/ErrorPage";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import "./widget_balance.css";
 import { Event } from "../../models/associations/event";
 import { formatDate, formatTime } from "../../utils/format";
-import { events } from "../../services/api/events";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs  from "dayjs";
 import { Modal } from "react-bootstrap";
 import { AvatarList } from "../utils/avatar/AvatarList";
 import { EventDate } from "../associations/events/list/EventDate";
 import { UserAvatar } from "../utils/avatar/UserAvatar";
 import { Size } from "../../utils/size";
-import { Avatar } from "../utils/avatar/Avatar";
 import { UserContext } from "../../services/authService";
 
 export const EventWidget = ({ ...props }) => {
@@ -72,9 +70,9 @@ const GroupEvents = ({ events, setSelectedEvent }) => {
             <tr className={"border-0"}>
               <td colSpan={2}>
                 <strong>
-                  {currentDate == dayjs().date()
+                  {currentDate === dayjs().date()
                     ? "Aujourd'hui"
-                    : dayjs(event.startsAt).date() ==
+                    : dayjs(event.startsAt).date() ===
                       dayjs().add(1, "day").date()
                     ? "Demain"
                     : "Le " + formatDate(event.startsAt)}
@@ -89,15 +87,15 @@ const GroupEvents = ({ events, setSelectedEvent }) => {
                 width={32}
                 alt={`Logo de ${event.association.name}`}
               />{" "}
-              <a
-                href="#"
+              <button
+                className={"btn btn-link"}
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedEvent(event);
                 }}
               >
                 {event.name}
-              </a>
+              </button>
             </td>
             <td className="py-0 text-right text-muted">
               {event.participants.some(
