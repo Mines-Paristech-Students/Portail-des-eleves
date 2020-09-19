@@ -1,6 +1,10 @@
-from datetime import date
+from datetime import date, timedelta, datetime
+from math import exp
+from operator import itemgetter
+
 
 from django.db.models import Q
+from django.core.cache import cache
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
 from rest_framework import exceptions, generics, permissions, response, status, viewsets
 from rest_framework.decorators import action
@@ -13,7 +17,12 @@ from polls.serializers import (
     VoteSerializer,
 )
 from polls.models import Poll, Vote
-from polls.permissions import PollPermission, ResultsPermission, VotePermission
+from polls.permissions import (
+    PollPermission,
+    ResultsPermission,
+    VotePermission,
+    PollStatsPermission,
+)
 
 
 class PollFilter(FilterSet):
@@ -115,6 +124,91 @@ class PollViewSet(viewsets.ModelViewSet):
                 )
                 .filter(is_active_condition)
                 .count(),
+            }
+        )
+
+    @action(detail=False, methods=("get",), permission_classes=(PollStatsPermission,))
+    def statistics(self, *args, **kwargs):
+
+        victories_by_user = {}
+        defeats_by_user = {}
+        participations_by_user = {}
+
+        if (
+            cache.get("participations") is not None
+            and cache.get("victories_ranking") is not None
+            and cache.get("defeats_ranking") is not None
+        ):
+            # Normally there should all be None or all be defined but just in case...
+            participations_by_user = cache.get("participations")
+            victories_by_user = cache.get("victories_ranking")
+            defeats_by_user = cache.get("defeats_ranking")
+
+        else:
+            # Computing the rankings...
+
+            for poll in self.queryset:
+                if poll.has_been_published:
+                    pollDate = poll.publication_date
+                    coeff_poll = exp(-(date.today() - pollDate).days / 14)
+                    voters = poll.votes.values_list("user__id", "choice")
+
+                    for voter in voters:
+                        user_id = voter[0]
+                        user_choice = voter[1]
+
+                        if user_choice == poll.results:
+                            if user_id in victories_by_user:
+                                victories_by_user[user_id] += coeff_poll
+                            else:
+                                victories_by_user[user_id] = coeff_poll
+                        else:
+                            if user_id in defeats_by_user:
+                                defeats_by_user[user_id] += coeff_poll
+                            else:
+                                defeats_by_user[user_id] = coeff_poll
+
+                        if user_id in participations_by_user:
+                            participations_by_user[user_id] += 1
+                        else:
+                            participations_by_user[user_id] = 1
+
+            # Setting up cache duration (until next poll's end)
+            cur_time = datetime.now()
+            tomorrow = datetime(
+                cur_time.year, cur_time.month, cur_time.day
+            ) + timedelta(days=1)
+            time_to_next_poll = (tomorrow - datetime.now()).seconds
+
+            # Setting up cache to avoid recomputing the dicts
+            cache.set("participations", participations_by_user, time_to_next_poll)
+            cache.set("victories_ranking", victories_by_user, time_to_next_poll)
+            cache.set("defeats_ranking", defeats_by_user, time_to_next_poll)
+
+        if self.request.user.id not in participations_by_user.keys():
+            # The user has never voted before
+            participations_by_user[self.request.user.id] = 0
+            victories_by_user[self.request.user.id] = 0
+            defeats_by_user[self.request.user.id] = 0
+
+        sorted_users_participations = sorted(
+            participations_by_user.items(), key=itemgetter(1)
+        )[::-1]
+        sorted_users_defeats_floating = sorted(
+            defeats_by_user.items(), key=itemgetter(1)
+        )[::-1]
+        sorted_users_victories_floating = sorted(
+            victories_by_user.items(), key=itemgetter(1)
+        )[::-1]
+
+        return response.Response(
+            data={
+                "participations_score": participations_by_user[self.request.user.id],
+                "weighted_victories_score": victories_by_user[self.request.user.id],
+                "weighted_defeats_score": defeats_by_user[self.request.user.id],
+                "sorted_participations": sorted_users_participations,
+                "sorted_weighted_victories": sorted_users_victories_floating,
+                "sorted_weighted_defeats": sorted_users_defeats_floating,
             }
         )
 
