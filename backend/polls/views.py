@@ -16,6 +16,7 @@ from polls.serializers import (
     AdminPollSerializer,
     VoteSerializer,
 )
+from authentication.models import User
 from polls.models import Poll, Vote
 from polls.permissions import (
     PollPermission,
@@ -134,6 +135,8 @@ class PollViewSet(viewsets.ModelViewSet):
         defeats_by_user = {}
         participations_by_user = {}
 
+        set_cache = False
+
         if (
             cache.get("participations") is not None
             and cache.get("victories_ranking") is not None
@@ -173,7 +176,24 @@ class PollViewSet(viewsets.ModelViewSet):
                         else:
                             participations_by_user[user_id] = 1
 
+            set_cache = True
+
+        all_users = User.objects.all()
+        for user in all_users:
+            if (
+                user.id not in participations_by_user.keys()
+            ):  # has never participated in any poll before
+                participations_by_user[user.id] = 0
+
+            if user.id not in victories_by_user.keys():  # has never won before
+                victories_by_user[user.id] = 0
+
+            if user.id not in defeats_by_user.keys():  # has never lost before
+                defeats_by_user[user.id] = 0
+
+        if set_cache:
             # Setting up cache duration (until next poll's end)
+            # That's not done in the "if" in case a new user is created between 2 cache updates
             cur_time = datetime.now()
             tomorrow = datetime(
                 cur_time.year, cur_time.month, cur_time.day
@@ -184,12 +204,6 @@ class PollViewSet(viewsets.ModelViewSet):
             cache.set("participations", participations_by_user, time_to_next_poll)
             cache.set("victories_ranking", victories_by_user, time_to_next_poll)
             cache.set("defeats_ranking", defeats_by_user, time_to_next_poll)
-
-        if self.request.user.id not in participations_by_user.keys():
-            # The user has never voted before
-            participations_by_user[self.request.user.id] = 0
-            victories_by_user[self.request.user.id] = 0
-            defeats_by_user[self.request.user.id] = 0
 
         sorted_users_participations = sorted(
             participations_by_user.items(), key=itemgetter(1)

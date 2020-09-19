@@ -52,6 +52,9 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
     def results(self, pk, data=""):
         return self.get(self.endpoint_results(pk), data)
 
+    def statistics(self, data=""):
+        return self.get("/polls/statistics/")
+
     ########
     # LIST #
     ########
@@ -556,3 +559,21 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
         self.check_results(
             poll.id, 1, 1
         )  # 17simple tried to vote twice, nothing changes.
+
+    def check_total_participations(self):
+        # Since the voters are generated randomly there's not much we can test
+        # but we can test aggregated values such as the sum of participations
+
+        self.login("17simple")
+        res = self.statistics()
+
+        total_polls = 0
+        for poll in Poll.objects.filter(state="ACCEPTED"):
+            total_polls += 1
+
+        maxi = 0
+        participations = res.data["sorted_participations"]
+        for k, v in participations:
+            maxi = max(maxi, v)
+
+        self.assertLessEqual(maxi, total_polls)
