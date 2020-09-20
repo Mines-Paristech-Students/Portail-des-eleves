@@ -574,6 +574,6 @@ class PollTestCase(WeakAuthenticationBaseTestCase):
         maxi = 0
         participations = res.data["sorted_participations"]
         for k, v in participations:
-            maxi = max(maxi, v)
+            maxi = max(maxi, v[0])
 
         self.assertLessEqual(maxi, total_polls)

@@ -26,6 +26,37 @@ from polls.permissions import (
 )
 
 
+def generate_stats():
+    # Computing the rankings...
+    all_users = User.objects.all()
+    all_polls = Poll.objects.all()
+    poll_leaderboard = {}
+
+    for user in all_users:
+        poll_leaderboard[user.id] = [0, 0, 0]
+
+    for poll in all_polls:
+        if not poll.has_been_published:
+            continue
+
+        poll_date = poll.publication_date
+        coeff_poll = exp(-(date.today() - poll_date).days / 14)
+        voters = poll.votes.values_list("user__id", "choice")
+
+        for voter in voters:
+            (user_id, user_choice) = voter
+            flag_victory = (user_choice == poll.results) + 1  # 2 if won, 1 otherwise
+
+            poll_leaderboard[user_id][flag_victory] = (
+                coeff_poll + poll_leaderboard.get(user_id, 0)[flag_victory]
+            )
+            poll_leaderboard[user_id][0] = (
+                1 + poll_leaderboard.get(user_id, 0)[0]
+            )  # participations
+
+    return poll_leaderboard
+
+
 class PollFilter(FilterSet):
     """
     This class is needed because Django does not allow to filter on properties.
@@ -128,70 +159,22 @@ class PollViewSet(viewsets.ModelViewSet):
             }
         )
 
-    @action(detail=False, methods=("get",), permission_classes=(PollStatsPermission,))
+    @action(detail=False, methods=("get",))
     def statistics(self, *args, **kwargs):
 
-        victories_by_user = {}
-        defeats_by_user = {}
-        participations_by_user = {}
-
-        set_cache = False
+        poll_leaderboard = {}
+        top_n = 10
 
         if (
-            cache.get("participations") is not None
-            and cache.get("victories_ranking") is not None
-            and cache.get("defeats_ranking") is not None
+            cache.get("poll_leaderboard") is not None
+            and self.request.user.id in cache.get("poll_leaderboard").keys()
         ):
             # Normally there should all be None or all be defined but just in case...
-            participations_by_user = cache.get("participations")
-            victories_by_user = cache.get("victories_ranking")
-            defeats_by_user = cache.get("defeats_ranking")
+            poll_leaderboard = cache.get("poll_leaderboard")
 
         else:
-            # Computing the rankings...
+            poll_leaderboard = generate_stats()
 
-            for poll in self.queryset:
-                if poll.has_been_published:
-                    pollDate = poll.publication_date
-                    coeff_poll = exp(-(date.today() - pollDate).days / 14)
-                    voters = poll.votes.values_list("user__id", "choice")
-
-                    for voter in voters:
-                        user_id = voter[0]
-                        user_choice = voter[1]
-
-                        if user_choice == poll.results:
-                            if user_id in victories_by_user:
-                                victories_by_user[user_id] += coeff_poll
-                            else:
-                                victories_by_user[user_id] = coeff_poll
-                        else:
-                            if user_id in defeats_by_user:
-                                defeats_by_user[user_id] += coeff_poll
-                            else:
-                                defeats_by_user[user_id] = coeff_poll
-
-                        if user_id in participations_by_user:
-                            participations_by_user[user_id] += 1
-                        else:
-                            participations_by_user[user_id] = 1
-
-            set_cache = True
-
-        all_users = User.objects.all()
-        for user in all_users:
-            if (
-                user.id not in participations_by_user.keys()
-            ):  # has never participated in any poll before
-                participations_by_user[user.id] = 0
-
-            if user.id not in victories_by_user.keys():  # has never won before
-                victories_by_user[user.id] = 0
-
-            if user.id not in defeats_by_user.keys():  # has never lost before
-                defeats_by_user[user.id] = 0
-
-        if set_cache:
             # Setting up cache duration (until next poll's end)
             # That's not done in the "if" in case a new user is created between 2 cache updates
             cur_time = datetime.now()
@@ -201,25 +184,21 @@ class PollViewSet(viewsets.ModelViewSet):
             time_to_next_poll = (tomorrow - datetime.now()).seconds
 
             # Setting up cache to avoid recomputing the dicts
-            cache.set("participations", participations_by_user, time_to_next_poll)
-            cache.set("victories_ranking", victories_by_user, time_to_next_poll)
-            cache.set("defeats_ranking", defeats_by_user, time_to_next_poll)
+            cache.set("poll_leaderboard", poll_leaderboard, time_to_next_poll)
 
         sorted_users_participations = sorted(
-            participations_by_user.items(), key=itemgetter(1)
-        )[::-1]
+            poll_leaderboard.items(), key=lambda x: x[1][0]
+        )[::-1][:top_n]
         sorted_users_defeats_floating = sorted(
-            defeats_by_user.items(), key=itemgetter(1)
-        )[::-1]
+            poll_leaderboard.items(), key=lambda x: x[1][1]
+        )[::-1][:top_n]
         sorted_users_victories_floating = sorted(
-            victories_by_user.items(), key=itemgetter(1)
-        )[::-1]
+            poll_leaderboard.items(), key=lambda x: x[1][2]
+        )[::-1][:top_n]
 
         return response.Response(
             data={
-                "participations_score": participations_by_user[self.request.user.id],
-                "weighted_victories_score": victories_by_user[self.request.user.id],
-                "weighted_defeats_score": defeats_by_user[self.request.user.id],
+                "user_score": poll_leaderboard.get(self.request.user.id),
                 "sorted_participations": sorted_users_participations,
                 "sorted_weighted_victories": sorted_users_victories_floating,
                 "sorted_weighted_defeats": sorted_users_defeats_floating,
