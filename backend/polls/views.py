@@ -152,7 +152,7 @@ class PollViewSet(viewsets.ModelViewSet):
 
             for poll in self.queryset:
                 if poll.has_been_published:
-                    pollDate = poll.publication_date
+                    poll_date = poll.publication_date
                     coeff_poll = exp(-(date.today() - pollDate).days / 14)
                     voters = poll.votes.values_list("user__id", "choice")
 
