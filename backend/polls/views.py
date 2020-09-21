@@ -36,8 +36,6 @@ def generate_stats():
         poll_leaderboard[user.id] = [0, 0, 0]
 
     for poll in all_polls:
-        if not poll.has_been_published:
-            continue
 
         poll_date = poll.publication_date
         coeff_poll = exp(-(date.today() - poll_date).days / 14)
