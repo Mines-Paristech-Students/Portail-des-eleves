@@ -29,7 +29,7 @@ from polls.permissions import (
 def generate_stats():
     # Computing the rankings...
     all_users = User.objects.all()
-    all_polls = Poll.objects.all()
+    all_polls = Poll.objects.filter(has_been_published=True).all()
     poll_leaderboard = {}
 
     for user in all_users:
