@@ -70,3 +70,17 @@ class VotePermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, poll):
         return poll.is_active
+
+
+class PollStatsPermission(permissions.BasePermission):
+    """
+    Anyone OK
+    """
+
+    message = "You are not allowed to see the stats for this poll."
+
+    def has_permission(self, request, view):
+        return request.method in permissions.SAFE_METHODS
+
+    def has_object_permission(self, request, view):
+        return True

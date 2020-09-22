@@ -1,6 +1,10 @@
-from datetime import date
+from datetime import date, timedelta, datetime
+from math import exp
+from operator import itemgetter
+
 
 from django.db.models import Q
+from django.core.cache import cache
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
 from rest_framework import exceptions, generics, permissions, response, status, viewsets
 from rest_framework.decorators import action
@@ -12,8 +16,43 @@ from polls.serializers import (
     AdminPollSerializer,
     VoteSerializer,
 )
+from authentication.models import User
 from polls.models import Poll, Vote
-from polls.permissions import PollPermission, ResultsPermission, VotePermission
+from polls.permissions import (
+    PollPermission,
+    ResultsPermission,
+    VotePermission,
+    PollStatsPermission,
+)
+
+
+def generate_stats():
+    # Computing the rankings...
+    all_users = User.objects.all()
+    all_polls = Poll.objects.filter(has_been_published=True).all()
+    poll_leaderboard = {}
+
+    for user in all_users:
+        poll_leaderboard[user.id] = [0, 0, 0]
+
+    for poll in all_polls:
+
+        poll_date = poll.publication_date
+        coeff_poll = exp(-(date.today() - poll_date).days / 14)
+        voters = poll.votes.values_list("user__id", "choice")
+
+        for voter in voters:
+            (user_id, user_choice) = voter
+            flag_victory = (user_choice == poll.results) + 1  # 2 if won, 1 otherwise
+
+            poll_leaderboard[user_id][flag_victory] = (
+                coeff_poll + poll_leaderboard.get(user_id, 0)[flag_victory]
+            )
+            poll_leaderboard[user_id][0] = (
+                1 + poll_leaderboard.get(user_id, 0)[0]
+            )  # participations
+
+    return poll_leaderboard
 
 
 class PollFilter(FilterSet):
@@ -115,6 +154,52 @@ class PollViewSet(viewsets.ModelViewSet):
                 )
                 .filter(is_active_condition)
                 .count(),
+            }
+        )
+
+    @action(detail=False, methods=("get",))
+    def statistics(self, *args, **kwargs):
+
+        poll_leaderboard = {}
+        top_n = 10
+
+        if (
+            cache.get("poll_leaderboard") is not None
+            and self.request.user.id in cache.get("poll_leaderboard").keys()
+        ):
+            # Normally there should all be None or all be defined but just in case...
+            poll_leaderboard = cache.get("poll_leaderboard")
+
+        else:
+            poll_leaderboard = generate_stats()
+
+            # Setting up cache duration (until next poll's end)
+            # That's not done in the "if" in case a new user is created between 2 cache updates
+            cur_time = datetime.now()
+            tomorrow = datetime(
+                cur_time.year, cur_time.month, cur_time.day
+            ) + timedelta(days=1)
+            time_to_next_poll = (tomorrow - datetime.now()).seconds
+
+            # Setting up cache to avoid recomputing the dicts
+            cache.set("poll_leaderboard", poll_leaderboard, time_to_next_poll)
+
+        sorted_users_participations = sorted(
+            poll_leaderboard.items(), key=lambda x: x[1][0]
+        )[::-1][:top_n]
+        sorted_users_defeats_floating = sorted(
+            poll_leaderboard.items(), key=lambda x: x[1][1]
+        )[::-1][:top_n]
+        sorted_users_victories_floating = sorted(
+            poll_leaderboard.items(), key=lambda x: x[1][2]
+        )[::-1][:top_n]
+
+        return response.Response(
+            data={
+                "user_score": poll_leaderboard.get(self.request.user.id),
+                "sorted_participations": sorted_users_participations,
+                "sorted_weighted_victories": sorted_users_victories_floating,
+                "sorted_weighted_defeats": sorted_users_defeats_floating,
             }
         )
 
