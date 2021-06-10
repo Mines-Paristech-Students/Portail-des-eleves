@@ -4,7 +4,7 @@ cached-property==1.5.1
 cffi==1.13.1
 colorama==0.4.1
 cryptography==3.3.2
-Django==2.2.18
+Django==2.2.24
 django-cors-headers==3.1.1
 django-environ==0.4.5
 django-extensions==2.2.5
