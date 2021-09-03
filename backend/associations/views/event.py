@@ -29,7 +29,8 @@ class EventFilter(FilterSet):
         model = Event
         fields = ("starts_at", "ends_at", "association", "time")
 
-    def filter_time(self, queryset, _, times):
+    @staticmethod
+    def filter_time(queryset, _, times):
         """Filter the events by time (BEFORE, NOW, AFTER) and return them in that order:
         * NOW, ordered by "-starts_at"
         * AFTER, ordered by "starts_at"

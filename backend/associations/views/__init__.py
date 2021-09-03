@@ -3,7 +3,7 @@ from associations.views.association import (
     AssociationViewSet,
     set_association_logo,
 )
-from associations.views.event import EventViewSet
+from associations.views.event import EventViewSet, EventFilter
 from associations.views.library import LibraryViewSet, LoanableViewSet, LoansViewSet
 from associations.views.marketplace import (
     MarketplaceViewSet,
