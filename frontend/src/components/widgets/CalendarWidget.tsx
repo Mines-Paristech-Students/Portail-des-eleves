@@ -33,9 +33,9 @@ export const CalendarWidget = ({ ...props }) => {
                 {data.length ? 
                     data.map((event: Event) => (
                         <tr>
-                          <td>{/*event.association.name*/}</td>
+                          <td>{ event.association.name }</td>
                           <td className="text-right">
-                            {/*event.name*/}
+                            { event.name }
                           </td>
                         </tr>
                       )) 
