@@ -5,6 +5,19 @@ from associations.models import Event
 from associations.views import EventFilter
 
 
+def turn_little(event):
+    """
+    :return: The little version of an event, used in the calendar
+    """
+    event_little = {
+        "association": {
+            "name": event.association
+        },
+        "name": event.name
+    }
+
+    return event_little
+
 @api_view(["GET"])
 def widget_calendar_view(request):
     """
@@ -14,12 +27,7 @@ def widget_calendar_view(request):
     queryset_events_to_come = EventFilter.filter_time(queryset=queryset_events, _="_", times=["NOW", "AFTER"])
 
     events_to_come = [
-        {
-            "association": {
-                "name": event.association.name
-            },
-            "name": event.name
-        }
+        turn_little(event)
         for event in queryset_events_to_come
     ]
 
