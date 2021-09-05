@@ -42,8 +42,8 @@ export const CalendarWidget = ({ ...props }) => {
                 <h4>
                   {dayjs()
                     .set("year", parseInt(year))
-                    .set("month", parseInt(month))
-                    .set("day", parseInt(day))
+                    .set("month", parseInt(month) - 1) // January = 0
+                    .set("date", parseInt(day))
                     .locale("fr")
                     .format("dddd DD MMMM")}
                 </h4>
@@ -75,7 +75,7 @@ export const CalendarWidget = ({ ...props }) => {
                             {`${startsAt.getHours()}:${startsAt.getMinutes()} > ${dayjs()
                                 .set("year", endsAt.getFullYear())
                                 .set("month", endsAt.getMonth())
-                                .set("day", endsAt.getDay())
+                                .set("date", endsAt.getDate())
                                 .locale("fr")
                                 .format("dddd DD MMMM")} ${endsAt.getHours()}:${endsAt.getMinutes()}`}
                           </span>

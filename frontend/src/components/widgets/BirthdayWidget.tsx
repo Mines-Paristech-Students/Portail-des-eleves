@@ -34,8 +34,8 @@ export const BirthdayWidget = ({ ...props }) => {
           <div key={day + "-" + month} className={"mb-4"}>
             <h4>
               {dayjs()
-                .set("month", month)
-                .set("day", day)
+                .set("month", month - 1) // January = 0
+                .set("date", day)
                 .locale("fr")
                 .format("dddd DD MMMM")}
             </h4>
