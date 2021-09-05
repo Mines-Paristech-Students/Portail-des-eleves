@@ -52,7 +52,7 @@ class CalendarTestCase(BaseEventsTestCase):
         Event.objects.create(*self.event_starts_one_week_after)
         Event.objects.create(*self.event_ends_one_week_before)
 
-        self.events_displayed = widget_calendar.widget_calendar_view()
+        self.events_displayed = widget_calendar.events_in_calendar()
 
     def test_if_starts_two_weeks_after_not_displayed(self):
         self.assertFalse(self.event_starts_two_weeks_after_little in self.events_displayed)

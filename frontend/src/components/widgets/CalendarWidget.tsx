@@ -59,7 +59,7 @@ export const CalendarWidget = ({ ...props }) => {
                       >
                         <Link to={`/associations/${event.association.id}`} className="float-left pr-2">
                           <span
-                            className="avatar avatar-lg avatar-white"
+                            className="avatar avatar-lg avatar-gray"
                             style={{
                               boxShadow: "0 2px 4px 0 hsla(0, 0%, 0%, 0.2)",
                               backgroundImage: event.association.logo ? `url(${baseUrl + event.association.logo})` : "",
