@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import date
 
-from associations.models import Event
+from associations.models import Event, Association
 from associations.views import EventFilter
 
 
@@ -9,11 +10,30 @@ def turn_little(event):
     """
     :return: The little version of an event, used in the calendar
     """
+    if type(event.association) is Association:
+        association = {
+            "id": event.association.id,
+            "name": event.association.name,
+            "logo": "",
+        }
+
+        if event.association.logo is None:
+            association["logo"] = ""
+        else:
+            association["logo"] = event.association.logo.preview_url
+    else:
+        association = {
+            "id": event.association,
+            "name": event.association,
+            "logo": "",
+        }
+
     event_little = {
-        "association": {
-            "name": event.association
-        },
-        "name": event.name
+        "id": event.id,
+        "association": association,
+        "name": event.name,
+        "starts_at": event.starts_at,
+        "ends_at": event.ends_at
     }
 
     return event_little
@@ -31,8 +51,17 @@ def widget_calendar_view(request):
         for event in queryset_events_to_come
     ]
 
+    events_to_come_ordered = {}
+    for event in events_to_come:
+        event_date = event["starts_at"].date().__str__()
+
+        if event_date not in events_to_come_ordered:
+            events_to_come_ordered[event_date] = []
+
+        events_to_come_ordered[event_date].append(event)
+    print(events_to_come_ordered)
     return Response(
         {
-            "events": events_to_come
+            "events": events_to_come_ordered
         }
     )

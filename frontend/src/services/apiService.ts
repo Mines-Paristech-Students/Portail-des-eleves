@@ -28,7 +28,8 @@ import { elections } from "./api/elections";
 import { subscriptions } from "./api/subscriptions";
 import { library } from "./api/library/library";
 
-const baseApi = "http://localhost:8000/api/v1";
+export const baseUrl = "http://localhost:8000";
+const baseApi = baseUrl + "/api/v1";
 
 export const apiService = applyConverters(
   Axios.create({
