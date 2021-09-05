@@ -38,11 +38,11 @@ def turn_little(event):
 
     return event_little
 
-@api_view(["GET"])
-def widget_calendar_view(request):
+
+def events_in_calendar():
     """
-    :return: A JSON object with one key, `events`, which is a list of objects `{}`.
-    """
+        :return: A JSON object with one key, `events`, which is a list of objects `{}`.
+        """
     queryset_events = Event.objects.all()
     queryset_events_to_come = EventFilter.filter_time(queryset=queryset_events, _="_", times=["NOW", "AFTER"])
 
@@ -59,9 +59,14 @@ def widget_calendar_view(request):
             events_to_come_ordered[event_date] = []
 
         events_to_come_ordered[event_date].append(event)
-    print(events_to_come_ordered)
+
     return Response(
         {
             "events": events_to_come_ordered
         }
     )
+
+
+@api_view(["GET"])
+def widget_calendar_view(request):
+    return events_in_calendar()

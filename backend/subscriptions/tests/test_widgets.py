@@ -1,6 +1,7 @@
 from associations.models import Marketplace
 from associations.views.marketplace import compute_balance
 from authentication.views.birthdays import birthdays_to_json
+from subscriptions.views import events_in_calendar
 from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 ALL_USERS = ["17simple", "18simple", "17admin"]
@@ -27,6 +28,12 @@ class BaseWidgetsTestCase(WeakAuthenticationBaseTestCase):
 
     def birthday_widget(self):
         return self.get(self.endpoint_birthday())
+
+    def endpoint_calendar(self):
+        return f"/subscriptions/calendar/"
+
+    def calendar_widget(self):
+        return self.get(self.endpoint_calendar())
 
     def endpoint_library(self, library_id):
         return f"/subscriptions/library/{library_id}/"
@@ -81,6 +88,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
     widget_names = [
         "balance",
         "birthday",
+        "calendar",
         "library_bd_tek",
         "marketplace_pdm",
         "poll",
@@ -140,6 +148,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
                     "vote",
                     "repartition",
                     "balance",
+                    "calendar",
                 ):
                     self.assertTrue(widget["mandatory"], msg=widget)
                 else:
@@ -168,6 +177,13 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             res = self.birthday_widget()
             self.assertStatusCode(res, 200)
             self.assertEqual(res.data, birthdays_to_json(7))
+
+    def test_calendar_widget(self):
+        for user in ALL_USERS:
+            self.login(user)
+            res = self.calendar_widget()
+            self.assertStatusCode(res, 200)
+            self.assertEqual(res.data, events_in_calendar())
 
     def test_library_widget(self):
         self.login("17simple")
