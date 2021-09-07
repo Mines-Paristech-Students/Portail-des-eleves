@@ -9,7 +9,7 @@ from repartitions.models import Proposition, Campaign, UserCampaign, Category, W
 
 
 class MunkresTestCase(WeakAuthenticationBaseTestCase):
-    """ The repartition algorithm is named 'Munkres algorithm' or 'Hungarian algorithm' """
+    """The repartition algorithm is named 'Munkres algorithm' or 'Hungarian algorithm'"""
 
     fixtures = ["authentication.yaml", "test_repartition_api.yaml"]
 
@@ -22,8 +22,8 @@ class MunkresTestCase(WeakAuthenticationBaseTestCase):
         self.assertEqual(5, get_project_index(1, [0, 0, 1, 0, 0, 1]))
 
     def generate_batch_wishes(self, n_propositions=10, n_students=168):
-        """ Creates a campaign with propositions, users, and 4 categories in which the students are distributed with
-        the probabilities 0.8, 0.1, 0.06, 0.04 """
+        """Creates a campaign with propositions, users, and 4 categories in which the students are distributed with
+        the probabilities 0.8, 0.1, 0.06, 0.04"""
 
         np.random.seed(0)
 
@@ -146,8 +146,8 @@ class MunkresTestCase(WeakAuthenticationBaseTestCase):
             self.assertEqual(len(to_find), 0)
 
     def test_crash_on_impossible_fixity(self):
-        """ Fixes too many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
-        per group """
+        """Fixes too many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
+        per group"""
         campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
             2, 5
         )
@@ -172,8 +172,8 @@ class MunkresTestCase(WeakAuthenticationBaseTestCase):
             )
 
     def test_crash_on_subtle_impossible_fixity(self):
-        """ Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
-        per group """
+        """Fixes to many users to allow the algorithm to find a repartition with the same (+/- 1) number of users
+        per group"""
         campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
             2, 6
         )
@@ -212,12 +212,12 @@ class MunkresTestCase(WeakAuthenticationBaseTestCase):
 
     def test_can_forcast_over_allocation(self):
         """
-           category 1 - 3 users:
-                2 users in group 1
-                1 user in group 2
-            category 2 - 1 user:
-                1 user fixed in group 1
-            BOUM
+        category 1 - 3 users:
+             2 users in group 1
+             1 user in group 2
+         category 2 - 1 user:
+             1 user fixed in group 1
+         BOUM
         """
         campaign, propositions, categories, user_campaigns = self.generate_batch_wishes(
             2, 4

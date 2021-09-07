@@ -21,22 +21,22 @@ export const CalendarWidget = ({ ...props }) => {
 
   return (
     <Widget
-      name={"Evènements à venir"}
+      name={"Évènements à venir"}
       color={TablerColor.Red}
       bodyWrapped={false}
       {...useWidgetConfig("calendar")}
       {...props}
     >
       <Card.Body>
-      {status === "loading" ? (
-        <Loading />
-      ) : status === "error" ? (
-        <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
-      ) : status === "success" && data && Object.keys(data).length ? (
-        Object.keys(data).map((key) => {
+        {status === "loading" ? (
+          <Loading />
+        ) : status === "error" ? (
+          <ErrorMessage>`Une erreur est apparue: ${error}`</ErrorMessage>
+        ) : status === "success" && data && Object.keys(data).length ? (
+          Object.keys(data).map((key) => {
             // Starts at Date
-            let [year, month, day] = key.split('_');
-            
+            let [year, month, day] = key.split("_");
+
             return (
               <div key={year + "-" + day + "-" + month} className={"mb-4"}>
                 <h4>
@@ -48,7 +48,7 @@ export const CalendarWidget = ({ ...props }) => {
                     .format("dddd DD MMMM")}
                 </h4>
                 <Row>
-                  { data[key].map((event: Event) => {
+                  {data[key].map((event: Event) => {
                     let startsAt = new Date(event.startsAt);
                     let endsAt = new Date(event.endsAt);
 
@@ -57,36 +57,49 @@ export const CalendarWidget = ({ ...props }) => {
                         className="align-items-center py-2 px-0 w-100"
                         key={event.id}
                       >
-                        <Link to={`/associations/${event.association.id}`} className="float-left pr-2">
+                        <Link
+                          to={`/associations/${event.association.id}`}
+                          className="float-left pr-2"
+                        >
                           <span
                             className="avatar avatar-lg avatar-gray"
                             style={{
                               boxShadow: "0 2px 4px 0 hsla(0, 0%, 0%, 0.2)",
-                              backgroundImage: event.association.logo ? `url(${baseUrl + event.association.logo})` : "",
+                              backgroundImage: event.association.logo
+                                ? `url(${baseUrl + event.association.logo})`
+                                : "",
                             }}
                           ></span>
                         </Link>
                         <div>
-                          <Link to={`/associations/${event.association.id}/evenements`} className="text-inherit">
+                          <Link
+                            to={`/associations/${event.association.id}/evenements`}
+                            className="text-inherit"
+                          >
                             {event.name}
                           </Link>
-                          <br/>
+                          <br />
                           <span className="text-muted h-1x">
                             {`${startsAt.getHours()}:${startsAt.getMinutes()} > ${dayjs()
-                                .set("year", endsAt.getFullYear())
-                                .set("month", endsAt.getMonth())
-                                .set("date", endsAt.getDate())
-                                .locale("fr")
-                                .format("dddd DD MMMM")} ${endsAt.getHours()}:${endsAt.getMinutes()}`}
+                              .set("year", endsAt.getFullYear())
+                              .set("month", endsAt.getMonth())
+                              .set("date", endsAt.getDate())
+                              .locale("fr")
+                              .format(
+                                "dddd DD MMMM"
+                              )} ${endsAt.getHours()}:${endsAt.getMinutes()}`}
                           </span>
                         </div>
                       </div>
-                  )}) }
+                    );
+                  })}
                 </Row>
               </div>
             );
           })
-      ) : "Aucun évènement à venir dans les 2 prochaines semaines :(" }
+        ) : (
+          "Aucun événement à venir dans les 2 prochaines semaines :("
+        )}
       </Card.Body>
     </Widget>
   );

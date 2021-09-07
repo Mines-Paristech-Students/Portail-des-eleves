@@ -10,7 +10,7 @@ import { getRandom } from "../utils/random";
 import "./homepage.css";
 import { PollWidget } from "./widgets/PollWidget";
 import { BalanceWidget } from "./widgets/BalanceWidget";
-import { CalendarWidget } from "./widgets/CalendarWidget";  
+import { CalendarWidget } from "./widgets/CalendarWidget";
 
 const greetings = [
   "Bonjour",

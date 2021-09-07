@@ -10,30 +10,40 @@ def turn_little(event):
     """
     :return: The little version of an event, used in the calendar
     """
-    if type(event.association) is Association:
+    if type(event) is Event:
+        event_association = event.association
+        event_name = event.name
+        event_starts_at = event.starts_at
+        event_ends_at = event.ends_at
+    else:
+        event_association = event["association"]
+        event_name = event["name"]
+        event_starts_at = event["starts_at"]
+        event_ends_at = event["ends_at"]
+
+    if type(event_association) is Association:
         association = {
-            "id": event.association.id,
-            "name": event.association.name,
+            "id": event_association.id,
+            "name": event_association.name,
             "logo": "",
         }
 
-        if event.association.logo is None:
+        if event_association.logo is None:
             association["logo"] = ""
         else:
-            association["logo"] = event.association.logo.preview_url
+            association["logo"] = event_association.logo.preview_url
     else:
         association = {
-            "id": event.association,
-            "name": event.association,
+            "id": event_association,
+            "name": event_association,
             "logo": "",
         }
 
     event_little = {
-        "id": event.id,
         "association": association,
-        "name": event.name,
-        "starts_at": event.starts_at,
-        "ends_at": event.ends_at
+        "name": event_name,
+        "starts_at": event_starts_at,
+        "ends_at": event_ends_at,
     }
 
     return event_little
@@ -41,15 +51,15 @@ def turn_little(event):
 
 def events_in_calendar():
     """
-        :return: A JSON object with one key, `events`, which is a list of objects `{}`.
-        """
+    :return: A JSON object with one key, `events`, which is a
+    list of objects described in the "turn_little" function.
+    """
     queryset_events = Event.objects.all()
-    queryset_events_to_come = EventFilter.filter_time(queryset=queryset_events, _="_", times=["NOW", "AFTER"])
+    queryset_events_to_come = EventFilter.filter_time(
+        queryset=queryset_events, _="_", times=["NOW", "AFTER"]
+    )
 
-    events_to_come = [
-        turn_little(event)
-        for event in queryset_events_to_come
-    ]
+    events_to_come = [turn_little(event) for event in queryset_events_to_come]
 
     events_to_come_ordered = {}
     for event in events_to_come:
@@ -60,13 +70,9 @@ def events_in_calendar():
 
         events_to_come_ordered[event_date].append(event)
 
-    return Response(
-        {
-            "events": events_to_come_ordered
-        }
-    )
+    return events_to_come_ordered
 
 
 @api_view(["GET"])
 def widget_calendar_view(request):
-    return events_in_calendar()
+    return Response({"events": events_in_calendar()})

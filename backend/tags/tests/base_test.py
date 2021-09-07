@@ -12,8 +12,8 @@ class TagsBaseTestCase(WeakAuthenticationBaseTestCase):
 
     @classmethod
     def setUpClass(cls):
-        """ Adds the lorem-ipsum.pdf file in the test MEDIA_ROOT folder so the fixtures
-         can be loaded"""
+        """Adds the lorem-ipsum.pdf file in the test MEDIA_ROOT folder so the fixtures
+        can be loaded"""
         try:
             makedirs(join(MEDIA_ROOT, "associations"))
         except FileExistsError:
@@ -28,6 +28,6 @@ class TagsBaseTestCase(WeakAuthenticationBaseTestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        """ Clears the test MEDIA_ROOT folder """
+        """Clears the test MEDIA_ROOT folder"""
         super(TagsBaseTestCase, cls).tearDownClass()
         shutil.rmtree(MEDIA_ROOT)

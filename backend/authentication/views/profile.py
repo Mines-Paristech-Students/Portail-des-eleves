@@ -19,11 +19,11 @@ class ProfileFilter(FilterSet):
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
-        API endpoint that allows an user profile to be viewed or edited.
+    API endpoint that allows an user profile to be viewed or edited.
 
-        Parameters:
-            - search: search in `id`, `first_name`, `last_name` fields.
-            - promotion: does NOT follow the standard behaviour. Filter on the `promotion` field. Several promotions may be given, they must be separated by commas.
+    Parameters:
+        - search: search in `id`, `first_name`, `last_name` fields.
+        - promotion: does NOT follow the standard behaviour. Filter on the `promotion` field. Several promotions may be given, they must be separated by commas.
     """
 
     queryset = User.objects.all()

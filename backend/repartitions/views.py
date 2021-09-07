@@ -74,7 +74,7 @@ class UserCampaignView(NestedViewSetMixin, viewsets.ModelViewSet):
         serializer.save(campaign=campaign)
 
     def get_object(self):
-        """ Override of parent `get_object` method but filters by default the user's repartitions """
+        """Override of parent `get_object` method but filters by default the user's repartitions"""
         queryset = self.filter_queryset(self.get_queryset())
 
         # Perform the lookup filtering.

@@ -58,7 +58,7 @@ class Role(models.Model):
 
     @cached_property
     def is_active(self):
-        """"A role is active iff the start date is passed and there is no end date / the end date is not passed yet."""
+        """ "A role is active iff the start date is passed and there is no end date / the end date is not passed yet."""
 
         return date.today() >= self.start_date and (
             self.end_date is None or self.end_date > date.today()

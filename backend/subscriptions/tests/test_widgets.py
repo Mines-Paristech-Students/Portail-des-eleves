@@ -183,7 +183,7 @@ class WidgetsTestCase(BaseWidgetsTestCase):
             self.login(user)
             res = self.calendar_widget()
             self.assertStatusCode(res, 200)
-            self.assertEqual(res.data, events_in_calendar())
+            self.assertEqual(res.data, {"events": events_in_calendar()})
 
     def test_library_widget(self):
         self.login("17simple")

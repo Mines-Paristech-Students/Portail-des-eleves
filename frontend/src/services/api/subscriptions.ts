@@ -35,7 +35,7 @@ export const subscriptions = {
       (res) => res.balances
     ),
 
-  calendar: () => 
+  calendar: () =>
     unwrap<any>(apiService.get(`/subscriptions/calendar/`)).then(
       (res) => res.events
     ),

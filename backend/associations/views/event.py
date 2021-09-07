@@ -66,30 +66,23 @@ class EventFilter(FilterSet):
             else Event.objects.none()
         )
 
-        events_annotated = (
-            (now | after | before)
-            .annotate(
-                ordering=Case(
-                    *(
-                        [
-                            When(pk=pk, then=Value(f"A{rank}"))
-                            for rank, pk in enumerate(now.values_list("pk", flat=True))
-                        ]
-                        + [
-                            When(pk=pk, then=Value(f"B{rank}"))
-                            for rank, pk in enumerate(
-                                after.values_list("pk", flat=True)
-                            )
-                        ]
-                        + [
-                            When(pk=pk, then=Value(f"C{rank}"))
-                            for rank, pk in enumerate(
-                                before.values_list("pk", flat=True)
-                            )
-                        ]
-                    ),
-                    output_field=CharField(),
-                )
+        events_annotated = (now | after | before).annotate(
+            ordering=Case(
+                *(
+                    [
+                        When(pk=pk, then=Value(f"A{rank}"))
+                        for rank, pk in enumerate(now.values_list("pk", flat=True))
+                    ]
+                    + [
+                        When(pk=pk, then=Value(f"B{rank}"))
+                        for rank, pk in enumerate(after.values_list("pk", flat=True))
+                    ]
+                    + [
+                        When(pk=pk, then=Value(f"C{rank}"))
+                        for rank, pk in enumerate(before.values_list("pk", flat=True))
+                    ]
+                ),
+                output_field=CharField(),
             )
         )
 

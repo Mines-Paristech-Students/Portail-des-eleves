@@ -63,8 +63,8 @@ To abide by theses constraints, the algorithm is split in 2 stages:
 def generate_line(
     uc: UserCampaign, propositions: List[Proposition], places: List[int]
 ) -> List[float]:
-    """ given a user's choices, a list of proposition and the number of places for each proposition, returns the
-    corresponding line of the cost matrix """
+    """given a user's choices, a list of proposition and the number of places for each proposition, returns the
+    corresponding line of the cost matrix"""
 
     if any(map(lambda x: x < 0, places)):
         raise ValueError("places {} is not valid", places)
@@ -90,8 +90,8 @@ def generate_line(
 
 
 def get_project_index(index, places):
-    """ Given an index and the number of places in each proposition, returns the index of the proposition in the
-    array given to `generate_line` """
+    """Given an index and the number of places in each proposition, returns the index of the proposition in the
+    array given to `generate_line`"""
     s = 0
     for i in range(len(places)):
         if s <= index < s + places[i]:
