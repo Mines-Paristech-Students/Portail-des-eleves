@@ -93,7 +93,6 @@ export const ProductForm: ({
           .min(0.0, "Un prix est positif askip"),
         numberLeft: Yup.number()
           .required("Veuillez entrer une quantité")
-          .min(0, "Un stock est positif askip"),
       })}
       onSubmit={onSubmit}
       render={({ setFieldValue, values }) => (
