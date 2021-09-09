@@ -16,6 +16,7 @@ from associations.views import (
     RoleViewSet,
 )
 from associations.views.election import VoterViewSet, ElectionViewSet, ChoiceViewSet
+from associations.views.library import LibraryView
 from associations.views.marketplace import MarketplaceView
 from associations.views.media import MediaViewSet, get_media_uploaded_on_bounds
 from associations.views import set_association_logo
@@ -65,6 +66,7 @@ urlpatterns += [
         BalanceView.as_view(),
         name="balance-detail",
     ),
+    path("library/<slug:library_id>/", LibraryView.as_view()),
 ]
 
 # Pages.
