@@ -4,7 +4,7 @@ import django_filters
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404, HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.filters import SearchFilter
@@ -14,7 +14,7 @@ from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
 from api.paginator import SmallResultsSetPagination
-from associations.models import Marketplace, Product, Transaction, Funding
+from associations.models import Marketplace, Product, Transaction, Funding, Association
 from associations.permissions import (
     MarketplacePermission,
     ProductPermission,
@@ -43,10 +43,47 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
     permission_classes = (MarketplacePermission,)
 
     def get_serializer_class(self):
-        if self.action in ("create", "update", "partial_update"):
+        if self.action in ("create", "update", "patch", "partial_update"):
             return MarketplaceWriteSerializer
 
         return MarketplaceSerializer
+
+
+class MarketplaceView(APIView):
+    def patch(self, request, marketplace_id=None):
+        if marketplace_id is None:
+            return HttpResponseBadRequest(
+                "You must mention an association to patch it"
+            )
+
+        association = Association.objects.get(pk=marketplace_id).pk
+
+        if not Marketplace.objects.filter(id=marketplace_id).exists():
+            serializer = MarketplaceWriteSerializer(data={
+                "id": marketplace_id,
+                "enabled": False,
+                "association": association,
+                "products": []
+            })
+
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        marketplace = Marketplace.objects.get(id=marketplace_id)
+        serializer = MarketplaceWriteSerializer(marketplace, data={
+            "id": marketplace_id,
+            "enabled": request.data["enabled"],
+            "association": association,
+            "products": []
+        })
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductFilter(TaggableFilter):
