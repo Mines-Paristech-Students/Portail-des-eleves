@@ -67,15 +67,12 @@ class RoleFilter(FilterSet):
 
         for permission_name in Role.PERMISSION_NAMES:
             if permission_name in permissions_filter:
-                condition |= (
-                    Q(
-                        **{
-                            f"{permission_name}_permission": True,
-                            "start_date__lte": date.today(),
-                        }
-                    )
-                    & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
-                )
+                condition |= Q(
+                    **{
+                        f"{permission_name}_permission": True,
+                        "start_date__lte": date.today(),
+                    }
+                ) & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
 
         return queryset.filter(condition).distinct()
 
