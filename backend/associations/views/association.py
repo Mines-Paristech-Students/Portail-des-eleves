@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django_filters import DateTimeFromToRangeFilter
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response
@@ -16,7 +16,7 @@ from associations.serializers import (
     AssociationShortSerializer,
     AssociationSerializer,
     RoleSerializer,
-    WriteRoleSerializer,
+    WriteRoleSerializer, MarketplaceWriteSerializer, LibraryWriteSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
 
@@ -132,6 +132,45 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationShortSerializer
         else:
             return AssociationSerializer
+
+    def create(self, request):
+        # Create the association
+        association_serializer = AssociationSerializer(data=request.data)
+
+        if association_serializer.is_valid():
+            association_serializer.save()
+        else:
+            return Response(association_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        id = Association.objects.get(name=request.data["name"]).pk
+
+        # Create the marketplace
+        serializer = MarketplaceWriteSerializer(data={
+            "id": id,
+            "enabled": False,
+            "association": id,
+            "products": []
+        })
+
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the library
+        serializer = LibraryWriteSerializer(data={
+            "id": id,
+            "enabled": False,
+            "association": id,
+            "loanables": []
+        })
+
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response("Association, marketplace and library created.", status=status.HTTP_200_OK)
 
 
 @api_view(["PUT"])
