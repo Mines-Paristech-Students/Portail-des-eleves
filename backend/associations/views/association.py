@@ -138,17 +138,17 @@ class AssociationViewSet(viewsets.ModelViewSet):
         association_serializer = AssociationSerializer(data=request.data)
 
         if association_serializer.is_valid():
-            association_serializer.save()
+            association = association_serializer.save()
         else:
             return Response(association_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        id = Association.objects.get(name=request.data["name"]).pk
+        association_pk = association.pk
 
         # Create the marketplace
         serializer = MarketplaceWriteSerializer(data={
-            "id": id,
+            "id": association_pk,
             "enabled": False,
-            "association": id,
+            "association": association_pk,
             "products": []
         })
 
@@ -159,9 +159,9 @@ class AssociationViewSet(viewsets.ModelViewSet):
 
         # Create the library
         serializer = LibraryWriteSerializer(data={
-            "id": id,
+            "id": association_pk,
             "enabled": False,
-            "association": id,
+            "association": association_pk,
             "loanables": []
         })
 
