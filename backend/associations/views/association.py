@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django_filters import DateTimeFromToRangeFilter
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
+from django.http import HttpResponseForbidden
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
@@ -19,6 +20,8 @@ from associations.serializers import (
     WriteRoleSerializer, MarketplaceWriteSerializer, LibraryWriteSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
+from associations.views.marketplace import MarketplaceViewSet
+from associations.views.library import LibraryViewSet
 
 
 class RoleFilter(FilterSet):
@@ -171,6 +174,19 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response("Association, marketplace and library created.", status=status.HTTP_200_OK)
+
+    def destroy(self, request, pk=None):
+        if pk is None:
+            return HttpResponseForbidden("You must mention an association to delete")
+
+        association = Association.objects.get(pk=pk)
+        marketplace = association.marketplace
+        library = association.library
+
+        MarketplaceViewSet().perform_destroy(instance=marketplace)
+        LibraryViewSet().perform_destroy(instance=library)
+
+        return super(AssociationViewSet, self).destroy(request, pk=pk)
 
 
 @api_view(["PUT"])
