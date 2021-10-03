@@ -9,9 +9,9 @@ from backend.fake_private_key import FAKE_PRIVATE_KEY
 
 class BaseTestCase(APITestCase):
     """
-        This test base provides convenient `get`, `post`, etc. shortcut methods to the corresponding
-        `self.client.xxx` methods.
-        When using these methods, the URLs must be shortened from `/api/v1/some/endpoint/` to `/some/endpoint/`.
+    This test base provides convenient `get`, `post`, etc. shortcut methods to the corresponding
+    `self.client.xxx` methods.
+    When using these methods, the URLs must be shortened from `/api/v1/some/endpoint/` to `/some/endpoint/`.
     """
 
     api_base = "/api/v1"
@@ -65,11 +65,11 @@ class BaseTestCase(APITestCase):
 
 class WeakAuthenticationBaseTestCase(BaseTestCase):
     """
-        This test base provides convenient methods to log users in and out.
-        However, it does so by generating fake JWT and disabling the signature verification.
-        Do not use this test base to test the JWT authentication itself.
+    This test base provides convenient methods to log users in and out.
+    However, it does so by generating fake JWT and disabling the signature verification.
+    Do not use this test base to test the JWT authentication itself.
 
-        If you overload `setUp` in a child class, do not forget to call the base setUp too!
+    If you overload `setUp` in a child class, do not forget to call the base setUp too!
     """
 
     def setUp(self):
@@ -77,8 +77,8 @@ class WeakAuthenticationBaseTestCase(BaseTestCase):
 
     def _get_fake_jwt(self, username):
         """
-            Produce a fake JWT authenticating the given user.
-            Use a random RSA private key.
+        Produce a fake JWT authenticating the given user.
+        Use a random RSA private key.
         """
 
         payload = {

@@ -3,9 +3,9 @@ from rest_framework import permissions
 
 class CoursePermission(permissions.BasePermission):
     """
-                             | Association |
-        Global administrator | CRUD        |
-        User                 | R           |
+                         | Association |
+    Global administrator | CRUD        |
+    User                 | R           |
     """
 
     def has_permission(self, request, view):
@@ -14,9 +14,9 @@ class CoursePermission(permissions.BasePermission):
 
 class FormPermission(permissions.BasePermission):
     """
-                             | Association |
-        Global administrator | CRUD        |
-        User                 | R           |
+                         | Association |
+    Global administrator | CRUD        |
+    User                 | R           |
     """
 
     def has_permission(self, request, view):

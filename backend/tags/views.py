@@ -166,7 +166,7 @@ class TagLinkView(APIView):
 
 @api_view(["GET"])
 def get_namespaces_for_object(request, model, instance_pk):
-    """ Returns the namespaces that the object of type `model` and id `instance_pk` can get tags from """
+    """Returns the namespaces that the object of type `model` and id `instance_pk` can get tags from"""
 
     instance = Tag.LINKED_TO_MODEL[model].objects.get(pk=instance_pk)
     parent = get_parent_object(instance)

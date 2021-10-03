@@ -155,9 +155,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     @cached_property
     def years_since_entry(self):
         """
-            Return the number of years completed since the student's arrival at school.\n
-            A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
-            of elapsed 30th June NOT including the one of the arrival year.
+        Return the number of years completed since the student's arrival at school.\n
+        A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
+        of elapsed 30th June NOT including the one of the arrival year.
         """
         today = date.today()
 

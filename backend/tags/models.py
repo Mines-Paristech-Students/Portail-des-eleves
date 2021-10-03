@@ -8,17 +8,17 @@ from tags.exceptions import BrokenTagLink
 
 class Namespace(models.Model):
     """
-        Represents a namespace for a `Tag` object. A namespace defines a `scope`, which is a “big” object, for instance
-        a specific `Association`. A `Tag` under this `Namespace` will be restricted to this
-        object and its taggable children (a `Page` or a `File`, for instance).
+    Represents a namespace for a `Tag` object. A namespace defines a `scope`, which is a “big” object, for instance
+    a specific `Association`. A `Tag` under this `Namespace` will be restricted to this
+    object and its taggable children (a `Page` or a `File`, for instance).
 
-        Namespaces can also have a global scope, meaning a `Tag` under this namespace can be used everywhere.
+    Namespaces can also have a global scope, meaning a `Tag` under this namespace can be used everywhere.
 
-        Examples:
-            * A global `Namespace` called `user` allows the creation of `Tag` objects on every taggable object (a
-            `Page`, a `Product`…
-            * A `Namespace` called `beer` scoped to the `Association` `biero` will allow users to tag the `biero`
-            `Products` with tags such as: `beer:IPA`, `beer:belgian`, `beer:soft`…
+    Examples:
+        * A global `Namespace` called `user` allows the creation of `Tag` objects on every taggable object (a
+        `Page`, a `Product`…
+        * A `Namespace` called `beer` scoped to the `Association` `biero` will allow users to tag the `biero`
+        `Products` with tags such as: `beer:IPA`, `beer:belgian`, `beer:soft`…
     """
 
     class Meta:
@@ -60,8 +60,8 @@ class Namespace(models.Model):
 
 class Tag(models.Model):
     """
-        Represents a tag which can be linked to a instance of a model listed in `LINKED_TO_MODEL`, provided the tag's
-        namespace is compatible (see `Namespace`).
+    Represents a tag which can be linked to a instance of a model listed in `LINKED_TO_MODEL`, provided the tag's
+    namespace is compatible (see `Namespace`).
     """
 
     LINKED_TO_MODEL = {

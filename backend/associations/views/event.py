@@ -29,7 +29,8 @@ class EventFilter(FilterSet):
         model = Event
         fields = ("starts_at", "ends_at", "association", "time")
 
-    def filter_time(self, queryset, _, times):
+    @staticmethod
+    def filter_time(queryset, _, times):
         """Filter the events by time (BEFORE, NOW, AFTER) and return them in that order:
         * NOW, ordered by "-starts_at"
         * AFTER, ordered by "starts_at"
@@ -65,33 +66,30 @@ class EventFilter(FilterSet):
             else Event.objects.none()
         )
 
-        return (
-            (now | after | before)
-            .annotate(
-                ordering=Case(
-                    *(
-                        [
-                            When(pk=pk, then=Value(f"A{rank}"))
-                            for rank, pk in enumerate(now.values_list("pk", flat=True))
-                        ]
-                        + [
-                            When(pk=pk, then=Value(f"B{rank}"))
-                            for rank, pk in enumerate(
-                                after.values_list("pk", flat=True)
-                            )
-                        ]
-                        + [
-                            When(pk=pk, then=Value(f"C{rank}"))
-                            for rank, pk in enumerate(
-                                before.values_list("pk", flat=True)
-                            )
-                        ]
-                    ),
-                    output_field=CharField(),
-                )
+        events_annotated = (now | after | before).annotate(
+            ordering=Case(
+                *(
+                    [
+                        When(pk=pk, then=Value(f"A{rank}"))
+                        for rank, pk in enumerate(now.values_list("pk", flat=True))
+                    ]
+                    + [
+                        When(pk=pk, then=Value(f"B{rank}"))
+                        for rank, pk in enumerate(after.values_list("pk", flat=True))
+                    ]
+                    + [
+                        When(pk=pk, then=Value(f"C{rank}"))
+                        for rank, pk in enumerate(before.values_list("pk", flat=True))
+                    ]
+                ),
+                output_field=CharField(),
             )
-            .order_by("ordering")
         )
+
+        if events_annotated:
+            return events_annotated.order_by("ordering")
+
+        return events_annotated
 
 
 class EventViewSet(viewsets.ModelViewSet):

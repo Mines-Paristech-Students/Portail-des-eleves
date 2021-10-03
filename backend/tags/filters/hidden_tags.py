@@ -21,8 +21,8 @@ from tags.models import Tag
 
 class HasHiddenTagFilter(filters.BaseFilterBackend):
     """
-        Filter the query sets by excluding any object which has a `hidden` tag or whose parent has a `hidden` tag.
-        Please note that this filter has no effect on the nested objects which are fetched from a `Serializer`.
+    Filter the query sets by excluding any object which has a `hidden` tag or whose parent has a `hidden` tag.
+    Please note that this filter has no effect on the nested objects which are fetched from a `Serializer`.
     """
 
     def filter_queryset(self, request, queryset, view):

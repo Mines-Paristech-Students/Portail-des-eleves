@@ -1,5 +1,6 @@
 import { dayPickerLocalisationProps } from "./DayPickerField";
 import dayjs from "dayjs";
+import "dayjs/locale/fr";
 import React from "react";
 import { useField } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";

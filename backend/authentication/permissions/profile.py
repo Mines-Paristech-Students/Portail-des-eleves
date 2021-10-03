@@ -3,11 +3,11 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 class ProfilePermission(BasePermission):
     """
-               | Own profile | Another user |
-        Admin  | RU          | RU           |
-        Simple | RU          | R            |
+           | Own profile | Another user |
+    Admin  | RU          | RU           |
+    Simple | RU          | R            |
 
-        The fields which can be updated are specified in the UserSerializer.
+    The fields which can be updated are specified in the UserSerializer.
     """
 
     message = "You are not allowed to edit this profile."
