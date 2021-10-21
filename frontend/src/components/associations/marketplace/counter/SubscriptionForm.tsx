@@ -41,7 +41,7 @@ export const SubscriptionForm = ({
     <em>Erreur {error}</em>
   ) : (
     <>
-      <label>
+      <label className="mt-1 mb-5">
           <input
             type="checkbox"
             className="custom-switch-input"

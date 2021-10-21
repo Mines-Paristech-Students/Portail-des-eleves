@@ -1,4 +1,5 @@
 from django.db.models import Q
+from associations.models import marketplace
 from rest_framework import serializers
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
@@ -23,7 +24,14 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
 
         # Compute the value of the transaction.
         product = Product.objects.get(pk=validated_data["product"].id)
-        validated_data["value"] = round(product.price * validated_data["quantity"], 2)
+        user = User.objects.get(pk=validated_data["buyer"].id)
+        subscriber = Subscription.objects.filter(user=user, marketplace=product.marketplace).exists()
+        if subscriber and product.price_for_subscribers:
+            price = product.price_for_subscribers
+        else:
+            price = product.price
+
+        validated_data["value"] = round(price * validated_data["quantity"], 2)
         if not validated_data.get("status", False):
             validated_data["status"] = "ORDERED"
 

@@ -115,7 +115,7 @@ export const CounterOrderMaker = ({
             marketplaceId={marketplaceId}
             className={"float-right mt-2"}
           />
-          
+          <br/>
           <SubscriptionForm
             customer={customer}
             marketplaceId={marketplaceId}
