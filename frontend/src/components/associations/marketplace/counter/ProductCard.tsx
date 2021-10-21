@@ -4,6 +4,7 @@ import { decidePlural, formatPrice } from "../../../../utils/format";
 
 export const ProductCard = ({
   product,
+  subscriber,
   addToBasket,
   quantityOrdered,
   className = "",
@@ -16,7 +17,8 @@ export const ProductCard = ({
       {product.name}
       <br />
       <small className="text-muted">
-        {formatPrice(product.price)}
+        { subscriber && product.priceForSubscribers ?
+            formatPrice(product.priceForSubscribers) : formatPrice(product.price)} 
         {product.numberLeft > -1
           ? ` / ${product.numberLeft - (quantityOrdered || 0)} ${decidePlural(
               product.numberLeft - (quantityOrdered || 0),

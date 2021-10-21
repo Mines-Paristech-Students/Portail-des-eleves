@@ -1,14 +1,16 @@
-import { api } from "../../../../services/apiService";
+import { api, useBetterQuery } from "../../../../services/apiService";
 import React, { useContext, useState } from "react";
 import { ToastContext } from "../../../utils/Toast";
 import { TransactionStatus } from "../../../../models/associations/marketplace";
-import { queryCache } from "react-query";
+import { queryCache, useMutation } from "react-query";
 import { Card, Col, Row } from "react-bootstrap";
 import { RefundForm } from "./RefundForm";
 import { ProductSearch } from "./ProductSearch";
 import { OrderSummary } from "./OrderSummary";
 import { Balance } from "../Balance";
 import { SubscriptionForm } from "./SubscriptionForm";
+import { Loading } from "../../../utils/Loading";
+import { genericMutationErrorHandling } from "../../../../utils/genericMutationErrorHandling";
 
 export const CounterOrderMaker = ({
   marketplaceId,
@@ -92,8 +94,34 @@ export const CounterOrderMaker = ({
 
     await queryCache.invalidateQueries(["marketplace.transactions.list"]);
   };
+  
+  const [localSubscription, setLocalSubscription] = useState(false);
+  const [updated, setUpdated] = useState(false);
 
-  return (
+  const [updateSubscription] = useMutation(api.marketplace.subscription.update, {
+    onSuccess: (entity) => {
+      setLocalSubscription(entity.subscriber);
+      sendSuccessToast("Compte modifié.");
+      return queryCache.invalidateQueries(["marketplace.get", { marketplaceId }]);
+    },
+    onError: genericMutationErrorHandling(sendErrorToast),
+  });
+
+  let {data: subscriber, status, error} = useBetterQuery(
+    ["marketplace.subscription", marketplaceId, customer.id],
+    api.marketplace.subscription.get
+  );
+
+  if(status === "success" && !updated) {
+    setUpdated(true);
+    setLocalSubscription((subscriber as {subscriber: boolean}).subscriber);
+  }
+
+  return (status === "loading") ? (
+    <Loading />
+  ) : (status === "error") ? (
+    <span>Error :{" " + error}</span>
+  ) : (
     <>
       <Row className="mt-4">
         <Col md={8} className="d-flex justify-content-center">
@@ -115,8 +143,10 @@ export const CounterOrderMaker = ({
             marketplaceId={marketplaceId}
             className={"float-right mt-2"}
           />
-          <br/>
+          
           <SubscriptionForm
+            subscriber={localSubscription}
+            updateSubscription={updateSubscription}
             customer={customer}
             marketplaceId={marketplaceId}
           />
@@ -126,6 +156,7 @@ export const CounterOrderMaker = ({
       <Row>
         <Col md={6}>
           <ProductSearch
+            subscriber={localSubscription}
             basket={basket}
             addToBasket={addToBasket}
             marketplaceId={marketplaceId}
@@ -135,6 +166,7 @@ export const CounterOrderMaker = ({
         {/* Show order summary */}
         <Col md={6}>
           <OrderSummary
+            subscriber={localSubscription}
             basket={basket}
             removeFromBasket={removeFromBasket}
             makeOrder={makeOrder}
