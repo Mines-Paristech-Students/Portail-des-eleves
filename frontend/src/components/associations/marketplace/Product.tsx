@@ -7,7 +7,7 @@ import {
   formatPrice,
 } from "../../../utils/format";
 
-export const Product = ({ product, additionalContent }) => (
+export const Product = ({ subscriber, product, additionalContent }) => (
   <Col xs={12} md={6}>
     <Card>
       <Card.Body>
@@ -23,11 +23,16 @@ export const Product = ({ product, additionalContent }) => (
         </Card.Subtitle>
         <p>{formatNewLines(product.description)}</p>
 
-        <div className="mt-5 d-flex align-items-center">
-          <div className={"product-price mr-3"}>
-            <strong>{formatPrice(product.price)}</strong>
+        <div className="mt-5 d-flex align-items-center flex-column flex-sm-row flex-lg-row flex-md-column">
+          <div className={"product-price mr-3 word"}>
+            { product.priceForSubscribers ? (
+              <s className="mr-1">
+                { subscriber ? formatPrice(product.price) : formatPrice(product.priceForSubscribers) }
+              </s>
+            ) : '' }
+            <strong>{ product.priceForSubscribers && subscriber ? formatPrice(product.priceForSubscribers) : formatPrice(product.price)}</strong>
           </div>
-          <div className="ml-auto">{additionalContent}</div>
+          <div className="ml-0 ml-sm-auto ml-lg-auto ml-md-0">{additionalContent}</div>
         </div>
       </Card.Body>
     </Card>

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { PageTitle } from "../../utils/PageTitle";
 import Container from "react-bootstrap/Container";
-import { api } from "../../../services/apiService";
+import { api, useBetterQuery } from "../../../services/apiService";
 import Row from "react-bootstrap/Row";
 import { Pagination } from "../../utils/Pagination";
 import { Instructions } from "../../utils/Instructions";
@@ -16,12 +16,17 @@ import { Product } from "./Product";
 import { QuantitySelect } from "./QuantitySelect";
 import { Link } from "react-router-dom";
 import { Balance } from "./Balance";
+import { Loading } from "../../utils/Loading";
 
 export const AssociationMarketplaceHome = ({ association }) => {
   const marketplaceId = association.id;
 
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const user = useContext(UserContext);
+  const {data: subscriber, status, error} = useBetterQuery(
+    ["marketplace.subscription", marketplaceId, user?.id],
+    api.marketplace.subscription.get
+  );
 
   const makeOrder = (product, quantity) => {
     api.transactions
@@ -56,12 +61,17 @@ export const AssociationMarketplaceHome = ({ association }) => {
         </>
       }
     >
+      { status === "success" ? (
       <Container>
         <div className="d-flex align-items-center">
           <PageTitle>Magasin </PageTitle>
           <div className={"ml-auto"}>
+            
             <span className="tag align-middle mr-2">
-              Mon solde : <Balance marketplaceId={marketplaceId} user={user} />
+              { (subscriber as {subscriber: Boolean}).subscriber ? "Cotisant" : "Non cotisant" }
+            </span>
+            <span className="tag align-middle mr-2">
+              Mon solde :&nbsp;<Balance marketplaceId={marketplaceId} user={user} />
             </span>
             <Link
               to={`/associations/${marketplaceId}/magasin/historique/`}
@@ -74,15 +84,19 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
         <ProductsPagination
           association={association}
+          subscriber={(subscriber as {subscriber: Boolean}).subscriber}
           queryParams={{ ...tagParams, ...searchParams }}
           makeOrder={makeOrder}
         />
       </Container>
+      ) : (
+        <Loading/>
+      ) }
     </AssociationLayout>
   );
 };
 
-const ProductsPagination = ({ association, queryParams, makeOrder }) => (
+const ProductsPagination = ({ association, subscriber, queryParams, makeOrder }) => (
   <Pagination
     apiKey={["products.list", association.id, { ...queryParams, page_size: 8 }]}
     apiMethod={api.products.list}
@@ -95,6 +109,7 @@ const ProductsPagination = ({ association, queryParams, makeOrder }) => (
           {products.length > 0 ? (
             products.map((product) => (
               <Product
+                subscriber={subscriber}
                 product={product}
                 key={product.id}
                 additionalContent={
