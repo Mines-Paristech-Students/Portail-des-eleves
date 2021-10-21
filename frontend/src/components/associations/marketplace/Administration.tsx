@@ -89,6 +89,12 @@ const columns = (marketplaceId) => [
     render: (product) => formatPrice(product.price),
   },
   {
+    key: "price",
+    header: "Prix cotisant",
+    cellClassName: "text-muted",
+    render: (product) => product.priceForSubscribers ? formatPrice(product.priceForSubscribers) : '-',
+  },
+  {
     key: "description",
     header: "Description",
     render: (product) => formatNewLines(product.description),
