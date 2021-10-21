@@ -54,19 +54,19 @@ class LibraryViewSet(viewsets.ModelViewSet):
 class LibraryView(APIView):
     def patch(self, request, library_id=None):
         if library_id is None:
-            return HttpResponseBadRequest(
-                "You must mention an association to patch it"
-            )
+            return HttpResponseBadRequest("You must mention an association to patch it")
 
         association = Association.objects.get(pk=library_id).pk
 
         if not Library.objects.filter(id=library_id).exists():
-            serializer = LibraryWriteSerializer(data={
-                "id": library_id,
-                "enabled": False,
-                "association": association,
-                "loanables": []
-            })
+            serializer = LibraryWriteSerializer(
+                data={
+                    "id": library_id,
+                    "enabled": False,
+                    "association": association,
+                    "loanables": [],
+                }
+            )
 
             if serializer.is_valid():
                 serializer.save()
@@ -74,12 +74,15 @@ class LibraryView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         marketplace = Library.objects.get(id=library_id)
-        serializer = LibraryWriteSerializer(marketplace, data={
-            "id": library_id,
-            "enabled": request.data["enabled"],
-            "association": association,
-            "loanables": []
-        })
+        serializer = LibraryWriteSerializer(
+            marketplace,
+            data={
+                "id": library_id,
+                "enabled": request.data["enabled"],
+                "association": association,
+                "loanables": [],
+            },
+        )
 
         if serializer.is_valid():
             serializer.save()

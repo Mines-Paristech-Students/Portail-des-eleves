@@ -5,8 +5,8 @@ from django.conf import settings
 
 def decode_token(token: str, verify: bool = True) -> dict:
     """
-        Verify a token and return its claims.
-        Raise a `jwt.exceptions.InvalidTokenError` if the token cannot be verified.
+    Verify a token and return its claims.
+    Raise a `jwt.exceptions.InvalidTokenError` if the token cannot be verified.
     """
 
     try:

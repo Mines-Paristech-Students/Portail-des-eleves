@@ -17,7 +17,11 @@ from associations.views import (
 )
 from associations.views.election import VoterViewSet, ElectionViewSet, ChoiceViewSet
 from associations.views.library import LibraryView
-from associations.views.marketplace import MarketplaceView, SubscriptionView, SubscriptionView
+from associations.views.marketplace import (
+    MarketplaceView,
+    SubscriptionView,
+    SubscriptionView,
+)
 from associations.views.media import MediaViewSet, get_media_uploaded_on_bounds
 from associations.views import set_association_logo
 from subscriptions.views.widget_balance import widget_balance_view

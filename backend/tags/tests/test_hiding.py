@@ -18,10 +18,10 @@ from tags.tests.base_test import TagsBaseTestCase
 
 class HidingTestCase(TagsBaseTestCase):
     """
-        * Test every model which has a ViewSet, even if this model cannot have a Tag (test_hiding_***)
-        * Test the nested representations of the models which can have a Tag (test_hiding_nested_***_from_***).
-        * Test if some endpoints have changed and now return tagged models which have not been tested yet.
-          In that case, display a message urging to implement the test.
+    * Test every model which has a ViewSet, even if this model cannot have a Tag (test_hiding_***)
+    * Test the nested representations of the models which can have a Tag (test_hiding_nested_***_from_***).
+    * Test if some endpoints have changed and now return tagged models which have not been tested yet.
+      In that case, display a message urging to implement the test.
     """
 
     fixtures = ["test_authentication.yaml", "test_hiding.yaml"]

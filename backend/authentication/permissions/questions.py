@@ -6,9 +6,9 @@ from authentication.models import User
 
 class ProfileQuestionPermission(BasePermission):
     """
-               | Question |
-        Admin  | CRUD     |
-        Simple | R        |
+           | Question |
+    Admin  | CRUD     |
+    Simple | R        |
     """
 
     message = "You are not allowed to edit this profile question."
@@ -19,9 +19,9 @@ class ProfileQuestionPermission(BasePermission):
 
 class ProfileAnswerPermission(BasePermission):
     """
-               | Own profile | Other profile |
-        Admin  | CRUD        | RUD           |
-        Simple | CRUD        | R             |
+           | Own profile | Other profile |
+    Admin  | CRUD        | RUD           |
+    Simple | CRUD        | R             |
     """
 
     message = "You are not allowed to edit this profile answer."

@@ -17,7 +17,9 @@ from associations.serializers import (
     AssociationShortSerializer,
     AssociationSerializer,
     RoleSerializer,
-    WriteRoleSerializer, MarketplaceWriteSerializer, LibraryWriteSerializer,
+    WriteRoleSerializer,
+    MarketplaceWriteSerializer,
+    LibraryWriteSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
 from associations.views.marketplace import MarketplaceViewSet
@@ -70,12 +72,15 @@ class RoleFilter(FilterSet):
 
         for permission_name in Role.PERMISSION_NAMES:
             if permission_name in permissions_filter:
-                condition |= Q(
-                    **{
-                        f"{permission_name}_permission": True,
-                        "start_date__lte": date.today(),
-                    }
-                ) & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
+                condition |= (
+                    Q(
+                        **{
+                            f"{permission_name}_permission": True,
+                            "start_date__lte": date.today(),
+                        }
+                    )
+                    & (Q(end_date__isnull=True) | Q(end_date__gt=date.today()))
+                )
 
         return queryset.filter(condition).distinct()
 
@@ -143,17 +148,21 @@ class AssociationViewSet(viewsets.ModelViewSet):
         if association_serializer.is_valid():
             association = association_serializer.save()
         else:
-            return Response(association_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                association_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
 
         association_pk = association.pk
 
         # Create the marketplace
-        serializer = MarketplaceWriteSerializer(data={
-            "id": association_pk,
-            "enabled": False,
-            "association": association_pk,
-            "products": []
-        })
+        serializer = MarketplaceWriteSerializer(
+            data={
+                "id": association_pk,
+                "enabled": False,
+                "association": association_pk,
+                "products": [],
+            }
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -161,19 +170,23 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Create the library
-        serializer = LibraryWriteSerializer(data={
-            "id": association_pk,
-            "enabled": False,
-            "association": association_pk,
-            "loanables": []
-        })
+        serializer = LibraryWriteSerializer(
+            data={
+                "id": association_pk,
+                "enabled": False,
+                "association": association_pk,
+                "loanables": [],
+            }
+        )
 
         if serializer.is_valid():
             serializer.save()
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("Association, marketplace and library created.", status=status.HTTP_200_OK)
+        return Response(
+            "Association, marketplace and library created.", status=status.HTTP_200_OK
+        )
 
     def destroy(self, request, pk=None):
         if pk is None:

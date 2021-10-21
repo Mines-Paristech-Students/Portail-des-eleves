@@ -19,9 +19,7 @@ class Marketplace(models.Model):
 
 class Subscription(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(
-        User, models.CASCADE, related_name="subscription_users"
-    )
+    user = models.ForeignKey(User, models.CASCADE, related_name="subscription_users")
     marketplace = models.ForeignKey(
         Marketplace, models.CASCADE, related_name="subscription_marketplaces"
     )
@@ -47,8 +45,12 @@ class Product(models.Model):
         max_digits=5, decimal_places=2, validators=[MinValueValidator(0)]
     )
     price_for_subscribers = models.DecimalField(
-        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)],
-        default=None, null=True, blank=True
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        default=None,
+        null=True,
+        blank=True,
     )
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)

@@ -4,7 +4,12 @@ import django_filters
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseForbidden, HttpResponseBadRequest, Http404, HttpResponse
+from django.http import (
+    HttpResponseForbidden,
+    HttpResponseBadRequest,
+    Http404,
+    HttpResponse,
+)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.filters import SearchFilter
@@ -21,7 +26,7 @@ from associations.permissions import (
     ProductPermission,
     TransactionPermission,
     FundingPermission,
-    SubscriptionPermission
+    SubscriptionPermission,
 )
 from associations.serializers import (
     MarketplaceSerializer,
@@ -55,19 +60,19 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
 class MarketplaceView(APIView):
     def patch(self, request, marketplace_id=None):
         if marketplace_id is None:
-            return HttpResponseBadRequest(
-                "You must mention an association to patch it"
-            )
+            return HttpResponseBadRequest("You must mention an association to patch it")
 
         association = Association.objects.get(pk=marketplace_id).pk
 
         if not Marketplace.objects.filter(id=marketplace_id).exists():
-            serializer = MarketplaceWriteSerializer(data={
-                "id": marketplace_id,
-                "enabled": False,
-                "association": association,
-                "products": []
-            })
+            serializer = MarketplaceWriteSerializer(
+                data={
+                    "id": marketplace_id,
+                    "enabled": False,
+                    "association": association,
+                    "products": [],
+                }
+            )
 
             if serializer.is_valid():
                 serializer.save()
@@ -75,12 +80,15 @@ class MarketplaceView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         marketplace = Marketplace.objects.get(id=marketplace_id)
-        serializer = MarketplaceWriteSerializer(marketplace, data={
-            "id": marketplace_id,
-            "enabled": request.data["enabled"],
-            "association": association,
-            "products": []
-        })
+        serializer = MarketplaceWriteSerializer(
+            marketplace,
+            data={
+                "id": marketplace_id,
+                "enabled": request.data["enabled"],
+                "association": association,
+                "products": [],
+            },
+        )
 
         if serializer.is_valid():
             serializer.save()
@@ -388,19 +396,33 @@ class SubscriptionView(APIView):
         user = User.objects.get(pk=user_id)
         marketplace = Marketplace.objects.get(pk=marketplace_id)
 
-        return Response({"subscriber": Subscription.objects.filter(user=user, marketplace=marketplace).exists()})
+        return Response(
+            {
+                "subscriber": Subscription.objects.filter(
+                    user=user, marketplace=marketplace
+                ).exists()
+            }
+        )
 
     def patch(self, request, marketplace_id=None, user_id=None):
         user = User.objects.get(pk=user_id)
         marketplace = Marketplace.objects.get(pk=marketplace_id)
-        
-        is_subscriber = Subscription.objects.filter(user=user, marketplace=marketplace).exists()
+
+        is_subscriber = Subscription.objects.filter(
+            user=user, marketplace=marketplace
+        ).exists()
 
         if is_subscriber:
-            ser = Subscription.objects.filter(user=user, marketplace=marketplace).delete()
+            ser = Subscription.objects.filter(
+                user=user, marketplace=marketplace
+            ).delete()
         else:
-            subscription = SubscriptionSerializer(Subscription(marketplace=marketplace, user=user))
-            ser = subscription.create(validated_data={"user": user, "marketplace": marketplace})
+            subscription = SubscriptionSerializer(
+                Subscription(marketplace=marketplace, user=user)
+            )
+            ser = subscription.create(
+                validated_data={"user": user, "marketplace": marketplace}
+            )
             ser.save()
 
         return Response({"subscriber": not is_subscriber})

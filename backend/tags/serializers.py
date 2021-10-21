@@ -9,18 +9,18 @@ def filter_nested_attribute(
     context, main_object, serializer_class, nested_attribute, exclude_condition
 ):
     """
-        This function is a helper function for the Serializers which have to return nested objects but want to filter
-        them if the user is not `show`.
+    This function is a helper function for the Serializers which have to return nested objects but want to filter
+    them if the user is not `show`.
 
-        For instance, to filter out the `events` of a `Association` object, one could do like this:
-            topics = serializersSerializerMethodField()
+    For instance, to filter out the `events` of a `Association` object, one could do like this:
+        topics = serializersSerializerMethodField()
 
-            def get_topics(self, obj):
-                return filter_nested_attribute(
-                    self.context, obj, EventSerializer, "events", Q(tags__is_hidden=True)
-                )
+        def get_topics(self, obj):
+            return filter_nested_attribute(
+                self.context, obj, EventSerializer, "events", Q(tags__is_hidden=True)
+            )
 
-        Don't forget to add `topics` to `read_only_fields` or `fields`. ;)
+    Don't forget to add `topics` to `read_only_fields` or `fields`. ;)
     """
 
     # Get the current user.
@@ -43,16 +43,16 @@ def filter_nested_attribute(
 
 def filter_tags(context, main_object, short=False):
     """
-        Shortcut to use `TagShortSerializer` or `TagSerializer` with `filter_nested_attributes`.
-        Use it like this:
-            tags = serializers.SerializerMethodField()
+    Shortcut to use `TagShortSerializer` or `TagSerializer` with `filter_nested_attributes`.
+    Use it like this:
+        tags = serializers.SerializerMethodField()
 
-            def get_tags(self, obj):
-                return filter_tags(self.context, obj, short=True)
+        def get_tags(self, obj):
+            return filter_tags(self.context, obj, short=True)
 
-        :param context should be `self.context` in the context of a `get_tags` `Serializer` method.
-        :param main_object should be `obj`, the second parameter of a `get_tags` `Serializer` method.
-        :param short use `TagShortSerializer` if set to True, `TagSerializer` otherwise.r.
+    :param context should be `self.context` in the context of a `get_tags` `Serializer` method.
+    :param main_object should be `obj`, the second parameter of a `get_tags` `Serializer` method.
+    :param short use `TagShortSerializer` if set to True, `TagSerializer` otherwise.r.
     """
 
     return filter_nested_attribute(
@@ -128,9 +128,9 @@ class TagSerializer(serializers.ModelSerializer):
         return response
 
     def update(self, instance, validated_data):
-        """ Tags may be created or delete but never changed because we don't know the extent of the modification
-         - maybe renaming a tag would change values in  places we didn't think of
-         - the namespace cannot be changed because a tag cannot be placed on an object outside its namespace
+        """Tags may be created or delete but never changed because we don't know the extent of the modification
+        - maybe renaming a tag would change values in  places we didn't think of
+        - the namespace cannot be changed because a tag cannot be placed on an object outside its namespace
         """
         raise NotImplementedError("Cannot update a tag from the REST API")
 

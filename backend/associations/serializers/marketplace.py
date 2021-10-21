@@ -8,16 +8,19 @@ from associations.serializers.association_short import AssociationShortSerialize
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
 
+
 class BlankableDecimalField(serializers.DecimalField):
     """
     We wanted to be able to receive an empty string ('') for a decimal field
     and in that case turn it into a None number
     """
+
     def to_internal_value(self, data):
-        if data == '':
+        if data == "":
             return None
 
         return super(BlankableDecimalField, self).to_internal_value(data)
+
 
 class CreateTransactionSerializer(serializers.ModelSerializer):
     """Only serialize the product, the user and the quantity."""
@@ -35,7 +38,9 @@ class CreateTransactionSerializer(serializers.ModelSerializer):
         # Compute the value of the transaction.
         product = Product.objects.get(pk=validated_data["product"].id)
         user = User.objects.get(pk=validated_data["buyer"].id)
-        subscriber = Subscription.objects.filter(user=user, marketplace=product.marketplace).exists()
+        subscriber = Subscription.objects.filter(
+            user=user, marketplace=product.marketplace
+        ).exists()
         if subscriber and product.price_for_subscribers:
             price = product.price_for_subscribers
         else:

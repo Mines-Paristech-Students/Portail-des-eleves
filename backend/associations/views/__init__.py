@@ -11,6 +11,6 @@ from associations.views.marketplace import (
     TransactionViewSet,
     FundingViewSet,
     BalanceView,
-    SubscriptionView
+    SubscriptionView,
 )
 from associations.views.page import PageViewSet
