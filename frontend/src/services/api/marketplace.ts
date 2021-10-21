@@ -18,4 +18,18 @@ export const marketplace = {
         )
       ),
   },
+  subscription: {
+    get: (marketplaceId, customerId) =>
+      unwrap<{ subscriber: boolean }>(
+        apiService.get(
+          `/associations/marketplace/${marketplaceId}/subscription/${customerId}/`
+        )
+      ),
+    update: ({marketplaceId, customerId, subscriber}) =>
+      unwrap<{ subscriber: boolean }>(
+        apiService.patch(
+          `/associations/marketplace/${marketplaceId}/subscription/${customerId}/`
+        )
+      ),
+  }
 };

@@ -141,3 +141,27 @@ class FundingPermission(BasePermission):
             return True  # Marketplace administrator
         else:
             return funding.user == request.user and request.method in SAFE_METHODS
+
+
+class SubscriptionPermission(BasePermission):
+    """
+           | Enabled | Disabled |
+    Admin  | CRUD    | CRUD     |
+    Simple | R       |          |
+    """
+
+    message = "You are not allowed to edit any subscription."
+
+    def has_permission(self, request, view):
+        if request.method in ("POST",):
+            return check_permission_from_post_data(request, "marketplace")
+
+        return True
+
+    def has_object_permission(self, request, view, marketplace):
+        role = request.user.get_role(marketplace.association)
+
+        if role and role.marketplace:  # Marketplace administrator.
+            return True
+        else:
+            return marketplace.enabled and request.method in SAFE_METHODS

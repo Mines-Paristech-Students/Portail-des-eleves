@@ -8,6 +8,7 @@ import { RefundForm } from "./RefundForm";
 import { ProductSearch } from "./ProductSearch";
 import { OrderSummary } from "./OrderSummary";
 import { Balance } from "../Balance";
+import { SubscriptionForm } from "./SubscriptionForm";
 
 export const CounterOrderMaker = ({
   marketplaceId,
@@ -94,24 +95,33 @@ export const CounterOrderMaker = ({
 
   return (
     <>
-      <RefundForm
-        customer={customer}
-        marketplaceId={marketplaceId}
-        className={"float-right mt-2"}
-      />
-
-      <div className="d-flex justify-content-center mt-4">
-        <Col md={"6"}>
-          <Card>
-            <Card.Body className="text-center">
-              <h5>{customer.id}</h5>
-              <p className="h1 font-weight-bold">
-                <Balance marketplaceId={marketplaceId} user={customer} />
-              </p>
-            </Card.Body>
-          </Card>
+      <Row className="mt-4">
+        <Col md={8} className="d-flex justify-content-center">
+          <Col md={8}>
+            <Card>
+              <Card.Body className="text-center">
+                <h5>{customer.id}</h5>
+                <p className="h1 font-weight-bold">
+                  <Balance marketplaceId={marketplaceId} user={customer} />
+                </p>
+              </Card.Body>
+            </Card>
+          </Col>
         </Col>
-      </div>
+        
+        <Col md={4} className="d-flex flex-column">
+          <RefundForm
+            customer={customer}
+            marketplaceId={marketplaceId}
+            className={"float-right mt-2"}
+          />
+          
+          <SubscriptionForm
+            customer={customer}
+            marketplaceId={marketplaceId}
+          />
+        </Col>
+      </Row>
 
       <Row>
         <Col md={6}>

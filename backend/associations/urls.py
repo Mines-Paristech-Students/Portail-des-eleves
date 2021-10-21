@@ -17,7 +17,7 @@ from associations.views import (
 )
 from associations.views.election import VoterViewSet, ElectionViewSet, ChoiceViewSet
 from associations.views.library import LibraryView
-from associations.views.marketplace import MarketplaceView
+from associations.views.marketplace import MarketplaceView, SubscriptionView, SubscriptionView
 from associations.views.media import MediaViewSet, get_media_uploaded_on_bounds
 from associations.views import set_association_logo
 from subscriptions.views.widget_balance import widget_balance_view
@@ -65,6 +65,11 @@ urlpatterns += [
         "marketplace/<slug:marketplace_id>/balance/<slug:user_id>/",
         BalanceView.as_view(),
         name="balance-detail",
+    ),
+    path(
+        "marketplace/<slug:marketplace_id>/subscription/<slug:user_id>/",
+        SubscriptionView.as_view(),
+        name="marketplace-subscription",
     ),
     path("library/<slug:library_id>/", LibraryView.as_view()),
 ]

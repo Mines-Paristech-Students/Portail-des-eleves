@@ -17,6 +17,23 @@ class Marketplace(models.Model):
         ordering = ["-id"]
 
 
+class Subscription(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        User, models.CASCADE, related_name="subscription_users"
+    )
+    marketplace = models.ForeignKey(
+        Marketplace, models.CASCADE, related_name="subscription_marketplaces"
+    )
+    date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-id"]
+
+    def __str__(self):
+        return "{} ({})".format(self.user.id, self.marketplace.id)
+
+
 class Product(models.Model):
     """
     A product sold in a Marketplace.

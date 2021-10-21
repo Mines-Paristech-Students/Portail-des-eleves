@@ -15,11 +15,13 @@ from rest_framework.viewsets import GenericViewSet
 
 from api.paginator import SmallResultsSetPagination
 from associations.models import Marketplace, Product, Transaction, Funding, Association
+from associations.models.marketplace import Subscription
 from associations.permissions import (
     MarketplacePermission,
     ProductPermission,
     TransactionPermission,
     FundingPermission,
+    SubscriptionPermission
 )
 from associations.serializers import (
     MarketplaceSerializer,
@@ -32,6 +34,7 @@ from associations.serializers import (
     CreateFundingSerializer,
     UpdateFundingSerializer,
 )
+from associations.serializers.marketplace import SubscriptionSerializer
 from authentication.models import User
 from tags.filters import HasHiddenTagFilter
 from tags.filters.taggable import TaggableFilter
@@ -377,3 +380,26 @@ class BalanceView(APIView):
                         )
 
                 return Response(self.get_balance_in_json(user, marketplace))
+
+
+class SubscriptionView(APIView):
+    def get(self, request, marketplace_id=None, user_id=None):
+        user = User.objects.get(pk=user_id)
+        marketplace = Marketplace.objects.get(pk=marketplace_id)
+
+        return Response({"subscriber": Subscription.objects.filter(user=user, marketplace=marketplace).exists()})
+
+    def patch(self, request, marketplace_id=None, user_id=None):
+        user = User.objects.get(pk=user_id)
+        marketplace = Marketplace.objects.get(pk=marketplace_id)
+        
+        is_subscriber = Subscription.objects.filter(user=user, marketplace=marketplace).exists()
+
+        if is_subscriber:
+            ser = Subscription.objects.filter(user=user, marketplace=marketplace).delete()
+        else:
+            subscription = SubscriptionSerializer(Subscription(marketplace=marketplace, user=user))
+            ser = subscription.create(validated_data={"user": user, "marketplace": marketplace})
+            ser.save()
+
+        return Response({"subscriber": not is_subscriber})

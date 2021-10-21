@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from associations.models import Association, Marketplace, Product, Transaction, Funding
+from associations.models.marketplace import Subscription
 from associations.serializers.association_short import AssociationShortSerializer
 from authentication.models import User
 from tags.serializers import filter_tags, filter_nested_attribute
@@ -206,3 +207,12 @@ class MarketplaceWriteSerializer(serializers.ModelSerializer):
         instance.enabled = validated_data.get("enabled", instance.enabled)
         instance.save()
         return instance
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
+
+    class Meta:
+        model = Subscription
+        fields = ("user", "marketplace")
