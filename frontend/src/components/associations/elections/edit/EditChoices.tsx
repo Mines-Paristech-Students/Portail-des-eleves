@@ -13,7 +13,11 @@ import { TextField } from "../../../utils/forms/TextField";
 export const EditChoices = ({ election }: { election: Election }) => {
   const { sendErrorToast } = useContext(ToastContext);
 
-  const { resolvedData: choices, error, status } = useBetterPaginatedQuery<any>(
+  const {
+    resolvedData: choices,
+    error,
+    status,
+  } = useBetterPaginatedQuery<any>(
     ["election.choices.list", { page_size: 1000, election: election.id }],
     api.elections.choices.list
   );

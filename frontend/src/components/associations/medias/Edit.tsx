@@ -15,10 +15,11 @@ import { TagEdition } from "../../utils/tags/TagEdition";
 
 export const AssociationFilesystemEdit = ({ association }) => {
   const { fileId } = useParams<{ fileId: string }>();
-  const { data: media, status, error } = useBetterQuery<Media>(
-    ["media.get", fileId],
-    api.medias.get
-  );
+  const {
+    data: media,
+    status,
+    error,
+  } = useBetterQuery<Media>(["media.get", fileId], api.medias.get);
 
   const history = useHistory();
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);

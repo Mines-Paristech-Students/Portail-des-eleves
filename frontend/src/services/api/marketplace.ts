@@ -25,11 +25,11 @@ export const marketplace = {
           `/associations/marketplace/${marketplaceId}/subscription/${customerId}/`
         )
       ),
-    update: ({marketplaceId, customerId, subscriber}) =>
+    update: ({ marketplaceId, customerId, subscriber }) =>
       unwrap<{ subscriber: boolean }>(
         apiService.patch(
           `/associations/marketplace/${marketplaceId}/subscription/${customerId}/`
         )
       ),
-  }
+  },
 };

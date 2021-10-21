@@ -92,9 +92,8 @@ export const AssociationLibraryHistory = ({
 }: {
   association: Association;
 }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const [cancel] = useMutation(api.loans.cancel, {
     onMutate: () => sendInfoToast("Annulation en cours..."),

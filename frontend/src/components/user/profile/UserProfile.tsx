@@ -14,7 +14,11 @@ import { Profile } from "../../../models/profile";
 
 export const UserProfile = ({ match }: { match: any }) => {
   const user = useContext(UserContext);
-  const { status, data: profile, error } = useBetterQuery<Profile>(
+  const {
+    status,
+    data: profile,
+    error,
+  } = useBetterQuery<Profile>(
     ["profile.get", { userId: match.params.userId }],
     api.profile.get
   );

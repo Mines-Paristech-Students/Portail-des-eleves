@@ -17,8 +17,9 @@ export const ProductCard = ({
       {product.name}
       <br />
       <small className="text-muted">
-        { subscriber && product.priceForSubscribers ?
-            formatPrice(product.priceForSubscribers) : formatPrice(product.price)} 
+        {subscriber && product.priceForSubscribers
+          ? formatPrice(product.priceForSubscribers)
+          : formatPrice(product.price)}
         {product.numberLeft > -1
           ? ` / ${product.numberLeft - (quantityOrdered || 0)} ${decidePlural(
               product.numberLeft - (quantityOrdered || 0),

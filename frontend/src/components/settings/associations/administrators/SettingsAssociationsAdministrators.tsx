@@ -53,7 +53,11 @@ export const SettingsAssociationsAdministrators = () => {
 
   // Load the relevant association.
   const { associationId } = useParams<{ associationId: string }>();
-  const { data: association, status, error } = useBetterQuery<Association>(
+  const {
+    data: association,
+    status,
+    error,
+  } = useBetterQuery<Association>(
     ["associations.get", { associationId }],
     api.associations.get,
     { refetchOnWindowFocus: false }

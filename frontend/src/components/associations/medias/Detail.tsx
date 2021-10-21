@@ -13,10 +13,11 @@ import { ArrowLink } from "../../utils/ArrowLink";
 
 export const AssociationFilesystemDetail = ({ association }) => {
   const { fileId } = useParams<{ fileId: string }>();
-  const { data: media, status, error } = useBetterQuery<Media>(
-    ["media.get", fileId],
-    api.medias.get
-  );
+  const {
+    data: media,
+    status,
+    error,
+  } = useBetterQuery<Media>(["media.get", fileId], api.medias.get);
 
   return status === "loading" ? (
     <Loading />

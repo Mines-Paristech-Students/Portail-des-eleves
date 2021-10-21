@@ -46,7 +46,11 @@ const CourseSidebar = ({ courseId }) => {
 };
 
 const EvaluationSidebar = ({ courseId }) => {
-  const { data: has_voted, error, status } = useBetterQuery<boolean>(
+  const {
+    data: has_voted,
+    error,
+    status,
+  } = useBetterQuery<boolean>(
     ["courses.has_voted", courseId],
     api.courses.has_voted
   );

@@ -8,7 +8,11 @@ import { Link } from "react-router-dom";
 import { PageContainer } from "./page/PageContainer";
 
 export const AssociationHome = ({ association }) => {
-  const { resolvedData: data, error, status } = useBetterPaginatedQuery<any>(
+  const {
+    resolvedData: data,
+    error,
+    status,
+  } = useBetterPaginatedQuery<any>(
     [
       "association.page.list.homepage",
       { association_id: association.id, title: "Accueil" },

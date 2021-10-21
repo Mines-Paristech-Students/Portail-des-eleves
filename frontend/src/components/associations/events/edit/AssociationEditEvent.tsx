@@ -24,11 +24,13 @@ export const AssociationEditEvent = ({
   const history = useHistory();
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-  const { data: event, error, status } = useBetterQuery<Event>(
-    ["events.get", { eventId }],
-    api.events.get,
-    { refetchOnWindowFocus: false }
-  );
+  const {
+    data: event,
+    error,
+    status,
+  } = useBetterQuery<Event>(["events.get", { eventId }], api.events.get, {
+    refetchOnWindowFocus: false,
+  });
 
   const [edit] = useMutation(api.events.update, {
     onSuccess: (response) => {

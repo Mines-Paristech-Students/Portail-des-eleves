@@ -13,10 +13,11 @@ export const AssociationMarketplaceProductEdit = ({ association }) => {
   const { productId } = useParams<{ productId: string }>();
   const marketplaceId = association.id;
 
-  const { data: product, status, error } = useBetterQuery<Product>(
-    ["product.get", productId],
-    api.products.get
-  );
+  const {
+    data: product,
+    status,
+    error,
+  } = useBetterQuery<Product>(["product.get", productId], api.products.get);
 
   return status === "loading" ? (
     <Loading className="mt-5" />

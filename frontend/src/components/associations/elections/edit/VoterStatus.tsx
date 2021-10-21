@@ -28,9 +28,8 @@ export const VoterStatus = ({ election }) => {
 
 export const ChangeStateModal = ({ voter, setVoter }) => {
   const handleClose = () => setVoter(null);
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const [save] = useMutation(api.elections.voters.update, {
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),

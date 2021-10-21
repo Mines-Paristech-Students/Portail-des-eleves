@@ -94,8 +94,7 @@ export const ProductForm: ({
         priceForSubscribers: Yup.number()
           .notRequired()
           .min(0.0, "Un prix est positif askip"),
-        numberLeft: Yup.number()
-          .required("Veuillez entrer une quantité")
+        numberLeft: Yup.number().required("Veuillez entrer une quantité"),
       })}
       onSubmit={onSubmit}
       render={({ setFieldValue, values }) => (

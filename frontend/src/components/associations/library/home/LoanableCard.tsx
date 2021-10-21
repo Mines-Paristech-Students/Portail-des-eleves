@@ -101,9 +101,8 @@ export const LoanableCard = ({
   className?: string;
 }) => {
   const user = useContext(UserContext);
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const [create] = useMutation(api.loans.create, {
     onMutate: () => sendInfoToast("Demande en cours d’envoi..."),

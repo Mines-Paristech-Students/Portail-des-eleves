@@ -4,9 +4,8 @@ import { useContext } from "react";
 import { ToastContext } from "../utils/Toast";
 
 export const useWidgetConfig = (widgetName) => {
-  const { sendSuccessToast, sendInfoToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendSuccessToast, sendInfoToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const { data: config } = useBetterQuery<any>(
     ["subscriptions.config.get"],

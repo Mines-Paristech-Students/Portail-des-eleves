@@ -16,9 +16,8 @@ export const Administration = ({
   election: Election;
   onChange?: (election: Election) => void;
 }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const [save] = useMutation(
     election.id ? api.elections.update : api.elections.create,

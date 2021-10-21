@@ -51,9 +51,8 @@ export const PollsTable = ({
     reviewing: true,
   };
 
-  const [stateFilter, setStateFilter] = useState<PollStateFilter>(
-    defaultStateFilter
-  );
+  const [stateFilter, setStateFilter] =
+    useState<PollStateFilter>(defaultStateFilter);
 
   return !authService.isStaff && adminVersion ? (
     <ForbiddenError />

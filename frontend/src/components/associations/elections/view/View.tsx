@@ -42,7 +42,11 @@ export const AssociationViewElection = ({
   association: Association;
 }) => {
   const { electionId } = useParams<{ electionId: string }>();
-  const { data: election, status, error } = useBetterQuery<Election>(
+  const {
+    data: election,
+    status,
+    error,
+  } = useBetterQuery<Election>(
     ["election.get", electionId],
     api.elections.get,
     { refetchOnWindowFocus: false }

@@ -80,7 +80,11 @@ export const Pagination = ({
     // eslint-disable-next-line
   }, [JSON.stringify(apiKey)]);
 
-  const { resolvedData: data, status, error } = useBetterPaginatedQuery<any>(
+  const {
+    resolvedData: data,
+    status,
+    error,
+  } = useBetterPaginatedQuery<any>(
     [...temporizedApiKey, page],
     apiMethod,
     config

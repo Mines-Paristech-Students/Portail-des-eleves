@@ -77,9 +77,8 @@ export const LoansTable = ({
   loanableId: string;
   apiParameters?: Partial<ListLoansApiParameters>;
 }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   // The loan edited in the modal.
   const [editLoan, setEditLoan] = useState<Loan | null>(null);

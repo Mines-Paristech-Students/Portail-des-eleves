@@ -94,32 +94,42 @@ export const CounterOrderMaker = ({
 
     await queryCache.invalidateQueries(["marketplace.transactions.list"]);
   };
-  
+
   const [localSubscription, setLocalSubscription] = useState(false);
   const [updated, setUpdated] = useState(false);
 
-  const [updateSubscription] = useMutation(api.marketplace.subscription.update, {
-    onSuccess: (entity) => {
-      setLocalSubscription(entity.subscriber);
-      sendSuccessToast("Compte modifié.");
-      return queryCache.invalidateQueries(["marketplace.get", { marketplaceId }]);
-    },
-    onError: genericMutationErrorHandling(sendErrorToast),
-  });
+  const [updateSubscription] = useMutation(
+    api.marketplace.subscription.update,
+    {
+      onSuccess: (entity) => {
+        setLocalSubscription(entity.subscriber);
+        sendSuccessToast("Compte modifié.");
+        return queryCache.invalidateQueries([
+          "marketplace.get",
+          { marketplaceId },
+        ]);
+      },
+      onError: genericMutationErrorHandling(sendErrorToast),
+    }
+  );
 
-  let {data: subscriber, status, error} = useBetterQuery(
+  let {
+    data: subscriber,
+    status,
+    error,
+  } = useBetterQuery(
     ["marketplace.subscription", marketplaceId, customer.id],
     api.marketplace.subscription.get
   );
 
-  if(status === "success" && !updated) {
+  if (status === "success" && !updated) {
     setUpdated(true);
-    setLocalSubscription((subscriber as {subscriber: boolean}).subscriber);
+    setLocalSubscription((subscriber as { subscriber: boolean }).subscriber);
   }
 
-  return (status === "loading") ? (
+  return status === "loading" ? (
     <Loading />
-  ) : (status === "error") ? (
+  ) : status === "error" ? (
     <span>Error :{" " + error}</span>
   ) : (
     <>
@@ -136,14 +146,14 @@ export const CounterOrderMaker = ({
             </Card>
           </Col>
         </Col>
-        
+
         <Col md={4} className="d-flex flex-column">
           <RefundForm
             customer={customer}
             marketplaceId={marketplaceId}
             className={"float-right mt-2"}
           />
-          
+
           <SubscriptionForm
             subscriber={localSubscription}
             updateSubscription={updateSubscription}

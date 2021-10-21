@@ -21,7 +21,11 @@ export const SettingsAssociationsEdit = () => {
   const history = useHistory();
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
 
-  const { data: association, error, status } = useBetterQuery<Association>(
+  const {
+    data: association,
+    error,
+    status,
+  } = useBetterQuery<Association>(
     ["association.get", { associationId }],
     api.associations.get,
     { refetchOnWindowFocus: false }

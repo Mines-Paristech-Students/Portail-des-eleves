@@ -15,9 +15,8 @@ export const AssociationLoanableCreate = ({
   association: Association;
 }) => {
   const history = useHistory();
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const [create] = useMutation(api.loanables.create, {
     onMutate: () => sendInfoToast("Création en cours…"),

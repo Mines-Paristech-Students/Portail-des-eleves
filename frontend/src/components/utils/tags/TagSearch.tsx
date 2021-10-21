@@ -46,7 +46,11 @@ import { useURLState } from "../../../utils/useURLState";
  * `getBetterPaginatedQuery` to use them
  */
 export const TagSearch = ({ tagsQueryParams, setTagParams: setParams }) => {
-  const { resolvedData: tags, status, error } = useBetterPaginatedQuery<any>(
+  const {
+    resolvedData: tags,
+    status,
+    error,
+  } = useBetterPaginatedQuery<any>(
     ["tags.list", tagsQueryParams],
     api.tags.list
   );

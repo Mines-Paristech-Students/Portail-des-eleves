@@ -19,12 +19,15 @@ export const AssociationLoanableEdit = ({
   association: Association;
 }) => {
   const history = useHistory();
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
   const { loanableId } = useParams<{ loanableId: string }>();
 
-  const { data: loanable, error, status } = useBetterQuery<Loanable>(
+  const {
+    data: loanable,
+    error,
+    status,
+  } = useBetterQuery<Loanable>(
     ["loanables.get", { loanableId: loanableId }],
     api.loanables.get
   );

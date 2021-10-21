@@ -159,9 +159,11 @@ const MarketSubNavbar = ({ association }) => {
 
 const PageSubSidebar = ({ association }: { association: Association }) => {
   const location = useLocation();
-  const { data: pages, status, error } = useBetterQuery<
-    PaginatedResponse<Page[]>
-  >(
+  const {
+    data: pages,
+    status,
+    error,
+  } = useBetterQuery<PaginatedResponse<Page[]>>(
     ["pages.list", { association_id: association.id, page_type: "STATIC" }],
     api.pages.list
   );

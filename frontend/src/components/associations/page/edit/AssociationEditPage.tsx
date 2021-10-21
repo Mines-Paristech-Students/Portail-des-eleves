@@ -18,17 +18,17 @@ export const AssociationEditPage = ({
 }: {
   association: Association;
 }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const history = useHistory();
   const { pageId } = useParams<{ pageId: string }>();
 
-  const { data: page, status, error } = useBetterQuery<Page>(
-    ["pages.get", pageId],
-    api.pages.get
-  );
+  const {
+    data: page,
+    status,
+    error,
+  } = useBetterQuery<Page>(["pages.get", pageId], api.pages.get);
 
   const [edit] = useMutation(api.pages.edit, {
     onMutate: () => sendInfoToast("Sauvegarde en cours…"),

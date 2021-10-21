@@ -4,9 +4,9 @@ import { toUrlParams } from "../../utils/urlParam";
 export const subscriptions = {
   config: {
     get: () =>
-      unwrap<any>(
-        apiService.get("/subscriptions/subscriptions/get/")
-      ).then((content) => JSON.parse(content["payload"])),
+      unwrap<any>(apiService.get("/subscriptions/subscriptions/get/")).then(
+        (content) => JSON.parse(content["payload"])
+      ),
     set: (config) =>
       unwrap<any>(
         apiService.post("/subscriptions/subscriptions/set/", {

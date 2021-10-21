@@ -4,7 +4,11 @@ import { api, useBetterQuery } from "../../../services/apiService";
 import { Loading } from "../../utils/Loading";
 
 export const Balance = ({ marketplaceId, user }) => {
-  const { data: balance, status, error } = useBetterQuery(
+  const {
+    data: balance,
+    status,
+    error,
+  } = useBetterQuery(
     ["marketplace.balance", marketplaceId, user.id],
     api.marketplace.balance.get
   );

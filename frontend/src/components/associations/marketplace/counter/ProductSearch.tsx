@@ -6,7 +6,12 @@ import { api } from "../../../../services/apiService";
 import { ProductCard } from "./ProductCard";
 import "./product-search.css";
 
-export const ProductSearch = ({ subscriber, marketplaceId, basket, addToBasket }) => {
+export const ProductSearch = ({
+  subscriber,
+  marketplaceId,
+  basket,
+  addToBasket,
+}) => {
   const [searchValue, setSearchValue] = useState("");
 
   return (

@@ -285,12 +285,14 @@ export const TagSelector = ({
               namespace: namespace,
               type: "namespace",
             })) as any)
-          : (suggestionsTag.map((tag) => ({
-              value: tag.value,
-              label: `${tag.namespace.name}: ${tag.value}`,
-              tag: tag,
-              type: "tag",
-            })) as any[]).concat([
+          : (
+              suggestionsTag.map((tag) => ({
+                value: tag.value,
+                label: `${tag.namespace.name}: ${tag.value}`,
+                tag: tag,
+                type: "tag",
+              })) as any[]
+            ).concat([
               {
                 value: searchValue,
                 label: (

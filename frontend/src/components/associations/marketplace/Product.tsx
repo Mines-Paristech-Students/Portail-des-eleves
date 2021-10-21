@@ -25,14 +25,24 @@ export const Product = ({ subscriber, product, additionalContent }) => (
 
         <div className="mt-5 d-flex align-items-center flex-column flex-sm-row flex-lg-row flex-md-column">
           <div className={"product-price mr-3 word"}>
-            { product.priceForSubscribers ? (
+            {product.priceForSubscribers ? (
               <s className="mr-1">
-                { subscriber ? formatPrice(product.price) : formatPrice(product.priceForSubscribers) }
+                {subscriber
+                  ? formatPrice(product.price)
+                  : formatPrice(product.priceForSubscribers)}
               </s>
-            ) : '' }
-            <strong>{ product.priceForSubscribers && subscriber ? formatPrice(product.priceForSubscribers) : formatPrice(product.price)}</strong>
+            ) : (
+              ""
+            )}
+            <strong>
+              {product.priceForSubscribers && subscriber
+                ? formatPrice(product.priceForSubscribers)
+                : formatPrice(product.price)}
+            </strong>
           </div>
-          <div className="ml-0 ml-sm-auto ml-lg-auto ml-md-0">{additionalContent}</div>
+          <div className="ml-0 ml-sm-auto ml-lg-auto ml-md-0">
+            {additionalContent}
+          </div>
         </div>
       </Card.Body>
     </Card>

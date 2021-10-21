@@ -14,9 +14,8 @@ export const AssociationCreatePage = ({
 }: {
   association: Association;
 }) => {
-  const { sendInfoToast, sendSuccessToast, sendErrorToast } = useContext(
-    ToastContext
-  );
+  const { sendInfoToast, sendSuccessToast, sendErrorToast } =
+    useContext(ToastContext);
 
   const history = useHistory();
 

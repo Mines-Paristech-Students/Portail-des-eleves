@@ -23,7 +23,11 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const user = useContext(UserContext);
-  const {data: subscriber, status, error} = useBetterQuery(
+  const {
+    data: subscriber,
+    status,
+    error,
+  } = useBetterQuery(
     ["marketplace.subscription", marketplaceId, user?.id],
     api.marketplace.subscription.get
   );
@@ -61,42 +65,49 @@ export const AssociationMarketplaceHome = ({ association }) => {
         </>
       }
     >
-      { status === "success" ? (
-      <Container>
-        <div className="d-flex align-items-center">
-          <PageTitle>Magasin </PageTitle>
-          <div className={"ml-auto"}>
-            
-            <span className="tag align-middle mr-2">
-              { (subscriber as {subscriber: Boolean}).subscriber ? "Cotisant" : "Non cotisant" }
-            </span>
-            <span className="tag align-middle mr-2">
-              Mon solde :&nbsp;<Balance marketplaceId={marketplaceId} user={user} />
-            </span>
-            <Link
-              to={`/associations/${marketplaceId}/magasin/historique/`}
-              className={"btn btn-primary btn-sm"}
-            >
-              <span className={"fe fe-book-open"} /> Historique
-            </Link>
+      {status === "success" ? (
+        <Container>
+          <div className="d-flex align-items-center">
+            <PageTitle>Magasin </PageTitle>
+            <div className={"ml-auto"}>
+              <span className="tag align-middle mr-2">
+                {(subscriber as { subscriber: Boolean }).subscriber
+                  ? "Cotisant"
+                  : "Non cotisant"}
+              </span>
+              <span className="tag align-middle mr-2">
+                Mon solde :&nbsp;
+                <Balance marketplaceId={marketplaceId} user={user} />
+              </span>
+              <Link
+                to={`/associations/${marketplaceId}/magasin/historique/`}
+                className={"btn btn-primary btn-sm"}
+              >
+                <span className={"fe fe-book-open"} /> Historique
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <ProductsPagination
-          association={association}
-          subscriber={(subscriber as {subscriber: Boolean}).subscriber}
-          queryParams={{ ...tagParams, ...searchParams }}
-          makeOrder={makeOrder}
-        />
-      </Container>
+          <ProductsPagination
+            association={association}
+            subscriber={(subscriber as { subscriber: Boolean }).subscriber}
+            queryParams={{ ...tagParams, ...searchParams }}
+            makeOrder={makeOrder}
+          />
+        </Container>
       ) : (
-        <Loading/>
-      ) }
+        <Loading />
+      )}
     </AssociationLayout>
   );
 };
 
-const ProductsPagination = ({ association, subscriber, queryParams, makeOrder }) => (
+const ProductsPagination = ({
+  association,
+  subscriber,
+  queryParams,
+  makeOrder,
+}) => (
   <Pagination
     apiKey={["products.list", association.id, { ...queryParams, page_size: 8 }]}
     apiMethod={api.products.list}

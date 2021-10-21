@@ -6,7 +6,11 @@ import { queryCache } from "react-query";
 import { Media } from "../../../models/associations/media";
 
 export const AssociationLogoSettings = ({ association }) => {
-  const { data: logo, status, error } = useBetterQuery<Media>(
+  const {
+    data: logo,
+    status,
+    error,
+  } = useBetterQuery<Media>(
     ["association.logo.get", association.logo],
     api.medias.get,
     {

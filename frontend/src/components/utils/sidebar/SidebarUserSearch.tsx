@@ -34,7 +34,11 @@ export const SidebarUserSearch = ({ setParams, apiKey = "user", ...props }) => {
     (data) => data
   );
 
-  const { resolvedData: users, status, error } = useBetterPaginatedQuery<any>(
+  const {
+    resolvedData: users,
+    status,
+    error,
+  } = useBetterPaginatedQuery<any>(
     ["users.list", { page_size: 20, search: inputValue }],
     api.users.list
   );

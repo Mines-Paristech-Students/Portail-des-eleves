@@ -8,10 +8,11 @@ import { PageContainer } from "../PageContainer";
 
 export const AssociationShowPage = ({ association }) => {
   const { pageId } = useParams<{ pageId: string }>();
-  const { data: page, status, error } = useBetterQuery<Page>(
-    ["pages.get", pageId],
-    api.pages.get
-  );
+  const {
+    data: page,
+    status,
+    error,
+  } = useBetterQuery<Page>(["pages.get", pageId], api.pages.get);
 
   return status === "loading" ? (
     <LoadingAssociation />

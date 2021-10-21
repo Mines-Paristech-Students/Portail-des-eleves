@@ -2,7 +2,12 @@ import { Button, Card } from "react-bootstrap";
 import React from "react";
 import { Table } from "../../../utils/table/Table";
 
-export const OrderSummary = ({ subscriber, basket, removeFromBasket, makeOrder }) => (
+export const OrderSummary = ({
+  subscriber,
+  basket,
+  removeFromBasket,
+  makeOrder,
+}) => (
   <Card>
     <Card.Header>
       <Card.Title>Commande</Card.Title>
@@ -33,7 +38,10 @@ export const OrderSummary = ({ subscriber, basket, removeFromBasket, makeOrder }
         {Object.keys(basket)
           .map((key) => basket[key])
           .map(({ product, quantity }) => {
-            const price = subscriber && product.priceForSubscribers ? product.priceForSubscribers : product.price;
+            const price =
+              subscriber && product.priceForSubscribers
+                ? product.priceForSubscribers
+                : product.price;
             return price * quantity;
           })
           .reduce((acc, val) => acc + val, 0)}
@@ -57,7 +65,10 @@ const columns = (subscriber, decreaseNumber) => [
     key: "value",
     header: "Montant",
     render: ({ product, quantity, status }) => {
-      const price = subscriber && product.priceForSubscribers ? product.priceForSubscribers : product.price;
+      const price =
+        subscriber && product.priceForSubscribers
+          ? product.priceForSubscribers
+          : product.price;
       return `${price} x ${quantity}`;
     },
     headerClassName: "text-right",
