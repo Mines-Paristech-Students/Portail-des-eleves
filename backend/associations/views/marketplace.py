@@ -203,8 +203,9 @@ class TransactionViewSet(
 
         with transaction.atomic():  # make sure the stock is updated iff the transaction is taken into account
             self.perform_create(serializer)
-            product.number_left -= serializer.validated_data["quantity"]
-            product.save()
+            if product.number_left > -1:
+                product.number_left -= serializer.validated_data["quantity"]
+                product.save()
 
         headers = self.get_success_headers(serializer.data)
         return Response(
