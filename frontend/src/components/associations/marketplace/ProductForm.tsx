@@ -91,6 +91,9 @@ export const ProductForm: ({
         price: Yup.number()
           .required("Veuillez indiquer le prix")
           .min(0.0, "Un prix est positif askip"),
+        priceForSubscribers: Yup.number()
+          .notRequired()
+          .min(0.0, "Un prix est positif askip"),
         numberLeft: Yup.number()
           .required("Veuillez entrer une quantité")
       })}
@@ -100,7 +103,7 @@ export const ProductForm: ({
           <Card.Body>
             <Form>
               <ReactBootstrapForm.Row>
-                <Col md={6}>
+                <Col md={12}>
                   <TextFormGroup
                     label="Nom du produit"
                     name="name"
@@ -112,6 +115,16 @@ export const ProductForm: ({
                   <TextFormGroup
                     label="Prix"
                     name="price"
+                    type="number"
+                    step="0.01"
+                    className={"text-right"}
+                    textRight={"€"}
+                  />
+                </Col>
+                <Col md={6}>
+                  <TextFormGroup
+                    label="Prix pour les cotisants (optionnel)"
+                    name="priceForSubscribers"
                     type="number"
                     step="0.01"
                     className={"text-right"}

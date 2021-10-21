@@ -15,6 +15,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  priceForSubscribers?: number;
   comment: string;
   marketplace: Marketplace;
   numberLeft: number;

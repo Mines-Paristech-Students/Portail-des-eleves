@@ -46,6 +46,10 @@ class Product(models.Model):
     price = models.DecimalField(
         max_digits=5, decimal_places=2, validators=[MinValueValidator(0)]
     )
+    price_for_subscribers = models.DecimalField(
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(0)],
+        default=None, null=True, blank=True
+    )
     image = models.ImageField()
     comment = models.TextField(null=True, blank=True)
 
