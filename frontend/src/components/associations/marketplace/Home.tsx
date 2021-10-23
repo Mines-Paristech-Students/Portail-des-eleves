@@ -26,7 +26,6 @@ export const AssociationMarketplaceHome = ({ association }) => {
   const {
     data: subscriber,
     status,
-    error,
   } = useBetterQuery(
     ["marketplace.subscription", marketplaceId, user?.id],
     api.marketplace.subscription.get
