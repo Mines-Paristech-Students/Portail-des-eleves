@@ -185,7 +185,8 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(
-            "Association, marketplace and library created.", status=status.HTTP_200_OK
+            "Association, marketplace and library created.",
+            status=status.HTTP_201_CREATED,
         )
 
     def destroy(self, request, pk=None):
@@ -196,8 +197,10 @@ class AssociationViewSet(viewsets.ModelViewSet):
         marketplace = association.marketplace
         library = association.library
 
-        MarketplaceViewSet().perform_destroy(instance=marketplace)
-        LibraryViewSet().perform_destroy(instance=library)
+        if marketplace:
+            MarketplaceViewSet().perform_destroy(instance=marketplace)
+        if library:
+            LibraryViewSet().perform_destroy(instance=library)
 
         return super(AssociationViewSet, self).destroy(request, pk=pk)
 

@@ -94,7 +94,9 @@ class ProductShortSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     marketplace = serializers.PrimaryKeyRelatedField(queryset=Marketplace.objects.all())
     tags = serializers.SerializerMethodField()
-    price_for_subscribers = BlankableDecimalField(max_digits=5, decimal_places=2)
+    price_for_subscribers = BlankableDecimalField(
+        max_digits=5, decimal_places=2, required=False, default=None
+    )
 
     class Meta:
         model = Product

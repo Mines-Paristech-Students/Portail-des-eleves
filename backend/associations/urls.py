@@ -1,4 +1,5 @@
 from django.urls import path
+from associations.models.marketplace import Marketplace
 from rest_framework_bulk.routes import BulkRouter
 
 from associations.views import (
@@ -16,9 +17,7 @@ from associations.views import (
     RoleViewSet,
 )
 from associations.views.election import VoterViewSet, ElectionViewSet, ChoiceViewSet
-from associations.views.library import LibraryView
 from associations.views.marketplace import (
-    MarketplaceView,
     SubscriptionView,
     SubscriptionView,
 )
@@ -48,17 +47,18 @@ urlpatterns += [
 
 # Library.
 router.register(r"library", LibraryViewSet)
+router.register(r"library/(?P<library_id>\d+)", LibraryViewSet)
 router.register(r"loans", LoansViewSet)
 router.register(r"loanables", LoanableViewSet)
 
 # Marketplace.
 router.register(r"marketplace", MarketplaceViewSet)
+router.register(r"library/(?P<marketplace_id>\d+)", MarketplaceViewSet)
 router.register(r"products", ProductViewSet)
 router.register(r"transactions", TransactionViewSet)
 router.register(r"fundings", FundingViewSet)
 urlpatterns += [
     path("associations/<association_pk>/image", set_association_logo),
-    path("marketplace/<slug:marketplace_id>/", MarketplaceView.as_view()),
     path("marketplace/balance/", widget_balance_view, name="balance-list"),
     path(
         "marketplace/<slug:marketplace_id>/balance/",
@@ -75,7 +75,6 @@ urlpatterns += [
         SubscriptionView.as_view(),
         name="marketplace-subscription",
     ),
-    path("library/<slug:library_id>/", LibraryView.as_view()),
 ]
 
 # Pages.

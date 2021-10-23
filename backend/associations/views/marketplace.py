@@ -20,6 +20,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from api.paginator import SmallResultsSetPagination
 from associations.models import Marketplace, Product, Transaction, Funding, Association
+from associations.models import marketplace
 from associations.models.marketplace import Subscription
 from associations.permissions import (
     MarketplacePermission,
@@ -56,45 +57,26 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
 
         return MarketplaceSerializer
 
+    def partial_update(self, request, pk):
+        marketplaces_id = [
+            role.association.marketplace.id
+            for role in self.request.user.roles.all()
+            if role.marketplace
+        ]
 
-class MarketplaceView(APIView):
-    def patch(self, request, marketplace_id=None):
-        if marketplace_id is None:
-            return HttpResponseBadRequest("You must mention an association to patch it")
-
-        association = Association.objects.get(pk=marketplace_id).pk
-
-        if not Marketplace.objects.filter(id=marketplace_id).exists():
-            serializer = MarketplaceWriteSerializer(
-                data={
-                    "id": marketplace_id,
-                    "enabled": False,
-                    "association": association,
-                    "products": [],
-                }
+        if pk in marketplaces_id:
+            serializer = self.get_serializer_class()(
+                Marketplace.objects.get(pk=pk), data=request.data, partial=True
             )
-
             if serializer.is_valid():
                 serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        marketplace = Marketplace.objects.get(id=marketplace_id)
-        serializer = MarketplaceWriteSerializer(
-            marketplace,
-            data={
-                "id": marketplace_id,
-                "enabled": request.data["enabled"],
-                "association": association,
-                "products": [],
-            },
+        return Response(
+            "You don't have the right to patch this marketplace.",
+            status=status.HTTP_403_FORBIDDEN,
         )
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductFilter(TaggableFilter):
@@ -405,24 +387,37 @@ class SubscriptionView(APIView):
         )
 
     def patch(self, request, marketplace_id=None, user_id=None):
-        user = User.objects.get(pk=user_id)
-        marketplace = Marketplace.objects.get(pk=marketplace_id)
+        marketplaces_id_authorized = [
+            role.association.marketplace.id
+            for role in request.user.roles.all()
+            if role.marketplace
+        ]
 
-        is_subscriber = Subscription.objects.filter(
-            user=user, marketplace=marketplace
-        ).exists()
+        if marketplace_id in marketplaces_id_authorized:
+            user = User.objects.get(pk=user_id)
+            marketplace = Marketplace.objects.get(pk=marketplace_id)
 
-        if is_subscriber:
-            ser = Subscription.objects.filter(
+            is_subscriber = Subscription.objects.filter(
                 user=user, marketplace=marketplace
-            ).delete()
-        else:
-            subscription = SubscriptionSerializer(
-                Subscription(marketplace=marketplace, user=user)
-            )
-            ser = subscription.create(
-                validated_data={"user": user, "marketplace": marketplace}
-            )
-            ser.save()
+            ).exists()
 
-        return Response({"subscriber": not is_subscriber})
+            if is_subscriber:
+                ser = Subscription.objects.filter(
+                    user=user, marketplace=marketplace
+                ).delete()
+            else:
+                subscription = SubscriptionSerializer(
+                    Subscription(marketplace=marketplace, user=user)
+                )
+                ser = subscription.create(
+                    validated_data={"user": user, "marketplace": marketplace}
+                )
+                ser.save()
+
+            return Response(
+                {"subscriber": not is_subscriber}, status=status.HTTP_200_OK
+            )
+        return Response(
+            "You're not authorized to patch subscriptions of this marketplace.",
+            status=status.HTTP_401_UNAUTHORIZED,
+        )

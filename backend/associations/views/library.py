@@ -1,5 +1,6 @@
 from django import http
 from django.db.models import Q
+from associations import serializers
 from django_filters.rest_framework import (
     DjangoFilterBackend,
     FilterSet,
@@ -50,45 +51,26 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
         return LibrarySerializer
 
+    def partial_update(self, request, pk):
+        libraries_id = [
+            role.association.library.id
+            for role in self.request.user.roles.all()
+            if role.library
+        ]
 
-class LibraryView(APIView):
-    def patch(self, request, library_id=None):
-        if library_id is None:
-            return HttpResponseBadRequest("You must mention an association to patch it")
-
-        association = Association.objects.get(pk=library_id).pk
-
-        if not Library.objects.filter(id=library_id).exists():
-            serializer = LibraryWriteSerializer(
-                data={
-                    "id": library_id,
-                    "enabled": False,
-                    "association": association,
-                    "loanables": [],
-                }
+        if pk in libraries_id:
+            serializer = self.get_serializer_class()(
+                Library.objects.get(pk=pk), data=request.data, partial=True
             )
-
             if serializer.is_valid():
                 serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        marketplace = Library.objects.get(id=library_id)
-        serializer = LibraryWriteSerializer(
-            marketplace,
-            data={
-                "id": library_id,
-                "enabled": request.data["enabled"],
-                "association": association,
-                "loanables": [],
-            },
+        return Response(
+            "You don't have the right to patch this library.",
+            status=status.HTTP_403_FORBIDDEN,
         )
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoanableFilter(FilterSet):
