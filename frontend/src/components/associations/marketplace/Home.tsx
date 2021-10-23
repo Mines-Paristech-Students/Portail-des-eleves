@@ -23,10 +23,7 @@ export const AssociationMarketplaceHome = ({ association }) => {
 
   const { sendSuccessToast, sendErrorToast } = useContext(ToastContext);
   const user = useContext(UserContext);
-  const {
-    data: subscriber,
-    status,
-  } = useBetterQuery(
+  const { data: subscriber, status } = useBetterQuery(
     ["marketplace.subscription", marketplaceId, user?.id],
     api.marketplace.subscription.get
   );
