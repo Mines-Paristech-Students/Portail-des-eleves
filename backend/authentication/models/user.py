@@ -193,3 +193,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         from associations.models.role import Role
 
         return set(Role.objects.filter(query).values_list("association__pk", flat=True))
+
+    ## For students' genealogy ##
+
+    def genealogy_relations(self):
+        """All neighbors of a student in the Minor's graph"""
+        successors = []
+        if self.roommate.all:
+            successors.extend(self.roommate.all())
+        if self.minesparent.all:
+            successors.extend(self.minesparent.all())
+        if self.fillots.all:
+            successors.extend(self.fillots.all())
+        return successors
+
+    @staticmethod
+    def BFS(start, end):
+        """Breadth-First-Search algorith, to find the shortest path between two students"""
+        visited = []
+        queue = []
+        queue.append([start])
+        while queue:
+            path = queue.pop(0)
+            node = path[-1]
+            if node == end:
+                return path
+            if not node.id in visited:
+                visited.append(node.id)
+                for adjacent in node.separation_successeurs():
+                    new_path = list(path)
+                    new_path.append(adjacent)
+                    queue.append(new_path)
+        return None
