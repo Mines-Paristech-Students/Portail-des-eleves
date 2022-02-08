@@ -7,6 +7,7 @@ from authentication.views import (
     LoginView,
     LogoutView,
     CredentialsView,
+    GenealogyView,
     get_birthdays,
     ProfileAnswerViewSet,
     ProfileQuestionViewSet,
@@ -29,4 +30,5 @@ urlpatterns = [
     path("users/birthdays/<int:number_of_days>/", get_birthdays, name="get_birthdays"),
     path("users/promotions/", list_promotions, name="list_promotions"),
     path("users/questions/<slug:user_pk>/", list_profile_questions),
+    path("users/genealogy/", GenealogyView.as_view(), name="genealogy")
 ] + router.urls

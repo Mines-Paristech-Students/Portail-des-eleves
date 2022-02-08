@@ -7,3 +7,4 @@ from .questions import (
     ProfileAnswerViewSet,
     list_profile_questions,
 )
+from .genealogy import GenealogyView
