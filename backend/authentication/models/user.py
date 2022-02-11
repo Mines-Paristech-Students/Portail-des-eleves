@@ -194,6 +194,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return set(Role.objects.filter(query).values_list("association__pk", flat=True))
 
+    def get_absolute_url(self):
+        return '/profils/'+self.id
+
     ## For students' genealogy ##
 
     def genealogy_relations(self):
@@ -207,9 +210,22 @@ class User(AbstractBaseUser, PermissionsMixin):
             successors.extend(self.fillots.all())
         return successors
 
+    def relation_with(self, student):
+        """
+            Describes relation linking self with another student
+            Returns None if the 2 students have no direct link
+        """
+        if self in student.roommate.all():
+            return "co"
+        if self in student.minesparent.all():
+            return "parraine"
+        if self in student.fillots.all():
+            return "fillot.e"
+        return None
+
     @staticmethod
     def BFS(start, end):
-        """Breadth-First-Search algorith, to find the shortest path between two students"""
+        """Breadth-First-Search algorithm, to find the shortest path between two students"""
         visited = []
         queue = []
         queue.append([start])
@@ -220,7 +236,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return path
             if not node.id in visited:
                 visited.append(node.id)
-                for adjacent in node.separation_successeurs():
+                for adjacent in node.genealogy_relations():
                     new_path = list(path)
                     new_path.append(adjacent)
                     queue.append(new_path)

@@ -14,7 +14,7 @@ class GenealogyView(views.APIView):
             chemin_string = '<a href = "' + chemin[0].get_absolute_url() + '">' + chemin[0].first_name + ' ' + chemin[
                 0].last_name + '</a>'
             for i in range(len(chemin) - 1):
-                chemin_string = chemin_string + ', ' + chemin[i].relation_avec(chemin[i + 1]) + ' de ' + '<a href = "' + \
+                chemin_string = chemin_string + ', ' + chemin[i].relation_with(chemin[i + 1]) + ' de ' + '<a href = "' + \
                                 chemin[i + 1].get_absolute_url() + '">' + chemin[i + 1].first_name + ' ' + chemin[
                                     i + 1].last_name + '</a>'
         else:
@@ -30,10 +30,8 @@ class GenealogyView(views.APIView):
 
     def post(self, request):
         """Le plus court chemin séparant deux élèves"""
-        recherche = True
-        eleves = User.objects.all()
-        start = User.objects.get(user__username=request.POST.get('start_username', ''))
-        end = User.objects.get(user__username=request.POST.get('end_username', ''))
+        start = User.objects.get(id=request.data['start_username']['value'])
+        end = User.objects.get(id=request.data['end_username']['value'])
         result = User.BFS(start, end)
-        result_string = self.chemin_to_html(result)
-        return Response({'eleves': eleves, 'result': result, 'result_string': result_string, 'recherche': recherche})
+        result_string: str = self.chemin_to_html(result)
+        return Response({'result_string': result_string})
