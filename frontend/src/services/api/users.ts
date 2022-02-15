@@ -9,6 +9,6 @@ export const users = {
     ),
   listPromotions: () =>
     unwrap<{ promotions: string[] }>(apiService.get("/users/promotions")),
-  getGenealogy: ({user1, user2}) => unwrap<{ result_string: string }>(apiService.post("/users/genealogy/",
+  getGenealogy: ({user1, user2}) => unwrap<{ linkFound: boolean, result: string[], resultLinks: string[] }>(apiService.post("/users/genealogy/",
           {start_username: user1, end_username: user2}))
 };

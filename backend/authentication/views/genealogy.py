@@ -5,21 +5,14 @@ from authentication.models import User
 
 class GenealogyView(views.APIView):
     @staticmethod
-    def chemin_to_html(chemin):
+    def chemin_links(chemin):
         """
-            Effectue un rendu en code HTML d'une liste d'élèves en précisant les
-            relations entre deux élèves successifs.
+            For a given chemin of n students, returns list of size n-1 of links between each students
         """
-        if chemin:
-            chemin_string = '<a href = "' + chemin[0].get_absolute_url() + '">' + chemin[0].first_name + ' ' + chemin[
-                0].last_name + '</a>'
-            for i in range(len(chemin) - 1):
-                chemin_string = chemin_string + ', ' + chemin[i].relation_with(chemin[i + 1]) + ' de ' + '<a href = "' + \
-                                chemin[i + 1].get_absolute_url() + '">' + chemin[i + 1].first_name + ' ' + chemin[
-                                    i + 1].last_name + '</a>'
-        else:
-            chemin_string = "Aucun chemin existant"
-        return chemin_string
+        chemin_links = []
+        for i in range(len(chemin) - 1):
+            chemin_links.append(chemin[i].relation_with(chemin[i + 1]) + ' de ')
+        return chemin_links
 
     def get(self, request):
         eleves = User.objects.all()
@@ -33,5 +26,8 @@ class GenealogyView(views.APIView):
         start = User.objects.get(id=request.data['start_username']['value'])
         end = User.objects.get(id=request.data['end_username']['value'])
         result = User.BFS(start, end)
-        result_string: str = self.chemin_to_html(result)
-        return Response({'result_string': result_string})
+        if result is None:
+            return Response({'linkFound': False, 'result': [], 'resultLinks': []})
+        result_links = self.chemin_links(result)
+        result = [user.id for user in result]
+        return Response({'linkFound': True, 'result': result, 'resultLinks': result_links})
