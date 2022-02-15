@@ -18,9 +18,10 @@ const mapToUserAvatar = (userList) =>
   ));
 
 export const ProfileRelated = ({ profile }: { profile: Profile }) =>
-  profile.roommate.length > 0 ||
+    profile.roommate.length > 0 ||
   profile.minesparent.length > 0 ||
-  profile.fillots.length > 0 ? (
+  profile.fillots.length > 0 ||
+  profile.cousinast.length > 0 ? (
     <Card>
       <Card.Body className="px-6">
         {profile.roommate.length > 0 && (
@@ -84,6 +85,24 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
             </Row>
           </>
         )}
+
+        {profile.cousinast.length > 0 && (
+          <>
+            <Row className="mb-1">
+              <Col md="12">
+                <h5 className="font-weight-normal">
+                  {decidePlural(profile.cousinast.length, "Cousin AST", "Cousins AST")}
+                </h5>
+              </Col>
+            </Row>
+            <Row className="justify-content-left mb-5">
+              <Col md="12">
+                <AvatarList>{mapToUserAvatar(profile.cousinast)}</AvatarList>
+              </Col>
+            </Row>
+          </>
+        )}
       </Card.Body>
     </Card>
-  ) : null;
+  ) : null
+;

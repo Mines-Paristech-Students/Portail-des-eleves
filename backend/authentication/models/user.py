@@ -119,6 +119,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     minesparent = models.ManyToManyField(
         "self", related_name="fillots", symmetrical=False, default=None
     )
+    astcousin = models.ManyToManyField("self", symmetrical=True, default=None)
+
 
     # Life on portail.
     is_active = models.BooleanField(default=True)

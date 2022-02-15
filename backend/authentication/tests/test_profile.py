@@ -84,6 +84,7 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
         "option": "Mécatro",
         "roommate": ["17bocquet"],
         "minesparent": ["17wan-fat"],
+        "astcousin": ["17bocquet"]
     }
 
     not_allowed_edits = {
@@ -104,7 +105,7 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
 
         user = User.objects.get(pk="17simple")
         for field in self.allowed_edits:
-            if field in ["roommate", "minesparent"]:
+            if field in ["roommate", "minesparent", "astcousin"]:
                 self.assertEqual(
                     [u.id for u in getattr(user, field).all()],
                     self.allowed_edits[field],
@@ -134,7 +135,7 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
 
         user = User.objects.get(pk="17simple")
         for field in self.allowed_edits:
-            if field in ("roommate", "minesparent"):
+            if field in ("roommate", "minesparent", "astcousin"):
                 self.assertEqual(
                     [u.id for u in getattr(user, field).all()],
                     self.allowed_edits[field],
