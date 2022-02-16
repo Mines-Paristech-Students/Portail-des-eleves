@@ -15,13 +15,14 @@ class Association(models.Model):
     name = models.CharField(max_length=200)
 
     logo = models.ForeignKey(
-        "Media", on_delete=models.SET_NULL, null=True, related_name="logo_of"
+        "Media", on_delete=models.SET_NULL, null=True, blank=True, related_name="logo_of",
     )
 
     marketplace = models.OneToOneField(
         Marketplace,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         default=None,
         related_name="association",
     )
@@ -29,6 +30,7 @@ class Association(models.Model):
         Library,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         default=None,
         related_name="association",
     )
