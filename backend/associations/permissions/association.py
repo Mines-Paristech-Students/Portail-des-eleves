@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from associations.permissions.utils import check_permission_from_post_data
+from authentication.models import User
 
 
 class AssociationPermission(BasePermission):
@@ -13,6 +14,14 @@ class AssociationPermission(BasePermission):
     message = "You do not have the permission to edit this association."
 
     def has_permission(self, request, view):
+        return request.method in SAFE_METHODS or request.user.is_staff
+
+    def has_object_permission(self, request, view, assoc):
+        user = User.objects.get(pk=request.user.id)
+        if assoc is not None:
+            is_hidden = assoc.is_hidden
+            if user.is_in_first_year and is_hidden:
+                return False
         return request.method in SAFE_METHODS or request.user.is_staff
 
 
