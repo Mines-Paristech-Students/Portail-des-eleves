@@ -1,11 +1,11 @@
 import django_filters
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics
 from rest_framework import pagination
+from rest_framework import mixins, viewsets
 
-from .models import Game
-from .serializers import GameSerializer
+from games.models import Game
+from games.serializers import GameSerializer
 
 
 class GamePagination(pagination.PageNumberPagination):
@@ -20,9 +20,12 @@ class GameFilter(django_filters.FilterSet):
         fields = ["mode"]
 
 
-class GamePaginatedList(generics.ListAPIView):
+class GameViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet,
+):
     queryset = Game.objects.all()
     filterset_class = GameFilter
     serializer_class = GameSerializer
     pagination_class = GamePagination
     permission_classes = [IsAuthenticated]
+    ordering = ["-pub_date"]
