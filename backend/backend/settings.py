@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "tags",
     "repartitions",
     "courses",
+    "games",
 ]
 
 MIDDLEWARE = [

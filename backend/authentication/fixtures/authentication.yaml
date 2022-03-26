@@ -288,3 +288,27 @@
     current_academic_year: 1A
     minesparent: [17bocquet]
     roommate: [19biero, 19market-biero]
+
+- model: authentication.user
+  pk: 20delmas
+  fields:
+    password: pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=
+    last_login:
+    first_name: Louis
+    last_name: Delmas
+    email: 20delmas@mpt.fr
+    birthday: "2001-09-13"
+    is_active: true
+    is_staff: true
+    is_superuser: true
+    nickname: Delmas
+    city_of_origin: Konoha
+    option: Dodo
+    room: "1234"
+    phone: "+33456789012"
+    year_of_entry: 2020
+    promotion: P20
+    student_type: IC
+    current_academic_year: "2A"
+    minesparent: []
+    roommate: []
