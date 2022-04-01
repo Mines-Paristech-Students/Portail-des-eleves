@@ -17,11 +17,15 @@ const mapToUserAvatar = (userList) =>
     />
   ));
 
+const hasMinesParent = (profile: Profile) => (profile.minesparent && profile.minesparent.length > 0);
+const hasFillot = (profile: Profile) => (profile.fillots && profile.fillots.length > 0);
+const hasCousinAst = (profile: Profile) => (profile.cousinast && profile.cousinast.length > 0);
+
 export const ProfileRelated = ({ profile }: { profile: Profile }) =>
     profile.roommate.length > 0 ||
-  profile.minesparent.length > 0 ||
-  profile.fillots.length > 0 ||
-  profile.cousinast.length > 0 ? (
+    hasMinesParent(profile) ||
+    hasFillot(profile) ||
+    hasCousinAst(profile) ? (
     <Card>
       <Card.Body className="px-6">
         {profile.roommate.length > 0 && (
@@ -41,10 +45,10 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
           </>
         )}
 
-        {(profile.minesparent.length > 0 || profile.fillots.length > 0) && (
+        {(hasMinesParent(profile) || hasFillot(profile)) && (
           <>
             <Row className="mb-1">
-              {profile.minesparent.length > 0 && (
+              { hasMinesParent(profile) && (
                 <Col md="6">
                   <h5 className="font-weight-normal">
                     {decidePlural(
@@ -55,7 +59,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
                   </h5>
                 </Col>
               )}
-              {profile.fillots.length > 0 && (
+              { hasFillot(profile) && (
                 <Col md="6">
                   <h5 className="font-weight-normal">
                     {decidePlural(
@@ -69,7 +73,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
             </Row>
 
             <Row className="justify-content-left">
-              {profile.minesparent.length > 0 && (
+              { hasMinesParent(profile) && (
                 <Col md="6" className="justify-content-left">
                   <AvatarList>
                     {mapToUserAvatar(profile.minesparent)}
@@ -77,7 +81,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
                 </Col>
               )}
 
-              {profile.fillots.length > 0 && (
+              { hasFillot(profile) && (
                 <Col md="6" className="justify-content-left">
                   <AvatarList>{mapToUserAvatar(profile.fillots)}</AvatarList>
                 </Col>
@@ -86,7 +90,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
           </>
         )}
 
-        {profile.cousinast.length > 0 && (
+        { hasCousinAst(profile) && (
           <>
             <Row className="mb-1">
               <Col md="12">
