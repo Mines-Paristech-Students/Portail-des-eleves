@@ -39,12 +39,12 @@
     first_name: Adrien
     last_name: Bocquet
     email: 17bocquet@mpt.fr
-    birthday: '1997-01-08'
+    birthday: "1997-01-08"
     is_active: true
     is_staff: true
     nickname: the roc
     city_of_origin: Gotham
-    room: '1234'
+    room: "1234"
     phone: "+33456789012"
     year_of_entry: 2017
     promotion: P17
@@ -57,12 +57,12 @@
     first_name: Pierre
     last_name: Wan-Fat
     email: 17wan-fat@mpt.fr
-    birthday: '1998-06-26'
+    birthday: "1998-06-26"
     is_active: true
     is_staff: false
     nickname: Le Rocher
     city_of_origin: Le Tampon
-    room: '802'
-    phone: ''
+    room: "802"
+    phone: ""
     year_of_entry: 2017
     promotion: P17

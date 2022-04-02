@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 GAME_MODES = (("S", ("SOLO")), ("M", ("MULTI")))
 
@@ -10,7 +11,7 @@ class Game(models.Model):
     mode = models.CharField(max_length=1, choices=GAME_MODES, default="S")
     description = models.CharField(max_length=512, blank=True, default="")
 
-    pub_date = models.DateField(auto_now_add=True, blank=True)
+    pub_date = models.DateField(blank=True, default=timezone.now())
 
     def __str__(self):
         return self.id
