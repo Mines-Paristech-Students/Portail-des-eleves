@@ -8,6 +8,7 @@ import repartitions.urls
 import subscriptions.urls
 import tags.urls
 import courses.urls
+import games.urls
 
 urlpatterns = [
     path("associations/", include(associations.urls)),
@@ -17,4 +18,5 @@ urlpatterns = [
     path("subscriptions/", include(subscriptions.urls)),
     path("tags/", include(tags.urls)),
     path("courses/", include(courses.urls)),
+    path("games/", include(games.urls)),
 ]
