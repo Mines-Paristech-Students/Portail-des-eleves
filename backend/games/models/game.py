@@ -3,6 +3,7 @@ from django.utils import timezone
 
 GAME_MODES = (("S", ("SOLO")), ("M", "MULTI"))
 
+
 class Game(models.Model):
     id = models.CharField(unique=True, primary_key=True, max_length=30)
 

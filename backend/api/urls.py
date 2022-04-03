@@ -18,5 +18,5 @@ urlpatterns = [
     path("subscriptions/", include(subscriptions.urls)),
     path("tags/", include(tags.urls)),
     path("courses/", include(courses.urls)),
-    path("games/", include(games.urls))
+    path("games/", include(games.urls)),
 ]
