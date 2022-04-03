@@ -1,0 +1,13 @@
+- model: games.game
+  pk: "2048"
+  fields:
+    name: "2048"
+    mode: "S"
+    description: "L'histoire raconte qu'on jouait déjà au 2048 dans les mines."
+
+- model: games.game
+  pk: "pictionary"
+  fields:
+    name: "Pictionary"
+    mode: "M"
+    description: "Pour les artistes !"
