@@ -1,1 +1,2 @@
-from .game import GameSerializer
+from .game import GameSerializer, ShortGameSerializer
+from .scores import ScoreSerializer, CreateScoreSerializer
