@@ -45,7 +45,7 @@ class ScoreViewSet(
     queryset = Score.objects.all()
     filterset_class = ScoreFilter
     pagination_class = ScorePagination
-    ordering = ["-when"]
+    ordering = ["-created_on"]
 
     serializers = {
         "list": ScoreSerializer,

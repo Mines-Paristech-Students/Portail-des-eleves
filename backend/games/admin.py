@@ -9,4 +9,4 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
-    list_display = ("game", "user", "score", "when")
+    list_display = ("game", "user", "score", "created_on")

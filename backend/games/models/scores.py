@@ -19,4 +19,6 @@ class Score(models.Model):
         verbose_name="score", validators=[MinValueValidator(0)], default=0
     )
 
-    when = models.DateTimeField(verbose_name="when", auto_now_add=True, blank=True)
+    created_on = models.DateTimeField(
+        verbose_name="created_on", auto_now_add=True, blank=True
+    )

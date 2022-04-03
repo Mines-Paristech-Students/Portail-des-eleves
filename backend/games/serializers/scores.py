@@ -15,7 +15,7 @@ class CreateScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Score
-        read_only_fields = ("when",)
+        read_only_fields = ("created_on",)
         fields = ("game", "user", "score") + read_only_fields
 
 
@@ -27,5 +27,5 @@ class ScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Score
-        read_only_fields = ("when",)
+        read_only_fields = ("created_on",)
         fields = ("game", "user", "score") + read_only_fields

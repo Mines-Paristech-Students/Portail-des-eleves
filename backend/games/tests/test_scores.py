@@ -7,7 +7,7 @@ from django.db.models import Sum
 class ScoresTestCase(WeakAuthenticationBaseTestCase):
     fixtures = ["test_authentication.yaml", "games.yaml", "test_scores.yaml"]
 
-    EXPECTED_FIELDS = {"game", "user", "score", "when"}
+    EXPECTED_FIELDS = {"game", "user", "score", "created_on"}
     EXPECTED_GAME_FIELDS = {"id", "name"}
 
     def endpoint_list(self):
@@ -45,9 +45,9 @@ class ScoresTestCase(WeakAuthenticationBaseTestCase):
         for score in res.data:
             self.assertSetEqual(set(score.keys()), self.EXPECTED_FIELDS)
             self.assertSetEqual(set(score.game.keys()), self.EXPECTED_GAME_FIELDS)
-            # Scores should be sorted by "when" date
-            self.assertGreaterEqual(score.when, prev_date)
-            prev_date = score.when
+            # Scores should be sorted by "created_on" date
+            self.assertGreaterEqual(score.created_on, prev_date)
+            prev_date = score.created_on
 
     ##########
     # FILTER #
@@ -69,7 +69,7 @@ class ScoresTestCase(WeakAuthenticationBaseTestCase):
         "game": "pictionary",
         "user": "17simple",
         "score": 123,
-        "when": datetime.now(),
+        "created_on": datetime.now(),
     }
 
     def test_if_not_global_admin_then_cannot_create(self):
