@@ -7,6 +7,7 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = ("id", "name", "mode", "description", "pub_date")
 
+
 class ShortGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game

@@ -9,6 +9,7 @@ from games.serializers import (
 )
 from games.models import Game, Score
 
+
 class ActionBasedPermission(AllowAny):
     """
     Grant or deny access to a view, based on a mapping in view.action_permissions
@@ -19,6 +20,7 @@ class ActionBasedPermission(AllowAny):
             if view.action in actions:
                 return klass().has_permission(request, view)
         return False
+
 
 class ScorePagination(pagination.PageNumberPagination):
     page_size = 5
