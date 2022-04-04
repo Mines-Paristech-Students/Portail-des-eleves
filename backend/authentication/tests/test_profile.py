@@ -84,7 +84,7 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
         "option": "Mécatro",
         "roommate": ["17bocquet"],
         "minesparent": ["17wan-fat"],
-        "astcousin": ["17bocquet"]
+        "astcousin": ["17bocquet"],
     }
 
     not_allowed_edits = {

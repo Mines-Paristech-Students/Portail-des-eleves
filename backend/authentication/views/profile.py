@@ -14,6 +14,7 @@ from tags.filters import HasHiddenTagFilter
 # Should be set to True during Parrainage week so first years don't have access to Mine's genealogy
 HIDDEN_PARENT = False
 
+
 class ProfileFilter(FilterSet):
     class Meta:
         model = User

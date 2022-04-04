@@ -121,7 +121,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     astcousin = models.ManyToManyField("self", symmetrical=True, default=None)
 
-
     # Life on portail.
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

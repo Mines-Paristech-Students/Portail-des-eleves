@@ -147,5 +147,9 @@ class ReadOnlyUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        read_only_fields = user_read_only_fields + ("minesparent", "cousinast", "fillots")
+        read_only_fields = user_read_only_fields + (
+            "minesparent",
+            "cousinast",
+            "fillots",
+        )
         fields = read_only_fields
