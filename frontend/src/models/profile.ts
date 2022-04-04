@@ -33,7 +33,7 @@ export interface Profile {
   roommate: { id: string; firstName: string; lastName: string }[];
   minesparent: { id: string; firstName: string; lastName: string }[];
   fillots: { id: string; firstName: string; lastName: string }[];
-  cousinast: { id: string; firstName: string; lastName: string }[];
+  astcousin: { id: string; firstName: string; lastName: string }[];
   profileAnswers: ProfileAnswer[];
   roles: Role[];
 }

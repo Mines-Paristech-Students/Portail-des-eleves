@@ -149,7 +149,7 @@ class ReadOnlyUserSerializer(serializers.ModelSerializer):
         model = User
         read_only_fields = user_read_only_fields + (
             "minesparent",
-            "cousinast",
+            "astcousin",
             "fillots",
         )
         fields = read_only_fields

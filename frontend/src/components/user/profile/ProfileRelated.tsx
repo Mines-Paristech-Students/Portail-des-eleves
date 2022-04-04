@@ -23,7 +23,7 @@ const hasMinesParent = (profile: Profile) =>
 const hasFillot = (profile: Profile) =>
   profile.fillots && profile.fillots.length > 0;
 const hasCousinAst = (profile: Profile) =>
-  profile.cousinast && profile.cousinast.length > 0;
+  profile.astcousin && profile.astcousin.length > 0;
 
 export const ProfileRelated = ({ profile }: { profile: Profile }) =>
   hasRoomate(profile) ||
@@ -100,7 +100,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
               <Col md="12">
                 <h5 className="font-weight-normal">
                   {decidePlural(
-                    profile.cousinast.length,
+                    profile.astcousin.length,
                     "Cousin AST",
                     "Cousins AST"
                   )}
@@ -109,7 +109,7 @@ export const ProfileRelated = ({ profile }: { profile: Profile }) =>
             </Row>
             <Row className="justify-content-left mb-5">
               <Col md="12">
-                <AvatarList>{mapToUserAvatar(profile.cousinast)}</AvatarList>
+                <AvatarList>{mapToUserAvatar(profile.astcousin)}</AvatarList>
               </Col>
             </Row>
           </>
