@@ -15,7 +15,11 @@ class Association(models.Model):
     name = models.CharField(max_length=200)
 
     logo = models.ForeignKey(
-        "Media", on_delete=models.SET_NULL, null=True, blank=True, related_name="logo_of",
+        "Media",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="logo_of",
     )
 
     marketplace = models.OneToOneField(
