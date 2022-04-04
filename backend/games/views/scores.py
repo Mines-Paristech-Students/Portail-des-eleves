@@ -1,4 +1,6 @@
 import django_filters
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework import pagination, mixins, viewsets
@@ -6,6 +8,7 @@ from authentication.models.user import User
 from games.serializers import (
     ScoreSerializer,
     CreateScoreSerializer,
+    LeaderboardSerializer,
 )
 from games.models import Game, Score
 
@@ -57,3 +60,18 @@ class ScoreViewSet(
 
     action_permissions = {IsAuthenticated: ["list"], IsAdminUser: ["create"]}
     permission_classes = (ActionBasedPermission,)
+
+
+class LeaderboardViewSet(
+    mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet
+):
+    queryset = (
+        Score.objects.values("user")
+        .annotate(total_score=Coalesce(Sum("score"), 0))
+        .order_by("-total_score")
+    )
+    filterset_class = ScoreFilter
+    serializer_class = LeaderboardSerializer
+    pagination_class = ScorePagination
+
+    permission_classes = [IsAuthenticated]

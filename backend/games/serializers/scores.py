@@ -29,3 +29,11 @@ class ScoreSerializer(serializers.ModelSerializer):
         model = Score
         read_only_fields = ("created_on",)
         fields = ("game", "user", "score") + read_only_fields
+
+
+class LeaderboardSerializer(serializers.Serializer):
+    user = serializers.CharField()
+    total_score = serializers.IntegerField(validators=[MinValueValidator(0)])
+
+    class Meta:
+        fields = ("user", "total_score")
