@@ -19,6 +19,7 @@ from associations.serializers import (
     WriteRoleSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
+from authentication.models import User
 
 
 class RoleFilter(FilterSet):
@@ -132,6 +133,21 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationShortSerializer
         else:
             return AssociationSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        user = User.objects.get(pk=request.user.id)
+
+        if user.is_in_first_year:
+            queryset = queryset.filter(is_hidden=False)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 @api_view(["PUT"])
