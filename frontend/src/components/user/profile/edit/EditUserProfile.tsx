@@ -321,7 +321,11 @@ export const EditUserProfile = () => {
                     />
                   </Col>
                   <Col md={6}>
-                    <SelectUserFormGroup name="cousinast" label="Cousins AST" isMulti />
+                    <SelectUserFormGroup
+                      name="cousinast"
+                      label="Cousins AST"
+                      isMulti
+                    />
                   </Col>
                 </Row>
               </Card.Body>
