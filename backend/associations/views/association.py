@@ -135,15 +135,11 @@ class AssociationViewSet(viewsets.ModelViewSet):
             return AssociationSerializer
 
     def list(self, request, *args, **kwargs):
-        print("listing assoc")
         queryset = self.filter_queryset(self.get_queryset())
         user = User.objects.get(pk=request.user.id)
 
-        queryset = [
-            a
-            for a in queryset
-            if not (a.is_hidden and user.is_in_first_year)
-        ]
+        if user.is_in_first_year:
+            queryset = queryset.filter(is_hidden=False)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
