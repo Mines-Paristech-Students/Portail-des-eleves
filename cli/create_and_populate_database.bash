@@ -13,6 +13,7 @@ rm -Rf  profile/migrations/*
 rm -Rf  repartitions/migrations/*
 rm -Rf  subscriptions/migrations/*
 rm -Rf  tags/migrations/*
+rm -Rf  games/migrations/*
 
 python manage.py reset_db --noinput
 
@@ -23,6 +24,7 @@ python manage.py makemigrations repartitions
 python manage.py makemigrations subscriptions
 python manage.py makemigrations tags
 python manage.py makemigrations courses 
+python manage.py makemigrations games 
 
 python manage.py migrate
 
@@ -33,3 +35,4 @@ python manage.py loaddata repartitions
 python manage.py loaddata subscriptions
 python manage.py loaddata tags
 python manage.py loaddata courses 
+python manage.py loaddata games 
