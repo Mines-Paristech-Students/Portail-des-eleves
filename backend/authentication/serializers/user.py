@@ -18,6 +18,9 @@ class UpdateOnlyUserSerializer(serializers.ModelSerializer):
     minesparent = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), many=True, read_only=False
     )
+    astcousin = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), many=True, read_only=False
+    )
     profile_answers = ProfileAnswerShortUpdateSerializer(many=True, read_only=False)
 
     class Meta:
@@ -31,6 +34,7 @@ class UpdateOnlyUserSerializer(serializers.ModelSerializer):
             "current_academic_year",
             "roommate",
             "minesparent",
+            "astcousin",
             "profile_answers",
         )
 
@@ -50,6 +54,15 @@ class UpdateOnlyUserSerializer(serializers.ModelSerializer):
             for user in roommate_data:
                 if user.id != instance.id:  # An user cannot be its own roommate.
                     instance.roommate.add(user)
+        if "astcousin" in validated_data:
+            # Update strategy for astcousin: remove the old relationships and add the new ones.
+            cousin_data = validated_data.pop("astcousin")
+
+            instance.astcousin.clear()
+
+            for user in cousin_data:
+                if user.id != instance.id:  # An user cannot be its own cousin.
+                    instance.astcousin.add(user)
 
         if "minesparent" in validated_data:
             # Update strategy for minesparent: remove the old relationships and add the new ones.
@@ -78,12 +91,33 @@ class UpdateOnlyUserSerializer(serializers.ModelSerializer):
         return super(UpdateOnlyUserSerializer, self).update(instance, validated_data)
 
 
-class ReadOnlyUserSerializer(serializers.ModelSerializer):
+user_read_only_fields = (
+    "id",
+    "first_name",
+    "last_name",
+    "nickname",
+    "birthday",
+    "email",
+    "year_of_entry",
+    "phone",
+    "room",
+    "city_of_origin",
+    "option",
+    "student_type",
+    "current_academic_year",
+    "roommate",
+    "is_active",
+    "is_staff",
+    "profile_answers",
+    "roles",
+    "promotion",
+)
+
+
+class HiddenParentReadOnlyUserSerializer(serializers.ModelSerializer):
     roommate = UserShortSerializer(many=True, read_only=True)
-    minesparent = UserShortSerializer(many=True, read_only=True)
     profile_answers = ProfileAnswerShortSerializer(many=True, read_only=True)
     roles = RoleSerializer(many=True, read_only=True)
-    fillots = UserShortSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         raise NotImplemented("This serializer should not be used for write operations.")
@@ -93,27 +127,29 @@ class ReadOnlyUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        read_only_fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "nickname",
-            "birthday",
-            "email",
-            "year_of_entry",
-            "phone",
-            "room",
-            "city_of_origin",
-            "option",
-            "student_type",
-            "current_academic_year",
-            "roommate",
+        read_only_fields = user_read_only_fields
+        fields = read_only_fields
+
+
+class ReadOnlyUserSerializer(serializers.ModelSerializer):
+    minesparent = UserShortSerializer(many=True, read_only=True)
+    astcousin = UserShortSerializer(many=True, read_only=True)
+    fillots = UserShortSerializer(many=True, read_only=True)
+    roommate = UserShortSerializer(many=True, read_only=True)
+    profile_answers = ProfileAnswerShortSerializer(many=True, read_only=True)
+    roles = RoleSerializer(many=True, read_only=True)
+
+    def create(self, validated_data):
+        raise NotImplemented("This serializer should not be used for write operations.")
+
+    def update(self, instance, validated_data):
+        raise NotImplemented("This serializer should not be used for write operations.")
+
+    class Meta:
+        model = User
+        read_only_fields = user_read_only_fields + (
             "minesparent",
-            "is_active",
-            "is_staff",
-            "profile_answers",
-            "roles",
+            "astcousin",
             "fillots",
-            "promotion",
         )
         fields = read_only_fields

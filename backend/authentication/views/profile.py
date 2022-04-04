@@ -4,11 +4,15 @@ from rest_framework import filters, viewsets
 from authentication.models import User
 from authentication.permissions import ProfilePermission
 from authentication.serializers.user import (
+    HiddenParentReadOnlyUserSerializer,
     ReadOnlyUserSerializer,
     UpdateOnlyUserSerializer,
     UserShortSerializer,
 )
 from tags.filters import HasHiddenTagFilter
+
+# Should be set to True during Parrainage week so first years don't have access to Mine's genealogy
+HIDDEN_PARENT = False
 
 
 class ProfileFilter(FilterSet):
@@ -44,7 +48,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
             return UserShortSerializer
         elif self.action in ("partial_update", "update"):
             return UpdateOnlyUserSerializer
-
+        elif HIDDEN_PARENT:
+            user = User.objects.get(pk=self.request.user.id)
+            if user.is_in_first_year:
+                return HiddenParentReadOnlyUserSerializer
         return ReadOnlyUserSerializer
 
     def get_object(self):
@@ -53,7 +60,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
         The user identifier is in the pk kwargs.\n
         If pk is the string "current", return the data for the current authenticated user.
         """
-
         if self.kwargs["pk"] == "current":
             self.check_object_permissions(self.request, self.request.user)
             return self.request.user

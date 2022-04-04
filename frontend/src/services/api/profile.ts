@@ -27,6 +27,7 @@ export const profile = {
       currentAcademicYear?: "1A" | "2A" | "GAP YEAR" | "3A" | "GRADUATE";
       minesparent?: string[];
       roommate?: string[];
+      astcousin?: string[];
       profileAnswers?: {
         question: number;
         text: string;

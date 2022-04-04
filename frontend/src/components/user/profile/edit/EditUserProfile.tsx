@@ -67,6 +67,7 @@ const getInitialValues = (profile: Profile, questions: ProfileQuestion[]) => {
     currentAcademicYear: profile.currentAcademicYear,
     minesparent: [],
     roommate: [],
+    astcousin: [],
   };
 
   profile.profileAnswers.forEach(({ questionId, text }) => {
@@ -82,6 +83,13 @@ const getInitialValues = (profile: Profile, questions: ProfileQuestion[]) => {
 
   profile.minesparent.forEach(({ id, firstName, lastName }) => {
     initialValues.minesparent.push({
+      value: id,
+      label: `${firstName} ${lastName}`,
+    });
+  });
+
+  profile.astcousin.forEach(({ id, firstName, lastName }) => {
+    initialValues.astcousin.push({
       value: id,
       label: `${firstName} ${lastName}`,
     });
@@ -108,10 +116,12 @@ export const getData = (values: { [key: string]: any }) => {
     }[];
     roommate: string[];
     minesparent: string[];
+    astcousin: string[];
   } = {
     profileAnswers: [],
     roommate: [],
     minesparent: [],
+    astcousin: [],
   };
 
   // These keys are kept as-is.
@@ -133,6 +143,10 @@ export const getData = (values: { [key: string]: any }) => {
     } else if (key === "minesparent" && values[key]) {
       for (let option of values[key]) {
         data.minesparent.push(option.value);
+      }
+    } else if (key === "astcousin" && values[key]) {
+      for (let option of values[key]) {
+        data.astcousin.push(option.value);
       }
     } else if (noChangeKeys.includes(key)) {
       data[key] = values[key];
@@ -303,6 +317,13 @@ export const EditUserProfile = () => {
                     <SelectUserFormGroup
                       name="minesparent"
                       label="Marrain(e)s"
+                      isMulti
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <SelectUserFormGroup
+                      name="astcousin"
+                      label="Cousins AST"
                       isMulti
                     />
                   </Col>
