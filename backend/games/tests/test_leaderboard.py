@@ -50,7 +50,7 @@ class LeaderboardTestCase(WeakAuthenticationBaseTestCase):
         self.assertStatusCode(res, 401)
 
     def if_logged_in_then_can_list(self):
-        print(self.login("17simple"))
+        self.login("17simple")
         res = self.list()
         self.assertStatusCode(res, 200)
         prev_score = 0
