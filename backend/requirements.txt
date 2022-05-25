@@ -28,7 +28,7 @@ numpy==1.17.3
 Pillow==8.1.1
 psycopg2-binary==2.8.4
 pycparser==2.19
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.4.3
 python-magic==0.4.15
 pytz==2019.3
