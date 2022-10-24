@@ -25,7 +25,7 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-  
+            ${{ runner.os }}-pip-
       - name: Install Dependencies
         run: |
           sudo apt-get install poppler-utils
@@ -43,9 +43,8 @@ jobs:
           postgresql password: postgres
       - name: Set up database
         run: |
-          cd backend
-          cp backend/.env.ci backend/.env
-          ../cli/create_and_populate_database.bash
+          cp backend/backend/.env.ci backend/backend/.env
+          ./cli/create_and_populate_database.bash
       - name: Run Associations Tests
         run: |
           cd backend
