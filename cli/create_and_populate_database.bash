@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # erases the database, creates a new one and loads fixtures in it
 
-cd ../backend
+cd backend
 
 rm -f medias
-ln -s ../medias medias
+ln -s ../cli/medias medias
 
 rm -Rf  authentication/migrations/*
 rm -Rf  associations/migrations/*

@@ -28,8 +28,8 @@ import { elections } from "./api/elections";
 import { subscriptions } from "./api/subscriptions";
 import { library } from "./api/library/library";
 
-export const baseUrl = "http://localhost:8000";
-const baseApi = baseUrl + "/api/v1";
+export const baseUrl = process.env.REACT_APP_API_BASE_URL;
+const baseApi = process.env.REACT_APP_API_URL;
 
 export const apiService = applyConverters(
   Axios.create({

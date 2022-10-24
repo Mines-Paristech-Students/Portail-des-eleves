@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   # chat:
     # restart: always
@@ -13,20 +13,58 @@ services:
     #   - 3000:3000
 
   db:
-    restart: always
     build:
-      context: ./chat_server/
-      dockerfile: docker/db.Dockerfile
+      context: docker
+      dockerfile: db.Dockerfile
+    volumes:
+      - ./volumes:/var/lib/postgresql/data/
     ports: 
       - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s 
+    profiles: ["dev", "prod"]
   
   backend:
-    restart: always
     build:
-      # Because of cli & database init
       context: .
       dockerfile: docker/backend.Dockerfile
-    links:
-      - db:db
     ports:
       - "8000:8000"
+    links:
+      - db:db
+    environment:
+      - DATABASE_HOST=db
+    depends_on:
+      - db
+    volumes:
+    - "./backend:/app/backend"
+    profiles: ["dev", "prod"]
+
+  frontend-dev:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+      - "./frontend:/app"
+      - "/app/node_modules"
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    profiles: ["dev"]
+
+  frontend-prod:
+    build:
+      context: frontend
+      dockerfile: prod.Dockerfile
+    ports:
+      - "3000:3000"
+    profiles: ["prod"]

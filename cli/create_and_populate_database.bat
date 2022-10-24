@@ -10,7 +10,7 @@ rmdir /S /Q tags\migrations
 rmdir /S /Q games\migrations
 
 rmdir /S /Q medias
-mklink /J medias ..\medias
+mklink /J medias ..\cli\medias
 
 python manage.py reset_db --noinput
 
