@@ -1,20 +1,21 @@
-FROM ubuntu:18.04
+FROM python:3.7
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update
-RUN apt-get -y install python3-dev build-essential
+RUN apt-get update && apt-get install -y poppler-utils
 
-WORKDIR /workspace/
+WORKDIR /app
 
-COPY backend/ .
+COPY backend backend
 
-RUN apt-get -y install python3-pip
+RUN pip install --upgrade pip>=21.2.4
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r backend/requirements.txt 
 
-COPY cli/create_and_populate_database.bash .
+COPY cli cli
 
-RUN cp backend/.env.dist backend/.env
+RUN chmod +x ./cli/create_and_populate_database.bash
 
-ENTRYPOINT ["./create_and_populate_database.bash"]
+EXPOSE 8000
 
-CMD ["python3 manage.py runsever"]
+CMD ./cli/create_and_populate_database.bash ; python ./backend/manage.py runserver 0.0.0.0:8000
