@@ -46,22 +46,25 @@ class EventFilter(FilterSet):
         # BEFORE is C) plus a number (the rank inside each partition).
         # Finally, order by `ordering`.
 
+        now_datetime = datetime.now().astimezone()
+
         now = (
             queryset.filter(
-                starts_at__lte=datetime.now(), ends_at__gte=datetime.now()
+                starts_at__lte=now_datetime,
+                ends_at__gte=now_datetime,
             ).order_by("-starts_at")
             if "NOW" in times
             else Event.objects.none()
         )
 
         after = (
-            queryset.filter(starts_at__gte=datetime.now()).order_by("starts_at")
+            queryset.filter(starts_at__gte=now_datetime).order_by("starts_at")
             if "AFTER" in times
             else Event.objects.none()
         )
 
         before = (
-            queryset.filter(ends_at__lte=datetime.now()).order_by("-starts_at")
+            queryset.filter(ends_at__lte=now_datetime).order_by("-starts_at")
             if "BEFORE" in times
             else Event.objects.none()
         )
