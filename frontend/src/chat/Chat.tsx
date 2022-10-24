@@ -4,7 +4,7 @@ import { Message, MessageData } from "./Message";
 import { api } from "../services/apiService";
 import socketIOClient from "socket.io-client";
 
-const chat_server_url = "http://localhost:3001";
+const chat_server_url = process.env.REACT_APP_CHAT_SERVER_BASE_URL;
 
 export const Chat = () => {
   const [messages, setMessages] = useState<MessageData[]>([]);
