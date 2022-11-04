@@ -168,6 +168,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
         of elapsed 30th June NOT including the one of the arrival year.
         """
+        if self.year_of_entry is None:
+            return 0
+
         today = date.today()
 
         if today >= date(today.year, 6, 30):

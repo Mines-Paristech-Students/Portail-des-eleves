@@ -13,6 +13,7 @@ def list_promotions(request):
             "promotions": sorted(
                 User.objects.order_by("promotion")
                 .distinct("promotion")
+                .exclude(promotion__isnull=True)
                 .values_list("promotion", flat=True),
                 reverse=True,
             )

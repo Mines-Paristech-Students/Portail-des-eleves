@@ -1,8 +1,8 @@
 from authentication.models import User
 from authentication.serializers.user import ReadOnlyUserSerializer
-from backend.tests_utils import WeakAuthenticationBaseTestCase
-
 from rest_framework.renderers import JSONRenderer
+
+from backend.tests_utils import WeakAuthenticationBaseTestCase
 
 
 class ProfileTestCase(WeakAuthenticationBaseTestCase):
@@ -52,7 +52,6 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
 
     new_user_data = {
         "id": "17test",
-        "password": "pbkdf2_sha256$100000$tos6gO0V3tNL$Vd14vNq3N5MwGX6TsvBV0RW+DQzGpy3OGfKqCtL3kls=",
         "first_name": "Test",
         "last_name": "Test",
         "email": "test@mpt.fr",
@@ -60,17 +59,19 @@ class ProfileTestCase(WeakAuthenticationBaseTestCase):
         "year_of_entry": 2017,
     }
 
-    def test_cannot_create_user(self):
+    def test_cannot_create_user_if_not_authorized(self):
         res = self.post("/users/users/", self.new_user_data)
         self.assertStatusCode(res, 401)
 
+    def test_cannot_create_user_if_not_admin(self):
         self.login("17simple")
         res = self.post("/users/users/", self.new_user_data)
         self.assertStatusCode(res, 403)
 
+    def test_can_create_user_if_admin(self):
         self.login("17admin")
         res = self.post("/users/users/", self.new_user_data)
-        self.assertStatusCode(res, 403)
+        self.assertStatusCode(res, 201)
 
     ##########
     # UPDATE #
