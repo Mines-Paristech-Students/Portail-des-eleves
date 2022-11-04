@@ -1,9 +1,10 @@
-from django_filters.rest_framework import FilterSet, DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import filters, viewsets
 
 from authentication.models import User
 from authentication.permissions import ProfilePermission
 from authentication.serializers.user import (
+    CreateUserSerializer,
     HiddenParentReadOnlyUserSerializer,
     ReadOnlyUserSerializer,
     UpdateOnlyUserSerializer,
@@ -23,7 +24,7 @@ class ProfileFilter(FilterSet):
 
 class ProfileViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows an user profile to be viewed or edited.
+    API endpoint that allows an user profile to viewed, created or edited.
 
     Parameters:
         - search: search in `id`, `first_name`, `last_name` fields.
@@ -46,6 +47,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ("list",):
             return UserShortSerializer
+        elif self.action in ("create"):
+            return CreateUserSerializer
         elif self.action in ("partial_update", "update"):
             return UpdateOnlyUserSerializer
         elif HIDDEN_PARENT:

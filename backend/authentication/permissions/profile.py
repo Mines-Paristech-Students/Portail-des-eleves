@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class ProfilePermission(BasePermission):
@@ -13,7 +13,7 @@ class ProfilePermission(BasePermission):
     message = "You are not allowed to edit this profile."
 
     def has_permission(self, request, view):
-        return request.method not in ("POST", "DELETE")
+        return request.method not in ("DELETE")
 
     def has_object_permission(self, request, view, target_user):
         if request.user.is_admin:
