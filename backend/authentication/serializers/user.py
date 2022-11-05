@@ -1,12 +1,17 @@
-from rest_framework import serializers
-
 from associations.serializers.role import RoleSerializer
-from authentication.models import User, ProfileAnswer
+from authentication.models import ProfileAnswer, User
 from authentication.serializers.questions_short import (
     ProfileAnswerShortSerializer,
     ProfileAnswerShortUpdateSerializer,
 )
 from authentication.serializers.user_short import UserShortSerializer
+from rest_framework import serializers
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ("password",)
 
 
 class UpdateOnlyUserSerializer(serializers.ModelSerializer):

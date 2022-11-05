@@ -2,8 +2,8 @@ from datetime import date
 
 from django.conf import settings
 from django.contrib.auth.models import (
-    BaseUserManager,
     AbstractBaseUser,
+    BaseUserManager,
     PermissionsMixin,
 )
 from django.core.validators import MinValueValidator
@@ -14,7 +14,7 @@ from django.utils.functional import cached_property
 
 class UserManager(BaseUserManager):
     def create_user(
-        self, username, first_name, last_name, email, password, birthday, year_of_entry
+        self, username, first_name, last_name, email, birthday, year_of_entry
     ):
         """
         Create and save a User.
@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
             first_name,
             last_name,
             email,
-            password,
+            "",
             birthday,
             year_of_entry,
             is_admin=False,
@@ -97,33 +97,41 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    nickname = models.CharField(max_length=128, blank=True, default="")
-    birthday = models.DateField(null=True)
+    nickname = models.CharField(max_length=128, null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
     email = models.EmailField(max_length=160, unique=True)
     year_of_entry = models.IntegerField(
-        validators=(MinValueValidator(1783),)
+        validators=(MinValueValidator(1783),), null=True, blank=True
     )  # The year MINES ParisTech was created.
-    promotion = models.CharField(max_length=50)
+    promotion = models.CharField(max_length=50, null=True, blank=True)
 
-    phone = models.CharField(max_length=15, blank=True)
-    room = models.CharField(max_length=128, blank=True)
-    city_of_origin = models.CharField(max_length=128, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    room = models.CharField(max_length=128, null=True, blank=True)
+    city_of_origin = models.CharField(max_length=128, null=True, blank=True)
 
     # Education.
-    option = models.CharField(max_length=128, blank=True)
-    student_type = models.CharField(max_length=10, choices=STUDENT_TYPES)
-    current_academic_year = models.CharField(max_length=10, choices=ACADEMIC_YEARS)
+    option = models.CharField(max_length=128, null=True, blank=True)
+    student_type = models.CharField(
+        max_length=10, choices=STUDENT_TYPES, null=True, blank=True
+    )
+    current_academic_year = models.CharField(
+        max_length=10, choices=ACADEMIC_YEARS, null=True, blank=True
+    )
 
     # Life at school.
-    roommate = models.ManyToManyField("self", symmetrical=True, default=None)
-    minesparent = models.ManyToManyField(
-        "self", related_name="fillots", symmetrical=False, default=None
+    roommate = models.ManyToManyField(
+        "self", symmetrical=True, default=None, blank=True
     )
-    astcousin = models.ManyToManyField("self", symmetrical=True, default=None)
+    minesparent = models.ManyToManyField(
+        "self", related_name="fillots", symmetrical=False, default=None, blank=True
+    )
+    astcousin = models.ManyToManyField(
+        "self", symmetrical=True, default=None, blank=True
+    )
 
     # Life on portail.
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True, blank=True)
+    is_staff = models.BooleanField(default=False, blank=True)
 
     objects = UserManager()
 
@@ -160,6 +168,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         A school year begins on 1st September and ends the 30th June. In other words, we are counting the number
         of elapsed 30th June NOT including the one of the arrival year.
         """
+        if self.year_of_entry is None:
+            return 0
+
         today = date.today()
 
         if today >= date(today.year, 6, 30):

@@ -6,7 +6,9 @@ export const profile = {
   get: ({ userId }: { userId: string }) =>
     unwrap<Profile>(apiService.get(`/users/users/${userId}/`)).then(
       (profile) => {
-        profile.birthday = new Date(profile.birthday);
+        profile.birthday = profile.birthday
+          ? new Date(profile.birthday)
+          : undefined;
         profile.roles.forEach((role) => parseRoleDates(role));
         return profile;
       }

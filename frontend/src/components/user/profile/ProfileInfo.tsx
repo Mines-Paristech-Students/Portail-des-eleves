@@ -18,6 +18,15 @@ const ACADEMIC_YEAR = new Map([
   ["GRADUATE", "Alumni"],
 ]);
 
+const getAcademicStatus = (profile: Profile) =>
+  `${profile.promotion ? profile.promotion + " " : ""}${
+    profile.studentType ? profile.studentType + " " : ""
+  }${
+    profile.currentAcademicYear
+      ? `(${ACADEMIC_YEAR.get(profile.currentAcademicYear)})`
+      : ""
+  }`;
+
 export const ProfileInfo = ({
   profile,
   showEditButton = false,
@@ -37,22 +46,26 @@ export const ProfileInfo = ({
           />
           <div className="media-body">
             <h3 className="m-0">{`${profile.firstName} ${profile.lastName}`}</h3>
-            <p className="font-italic mb-2">{profile.nickname}</p>
-            <p className="text-muted">{`${profile.promotion} ${
-              profile.studentType
-            } (${ACADEMIC_YEAR.get(profile.currentAcademicYear)})`}</p>
+            {profile.nickname && (
+              <p className="font-italic mb-2">{profile.nickname}</p>
+            )}
+            {getAcademicStatus(profile) && (
+              <p className="text-muted">{getAcademicStatus(profile)}</p>
+            )}
           </div>
         </div>
       </Row>
       <Row>
         <Col>
           <ListGroup variant="flush">
-            <ListGroup.Item>
-              <span className="icon mr-3">
-                <i className="fe fe-calendar" />
-              </span>
-              {formatLongDate(profile.birthday)}
-            </ListGroup.Item>
+            {profile.birthday && (
+              <ListGroup.Item>
+                <span className="icon mr-3">
+                  <i className="fe fe-calendar" />
+                </span>
+                {formatLongDate(profile.birthday)}
+              </ListGroup.Item>
+            )}
             <ListGroup.Item>
               <span className="icon mr-3">
                 <i className="fe fe-mail" />

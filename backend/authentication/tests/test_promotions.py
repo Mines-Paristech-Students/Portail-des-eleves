@@ -20,5 +20,10 @@ class PromotionsTestCase(WeakAuthenticationBaseTestCase):
         promotions = json.loads(res.content)["promotions"]
 
         self.assertSetEqual(
-            set(promotions), set(user.promotion for user in User.objects.all())
+            set(promotions),
+            set(
+                user.promotion
+                for user in User.objects.all()
+                if user.promotion is not None
+            ),
         )
