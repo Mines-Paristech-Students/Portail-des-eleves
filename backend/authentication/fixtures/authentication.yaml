@@ -288,3 +288,12 @@
     current_academic_year: 1A
     minesparent: [17bocquet]
     roommate: [19biero, 19market-biero]
+
+- model: authentication.user
+  pk: 17portail
+  fields:
+    first_name: Super
+    last_name: Portail
+    email: 17portail
+    is_active: true
+    is_staff: true
