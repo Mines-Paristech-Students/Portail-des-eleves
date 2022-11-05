@@ -13,13 +13,15 @@ const authUrlAdmin =
 const authUrlSimple =
   "http://localhost:8000/api/v1/auth/login/?access=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOjc3MTU2NjE1NDYuMTkzMTA3LCJpc3MiOiJzc29fc2VydmVyIiwiYXVkIjoicG9ydGFpbCIsImp0aSI6ImE4ODkwYmY4ODQxMDRiMGQ5NDllYTVjOGJkYzVlN2M5IiwidXNlciI6IjE5c2ltcGxlIn0.UNR6H8qY5DzVfs_zjQtyRmur5dtkhJQ0ahJK2DAqosZdiO09y-E3Tz3E9ResQtJsa0aJIxtkB_9HihQ7zl-afi2be_PEcKtCiOQOs8AJT6xWUJy4_1jzmLkuoHeJZ13mmgl1HmnjzpF01ZKV9RxeP1-2izjz24Zg1NPZ5H8Kw8I";
 
+const ssoLoginUrl = process.env.REACT_APP_SSO_BASE_URL + "/connexion/portail";
+
 export const Login = () => {
   if (authService.isAuthenticated) {
     return <Redirect to={"/"} />;
   }
 
   if (process.env.NODE_ENV !== "development") {
-    window.location.replace("http://localhost:3001/connexion/portail");
+    window.location.replace(ssoLoginUrl);
     return null;
   }
 
@@ -44,10 +46,7 @@ export const Login = () => {
                     <a href={authUrlSimple}>19simple (simple)</a> <br />
                   </p>
                   <p>
-                    ou{" "}
-                    <a href="http://localhost:3001/connexion/portail">
-                      connectez-vous via le SSO
-                    </a>
+                    ou <a href={ssoLoginUrl}>connectez-vous via le SSO</a>
                   </p>
                 </div>
               </form>
