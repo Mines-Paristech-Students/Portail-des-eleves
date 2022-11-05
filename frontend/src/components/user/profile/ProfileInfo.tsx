@@ -58,12 +58,14 @@ export const ProfileInfo = ({
       <Row>
         <Col>
           <ListGroup variant="flush">
-            <ListGroup.Item>
-              <span className="icon mr-3">
-                <i className="fe fe-calendar" />
-              </span>
-              {formatLongDate(profile.birthday)}
-            </ListGroup.Item>
+            {profile.birthday && (
+              <ListGroup.Item>
+                <span className="icon mr-3">
+                  <i className="fe fe-calendar" />
+                </span>
+                {formatLongDate(profile.birthday)}
+              </ListGroup.Item>
+            )}
             <ListGroup.Item>
               <span className="icon mr-3">
                 <i className="fe fe-mail" />
