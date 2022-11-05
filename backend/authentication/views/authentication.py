@@ -1,7 +1,8 @@
 from datetime import datetime
 from django.conf import settings
+from django.shortcuts import redirect
 import jwt
-from rest_framework import status, views
+from rest_framework import views
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 
@@ -31,7 +32,7 @@ class LoginView(views.APIView):
             JWTCookieAuthentication().get_user(claims)
 
             # Set it as a cookie.
-            response = Response({"token": token}, status=status.HTTP_200_OK)
+            response = redirect(settings.PORTAIL_URL)
             response.set_cookie(
                 key=settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"],
                 value=token,

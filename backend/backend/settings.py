@@ -174,6 +174,7 @@ if TESTING:
 # Customized settings.
 
 SHOW_TO_FIRST_YEAR_STUDENTS = False
+PORTAIL_URL = env.str("PORTAIL_URL")
 
 # JWT authentication settings.
 
