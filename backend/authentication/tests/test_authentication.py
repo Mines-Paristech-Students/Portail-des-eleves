@@ -155,7 +155,7 @@ class AuthenticationTestCase(BaseTestCase):
     def test_if_valid_user_token_then_authenticated(self):
         self.assertTrue(User.objects.filter(pk="17simple").exists())
         res = self.login(self.tokens["VALID_17SIMPLE_TOKEN"])
-        self.assertStatusCode(res, 200)
+        self.assertStatusCode(res, 302)
         self.assertIsAuthenticated("17simple")
 
     ##########
@@ -164,10 +164,7 @@ class AuthenticationTestCase(BaseTestCase):
 
     def test_logout(self):
         self.assertTrue(User.objects.filter(pk="17simple").exists())
-        res = self.login(self.tokens["VALID_17SIMPLE_TOKEN"])
-        self.assertStatusCode(res, 200)
-        self.assertIsAuthenticated("17simple")
-
+        self.login(self.tokens["VALID_17SIMPLE_TOKEN"])
         res = self.logout()
         self.assertStatusCode(res, 200)
         self.assertIsNotAuthenticated()
