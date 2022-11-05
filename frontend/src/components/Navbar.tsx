@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Logo from "../logo-mines.png";
-import { Link, NavLink, Redirect } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -39,9 +39,12 @@ function Navbar() {
     });
   };
 
-  return redirectToLogin ? (
-    <Redirect to={"/login"} />
-  ) : user ? (
+  if (redirectToLogin) {
+    window.location.reload();
+    return null;
+  }
+
+  return user ? (
     <>
       <div className="header p-1">
         <Container>
