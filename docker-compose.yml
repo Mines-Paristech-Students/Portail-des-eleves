@@ -46,6 +46,9 @@ services:
     volumes:
     - "./backend:/app/backend"
     profiles: ["dev", "prod"]
+    networks:
+      - default
+      - sso_sso
 
   frontend-dev:
     build:
@@ -68,3 +71,7 @@ services:
     ports:
       - "3000:3000"
     profiles: ["prod"]
+
+networks:
+  sso_sso:
+    external: true

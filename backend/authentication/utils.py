@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 
+from django.http import HttpRequest
+
 
 class Birthday:
     """Utils class to represent, sort, index and compare birthdays."""
@@ -77,3 +79,7 @@ class Birthday:
 
     def isoformat(self):
         return self._date.isoformat()
+
+
+def get_hostname(request: HttpRequest):
+    return request.get_host().split(":")[0]

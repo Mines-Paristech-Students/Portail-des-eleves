@@ -1,11 +1,12 @@
+import jwt
+from authentication import utils
+from authentication.token import decode_token
 from django.conf import settings
 from django.contrib.auth import get_user_model
-import jwt
-
+from django.http import HttpRequest
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from authentication.token import decode_token
 from backend import settings
 
 
@@ -19,26 +20,36 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
 
     User = get_user_model()
 
-    def authenticate(self, request):
-        # Validate the CSRF header.
-        if not self.validate_csrf_header(request):
-            raise AuthenticationFailed("Custom header against CSRF attacks is not set.")
-
-        # Get the cookie.
-        raw_token = request.COOKIES.get(
-            settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"]
-        )
-        if raw_token is None:
-            raise AuthenticationFailed("Authorization cookie not set.")
-
-        # Decode and verify the token.
-        # In DEBUG, the token is not verified (this allows to run tests more easily).
+    def authenticate(self, request: HttpRequest):
         try:
-            claims = decode_token(
-                raw_token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
+            # Validate the CSRF header.
+            if not self.validate_csrf_header(request):
+                raise AuthenticationFailed(
+                    "Custom header against CSRF attacks is not set."
+                )
+
+            # Get the cookie.
+            raw_token = request.COOKIES.get(
+                settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"]
             )
-        except jwt.exceptions.InvalidTokenError as e:
-            raise AuthenticationFailed(e)
+            if raw_token is None:
+                raise AuthenticationFailed("Authorization cookie not set.")
+
+            # Decode and verify the token.
+            # In DEBUG, the token is not verified (this allows to run tests more easily).
+            try:
+                claims = decode_token(
+                    raw_token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
+                )
+            except jwt.exceptions.InvalidTokenError as e:
+                raise AuthenticationFailed(e)
+        except AuthenticationFailed as e:
+            if (
+                utils.get_hostname(request)
+                in settings.ALLOWED_BYPASS_AUTHENTICATION_HOSTS
+            ):
+                return None, None
+            raise e
 
         # Authenticate the user.
         return self.get_user(claims), None

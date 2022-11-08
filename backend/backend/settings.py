@@ -34,9 +34,10 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
+SSO_API_HOSTNAME = env.str("SSO_API_HOSTNAME")
 ALLOWED_HOSTS = (
     ["localhost"]
-    + [env.str("PORTAIL_HOSTNAME"), env.str("SSO_HOSTNAME")]
+    + [env.str("PORTAIL_HOSTNAME"), env.str("SSO_HOSTNAME"), SSO_API_HOSTNAME]
     + ["127.0.0.1"]
 )
 CORS_ORIGIN_ALLOW_ALL = False
@@ -46,6 +47,8 @@ CORS_ORIGIN_WHITELIST = (
     + [env.str("PORTAIL_URL"), env.str("SSO_URL")]
     + ["http://127.0.0.1:3000"]
 )
+
+ALLOWED_BYPASS_AUTHENTICATION_HOSTS = (SSO_API_HOSTNAME,)
 
 AUTH_USER_MODEL = "authentication.User"
 

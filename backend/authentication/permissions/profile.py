@@ -1,3 +1,6 @@
+from authentication import utils
+from django.conf import settings
+from django.http import HttpRequest
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
@@ -12,8 +15,10 @@ class ProfilePermission(BasePermission):
 
     message = "You are not allowed to edit this profile."
 
-    def has_permission(self, request, view):
+    def has_permission(self, request: HttpRequest, view):
         if request.method not in ("POST", "DELETE"):
+            return True
+        if utils.get_hostname(request) in settings.ALLOWED_BYPASS_AUTHENTICATION_HOSTS:
             return True
         if request.method == "POST":
             self.message = "You are not allowed to create a new profile."
