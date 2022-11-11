@@ -48,9 +48,12 @@ CORS_ORIGIN_WHITELIST = (
     + ["http://127.0.0.1:3000"]
 )
 
-ALLOWED_BYPASS_AUTHENTICATION_HOSTS = (SSO_API_HOSTNAME,)
-
 AUTH_USER_MODEL = "authentication.User"
+
+# API Authentication (e.g. SSO)
+
+ALLOWED_API_HOSTS = (SSO_API_HOSTNAME,)
+API_KEYS = env.dict("API_KEYS")
 
 # Application definition
 
@@ -90,6 +93,7 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "authentication.authentication.ApiAuthentication",
         "authentication.authentication.JWTCookieAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "api.paginator.DefaultResultsSetPagination",

@@ -1,6 +1,3 @@
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import filters, viewsets
-
 from authentication.models import User
 from authentication.permissions import ProfilePermission
 from authentication.serializers.user import (
@@ -10,6 +7,8 @@ from authentication.serializers.user import (
     UpdateOnlyUserSerializer,
     UserShortSerializer,
 )
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from rest_framework import filters, viewsets
 from tags.filters import HasHiddenTagFilter
 
 # Should be set to True during Parrainage week so first years don't have access to Mine's genealogy

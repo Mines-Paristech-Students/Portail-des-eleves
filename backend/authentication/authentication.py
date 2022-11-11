@@ -10,6 +10,43 @@ from rest_framework.exceptions import AuthenticationFailed
 from backend import settings
 
 
+class ApiAuthentication(authentication.BaseAuthentication):
+    """
+    A Django rest authentication class that will:
+    - Check that the request host matches to an allowed API.
+    - Validate the given API key.
+    """
+
+    User = get_user_model()
+
+    def authenticate(self, request: HttpRequest):
+        given_api_key = request.headers.get("X-Api-Key")
+
+        if not given_api_key:
+            # Try to authenticate with an other authentication class
+            return None
+
+        if utils.get_hostname(request) not in settings.ALLOWED_API_HOSTS:
+            raise AuthenticationFailed(
+                "This host does not match an allowed API", code="api_unknown_host"
+            )
+
+        api_keys: dict = settings.API_KEYS
+
+        for api_name, api_key in api_keys.items():
+            if given_api_key == api_key:
+                print(f"{api_name} authenticated using API key")
+                user = self.User()
+                user.is_api = True
+                return user, None
+
+        raise AuthenticationFailed("Invalid API key", code="api_invalid_key")
+
+    def authenticate_header(self, request):
+        """Implementing this method is required for returning a 401 status code if authentication is wrong."""
+        return "Custom authentication method."
+
+
 class JWTCookieAuthentication(authentication.BaseAuthentication):
     """
     A Django rest authentication class that will:
@@ -21,35 +58,25 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
     User = get_user_model()
 
     def authenticate(self, request: HttpRequest):
+        # Validate the CSRF header.
+        if not self.validate_csrf_header(request):
+            raise AuthenticationFailed("Custom header against CSRF attacks is not set.")
+
+        # Get the cookie.
+        raw_token = request.COOKIES.get(
+            settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"]
+        )
+        if raw_token is None:
+            raise AuthenticationFailed("Authorization cookie not set.")
+
+        # Decode and verify the token.
+        # In DEBUG, the token is not verified (this allows to run tests more easily).
         try:
-            # Validate the CSRF header.
-            if not self.validate_csrf_header(request):
-                raise AuthenticationFailed(
-                    "Custom header against CSRF attacks is not set."
-                )
-
-            # Get the cookie.
-            raw_token = request.COOKIES.get(
-                settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"]
+            claims = decode_token(
+                raw_token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
             )
-            if raw_token is None:
-                raise AuthenticationFailed("Authorization cookie not set.")
-
-            # Decode and verify the token.
-            # In DEBUG, the token is not verified (this allows to run tests more easily).
-            try:
-                claims = decode_token(
-                    raw_token, verify=settings.JWT_AUTH_SETTINGS["VERIFY_SIGNATURE"]
-                )
-            except jwt.exceptions.InvalidTokenError as e:
-                raise AuthenticationFailed(e)
-        except AuthenticationFailed as e:
-            if (
-                utils.get_hostname(request)
-                in settings.ALLOWED_BYPASS_AUTHENTICATION_HOSTS
-            ):
-                return None, None
-            raise e
+        except jwt.exceptions.InvalidTokenError as e:
+            raise AuthenticationFailed(e)
 
         # Authenticate the user.
         return self.get_user(claims), None
