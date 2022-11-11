@@ -34,9 +34,10 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
+SSO_API_HOSTNAME = env.str("SSO_API_HOSTNAME")
 ALLOWED_HOSTS = (
     ["localhost"]
-    + [env.str("PORTAIL_HOSTNAME"), env.str("SSO_HOSTNAME")]
+    + [env.str("PORTAIL_HOSTNAME"), env.str("SSO_HOSTNAME"), SSO_API_HOSTNAME]
     + ["127.0.0.1"]
 )
 CORS_ORIGIN_ALLOW_ALL = False
@@ -48,6 +49,11 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 AUTH_USER_MODEL = "authentication.User"
+
+# API Authentication (e.g. SSO)
+
+ALLOWED_API_HOSTS = (SSO_API_HOSTNAME,)
+API_KEYS = env.dict("API_KEYS")
 
 # Application definition
 
@@ -87,6 +93,7 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "authentication.authentication.ApiAuthentication",
         "authentication.authentication.JWTCookieAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "api.paginator.DefaultResultsSetPagination",

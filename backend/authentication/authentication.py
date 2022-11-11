@@ -1,12 +1,50 @@
+import jwt
+from authentication import utils
+from authentication.token import decode_token
 from django.conf import settings
 from django.contrib.auth import get_user_model
-import jwt
-
+from django.http import HttpRequest
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from authentication.token import decode_token
 from backend import settings
+
+
+class ApiAuthentication(authentication.BaseAuthentication):
+    """
+    A Django rest authentication class that will:
+    - Check that the request host matches to an allowed API.
+    - Validate the given API key.
+    """
+
+    User = get_user_model()
+
+    def authenticate(self, request: HttpRequest):
+        given_api_key = request.headers.get("X-Api-Key")
+
+        if not given_api_key:
+            # Try to authenticate with an other authentication class
+            return None
+
+        if utils.get_hostname(request) not in settings.ALLOWED_API_HOSTS:
+            raise AuthenticationFailed(
+                "This host does not match an allowed API", code="api_unknown_host"
+            )
+
+        api_keys: dict = settings.API_KEYS
+
+        for api_name, api_key in api_keys.items():
+            if given_api_key == api_key:
+                print(f"{api_name} authenticated using API key")
+                user = self.User()
+                user.is_api = True
+                return user, None
+
+        raise AuthenticationFailed("Invalid API key", code="api_invalid_key")
+
+    def authenticate_header(self, request):
+        """Implementing this method is required for returning a 401 status code if authentication is wrong."""
+        return "Custom authentication method."
 
 
 class JWTCookieAuthentication(authentication.BaseAuthentication):
@@ -19,7 +57,7 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
 
     User = get_user_model()
 
-    def authenticate(self, request):
+    def authenticate(self, request: HttpRequest):
         # Validate the CSRF header.
         if not self.validate_csrf_header(request):
             raise AuthenticationFailed("Custom header against CSRF attacks is not set.")
