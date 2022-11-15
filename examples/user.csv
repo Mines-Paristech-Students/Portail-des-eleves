@@ -1,0 +1,3 @@
+id,nickname,birthday,year_of_entry,promotion,phone,room,city_of_origin,option,student_type,current_academic_year,is_staff
+20portail,Porto,2020-01-12,2020,P20,33612345678,420,Listenbourg,MAREVA,IC,GAP_YEAR,true
+20audience,Audi,2019-02-02,2019,P19,33098765432,321,Ville,INNOVATION,IC,1A,false
