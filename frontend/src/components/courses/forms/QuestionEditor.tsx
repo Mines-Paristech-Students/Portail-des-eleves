@@ -117,6 +117,8 @@ export const QuestionEditor = ({
           return (
             <>
               <Col sm={11} key={"Col1-" + key}>
+                {/*
+                // @ts-ignore-warning */}
                 <Card as={Form} onSubmit={props.handleSubmit}>
                   <CardStatus color={status} />
 

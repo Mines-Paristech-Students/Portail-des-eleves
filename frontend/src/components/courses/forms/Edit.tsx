@@ -157,6 +157,7 @@ const FormEditor = ({ form }) => {
   });
 
   return (
+    // @ts-ignore-warning
     <Card as={Form} onSubmit={formik.handleSubmit} className="p-2">
       <Row>
         <Col sm={10}>

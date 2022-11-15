@@ -37,11 +37,11 @@ export const ChangeNameForm = ({ namespace }) => {
               onChange={handleChange}
               isInvalid={!!(errors.name && touched.name)}
             />
-            <InputGroup.Append>
+            <InputGroup.Text>
               <Button type={"submit"} variant={"outline-success"}>
                 <span className="fe fe-save" />
               </Button>
-            </InputGroup.Append>
+            </InputGroup.Text>
             {errors.name && touched.name && (
               <Form.Control.Feedback type={"invalid"}>
                 {errors.name}

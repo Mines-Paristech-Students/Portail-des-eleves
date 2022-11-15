@@ -8,7 +8,6 @@ import Container from "react-bootstrap/Container";
 import { PageTitle } from "../../../utils/PageTitle";
 import { Form, Formik } from "formik";
 import Card from "react-bootstrap/Card";
-import { Form as ReactBootstrapForm } from "react-bootstrap";
 import { TextFormGroup } from "../../../utils/forms/TextFormGroup";
 import Button from "react-bootstrap/Button";
 import { SelectFormGroup } from "../../../utils/forms/SelectFormGroup";
@@ -255,7 +254,7 @@ export const EditUserProfile = () => {
                     <Card.Title>Informations générales</Card.Title>
                   </Col>
                 </Row>
-                <ReactBootstrapForm.Row className="mt-5">
+                <Row className="mt-5">
                   <Col md={{ span: 6 }}>
                     <TextFormGroup
                       label="Surnom"
@@ -297,7 +296,7 @@ export const EditUserProfile = () => {
                       iconLeft="activity"
                     />
                   </Col>
-                </ReactBootstrapForm.Row>
+                </Row>
               </Card.Body>
             </Card>
 
@@ -344,7 +343,7 @@ export const EditUserProfile = () => {
                     </p>
                   </Col>
                 </Row>
-                <ReactBootstrapForm.Row className="mt-3">
+                <Row className="mt-3">
                   {questions.map(({ id, text }) => (
                     <Col md={{ span: 6 }} key={id}>
                       <TextFormGroup
@@ -354,7 +353,7 @@ export const EditUserProfile = () => {
                       />
                     </Col>
                   ))}
-                </ReactBootstrapForm.Row>
+                </Row>
               </Card.Body>
             </Card>
 

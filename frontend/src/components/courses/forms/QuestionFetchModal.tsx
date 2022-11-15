@@ -158,7 +158,7 @@ export const QuestionFetchModal = ({ formId, trigger }) => {
               <ListGroup.Item active>Détails des questions</ListGroup.Item>
               {formik.values.questions.map((question: Question) => (
                 <ListGroup.Item>
-                  <Badge variant="info">
+                  <Badge bg="info">
                     {question.category === QuestionCategory.Comment ? (
                       <i className="fe fe-star" />
                     ) : (
