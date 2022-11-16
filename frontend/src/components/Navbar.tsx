@@ -1,17 +1,13 @@
-import React, { useContext, useState } from "react";
-import Logo from "../logo-mines.png";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext } from "react";
 import BootstrapNavbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import Offcanvas from "react-bootstrap/Offcanvas";
 import Container from "react-bootstrap/Container";
 
 import "./navbar.css";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { authService } from "../App";
 import { UserContext } from "../services/authService";
-import { UserAvatar } from "./utils/avatar/UserAvatar";
-import { Size } from "../utils/size";
+import { UserDropdown } from "./utils/navbar/UserDropdown";
+import { LogoLink } from "./utils/navbar/LogoLink";
+import { Menu } from "./utils/navbar/Menu";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -31,18 +27,6 @@ const links = [
 
 function Navbar() {
   const user = useContext(UserContext);
-  const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
-
-  const logout = () => {
-    authService.signOut().then(() => {
-      setRedirectToLogin(true);
-    });
-  };
-
-  if (redirectToLogin) {
-    window.location.reload();
-    return null;
-  }
 
   return user ? (
     <>
@@ -50,95 +34,34 @@ function Navbar() {
         <Container>
           <BootstrapNavbar expand="lg">
             <BootstrapNavbar.Brand>
-              <Link to="/" className="header-brand">
-                <img
-                  src={Logo}
-                  className="header-brand-img"
-                  alt="Logo MINES ParisTech"
-                />
-              </Link>
+              <LogoLink />
             </BootstrapNavbar.Brand>
-
-            <NavDropdown
-              className="ml-auto"
-              id="nav-dropdown"
-              bsPrefix="caret-off"
-              title={
-                <Container>
-                  <Row noGutters={true} className="align-items-center">
-                    <Col>
-                      <UserAvatar
-                        userId={user.id}
-                        link={false}
-                        size={Size.Medium}
-                      />
-                    </Col>
-                    <Col className="ml-2 float-right">
-                      <span className="text-default">
-                        {user.firstName} {user.lastName}
-                      </span>
-                      <small className="text-muted d-block mt-0 text-left">
-                        {user.promotion}
-                      </small>
-                    </Col>
-                  </Row>
-                </Container>
-              }
+            <BootstrapNavbar.Toggle aria-controls="offcanvasNavbar-expand-lg" />
+            <BootstrapNavbar.Offcanvas
+              id="offcanvasNavbar-expand-lg"
+              aria-labelledby="offcanvasNavbarLabel-expand-lg"
             >
-              {/*
-                            The `as` prop is used to render a `Link` element instead of an `a` element, which reloads the full page.
-                            For some reason, the anonymous function is passed _two_ parameters, and only the first one is the props.
-                            */}
-              <NavDropdown.Item
-                as={(...props) => (
-                  <Link to={`/profils/${user.id}`} {...props[0]} />
-                )}
-              >
-                <i className="dropdown-icon fe fe-user" /> Mon profil
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={logout}>
-                <i className="dropdown-icon fe fe-log-out" /> Déconnexion
-              </NavDropdown.Item>
-            </NavDropdown>
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title id="offcanvasNavbarLabel-expand-lg">
+                  <LogoLink />
+                </Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Menu
+                  links={links}
+                  isStaff={user.isStaff}
+                  className="d-lg-none"
+                />
+                <UserDropdown user={user} />
+              </Offcanvas.Body>
+            </BootstrapNavbar.Offcanvas>
           </BootstrapNavbar>
         </Container>
       </div>
-      <div className="header p-0">
+
+      <div className="header p-0 d-none d-lg-flex">
         <Container>
-          <Row className="align-items-center">
-            <Col>
-              <ul className="nav nav-tabs border-0 flex-column flex-lg-row">
-                {links.map(({ icon, url, label }) => (
-                  <li className={`nav-item`} key={url}>
-                    <NavLink
-                      exact={url === "/"}
-                      to={url}
-                      className={"nav-link"}
-                      activeClassName={"active"}
-                    >
-                      <i className={icon && "fe fe-" + icon} />
-                      {label}
-                    </NavLink>
-                  </li>
-                ))}
-                {user.isStaff && (
-                  <li className="nav-item">
-                    <NavLink
-                      exact={false}
-                      to="/parametres"
-                      className="nav-link"
-                      activeClassName="active"
-                    >
-                      {" "}
-                      <i className="fe fe-settings" />
-                      Paramètres
-                    </NavLink>
-                  </li>
-                )}
-              </ul>
-            </Col>
-          </Row>
+          <Menu links={links} isStaff={user.isStaff} />
         </Container>
       </div>
     </>

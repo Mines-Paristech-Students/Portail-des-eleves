@@ -5,3 +5,11 @@
 .caret-off::after {
   display: none;
 }
+
+.navbar-light .navbar-nav .nav-link.active {
+  color: var(--blue);
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: var(--gray);
+}
