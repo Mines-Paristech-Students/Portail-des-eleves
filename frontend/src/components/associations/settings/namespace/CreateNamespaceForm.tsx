@@ -41,8 +41,9 @@ export const CreateNamespaceForm = ({ association }) => {
     >
       {({ values, handleChange, errors, touched, handleSubmit }) => (
         <form onSubmit={handleSubmit}>
-          <InputGroup>
+          <InputGroup className="d-flex flex-column flex-md-row">
             <Form.Control
+              className="w-100"
               placeholder={"Nouveau namespace"}
               name={"namespaceName"}
               value={values.namespaceName}
