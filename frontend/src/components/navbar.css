@@ -1,9 +1,9 @@
 .caret-off::before {
-  display: none;
+  display: none !important;
 }
 
 .caret-off::after {
-  display: none;
+  display: none !important;
 }
 
 .navbar-light .navbar-nav .nav-link.active {

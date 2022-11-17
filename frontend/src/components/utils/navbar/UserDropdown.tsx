@@ -11,9 +11,11 @@ import { authService } from "../../../App";
 
 export const UserDropdown = ({
   user,
+  drop,
   ...props
 }: {
   user: User;
+  drop?: "up" | "down";
   [key: string]: any;
 }) => {
   const [redirectToLogin, setRedirectToLogin] = useState<boolean>(false);
@@ -34,13 +36,14 @@ export const UserDropdown = ({
       className={"ml-auto " + props.className ?? ""}
       id="nav-dropdown"
       bsPrefix="caret-off"
+      drop={drop ?? "down"}
       title={
         <Container>
           <Row noGutters={true} className="align-items-center">
             <Col>
               <UserAvatar userId={user.id} link={false} size={Size.Medium} />
             </Col>
-            <Col className="ml-2 float-right">
+            <Col className="pl-0">
               <span className="text-default">
                 {user.firstName} {user.lastName}
               </span>

@@ -8,6 +8,7 @@ import { UserContext } from "../services/authService";
 import { UserDropdown } from "./utils/navbar/UserDropdown";
 import { LogoLink } from "./utils/navbar/LogoLink";
 import { Menu } from "./utils/navbar/Menu";
+import useBreakpoint, { Breakpoint } from "../utils/useBreakpoint";
 
 /**
  * The links displayed in the navbar. It's an array of objects having three
@@ -27,6 +28,7 @@ const links = [
 
 function Navbar() {
   const user = useContext(UserContext);
+  const breakpoint = useBreakpoint();
 
   return user ? (
     <>
@@ -46,13 +48,17 @@ function Navbar() {
                   <LogoLink />
                 </Offcanvas.Title>
               </Offcanvas.Header>
-              <Offcanvas.Body>
+              <Offcanvas.Body className="d-flex flex-column">
                 <Menu
                   links={links}
                   isStaff={user.isStaff}
-                  className="d-lg-none"
+                  className="d-lg-none flex-grow-1"
                 />
-                <UserDropdown user={user} />
+                <UserDropdown
+                  user={user}
+                  drop={breakpoint < Breakpoint.SIZE_LG ? "up" : "down"}
+                  className="align-self"
+                />
               </Offcanvas.Body>
             </BootstrapNavbar.Offcanvas>
           </BootstrapNavbar>
