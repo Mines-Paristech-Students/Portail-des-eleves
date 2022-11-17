@@ -11,7 +11,7 @@ repos:
         exclude: frontend/
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: 5e374fda194d7f7ce9eebbd582b2a5594838c85b # Use the sha or tag you want to point at
+    rev: 408c101af984fcee7d4b238b52a73cd1d132f134 # Use the sha or tag you want to point at
     hooks:
       - id: prettier
         files: frontend/
