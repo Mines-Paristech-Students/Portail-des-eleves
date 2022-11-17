@@ -29,7 +29,7 @@ const Content = ({ polls, paginationControl }) => {
       {cards.length > 0 ? (
         <Row>
           {cards.map((pollCard, index) => (
-            <Col key={"poll-card-" + index} xs={{ span: 6 }}>
+            <Col key={"poll-card-" + index} xs={12} md={6}>
               <Card>
                 <Card.Body>{pollCard}</Card.Body>
               </Card>
