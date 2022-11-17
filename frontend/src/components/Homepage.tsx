@@ -39,7 +39,7 @@ export const Homepage = () => {
           <PollWidget />
           <BalanceWidget />
         </Col>
-        <Col xs={12} sm="auto">
+        <Col xs={12} sm={6} lg="auto" className="flex-grow-1">
           <TimelineWidget />
         </Col>
         <Col className={"side-widget"}>
