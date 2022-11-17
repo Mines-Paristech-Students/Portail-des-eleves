@@ -31,7 +31,7 @@ export const Homepage = () => {
   return (
     <Container fluid>
       <PageTitle>
-        {getRandom(greetings)} {user?.firstName}
+        {getRandom(greetings)} {user?.firstName ?? ""}
       </PageTitle>
       {/* <Chat /> */}
       <Row>
@@ -39,7 +39,7 @@ export const Homepage = () => {
           <PollWidget />
           <BalanceWidget />
         </Col>
-        <Col>
+        <Col xs={12} sm="auto">
           <TimelineWidget />
         </Col>
         <Col className={"side-widget"}>
