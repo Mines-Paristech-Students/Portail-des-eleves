@@ -51,12 +51,12 @@ export const CreateNamespaceForm = ({ association }) => {
                 (errors.namespaceName && touched.namespaceName) || false
               }
             />
-            <InputGroup.Append>
+            <InputGroup.Text>
               <Button type={"submit"} variant={"success"}>
                 <span className="fe fe-plus" />
                 Ajouter le namespace
               </Button>
-            </InputGroup.Append>
+            </InputGroup.Text>
             {errors.namespaceName && touched.namespaceName && (
               <Form.Control.Feedback type={"invalid"}>
                 {errors.namespaceName}

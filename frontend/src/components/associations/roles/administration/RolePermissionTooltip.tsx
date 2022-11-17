@@ -30,7 +30,7 @@ export const RolePermissionTooltip = ({
   ...props
 }: {
   permission: RolePermission;
-  children: React.ReactNode;
+  children: any;
 } & Partial<OverlayTriggerProps>) => (
   <OverlayTrigger
     placement="bottom"

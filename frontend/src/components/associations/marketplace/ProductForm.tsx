@@ -100,7 +100,7 @@ export const ProductForm: ({
         <Card>
           <Card.Body>
             <Form>
-              <ReactBootstrapForm.Row>
+              <Row>
                 <Col md={6}>
                   <TextFormGroup
                     label="Nom du produit"
@@ -195,7 +195,7 @@ export const ProductForm: ({
                     </SwitchCheckbox>
                   </Row>
                 </Col>
-              </ReactBootstrapForm.Row>
+              </Row>
 
               <Container className="text-right">
                 <Button type="submit" variant="primary">

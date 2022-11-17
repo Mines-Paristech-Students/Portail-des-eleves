@@ -39,7 +39,7 @@ const DictToHistogram = (histogram: Histogram, sum: number) => (
               now={(histogram[key] / sum) * 100}
               key={"hist" + key}
               label={key}
-              srOnly
+              visuallyHidden
             />
           </Col>
         </Row>

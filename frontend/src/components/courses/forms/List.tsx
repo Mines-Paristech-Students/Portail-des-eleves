@@ -27,6 +27,8 @@ export const FormList = () => (
 
                   <Col sm={2}>
                     <Button
+                      /*
+                      // @ts-ignore-warning */
                       as={Link}
                       variant="outline-primary"
                       to={`/cours/formulaires/${form.id}/editer`}

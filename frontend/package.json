@@ -7,11 +7,12 @@
     "axios-case-converter": "^0.6.0",
     "chart.js": "^2.9.3",
     "dayjs": "^1.8.28",
+    "debounce": "^1.2.1",
     "formik": "^2.1.4",
     "fuse.js": "^5.2.3",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
-    "react-bootstrap": "^1.0.0",
+    "react-bootstrap": "^2.6.0",
     "react-datetime": "^2.16.3",
     "react-day-picker": "^7.4.5",
     "react-debounce-input": "^3.2.2",
@@ -27,6 +28,7 @@
     "yup": "^0.28.4"
   },
   "devDependencies": {
+    "@types/debounce": "^1.2.1",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.0",
     "@types/react": "^16.9.35",
