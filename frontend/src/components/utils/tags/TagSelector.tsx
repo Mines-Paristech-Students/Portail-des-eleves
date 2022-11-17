@@ -76,6 +76,7 @@ export const TagSelector = ({
         {
           [model]: id,
         },
+        1,
         { cancelToken: source.token }
       )
       .then((res) => {
