@@ -22,6 +22,8 @@ from associations.serializers import (
 )
 from associations.serializers.association import AssociationLogoSerializer
 from authentication.models import User
+from .library import LibraryViewSet
+from .marketplace import MarketplaceViewSet
 
 
 class RoleFilter(FilterSet):
@@ -162,11 +164,9 @@ class AssociationViewSet(viewsets.ModelViewSet):
         association: Association = serializer.save()
 
         # Create the marketplace
-        marketplace = Marketplace.objects.get(id=association.id)
-
-        if marketplace:
-            association.marketplace = marketplace
-        else:
+        try:
+            association.marketplace = Marketplace.objects.get(id=association.id)
+        except ObjectDoesNotExist:
             serializer = MarketplaceWriteSerializer(
                 data={
                     "id": association.id,
@@ -179,14 +179,12 @@ class AssociationViewSet(viewsets.ModelViewSet):
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            serializer.save()
+            association.marketplace = serializer.save()
 
         # Create the library
-        library = Library.objects.get(id=association.id)
-
-        if library:
-            association.library = library
-        else:
+        try:
+            association.library = Library.objects.get(id=association.id)
+        except ObjectDoesNotExist:
             serializer = LibraryWriteSerializer(
                 data={
                     "id": association.id,
@@ -199,13 +197,35 @@ class AssociationViewSet(viewsets.ModelViewSet):
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            serializer.save()
+            association.library = serializer.save()
 
         association.save()
 
         return Response(
             status=status.HTTP_201_CREATED,
         )
+
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        association = self.get_object()
+
+        if not association:
+            return Response(
+                "You must mention an association to delete",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        marketplace = association.marketplace
+
+        if marketplace:
+            MarketplaceViewSet().perform_destroy(instance=marketplace)
+
+        library = association.library
+
+        if library:
+            LibraryViewSet().perform_destroy(instance=library)
+
+        return super(AssociationViewSet, self).destroy(request)
 
 
 @api_view(["PUT"])
