@@ -1,22 +1,24 @@
 from datetime import date
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.db.models import Q
 from django_filters import DateTimeFromToRangeFilter
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response
 
-from associations.models import Association
-from associations.models import Role
+from associations.models import Association, Role, Library, Marketplace
 from associations.permissions import AssociationPermission, RolePermission
 from associations.serializers import (
     AssociationShortSerializer,
     AssociationSerializer,
     RoleSerializer,
     WriteRoleSerializer,
+    MarketplaceWriteSerializer,
+    LibraryWriteSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
 from authentication.models import User
@@ -148,6 +150,62 @@ class AssociationViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @transaction.atomic
+    def create(self, request):
+        # Create the association
+        serializer = AssociationSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        association: Association = serializer.save()
+
+        # Create the marketplace
+        marketplace = Marketplace.objects.get(id=association.id)
+
+        if marketplace:
+            association.marketplace = marketplace
+        else:
+            serializer = MarketplaceWriteSerializer(
+                data={
+                    "id": association.id,
+                    "enabled": False,
+                    "association": association.id,
+                    "products": [],
+                }
+            )
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer.save()
+
+        # Create the library
+        library = Library.objects.get(id=association.id)
+
+        if library:
+            association.library = library
+        else:
+            serializer = LibraryWriteSerializer(
+                data={
+                    "id": association.id,
+                    "enabled": False,
+                    "association": association.id,
+                    "loanables": [],
+                }
+            )
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer.save()
+
+        association.save()
+
+        return Response(
+            status=status.HTTP_201_CREATED,
+        )
 
 
 @api_view(["PUT"])
