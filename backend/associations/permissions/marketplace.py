@@ -23,7 +23,7 @@ class MarketplacePermission(BasePermission):
     def has_object_permission(self, request, view, marketplace):
         role = request.user.get_role(marketplace.association)
 
-        if role and role.marketplace:  # Marketplace administrator.
+        if role and (role.marketplace or role.administration):
             return True
         else:
             return marketplace.enabled and request.method in SAFE_METHODS

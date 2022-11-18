@@ -12,7 +12,9 @@ ALL_USERS = [
 ]
 """A list of user ids covering all the spectrum of roles and permissions."""
 
-ALL_USERS_EXCEPT_MARKET_BIERO = [user for user in ALL_USERS if user != "17market_biero"]
+ALL_USERS_EXCEPT_MARKET_BIERO = [
+    user for user in ALL_USERS if user != "17market_biero" and user != "17admin_biero"
+]
 """Same as ALL_USERS, but without 17market_biero."""
 
 ALL_USERS_EXCEPT_MARKET_PDM = [user for user in ALL_USERS if user != "17market_pdm"]

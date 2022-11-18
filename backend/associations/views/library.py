@@ -37,7 +37,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         libraries_id = [
             role.association.library.id
             for role in self.request.user.roles.all()
-            if role.library
+            if role.library or role.administration
         ]
 
         return Library.objects.filter(Q(enabled=True) | Q(id__in=libraries_id))

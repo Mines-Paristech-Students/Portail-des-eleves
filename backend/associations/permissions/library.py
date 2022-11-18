@@ -22,7 +22,7 @@ class LibraryPermission(BasePermission):
     def has_object_permission(self, request, view, library):
         role = request.user.get_role(library.association)
 
-        if role and role.library:  # Library administrator.
+        if role and (role.library or role.administration):
             return True
         else:
             return library.enabled and request.method in SAFE_METHODS
