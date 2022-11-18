@@ -1,25 +1,29 @@
 from datetime import date
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.db.models import Q
 from django_filters import DateTimeFromToRangeFilter
 from django_filters.rest_framework import FilterSet, CharFilter, MultipleChoiceFilter
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response
 
-from associations.models import Association
-from associations.models import Role
+from associations.models import Association, Role, Library, Marketplace
 from associations.permissions import AssociationPermission, RolePermission
 from associations.serializers import (
     AssociationShortSerializer,
     AssociationSerializer,
     RoleSerializer,
     WriteRoleSerializer,
+    MarketplaceWriteSerializer,
+    LibraryWriteSerializer,
 )
 from associations.serializers.association import AssociationLogoSerializer
 from authentication.models import User
+from .library import LibraryViewSet
+from .marketplace import MarketplaceViewSet
 
 
 class RoleFilter(FilterSet):
@@ -148,6 +152,80 @@ class AssociationViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @transaction.atomic
+    def create(self, request):
+        # Create the association
+        serializer = AssociationSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        association: Association = serializer.save()
+
+        # Create the marketplace
+        try:
+            association.marketplace = Marketplace.objects.get(id=association.id)
+        except ObjectDoesNotExist:
+            serializer = MarketplaceWriteSerializer(
+                data={
+                    "id": association.id,
+                    "enabled": False,
+                    "association": association.id,
+                    "products": [],
+                }
+            )
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            association.marketplace = serializer.save()
+
+        # Create the library
+        try:
+            association.library = Library.objects.get(id=association.id)
+        except ObjectDoesNotExist:
+            serializer = LibraryWriteSerializer(
+                data={
+                    "id": association.id,
+                    "enabled": False,
+                    "association": association.id,
+                    "loanables": [],
+                }
+            )
+
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            association.library = serializer.save()
+
+        association.save()
+
+        return Response(
+            status=status.HTTP_201_CREATED,
+        )
+
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        association = self.get_object()
+
+        if not association:
+            return Response(
+                "You must mention an association to delete",
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        marketplace = association.marketplace
+
+        if marketplace:
+            MarketplaceViewSet().perform_destroy(instance=marketplace)
+
+        library = association.library
+
+        if library:
+            LibraryViewSet().perform_destroy(instance=library)
+
+        return super(AssociationViewSet, self).destroy(request)
 
 
 @api_view(["PUT"])
