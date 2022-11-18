@@ -14,7 +14,9 @@ ALL_USERS = [
 """A list of user ids covering all the spectrum of roles and permissions."""
 
 ALL_USERS_EXCEPT_LIBRARY_BD_TEK = [
-    user for user in ALL_USERS if user != "17library_bd-tek"
+    user
+    for user in ALL_USERS
+    if user != "17library_bd-tek" and user != "17admin_bd-tek"
 ]
 """Same as ALL_USERS, but with 17library_bd-tek removed."""
 
