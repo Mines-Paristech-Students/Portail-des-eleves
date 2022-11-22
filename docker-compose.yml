@@ -1,16 +1,20 @@
 version: "3"
 services:
-  # chat:
-    # restart: always
-    # build:
-    #   context: ./chat_server/ 
-    #   dockerfile: chat_server.Dockerfile
-    # links:
-    #   - db:db
-    # env_file:
-    #    - ./chat_server/db.env
-    # ports:
-    #   - 3000:3000
+  chat:
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/chat_server.Dockerfile
+    links:
+      - db:db
+    volumes:
+      - "./chat_server:/app"
+      - "/app/node_modules"
+    env_file:
+      - ./chat_server/docker.env
+    ports:
+      - "4000:3001"
+    profiles: [ "dev", "prod" ]
 
   db:
     build:
@@ -18,19 +22,19 @@ services:
       dockerfile: db.Dockerfile
     volumes:
       - ./volumes:/var/lib/postgresql/data/
-    ports: 
+    ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
       interval: 30s
       timeout: 60s
       retries: 5
-      start_period: 80s 
-    profiles: ["dev", "prod"]
-  
+      start_period: 80s
+    profiles: [ "dev", "prod" ]
+
   backend:
     build:
       context: .
@@ -44,8 +48,8 @@ services:
     depends_on:
       - db
     volumes:
-    - "./backend:/app/backend"
-    profiles: ["dev", "prod"]
+      - "./backend:/app/backend"
+    profiles: [ "dev", "prod" ]
     networks:
       - default
       - sso_sso
@@ -62,7 +66,7 @@ services:
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
-    profiles: ["dev"]
+    profiles: [ "dev" ]
 
   frontend-prod:
     build:
@@ -70,7 +74,7 @@ services:
       dockerfile: prod.Dockerfile
     ports:
       - "3000:3000"
-    profiles: ["prod"]
+    profiles: [ "prod" ]
 
 networks:
   sso_sso:
