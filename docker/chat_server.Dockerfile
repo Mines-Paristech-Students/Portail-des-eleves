@@ -1,7 +1,11 @@
 FROM node:latest
 
-WORKDIR /workspace
-COPY . /workspace/
-RUN npm install
+WORKDIR /app
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+COPY chat_server .
+
+RUN npm install --silent
 
 CMD ["npm", "start"]

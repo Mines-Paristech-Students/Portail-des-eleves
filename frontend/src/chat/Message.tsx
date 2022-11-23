@@ -1,5 +1,7 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { UserAvatar } from "../components/utils/avatar/UserAvatar";
+import { Size } from "../utils/size";
 
 export interface MessageData {
   username: string;
@@ -32,8 +34,7 @@ export const Message = ({
         }
       >
         <p className="float-left">
-          {/* todo: load user avatar */}
-          <span className="avatar" style={{ backgroundImage: "url()" }} />
+          <UserAvatar userId={message.username} size={Size.Small} link={true} />
         </p>
       </OverlayTrigger>
       <OverlayTrigger

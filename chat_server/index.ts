@@ -12,12 +12,17 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 export const httpServer = createServer(app);
-export const io = require("socket.io")(httpServer);
+export const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
 
 /**
  * The JWT authentication is made with https://github.com/auth0-community/auth0-socketio-jwt
  *
- * The public key is taken from Django
+ * The public key is taken from the SSO server
  */
 const public_key = process.env.JWT_PUBLIC_KEY;
 if (public_key === undefined) {
