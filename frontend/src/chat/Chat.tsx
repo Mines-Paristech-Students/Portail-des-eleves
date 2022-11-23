@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import { Message, MessageData } from "./Message";
 import { api } from "../services/apiService";
 import socketIOClient from "socket.io-client";
+import { authService } from "../App";
 
 const chat_server_url = process.env.REACT_APP_CHAT_SERVER_BASE_URL;
 
@@ -26,25 +27,23 @@ export const Chat = () => {
     );
   };
 
-  const username: string = "17bocquet";
+  // const fetchMessages = () => {
+  //   if (socket && !fetching) {
+  //     setFetching(true);
+  //     console.log("Date of fetch %s", date);
+  //     socket.emit("fetch", {
+  //       from: date,
+  //       limit: 20,
+  //     });
+  //   }
+  // };
 
-  const fetchMessages = () => {
-    if (socket && !fetching) {
-      setFetching(true);
-      console.log("Date of fetch %s", date);
-      socket.emit("fetch", {
-        from: date,
-        limit: 20,
-      });
-    }
-  };
-
-  const scrollFetch = async () => {
-    // @ts-ignore
-    if (scrollRef.current.scrollTop <= 150) {
-      fetchMessages();
-    }
-  };
+  // const scrollFetch = async () => {
+  //   // @ts-ignore
+  //   if (scrollRef.current.scrollTop <= 150) {
+  //     fetchMessages();
+  //   }
+  // };
 
   useEffect(() => {
     (async () => {
@@ -107,6 +106,12 @@ export const Chat = () => {
       event.preventDefault();
     }
   };
+
+  if (!authService.user || !authService.user.id) {
+    return <></>;
+  }
+
+  const username = authService.user.id;
 
   return (
     <Card
