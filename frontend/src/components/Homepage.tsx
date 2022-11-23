@@ -11,6 +11,7 @@ import "./homepage.css";
 import { PollWidget } from "./widgets/PollWidget";
 import { BalanceWidget } from "./widgets/BalanceWidget";
 import { CalendarWidget } from "./widgets/CalendarWidget";
+import { Chat } from "../chat/Chat";
 
 const greetings = [
   "Bonjour",
@@ -33,7 +34,7 @@ export const Homepage = () => {
       <PageTitle>
         {getRandom(greetings)} {user?.firstName ?? ""}
       </PageTitle>
-      {/* <Chat /> */}
+      <Chat />
       <Row>
         <Col className="side-widget">
           <PollWidget />

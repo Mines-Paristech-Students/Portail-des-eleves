@@ -56,11 +56,13 @@ export const Chat = () => {
 
       setSocket(socket);
 
-      setFetching(true);
-      socket.emit("fetch", {
-        from: date,
-        limit: 20,
-      });
+      if (!fetching) {
+        setFetching(true);
+        socket.emit("fetch", {
+          from: date,
+          limit: 20,
+        });
+      }
     })();
     /* eslint-disable */
   }, []);
@@ -75,16 +77,19 @@ export const Chat = () => {
 
       // No sort needed -> Messages arrive in order
       socket.on("fetch_response", async (data: MessageData[]) => {
-        let all_messages = [...messages, ...data];
-        all_messages.sort(function (a, b) {
-          // @ts-ignore
-          return new Date(a.posted_on) - new Date(b.posted_on);
-        });
-        setDate(all_messages[0].posted_on);
-        setIndexScroll(data.length - 1);
-        setFetching(false);
-        setMessages(all_messages);
-        scrollToLastMessage();
+        if (data.length) {
+          let all_messages = [...messages, ...data];
+          all_messages.sort(function (a, b) {
+            // @ts-ignore
+            return new Date(a.posted_on) - new Date(b.posted_on);
+          });
+          setDate(all_messages[0].posted_on);
+          setIndexScroll(data.length - 1);
+          setFetching(false);
+          setMessages(all_messages);
+          // TODO: re-enable this when scrollRef issue will be fixed
+          // scrollToLastMessage();
+        }
       });
     }
     /* eslint-disable */
@@ -128,7 +133,6 @@ export const Chat = () => {
               className="overflow-auto h-100 mt-2"
               id="list-message"
               style={{ paddingTop: "50px" }}
-              onScroll={scrollFetch}
               ref={scrollRef}
             >
               {messages.map((data: MessageData, index) => (
