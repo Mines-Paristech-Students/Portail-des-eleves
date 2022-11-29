@@ -90,6 +90,7 @@ class TransactionFilter(django_filters.FilterSet):
             "status": ["exact", "in"],
             "buyer": ["exact"],
             "date": ["exact"],
+            "product__marketplace": ["exact"],
         }
 
 
