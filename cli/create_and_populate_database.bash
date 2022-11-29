@@ -4,7 +4,7 @@
 cd backend
 
 rm -f medias
-ln -s ../cli/medias medias
+cp -rn ../cli/medias . || true
 
 rm -Rf  authentication/migrations/*
 rm -Rf  associations/migrations/*
