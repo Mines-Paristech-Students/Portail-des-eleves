@@ -34,6 +34,8 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
+PORTAIL_HOSTNAME = env.str("PORTAIL_HOSTNAME")
+
 ALLOWED_HOSTS = [
     ".localhost",
     "127.0.0.1",

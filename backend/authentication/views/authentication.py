@@ -40,6 +40,7 @@ class LoginView(views.APIView):
                 + settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_LIFETIME"],
                 httponly=True,
                 secure=not settings.DEBUG,
+                domain=settings.PORTAIL_HOSTNAME,
             )
 
             return response
@@ -60,7 +61,10 @@ class LogoutView(views.APIView):
         delete the cookie."""
 
         response = Response("Cookie deleted.")
-        response.delete_cookie(settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"])
+        response.delete_cookie(
+            settings.JWT_AUTH_SETTINGS["ACCESS_TOKEN_COOKIE_NAME"],
+            domain=settings.PORTAIL_HOSTNAME,
+        )
 
         return response
 
