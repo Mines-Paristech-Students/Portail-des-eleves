@@ -69,6 +69,9 @@ class EventFilter(FilterSet):
             else Event.objects.none()
         )
 
+        if not now and not after and not before:
+            return Event.objects.none()
+
         events_annotated = (now | after | before).annotate(
             ordering=Case(
                 *(
@@ -89,10 +92,7 @@ class EventFilter(FilterSet):
             )
         )
 
-        if events_annotated:
-            return events_annotated.order_by("ordering")
-
-        return events_annotated
+        return events_annotated.order_by("ordering")
 
 
 class EventViewSet(viewsets.ModelViewSet):
