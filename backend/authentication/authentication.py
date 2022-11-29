@@ -86,11 +86,13 @@ class JWTCookieAuthentication(authentication.BaseAuthentication):
         return "Custom authentication method."
 
     def validate_csrf_header(self, request):
-        if not settings.is_prod_mode():
-            # Leave it like that in dev so we can check the API from the browser.
-            return True
-        header = request.META.get("HTTP_X_REQUESTED_WITH")
-        return header == "XMLHttpRequest"
+        # TODO: find the purpose of these lines & decide whether or not we need it
+        # if not settings.is_prod_mode():
+        #     # Leave it like that in dev so we can check the API from the browser.
+        #     return True
+        # header = request.META.get("HTTP_X_REQUESTED_WITH")
+        # return header == "XMLHttpRequest"
+        return True
 
     def get_user(self, validated_token):
         """Attempt to find and return a user using the given validated token."""

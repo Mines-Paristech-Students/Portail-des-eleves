@@ -11,7 +11,7 @@ services:
       - "./chat_server:/app"
       - "/app/node_modules"
     env_file:
-      - ./chat_server/docker.env
+      - ./chat_server/.env
     ports:
       - "4000:3001"
     profiles: [ "dev", "prod" ]

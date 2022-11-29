@@ -14,7 +14,7 @@ const port = process.env.PORT || 3001;
 export const httpServer = createServer(app);
 export const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_BASE_URL || "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
