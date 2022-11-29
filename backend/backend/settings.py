@@ -34,25 +34,27 @@ SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
-SSO_API_HOSTNAME = env.str("SSO_API_HOSTNAME")
-ALLOWED_HOSTS = (
-    ["localhost"]
-    + [env.str("PORTAIL_HOSTNAME"), env.str("SSO_HOSTNAME"), SSO_API_HOSTNAME]
-    + ["127.0.0.1"]
-)
+ALLOWED_HOSTS = [
+    ".localhost",
+    "127.0.0.1",
+    "[::1]",
+    env.str("PORTAIL_API_HOSTNAME"),
+]
+
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    ["http://localhost:3000"]
-    + [env.str("PORTAIL_URL"), env.str("SSO_URL")]
-    + ["http://127.0.0.1:3000"]
-)
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    env.str("PORTAIL_URL"),
+    env.str("SSO_URL"),
+]
 
 AUTH_USER_MODEL = "authentication.User"
 
 # API Authentication (e.g. SSO)
 
-ALLOWED_API_HOSTS = (SSO_API_HOSTNAME,)
+ALLOWED_API_HOSTS = (env.str("SSO_API_HOSTNAME"),)
 API_KEYS = env.dict("API_KEYS")
 
 # Application definition
