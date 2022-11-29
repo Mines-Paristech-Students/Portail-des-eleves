@@ -3,7 +3,6 @@
 
 cd backend
 
-rm -f medias
 cp -rn ../cli/medias . || true
 
 rm -Rf  authentication/migrations/*
