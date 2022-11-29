@@ -14,7 +14,7 @@ export const transactions = {
       status: status,
     }),
   list: (marketplaceId, params = {}, page = 1) => {
-    params["marketplace"] = marketplaceId;
+    params["product__marketplace"] = marketplaceId;
     params["page"] = page;
 
     return unwrap<Transaction[]>(
