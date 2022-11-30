@@ -1,0 +1,16 @@
+- model: directory.DoctorOpinion
+  pk: 77729582-37c8-4c77-adfc-85eb10850fbe
+  fields:
+    user: 19membre-bde
+    doctor: af82d74a-d9a0-46e3-8401-49bdf0662cb8
+    reason_for_consultation: Boulimie
+    comment: Ponctuel, mets en totale confiance et assure un suivi long terme
+
+- model: directory.DoctorOpinion
+  pk: 036f80f9-e9cc-4b1b-b4ab-287ee8d5893e
+  fields:
+    user: 19bde
+    doctor: af82d74a-d9a0-46e3-8401-49bdf0662cb8
+    is_anonymous: True
+    reason_for_consultation: Obésité
+    comment: Bienveillant, beaucoup de rdv disponibles

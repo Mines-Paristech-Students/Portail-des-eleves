@@ -18,6 +18,18 @@
     name: cache
     scoped_to_model: global
 
+- model: tags.namespace
+  pk: 4
+  fields:
+    name: "Type"
+    scoped_to_model: doctor
+
+- model: tags.namespace
+  pk: 5
+  fields:
+    name: "Spécialité"
+    scoped_to_model: doctor
+
 - model: tags.tag
   pk: 1
   fields:
@@ -51,3 +63,38 @@
   fields:
     value: "Secret millénaire"
     namespace: 2
+
+- model: tags.tag
+  pk: 6
+  fields:
+    value: "Psychologue"
+    namespace: 4
+    doctor: ["a63b39c9-df13-4c2f-a3da-f648f62f6141"]
+
+- model: tags.tag
+  pk: 7
+  fields:
+    value: "Nutritionniste"
+    namespace: 4
+    doctor: ["af82d74a-d9a0-46e3-8401-49bdf0662cb8"]
+
+- model: tags.tag
+  pk: 8
+  fields:
+    value: "Anorexie"
+    namespace: 5
+    doctor: ["af82d74a-d9a0-46e3-8401-49bdf0662cb8"]
+
+- model: tags.tag
+  pk: 9
+  fields:
+    value: "Boulimie"
+    namespace: 5
+    doctor: ["af82d74a-d9a0-46e3-8401-49bdf0662cb8"]
+
+- model: tags.tag
+  pk: 10
+  fields:
+    value: "Obésité"
+    namespace: 5
+    doctor: ["af82d74a-d9a0-46e3-8401-49bdf0662cb8"]

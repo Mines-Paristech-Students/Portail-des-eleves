@@ -1,0 +1,13 @@
+- model: directory.Doctor
+  pk: a63b39c9-df13-4c2f-a3da-f648f62f6141
+  fields:
+    name: Mme Anne MORTUREUX
+    address: 60 Bd Saint-Michel, 75272 Paris
+
+- model: directory.Doctor
+  pk: af82d74a-d9a0-46e3-8401-49bdf0662cb8
+  fields:
+    name: M. Faux MEDECIN
+    address: 60 Bd Saint-Michel, 75272 Paris
+    phone: +0123456789
+    fee: 60
