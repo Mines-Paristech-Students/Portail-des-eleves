@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "repartitions",
     "courses",
     "games",
+    "directory",
 ]
 
 MIDDLEWARE = [

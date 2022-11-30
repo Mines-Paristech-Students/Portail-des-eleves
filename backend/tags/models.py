@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from associations.models import Media, Product, Loanable, Page, Role, Association
+from directory.models import Doctor
 from tags.exceptions import BrokenTagLink
 
 
@@ -25,8 +26,12 @@ class Namespace(models.Model):
         unique_together = ("name", "scoped_to_model", "scoped_to_pk")
         ordering = ["-id"]
 
-    SCOPED_TO_MODELS = {"association": Association, "global": None}
-    SCOPED_TO_MODELS_REV = {Association: "association", None: "global"}
+    SCOPED_TO_MODELS = {"association": Association, "doctor": Doctor, "global": None}
+    SCOPED_TO_MODELS_REV = {
+        Association: "association",
+        Doctor: "doctor",
+        None: "global",
+    }
 
     name = models.CharField(max_length=50)
 
@@ -72,6 +77,7 @@ class Tag(models.Model):
         "page": Page,
         "product": Product,
         "role": Role,
+        "doctor": Doctor,
     }
 
     namespace = models.ForeignKey(
