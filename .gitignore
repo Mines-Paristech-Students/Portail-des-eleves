@@ -116,14 +116,6 @@ venv.bak/
 # macOS
 .DS_Store
 
-backend/api/migrations
-backend/associations/migrations
-backend/authentication/migrations
-backend/polls/migrations
-backend/repartitions/migrations
-backend/subscriptions/migrations
-backend/tags/migrations
-backend/courses/migrations
-backend/games/migrations
+backend/**/migrations
 
 backend/medias
