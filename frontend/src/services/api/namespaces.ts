@@ -3,15 +3,13 @@ import { Namespace } from "../../models/tag";
 import { toUrlParams } from "../../utils/urlParam";
 
 export const namespaces = {
-  list: (params, page = 1, axiosConfig = {}) => {
-    params["page_size"] = 1000;
+  list: (params, _, axiosConfig = {}) => {
     return unwrap<PaginatedResponse<Namespace[]>>(
       apiService.get(
         "/tags/namespaces/" +
-          toUrlParams({
-            ...params,
-            page: page,
-          }),
+        toUrlParams({
+          ...params,
+        }),
         axiosConfig
       )
     );
