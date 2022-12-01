@@ -24,6 +24,7 @@ const links = [
   { icon: "zap", url: "/associations", label: "Associations" },
   { icon: "check-square", url: "/sondages", label: "Sondages" },
   { icon: "book-open", url: "/cours", label: "Cours" },
+  { icon: "phone-call", url: "/annuaire", label: "Annuaire" },
 ];
 
 function Navbar() {

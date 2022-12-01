@@ -10,6 +10,7 @@ import {
   compileAssociationRoutes,
   routes as associationsRoutes,
 } from "./associations";
+import { routes as directoryRoutes } from "./directory";
 
 export const addRoutePrefix = (prefix: string, routes: Route[]): Route[] =>
   routes.map((route) => ({
@@ -42,4 +43,5 @@ export const routes = [
   )
   .concat(addRoutePrefix("/sondages", pollsRoutes))
   .concat(addRoutePrefix("/parametres", settingsRoutes))
+  .concat(addRoutePrefix("/annuaire", directoryRoutes))
   .concat(usersRoutes);
