@@ -7,9 +7,9 @@ export const namespaces = {
     return unwrap<PaginatedResponse<Namespace[]>>(
       apiService.get(
         "/tags/namespaces/" +
-        toUrlParams({
-          ...params,
-        }),
+          toUrlParams({
+            ...params,
+          }),
         axiosConfig
       )
     );
