@@ -9,6 +9,7 @@ import subscriptions.urls
 import tags.urls
 import courses.urls
 import games.urls
+import directory.urls
 
 urlpatterns = [
     path("associations/", include(associations.urls)),
@@ -19,4 +20,5 @@ urlpatterns = [
     path("tags/", include(tags.urls)),
     path("courses/", include(courses.urls)),
     path("games/", include(games.urls)),
+    path("directory/", include(directory.urls)),
 ]

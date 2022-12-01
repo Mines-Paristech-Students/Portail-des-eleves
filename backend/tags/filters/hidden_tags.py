@@ -16,6 +16,7 @@ from associations.models import (
     Transaction,
     Role,
 )
+from directory.models import Doctor
 from tags.models import Tag
 
 
@@ -43,6 +44,8 @@ class HasHiddenTagFilter(filters.BaseFilterBackend):
             | Q(marketplace__association__tags__is_hidden=True),
             Transaction: Q(product__marketplace__association__tags__is_hidden=True),
             Role: Q(tags__is_hidden=True) | Q(association__tags__is_hidden=True),
+            # Directory.
+            Doctor: Q(tags__is_hidden=True),
             # Tags.
             Tag: Q(is_hidden=True),
         }
