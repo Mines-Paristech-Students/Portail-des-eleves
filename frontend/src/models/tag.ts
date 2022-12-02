@@ -10,3 +10,9 @@ export interface Tag {
   value: string;
   namespace: Namespace;
 }
+
+export interface ShortTag {
+  id: string;
+  value: string;
+  namespace: string;
+}
