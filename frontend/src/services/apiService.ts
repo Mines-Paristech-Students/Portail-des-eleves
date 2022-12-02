@@ -27,6 +27,7 @@ import { loans } from "./api/library/loans";
 import { elections } from "./api/elections";
 import { subscriptions } from "./api/subscriptions";
 import { library } from "./api/library/library";
+import { directory } from "./api/directory/directory";
 
 export const baseUrl = process.env.REACT_APP_API_BASE_URL;
 const baseApi = process.env.REACT_APP_API_URL;
@@ -77,6 +78,8 @@ export const api = {
   users: users,
   profile: profile,
   subscriptions: subscriptions,
+
+  directory: directory,
 };
 
 /**

@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from directory.models import Doctor
 from directory.serializers.doctor import DoctorSerializer
@@ -17,8 +17,14 @@ class DoctorFilter(TaggableFilter):
 class DoctorViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Doctor.objects.all()
     filter_class = DoctorFilter
-    filter_backends = (DjangoFilterBackend, SearchFilter, HasHiddenTagFilter)
+    filter_backends = (
+        DjangoFilterBackend,
+        SearchFilter,
+        HasHiddenTagFilter,
+        OrderingFilter,
+    )
     search_fields = ("name", "address")
+    ordering_fields = ("name", "address")
 
     def get_serializer_class(self):
         return DoctorSerializer

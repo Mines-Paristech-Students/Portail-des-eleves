@@ -10,6 +10,7 @@ export enum TaggableModel {
   Page = "page",
   Product = "product",
   Role = "role",
+  Doctor = "doctor",
 }
 
 /**
@@ -46,7 +47,7 @@ export const TagList = ({
     <div {...props}>
       {tags.map((tag) => (
         <TagComponent
-          tag={tag.namespace.name}
+          tag={tag.namespace.name ?? tag.namespace}
           addon={tag.value}
           key={tag.id}
           collapsed={collapsed}
