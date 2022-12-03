@@ -7,6 +7,7 @@ import { ArrowLink } from "../../utils/ArrowLink";
 import { ErrorMessage } from "../../utils/ErrorPage";
 import { Loading } from "../../utils/Loading";
 import { PageTitle } from "../../utils/PageTitle";
+import { TaggableModel, TagList } from "../../utils/tags/TagList";
 import { DirectoryLayout } from "../DirectoryLayout";
 
 export const DirectoryDoctorsDetail = () => {
@@ -28,6 +29,12 @@ export const DirectoryDoctorsDetail = () => {
             <ArrowLink to="/annuaire/medecins" />
             {doctor.name}
           </PageTitle>
+
+          <TagList
+            model={TaggableModel.Doctor}
+            instance={doctor}
+            className={"my-2"}
+          />
         </Container>
       ) : (
         <></>
