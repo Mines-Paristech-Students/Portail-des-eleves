@@ -3,7 +3,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from directory.models import Doctor
-from directory.serializers.doctor import DoctorSerializer
+from directory.serializers.doctor import DoctorShortSerializer, DoctorSerializer
 from tags.filters import HasHiddenTagFilter
 from tags.filters.taggable import TaggableFilter
 
@@ -14,7 +14,9 @@ class DoctorFilter(TaggableFilter):
         exclude = ()
 
 
-class DoctorViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class DoctorViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     queryset = Doctor.objects.all()
     filter_class = DoctorFilter
     filter_backends = (
@@ -27,4 +29,6 @@ class DoctorViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     ordering_fields = ("name", "address")
 
     def get_serializer_class(self):
+        if self.action in ("list",):
+            return DoctorShortSerializer
         return DoctorSerializer
