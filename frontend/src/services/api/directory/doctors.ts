@@ -16,4 +16,6 @@ export const doctors = {
         })}`
       )
     ),
+  get: (doctorId: string) =>
+    unwrap<Doctor>(apiService.get(`/directory/doctors/${doctorId}`)),
 };

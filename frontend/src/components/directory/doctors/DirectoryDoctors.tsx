@@ -13,12 +13,16 @@ import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { TagSearch } from "../../utils/tags/TagSearch";
 import { GoogleMapsLink } from "../../utils/GoogleMapsLink";
+import { Link } from "react-router-dom";
 
 const columnsData = [
   {
     key: "name",
     header: "Nom",
     canSort: true,
+    render: (doctor: Doctor) => (
+      <Link to={`/annuaire/medecins/${doctor.id}`}>{doctor.name}</Link>
+    ),
   },
   {
     key: "tags",

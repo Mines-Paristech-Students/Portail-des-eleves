@@ -1,4 +1,5 @@
 import { ShortTag } from "../tag";
+import { DoctorOpinion } from "./doctorOpinion";
 
 export interface Doctor {
   id: string;
@@ -7,4 +8,5 @@ export interface Doctor {
   phone: string;
   fee?: Number;
   tags: ShortTag[];
+  opinions: DoctorOpinion[];
 }
