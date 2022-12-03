@@ -12,6 +12,7 @@ import { TagList, TaggableModel } from "../../utils/tags/TagList";
 import { SidebarInputSearch } from "../../utils/sidebar/SidebarInputSearch";
 import { SidebarSpace } from "../../utils/sidebar/Sidebar";
 import { TagSearch } from "../../utils/tags/TagSearch";
+import { GoogleMapsLink } from "../../utils/GoogleMapsLink";
 
 const columnsData = [
   {
@@ -35,6 +36,8 @@ const columnsData = [
     header: "Adresse",
     headerClassName: "w-50",
     canSort: true,
+    render: (doctor: Doctor) =>
+      doctor.address ? <GoogleMapsLink address={doctor.address} /> : "",
   },
   {
     key: "phone",
