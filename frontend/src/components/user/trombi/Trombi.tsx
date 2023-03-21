@@ -27,7 +27,16 @@ export const Trombi = () => {
   return (
     <Container className="mt-5">
       <PageTitle>Trombinoscope</PageTitle>
-
+        <Row className="mb-3">
+            <Col md={3}>
+                <Link
+                  className="text-reset"
+                  to={`/genealogy`}
+                >
+                  Généalogie minière
+                </Link>
+            </Col>
+        </Row>
       <Row className="mb-5">
         <Col md={3}>
           <InputGroup className="mb-3" tabIndex={0}>
