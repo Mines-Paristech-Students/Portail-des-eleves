@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.decorators import action
 
 from api.paginator import SmallResultsSetPagination
 from associations.models import Marketplace, Product, Transaction, Funding
@@ -43,10 +44,18 @@ class MarketplaceViewSet(viewsets.ModelViewSet):
     permission_classes = (MarketplacePermission,)
 
     def get_serializer_class(self):
-        if self.action in ("create", "update", "partial_update"):
+        if self.action in ("create", "update", "partial_update", "create_or_update"):
             return MarketplaceWriteSerializer
 
         return MarketplaceSerializer
+
+    @action(detail=False, methods=["PATCH"])
+    def create_or_update(self, request):
+        existing = Marketplace.objects.filter(pk=request.data["id"]).first()
+        if not existing:
+            return super(MarketplaceViewSet, self).create(request)
+        else:
+            return super(MarketplaceViewSet, self).update(request)
 
 
 class ProductFilter(TaggableFilter):

@@ -6,9 +6,9 @@ export const marketplace = {
     unwrap<Marketplace>(
       apiService.get(`/associations/marketplace/${marketplaceId}`)
     ),
-  update: ({ id, ...data }) =>
+  createOrUpdate: (data) =>
     unwrap<Marketplace>(
-      apiService.patch(`/associations/marketplace/${id}/`, data)
+      apiService.patch(`/associations/marketplace/create_or_update/`, data)
     ),
   balance: {
     get: (marketplaceId, customerId) =>

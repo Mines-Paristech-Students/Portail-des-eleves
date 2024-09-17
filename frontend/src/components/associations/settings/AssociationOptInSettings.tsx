@@ -20,7 +20,7 @@ export const AssociationOptInSettings = ({ association }) => (
           <EnableModuleForm
             id={association.id}
             label={"Magasin"}
-            apiMethod={api.marketplace.update}
+            apiMethod={api.marketplace.createOrUpdate}
             initialValue={association.enabledModules.includes("marketplace")}
           />
         </Col>
@@ -69,15 +69,14 @@ const EnableModuleForm = ({
   });
 
   return (
-    <label
-      onClick={() => {
-        save({ id: id, enabled: !checked });
-      }}
-    >
+    <label>
       <input
         type="checkbox"
         className="custom-switch-input"
         checked={checked}
+        onChange={() => {
+          save({ id: id, enabled: !checked, association: id, products: [] });
+        }}
       />
       <span className="custom-switch-indicator" />
       <span className="custom-switch-description">{label}</span>
