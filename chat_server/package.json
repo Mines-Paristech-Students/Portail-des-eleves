@@ -19,7 +19,7 @@
     "@types/socketio-jwt": "0.0.0",
     "chai": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mocha": "^6.2.2",
+    "mocha": "^10.1.0",
     "pg": "^8.8.0",
     "request": "^2.88.0",
     "tslint": "^5.20.0",
